@@ -7,6 +7,9 @@ import MapboxMaps
 import MapboxCoreMaps
 import MapboxNavigation
 
+import MapboxDirections
+import Turf
+
 class ViewController: UIViewController {
     
     @IBOutlet weak var longPressHintView: UIView!
@@ -50,13 +53,14 @@ class ViewController: UIViewController {
                 clearMapView()
                 return
             }
-            
+
             startButton.isEnabled = true
             navigationMapView.show(routes)
             navigationMapView.showWaypoints(on: currentRoute)
+            navigationMapView.showRouteDurations(along: routes)
         }
     }
-    
+
     weak var activeNavigationViewController: NavigationViewController?
     
     // MARK: - UIViewController lifecycle methods
@@ -132,8 +136,14 @@ class ViewController: UIViewController {
         clearMap.isHidden = true
         longPressHintView.isHidden = false
         
+        if let style = navigationMapView.style {
+            style.removeDebugLineLayers()
+            style.removeDebugCircleLayers()
+        }
+        
         // TODO: Unhighlight buildings when clearing map.
         navigationMapView.removeRoutes()
+        navigationMapView.removeRouteDurations()
         navigationMapView.removeWaypoints()
         waypoints.removeAll()
     }
@@ -145,7 +155,7 @@ class ViewController: UIViewController {
             }
         }
     }
-    
+
     @IBAction func simulateButtonPressed(_ sender: Any) {
         simulationButton.isSelected = !simulationButton.isSelected
     }
@@ -178,19 +188,19 @@ class ViewController: UIViewController {
             delegate?.carPlayManager.beginNavigationWithCarPlay(using: location.coordinate, navigationService: service)
         }
     }
-    
+
     private func presentActionsAlertController() {
         let alertController = UIAlertController(title: "Start Navigation", message: "Select the navigation type", preferredStyle: .actionSheet)
-        
+
         typealias ActionHandler = (UIAlertAction) -> Void
-        
+
         let basic: ActionHandler = { _ in self.startBasicNavigation() }
         let day: ActionHandler = { _ in self.startNavigation(styles: [DayStyle()]) }
         let night: ActionHandler = { _ in self.startNavigation(styles: [NightStyle()]) }
         let custom: ActionHandler = { _ in self.startCustomNavigation() }
         let styled: ActionHandler = { _ in self.startStyledNavigation() }
         let guidanceCards: ActionHandler = { _ in self.startGuidanceCardsNavigation() }
-        
+
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Default UI", .default, basic),
             ("DayStyle UI", .default, day),
@@ -200,16 +210,16 @@ class ViewController: UIViewController {
             ("Styled UI", .default, styled),
             ("Cancel", .cancel, nil)
         ]
-        
+
         actionPayloads
             .map { payload in UIAlertAction(title: payload.0, style: payload.1, handler: payload.2) }
             .forEach(alertController.addAction(_:))
-        
+
         if let popoverController = alertController.popoverPresentationController {
             popoverController.sourceView = self.startButton
             popoverController.sourceRect = self.startButton.bounds
         }
-        
+
         present(alertController, animated: true, completion: nil)
     }
     
@@ -230,13 +240,13 @@ class ViewController: UIViewController {
     
     func startBasicNavigation() {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
-        
+
         let service = navigationService(route: route, routeIndex: 0, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
-        
+
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
         navigationViewController.routeLineTracksTraversal = true
-        
+
         // Example of building highlighting in 3D.
         navigationViewController.waypointStyle = .extrudedBuilding
         
@@ -273,17 +283,18 @@ class ViewController: UIViewController {
 
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
-    
+
     func startGuidanceCardsNavigation() {
         guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
-        
+
         let instructionsCardCollection = InstructionsCardViewController()
         instructionsCardCollection.cardCollectionDelegate = self
         
         let options = NavigationOptions(navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), topBanner: instructionsCardCollection, predictiveCacheOptions: PredictiveCacheOptions())
+
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
-        
+
         presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
@@ -546,12 +557,12 @@ extension ViewController: NavigationMapViewDelegate {
         let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of alert confirming waypoint removal")
         let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert action for removing a waypoint")
         let cancelTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_CANCEL", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
-        
+
         let waypointRemovalAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
         let removeAction = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
         let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
         [removeAction, cancelAction].forEach(waypointRemovalAlertController.addAction(_:))
-        
+
         self.present(waypointRemovalAlertController, animated: true, completion: nil)
     }
 }
@@ -560,18 +571,63 @@ extension ViewController: NavigationMapViewDelegate {
 
 extension ViewController: RouteVoiceControllerDelegate {
 
+<<<<<<< HEAD
+=======
+    }
+
+    // By default, the navigation service will attempt to filter out unqualified locations.
+    // If however you would like to filter these locations in,
+    // you can conditionally return a Bool here according to your own heuristics.
+    // See CLLocation.swift `isQualified` for what makes a location update unqualified.
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
+        return true
+    }
+
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+        return true
+    }
+>>>>>>> main
 }
 
 // MARK: - NavigationViewControllerDelegate methods
 
 extension ViewController: NavigationViewControllerDelegate {
+<<<<<<< HEAD
+=======
+    // By default, when the user arrives at a waypoint, the next leg starts immediately.
+    // If you implement this method, return true to preserve this behavior.
+    // Return false to remain on the current leg, for example to allow the user to provide input.
+    // If you return false, you must manually advance to the next leg. See the example above in `confirmationControllerDidConfirm(_:)`.
+    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
+        // When the user arrives, present a view controller that prompts the user to continue to their next destination
+        // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
+
+        //If we're not in a "Multiple Stops" demo, show the normal EORVC
+        if navigationViewController.navigationService.router.routeProgress.isFinalLeg {
+            endCarPlayNavigation(canceled: false)
+            return true
+        }
+
+        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else {
+            return true
+        }
+
+        confirmationController.delegate = self
+>>>>>>> main
 
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         return true
     }
+<<<<<<< HEAD
     
+=======
+
+    // Called when the user hits the exit button.
+    // If implemented, you are responsible for also dismissing the UI.
+>>>>>>> main
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         dismissActiveNavigationViewController()
+<<<<<<< HEAD
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
@@ -629,6 +685,64 @@ extension ViewController: NavigationViewControllerDelegate {
             features.append(feature)
         }
         return FeatureCollection(features: features)
+=======
+        if mapView == nil {
+            mapView = NavigationMapView(frame: view.bounds)
+        }
+    }
+}
+
+// MARK: VisualInstructionDelegate
+extension ViewController: VisualInstructionDelegate {
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        // Uncomment to mutate the instruction shown in the top instruction banner
+        // let range = NSRange(location: 0, length: presented.length)
+        // let mutable = NSMutableAttributedString(attributedString: presented)
+        // mutable.mutableString.applyTransform(.latinToKatakana, reverse: false, range: range, updatedRange: nil)
+        // return mutable
+
+        return presented
+    }
+}
+
+// MARK: Free driving
+extension ViewController {
+    func trackLocations(mapView: NavigationMapView) {
+        let dataSource = PassiveLocationDataSource()
+        let locationManager = PassiveLocationManager(dataSource: dataSource)
+        mapView.locationManager = locationManager
+
+        NotificationCenter.default.addObserver(self, selector: #selector(didUpdatePassiveLocation), name: .passiveLocationDataSourceDidUpdate, object: dataSource)
+
+        trackPolyline = nil
+        rawTrackPolyline = nil
+    }
+
+    @objc func didUpdatePassiveLocation(_ notification: Notification) {
+        if let roadName = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey] as? String {
+            title = roadName
+        }
+
+        if let location = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation {
+            if trackPolyline == nil {
+                trackPolyline = MGLPolyline()
+            }
+
+            var coordinates: [CLLocationCoordinate2D] = [location.coordinate]
+            trackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
+        }
+
+        if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
+            if rawTrackPolyline == nil {
+                rawTrackPolyline = MGLPolyline()
+            }
+
+            var coordinates: [CLLocationCoordinate2D] = [rawLocation.coordinate]
+            rawTrackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
+        }
+
+        mapView?.addAnnotations([rawTrackPolyline!, trackPolyline!])
+>>>>>>> main
     }
 }
 

@@ -5,33 +5,12 @@ import CarPlay
 
 @available(iOS 12.0, *)
 extension CPTrip {
-    static let fullDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .full
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-    
-    static let shortDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .short
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-    
-    static let briefDateComponentsFormatter: DateComponentsFormatter = {
-        let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = .brief
-        formatter.allowedUnits = [.day, .hour, .minute]
-        return formatter
-    }()
-    
     convenience init(routes: [Route], routeOptions: RouteOptions, waypoints: [Waypoint]) {
         let routeChoices = routes.enumerated().map { (routeIndex, route) -> CPRouteChoice in
             let summaryVariants = [
-                CPTrip.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-                CPTrip.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
-                CPTrip.briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
+                DateComponentsFormatter.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+                DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
+                DateComponentsFormatter.briefDateComponentsFormatter.string(from: route.expectedTravelTime)!
             ]
             let routeChoice = CPRouteChoice(summaryVariants: summaryVariants,
                                             additionalInformationVariants: [route.description],

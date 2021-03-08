@@ -31,6 +31,13 @@ extension UIColor {
     
     class var defaultBuildingColor: UIColor { get { return #colorLiteral(red: 0.9833194452, green: 0.9843137255, blue: 0.9331936657, alpha: 0.8019049658) } }
     class var defaultBuildingHighlightColor: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 0.949406036) } }
+
+    class var routeDurationAnnotationColor: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
+    class var selectedRouteDurationAnnotationColor: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) } }
+
+    class var routeDurationAnnotationTextColor: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
+    class var selectedRouteDurationAnnotationTextColor: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
+
 }
 
 extension UIColor {
@@ -130,6 +137,10 @@ open class DayStyle: Style {
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColor = .defaultLaneArrowSecondary
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
+        LaneView.appearance().primaryColor = .defaultLaneArrowPrimaryCarPlay
+        LaneView.appearance().secondaryColor = .defaultLaneArrowSecondaryCarPlay
+        LaneView.appearance().primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
+        LaneView.appearance().secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
         LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         LineView.appearance().lineColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         ManeuverView.appearance().backgroundColor = .clear
@@ -155,6 +166,11 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficUnknownColor = .trafficUnknown
         NavigationMapView.appearance().buildingDefaultColor = .defaultBuildingColor
         NavigationMapView.appearance().buildingHighlightColor = .defaultBuildingHighlightColor
+        NavigationMapView.appearance().routeDurationAnnotationColor = .routeDurationAnnotationColor
+        NavigationMapView.appearance().routeDurationAnnotationSelectedColor = .selectedRouteDurationAnnotationColor
+        NavigationMapView.appearance().routeDurationAnnotationFontName = "DIN Pro Medium"
+        NavigationMapView.appearance().routeDurationAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+        NavigationMapView.appearance().routeDurationAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         NavigationView.appearance().backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)
         NextBannerView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         NextBannerView.appearance(whenContainedInInstancesOf:[InstructionsCardContainerView.self]).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)

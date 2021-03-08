@@ -5,6 +5,12 @@ import MapboxDirections
 import MapboxCoreNavigation
 import Turf
 
+
+private enum RouteDurationAnnotationTailPosition: Int {
+    case left
+    case right
+}
+
 /**
  `NavigationMapView` is a subclass of `UIView`, which draws `MapView` on its surface and provides convenience functions for adding `Route` lines to a map.
  */
@@ -79,6 +85,7 @@ open class NavigationMapView: UIView {
         static let waypointSource = "\(identifier)_waypointSource"
         static let waypointCircle = "\(identifier)_waypointCircle"
         static let waypointSymbol = "\(identifier)_waypointSymbol"
+        static let routeDurationAnnotations = "\(identifier)_routeDurationAnnotations"
     }
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
@@ -118,6 +125,12 @@ open class NavigationMapView: UIView {
      */
     public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
     
+
+    @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .selectedRouteDurationAnnotationColor
+    @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
+    @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
+    @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
+    @objc dynamic public var routeDurationAnnotationFontName: String = "DIN Pro Medium"
     var userLocationForCourseTracking: CLLocation?
     var altitude: CLLocationDistance
     var routes: [Route]?
@@ -895,6 +908,246 @@ open class NavigationMapView: UIView {
             IdentifierString.arrowSymbolSource
         ]
         mapView.style.removeSources(sourceSet)
+    }
+
+    /**
+     Shows a callout containing the duration of each route.
+     Useful as a way to give the user more information when picking between multiple route alternatives.
+     If the route contains any tolled segments then the callout will specify that as well.
+     */
+    public func showRouteDurations(along routes: [Route]?) {
+        guard let visibleRoutes = self.routes, visibleRoutes.count > 0 else { return }
+        updateAnnotationSymbolImages()
+        updateRouteDurations(along: visibleRoutes)
+    }
+
+    /**
+     Updates the image assets in the map style for the route duration annotations. Useful when the desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
+     */
+    private func updateAnnotationSymbolImages() {
+        guard let style = style, style.image(forName: "RouteInfoAnnotationLeftHanded") == nil, style.image(forName: "RouteInfoAnnotationRightHanded") == nil else { return }
+        let capInsetHeight = CGFloat(22)
+        let capInsetWidth = CGFloat(11)
+        let capInsets = UIEdgeInsets(top: capInsetHeight, left: capInsetWidth, bottom: capInsetHeight, right: capInsetWidth)
+        if let image =  Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
+            let regularRouteImage = image.tint(routeDurationAnnotationColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            style.setImage(regularRouteImage, forName: "RouteInfoAnnotationLeftHanded")
+
+            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationLeftHanded-Selected")
+        }
+
+        if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
+            let regularRouteImage = image.tint(routeDurationAnnotationColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            style.setImage(regularRouteImage, forName: "RouteInfoAnnotationRightHanded")
+
+            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
+            style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationRightHanded-Selected")
+        }
+    }
+
+    /**
+     Remove any old route duration callouts and generate new ones for each passed in route.
+     */
+    private func updateRouteDurations(along routes: [Route]?) {
+        guard let style = style else { return }
+        
+        // remove any existing route annotation
+        removeRouteDurationAnnotationsLayerFromStyle(style)
+
+        guard let routes = routes else { return }
+
+        let visibleBoundingBox = BoundingBox(coordinateBounds: visibleCoordinateBounds)
+
+        let tollRoutes = routes.filter { route -> Bool in
+            return (route.tollIntersections?.count ?? 0) > 0
+        }
+        let routesContainTolls = tollRoutes.count > 0
+
+        // pick a random tail direction to keep things varied
+        guard let randomTailPosition = [RouteDurationAnnotationTailPosition.left, RouteDurationAnnotationTailPosition.right].randomElement() else { return }
+
+        var features = [MGLPointFeature]()
+
+        // Run through our heuristic algorithm looking for a good coordinate along each route line to place it's route annotation
+        // First, we will look for a set of RouteSteps unique to each route
+        var excludedSteps = [RouteStep]()
+        for (index, route) in routes.enumerated() {
+            let allSteps = route.legs.flatMap { return $0.steps }
+            let alternateSteps = allSteps.filter { !excludedSteps.contains($0) }
+
+            excludedSteps.append(contentsOf: alternateSteps)
+            let visibleAlternateSteps = alternateSteps.filter { $0.intersects(visibleBoundingBox) }
+
+            var coordinate: CLLocationCoordinate2D?
+
+            // Obtain a polyline of the set of steps. We'll look for a good spot along this line to place the annotation.
+            // We will consider a good spot to be somewhere near the middle of the line, making sure that the coordinate is visible on-screen.
+            if let continuousLine = visibleAlternateSteps.continuousShape(), continuousLine.coordinates.count > 0 {
+                coordinate = continuousLine.coordinates[0]
+
+                // Pick a coordinate using some randomness in order to give visual variety.
+                // Take care to snap that coordinate to one that lays on the original route line.
+                // If the chosen snapped coordinate is not visible on the screen, then we walk back along the route coordinates looking for one that is.
+                // If none of the earlier points are on screen then we walk forward along the route coordinates until we find one that is.
+                if let distance = continuousLine.distance(), let sampleCoordinate = continuousLine.indexedCoordinateFromStart(distance: distance * CLLocationDistance.random(in: 0.3...0.8))?.coordinate, let routeShape = route.shape, let snappedCoordinate = routeShape.closestCoordinate(to: sampleCoordinate) {
+                    var foundOnscreenCoordinate = false
+                    var firstOnscreenCoordinate = snappedCoordinate.coordinate
+                    for indexedCoordinate in routeShape.coordinates.prefix(through: snappedCoordinate.index).reversed() {
+                        if visibleBoundingBox.contains(indexedCoordinate) {
+                            firstOnscreenCoordinate = indexedCoordinate
+                            foundOnscreenCoordinate = true
+                            break
+                        }
+                    }
+
+                    if foundOnscreenCoordinate {
+                        // We found a point that is both on the route and on-screen
+                        coordinate = firstOnscreenCoordinate
+                    } else {
+                        // we didn't find a previous point that is on-screen so we'll move forward through the coordinates looking for one
+                        for indexedCoordinate in routeShape.coordinates.suffix(from: snappedCoordinate.index) {
+                            if visibleBoundingBox.contains(indexedCoordinate) {
+                                firstOnscreenCoordinate = indexedCoordinate
+                                break
+                            }
+                        }
+                        coordinate = firstOnscreenCoordinate
+                    }
+                }
+            }
+
+            guard let annotationCoordinate = coordinate else { return }
+
+            // form the appropriate text string for the annotation
+            let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
+
+            // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
+            let point = MGLPointFeature()
+            point.coordinate = annotationCoordinate
+
+            var tailPosition = randomTailPosition
+
+            // convert our coordinate to screen space so we can make a choice on which side of the coordinate the label ends up on
+            let unprojectedCoordinate = convert(annotationCoordinate, toPointTo: nil)
+
+            // pick the orientation of the bubble "stem" based on how close to the edge of the screen it is
+            if tailPosition == .left && unprojectedCoordinate.x > bounds.width * 0.75 {
+                tailPosition = .right
+            } else if tailPosition == .right && unprojectedCoordinate.x < bounds.width * 0.25 {
+                tailPosition = .left
+            }
+
+            var imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
+
+            // the selected route uses the colored annotation image
+            if index == 0 {
+                imageName += "-Selected"
+            }
+
+            // set the feature attributes which will be used in styling the symbol style layer
+            point.attributes = ["selected": index == 0, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": imageName, "sortOrder": -index]
+
+            features.append(point)
+        }
+
+        // add the features to the style
+        self.addRouteAnnotationSymbolLayer(features: features)
+    }
+
+    /**
+     Add the MGLSymbolStyleLayer for the route duration annotations.
+     */
+    private func addRouteAnnotationSymbolLayer(features: [MGLPointFeature]) {
+        guard let style = style else { return }
+        let dataSource: MGLShapeSource
+        if let source = style.source(withIdentifier: SourceIdentifier.routeDurationAnnotations) as? MGLShapeSource {
+            dataSource = source
+        } else {
+            dataSource = MGLShapeSource(identifier: SourceIdentifier.routeDurationAnnotations, features: features, options: nil)
+            style.addSource(dataSource)
+        }
+
+        let shapeLayer: MGLSymbolStyleLayer
+
+        if let layer = style.layer(withIdentifier: StyleLayerIdentifier.routeDurationAnnotations) as? MGLSymbolStyleLayer {
+            shapeLayer = layer
+        } else {
+            shapeLayer = MGLSymbolStyleLayer(identifier: StyleLayerIdentifier.routeDurationAnnotations, source: dataSource)
+        }
+
+        shapeLayer.text = NSExpression(forKeyPath: "text")
+        let fontSizeByZoomLevel = [
+            13: NSExpression(forConstantValue: 16),
+            15.5: NSExpression(forConstantValue: 20)
+        ]
+        shapeLayer.textFontSize = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fontSizeByZoomLevel)
+
+        shapeLayer.textColor = NSExpression(forConditional: NSPredicate(format: "selected == true"),
+                                            trueExpression: NSExpression(forConstantValue: routeDurationAnnotationSelectedTextColor),
+                     falseExpression: NSExpression(forConstantValue: routeDurationAnnotationTextColor))
+
+        shapeLayer.textFontNames = NSExpression(forConstantValue: [self.routeDurationAnnotationFontName])
+        shapeLayer.textAllowsOverlap = NSExpression(forConstantValue: true)
+        shapeLayer.textJustification = NSExpression(forConstantValue: "left")
+        shapeLayer.symbolZOrder = NSExpression(forConstantValue: NSValue(mglSymbolZOrder: MGLSymbolZOrder.auto))
+        shapeLayer.symbolSortKey = NSExpression(forConditional: NSPredicate(format: "selected == true"),
+                                                trueExpression: NSExpression(forConstantValue: 1),
+                                                   falseExpression: NSExpression(format: "sortOrder"))
+        shapeLayer.iconAnchor = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
+                                             trueExpression: NSExpression(forConstantValue: "bottom-left"),
+                                                falseExpression: NSExpression(forConstantValue: "bottom-right"))
+        shapeLayer.textAnchor = shapeLayer.iconAnchor
+        shapeLayer.iconTextFit = NSExpression(forConstantValue: "both")
+
+        shapeLayer.iconImageName = NSExpression(forKeyPath: "imageName")
+        shapeLayer.iconOffset = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
+                                             trueExpression: NSExpression(forConstantValue: CGVector(dx: 0.5, dy: -1.0)),
+                      falseExpression: NSExpression(forConstantValue: CGVector(dx: -0.5, dy: -1.0)))
+        shapeLayer.textOffset = shapeLayer.iconOffset
+        shapeLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
+
+        style.addLayer(shapeLayer)
+    }
+
+    /**
+     Removes all visible route duration callouts.
+     */
+    public func removeRouteDurations() {
+        guard let style = style else { return }
+        removeRouteDurationAnnotationsLayerFromStyle(style)
+    }
+
+    /**
+     Remove the underlying style layers and data sources for the route duration annotations.
+     */
+    private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MGLStyle) {
+        if let annotationsLayer = style.layer(withIdentifier: StyleLayerIdentifier.routeDurationAnnotations) {
+            style.removeLayer(annotationsLayer)
+        }
+
+        if let annotationsSource = style.source(withIdentifier: SourceIdentifier.routeDurationAnnotations) {
+            style.removeSource(annotationsSource)
+        }
+    }
+
+    // This function generates the text for the label to be shown on screen. It will include estimated duration and info on Tolls, if applicable
+    private func annotationLabelForRoute(_ route: Route, tolls: Bool) -> String {
+        var eta = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
+
+        let hasTolls = (route.tollIntersections?.count ?? 0) > 0
+        if hasTolls {
+            eta += "\n" + NSLocalizedString("ROUTE_HAS_TOLLS", value: "Tolls", comment: "This route does have tolls")
+            if let symbol = Locale.current.currencySymbol {
+                eta += " " + symbol
+            }
+        } else if tolls {
+            // If one of the routes has tolls, but this one does not then it needs to explicitly say that it has no tolls
+            // If no routes have tolls at all then we can omit this portion of the string.
+            eta += "\n" + NSLocalizedString("ROUTE_HAS_NO_TOLLS", value: "No Tolls", comment: "This route does not have tolls")
+        }
+
+        return eta
     }
     
     public func localizeLabels() {
