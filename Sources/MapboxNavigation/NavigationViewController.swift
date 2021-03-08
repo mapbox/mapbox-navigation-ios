@@ -737,11 +737,56 @@ extension NavigationViewController: NavigationServiceDelegate {
     // MARK: - Building Extrusion Highlighting methods
     
     private func attemptToHighlightBuildings(_ progress: RouteProgress, with location: CLLocation) {
-        // TODO: Implement the ability to highlight building upon arrival.
+        // In case if distance was fully covered - do nothing.
+        // FIXME: This check prevents issue which leads to highlighting random buildings after arrival to final destination.
+        // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
+        if progress.fractionTraveled >= 1.0 { return }
+        if waypointStyle == .annotation { return }
+        guard let mapView = navigationMapView else { return }
+
+        if currentLeg != progress.currentLeg {
+            currentLeg = progress.currentLeg
+            passedApproachingDestinationThreshold = false
+            mapViewController?.suppressAutomaticAltitudeChanges = false
+            foundAllBuildings = false
+            mapView.altitude = mapView.defaultAltitude
+        }
+
+        let altitude = AltitudeForZoomLevel(16.1, mapView.mapView.cameraView.pitch, location.coordinate.latitude, mapView.mapView.frame.size)
+
+        if !passedApproachingDestinationThreshold, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
+            passedApproachingDestinationThreshold = true
+            mapViewController?.suppressAutomaticAltitudeChanges = true
+        }
+
+        // Attempt to decrease altitude so that highlighted building becomes visible.
+        // This is required in cases when:
+        // - Switching from overview to follow mode.
+        // - Previous attempt to decrease altitude failed (happens when highlighted building is within destination
+        // threshold right after starting navigation).
+        // FIXME: When device was rotated to landscape mode altitude should be adjusted so that building is highlighted.
+        if passedApproachingDestinationThreshold, mapView.altitude == mapView.defaultAltitude, altitude < mapView.altitude {
+            mapView.altitude = altitude
+        }
+
+        if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
+            mapView.highlightBuildings(at: [currentLegWaypoint],
+                                       in3D: waypointStyle == .extrudedBuilding ? true : false,
+                                       completion: { (result) -> Void in
+                                        self.foundAllBuildings = result
+                                       })
+        }
     }
-    
+
     private func frameDestinationArrival(for location: CLLocation?) {
-        // TODO: Implement the ability to highlight building upon arrival.
+        if waypointStyle == .annotation { return }
+        guard let mapViewController = self.mapViewController else { return }
+        guard let location = location else { return }
+
+        // Update insets to be able to correctly center map view after presenting end of route view.
+        mapViewController.updateMapViewContentInsets()
+        // Update user course view to correctly place it in map view.
+        self.navigationMapView?.updateCourseTracking(location: location, animated: false)
     }
 }
 
