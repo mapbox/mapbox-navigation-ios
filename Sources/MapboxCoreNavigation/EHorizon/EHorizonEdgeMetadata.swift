@@ -1,23 +1,24 @@
 import Foundation
+import CoreLocation
 import MapboxDirections
 import MapboxNavigationNative
 
 public struct EHorizonEdgeMetadata {
 
     /** The bearing in degrees clockwise at the start of the edge. */
-    public let heading: Double
+    public let heading: CLLocationDegrees
 
     /** The Edge's length in meters. */
-    public let length: Double
+    public let length: CLLocationDistance
 
     /** The edge's functional road class */
     public let functionalRoadClass: MapboxStreetsRoadClass
 
     /** The Edge's max speed (m/s) */
-    public let speedLimit: Double?
+    public let speedLimit: CLLocationSpeed?
 
     /** The Edge's average speed (m/s) */
-    public let speed: Double
+    public let speed: CLLocationSpeed
 
     /** Is the edge a ramp? */
     public let isRamp: Bool
@@ -41,7 +42,7 @@ public struct EHorizonEdgeMetadata {
     public let laneCount: UInt?
 
     /** The edge's mean elevation */
-    public let meanElevation: Double?
+    public let meanElevation: CLLocationDistance?
 
     /** The edge's curvature */
     public let curvature: UInt

@@ -1,10 +1,11 @@
 import Foundation
+import CoreLocation
 import MapboxNavigationNative
 
 public struct EHorizonOptions {
 
     /** The minimum length of the EHorizon ahead of the current position. */
-    public let length: Double
+    public let length: CLLocationDistance
 
     /** The expansion strategy to be used. */
     public let expansion: UInt
@@ -17,9 +18,9 @@ public struct EHorizonOptions {
      * navigation statuses to update electronic horizon (seconds)
      * if null we update electronic horizon on each navigation status
      */
-    public let minTimeDeltaBetweenUpdates: Double?
+    public let minTimeDeltaBetweenUpdates: TimeInterval?
 
-    public init(length: Double, expansion: UInt, branchLength: Double, minTimeDeltaBetweenUpdates: Double?) {
+    public init(length: CLLocationDistance, expansion: UInt, branchLength: Double, minTimeDeltaBetweenUpdates: TimeInterval?) {
         self.length = length
         self.expansion = expansion
         self.branchLength = branchLength
