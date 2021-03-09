@@ -651,7 +651,7 @@ open class NavigationMapView: UIView {
                 let circles = delegate?.navigationMapView(self, waypointCircleLayerWithIdentifier: IdentifierString.waypointCircle, sourceIdentifier: IdentifierString.waypointSource) ?? defaultWaypointCircleLayer()
                 let symbols = delegate?.navigationMapView(self, waypointSymbolLayerWithIdentifier: IdentifierString.waypointSymbol, sourceIdentifier: IdentifierString.waypointSource) ?? defaultWaypointSymbolLayer()
 
-                if let arrows = try? mapView.style.getLayer(with: IdentifierString.arrowCasingSymbol, type: LineLayer.self).get() {
+                if let arrows = try? mapView.style.getLayer(with: IdentifierString.arrowSymbol, type: LineLayer.self).get() {
                     mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: arrows.id))
                 } else {
                     guard let layerIdentifier = identifier(route, identifierType: .route) else { return }
@@ -806,7 +806,7 @@ open class NavigationMapView: UIView {
             arrowSource.data = .feature(Feature(shaftPolyline))
             var arrow = LineLayer(id: IdentifierString.arrow)
             if let _ = try? mapView.style.getSource(identifier: IdentifierString.arrowSource, type: GeoJSONSource.self).get() {
-                let geoJSON = Feature.init(geometry: Geometry.lineString(shaftPolyline))
+                let geoJSON = Feature(shaftPolyline)
                 let _ = mapView.style.updateGeoJSON(for: IdentifierString.arrowSource, with: geoJSON)
             } else {
                 arrow.minZoom = Double(minimumZoomLevel)
@@ -817,18 +817,14 @@ open class NavigationMapView: UIView {
                 
                 mapView.style.addSource(source: arrowSource, identifier: IdentifierString.arrowSource)
                 arrow.source = IdentifierString.arrowSource
-                if let _ = try? mapView.style.getLayer(with: IdentifierString.waypointCircle, type: LineLayer.self).get() {
-                    mapView.style.addLayer(layer: arrow, layerPosition: LayerPosition(above: mainRouteLayerIdentifier, below: IdentifierString.waypointCircle))
-                } else {
-                    mapView.style.addLayer(layer: arrow, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
-                }
+                mapView.style.addLayer(layer: arrow, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
             }
             
             var arrowStrokeSource = GeoJSONSource()
             arrowStrokeSource.data = .feature(Feature(shaftPolyline))
             var arrowStroke = LineLayer(id: IdentifierString.arrowStroke)
             if let _ = try? mapView.style.getSource(identifier: IdentifierString.arrowStrokeSource, type: GeoJSONSource.self).get() {
-                let geoJSON = Feature.init(geometry: Geometry.lineString(shaftPolyline))
+                let geoJSON = Feature(shaftPolyline)
                 let _ = mapView.style.updateGeoJSON(for: IdentifierString.arrowStrokeSource, with: geoJSON)
             } else {
                 arrowStroke.minZoom = arrow.minZoom
