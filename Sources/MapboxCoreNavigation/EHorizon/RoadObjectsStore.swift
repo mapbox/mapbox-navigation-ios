@@ -61,25 +61,6 @@ public class RoadObjectsStore {
         return try! native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIds.map(NSNumber.init))
     }
 
-    /**
-     Adds road object to be tracked in electronic horizon. In case if object with such id already exists updates it.
-     - parameter roadObjectId unique id of object
-     - parameter location road object location (can be obtained using OpenLRDecoder)
-     */
-    public func addCustomRoadObject(for roadObjectId: RoadObjectId, location: OpenLRLocation) {
-        #warning("Custom road objects not yet implemented.")
-        preconditionFailure("Custom road objects not yet implemented.")
-//        native.addCustomRoadObject(forId: roadObjectId, location: <#T##OpenLRLocation#>)
-    }
-
-    /**
-     Removes road object(i.e. stops tracking it in electronic horizon)
-     - parameter roadObjectId of road object
-     */
-    public func removeCustomRoadObject(for roadObjectId: RoadObjectId) {
-        try! native.removeCustomRoadObject(forId: roadObjectId)
-    }
-
     public var peer: MBXPeerWrapper?
 
     init(_ native: MapboxNavigationNative.RoadObjectsStore) {

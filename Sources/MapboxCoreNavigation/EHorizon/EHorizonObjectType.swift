@@ -7,7 +7,7 @@ public enum EHorizonObjectType {
     case incident
 
     /** Road object represents some toll collection point */
-    case tollCollectionPoint
+    case tollCollection
 
     /** Road object represents some border crossing */
     case borderCrossing
@@ -33,15 +33,15 @@ public enum EHorizonObjectType {
     /** Road object represents some bridge exit */
     case bridgeExit
 
-    /** Road object was added by user(via `RoadObjectsStore.addCustomRoadObject`) */
-    case custom
+    /** Reserved for future use. */
+    case userDefined
 
     init(_ native: RoadObjectType) {
         switch native {
         case .incident:
             self = .incident
         case .tollCollectionPoint:
-            self = .tollCollectionPoint
+            self = .tollCollection
         case .borderCrossing:
             self = .borderCrossing
         case .tunnelEntrance:
@@ -59,7 +59,7 @@ public enum EHorizonObjectType {
         case .bridgeExit:
             self = .bridgeExit
         case .custom:
-            self = .custom
+            self = .userDefined
         }
     }
 }

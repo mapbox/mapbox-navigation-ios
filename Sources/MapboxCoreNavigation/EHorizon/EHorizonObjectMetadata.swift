@@ -57,7 +57,7 @@ public enum EHorizonObjectMetadata {
     /// Bridge exit
     case bridgeExit
     
-    /// Object was added by the application using the `RoadObjectsStore.addCustomRoadObject(for:location:)` method.
+    /// Reserved for future use.
     case userDefined
 
     init(_ native: RoadObjectMetadata) {
