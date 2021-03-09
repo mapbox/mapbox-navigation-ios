@@ -67,6 +67,8 @@ public class RoadObjectsStore {
      - parameter location road object location (can be obtained using OpenLRDecoder)
      */
     public func addCustomRoadObject(for roadObjectId: RoadObjectId, location: OpenLRLocation) {
+        #warning("Custom road objects not yet implemented.")
+        preconditionFailure("Custom road objects not yet implemented.")
 //        native.addCustomRoadObject(forId: roadObjectId, location: <#T##OpenLRLocation#>)
     }
 
