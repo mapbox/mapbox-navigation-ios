@@ -1,4 +1,5 @@
 import Foundation
+import MapboxDirections
 import MapboxNavigationNative
 
 public struct EHorizonEdgeMetadata {
@@ -10,7 +11,7 @@ public struct EHorizonEdgeMetadata {
     public let length: Double
 
     /** The edge's functional road class */
-    public let functionalRoadClass: RoadClass
+    public let functionalRoadClass: MapboxStreetsRoadClass
 
     /** The Edge's max speed (m/s) */
     public let speedLimit: Double?
@@ -54,7 +55,7 @@ public struct EHorizonEdgeMetadata {
     init(_ native: EdgeMetadata) {
         self.heading = native.heading
         self.length = native.length
-        self.functionalRoadClass = RoadClass(native.frc)
+        self.functionalRoadClass = MapboxStreetsRoadClass(native.frc)
         self.speedLimit = native.speedLimit as? Double
         self.speed = native.speed
         self.isRamp = native.isRamp
