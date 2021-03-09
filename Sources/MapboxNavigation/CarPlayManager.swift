@@ -391,7 +391,7 @@ extension CarPlayManager {
     }
     
     internal func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
-        directions.calculate(options, completionHandler: completionHandler)
+        directions.calculateWithCache(options: options, completionHandler: completionHandler)
     }
     
     internal func didCalculate(_ result: Result<RouteResponse, DirectionsError>,in session: Directions.Session, for routeOptions: RouteOptions, completionHandler: CompletionHandler) {

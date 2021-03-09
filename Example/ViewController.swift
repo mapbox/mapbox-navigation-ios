@@ -405,7 +405,7 @@ class ViewController: UIViewController {
     }
 
     func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
-        Directions.shared.calculate(options) { (session, result) in
+        Directions.shared.calculateWithCache(options: options) { (session, result) in
             switch result {
             case let .success(response):
                 success(response)
