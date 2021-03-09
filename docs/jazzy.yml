@@ -61,7 +61,6 @@ custom_categories:
     children:
       - NavigationMapView
       - NavigationMapViewDelegate
-      - NavigationMapViewCourseTrackingDelegate
       - MGLMapView
       - MGLAccountManager
       - MGLMultiPolygonFeature

@@ -100,35 +100,3 @@ public extension NavigationMapViewDelegate {
         return .zero
     }
 }
-
-// MARK: - NavigationMapViewCourseTrackingDelegate methods
-
-/**
- The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
- */
-public protocol NavigationMapViewCourseTrackingDelegate: class, UnimplementedLogging {
-    /**
-     Tells the receiver that the map is now tracking the user course.
-     - seealso: NavigationMapView.tracksUserCourse
-     - parameter mapView: The NavigationMapView.
-     */
-    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
-    
-    /**
-     Tells the receiver that `tracksUserCourse` was set to false, signifying that the map is no longer tracking the user course.
-     - seealso: NavigationMapView.tracksUserCourse
-     - parameter mapView: The NavigationMapView.
-     */
-    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
-}
-
-public extension NavigationMapViewCourseTrackingDelegate {
-    
-    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
-        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
-    }
-    
-    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
-        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
-    }
-}
