@@ -518,9 +518,9 @@ open class NavigationMapView: UIView {
             var parentLayer: String? = nil
             let identifiers = [
                 IdentifierString.arrow,
-                IdentifierString.arrowStroke,
-                IdentifierString.arrowCasingSymbol,
                 IdentifierString.arrowSymbol,
+                IdentifierString.arrowCasingSymbol,
+                IdentifierString.arrowStroke,
                 IdentifierString.waypointCircle
             ]
             
