@@ -4,10 +4,16 @@ import MapboxNavigation
 import MapboxDirections
 import MapboxMaps
 
-// FIXME: Currently if `MapView` is created using storyboard crash occurs.
 class CustomViewController: UIViewController {
     
+    var destinationAnnotation: PointAnnotation! {
+        didSet {
+            navigationMapView.mapView.annotationManager.addAnnotation(destinationAnnotation)
+        }
+    }
+    
     var navigationService: NavigationService!
+    
     var simulateLocation = false
 
     var userIndexedRoute: IndexedRoute?
@@ -50,8 +56,6 @@ class CustomViewController: UIViewController {
 
         // Start navigation
         navigationService.start()
-        
-        // TODO: Center map on user.
         
         navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
@@ -121,7 +125,7 @@ class CustomViewController: UIViewController {
     }
     
     @IBAction func recenterMap(_ sender: Any) {
-        // TODO: Recenter map.
+        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
     }
     
     @IBAction func showFeedback(_ sender: Any) {

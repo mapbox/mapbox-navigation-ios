@@ -290,11 +290,16 @@ class ViewController: UIViewController {
 
         customViewController.userIndexedRoute = (route, 0)
         customViewController.userRouteOptions = routeOptions
-
-        // TODO: Add the ability to show destination annotation.
         customViewController.simulateLocation = simulationButton.isSelected
+        
+        passiveLocationDataSource?.systemLocationManager.stopUpdatingLocation()
 
-        present(customViewController, animated: true, completion: nil)
+        present(customViewController, animated: true) {
+            if let destinationCoordinate = route.shape?.coordinates.last {
+                let destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
+                customViewController.destinationAnnotation = destinationAnnotation
+            }
+        }
     }
 
     func startStyledNavigation() {
@@ -341,11 +346,6 @@ class ViewController: UIViewController {
         let gestureLocation = gesture.location(in: navigationMapView)
         let destinationCoordinate = navigationMapView.mapView.coordinate(for: gestureLocation,
                                                                          in: navigationMapView)
-        
-        // TODO: Implement ability to get last annotation.
-        // if let annotation = navigationMapView.annotations?.last, waypoints.count > 2 {
-        //     mapView.removeAnnotation(annotation)
-        // }
         
         if waypoints.count > 1 {
             waypoints = Array(waypoints.dropFirst())
