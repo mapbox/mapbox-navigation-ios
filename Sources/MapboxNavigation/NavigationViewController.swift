@@ -769,13 +769,10 @@ extension NavigationViewController: NavigationServiceDelegate {
 
     private func frameDestinationArrival(for location: CLLocation?) {
         if waypointStyle == .annotation { return }
-        guard let mapViewController = self.mapViewController else { return }
         guard let location = location else { return }
-
-        // Update insets to be able to correctly center map view after presenting end of route view.
-        mapViewController.updateMapViewContentInsets()
+        
         // Update user course view to correctly place it in map view.
-        self.navigationMapView?.updateCourseTracking(location: location, animated: false)
+        self.navigationMapView?.updateUserCourseView(location)
     }
 }
 
