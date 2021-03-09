@@ -408,12 +408,19 @@ open class RouteController: NSObject {
     public func locationHistory() throws -> Data {
         return try Navigator.shared.history()
     }
-
+    
     /**
-     Sets electronic horizon options. Pass `nil` to reset to defaults.
+     A custom configuration for electronic horizon observations.
+     
+     Set this property to `nil` to use the default configuration.
      */
-    public func set(electronicHorizonOptions: EHorizonOptions?) {
-        try! navigator.setElectronicHorizonOptionsFor(electronicHorizonOptions?.nativeOptions)
+    public var electronicHorizonOptions: EHorizonOptions? {
+        get {
+            Navigator.shared.electronicHorizonOptions
+        }
+        set {
+            Navigator.shared.electronicHorizonOptions = newValue
+        }
     }
     
     public var graphAccessor: GraphAccessor {

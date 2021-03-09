@@ -101,4 +101,10 @@ class Navigator {
     private init() {
         
     }
+    
+    var electronicHorizonOptions: EHorizonOptions? {
+        didSet {
+            try! navigator.setElectronicHorizonOptionsFor(electronicHorizonOptions?.nativeOptions)
+        }
+    }
 }
