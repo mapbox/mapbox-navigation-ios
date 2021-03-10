@@ -1,6 +1,7 @@
 import Foundation
 import MapboxNavigationNative
 
+/// Identifies a road object in an electronic horizon.
 public typealias RoadObjectIdentifier = String
 
 public class RoadObjectsStore {
@@ -20,7 +21,7 @@ public class RoadObjectsStore {
      which are lying on the edge with given identifier.
      - parameter edgeIdentifier: The identifier of the edge to query.
      */
-    public func getRoadObjects(for edgeIdentifier: UInt) -> [RoadObjectIdentifier : EHorizonObjectEdgeLocation] {
+    public func getRoadObjects(edgeIdentifier: EHorizonEdge.Identifier) -> [RoadObjectIdentifier : EHorizonObjectEdgeLocation] {
         let objects = try! native.getForEdgeId(UInt64(edgeIdentifier))
         return Dictionary(
             uniqueKeysWithValues:objects.map { identifier, location in (identifier, EHorizonObjectEdgeLocation(location)) }
@@ -57,7 +58,7 @@ public class RoadObjectsStore {
      Returns list of road object ids which are (partially) belong to `edgeIds`.
      - parameter edgeIds list of edge ids
      */
-    public func getRoadObjectIdentifiers(edgeIdentifiers: [UInt]) -> [RoadObjectIdentifier] {
+    public func getRoadObjectIdentifiers(edgeIdentifiers: [EHorizonEdge.Identifier]) -> [RoadObjectIdentifier] {
         return try! native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))
     }
 

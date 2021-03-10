@@ -4,7 +4,7 @@ import MapboxNavigationNative
 public struct EHorizonObjectEnterExitInfo {
 
     /** Road object identifier */
-    public let roadObjectIdentifier: String
+    public let roadObjectIdentifier: RoadObjectIdentifier
 
     /**
      If object was entered via it's start for `onRoadObjectEnter`

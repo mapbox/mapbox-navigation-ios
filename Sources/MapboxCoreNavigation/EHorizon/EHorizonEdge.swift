@@ -2,9 +2,11 @@ import Foundation
 import MapboxNavigationNative
 
 public struct EHorizonEdge {
+    /** Unique identifier of a directed edge */
+    public typealias Identifier = UInt
 
     /** Unique identifier of the directed edge */
-    public let identifier: UInt
+    public let identifier: Identifier
 
     /**
      The level of the Edge (0 being the mpp, 1 branches of the mpp,

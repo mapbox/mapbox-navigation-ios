@@ -5,7 +5,7 @@ import MapboxNavigationNative
 public struct EHorizonGraphPosition {
 
     /** Edge identifier in road graph */
-    public let edgeIdentifier: UInt
+    public let edgeIdentifier: EHorizonEdge.Identifier
 
     /** Percent along edge shape (0-1) */
     public let percentAlong: Double
