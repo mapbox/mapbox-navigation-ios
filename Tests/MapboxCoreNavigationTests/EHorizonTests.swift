@@ -28,7 +28,7 @@ extension EHorizonTests: ElectronicHorizonDelegate {
         _ = passiveLocationDataSource.roadGraph.edgeShape(edgeIdentifier: graphPosition.edgeIdentifier)
     }
 
-    func didEnterObject(_ objectEnterExitInfo: RoadObjectTransition) {}
+    func didEnterRoadObject(_ objectEnterExitInfo: RoadObjectTransition) {}
 
     func didExitRoadObject(_ objectEnterExitInfo: RoadObjectTransition) {}
 }

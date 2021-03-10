@@ -512,7 +512,7 @@ extension RouteController: ElectronicHorizonObserver {
     }
 
     public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.didEnterObject(RoadObjectTransition(info))
+        electronicHorizonDelegate?.didEnterRoadObject(RoadObjectTransition(info))
     }
 
     public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {

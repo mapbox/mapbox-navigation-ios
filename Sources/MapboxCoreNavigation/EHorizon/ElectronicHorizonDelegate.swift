@@ -16,7 +16,7 @@ public protocol ElectronicHorizonDelegate: class {
      - parameter info: Contains info related to the object
      */
 
-    func didEnterObject(_ objectEnterExitInfo: RoadObjectTransition)
+    func didEnterRoadObject(_ objectEnterExitInfo: RoadObjectTransition)
 
     /**
      Called when exit from line-like (i.e. which has length != null) road object was detected
