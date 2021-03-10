@@ -20,26 +20,6 @@ extension ViewController {
         subscribeForFreeDriveNotifications()
     }
     
-    func setupFreeDriveStyledFeatures() {
-        trackStyledFeature = StyledFeature(sourceIdentifier: "trackSourceIdentifier",
-                                           layerIdentifier: "trackLayerIdentifier",
-                                           color: .darkGray,
-                                           lineWidth: 3.0,
-                                           lineString: LineString([]))
-        
-        rawTrackStyledFeature = StyledFeature(sourceIdentifier: "rawTrackSourceIdentifier",
-                                              layerIdentifier: "rawTrackLayerIdentifier",
-                                              color: .lightGray,
-                                              lineWidth: 3.0,
-                                              lineString: LineString([]))
-        
-        navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
-            guard let self = self else { return }
-            self.addStyledFeature(self.trackStyledFeature)
-            self.addStyledFeature(self.rawTrackStyledFeature)
-        })
-    }
-    
     func subscribeForFreeDriveNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didUpdatePassiveLocation),
@@ -73,6 +53,26 @@ extension ViewController {
         speedLimitView.speedLimit = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
         
         updateFreeDriveStyledFeatures()
+    }
+    
+    func setupFreeDriveStyledFeatures() {
+        trackStyledFeature = StyledFeature(sourceIdentifier: "trackSourceIdentifier",
+                                           layerIdentifier: "trackLayerIdentifier",
+                                           color: .darkGray,
+                                           lineWidth: 3.0,
+                                           lineString: LineString([]))
+        
+        rawTrackStyledFeature = StyledFeature(sourceIdentifier: "rawTrackSourceIdentifier",
+                                              layerIdentifier: "rawTrackLayerIdentifier",
+                                              color: .lightGray,
+                                              lineWidth: 3.0,
+                                              lineString: LineString([]))
+        
+        navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.addStyledFeature(self.trackStyledFeature)
+            self.addStyledFeature(self.rawTrackStyledFeature)
+        })
     }
     
     func updateFreeDriveStyledFeatures() {
