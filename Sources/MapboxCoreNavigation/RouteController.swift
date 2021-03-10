@@ -505,10 +505,8 @@ extension RouteController: InternalRouter { }
 
 extension RouteController: ElectronicHorizonObserver {
     public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
-        electronicHorizonDelegate?.didUpdatePosition(
-            ElectronicHorizon.Position(position),
-            distances: Dictionary(uniqueKeysWithValues:distances.map { key, value in (key, RoadObjectDistanceInfo(value)) })
-        )
+        electronicHorizonDelegate?.didUpdatePosition(ElectronicHorizon.Position(position),
+                                                     distances: distances.mapValues(RoadObjectDistanceInfo.init))
     }
 
     public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {

@@ -26,9 +26,7 @@ public final class RoadObjectsStore {
      */
     public func roadObjectEdgeLocations(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> [RoadObjectIdentifier : RoadObjectEdgeLocation] {
         let objects = try! native.getForEdgeId(UInt64(edgeIdentifier))
-        return Dictionary(
-            uniqueKeysWithValues:objects.map { identifier, location in (identifier, RoadObjectEdgeLocation(location)) }
-        )
+        return objects.mapValues(RoadObjectEdgeLocation.init)
     }
 
     /**
