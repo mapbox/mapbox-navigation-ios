@@ -732,31 +732,9 @@ extension NavigationViewController: NavigationServiceDelegate {
         if progress.fractionTraveled >= 1.0 { return }
         if waypointStyle == .annotation { return }
         guard let mapView = navigationMapView else { return }
-
-        if currentLeg != progress.currentLeg {
-            currentLeg = progress.currentLeg
-            passedApproachingDestinationThreshold = false
-            mapViewController?.suppressAutomaticAltitudeChanges = false
-            foundAllBuildings = false
-            mapView.altitude = mapView.defaultAltitude
-        }
-
-        let altitude = AltitudeForZoomLevel(16.1, mapView.mapView.cameraView.pitch, location.coordinate.latitude, mapView.mapView.frame.size)
-
-        if !passedApproachingDestinationThreshold, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
-            passedApproachingDestinationThreshold = true
-            mapViewController?.suppressAutomaticAltitudeChanges = true
-        }
-
-        // Attempt to decrease altitude so that highlighted building becomes visible.
-        // This is required in cases when:
-        // - Switching from overview to follow mode.
-        // - Previous attempt to decrease altitude failed (happens when highlighted building is within destination
-        // threshold right after starting navigation).
-        // FIXME: When device was rotated to landscape mode altitude should be adjusted so that building is highlighted.
-        if passedApproachingDestinationThreshold, mapView.altitude == mapView.defaultAltitude, altitude < mapView.altitude {
-            mapView.altitude = altitude
-        }
+        
+        // TODO: Altitude should be automatically adjusted by `NavigationViewportDataSource`
+        // to be able to highlight buildings.
 
         if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
             mapView.highlightBuildings(at: [currentLegWaypoint],

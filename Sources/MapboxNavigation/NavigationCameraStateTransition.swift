@@ -13,23 +13,27 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         mapView.addSubview(cameraView)
     }
     
-    public func transitionToFollowing(_ cameraOptions: CameraOptions, completion: ((Bool) -> Void)? = nil) {
+    public func transitionToFollowing(_ cameraOptions: CameraOptions, completion: (() -> Void)? = nil) {
         // TODO: Replace with specific set of animations.
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
                                          duration: 1.0,
-                                         completion: completion)
+                                         completion: { _ in
+                                            completion?()
+                                         })
     }
 
-    public func transitionToOverview(_ cameraOptions: CameraOptions, completion: ((Bool) -> Void)? = nil) {
+    public func transitionToOverview(_ cameraOptions: CameraOptions, completion: (() -> Void)? = nil) {
         // TODO: Replace with specific set of animations.
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
                                          duration: 1.0,
-                                         completion: completion)
+                                         completion: { _ in
+                                            completion?()
+                                         })
     }
 
-    public func updateForFollowing(_ cameraOptions: CameraOptions, completion: ((Bool) -> Void)? = nil) {
+    public func updateForFollowing(_ cameraOptions: CameraOptions, completion: (() -> Void)? = nil) {
         // TODO: Replace with specific set of animations.
         let numberOfAnimators = 4
         var animatorsComplete = 0
@@ -43,7 +47,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             animatorsComplete += 1
             if animatorsComplete == numberOfAnimators {
                 self.cameraView.isActive = false
-                completion?(true)
+                completion?()
             }
         }
         
@@ -102,11 +106,17 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         animatorPitch?.startAnimation(afterDelay: 0.0)
     }
 
-    public func updateForOverview(_ cameraOptions: CameraOptions, completion: ((Bool) -> Void)? = nil) {
+    public func updateForOverview(_ cameraOptions: CameraOptions, completion: (() -> Void)? = nil) {
         // TODO: Replace with specific set of animations.
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
                                          duration: 1.0,
-                                         completion: completion)
+                                         completion: { _ in
+                                            completion?()
+                                         })
+    }
+    
+    public func cancelPendingTransition() {
+        mapView?.cameraManager.cancelTransitions()
     }
 }

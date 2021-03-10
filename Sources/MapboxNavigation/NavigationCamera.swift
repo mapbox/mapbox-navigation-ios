@@ -46,9 +46,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
     // MARK: - ViewportDataSourceDelegate methods
     
-    public func viewportDataSource(_ dataSource: ViewportDataSource, didUpdate cameraOptions: [String : CameraOptions]) {
-        NSLog("[NavigationCamera] Current camera state: \(navigationCameraState)")
-        
+    public func viewportDataSource(_ dataSource: ViewportDataSource, didUpdate cameraOptions: [String: CameraOptions]) {
         switch navigationCameraState {
         case .following:
             switch navigationCameraType {
@@ -99,7 +97,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
                 cameraOptions = viewportDataSource.followingHeadUnitCamera
             }
             
-            cameraStateTransition.transitionToFollowing(cameraOptions) { _ in
+            cameraStateTransition.transitionToFollowing(cameraOptions) { 
                 self.navigationCameraState = .following
             }
             
@@ -123,7 +121,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
                 cameraOptions = viewportDataSource.overviewHeadUnitCamera
             }
             
-            cameraStateTransition.transitionToOverview(cameraOptions) { _ in
+            cameraStateTransition.transitionToOverview(cameraOptions) { 
                 self.navigationCameraState = .overview
             }
             
@@ -132,10 +130,9 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     }
     
     @objc public func requestNavigationCameraToIdle() {
-        NSLog("[NavigationCamera] Requesting NavigationCamera to move to idle state.")
         if navigationCameraState == .idle { return }
         
-        // TODO: Cancel all pending animations.
+        cameraStateTransition.cancelPendingTransition()
         
         navigationCameraState = .idle
     }

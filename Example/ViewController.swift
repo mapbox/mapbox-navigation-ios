@@ -258,7 +258,7 @@ class ViewController: UIViewController {
         let navigationViewController = self.navigationViewController(navigationService: service)
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
-        navigationViewController.routeLineTracksTraversal = false
+        navigationViewController.routeLineTracksTraversal = true
         
         // Example of building highlighting in 3D.
         navigationViewController.waypointStyle = .extrudedBuilding
@@ -273,7 +273,7 @@ class ViewController: UIViewController {
         // `NavigationCamera` behavior.
         if let mapView = navigationViewController.navigationMapView?.mapView {
             let customViewportDataSource = NavigationViewportDataSource(mapView)
-            customViewportDataSource.altitude = 100.0
+            customViewportDataSource.altitude = 800.0
             navigationViewController.navigationMapView?.navigationCamera.viewportDataSource = customViewportDataSource
             
             let customCameraStateTransition = CustomCameraStateTransition(mapView)
