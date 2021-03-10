@@ -7,11 +7,15 @@ public struct EHorizonOptions {
     /** The minimum length of the EHorizon ahead of the current position. */
     public let length: CLLocationDistance
 
-    /** The expansion strategy to be used. */
-    public let expansion: UInt
+    /**
+     The number of levels of branches by which to expand the horizon.
+     
+     A value of 0 results in only the most probable path (MPP). A value of 1 adds paths branching out directly from the MPP, a value of 2 adds paths branching out from those paths, and so on. Only 0, 1, and 2 are usable in terms of performance.
+     */
+    public let expansionLevel: UInt
 
-    /** The expansion strategy to be used. */
-    public let branchLength: Double
+    /** Minimum length of side branches. */
+    public let branchLength: CLLocationDistance
 
     /**
      * minimum time which should pass between consecutive
@@ -22,7 +26,7 @@ public struct EHorizonOptions {
 
     public init(length: CLLocationDistance, expansion: UInt, branchLength: Double, minTimeDeltaBetweenUpdates: TimeInterval?) {
         self.length = length
-        self.expansion = expansion
+        self.expansionLevel = expansion
         self.branchLength = branchLength
         self.minimumTimeIntervalBetweenUpdates = minTimeDeltaBetweenUpdates
     }
@@ -30,7 +34,7 @@ public struct EHorizonOptions {
     var nativeOptions: ElectronicHorizonOptions {
         return ElectronicHorizonOptions(
             length: length,
-            expansion: UInt8(expansion),
+            expansion: UInt8(expansionLevel),
             branchLength: branchLength,
             doNotRecalculateInUncertainState: true,
             minTimeDeltaBetweenUpdates: minimumTimeIntervalBetweenUpdates as NSNumber?
