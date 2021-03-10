@@ -9,7 +9,7 @@ public final class GraphAccessor {
      Returns Graph Edge meta-information for the given GraphId of the edge.
      If edge with given edgeIdentifier is not accessible, returns `nil`
      */
-    public func getEdgeMetadata(for edgeIdentifier: EHorizonEdge.Identifier) -> EHorizonEdgeMetadata? {
+    public func edgeMetadata(edgeIdentifier: EHorizonEdge.Identifier) -> EHorizonEdgeMetadata? {
         if let edgeMetadata = try! native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)) {
             return EHorizonEdgeMetadata(edgeMetadata)
         }
@@ -20,7 +20,7 @@ public final class GraphAccessor {
      Returns Graph Edge geometry for the given GraphId of the edge.
      If edge with given edgeIdentifier is not accessible, returns `nil`
      */
-    public func getEdgeShape(for edgeIdentifier: EHorizonEdge.Identifier) -> [CLLocation]? {
+    public func edgeShape(edgeIdentifier: EHorizonEdge.Identifier) -> [CLLocation]? {
         return try! native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier))
     }
 

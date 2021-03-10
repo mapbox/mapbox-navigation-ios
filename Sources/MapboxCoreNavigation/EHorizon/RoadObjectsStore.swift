@@ -21,7 +21,7 @@ public class RoadObjectsStore {
      which are lying on the edge with given identifier.
      - parameter edgeIdentifier: The identifier of the edge to query.
      */
-    public func getRoadObjects(edgeIdentifier: EHorizonEdge.Identifier) -> [RoadObjectIdentifier : EHorizonObjectEdgeLocation] {
+    public func roadObjectEdgeLocations(edgeIdentifier: EHorizonEdge.Identifier) -> [RoadObjectIdentifier : EHorizonObjectEdgeLocation] {
         let objects = try! native.getForEdgeId(UInt64(edgeIdentifier))
         return Dictionary(
             uniqueKeysWithValues:objects.map { identifier, location in (identifier, EHorizonObjectEdgeLocation(location)) }
@@ -34,7 +34,7 @@ public class RoadObjectsStore {
      even if we know that we have object with such identifier based on previous calls.
      - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
-    public func getRoadObjectMetadata(for roadObjectIdentifier: RoadObjectIdentifier) -> EHorizonObjectMetadata? {
+    public func roadObjectMetadata(identifier roadObjectIdentifier: RoadObjectIdentifier) -> EHorizonObjectMetadata? {
         if let metadata = try! native.getRoadObjectMetadata(forRoadObjectId: roadObjectIdentifier) {
             return EHorizonObjectMetadata(metadata)
         }
@@ -47,7 +47,7 @@ public class RoadObjectsStore {
      even if we know that we have object with such identifier based on previous calls.
      - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
-    public func getRoadObjectLocation(for roadObjectIdentifier: RoadObjectIdentifier) -> EHorizonObjectLocation? {
+    public func roadObjectLocation(identifier roadObjectIdentifier: RoadObjectIdentifier) -> EHorizonObjectLocation? {
         if let location = try! native.getRoadObjectLocation(forRoadObjectId: roadObjectIdentifier) {
             return EHorizonObjectLocation(location)
         }
@@ -58,7 +58,7 @@ public class RoadObjectsStore {
      Returns list of road object ids which are (partially) belong to `edgeIds`.
      - parameter edgeIds list of edge ids
      */
-    public func getRoadObjectIdentifiers(edgeIdentifiers: [EHorizonEdge.Identifier]) -> [RoadObjectIdentifier] {
+    public func roadObjectIdentifiers(edgeIdentifiers: [EHorizonEdge.Identifier]) -> [RoadObjectIdentifier] {
         return try! native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))
     }
 
