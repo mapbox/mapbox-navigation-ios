@@ -47,11 +47,11 @@ public struct EHorizonEdgeMetadata {
     /** The edge's curvature */
     public let curvature: UInt
 
-    /** The edge's country code (ISO-3 format) */
+    /** The edge's country code (ISO 3166-1 alpha-3 format) */
     public let countryCode: String?
 
-    /** The edge's state code */
-    public let stateCode: String?
+    /** The edge's region code (ISO 3166-2 format) */
+    public let regionCode: String?
 
     init(_ native: EdgeMetadata) {
         self.heading = native.heading
@@ -69,6 +69,6 @@ public struct EHorizonEdgeMetadata {
         self.meanElevation = native.meanElevation as? Double
         self.curvature = UInt(native.curvature)
         self.countryCode = native.countryCode
-        self.stateCode = native.stateCode
+        self.regionCode = native.stateCode
     }
 }
