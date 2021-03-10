@@ -24,9 +24,9 @@ public struct ElectronicHorizonOptions {
      */
     public let minimumTimeIntervalBetweenUpdates: TimeInterval?
 
-    public init(length: CLLocationDistance, expansion: UInt, branchLength: Double, minTimeDeltaBetweenUpdates: TimeInterval?) {
+    public init(length: CLLocationDistance, expansionLevel: UInt, branchLength: CLLocationDistance, minTimeDeltaBetweenUpdates: TimeInterval?) {
         self.length = length
-        self.expansionLevel = expansion
+        self.expansionLevel = expansionLevel
         self.branchLength = branchLength
         self.minimumTimeIntervalBetweenUpdates = minTimeDeltaBetweenUpdates
     }
