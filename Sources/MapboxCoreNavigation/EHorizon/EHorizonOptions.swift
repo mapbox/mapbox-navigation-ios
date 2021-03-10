@@ -30,14 +30,16 @@ public struct EHorizonOptions {
         self.branchLength = branchLength
         self.minimumTimeIntervalBetweenUpdates = minTimeDeltaBetweenUpdates
     }
+}
 
-    var nativeOptions: ElectronicHorizonOptions {
-        return ElectronicHorizonOptions(
-            length: length,
-            expansion: UInt8(expansionLevel),
-            branchLength: branchLength,
+extension ElectronicHorizonOptions {
+    convenience init(_ options: EHorizonOptions) {
+        self.init(
+            length: options.length,
+            expansion: UInt8(options.expansionLevel),
+            branchLength: options.branchLength,
             doNotRecalculateInUncertainState: true,
-            minTimeDeltaBetweenUpdates: minimumTimeIntervalBetweenUpdates as NSNumber?
+            minTimeDeltaBetweenUpdates: options.minimumTimeIntervalBetweenUpdates as NSNumber?
         )
     }
 }

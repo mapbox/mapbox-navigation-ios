@@ -104,7 +104,13 @@ class Navigator {
     
     var electronicHorizonOptions: EHorizonOptions? {
         didSet {
-            try! navigator.setElectronicHorizonOptionsFor(electronicHorizonOptions?.nativeOptions)
+            let nativeOptions: ElectronicHorizonOptions?
+            if let electronicHorizonOptions = electronicHorizonOptions {
+                nativeOptions = ElectronicHorizonOptions(electronicHorizonOptions)
+            } else {
+                nativeOptions = nil
+            }
+            try! navigator.setElectronicHorizonOptionsFor(nativeOptions)
         }
     }
 }
