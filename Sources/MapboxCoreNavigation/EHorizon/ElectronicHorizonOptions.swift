@@ -2,9 +2,9 @@ import Foundation
 import CoreLocation
 import MapboxNavigationNative
 
-public struct EHorizonOptions {
+public struct ElectronicHorizonOptions {
 
-    /** The minimum length of the EHorizon ahead of the current position. */
+    /** The minimum length of the ElectronicHorizon ahead of the current position. */
     public let length: CLLocationDistance
 
     /**
@@ -32,8 +32,8 @@ public struct EHorizonOptions {
     }
 }
 
-extension ElectronicHorizonOptions {
-    convenience init(_ options: EHorizonOptions) {
+extension MapboxNavigationNative.ElectronicHorizonOptions {
+    convenience init(_ options: ElectronicHorizonOptions) {
         self.init(
             length: options.length,
             expansion: UInt8(options.expansionLevel),

@@ -1,7 +1,7 @@
 import Foundation
 import MapboxNavigationNative
 
-public struct EHorizonObjectEnterExitInfo {
+public struct RoadObjectTransition {
 
     /** Road object identifier */
     public let roadObjectIdentifier: RoadObjectIdentifier
@@ -13,11 +13,11 @@ public struct EHorizonObjectEnterExitInfo {
     public let isEnterFromStartOrExitFromEnd: Bool
 
     /** Type of road object */
-    public let type: EHorizonObjectType
+    public let type: RoadObjectType
 
     init(_ native: RoadObjectEnterExitInfo) {
         self.roadObjectIdentifier = native.roadObjectId
         self.isEnterFromStartOrExitFromEnd = native.isEnterFromStartOrExitFromEnd
-        self.type = EHorizonObjectType(native.type)
+        self.type = RoadObjectType(native.type)
     }
 }

@@ -2,7 +2,7 @@ import Foundation
 import MapboxDirections
 import MapboxNavigationNative
 
-public enum EHorizonObjectMetadata {
+public enum RoadObjectMetadata {
     /**
      Incident.
      
@@ -60,7 +60,7 @@ public enum EHorizonObjectMetadata {
     /// Reserved for future use.
     case userDefined
 
-    init(_ native: RoadObjectMetadata) {
+    init(_ native: MapboxNavigationNative.RoadObjectMetadata) {
         switch native.type {
         case .incident:
             self = .incident(native.incident != nil ? Incident(native.incident!) : nil)

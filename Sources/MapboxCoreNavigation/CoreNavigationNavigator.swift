@@ -39,7 +39,7 @@ class Navigator {
     
     var cacheHandle: CacheHandle!
     
-    var graphAccessor: GraphAccessor!
+    var roadGraph: RoadGraph!
     
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
@@ -85,7 +85,7 @@ class Navigator {
                                                        runLoop: runloopExecutor,
                                                        historyRecorder: instance.historyRecorder)
         
-        instance.graphAccessor = GraphAccessor(try! MapboxNavigationNative.GraphAccessor(cache: instance.cacheHandle))
+        instance.roadGraph = RoadGraph(try! MapboxNavigationNative.GraphAccessor(cache: instance.cacheHandle))
         
         instance.navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
                                                                    runLoopExecutor: runloopExecutor,
@@ -102,11 +102,11 @@ class Navigator {
         
     }
     
-    var electronicHorizonOptions: EHorizonOptions? {
+    var electronicHorizonOptions: ElectronicHorizonOptions? {
         didSet {
-            let nativeOptions: ElectronicHorizonOptions?
+            let nativeOptions: MapboxNavigationNative.ElectronicHorizonOptions?
             if let electronicHorizonOptions = electronicHorizonOptions {
-                nativeOptions = ElectronicHorizonOptions(electronicHorizonOptions)
+                nativeOptions = MapboxNavigationNative.ElectronicHorizonOptions(electronicHorizonOptions)
             } else {
                 nativeOptions = nil
             }

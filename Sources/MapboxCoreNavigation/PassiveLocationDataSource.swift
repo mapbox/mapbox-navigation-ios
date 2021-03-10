@@ -57,7 +57,7 @@ open class PassiveLocationDataSource: NSObject {
     /**
      Delegate for Electronic Horizon updates.
      */
-    public weak var electronicHorizonDelegate: EHorizonDelegate? {
+    public weak var electronicHorizonDelegate: ElectronicHorizonDelegate? {
         didSet {
             if delegate != nil {
                 try! self.navigator.setElectronicHorizonObserverFor(self)
@@ -79,7 +79,7 @@ open class PassiveLocationDataSource: NSObject {
      
      Set this property to `nil` to use the default configuration.
      */
-    public var electronicHorizonOptions: EHorizonOptions? {
+    public var electronicHorizonOptions: ElectronicHorizonOptions? {
         get {
             Navigator.shared.electronicHorizonOptions
         }
@@ -88,8 +88,8 @@ open class PassiveLocationDataSource: NSObject {
         }
     }
     
-    public var graphAccessor: GraphAccessor {
-        return Navigator.shared.graphAccessor
+    public var roadGraph: RoadGraph {
+        return Navigator.shared.roadGraph
     }
 
     public lazy var roadObjectsStore: RoadObjectsStore = {
@@ -186,19 +186,19 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
 }
 
 extension PassiveLocationDataSource: ElectronicHorizonObserver {
-    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : RoadObjectDistanceInfo]) {
+    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
         electronicHorizonDelegate?.didUpdatePosition(
-            EHorizonPosition(position),
-            distances: Dictionary(uniqueKeysWithValues:distances.map { key, value in (key, EHorizonObjectDistanceInfo(value)) })
+            ElectronicHorizon.Position(position),
+            distances: Dictionary(uniqueKeysWithValues:distances.map { key, value in (key, RoadObjectDistanceInfo(value)) })
         )
     }
 
     public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.didEnterObject(EHorizonObjectEnterExitInfo(info))
+        electronicHorizonDelegate?.didEnterObject(RoadObjectTransition(info))
     }
 
     public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.didExitRoadObject(EHorizonObjectEnterExitInfo(info))
+        electronicHorizonDelegate?.didExitRoadObject(RoadObjectTransition(info))
     }
 }
 

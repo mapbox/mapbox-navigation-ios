@@ -2,16 +2,16 @@ import Foundation
 import MapboxNavigationNative
 
 /**
- `GraphAccessor` provides methods to get edge shape (e.g. [EHorizonEdge]) and metadata.
+ `RoadGraph` provides methods to get edge shape (e.g. [ElectronicHorizon.Edge]) and metadata.
  */
-public final class GraphAccessor {
+public final class RoadGraph {
     /**
      Returns Graph Edge meta-information for the given GraphId of the edge.
      If edge with given edgeIdentifier is not accessible, returns `nil`
      */
-    public func edgeMetadata(edgeIdentifier: EHorizonEdge.Identifier) -> EHorizonEdgeMetadata? {
+    public func edgeMetadata(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> ElectronicHorizon.Edge.Metadata? {
         if let edgeMetadata = try! native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)) {
-            return EHorizonEdgeMetadata(edgeMetadata)
+            return ElectronicHorizon.Edge.Metadata(edgeMetadata)
         }
         return nil
     }
@@ -20,13 +20,13 @@ public final class GraphAccessor {
      Returns Graph Edge geometry for the given GraphId of the edge.
      If edge with given edgeIdentifier is not accessible, returns `nil`
      */
-    public func edgeShape(edgeIdentifier: EHorizonEdge.Identifier) -> [CLLocation]? {
+    public func edgeShape(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> [CLLocation]? {
         return try! native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier))
     }
 
-    init(_ native: MapboxNavigationNative.GraphAccessor) {
+    init(_ native: GraphAccessor) {
         self.native = native
     }
 
-    private let native: MapboxNavigationNative.GraphAccessor
+    private let native: GraphAccessor
 }

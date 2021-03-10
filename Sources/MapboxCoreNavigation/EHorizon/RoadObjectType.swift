@@ -1,7 +1,7 @@
 import Foundation
 import MapboxNavigationNative
 
-public enum EHorizonObjectType {
+public enum RoadObjectType {
 
     /** Road object represents some road incident */
     case incident
@@ -36,7 +36,7 @@ public enum EHorizonObjectType {
     /** Reserved for future use. */
     case userDefined
 
-    init(_ native: RoadObjectType) {
+    init(_ native: MapboxNavigationNative.RoadObjectType) {
         switch native {
         case .incident:
             self = .incident

@@ -21,16 +21,16 @@ class EHorizonTests: XCTestCase {
     }
 }
 
-extension EHorizonTests: EHorizonDelegate {
-    func didUpdatePosition(_ position: EHorizonPosition, distances: [RoadObjectIdentifier : EHorizonObjectDistanceInfo]) {
+extension EHorizonTests: ElectronicHorizonDelegate {
+    func didUpdatePosition(_ position: ElectronicHorizon.Position, distances: [RoadObjectIdentifier : RoadObjectDistanceInfo]) {
         let graphPosition = position.position
-        _ = passiveLocationDataSource.graphAccessor.edgeMetadata(edgeIdentifier: graphPosition.edgeIdentifier)
-        _ = passiveLocationDataSource.graphAccessor.edgeShape(edgeIdentifier: graphPosition.edgeIdentifier)
+        _ = passiveLocationDataSource.roadGraph.edgeMetadata(edgeIdentifier: graphPosition.edgeIdentifier)
+        _ = passiveLocationDataSource.roadGraph.edgeShape(edgeIdentifier: graphPosition.edgeIdentifier)
     }
 
-    func didEnterObject(_ objectEnterExitInfo: EHorizonObjectEnterExitInfo) {}
+    func didEnterObject(_ objectEnterExitInfo: RoadObjectTransition) {}
 
-    func didExitRoadObject(_ objectEnterExitInfo: EHorizonObjectEnterExitInfo) {}
+    func didExitRoadObject(_ objectEnterExitInfo: RoadObjectTransition) {}
 }
 
 extension EHorizonTests: RoadObjectsStoreDelegate {
