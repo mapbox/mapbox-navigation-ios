@@ -2,9 +2,10 @@ import Foundation
 import MapboxNavigationNative
 
 /**
- `RoadGraph` provides methods to get edge shape (e.g. [ElectronicHorizon.Edge]) and metadata.
+ `RoadGraph` provides methods to get edge shape (e.g. `ElectronicHorizon.Edge`) and metadata.
  */
 public final class RoadGraph {
+
     /**
      Returns Graph Edge meta-information for the given GraphId of the edge.
      If edge with given edgeIdentifier is not accessible, returns `nil`

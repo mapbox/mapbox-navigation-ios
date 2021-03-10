@@ -2,6 +2,8 @@ import Foundation
 import MapboxNavigationNative
 
 extension ElectronicHorizon {
+
+    /** Basic edge structure */
     public struct Edge {
         /** Unique identifier of a directed edge */
         public typealias Identifier = UInt

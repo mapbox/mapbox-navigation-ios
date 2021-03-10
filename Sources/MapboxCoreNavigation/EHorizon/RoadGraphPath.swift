@@ -3,6 +3,7 @@ import CoreLocation
 import MapboxNavigationNative
 
 extension RoadGraph {
+
     /** A position along a linear object in the road graph. */
     public struct Path {
         /** The edge identifiers that form the linear object. */

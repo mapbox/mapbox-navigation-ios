@@ -1,6 +1,7 @@
 import Foundation
 import MapboxNavigationNative
 
+/** Represents information about road object transitions */
 public struct RoadObjectTransition {
 
     /** Road object identifier */

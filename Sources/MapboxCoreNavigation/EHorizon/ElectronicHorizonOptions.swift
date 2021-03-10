@@ -2,6 +2,9 @@ import Foundation
 import CoreLocation
 import MapboxNavigationNative
 
+/**
+ Defines options for `ElectronicHorizon`.
+ */
 public struct ElectronicHorizonOptions {
 
     /** The minimum length of the ElectronicHorizon ahead of the current position. */

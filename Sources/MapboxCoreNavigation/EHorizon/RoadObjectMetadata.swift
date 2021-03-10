@@ -2,6 +2,7 @@ import Foundation
 import MapboxDirections
 import MapboxNavigationNative
 
+/** RoadObject metadata */
 public enum RoadObjectMetadata {
     /**
      Incident.

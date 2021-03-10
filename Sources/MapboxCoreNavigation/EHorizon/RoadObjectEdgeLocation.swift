@@ -1,7 +1,12 @@
 import Foundation
 import MapboxNavigationNative
 
+/**
+ Represents location of road object on road graph.
+ For point-like objects will contain single edge with `percentAlongBegin == percentAlongEnd`
+ */
 public struct RoadObjectEdgeLocation {
+
     /**
      Offset from the start of edge (0 - 1) pointing to the beginning of road object on this edge
      will be 0 for all edges in the line-like road object except the very first one

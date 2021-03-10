@@ -1,5 +1,6 @@
 import Foundation
 
+/** `RoadObjectsStore` delegate */
 public protocol RoadObjectsStoreDelegate: class {
 
     func didAddRoadObject(identifier: RoadObjectIdentifier)

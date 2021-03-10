@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxNavigationNative
 
+/** Information about distances relatted to a road object */
 public struct RoadObjectDistanceInfo {
 
     /** Distance along the road graph from current position to entry point of object in meters, if already "within" object will be equal to zero */

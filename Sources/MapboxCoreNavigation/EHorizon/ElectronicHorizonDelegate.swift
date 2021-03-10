@@ -1,6 +1,10 @@
 import Foundation
 import MapboxNavigationNative
 
+/**
+ Electronic horizon delegate. Methods are called in the order specified. `didUpdatePosition` might be called
+ multiple times after the other methods until a new change to the horizon occurs.
+ */
 public protocol ElectronicHorizonDelegate: class {
 
     /**

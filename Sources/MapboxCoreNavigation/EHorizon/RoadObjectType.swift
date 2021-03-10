@@ -1,6 +1,7 @@
 import Foundation
 import MapboxNavigationNative
 
+/** Type of the road object */
 public enum RoadObjectType {
 
     /** Road object represents some road incident */

@@ -1,7 +1,9 @@
 import Foundation
 import MapboxNavigationNative
 
+/** Road name information */
 public struct RoadName {
+
     /**
      The name of the road.
      

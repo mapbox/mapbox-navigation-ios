@@ -4,6 +4,8 @@ import MapboxDirections
 import MapboxNavigationNative
 
 extension ElectronicHorizon.Edge {
+
+    /** Edge metadata */
     public struct Metadata {
 
         /** The bearing in degrees clockwise at the start of the edge. */

@@ -2,6 +2,7 @@ import Foundation
 import MapboxNavigationNative
 
 extension RoadGraph {
+
     /** Declares position of an object on the map graph */
     public struct Position {
 

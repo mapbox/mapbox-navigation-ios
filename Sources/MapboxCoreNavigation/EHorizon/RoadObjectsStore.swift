@@ -4,7 +4,10 @@ import MapboxNavigationNative
 /// Identifies a road object in an electronic horizon.
 public typealias RoadObjectIdentifier = String
 
-public class RoadObjectsStore {
+/**
+ Provides methods to get road objects metadata
+ */
+public final class RoadObjectsStore {
 
     public weak var delegate: RoadObjectsStoreDelegate? {
         didSet {
