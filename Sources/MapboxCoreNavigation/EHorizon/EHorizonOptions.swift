@@ -18,13 +18,13 @@ public struct EHorizonOptions {
      * navigation statuses to update electronic horizon (seconds)
      * if null we update electronic horizon on each navigation status
      */
-    public let minTimeDeltaBetweenUpdates: TimeInterval?
+    public let minimumTimeIntervalBetweenUpdates: TimeInterval?
 
     public init(length: CLLocationDistance, expansion: UInt, branchLength: Double, minTimeDeltaBetweenUpdates: TimeInterval?) {
         self.length = length
         self.expansion = expansion
         self.branchLength = branchLength
-        self.minTimeDeltaBetweenUpdates = minTimeDeltaBetweenUpdates
+        self.minimumTimeIntervalBetweenUpdates = minTimeDeltaBetweenUpdates
     }
 
     var nativeOptions: ElectronicHorizonOptions {
@@ -33,7 +33,7 @@ public struct EHorizonOptions {
             expansion: UInt8(expansion),
             branchLength: branchLength,
             doNotRecalculateInUncertainState: true,
-            minTimeDeltaBetweenUpdates: minTimeDeltaBetweenUpdates as NSNumber?
+            minTimeDeltaBetweenUpdates: minimumTimeIntervalBetweenUpdates as NSNumber?
         )
     }
 }

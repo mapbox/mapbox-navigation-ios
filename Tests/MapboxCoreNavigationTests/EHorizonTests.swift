@@ -22,10 +22,10 @@ class EHorizonTests: XCTestCase {
 }
 
 extension EHorizonTests: EHorizonDelegate {
-    func didUpdatePosition(_ position: EHorizonPosition, distances: [EHorizonDistancesKey : EHorizonObjectDistanceInfo]) {
+    func didUpdatePosition(_ position: EHorizonPosition, distances: [RoadObjectIdentifier : EHorizonObjectDistanceInfo]) {
         let graphPosition = position.position
-        _ = passiveLocationDataSource.graphAccessor.getEdgeMetadata(for: graphPosition.edgeId)
-        _ = passiveLocationDataSource.graphAccessor.getEdgeShape(for: graphPosition.edgeId)
+        _ = passiveLocationDataSource.graphAccessor.getEdgeMetadata(for: graphPosition.edgeIdentifier)
+        _ = passiveLocationDataSource.graphAccessor.getEdgeShape(for: graphPosition.edgeIdentifier)
     }
 
     func didEnterObject(_ objectEnterExitInfo: EHorizonObjectEnterExitInfo) {}
@@ -34,11 +34,11 @@ extension EHorizonTests: EHorizonDelegate {
 }
 
 extension EHorizonTests: RoadObjectsStoreDelegate {
-    func didAddRoadObject(with id: RoadObjectId) {
+    func didAddRoadObject(identifier id: RoadObjectIdentifier) {
         _ = passiveLocationDataSource.roadObjectsStore.getRoadObjectMetadata(for: id)
     }
 
-    func didUpdateRoadObject(with id: RoadObjectId) {}
+    func didUpdateRoadObject(identifier id: RoadObjectIdentifier) {}
 
-    func didRemoveRoadObject(with id: RoadObjectId) {}
+    func didRemoveRoadObject(identifier id: RoadObjectIdentifier) {}
 }

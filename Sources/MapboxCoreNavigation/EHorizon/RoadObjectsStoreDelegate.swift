@@ -2,9 +2,9 @@ import Foundation
 
 public protocol RoadObjectsStoreDelegate: class {
 
-    func didAddRoadObject(with id: RoadObjectId)
+    func didAddRoadObject(identifier: RoadObjectIdentifier)
 
-    func didUpdateRoadObject(with id: RoadObjectId)
+    func didUpdateRoadObject(identifier: RoadObjectIdentifier)
 
-    func didRemoveRoadObject(with id: RoadObjectId)
+    func didRemoveRoadObject(identifier: RoadObjectIdentifier)
 }

@@ -1,7 +1,7 @@
 import Foundation
 import MapboxNavigationNative
 
-public typealias RoadObjectId = String
+public typealias RoadObjectIdentifier = String
 
 public class RoadObjectsStore {
 
@@ -16,38 +16,38 @@ public class RoadObjectsStore {
     }
 
     /**
-     Returns mapping `road object id -> RoadObjectEdgeLocation` for all road objects
-     which are lying on the edge with given id.
-     - parameter edgeId
+     Returns mapping `road object identifier -> RoadObjectEdgeLocation` for all road objects
+     which are lying on the edge with given identifier.
+     - parameter edgeIdentifier: The identifier of the edge to query.
      */
-    public func getRoadObjects(for edgeId: UInt) -> [RoadObjectId : EHorizonObjectEdgeLocation] {
-        let objects = try! native.getForEdgeId(UInt64(edgeId))
+    public func getRoadObjects(for edgeIdentifier: UInt) -> [RoadObjectIdentifier : EHorizonObjectEdgeLocation] {
+        let objects = try! native.getForEdgeId(UInt64(edgeIdentifier))
         return Dictionary(
-            uniqueKeysWithValues:objects.map { id, location in (id, EHorizonObjectEdgeLocation(location)) }
+            uniqueKeysWithValues:objects.map { identifier, location in (identifier, EHorizonObjectEdgeLocation(location)) }
         )
     }
 
     /**
-     Returns metadata of object with given id, if such object cannot be found returns null.
+     Returns metadata of object with given identifier, if such object cannot be found returns null.
      NB: since road objects can be removed/added in background we should always check return value for null,
-     even if we know that we have object with such id based on previous calls.
-     - parameter roadObjectId
+     even if we know that we have object with such identifier based on previous calls.
+     - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
-    public func getRoadObjectMetadata(for roadObjectId: RoadObjectId) -> EHorizonObjectMetadata? {
-        if let metadata = try! native.getRoadObjectMetadata(forRoadObjectId: roadObjectId) {
+    public func getRoadObjectMetadata(for roadObjectIdentifier: RoadObjectIdentifier) -> EHorizonObjectMetadata? {
+        if let metadata = try! native.getRoadObjectMetadata(forRoadObjectId: roadObjectIdentifier) {
             return EHorizonObjectMetadata(metadata)
         }
         return nil
     }
 
     /**
-     Returns location of object with given id, if such object cannot be found returns null.
+     Returns location of object with given identifier, if such object cannot be found returns null.
      NB: since road objects can be removed/added in background we should always check return value for null,
-     even if we know that we have object with such id based on previous calls.
-     - parameter roadObjectId
+     even if we know that we have object with such identifier based on previous calls.
+     - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
-    public func getRoadObjectLocation(for roadObjectId: RoadObjectId) -> EHorizonObjectLocation? {
-        if let location = try! native.getRoadObjectLocation(forRoadObjectId: roadObjectId) {
+    public func getRoadObjectLocation(for roadObjectIdentifier: RoadObjectIdentifier) -> EHorizonObjectLocation? {
+        if let location = try! native.getRoadObjectLocation(forRoadObjectId: roadObjectIdentifier) {
             return EHorizonObjectLocation(location)
         }
         return nil
@@ -57,8 +57,8 @@ public class RoadObjectsStore {
      Returns list of road object ids which are (partially) belong to `edgeIds`.
      - parameter edgeIds list of edge ids
      */
-    public func getRoadObjectIdsByEdgeIds(forEdgeIds edgeIds: [UInt]) -> [RoadObjectId] {
-        return try! native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIds.map(NSNumber.init))
+    public func getRoadObjectIdentifiers(edgeIdentifiers: [UInt]) -> [RoadObjectIdentifier] {
+        return try! native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))
     }
 
     public var peer: MBXPeerWrapper?
@@ -76,14 +76,14 @@ public class RoadObjectsStore {
 
 extension RoadObjectsStore: RoadObjectsStoreObserver {
     public func onRoadObjectAdded(forId id: String) {
-        delegate?.didAddRoadObject(with: id)
+        delegate?.didAddRoadObject(identifier: id)
     }
 
     public func onRoadObjectUpdated(forId id: String) {
-        delegate?.didUpdateRoadObject(with: id)
+        delegate?.didUpdateRoadObject(identifier: id)
     }
 
     public func onRoadObjectRemoved(forId id: String) {
-        delegate?.didRemoveRoadObject(with: id)
+        delegate?.didRemoveRoadObject(identifier: id)
     }
 }

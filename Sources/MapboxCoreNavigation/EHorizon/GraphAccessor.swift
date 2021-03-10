@@ -7,10 +7,10 @@ import MapboxNavigationNative
 public final class GraphAccessor {
     /**
      Returns Graph Edge meta-information for the given GraphId of the edge.
-     If edge with given edgeId is not accessible, returns `nil`
+     If edge with given edgeIdentifier is not accessible, returns `nil`
      */
-    public func getEdgeMetadata(for edgeId: UInt) -> EHorizonEdgeMetadata? {
-        if let edgeMetadata = try! native.getEdgeMetadata(forEdgeId: UInt64(edgeId)) {
+    public func getEdgeMetadata(for edgeIdentifier: UInt) -> EHorizonEdgeMetadata? {
+        if let edgeMetadata = try! native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)) {
             return EHorizonEdgeMetadata(edgeMetadata)
         }
         return nil
@@ -18,10 +18,10 @@ public final class GraphAccessor {
 
     /**
      Returns Graph Edge geometry for the given GraphId of the edge.
-     If edge with given edgeId is not accessible, returns `nil`
+     If edge with given edgeIdentifier is not accessible, returns `nil`
      */
-    public func getEdgeShape(for edgeId: UInt) -> [CLLocation]? {
-        return try! native.getEdgeShape(forEdgeId: UInt64(edgeId))
+    public func getEdgeShape(for edgeIdentifier: UInt) -> [CLLocation]? {
+        return try! native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier))
     }
 
     init(_ native: MapboxNavigationNative.GraphAccessor) {

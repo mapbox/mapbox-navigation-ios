@@ -3,8 +3,8 @@ import MapboxNavigationNative
 
 public struct EHorizonObjectEnterExitInfo {
 
-    /** Road object id */
-    public let roadObjectId: String
+    /** Road object identifier */
+    public let roadObjectIdentifier: String
 
     /**
      If object was entered via it's start for `onRoadObjectEnter`
@@ -16,7 +16,7 @@ public struct EHorizonObjectEnterExitInfo {
     public let type: EHorizonObjectType
 
     init(_ native: RoadObjectEnterExitInfo) {
-        self.roadObjectId = native.roadObjectId
+        self.roadObjectIdentifier = native.roadObjectId
         self.isEnterFromStartOrExitFromEnd = native.isEnterFromStartOrExitFromEnd
         self.type = EHorizonObjectType(native.type)
     }

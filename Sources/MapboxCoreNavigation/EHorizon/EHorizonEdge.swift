@@ -4,7 +4,7 @@ import MapboxNavigationNative
 public struct EHorizonEdge {
 
     /** Unique identifier of the directed edge */
-    public let id: UInt
+    public let identifier: UInt
 
     /**
      The level of the Edge (0 being the mpp, 1 branches of the mpp,
@@ -21,12 +21,12 @@ public struct EHorizonEdge {
      i.e. `out` can contain more than 1 edges with the level 0.
      Currently we have a limitation for maximum 1 split per electronic horizon.
      */
-    public let out: [EHorizonEdge]
+    public let outletEdges: [EHorizonEdge]
 
     init(_ native: ElectronicHorizonEdge) {
-        self.id = UInt(native.id)
+        self.identifier = UInt(native.id)
         self.level = UInt(native.level)
         self.probability = native.probability
-        self.out = native.out.map(EHorizonEdge.init)
+        self.outletEdges = native.out.map(EHorizonEdge.init)
     }
 }
