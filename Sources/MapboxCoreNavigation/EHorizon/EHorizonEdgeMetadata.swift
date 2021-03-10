@@ -14,8 +14,8 @@ public struct EHorizonEdgeMetadata {
     /** The edge's functional road class */
     public let functionalRoadClass: MapboxStreetsRoadClass
 
-    /** The Edge's max speed (m/s) */
-    public let speedLimit: CLLocationSpeed?
+    /** The edge’s maximum speed limit. */
+    public let speedLimit: Measurement<UnitSpeed>?
 
     /** The Edge's average speed (m/s) */
     public let speed: CLLocationSpeed
@@ -57,7 +57,12 @@ public struct EHorizonEdgeMetadata {
         self.heading = native.heading
         self.length = native.length
         self.functionalRoadClass = MapboxStreetsRoadClass(native.frc)
-        self.speedLimit = native.speedLimit as? Double
+        if let speedLimitValue = native.speedLimit as? Double {
+            // TODO: Convert to miles per hour as locally appropriate.
+            self.speedLimit = Measurement(value: speedLimitValue, unit: UnitSpeed.metersPerSecond).converted(to: .kilometersPerHour)
+        } else {
+            self.speedLimit = nil
+        }
         self.speed = native.speed
         self.isRamp = native.isRamp
         self.isMotorway = native.isMotorway
