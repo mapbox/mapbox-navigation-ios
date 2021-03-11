@@ -4,6 +4,8 @@ import MapboxNavigationNative
 
 /**
  `RoadGraph` provides methods to get edge shape (e.g. `ElectronicHorizon.Edge`) and metadata.
+ 
+ You do not create a `RoadGraph` object manually. Instead, observe the `Notification.Name.electronicHorizonDidUpdatePosition` notification to obtain edge identifiers and get more details about the edges using the `RouteController.roadGraph` or `PassiveLocationDataSource.roadGraph` property.
  */
 public final class RoadGraph {
 

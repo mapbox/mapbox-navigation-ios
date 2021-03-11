@@ -1,11 +1,17 @@
 import Foundation
 import MapboxNavigationNative
 
-/// Identifies a road object in an electronic horizon.
+/**
+ Identifies a road object in an electronic horizon. A road object represents a notable transition point along a road, such as a toll booth or tunnel entrance. A road object is similar to a `RouteAlert` but is more closely associated with the routing graph managed by the `RoadGraph` class.
+ 
+ Use a `RoadObjectsStore` object to get more information about a road object with a given identifier or get the locations of road objects along `ElectronicHorizon.Edge`s.
+ */
 public typealias RoadObjectIdentifier = String
 
 /**
- Provides methods to get road objects metadata
+ Stores and provides access to metadata about road objects.
+ 
+ You do not create a `RoadObjectsStore` object manually. Instead, use the `RouteController.roadObjectsStore` or `PassiveLocationDataSource.roadObjectsStore` to access the currently active road objects store.
  */
 public final class RoadObjectsStore {
 

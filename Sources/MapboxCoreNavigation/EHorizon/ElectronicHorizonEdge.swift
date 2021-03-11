@@ -3,9 +3,17 @@ import MapboxNavigationNative
 
 extension ElectronicHorizon {
 
-    /** Basic edge structure */
+    /**
+     An edge in a routing graph. For example, an edge may represent a road segment between two intersections or between the two ends of a bridge. An edge may traverse multiple road objects, and a road object may be associated with multiple edges.
+     
+     Use a `RoadGraph` object to get an edge with a given identifier.
+     */
     public struct Edge {
-        /** Unique identifier of a directed edge */
+        /**
+         Unique identifier of a directed edge.
+         
+         Use a `RoadGraph` object to get more information about the edge with a given identifier.
+         */
         public typealias Identifier = UInt
 
         /** Unique identifier of the directed edge */
