@@ -1,4 +1,5 @@
 import Foundation
+import Turf
 import MapboxNavigationNative
 
 /**
@@ -7,8 +8,9 @@ import MapboxNavigationNative
 public final class RoadGraph {
 
     /**
-     Returns Graph Edge meta-information for the given GraphId of the edge.
-     If edge with given edgeIdentifier is not accessible, returns `nil`
+     Returns metadata about the edge with the given edge identifier.
+     
+     - returns: Metadata about the edge with the given edge identifier, or `nil` if the edge is inaccessible.
      */
     public func edgeMetadata(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> ElectronicHorizon.Edge.Metadata? {
         if let edgeMetadata = try! native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)) {
@@ -18,11 +20,15 @@ public final class RoadGraph {
     }
 
     /**
-     Returns Graph Edge geometry for the given GraphId of the edge.
-     If edge with given edgeIdentifier is not accessible, returns `nil`
+     Returns a line string geometry corresponding to the given edge identifier.
+     
+     - returns: A line string corresponding to the given edge identifier, or `nil` if the edge is inaccessible.
      */
-    public func edgeShape(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> [CLLocation]? {
-        return try! native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier))
+    public func edgeShape(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> LineString? {
+        guard let locations = try! native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier)) else {
+            return nil
+        }
+        return LineString(locations.map { $0.coordinate })
     }
 
     init(_ native: GraphAccessor) {
