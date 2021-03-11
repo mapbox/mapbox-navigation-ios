@@ -49,10 +49,13 @@ class Navigator {
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `tilesURL`).
      */
-    static let shared: Navigator = {
-        let instance = Navigator()
-        
-        var tilesPath: String! = tilesURL?.path
+    static let shared: Navigator = Navigator()
+    
+    /**
+     Restrict direct initializer access.
+     */
+    private init() {
+        var tilesPath: String! = Self.tilesURL?.path
         if tilesPath == nil {
             let bundle = Bundle.mapboxCoreNavigation
             if bundle.ensureSuggestedTileURLExists() {
@@ -66,7 +69,7 @@ class Navigator {
                                               platform: ProfilePlatform.KIOS)
         
         let endpointConfig = TileEndpointConfiguration(credentials: Directions.shared.credentials,
-                                                       tilesVersion: tilesVersion,
+                                                       tilesVersion: Self.tilesVersion,
                                                        minimumDaysToPersistVersion: nil)
         
         let tilesConfig = TilesConfig(tilesPath: tilesPath,
@@ -80,29 +83,20 @@ class Navigator {
                                                      config: NavigatorConfig(),
                                                      customConfig: "")
         
-        instance.historyRecorder = try! HistoryRecorderHandle.build(forHistoryFile: "",
-                                                                    config: configFactory)
+        historyRecorder = try! HistoryRecorderHandle.build(forHistoryFile: "", config: configFactory)
         
         let runloopExecutor = try! RunLoopExecutorFactory.build()
-        instance.cacheHandle = try! CacheFactory.build(for: tilesConfig,
-                                                       config: configFactory,
-                                                       runLoop: runloopExecutor,
-                                                       historyRecorder: instance.historyRecorder)
+        cacheHandle = try! CacheFactory.build(for: tilesConfig,
+                                              config: configFactory,
+                                              runLoop: runloopExecutor,
+                                              historyRecorder: historyRecorder)
         
-        instance.roadGraph = RoadGraph(try! MapboxNavigationNative.GraphAccessor(cache: instance.cacheHandle))
+        roadGraph = RoadGraph(try! MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
         
-        instance.navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
-                                                                   runLoopExecutor: runloopExecutor,
-                                                                   cache: instance.cacheHandle,
-                                                                   historyRecorder: instance.historyRecorder)
-        
-        return instance
-    }()
-    
-    /**
-     Restrict direct initializer access.
-     */
-    private init() {
+        navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
+                                                          runLoopExecutor: runloopExecutor,
+                                                          cache: cacheHandle,
+                                                          historyRecorder: historyRecorder)
         try! navigator.setElectronicHorizonObserverFor(self)
     }
     
