@@ -384,7 +384,7 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
-        let reroutingStatus = StatusView.Status(identifier: "REROUTING", title: title, duration: 20, priority: StatusView.Priority(0))
+        let reroutingStatus = StatusView.Status(identifier: "REROUTING", title: title, duration: 20, priority: StatusView.Priority(value: 0))
         show(reroutingStatus)
     }
     
@@ -402,7 +402,7 @@ extension TopBannerViewController: NavigationComponent {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
             
             // create faster route status and append to array of statuses
-            let fasterRouteStatus = StatusView.Status(identifier: "FASTER_ROUTE_FOUND", title: title, duration: 3, priority: StatusView.Priority(0))
+            let fasterRouteStatus = StatusView.Status(identifier: "FASTER_ROUTE_FOUND", title: title, duration: 3, priority: StatusView.Priority(value: 0))
             statusView.show(fasterRouteStatus)
         }
     }
