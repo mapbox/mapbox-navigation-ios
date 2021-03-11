@@ -53,29 +53,30 @@ public class StatusView: UIControl {
      */
     public struct Status {
         public var identifier: String
-        let title: String
-        var spinner: Bool = false
-        let duration: TimeInterval
-        var animated: Bool = true
-        var interactive: Bool = false
-        var priority: Priority
+        public let title: String
+        public var spinner: Bool = false
+        public let duration: TimeInterval
+        public var animated: Bool = true
+        public var interactive: Bool = false
+        public var priority: Priority
     }
     
     /**
      `Priority` is used to display `Status`es by importance
+     Lower values correspond to higher priority.
      */
-    public struct Priority: RawRepresentable {
-        public typealias RawValue = Int
+    public struct Priority {
+        public typealias Priority = Int
 
-        public var rawValue: Int
+        public var priority: Int
 
-        public init(rawValue: Int) {
-            self.rawValue = rawValue
-        }
+//        public init(rawValue: Int) {
+//            self.rawValue = rawValue
+//        }
 //        — Highest Priority —
-//            rerouting (rawValue = 0)
-//            enable precise location (rawValue = 1)
-//            simulation banner (rawValue = 2)
+//            rerouting (priority = 0)
+//            enable precise location (priority = 1)
+//            simulation banner (priority = 2)
 //        — Lowest Priority —
     }
     
@@ -157,7 +158,7 @@ public class StatusView: UIControl {
      */
     @available(*, deprecated, message: "Add a status using show(_:) instead")
     public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        let status = Status(identifier: title, title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive, priority: StatusView.Priority(rawValue: 1))
+        let status = Status(identifier: title, title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive, priority: StatusView.Priority(1))
         show(status)
     }
     
@@ -181,7 +182,7 @@ public class StatusView: UIControl {
             hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)
         } else {
             // if we hide a Status and there are Statuses left in the statuses array, show the Status with highest priority
-            guard let highestPriorityStatus = statuses.min(by: {$0.priority.rawValue < $1.priority.rawValue}) else { return }
+            guard let highestPriorityStatus = statuses.min(by: {$0.priority < $1.priority}) else { return }
             show(status: highestPriorityStatus)
             hide(with: highestPriorityStatus, delay: highestPriorityStatus.duration)
         }
@@ -191,8 +192,7 @@ public class StatusView: UIControl {
      Hides a given Status without hiding the status view.
      */
     func hide(_ status: Status?) {
-        guard let identifier = status?.identifier else { return }
-        guard let row = statuses.firstIndex(where: {$0.identifier.contains(identifier)}) else { return }
+        guard let row = statuses.firstIndex(where: {$0.identifier == status?.identifier}) else { return }
         let removedStatus = statuses.remove(at: row)
         manageStatuses(status: removedStatus)
     }
@@ -200,7 +200,7 @@ public class StatusView: UIControl {
     func showSimulationStatus(speed: Int) {
         let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
         let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
-        let simulationStatus = Status(identifier: "USER_IN_SIMULATION_MODE", title: title, duration: .infinity, interactive: true, priority: StatusView.Priority(rawValue: 2))
+        let simulationStatus = Status(identifier: "USER_IN_SIMULATION_MODE", title: title, duration: .infinity, interactive: true, priority: StatusView.Priority(2))
         show(simulationStatus)
     }
     

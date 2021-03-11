@@ -55,15 +55,15 @@ extension StatusViewTests {
     
     // define statuses
     func firstStatus() -> StatusView.Status {
-        return StatusView.Status(identifier: "FIRST_TEST_STATUS", title: "first test status", duration: 1, priority: StatusView.Priority(rawValue: 0))
+        return StatusView.Status(identifier: "FIRST_TEST_STATUS", title: "first test status", duration: 1, priority: StatusView.Priority(0))
     }
     
     func secondStatus() -> StatusView.Status {
-        return StatusView.Status(identifier: "SECOND_TEST_STATUS", title: "second test status", duration: 5, priority: StatusView.Priority(rawValue: 1))
+        return StatusView.Status(identifier: "SECOND_TEST_STATUS", title: "second test status", duration: 5, priority: StatusView.Priority(1))
     }
     
     func thirdStatus() -> StatusView.Status {
-        return StatusView.Status(identifier: "THIRD_TEST_STATUS", title: "third test status", duration: .infinity, priority: StatusView.Priority(rawValue: 2))
+        return StatusView.Status(identifier: "THIRD_TEST_STATUS", title: "third test status", duration: .infinity, priority: StatusView.Priority(2))
     }
 
     func show(_ status: StatusView.Status) {
