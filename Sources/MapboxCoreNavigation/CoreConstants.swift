@@ -299,7 +299,67 @@ extension MapboxNavigationService {
         }
         
         /**
-         A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a CLAccuracyAuthorization` indicating the current location authorization setting. */
+         A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a `CLAccuracyAuthorization` indicating the current location authorization setting. */
         public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
+    }
+}
+
+extension Notification.Name {
+    /**
+     Posted when the user’s position in the electronic horizon changes. This notification may be posted multiple times after `electronicHorizonDidEnterRoadObject` until the user transitions to a new electronic horizon.
+     
+     The user info dictionary contains the keys `ElectronicHorizon.NotificationUserInfoKey.positionKey`, `ElectronicHorizon.NotificationUserInfoKey.treeKey`, `ElectronicHorizon.NotificationUserInfoKey.resultTypeKey`, and `ElectronicHorizon.NotificationUserInfoKey.distancesByRoadObjectKey`.
+    */
+    static let electronicHorizonDidUpdatePosition: Notification.Name = .init(rawValue: "ElectronicHorizonDidUpdatePosition")
+    
+    /**
+     Posted when the user enters a linear road object.
+     
+     The user info dictionary contains the keys `ElectronicHorizon.NotificationUserInfoKey.roadObjectIdentifierKey` and `ElectronicHorizon.NotificationUserInfoKey.didTransitionAtEndpointKey`.
+    */
+    static let electronicHorizonDidEnterRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidEnterRoadObject")
+    
+    /**
+     Posted when the user exits a linear road object.
+     
+     The user info dictionary contains the keys `ElectronicHorizon.NotificationUserInfoKey.roadObjectIdentifierKey` and `ElectronicHorizon.NotificationUserInfoKey.transitionKey`.
+    */
+    static let electronicHorizonDidExitRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidExitRoadObject")
+}
+
+extension ElectronicHorizon {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances of `RouteController` or `PassiveLocationDataSource` about `ElectronicHorizon`s.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
+        public var rawValue: String
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is a `RoadGraph.Position` indicating the current position in the road graph. */
+        public static let positionKey: NotificationUserInfoKey = .init(rawValue: "position")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an `ElectronicHorizon` at the root of a tree of edges in the routing graph. */
+        public static let treeKey: NotificationUserInfoKey = .init(rawValue: "tree")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an `ElectronicHorizon.ResultType` indicating the kind of electronic horizon result. */
+        public static let resultTypeKey: NotificationUserInfoKey = .init(rawValue: "resultType")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is a dictionary of upcoming road object identifiers as `RoadObjectIdentifier` keys and their distances from the user’s current location as `RoadObjectDistanceInfo` values. */
+        public static let distancesByRoadObjectKey: NotificationUserInfoKey = .init(rawValue: "distancesByRoadObject")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidEnterRoadObject` or `Notification.Name.electronicHorizonDidExitRoadObject` notification. The corresponding value is a `RoadObjectIdentifier` identifying the road object that the user entered or exited. */
+        public static let roadObjectIdentifierKey: NotificationUserInfoKey = .init(rawValue: "roadObjectIdentifier")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidEnterRoadObject` or `Notification.Name.electronicHorizonDidExitRoadObject` notification. The corresponding value is an `NSNumber` containing a Boolean value set to `true` if the user entered at the beginning or exited at the end of the road object, or `false` if they entered or exited somewhere along the road object. */
+        public static let didTransitionAtEndpointKey: NotificationUserInfoKey = .init(rawValue: "didTransitionAtEndpoint")
     }
 }

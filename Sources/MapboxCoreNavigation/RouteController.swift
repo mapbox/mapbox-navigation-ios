@@ -131,19 +131,6 @@ open class RouteController: NSObject {
      The route controller’s delegate.
      */
     public weak var delegate: RouterDelegate?
-
-    /**
-     Delegate for Electronic Horizon updates.
-     */
-    public weak var electronicHorizonDelegate: ElectronicHorizonDelegate? {
-        didSet {
-            if delegate != nil {
-                try! self.navigator.setElectronicHorizonObserverFor(self)
-            } else {
-                try! self.navigator.setElectronicHorizonObserverFor(nil)
-            }
-        }
-    }
     
     /**
      The route controller’s associated location manager.
@@ -427,11 +414,9 @@ open class RouteController: NSObject {
         return Navigator.shared.roadGraph
     }
 
-    public lazy var roadObjectsStore: RoadObjectsStore = {
-        return RoadObjectsStore(try! navigator.roadObjectStore())
-    }()
-
-    public var peer: MBXPeerWrapper?
+    public var roadObjectsStore: RoadObjectsStore {
+        return Navigator.shared.roadObjectsStore
+    }
 }
 
 extension RouteController: Router {
@@ -502,18 +487,3 @@ extension RouteController: Router {
 }
 
 extension RouteController: InternalRouter { }
-
-extension RouteController: ElectronicHorizonObserver {
-    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
-        electronicHorizonDelegate?.didUpdatePosition(ElectronicHorizon.Position(position),
-                                                     distances: distances.mapValues(RoadObjectDistanceInfo.init))
-    }
-
-    public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.didEnterRoadObject(RoadObjectTransition(info))
-    }
-
-    public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
-        electronicHorizonDelegate?.didExitRoadObject(RoadObjectTransition(info))
-    }
-}

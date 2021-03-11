@@ -41,6 +41,10 @@ class Navigator {
     
     var roadGraph: RoadGraph!
     
+    lazy var roadObjectsStore: RoadObjectsStore = {
+        return RoadObjectsStore(try! navigator.roadObjectStore())
+    }()
+    
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `tilesURL`).
@@ -99,7 +103,11 @@ class Navigator {
      Restrict direct initializer access.
      */
     private init() {
-        
+        try! navigator.setElectronicHorizonObserverFor(self)
+    }
+    
+    deinit {
+        try! navigator.setElectronicHorizonObserverFor(nil)
     }
     
     var electronicHorizonOptions: ElectronicHorizonOptions? {
@@ -112,5 +120,35 @@ class Navigator {
             }
             try! navigator.setElectronicHorizonOptionsFor(nativeOptions)
         }
+    }
+    
+    var peer: MBXPeerWrapper?
+}
+
+extension Navigator: ElectronicHorizonObserver {
+    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
+        let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
+            .positionKey: RoadGraph.Position(try! position.position()),
+            .treeKey: ElectronicHorizon(try! position.tree()),
+            .resultTypeKey: ElectronicHorizon.ResultType(try! position.type()),
+            .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init),
+        ]
+        NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
+    }
+    
+    public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
+        let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
+            .roadObjectIdentifierKey: info.roadObjectId,
+            .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
+        ]
+        NotificationCenter.default.post(name: .electronicHorizonDidEnterRoadObject, object: nil, userInfo: userInfo)
+    }
+    
+    public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
+        let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
+            .roadObjectIdentifierKey: info.roadObjectId,
+            .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
+        ]
+        NotificationCenter.default.post(name: .electronicHorizonDidExitRoadObject, object: nil, userInfo: userInfo)
     }
 }

@@ -353,15 +353,12 @@
 		DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF521A5C5D900AEA9AA /* UIViewController.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
-		DA5F446525F0744C00F573EC /* ElectronicHorizonDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F446425F0744C00F573EC /* ElectronicHorizonDelegate.swift */; };
 		DA5F448825F079F300F573EC /* EHorizonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F447E25F079AA00F573EC /* EHorizonTests.swift */; };
 		DA5F449A25F07A5C00F573EC /* ElectronicHorizon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */; };
 		DA5F44AA25F07A6800F573EC /* RoadObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A325F07A6500F573EC /* RoadObjectType.swift */; };
 		DA5F44AB25F07A6800F573EC /* ElectronicHorizonResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A425F07A6500F573EC /* ElectronicHorizonResultType.swift */; };
 		DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */; };
-		DA5F44AD25F07A6800F573EC /* RoadObjectTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A625F07A6500F573EC /* RoadObjectTransition.swift */; };
 		DA5F44AE25F07A6800F573EC /* RoadObjectDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */; };
-		DA5F44AF25F07A6800F573EC /* ElectronicHorizonPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A825F07A6500F573EC /* ElectronicHorizonPosition.swift */; };
 		DA5F44B025F07A6800F573EC /* ElectronicHorizonEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */; };
 		DA5F44BA25F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44B925F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift */; };
 		DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C325F07AB500F573EC /* RoadGraph.swift */; };
@@ -919,15 +916,12 @@
 		DA545AC41FAA86450090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA5AD03C1FEBA03700FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Main.strings; sourceTree = "<group>"; };
 		DA5AD0401FEBA23200FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DA5F446425F0744C00F573EC /* ElectronicHorizonDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonDelegate.swift; sourceTree = "<group>"; };
 		DA5F447E25F079AA00F573EC /* EHorizonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonTests.swift; sourceTree = "<group>"; };
 		DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizon.swift; sourceTree = "<group>"; };
 		DA5F44A325F07A6500F573EC /* RoadObjectType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectType.swift; sourceTree = "<group>"; };
 		DA5F44A425F07A6500F573EC /* ElectronicHorizonResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonResultType.swift; sourceTree = "<group>"; };
 		DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphPosition.swift; sourceTree = "<group>"; };
-		DA5F44A625F07A6500F573EC /* RoadObjectTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectTransition.swift; sourceTree = "<group>"; };
 		DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectDistanceInfo.swift; sourceTree = "<group>"; };
-		DA5F44A825F07A6500F573EC /* ElectronicHorizonPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonPosition.swift; sourceTree = "<group>"; };
 		DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonEdge.swift; sourceTree = "<group>"; };
 		DA5F44B925F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonEdgeMetadata.swift; sourceTree = "<group>"; };
 		DA5F44C325F07AB500F573EC /* RoadGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraph.swift; sourceTree = "<group>"; };
@@ -1801,11 +1795,9 @@
 			isa = PBXGroup;
 			children = (
 				DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */,
-				DA5F446425F0744C00F573EC /* ElectronicHorizonDelegate.swift */,
 				DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */,
 				DA5F44B925F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift */,
 				DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */,
-				DA5F44A825F07A6500F573EC /* ElectronicHorizonPosition.swift */,
 				DA5F44A425F07A6500F573EC /* ElectronicHorizonResultType.swift */,
 				DA5F44C325F07AB500F573EC /* RoadGraph.swift */,
 				DA2A01EF25F308B100AAB4C6 /* RoadGraphPath.swift */,
@@ -1815,7 +1807,6 @@
 				DA5F44DB25F07D1400F573EC /* RoadObjectEdgeLocation.swift */,
 				DA5F44E525F07D2600F573EC /* RoadObjectLocation.swift */,
 				DA5F44E625F07D2700F573EC /* RoadObjectMetadata.swift */,
-				DA5F44A625F07A6500F573EC /* RoadObjectTransition.swift */,
 				DA5F44A325F07A6500F573EC /* RoadObjectType.swift */,
 				DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */,
 				DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */,
@@ -2703,7 +2694,6 @@
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
 				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
-				DA5F44AF25F07A6800F573EC /* ElectronicHorizonPosition.swift in Sources */,
 				DA5F44BA25F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift in Sources */,
 				DA5F44E825F07D2800F573EC /* RoadObjectLocation.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
@@ -2712,8 +2702,6 @@
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
 				DA2A01F025F308B100AAB4C6 /* RoadGraphPath.swift in Sources */,
 				8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */,
-				DA5F446525F0744C00F573EC /* ElectronicHorizonDelegate.swift in Sources */,
-				DA5F44AD25F07A6800F573EC /* RoadObjectTransition.swift in Sources */,
 				35C98731212E02B500808B82 /* RouteController.swift in Sources */,
 				DA0A4B8124D1C9B200D6B4F8 /* Navigator.swift in Sources */,
 				5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */,
