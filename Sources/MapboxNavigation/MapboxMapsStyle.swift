@@ -88,7 +88,7 @@ extension MapboxMaps.Style {
             let _ = removeSource(for: $0)
         }
     }
-
+    #if false
     /**
      Convenience method for adding a circle at a given coordinate.
 
@@ -213,4 +213,5 @@ extension MapboxMaps.Style {
 
         remove(dataSources)
     }
+    #endif
 }

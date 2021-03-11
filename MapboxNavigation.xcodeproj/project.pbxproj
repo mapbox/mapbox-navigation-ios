@@ -48,7 +48,6 @@
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
 		35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35025F3E1F051DD2002BA3EA /* DialogViewController.swift */; };
-		3504DF7722B79B2E00D2FD3C /* MapboxAccounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3504DF7322B79AF300D2FD3C /* MapboxAccounts.framework */; };
 		350E2C5F22707EB80014CEB3 /* UIScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 350E2C5E22707EB80014CEB3 /* UIScreen.swift */; };
 		3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3510300E1F54B67000E3B7E7 /* LaneTests.swift */; };
 		351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = 351030101F54B72000E3B7E7 /* route-for-lane-testing.json */; };
@@ -354,8 +353,8 @@
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
 		DA66063023B32F99007832E5 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA66062F23B32F99007832E5 /* Array.swift */; };
 		DA754E1923AC56E5007E16B5 /* MBXAccountsLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = DA754E1723AC56E5007E16B5 /* MBXAccountsLoader.m */; };
+		DA85D5EF25DB4AA4008A2AD4 /* LaneViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */; };
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
-		DA85D5EF25DB4AA4008A2AD4 /* LaneViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */; };		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */; };
 		DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7723B5DB7900B56786 /* SpeedLimitStyleKit.swift */; };
 		DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */ = {isa = PBXBuildFile; fileRef = DAA96D17215A961D00BEF703 /* route-doubling-back.json */; };
@@ -1001,7 +1000,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3504DF7722B79B2E00D2FD3C /* MapboxAccounts.framework in Frameworks */,
 				C5EA98721F19414C00C8AA16 /* MapboxMobileEvents.framework in Frameworks */,
 				354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */,
 				35C98735212E042C00808B82 /* MapboxNavigationNative.framework in Frameworks */,
@@ -1656,6 +1654,7 @@
 				35CDA85F2190F2A30072B675 /* TestHelper */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
+				F4A0CCFB25F6B9E10053F3D9 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1751,6 +1750,16 @@
 			);
 			name = CMapboxCoreNavigation;
 			path = Sources/CMapboxCoreNavigation;
+			sourceTree = "<group>";
+		};
+		F4A0CCFB25F6B9E10053F3D9 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				8A1763CF25CCC38C00737520 /* Double.swift */,
+				CFD47D8F20FD85EC00BC1E49 /* AccountManager.swift */,
+				8A17635A25CC89D800737520 /* Expression.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2372,7 +2381,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				F452634C25B2506A00F7A464 /* Turf.swift in Sources */,
-				351BEBF11E5BCC63006FE110 /* MGLMapView.swift in Sources */,
+				8A17635B25CC89D800737520 /* Expression.swift in Sources */,
+				351BEBF11E5BCC63006FE110 /* MapView.swift in Sources */,
 				DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */,
 				2B72EC5E241276D10003B370 /* RouteVoiceController.swift in Sources */,
 				2B72EC602412AA800003B370 /* SystemSpeechSynthesizer.swift in Sources */,
@@ -2457,7 +2467,6 @@
 				4316D95C24340555000DD8F8 /* Match.swift in Sources */,
 				8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
-				8A17635B25CC89D800737520 /* Expression.swift in Sources */,
 				F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */,
 				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
 				35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */,

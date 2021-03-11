@@ -925,24 +925,63 @@ open class NavigationMapView: UIView {
      Updates the image assets in the map style for the route duration annotations. Useful when the desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
      */
     private func updateAnnotationSymbolImages() {
-        guard let style = style, style.image(forName: "RouteInfoAnnotationLeftHanded") == nil, style.image(forName: "RouteInfoAnnotationRightHanded") == nil else { return }
-        let capInsetHeight = CGFloat(22)
-        let capInsetWidth = CGFloat(11)
-        let capInsets = UIEdgeInsets(top: capInsetHeight, left: capInsetWidth, bottom: capInsetHeight, right: capInsetWidth)
-        if let image =  Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
-            let regularRouteImage = image.tint(routeDurationAnnotationColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
-            style.setImage(regularRouteImage, forName: "RouteInfoAnnotationLeftHanded")
+        guard let style = mapView.style, style.getStyleImage(with: "RouteInfoAnnotationLeftHanded") == nil, style.getStyleImage(with: "RouteInfoAnnotationRightHanded") == nil else { return }
 
-            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
-            style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationLeftHanded-Selected")
+        //        let leftStretchX = ImageStretches(first: Float(35), second: Float(50))
+        let leftStretchX = ImageStretches(first: Float(25), second: Float(55))
+        let rightStretchX = ImageStretches(first: Float(85), second: Float(115))
+        let stretchX = [leftStretchX, rightStretchX]
+        let stretchY = [ImageStretches(first: Float(25), second: Float(100))]
+        let imageContent = ImageContent(left: 25, top: 20, right: 115, bottom: 105)
+        if let image =  Bundle.mapboxNavigation.image(named: "Rectangle") {
+            let regularRouteImage = image.tint(routeDurationAnnotationColor)
+
+            //            style.setStyleImage(image: regularRouteImage, with: "RouteInfoAnnotationLeftHanded", scale: scale)
+            style.setStyleImage(image: regularRouteImage,
+                                with: "RouteInfoAnnotationLeftHanded",
+                                sdf: false,
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
+
+            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor)
+            //            style.setStyleImage(image: selectedRouteImage, with: "RouteInfoAnnotationLeftHanded-Selected", scale: scale)
+            style.setStyleImage(image: selectedRouteImage,
+                                with: "RouteInfoAnnotationLeftHanded-Selected",
+                                sdf: false,
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
         }
 
-        if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
-            let regularRouteImage = image.tint(routeDurationAnnotationColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
-            style.setImage(regularRouteImage, forName: "RouteInfoAnnotationRightHanded")
+        if let image =  Bundle.mapboxNavigation.image(named: "Rectangle2") {
+            let regularRouteImage = image.tint(routeDurationAnnotationColor)
 
-            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
-            style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationRightHanded-Selected")
+            let lStretchX = ImageStretches(first: Float(25), second: Float(55))
+            let stretchX = [lStretchX]
+            let stretchY = [ImageStretches(first: Float(25), second: Float(100))]
+            let imageContent = ImageContent(left: 25, top: 25, right: 90, bottom: 100)
+
+            //            style.setStyleImage(image: regularRouteImage, with: "RouteInfoAnnotationRightHanded", scale: scale)
+            style.setStyleImage(image: regularRouteImage,
+                                with: "RouteInfoAnnotationRightHanded",
+                                sdf: false,
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
+
+            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor)
+            //            style.setStyleImage(image: selectedRouteImage, with: "RouteInfoAnnotationRightHanded-Selected", scale: scale)
+            style.setStyleImage(image: selectedRouteImage,
+                                with: "RouteInfoAnnotationRightHanded-Selected",
+                                sdf: false,
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
         }
     }
 
@@ -950,14 +989,15 @@ open class NavigationMapView: UIView {
      Remove any old route duration callouts and generate new ones for each passed in route.
      */
     private func updateRouteDurations(along routes: [Route]?) {
-        guard let style = style else { return }
+        guard let style = mapView.style else { return }
         
         // remove any existing route annotation
         removeRouteDurationAnnotationsLayerFromStyle(style)
 
         guard let routes = routes else { return }
 
-        let visibleBoundingBox = BoundingBox(coordinateBounds: visibleCoordinateBounds)
+        let visibleBoundingBox = BoundingBox(coordinateBounds: mapView.coordinateBounds(for: mapView))// coordinateBounds(for view: UIView) -> CoordinateBounds
+//        let visibleBoundingBox = BoundingBox(coordinateBounds: mapView.visibleCoordinateBounds)
 
         let tollRoutes = routes.filter { route -> Bool in
             return (route.tollIntersections?.count ?? 0) > 0
@@ -967,7 +1007,7 @@ open class NavigationMapView: UIView {
         // pick a random tail direction to keep things varied
         guard let randomTailPosition = [RouteDurationAnnotationTailPosition.left, RouteDurationAnnotationTailPosition.right].randomElement() else { return }
 
-        var features = [MGLPointFeature]()
+        var features = [Feature]()
 
         // Run through our heuristic algorithm looking for a good coordinate along each route line to place it's route annotation
         // First, we will look for a set of RouteSteps unique to each route
@@ -1020,16 +1060,15 @@ open class NavigationMapView: UIView {
             guard let annotationCoordinate = coordinate else { return }
 
             // form the appropriate text string for the annotation
-            let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
+            let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)// + " Extra Long Super Long"
 
             // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
-            let point = MGLPointFeature()
-            point.coordinate = annotationCoordinate
+            var feature = Feature(Point(annotationCoordinate))
 
             var tailPosition = randomTailPosition
 
             // convert our coordinate to screen space so we can make a choice on which side of the coordinate the label ends up on
-            let unprojectedCoordinate = convert(annotationCoordinate, toPointTo: nil)
+            let unprojectedCoordinate = mapView.point(for: annotationCoordinate, in: nil)
 
             // pick the orientation of the bubble "stem" based on how close to the edge of the screen it is
             if tailPosition == .left && unprojectedCoordinate.x > bounds.width * 0.75 {
@@ -1046,89 +1085,109 @@ open class NavigationMapView: UIView {
             }
 
             // set the feature attributes which will be used in styling the symbol style layer
-            point.attributes = ["selected": index == 0, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": imageName, "sortOrder": -index]
+//            point.attributes = ["selected": index == 0, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": imageName, "sortOrder": -index]
+            feature.properties = ["selected": index == 0, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": imageName, "sortOrder": -index]
 
-            features.append(point)
+            features.append(feature)
         }
 
         // add the features to the style
-        self.addRouteAnnotationSymbolLayer(features: features)
+        self.addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features))
     }
 
     /**
      Add the MGLSymbolStyleLayer for the route duration annotations.
      */
-    private func addRouteAnnotationSymbolLayer(features: [MGLPointFeature]) {
-        guard let style = style else { return }
-        let dataSource: MGLShapeSource
-        if let source = style.source(withIdentifier: SourceIdentifier.routeDurationAnnotations) as? MGLShapeSource {
-            dataSource = source
+    private func addRouteAnnotationSymbolLayer(features: FeatureCollection) {
+        guard let style = mapView.style else { return }
+        if let _ = try? mapView.style.getSource(identifier: IdentifierString.routeDurationAnnotations, type: GeoJSONSource.self).get() {
+            let _ = mapView.style.updateGeoJSON(for: IdentifierString.arrowStrokeSource, with: features)
         } else {
-            dataSource = MGLShapeSource(identifier: SourceIdentifier.routeDurationAnnotations, features: features, options: nil)
-            style.addSource(dataSource)
+
+            var dataSource = GeoJSONSource()
+            dataSource.data = .featureCollection(features)
+            mapView.style.addSource(source: dataSource, identifier: IdentifierString.routeDurationAnnotations)
         }
 
-        let shapeLayer: MGLSymbolStyleLayer
+        var shapeLayer: SymbolLayer
 
-        if let layer = style.layer(withIdentifier: StyleLayerIdentifier.routeDurationAnnotations) as? MGLSymbolStyleLayer {
+        if let layer = try? mapView.style.getLayer(with: IdentifierString.routeDurationAnnotations, type: SymbolLayer.self).get() {
             shapeLayer = layer
         } else {
-            shapeLayer = MGLSymbolStyleLayer(identifier: StyleLayerIdentifier.routeDurationAnnotations, source: dataSource)
+            shapeLayer = SymbolLayer(id: IdentifierString.routeDurationAnnotations)
         }
 
-        shapeLayer.text = NSExpression(forKeyPath: "text")
-        let fontSizeByZoomLevel = [
-            13: NSExpression(forConstantValue: 16),
-            15.5: NSExpression(forConstantValue: 20)
-        ]
-        shapeLayer.textFontSize = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fontSizeByZoomLevel)
+        shapeLayer.source = IdentifierString.routeDurationAnnotations
+
+        shapeLayer.layout?.textField = .expression(Exp(.get) {
+            "text"
+        })
+
+        shapeLayer.layout?.iconImage = .expression(Exp(.get) {
+            "imageName"
+        })
+
+        shapeLayer.paint?.textColor = .expression(Exp(.switchCase) {
+            Exp(.any) {
+                Exp(.get) {
+                    "selected"
+                }
+            }
+            UIColor.white
+            UIColor.black
+        })
+
+        shapeLayer.layout?.textSize = .expression(
+            Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                13
+                16
+                15.5
+                20
+            }
+        )
+
+        shapeLayer.layout?.iconTextFit = .both
+        shapeLayer.layout?.iconAllowOverlap = .constant(true)
+        shapeLayer.layout?.textAllowOverlap = .constant(true)
+        shapeLayer.layout?.textJustify = .left
+        shapeLayer.layout?.symbolZOrder = .auto
+        shapeLayer.layout?.textFont = .constant([self.routeDurationAnnotationFontName])
+
+        style.addLayer(layer: shapeLayer, layerPosition: nil)
+
+        #if false
 
         shapeLayer.textColor = NSExpression(forConditional: NSPredicate(format: "selected == true"),
                                             trueExpression: NSExpression(forConstantValue: routeDurationAnnotationSelectedTextColor),
                      falseExpression: NSExpression(forConstantValue: routeDurationAnnotationTextColor))
 
-        shapeLayer.textFontNames = NSExpression(forConstantValue: [self.routeDurationAnnotationFontName])
-        shapeLayer.textAllowsOverlap = NSExpression(forConstantValue: true)
-        shapeLayer.textJustification = NSExpression(forConstantValue: "left")
-        shapeLayer.symbolZOrder = NSExpression(forConstantValue: NSValue(mglSymbolZOrder: MGLSymbolZOrder.auto))
         shapeLayer.symbolSortKey = NSExpression(forConditional: NSPredicate(format: "selected == true"),
                                                 trueExpression: NSExpression(forConstantValue: 1),
                                                    falseExpression: NSExpression(format: "sortOrder"))
-        shapeLayer.iconAnchor = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
-                                             trueExpression: NSExpression(forConstantValue: "bottom-left"),
-                                                falseExpression: NSExpression(forConstantValue: "bottom-right"))
-        shapeLayer.textAnchor = shapeLayer.iconAnchor
-        shapeLayer.iconTextFit = NSExpression(forConstantValue: "both")
-
-        shapeLayer.iconImageName = NSExpression(forKeyPath: "imageName")
         shapeLayer.iconOffset = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
                                              trueExpression: NSExpression(forConstantValue: CGVector(dx: 0.5, dy: -1.0)),
                       falseExpression: NSExpression(forConstantValue: CGVector(dx: -0.5, dy: -1.0)))
         shapeLayer.textOffset = shapeLayer.iconOffset
-        shapeLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
 
-        style.addLayer(shapeLayer)
+        #endif
     }
 
     /**
      Removes all visible route duration callouts.
      */
     public func removeRouteDurations() {
-        guard let style = style else { return }
+        guard let style = mapView.style else { return }
         removeRouteDurationAnnotationsLayerFromStyle(style)
     }
 
     /**
      Remove the underlying style layers and data sources for the route duration annotations.
      */
-    private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MGLStyle) {
-        if let annotationsLayer = style.layer(withIdentifier: StyleLayerIdentifier.routeDurationAnnotations) {
-            style.removeLayer(annotationsLayer)
-        }
-
-        if let annotationsSource = style.source(withIdentifier: SourceIdentifier.routeDurationAnnotations) {
-            style.removeSource(annotationsSource)
-        }
+    private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MapboxMaps.Style) {
+        style.removeLayers([IdentifierString.routeDurationAnnotations])
+        style.removeSources([IdentifierString.routeDurationAnnotations])
     }
 
     // This function generates the text for the label to be shown on screen. It will include estimated duration and info on Tolls, if applicable
@@ -1360,5 +1419,28 @@ open class NavigationMapView: UIView {
                               tracksUserCourse: tracksUserCourse)
         
         userCourseView.center = mapView.screenCoordinate(for: location.coordinate).point
+    }
+}
+
+extension UIColor {
+    func toHex(alpha: Bool = false) -> String {
+        guard let components = cgColor.components, components.count >= 3 else {
+            return "#000000"
+        }
+
+        let r = Float(components[0])
+        let g = Float(components[1])
+        let b = Float(components[2])
+        var a = Float(1.0)
+
+        if components.count >= 4 {
+            a = Float(components[3])
+        }
+
+        if alpha {
+            return String(format: "#%02lX%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255), lroundf(a * 255))
+        } else {
+            return String(format: "#%02lX%02lX%02lX", lroundf(r * 255), lroundf(g * 255), lroundf(b * 255))
+        }
     }
 }

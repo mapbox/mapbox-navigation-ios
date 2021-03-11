@@ -135,11 +135,13 @@ class ViewController: UIViewController {
         startButton.isEnabled = false
         clearMap.isHidden = true
         longPressHintView.isHidden = false
-        
-        if let style = navigationMapView.style {
+
+        #if false
+        if let style = navigationMapView.mapView.style {
             style.removeDebugLineLayers()
             style.removeDebugCircleLayers()
         }
+        #endif
         
         // TODO: Unhighlight buildings when clearing map.
         navigationMapView.removeRoutes()
@@ -570,64 +572,17 @@ extension ViewController: NavigationMapViewDelegate {
 // MARK: - RouteVoiceControllerDelegate methods
 
 extension ViewController: RouteVoiceControllerDelegate {
-
-<<<<<<< HEAD
-=======
-    }
-
-    // By default, the navigation service will attempt to filter out unqualified locations.
-    // If however you would like to filter these locations in,
-    // you can conditionally return a Bool here according to your own heuristics.
-    // See CLLocation.swift `isQualified` for what makes a location update unqualified.
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
-        return true
-    }
-
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
-        return true
-    }
->>>>>>> main
 }
 
 // MARK: - NavigationViewControllerDelegate methods
 
 extension ViewController: NavigationViewControllerDelegate {
-<<<<<<< HEAD
-=======
-    // By default, when the user arrives at a waypoint, the next leg starts immediately.
-    // If you implement this method, return true to preserve this behavior.
-    // Return false to remain on the current leg, for example to allow the user to provide input.
-    // If you return false, you must manually advance to the next leg. See the example above in `confirmationControllerDidConfirm(_:)`.
-    func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
-        // When the user arrives, present a view controller that prompts the user to continue to their next destination
-        // This type of screen could show information about a destination, pickup/dropoff confirmation, instructions upon arrival, etc.
-
-        //If we're not in a "Multiple Stops" demo, show the normal EORVC
-        if navigationViewController.navigationService.router.routeProgress.isFinalLeg {
-            endCarPlayNavigation(canceled: false)
-            return true
-        }
-
-        guard let confirmationController = self.storyboard?.instantiateViewController(withIdentifier: "waypointConfirmation") as? WaypointConfirmationViewController else {
-            return true
-        }
-
-        confirmationController.delegate = self
->>>>>>> main
-
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         return true
     }
-<<<<<<< HEAD
-    
-=======
 
-    // Called when the user hits the exit button.
-    // If implemented, you are responsible for also dismissing the UI.
->>>>>>> main
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         dismissActiveNavigationViewController()
-<<<<<<< HEAD
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
@@ -685,64 +640,6 @@ extension ViewController: NavigationViewControllerDelegate {
             features.append(feature)
         }
         return FeatureCollection(features: features)
-=======
-        if mapView == nil {
-            mapView = NavigationMapView(frame: view.bounds)
-        }
-    }
-}
-
-// MARK: VisualInstructionDelegate
-extension ViewController: VisualInstructionDelegate {
-    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        // Uncomment to mutate the instruction shown in the top instruction banner
-        // let range = NSRange(location: 0, length: presented.length)
-        // let mutable = NSMutableAttributedString(attributedString: presented)
-        // mutable.mutableString.applyTransform(.latinToKatakana, reverse: false, range: range, updatedRange: nil)
-        // return mutable
-
-        return presented
-    }
-}
-
-// MARK: Free driving
-extension ViewController {
-    func trackLocations(mapView: NavigationMapView) {
-        let dataSource = PassiveLocationDataSource()
-        let locationManager = PassiveLocationManager(dataSource: dataSource)
-        mapView.locationManager = locationManager
-
-        NotificationCenter.default.addObserver(self, selector: #selector(didUpdatePassiveLocation), name: .passiveLocationDataSourceDidUpdate, object: dataSource)
-
-        trackPolyline = nil
-        rawTrackPolyline = nil
-    }
-
-    @objc func didUpdatePassiveLocation(_ notification: Notification) {
-        if let roadName = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey] as? String {
-            title = roadName
-        }
-
-        if let location = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation {
-            if trackPolyline == nil {
-                trackPolyline = MGLPolyline()
-            }
-
-            var coordinates: [CLLocationCoordinate2D] = [location.coordinate]
-            trackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
-        }
-
-        if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
-            if rawTrackPolyline == nil {
-                rawTrackPolyline = MGLPolyline()
-            }
-
-            var coordinates: [CLLocationCoordinate2D] = [rawLocation.coordinate]
-            rawTrackPolyline?.appendCoordinates(&coordinates, count: UInt(coordinates.count))
-        }
-
-        mapView?.addAnnotations([rawTrackPolyline!, trackPolyline!])
->>>>>>> main
     }
 }
 

@@ -1,9 +1,9 @@
 import Foundation
-import Mapbox
+import MapboxMaps
 import Turf
 
 extension Turf.BoundingBox {
-    init(coordinateBounds: MGLCoordinateBounds) {
-        self.init(coordinateBounds.sw, coordinateBounds.ne)
+    init(coordinateBounds: CoordinateBounds) {
+        self.init(southWest: coordinateBounds.southwest, northEast: coordinateBounds.northeast)
     }
 }
