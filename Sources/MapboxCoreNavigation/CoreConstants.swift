@@ -304,7 +304,7 @@ extension MapboxNavigationService {
     }
 }
 
-extension Notification.Name {
+public extension Notification.Name {
     /**
      Posted when the user’s position in the electronic horizon changes. This notification may be posted multiple times after `electronicHorizonDidEnterRoadObject` until the user transitions to a new electronic horizon.
      
