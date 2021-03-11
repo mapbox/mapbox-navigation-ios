@@ -53,35 +53,35 @@ public class StatusView: UIControl {
      */
     public struct Status {
         /**
-        `identifier` is a unique string identifier for a `Status`
+        A string that uniquely identifies the `Status`
          */
         public var identifier: String
         /**
-        `title` is the text that will appear on the `Status`
+        The text that will appear on the `Status`
          */
         public let title: String
         /**
-        `spinner` indicates whether a spinner should be shown during animations
+         A boolean that indicates whether a `spinner` should be shown during animations
          set to `false` by default
          */
         public var spinner: Bool = false
         /**
-        `duration` designates the length of time a `Status` will be displayed in seconds
-         To display a `Status` indefinitely, set `duration` to `.infinity`
+         A TimeInterval that designates the length of time the `Status` will be displayed in seconds
+         To display the `Status` indefinitely, set `duration` to `.infinity`
          */
         public let duration: TimeInterval
         /**
-        `animated` indicates whether showing and hiding of the `Status` should be animated
+         A boolean that indicates whether showing and hiding of the `Status` should be animated
          set to `true` by default
          */
         public var animated: Bool = true
         /**
-        `interactive` indicates whether the `Status` should respond to touch events
+         A boolean that indicates whether the `Status` should respond to touch events
          set to `false` by default
          */
         public var interactive: Bool = false
         /**
-        `priority` is a struct which is used to rank a `Status` by importance
+         A typealias which is used to rank a `Status` by importance
          A lower `priority` value corresponds to a higher priority
          */
         public var priority: Priority
@@ -91,20 +91,12 @@ public class StatusView: UIControl {
      `Priority` is used to display `Status`es by importance
      Lower values correspond to higher priority.
      */
-    public struct Priority {
-        public typealias Priority = Int
-
-        public var value: Int
-
-        public init(value: Int) {
-            self.value = value
-        }
+    public typealias Priority = Int
 //        — Highest Priority —
 //            rerouting (value = 0)
 //            enable precise location (value = 1)
 //            simulation banner (value = 2)
 //        — Lowest Priority —
-    }
     
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -184,7 +176,7 @@ public class StatusView: UIControl {
      */
     @available(*, deprecated, message: "Add a status using show(_:) instead")
     public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        let status = Status(identifier: title, title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive, priority: StatusView.Priority(value: 1))
+        let status = Status(identifier: title, title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive, priority: 1)
         show(status)
     }
     
@@ -208,7 +200,7 @@ public class StatusView: UIControl {
             hide(delay: status?.duration ?? 0, animated: status?.animated ?? true)
         } else {
             // if we hide a Status and there are Statuses left in the statuses array, show the Status with highest priority
-            guard let highestPriorityStatus = statuses.min(by: {$0.priority.value < $1.priority.value}) else { return }
+            guard let highestPriorityStatus = statuses.min(by: {$0.priority < $1.priority}) else { return }
             show(status: highestPriorityStatus)
             hide(with: highestPriorityStatus, delay: highestPriorityStatus.duration)
         }
@@ -226,7 +218,7 @@ public class StatusView: UIControl {
     func showSimulationStatus(speed: Int) {
         let format = NSLocalizedString("USER_IN_SIMULATION_MODE", bundle: .mapboxNavigation, value: "Simulating Navigation at %@×", comment: "The text of a banner that appears during turn-by-turn navigation when route simulation is enabled.")
         let title = String.localizedStringWithFormat(format, NumberFormatter.localizedString(from: speed as NSNumber, number: .decimal))
-        let simulationStatus = Status(identifier: "USER_IN_SIMULATION_MODE", title: title, duration: .infinity, interactive: true, priority: StatusView.Priority(value: 2))
+        let simulationStatus = Status(identifier: "USER_IN_SIMULATION_MODE", title: title, duration: .infinity, interactive: true, priority: 2)
         show(simulationStatus)
     }
     
