@@ -25,10 +25,15 @@ extension ViewController {
                                                selector: #selector(didUpdatePassiveLocation),
                                                name: .passiveLocationDataSourceDidUpdate,
                                                object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didUpdateElectronicHorizonPosition),
+                                               name: .electronicHorizonDidUpdatePosition,
+                                               object: nil)
     }
     
     func unsubscribeFromFreeDriveNotifications() {
         NotificationCenter.default.removeObserver(self, name: .passiveLocationDataSourceDidUpdate, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .electronicHorizonDidUpdatePosition, object: nil)
     }
     
     @objc func didUpdatePassiveLocation(_ notification: Notification) {
@@ -83,5 +88,55 @@ extension ViewController {
         layer.paint?.lineWidth = .constant(styledFeature.lineWidth)
         layer.paint?.lineColor = .constant(.init(color: styledFeature.color))
         _ = navigationMapView.mapView.style.addLayer(layer: layer)
+    }
+    
+    @objc func didUpdateElectronicHorizonPosition(_ notification: Notification) {
+        guard let horizon = notification.userInfo?[ElectronicHorizon.NotificationUserInfoKey.treeKey] as? ElectronicHorizon else {
+            return
+        }
+        
+        // Avoid repeating edges that have already been printed out.
+        guard currentEdgeIdentifier != horizon.start.identifier ||
+                nextEdgeIdentifier != horizon.start.outletEdges.first?.identifier else {
+            return
+        }
+        currentEdgeIdentifier = horizon.start.identifier
+        nextEdgeIdentifier = horizon.start.outletEdges.first?.identifier
+        guard let currentEdgeIdentifier = currentEdgeIdentifier,
+              let nextEdgeIdentifier = nextEdgeIdentifier else {
+            return
+        }
+        
+        // Print the current road and upcoming road.
+        var statusString = "Currently on \(edgeNames(identifier: currentEdgeIdentifier).joined(separator: " / ")), approaching \(edgeNames(identifier: nextEdgeIdentifier).joined(separator: " / "))"
+        
+        // If there is an upcoming intersection, include the names of the cross streets.
+        let branchEdgeIdentifiers = horizon.start.outletEdges.suffix(from: 1).map({ $0.identifier })
+        if !branchEdgeIdentifiers.isEmpty {
+            let branchNames = branchEdgeIdentifiers.flatMap { edgeNames(identifier: $0) }
+            statusString += " at \(branchNames.joined(separator: ", "))"
+        }
+        print(statusString)
+    }
+    
+    func edgeNames(identifier: ElectronicHorizon.Edge.Identifier) -> [String] {
+        let passiveLocationDataSource = (navigationMapView.mapView.locationManager.locationProvider as! PassiveLocationManager).dataSource
+        guard let metadata = passiveLocationDataSource.roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
+            return []
+        }
+        let names = metadata.names.map { name -> String in
+            switch name {
+            case .name(let name):
+                return name
+            case .code(let code):
+                return "(\(code))"
+            }
+        }
+        
+        // If the road is unnamed, fall back to the road class.
+        if names.isEmpty {
+            return ["\(metadata.mapboxStreetsRoadClass.rawValue)"]
+        }
+        return names
     }
 }
