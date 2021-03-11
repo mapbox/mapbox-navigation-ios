@@ -15,7 +15,7 @@ extension ElectronicHorizon.Edge {
         public let length: CLLocationDistance
 
         /** The edge's functional road class */
-        public let functionalRoadClass: MapboxStreetsRoadClass
+        public let mapboxStreetsRoadClass: MapboxStreetsRoadClass
 
         /** The edge’s maximum speed limit. */
         public let speedLimit: Measurement<UnitSpeed>?
@@ -59,7 +59,7 @@ extension ElectronicHorizon.Edge {
         init(_ native: EdgeMetadata) {
             self.heading = native.heading
             self.length = native.length
-            self.functionalRoadClass = MapboxStreetsRoadClass(native.frc)
+            self.mapboxStreetsRoadClass = MapboxStreetsRoadClass(native.frc)
             if let speedLimitValue = native.speedLimit as? Double {
                 // TODO: Convert to miles per hour as locally appropriate.
                 self.speedLimit = Measurement(value: speedLimitValue, unit: UnitSpeed.metersPerSecond).converted(to: .kilometersPerHour)
