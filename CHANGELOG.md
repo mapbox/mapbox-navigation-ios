@@ -3,12 +3,13 @@
 ## v1.3.0
 
 * MapboxCoreNavigation can now be installed using Swift Package Manager. ([#2771](https://github.com/mapbox/mapbox-navigation-ios/pull/2771))
-* The CarPlay guidance panel now shows lane guidance. ([#2798](https://github.com/mapbox/mapbox-navigation-ios/pull/2798))
+* The CarPlay guidance panel now shows lane guidance. ([#1885](https://github.com/mapbox/mapbox-navigation-ios/pull/1885))
 * Old versions of routing tiles are automatically deleted from the cache to save storage space. ([#2807](https://github.com/mapbox/mapbox-navigation-ios/pull/2807))
 * Fixed an issue where lane guidance icons would indicate the wrong arrow for certain maneuvers. ([#2796](https://github.com/mapbox/mapbox-navigation-ios/pull/2796), [#2809](https://github.com/mapbox/mapbox-navigation-ios/pull/2809))
 * Fixed a crash showing a junction view. ([#2805](https://github.com/mapbox/mapbox-navigation-ios/pull/2805))
 * Fixed an issue with CarPlay visual instructions where U-Turn maneuver icons were not being flipped properly based on regional driving side ([#2803](https://github.com/mapbox/mapbox-navigation-ios/pull/2803)) 
 * Fixed swiping for right-to-left languages for the Guidance Card UI to be more intuitive. ([#2724](https://github.com/mapbox/mapbox-navigation-ios/pull/2724))
+* `NavigationViewController` can now manage multiple status banners one after another. Renamed the `NavigationViewController.showStatus(title:spinner:duration:animated:interactive:)` method to `NavigationViewController.show(_:)` and added a corresponding `NavigationViewController.hide(_:)` method. Renamed the `NavigationStatusPresenter.showStatus(title:spinner:duration:animated:interactive:)` method to `NavigationStatusPresenter.show(_:)` and added a `NavigationStatusPresenter.hide(_:)` method. ([#2747](https://github.com/mapbox/mapbox-navigation-ios/pull/2747))
 
 ## v1.2.1
 
