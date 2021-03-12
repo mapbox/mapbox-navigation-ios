@@ -81,6 +81,12 @@ step-library:
           ./scripts/convert_string_files.sh
           git diff --exit-code -- */*/*.lproj
 
+  - &add-github-to-known-hosts
+      run:
+        name: Add GitHub to known hosts
+        command: |
+          for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+
   - &install-dependencies
       when:
         condition:
@@ -199,9 +205,7 @@ jobs:
           name: pre-start simulator
           command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
       - *verify-missing-localizable-strings
-      - run:
-          name: Add GitHub to known hosts
-          command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+      - *add-github-to-known-hosts
       - when:
           condition:
             not: << parameters.spm >>
@@ -247,6 +251,7 @@ jobs:
       - *update-carthage-version
       - *restore-cache
       - *install-dependencies
+      - *add-github-to-known-hosts
       - *build-Example
       - *save-cache
 
