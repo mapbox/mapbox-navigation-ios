@@ -235,7 +235,7 @@ jobs:
         default: "12.4.0"
       spm:
         type: boolean
-        default: false
+        default: true
     macos:
       xcode: << parameters.xcode >>
     environment:
