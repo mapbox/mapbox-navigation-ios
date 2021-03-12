@@ -927,57 +927,75 @@ open class NavigationMapView: UIView {
     private func updateAnnotationSymbolImages() {
         guard let style = mapView.style, style.getStyleImage(with: "RouteInfoAnnotationLeftHanded") == nil, style.getStyleImage(with: "RouteInfoAnnotationRightHanded") == nil else { return }
 
-        //        let leftStretchX = ImageStretches(first: Float(35), second: Float(50))
-        let leftStretchX = ImageStretches(first: Float(25), second: Float(55))
-        let rightStretchX = ImageStretches(first: Float(85), second: Float(115))
-        let stretchX = [leftStretchX, rightStretchX]
-        let stretchY = [ImageStretches(first: Float(25), second: Float(100))]
-        let imageContent = ImageContent(left: 25, top: 20, right: 115, bottom: 105)
-        if let image =  Bundle.mapboxNavigation.image(named: "Rectangle") {
+        // Center pin
+//        if let image =  Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationCenter2") {
+//            let leftStretchX = ImageStretches(first: Float(25), second: Float(55))
+//            let rightStretchX = ImageStretches(first: Float(85), second: Float(115))
+//            let stretchX = [leftStretchX, rightStretchX]
+//            let stretchY = [ImageStretches(first: Float(25), second: Float(100))]
+//            let imageContent = ImageContent(left: 25, top: 20, right: 115, bottom: 105)
+//            let regularRouteImage = image.tint(routeDurationAnnotationColor)
+//
+//            style.setStyleImage(image: regularRouteImage,
+//                                with: "RouteInfoAnnotationLeftHanded",
+//                                stretchX: stretchX,
+//                                stretchY: stretchY,
+//                                scale: 2.0,
+//                                imageContent: imageContent)
+//
+//            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor)
+//            style.setStyleImage(image: selectedRouteImage,
+//                                with: "RouteInfoAnnotationLeftHanded-Selected",
+//                                stretchX: stretchX,
+//                                stretchY: stretchY,
+//                                scale: 2.0,
+//                                imageContent: imageContent)
+//        }
+
+        // Right-hand pin
+        if let image =  Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
             let regularRouteImage = image.tint(routeDurationAnnotationColor)
 
-            //            style.setStyleImage(image: regularRouteImage, with: "RouteInfoAnnotationLeftHanded", scale: scale)
+            let lStretchX = ImageStretches(first: Float(25), second: Float(40))
+            let stretchX = [lStretchX]
+            let stretchY = [ImageStretches(first: Float(40), second: Float(32))]
+            let imageContent = ImageContent(left: 25, top: 26, right: 40, bottom: 33) // for image(named: "RouteInfoAnnotationRightHanded2")
+
             style.setStyleImage(image: regularRouteImage,
-                                with: "RouteInfoAnnotationLeftHanded",
-                                sdf: false,
+                                with: "RouteInfoAnnotationRightHanded",
                                 stretchX: stretchX,
                                 stretchY: stretchY,
                                 scale: 2.0,
                                 imageContent: imageContent)
 
             let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor)
-            //            style.setStyleImage(image: selectedRouteImage, with: "RouteInfoAnnotationLeftHanded-Selected", scale: scale)
             style.setStyleImage(image: selectedRouteImage,
-                                with: "RouteInfoAnnotationLeftHanded-Selected",
-                                sdf: false,
+                                with: "RouteInfoAnnotationRightHanded-Selected",
                                 stretchX: stretchX,
                                 stretchY: stretchY,
                                 scale: 2.0,
                                 imageContent: imageContent)
         }
 
-        if let image =  Bundle.mapboxNavigation.image(named: "Rectangle2") {
+        // Left-hand pin
+        if let image =  Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
             let regularRouteImage = image.tint(routeDurationAnnotationColor)
 
-            let lStretchX = ImageStretches(first: Float(25), second: Float(55))
+            let lStretchX = ImageStretches(first: Float(32), second: Float(42))
             let stretchX = [lStretchX]
-            let stretchY = [ImageStretches(first: Float(25), second: Float(100))]
-            let imageContent = ImageContent(left: 25, top: 25, right: 90, bottom: 100)
+            let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
+            let imageContent = ImageContent(left: 32, top: 26, right: 47, bottom: 33)
 
-            //            style.setStyleImage(image: regularRouteImage, with: "RouteInfoAnnotationRightHanded", scale: scale)
             style.setStyleImage(image: regularRouteImage,
-                                with: "RouteInfoAnnotationRightHanded",
-                                sdf: false,
+                                with: "RouteInfoAnnotationLeftHanded",
                                 stretchX: stretchX,
                                 stretchY: stretchY,
                                 scale: 2.0,
                                 imageContent: imageContent)
 
             let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor)
-            //            style.setStyleImage(image: selectedRouteImage, with: "RouteInfoAnnotationRightHanded-Selected", scale: scale)
             style.setStyleImage(image: selectedRouteImage,
-                                with: "RouteInfoAnnotationRightHanded-Selected",
-                                sdf: false,
+                                with: "RouteInfoAnnotationLeftHanded-Selected",
                                 stretchX: stretchX,
                                 stretchY: stretchY,
                                 scale: 2.0,
