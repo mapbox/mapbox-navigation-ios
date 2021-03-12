@@ -199,6 +199,9 @@ jobs:
           name: pre-start simulator
           command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
       - *verify-missing-localizable-strings
+      - run:
+          name: Add GitHub to known hosts
+          command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
       - when:
           condition:
             not: << parameters.spm >>
@@ -209,9 +212,6 @@ jobs:
       - when:
           condition: << parameters.spm >>
           steps:
-            - run:
-                name: Add GitHub to known hosts
-                command: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
             - run:
                 name: Move Xcode project aside
                 command: mv MapboxNavigation.xcodeproj MapboxNavigation.xcodeproj-aside
