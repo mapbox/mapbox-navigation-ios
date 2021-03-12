@@ -1,5 +1,6 @@
 import UIKit
 import CoreLocation
+import MapboxMaps
 
 /**
  A protocol that represents a `UIView` which tracks the user’s location and course on a `NavigationMapView`.
@@ -49,14 +50,46 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     /// Time interval, after which Puck is considered 100% 'stale'
     public var staleInterval: TimeInterval = 60
     
+    var location: CLLocation? = nil
+    var course: CLLocationDirection? = nil
+    var pitch: CGFloat? = nil
+    var direction: CLLocationDegrees? = nil
+    var navigationCameraState: NavigationCameraState? = nil
+    
     /**
      Transforms the location of the user puck.
      */
     public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
-        let duration: TimeInterval = animated ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
+        self.location = location
+        self.navigationCameraState = navigationCameraState
+        self.course = location.course
+        self.pitch = pitch
+        self.direction = direction
+    }
+    
+    private var displayLink: CADisplayLink?
+    
+    public override var isHidden: Bool {
+        didSet {
+            if isHidden {
+                stopDisplayLink()
+            } else {
+                startDisplayLink()
+            }
+        }
+    }
+    
+    @objc private func updateUserCourseView() {
+        guard let mapView = superview as? MapView,
+              let location = location,
+              let course = course,
+              let pitch = pitch,
+              let direction = direction,
+              let navigationCameraState = navigationCameraState else { return }
+        
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: [.beginFromCurrentState, .curveLinear], animations: {
             let isCameraFollowing = navigationCameraState == .following
-            let angle = CGFloat(isCameraFollowing ? 0.0 : CLLocationDegrees(direction - location.course).toRadians())
+            let angle = CGFloat(isCameraFollowing ? 0.0 : CLLocationDegrees(direction - course).toRadians())
             let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
             
             let isCameraTransitioning = navigationCameraState == .transitionToFollowing || navigationCameraState == .transitionToOverview
@@ -67,7 +100,21 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
             transform = CATransform3DScale(transform, scale, scale, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
             self.layer.sublayerTransform = transform
-        }, completion: nil)
+            
+            self.center = mapView.screenCoordinate(for: location.coordinate).point
+        })
+    }
+    
+    private func startDisplayLink() {
+        if self.displayLink == nil {
+            self.displayLink = CADisplayLink(target: self, selector: #selector(updateUserCourseView))
+        }
+        self.displayLink?.add(to: .current, forMode: RunLoop.Mode.common)
+    }
+    
+    private func stopDisplayLink() {
+        self.displayLink?.remove(from: .current, forMode: RunLoop.Mode.common)
+        self.displayLink = nil
     }
     
     // Sets the color on the user puck
@@ -111,6 +158,7 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
     }
     
     deinit {
+        stopDisplayLink()
         staleTimer.invalidate()
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
     }

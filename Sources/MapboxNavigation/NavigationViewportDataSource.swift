@@ -159,85 +159,96 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
     
     func updateFollowingCamera(_ passiveLocation: CLLocation?, activeLocation: CLLocation?, routeProgress: RouteProgress?) {
-        guard let location = activeLocation,
-              let mapView = mapView,
-              let routeProgress = routeProgress else { return }
+        guard let mapView = mapView else { return }
         
-        let heading = location.course
-        let edgeInsets: UIEdgeInsets = UIEdgeInsets(top: 100.0, left: 80.0, bottom: 150.0, right: 80.0)
-        
-        lastKnownEdgeInsets = edgeInsets
-        updateEdgeInsetsDebugView()
-        
-        let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: activeLocation?.coordinate) ?? []
-        let stepIndex = routeProgress.currentLegProgress.stepIndex
-        let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
-        let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...].map({ $0.shape?.coordinates })
-        
-        var cameraShouldIgnoreManeuver = false
-        if let upcomingStep = routeProgress.currentLeg.steps[safe: routeProgress.currentLegProgress.stepIndex + 1] {
-            if routeProgress.currentLegProgress.stepIndex == routeProgress.currentLegProgress.leg.steps.count - 2 {
-                cameraShouldIgnoreManeuver = true
-            }
+        if let location = passiveLocation {
+            followingMobileCamera.center = location.coordinate
+            followingMobileCamera.zoom = 14.0
+            followingMobileCamera.bearing = 0
+            followingMobileCamera.anchor = mapView.center
+            followingMobileCamera.pitch = 0
+            followingMobileCamera.padding = .zero
             
-            let maneuvers: [ManeuverType] = [.continue, .merge, .takeOnRamp, .takeOffRamp, .reachFork]
-            if maneuvers.contains(upcomingStep.maneuverType) {
-                cameraShouldIgnoreManeuver = true
-            }
+            return
         }
         
-        let coordinatesToManeuver = untraveledCoordinatesOnCurrentStep
-        guard let distance = LineString(coordinatesToManeuver).distance() else { return }
-        let pitchEffectDistanceStart: CLLocationDistance = 180
-        let pitchEffectDistanceEnd: CLLocationDistance = 150
-        let pitchPercentage = cameraShouldIgnoreManeuver ? 1.0 : getPitchEffectPercentage(currentDistance: distance,
-                                                                                          effectStartRemainingDistance: pitchEffectDistanceStart,
-                                                                                          effectEndRemainingDistance: pitchEffectDistanceEnd)
-        let pitchAndScreenCoordinate = getPitchAndScreenCenterPoint(pitchEffectPercentage: pitchPercentage,
-                                                                    maxPitch: maxPitch,
-                                                                    bounds: mapView.bounds,
-                                                                    edgeInsets: edgeInsets)
-        let newPitch = pitchAndScreenCoordinate.pitch
-        let newCenterScreenCoordinate = pitchAndScreenCoordinate.screenCenterPoint
-        
-        var coordinatesForManeuverFraming: [CLLocationCoordinate2D]
-        var compoundManeuvers: [[CLLocationCoordinate2D]] = []
-        for step in coordinatesAfterCurrentStep {
-            if let coordsForStep = step {
-                let distance = coordsForStep.distance()
-                if distance < 150 && distance > 0 {
-                    compoundManeuvers.append(coordsForStep)
-                } else {
-                    let distanceAfterManeuverToIncludeInFraming = 30.0
-                    compoundManeuvers.append(coordsForStep.trimmed(distance: distanceAfterManeuverToIncludeInFraming))
-                    break
+        if let location = activeLocation, let routeProgress = routeProgress {
+            let heading = location.course
+            let edgeInsets: UIEdgeInsets = UIEdgeInsets(top: 100.0, left: 80.0, bottom: 150.0, right: 80.0)
+            
+            lastKnownEdgeInsets = edgeInsets
+            updateEdgeInsetsDebugView()
+            
+            let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: activeLocation?.coordinate) ?? []
+            let stepIndex = routeProgress.currentLegProgress.stepIndex
+            let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
+            let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...].map({ $0.shape?.coordinates })
+            
+            var cameraShouldIgnoreManeuver = false
+            if let upcomingStep = routeProgress.currentLeg.steps[safe: routeProgress.currentLegProgress.stepIndex + 1] {
+                if routeProgress.currentLegProgress.stepIndex == routeProgress.currentLegProgress.leg.steps.count - 2 {
+                    cameraShouldIgnoreManeuver = true
+                }
+                
+                let maneuvers: [ManeuverType] = [.continue, .merge, .takeOnRamp, .takeOffRamp, .reachFork]
+                if maneuvers.contains(upcomingStep.maneuverType) {
+                    cameraShouldIgnoreManeuver = true
                 }
             }
+            
+            let coordinatesToManeuver = untraveledCoordinatesOnCurrentStep
+            guard let distance = LineString(coordinatesToManeuver).distance() else { return }
+            let pitchEffectDistanceStart: CLLocationDistance = 180
+            let pitchEffectDistanceEnd: CLLocationDistance = 150
+            let pitchPercentage = cameraShouldIgnoreManeuver ? 1.0 : getPitchEffectPercentage(currentDistance: distance,
+                                                                                              effectStartRemainingDistance: pitchEffectDistanceStart,
+                                                                                              effectEndRemainingDistance: pitchEffectDistanceEnd)
+            let pitchAndScreenCoordinate = getPitchAndScreenCenterPoint(pitchEffectPercentage: pitchPercentage,
+                                                                        maxPitch: maxPitch,
+                                                                        bounds: mapView.bounds,
+                                                                        edgeInsets: edgeInsets)
+            let newPitch = pitchAndScreenCoordinate.pitch
+            let newCenterScreenCoordinate = pitchAndScreenCoordinate.screenCenterPoint
+            
+            var coordinatesForManeuverFraming: [CLLocationCoordinate2D]
+            var compoundManeuvers: [[CLLocationCoordinate2D]] = []
+            for step in coordinatesAfterCurrentStep {
+                if let coordsForStep = step {
+                    let distance = coordsForStep.distance()
+                    if distance < 150 && distance > 0 {
+                        compoundManeuvers.append(coordsForStep)
+                    } else {
+                        let distanceAfterManeuverToIncludeInFraming = 30.0
+                        compoundManeuvers.append(coordsForStep.trimmed(distance: distanceAfterManeuverToIncludeInFraming))
+                        break
+                    }
+                }
+            }
+            
+            coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
+            
+            let cameraParams = getZoomLevelAndCenterCoordinateForFollowing(coordinates: coordinatesToManeuver + coordinatesForManeuverFraming,
+                                                                           heading: heading,
+                                                                           pitch: newPitch,
+                                                                           edgeInsets: edgeInsets)
+            let newZoomLevel = cameraParams.zoomLevel
+            
+            var newCenter: CLLocationCoordinate2D = location.coordinate
+            let centerLineString = LineString([location.coordinate, cameraParams.centerCoordinate!])
+            guard let centerLineStringTotalDistance = centerLineString.distance() else { return }
+            let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchPercentage)
+            let adjustedCenterCoord = centerLineString.coordinateFromStart(distance: centerCoordDistance)
+            newCenter = adjustedCenterCoord!
+            
+            let newMapBearing = normalizeAngle(angle: heading, anchorAngle: mapView.bearing)
+            
+            followingMobileCamera.center = newCenter
+            followingMobileCamera.zoom = CGFloat(newZoomLevel)
+            followingMobileCamera.bearing = newMapBearing
+            followingMobileCamera.anchor = newCenterScreenCoordinate
+            followingMobileCamera.pitch = CGFloat(newPitch)
+            followingMobileCamera.padding = edgeInsets
         }
-        
-        coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
-        
-        let cameraParams = getZoomLevelAndCenterCoordinateForFollowing(coordinates: coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                                       heading: heading,
-                                                                       pitch: newPitch,
-                                                                       edgeInsets: edgeInsets)
-        let newZoomLevel = cameraParams.zoomLevel
-
-        var newCenter: CLLocationCoordinate2D = location.coordinate
-        let centerLineString = LineString([location.coordinate, cameraParams.centerCoordinate!])
-        guard let centerLineStringTotalDistance = centerLineString.distance() else { return }
-        let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchPercentage)
-        let adjustedCenterCoord = centerLineString.coordinateFromStart(distance: centerCoordDistance)
-        newCenter = adjustedCenterCoord!
-
-        let newMapBearing = normalizeAngle(angle: heading, anchorAngle: mapView.bearing)
-        
-        followingMobileCamera.center = newCenter
-        followingMobileCamera.zoom = CGFloat(newZoomLevel)
-        followingMobileCamera.bearing = newMapBearing
-        followingMobileCamera.anchor = newCenterScreenCoordinate
-        followingMobileCamera.pitch = CGFloat(newPitch)
-        followingMobileCamera.padding = edgeInsets
     }
     
     func getZoomLevelAndCenterCoordinateForFollowing(coordinates: [CLLocationCoordinate2D],

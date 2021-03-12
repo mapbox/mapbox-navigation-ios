@@ -88,9 +88,12 @@ open class NavigationMapView: UIView {
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
             let frame = CGRect(origin: .zero, size: 75.0)
+            let isHidden = userCourseView.isHidden
             userCourseView = reducedAccuracyActivatedMode
                 ? UserHaloCourseView(frame: frame)
                 : UserPuckCourseView(frame: frame)
+            
+            userCourseView.isHidden = isHidden
         }
     }
     
@@ -355,26 +358,18 @@ open class NavigationMapView: UIView {
         
         mostRecentUserCourseViewLocation = location
         
-        if userCourseView.isHidden {
-            userCourseView.isHidden = false
-        }
-        
-        let centerUserCourseView = { [weak self] in
+        // While animating to overview mode, don't animate the puck.
+        let duration: TimeInterval = animated && navigationCamera.navigationCameraState != .transitionToOverview ? 1 : 0
+        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
             guard let point = self?.mapView.screenCoordinate(for: location.coordinate).point else { return }
             self?.userCourseView.center = point
         }
         
-        // While animating to overview mode, don't animate the puck.
-        let duration: TimeInterval = animated && navigationCamera.navigationCameraState != .transitionToOverview ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: centerUserCourseView)
-        
         userCourseView.update(location: location,
-                              pitch: mapView.cameraView.pitch,
+                              pitch: mapView.pitch,
                               direction: mapView.bearing,
                               animated: animated,
                               navigationCameraState: navigationCamera.navigationCameraState)
-        
-        userCourseView.center = mapView.screenCoordinate(for: location.coordinate).point
     }
     
     // MARK: Feature Addition/removal properties and methods

@@ -112,9 +112,8 @@ class RouteMapViewController: UIViewController {
         self.init()
         self.navigationService = navigationService
         self.delegate = delegate
-        automaticallyAdjustsScrollViewInsets = false
-        let topContainer = navigationView.topBannerContainerView
         
+        let topContainer = navigationView.topBannerContainerView
         embed(topBanner, in: topContainer) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: self.navigationView.topBannerContainerView)
@@ -141,16 +140,10 @@ class RouteMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let navigationMapView = self.navigationMapView
-        // TODO: Verify whether content insets should be changed on map view.
-        view.layoutIfNeeded()
-
-        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
-        
-        navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        self.navigationMapView.mapView.on(.styleLoadingFinished) { _ in
             self.showRouteIfNeeded()
-            navigationMapView.localizeLabels()
-            navigationMapView.mapView.showsTraffic = false
+            self.navigationMapView.localizeLabels()
+            self.navigationMapView.mapView.showsTraffic = false
             
             // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
             // regarding building identification such highlighted building will disappear.
@@ -162,6 +155,8 @@ class RouteMapViewController: UIViewController {
         navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
         resumeNotifications()
+        
+        self.navigationMapView.userCourseView.isHidden = false
     }
 
     deinit {

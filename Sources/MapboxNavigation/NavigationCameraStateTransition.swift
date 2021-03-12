@@ -3,9 +3,9 @@ import Turf
 
 public class NavigationCameraStateTransition: CameraStateTransition {
 
-    weak public var mapView: MapView?
+    public weak var mapView: MapView?
     
-    var cameraView: CameraView!
+    public var cameraView: CameraView!
     
     let followingWithoutRouteZoomLevel = 16.0
     let maxPitch = 60.0
