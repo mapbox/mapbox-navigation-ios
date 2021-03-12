@@ -6,9 +6,9 @@ public protocol CameraStateTransition {
     
     init(_ mapView: MapView)
     
-    func transitionToFollowing(_ cameraOptions: CameraOptions, completion: (() -> Void)?)
+    func transitionToFollowing(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void))
     
-    func transitionToOverview(_ cameraOptions: CameraOptions, completion: (() -> Void)?)
+    func transitionToOverview(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void))
     
     func updateForFollowing(_ cameraOptions: CameraOptions, completion: (() -> Void)?)
     

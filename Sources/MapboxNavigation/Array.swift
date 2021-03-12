@@ -69,13 +69,6 @@ extension Array where Iterator.Element == CLLocationCoordinate2D {
         }
     }
     
-    func trimmedFromEnd(distance: CLLocationDistance) -> [CLLocationCoordinate2D] {
-        return self.reversed().trimmed(distance: distance).reversed()
-    }
-}
-
-extension Array where Iterator.Element == CLLocationCoordinate2D {
-    
     func getCenterCoordinate() -> CLLocationCoordinate2D {
         let avgLat = self.map {$0.latitude} .reduce(0.0, +) / Double(self.count)
         let avgLng = self.map {$0.longitude} .reduce(0.0, +) / Double(self.count)

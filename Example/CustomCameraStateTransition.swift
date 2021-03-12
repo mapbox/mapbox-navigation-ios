@@ -9,21 +9,21 @@ class CustomCameraStateTransition: CameraStateTransition {
         self.mapView = mapView
     }
     
-    func transitionToFollowing(_ cameraOptions: CameraOptions, completion: (() -> Void)?) {
+    func transitionToFollowing(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
                                          duration: 0.5,
                                          completion: { _ in
-                                            completion?()
+                                            completion()
                                          })
     }
     
-    func transitionToOverview(_ cameraOptions: CameraOptions, completion: (() -> Void)?) {
+    func transitionToOverview(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
                                          duration: 0.5,
                                          completion: { _ in
-                                            completion?()
+                                            completion()
                                          })
     }
     
