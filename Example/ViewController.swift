@@ -145,6 +145,15 @@ class ViewController: UIViewController {
         
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()
+        
+        // TODO: Provide a reliable way of setting camera to current coordinate.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            if let coordinate = navigationMapView.mapView.locationManager.latestLocation?.coordinate {
+                navigationMapView.mapView.cameraManager.setCamera(to: CameraOptions(center: coordinate, zoom: 13),
+                                                                  animated: true,
+                                                                  completion: nil)
+            }
+        }
     }
     
     private func uninstall(_ navigationMapView: NavigationMapView) {
@@ -269,17 +278,6 @@ class ViewController: UIViewController {
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
         
-        // Modify default `NavigationViewportDataSource` and `NavigationCameraStateTransition` to change
-        // `NavigationCamera` behavior.
-        if let mapView = navigationViewController.navigationMapView?.mapView {
-            let customViewportDataSource = NavigationViewportDataSource(mapView)
-            customViewportDataSource.altitude = 800.0
-            navigationViewController.navigationMapView?.navigationCamera.viewportDataSource = customViewportDataSource
-            
-            let customCameraStateTransition = CustomCameraStateTransition(mapView)
-            navigationViewController.navigationMapView?.navigationCamera.cameraStateTransition = customCameraStateTransition
-        }
-        
         present(navigationViewController, completion: nil)
     }
     
@@ -309,6 +307,17 @@ class ViewController: UIViewController {
         let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
+        
+        // Modify default `NavigationViewportDataSource` and `NavigationCameraStateTransition` to change
+        // `NavigationCamera` behavior during active guidance.
+        if let mapView = navigationViewController.navigationMapView?.mapView {
+            let customViewportDataSource = NavigationViewportDataSource(mapView)
+            customViewportDataSource.altitude = 800.0
+            navigationViewController.navigationMapView?.navigationCamera.viewportDataSource = customViewportDataSource
+            
+            let customCameraStateTransition = CustomCameraStateTransition(mapView)
+            navigationViewController.navigationMapView?.navigationCamera.cameraStateTransition = customCameraStateTransition
+        }
 
         present(navigationViewController, completion: beginCarPlayNavigation)
     }

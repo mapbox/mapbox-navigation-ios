@@ -386,6 +386,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         cameraView.isActive = true
         
         let completion = {
+            self.setUpAnimatorsForFollowing()
             animatorsComplete += 1
             if animatorsComplete == numberOfAnimators {
                 completion()
@@ -427,11 +428,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         animatorCenter.addCompletion { _ in
             self.cameraParametersInTransition.remove(.center)
-            self.setUpAnimatorsForFollowing()
-            animatorsComplete += 1
-            if animatorsComplete >= 2 && !self.cameraParametersInTransition.contains([.center, .zoom]) {
-                completion()
-            }
+            completion()
         }
         
         let bezierParamsZoom = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.2, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
@@ -441,11 +438,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         animatorZoom.addCompletion { _ in
             self.cameraParametersInTransition.remove(.zoom)
-            self.setUpAnimatorsForFollowing()
-            animatorsComplete += 1
-            if animatorsComplete >= 2 && !self.cameraParametersInTransition.contains([.center, .zoom]) {
-                completion()
-            }
+            completion()
         }
         
         let bezierParamsBearing = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.6, y: 0.0), controlPoint2: CGPoint(x: 0.4, y: 1.0))
@@ -455,11 +448,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         animatorBearing.addCompletion { _ in
             self.cameraParametersInTransition.remove(.bearing)
-            self.setUpAnimatorsForFollowing()
-            animatorsComplete += 1
-            if animatorsComplete == numberOfAnimators {
-                // completion()
-            }
+            completion()
         }
         
         let bezierParamsPitch = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.6, y: 0.0), controlPoint2: CGPoint(x: 0.4, y: 1.0))
@@ -470,11 +459,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         animatorPitch.addCompletion { _ in
             self.cameraParametersInTransition.remove(.pitch)
-            self.setUpAnimatorsForFollowing()
-            animatorsComplete += 1
-            if animatorsComplete == numberOfAnimators {
-                // completion()
-            }
+            completion()
         }
         
         animatorCenter.startAnimation(afterDelay: fmax(delayCenterAnimation, 0))
@@ -492,6 +477,14 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         
         let numberOfAnimators = 4
         var animatorsComplete: Int = 0
+        let completion = {
+            self.setUpAnimatorsForFollowing()
+            animatorsComplete += 1
+            if animatorsComplete == numberOfAnimators {
+                completion()
+                self.cameraView.isActive = false
+            }
+        }
         
         cameraParametersInTransition = [.center, .zoom, .bearing, .pitch]
         cameraParameters = []
@@ -503,12 +496,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         animatorCenter.addCompletion { _ in
             self.cameraParametersInTransition.remove(.center)
-            self.setUpAnimatorsForFollowing()
-            animatorsComplete += 1
-            if animatorsComplete == numberOfAnimators {
-                self.cameraView.isActive = false
-                completion()
-            }
+            completion()
         }
         
         // TODO: When transitioning to high zoom following `UICubicTimingParameters` should be used.
@@ -521,12 +509,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         animatorZoom.addCompletion { _ in
             self.cameraParametersInTransition.remove(.zoom)
-            self.setUpAnimatorsForFollowing()
-            animatorsComplete += 1
-            if animatorsComplete == numberOfAnimators {
-                self.cameraView.isActive = false
-                completion()
-            }
+            completion()
         }
         
         let bezierParamsBearing = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
@@ -536,12 +519,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         animatorBearing.addCompletion { _ in
             self.cameraParametersInTransition.remove(.bearing)
-            self.setUpAnimatorsForFollowing()
-            animatorsComplete += 1
-            if animatorsComplete == numberOfAnimators {
-                self.cameraView.isActive = false
-                completion()
-            }
+            completion()
         }
         
         let bezierParamsPitch = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.6, y: 0.0), controlPoint2: CGPoint(x: 0.4, y: 1.0))
@@ -552,12 +530,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         animatorPitch.addCompletion { _ in
             self.cameraParametersInTransition.remove(.pitch)
-            self.setUpAnimatorsForFollowing()
-            animatorsComplete += 1
-            if animatorsComplete == numberOfAnimators {
-                self.cameraView.isActive = false
-                completion()
-            }
+            completion()
         }
         
         animatorCenter.startAnimation(afterDelay: fmax(transitionParameters.centerAnimationDelay, 0))
