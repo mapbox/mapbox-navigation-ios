@@ -8,7 +8,7 @@ import MapboxNavigationNative
 
  The road network ahead of the user is represented as a tree of edges. Each intersection has outlet edges. In turn, each edge has a probability of transition to another edge, as well as details about the road segment that the edge traverses. You can use these details to influence application behavior based on predicted upcoming conditions.
  */
-public class ElectronicHorizon {
+public struct ElectronicHorizon {
 
     /// The starting edge leading to the upcoming probable paths.
     public let start: Edge
