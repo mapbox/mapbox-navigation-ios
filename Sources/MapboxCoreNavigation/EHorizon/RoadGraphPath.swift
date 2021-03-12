@@ -9,19 +9,19 @@ extension RoadGraph {
         /** The edge identifiers that form the linear object. */
         public let edgeIdentifiers: [ElectronicHorizon.Edge.Identifier]
 
-        /** Percent along edge shape (0-1) of a path begin point. */
-        public let percentAlongBegin: Double
+        /** The distance from the start of the linear object to the user’s location as a fraction of the linear object’s length from 0 to 1. */
+        public let fractionFromStart: Double
 
-        /** Percent along edge shape (0-1) of a path end point. */
-        public let percentAlongEnd: Double
+        /** The distance from the the user’s location to the end of the linear object as a fraction of the linear object’s length from 0 to 1. */
+        public let fractionToEnd: Double
         
-        /** Length of a path. */
+        /** Length of a path, measured in meters. */
         public let length: CLLocationDistance
 
         init(_ native: GraphPath) {
             self.edgeIdentifiers = native.edges.map { $0.uintValue }
-            self.percentAlongBegin = native.percentAlongBegin
-            self.percentAlongEnd = native.percentAlongEnd
+            self.fractionFromStart = native.percentAlongBegin
+            self.fractionToEnd = native.percentAlongEnd
             self.length = native.length
         }
     }

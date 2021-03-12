@@ -347,7 +347,7 @@ extension ElectronicHorizon {
         public static let treeKey: NotificationUserInfoKey = .init(rawValue: "tree")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an `ElectronicHorizon.ResultType` indicating the kind of electronic horizon result. */
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an `ElectronicHorizon.Revision` indicating the kind of electronic horizon result. */
         public static let resultTypeKey: NotificationUserInfoKey = .init(rawValue: "resultType")
         
         /**

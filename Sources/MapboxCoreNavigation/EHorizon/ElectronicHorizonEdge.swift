@@ -16,23 +16,25 @@ extension ElectronicHorizon {
          */
         public typealias Identifier = UInt
 
-        /** Unique identifier of the directed edge */
+        /** Unique identifier of the directed edge. */
         public let identifier: Identifier
 
         /**
-         The level of the Edge (0 being the mpp, 1 branches of the mpp,
-         2 branches of level 1 branches, etc)
+         The level of the edge.
+         
+         A value of 0 indicates that the edge is part of the most probable path (MPP), a value of 1 indicates an edge that branches away from the MPP, and so on.
          */
         public let level: UInt
 
-        /** The probability for this edge in percentage */
+        /**
+         The probability that the user will transition onto this edge, with 1 being certain and 0 being unlikely.
+         */
         public let probability: Double
 
         /**
-         The outgoing Edges.
-         NB: MPP can be splitted at some point if some of edges have low probability difference(+/- 0.05),
-         i.e. `out` can contain more than 1 edges with the level 0.
-         Currently we have a limitation for maximum 1 split per electronic horizon.
+         The edges to which the user could transition from this edge.
+         
+         The most probable path may be split at some point if some of edges have a low probability difference (±0.05). For example, `outletEdges` can contain more than one edge with `level` set to 0. Currently, there is a maximum limit of one split per electronic horizon.
          */
         public let outletEdges: [Edge]
 

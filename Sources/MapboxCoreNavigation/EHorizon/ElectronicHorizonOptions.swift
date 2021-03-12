@@ -3,11 +3,11 @@ import CoreLocation
 import MapboxNavigationNative
 
 /**
- Defines options for `ElectronicHorizon`.
+ Defines options for emitting `Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, and `Notification.Name.electronicHorizonDidExitRoadObject` notifications while a `RouteController` or `PassiveLocationDataSource` is active.
  */
 public struct ElectronicHorizonOptions {
 
-    /** The minimum length of the ElectronicHorizon ahead of the current position. */
+    /** The minimum length of the electronic horizon ahead of the current position, measured in meters. */
     public let length: CLLocationDistance
 
     /**
@@ -17,7 +17,7 @@ public struct ElectronicHorizonOptions {
      */
     public let expansionLevel: UInt
 
-    /** Minimum length of side branches. */
+    /** Minimum length of side branches, measured in meters. */
     public let branchLength: CLLocationDistance
 
     /**

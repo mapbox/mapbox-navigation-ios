@@ -11,73 +11,77 @@ extension ElectronicHorizon.Edge {
         /** The bearing in degrees clockwise at the start of the edge. */
         public let heading: CLLocationDegrees
 
-        /** The Edge's length in meters. */
+        /** The edge’s length in meters. */
         public let length: CLLocationDistance
-
-        /** The edge's functional road class */
+        
+        /// The edge’s general road classes.
+        public let roadClasses: RoadClasses
+        
+        /**
+         The edge’s functional road class, according to the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#road), version 8.
+         */
         public let mapboxStreetsRoadClass: MapboxStreetsRoadClass
 
         /** The edge’s maximum speed limit. */
         public let speedLimit: Measurement<UnitSpeed>?
 
-        /** The Edge's average speed (m/s) */
+        /**
+         The user’s expected average speed along the edge, measured in meters per second.
+         */
         public let speed: CLLocationSpeed
-
-        /** Is the edge a ramp? */
-        public let isRamp: Bool
-
-        /** Is the edge a motorway? */
-        public let isMotorway: Bool
 
         /** Is the edge a bridge? */
         public let isBridge: Bool
 
-        /** Is the edge a tunnel? */
-        public let isTunnel: Bool
-
-        /** Is the edge a toll road? */
-        public let isToll: Bool
-
         /** The edge's names */
         public let names: [RoadName]
 
-        /** The edge's lane counts */
+        /** The number of parallel traffic lanes along the edge. */
         public let laneCount: UInt?
 
-        /** The edge's mean elevation */
-        public let meanElevation: CLLocationDistance?
+        /** The edge’s mean elevation, measured in meters. */
+        public let altitude: CLLocationDistance?
 
-        /** The edge's curvature */
+        /** The edge’s curvature. */
         public let curvature: UInt
 
-        /** The edge's country code (ISO 3166-1 alpha-3 format) */
+        /** The ISO 3166-1 alpha-3 code of the country where this edge is located. */
         public let countryCode: String?
 
-        /** The edge's region code (ISO 3166-2 format) */
+        /** The ISO 3166-2 code of the country subdivision where this edge is located. */
         public let regionCode: String?
 
         init(_ native: EdgeMetadata) {
-            self.heading = native.heading
-            self.length = native.length
-            self.mapboxStreetsRoadClass = MapboxStreetsRoadClass(native.frc)
+            heading = native.heading
+            length = native.length
+            mapboxStreetsRoadClass = MapboxStreetsRoadClass(native.frc, isRamp: native.isRamp)
             if let speedLimitValue = native.speedLimit as? Double {
                 // TODO: Convert to miles per hour as locally appropriate.
-                self.speedLimit = Measurement(value: speedLimitValue, unit: UnitSpeed.metersPerSecond).converted(to: .kilometersPerHour)
+                speedLimit = Measurement(value: speedLimitValue, unit: UnitSpeed.metersPerSecond).converted(to: .kilometersPerHour)
             } else {
-                self.speedLimit = nil
+                speedLimit = nil
             }
-            self.speed = native.speed
-            self.isRamp = native.isRamp
-            self.isMotorway = native.isMotorway
-            self.isBridge = native.isBridge
-            self.isTunnel = native.isTunnel
-            self.isToll = native.isToll
-            self.names = native.names.map(RoadName.init)
-            self.laneCount = native.laneCount as? UInt
-            self.meanElevation = native.meanElevation as? Double
-            self.curvature = UInt(native.curvature)
-            self.countryCode = native.countryCode
-            self.regionCode = native.stateCode
+            speed = native.speed
+            
+            var roadClasses: RoadClasses = []
+            if native.isMotorway {
+                roadClasses.update(with: .motorway)
+            }
+            if native.isTunnel {
+                roadClasses.update(with: .tunnel)
+            }
+            if native.isToll {
+                roadClasses.update(with: .toll)
+            }
+            self.roadClasses = roadClasses
+            
+            isBridge = native.isBridge
+            names = native.names.map(RoadName.init)
+            laneCount = native.laneCount as? UInt
+            altitude = native.meanElevation as? Double
+            curvature = UInt(native.curvature)
+            countryCode = native.countryCode
+            regionCode = native.stateCode
         }
     }
 }

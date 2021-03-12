@@ -3,18 +3,18 @@ import MapboxNavigationNative
 
 extension RoadGraph {
 
-    /** Declares position of an object on the map graph */
+    /** The position of a point object in the road graph. */
     public struct Position {
 
-        /** Edge identifier in road graph */
+        /** The edge identifier that forms the point object. */
         public let edgeIdentifier: ElectronicHorizon.Edge.Identifier
 
-        /** Percent along edge shape (0-1) */
-        public let percentAlong: Double
+        /** The distance from the start of the point object to the user’s location as a fraction of the point object’s length from 0 to 1. */
+        public let fractionFromStart: Double
 
         init(_ native: GraphPosition) {
             self.edgeIdentifier = UInt(native.edgeId)
-            self.percentAlong = native.percentAlong
+            self.fractionFromStart = native.percentAlong
         }
     }
 }

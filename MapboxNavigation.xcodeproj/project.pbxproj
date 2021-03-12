@@ -356,7 +356,7 @@
 		DA5F448825F079F300F573EC /* EHorizonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F447E25F079AA00F573EC /* EHorizonTests.swift */; };
 		DA5F449A25F07A5C00F573EC /* ElectronicHorizon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */; };
 		DA5F44AA25F07A6800F573EC /* RoadObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A325F07A6500F573EC /* RoadObjectType.swift */; };
-		DA5F44AB25F07A6800F573EC /* ElectronicHorizonResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A425F07A6500F573EC /* ElectronicHorizonResultType.swift */; };
+		DA5F44AB25F07A6800F573EC /* ElectronicHorizonRevision.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A425F07A6500F573EC /* ElectronicHorizonRevision.swift */; };
 		DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */; };
 		DA5F44AE25F07A6800F573EC /* RoadObjectDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */; };
 		DA5F44B025F07A6800F573EC /* ElectronicHorizonEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */; };
@@ -919,7 +919,7 @@
 		DA5F447E25F079AA00F573EC /* EHorizonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonTests.swift; sourceTree = "<group>"; };
 		DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizon.swift; sourceTree = "<group>"; };
 		DA5F44A325F07A6500F573EC /* RoadObjectType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectType.swift; sourceTree = "<group>"; };
-		DA5F44A425F07A6500F573EC /* ElectronicHorizonResultType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonResultType.swift; sourceTree = "<group>"; };
+		DA5F44A425F07A6500F573EC /* ElectronicHorizonRevision.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonRevision.swift; sourceTree = "<group>"; };
 		DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphPosition.swift; sourceTree = "<group>"; };
 		DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectDistanceInfo.swift; sourceTree = "<group>"; };
 		DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonEdge.swift; sourceTree = "<group>"; };
@@ -1798,7 +1798,7 @@
 				DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */,
 				DA5F44B925F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift */,
 				DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */,
-				DA5F44A425F07A6500F573EC /* ElectronicHorizonResultType.swift */,
+				DA5F44A425F07A6500F573EC /* ElectronicHorizonRevision.swift */,
 				DA5F44C325F07AB500F573EC /* RoadGraph.swift */,
 				DA2A01EF25F308B100AAB4C6 /* RoadGraphPath.swift */,
 				DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */,
@@ -2671,7 +2671,7 @@
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
 				DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */,
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
-				DA5F44AB25F07A6800F573EC /* ElectronicHorizonResultType.swift in Sources */,
+				DA5F44AB25F07A6800F573EC /* ElectronicHorizonRevision.swift in Sources */,
 				DA5F44AE25F07A6800F573EC /* RoadObjectDistanceInfo.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				354A9BC620EA991900F03325 /* SessionState.swift in Sources */,
