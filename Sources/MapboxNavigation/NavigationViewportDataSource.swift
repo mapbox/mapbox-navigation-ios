@@ -186,7 +186,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
         }
         
-        let coordinatesToManeuver = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
+        let coordinatesToManeuver = untraveledCoordinatesOnCurrentStep
         guard let distance = LineString(coordinatesToManeuver).distance() else { return }
         let pitchEffectDistanceStart: CLLocationDistance = 180
         let pitchEffectDistanceEnd: CLLocationDistance = 150
