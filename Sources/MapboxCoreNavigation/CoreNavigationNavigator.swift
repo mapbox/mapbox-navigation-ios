@@ -124,7 +124,7 @@ extension Navigator: ElectronicHorizonObserver {
         let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
             .positionKey: RoadGraph.Position(try! position.position()),
             .treeKey: ElectronicHorizon(try! position.tree()),
-            .revisionKey: ElectronicHorizon.Revision(try! position.type()),
+            .updatesMostProbablePathKey: try! position.type() == .UPDATE,
             .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init),
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)

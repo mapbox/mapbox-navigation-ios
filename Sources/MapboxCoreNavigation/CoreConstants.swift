@@ -308,7 +308,7 @@ public extension Notification.Name {
     /**
      Posted when the user’s position in the electronic horizon changes. This notification may be posted multiple times after `electronicHorizonDidEnterRoadObject` until the user transitions to a new electronic horizon.
      
-     The user info dictionary contains the keys `ElectronicHorizon.NotificationUserInfoKey.positionKey`, `ElectronicHorizon.NotificationUserInfoKey.treeKey`, `ElectronicHorizon.NotificationUserInfoKey.revisionKey`, and `ElectronicHorizon.NotificationUserInfoKey.distancesByRoadObjectKey`.
+     The user info dictionary contains the keys `ElectronicHorizon.NotificationUserInfoKey.positionKey`, `ElectronicHorizon.NotificationUserInfoKey.treeKey`, `ElectronicHorizon.NotificationUserInfoKey.updatesMostProbablePathKey`, and `ElectronicHorizon.NotificationUserInfoKey.distancesByRoadObjectKey`.
     */
     static let electronicHorizonDidUpdatePosition: Notification.Name = .init(rawValue: "ElectronicHorizonDidUpdatePosition")
     
@@ -347,8 +347,14 @@ extension ElectronicHorizon {
         public static let treeKey: NotificationUserInfoKey = .init(rawValue: "tree")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an `ElectronicHorizon.Revision` indicating which revision of the electronic horizon is being reported. */
-        public static let revisionKey: NotificationUserInfoKey = .init(rawValue: "revision")
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is a Boolean value of `true` if the position update indicates a new most probable path (MPP) or `false` if it updates an existing MPP that the user has continued to follow.
+         
+         An electronic horizon can represent a new MPP in three scenarios:
+         - An electronic horizon is detected for the very first time.
+         - A user location tracking error leads to an MPP completely distinct from the previous MPP.
+         - The user has departed from the previous MPP, for example by driving to a side path of the previous MPP.
+         */
+        public static let updatesMostProbablePathKey: NotificationUserInfoKey = .init(rawValue: "updatesMostProbablePath")
         
         /**
          A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is a dictionary of upcoming road object identifiers as `RoadObjectIdentifier` keys and their distances from the user’s current location as `RoadObjectDistanceInfo` values. */
