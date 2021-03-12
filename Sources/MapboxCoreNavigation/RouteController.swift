@@ -410,10 +410,12 @@ open class RouteController: NSObject {
         }
     }
     
+    /// The road graph that is updated as the route controller tracks the user’s location.
     public var roadGraph: RoadGraph {
         return Navigator.shared.roadGraph
     }
 
+    /// The road objects store that is updated as the route controller tracks the user’s location.
     public var roadObjectsStore: RoadObjectsStore {
         return Navigator.shared.roadObjectsStore
     }

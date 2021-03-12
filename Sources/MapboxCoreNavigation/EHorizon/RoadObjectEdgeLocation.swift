@@ -3,7 +3,8 @@ import MapboxNavigationNative
 
 /**
  Represents location of road object on road graph.
- For point-like objects will contain single edge with `fractionFromStart == fractionToEnd`
+ 
+ A point object is represented by a single edge whose location has the same `fractionFromStart` and `fractionToEnd`.
  */
 public struct RoadObjectEdgeLocation {
 
@@ -12,17 +13,17 @@ public struct RoadObjectEdgeLocation {
      will be 0 for all edges in the line-like road object except the very first one
      in the case of point-like object fractionFromStart == fractionToEnd
      */
-    public let percentAlongBegin: Double
+    public let fractionFromStart: Double
 
     /**
      Offset from the start of edge (0 - 1) pointing to the end of road object on this edge
      will be 1 for all edges in the line-like road object except the very first one
      in the case of point-like object fractionFromStart == fractionToEnd
      */
-    public let percentAlongEnd: Double
+    public let fractionToEnd: Double
 
     init(_ native: MapboxNavigationNative.RoadObjectEdgeLocation) {
-        self.percentAlongBegin = native.percentAlongBegin
-        self.percentAlongEnd = native.percentAlongEnd
+        self.fractionFromStart = native.percentAlongBegin
+        self.fractionToEnd = native.percentAlongEnd
     }
 }

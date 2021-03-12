@@ -14,7 +14,7 @@ public typealias RoadObjectIdentifier = String
  You do not create a `RoadObjectsStore` object manually. Instead, use the `RouteController.roadObjectsStore` or `PassiveLocationDataSource.roadObjectsStore` to access the currently active road objects store.
  */
 public final class RoadObjectsStore {
-
+    /// The road objects store’s delegate.
     public weak var delegate: RoadObjectsStoreDelegate? {
         didSet {
             if delegate != nil {
