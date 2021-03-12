@@ -27,10 +27,6 @@ open class PassiveLocationDataSource: NSObject {
         
         self.systemLocationManager.delegate = self
     }
-
-    deinit {
-        try! self.navigator.setElectronicHorizonObserverFor(nil)
-    }
     
     /**
      The directions service that allows the location data source to access road network data.

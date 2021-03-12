@@ -165,7 +165,6 @@ open class RouteController: NSObject {
     
     deinit {
         resetObservation(for: _routeProgress)
-        try! navigator.setElectronicHorizonObserverFor(nil)
     }
     
     func resetObservation(for progress: RouteProgress) {
