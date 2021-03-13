@@ -885,7 +885,7 @@
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
 		AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ViewController+GuidanceCards.swift"; path = "Example/ViewController+GuidanceCards.swift"; sourceTree = "<group>"; };
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
-        B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseView.swift; sourceTree = "<group>"; };
+		B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseView.swift; sourceTree = "<group>"; };
 		B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-vanishing-route-line.json"; sourceTree = "<group>"; };
 		B4F7631B2578751300177B33 /* VanishingRouteLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VanishingRouteLine.swift; sourceTree = "<group>"; };
 		C3D225502587F411007DBCDF /* StatusViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusViewTests.swift; sourceTree = "<group>"; };
@@ -948,6 +948,7 @@
 		DA0557242155040700A1F2AA /* RouteTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteTests.swift; sourceTree = "<group>"; };
 		DA0A4B7724D0BC7000D6B4F8 /* MapboxCommon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapboxCommon.framework; path = Carthage/Build/iOS/MapboxCommon.framework; sourceTree = "<group>"; };
 		DA0A4B8024D1C9B200D6B4F8 /* Navigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigator.swift; sourceTree = "<group>"; };
+		DA0DBA2125FC4CC200E86BDF /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ca; path = Resources/ca.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA1811FE20128B0900C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA18120120128B7B00C91918 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA18120320128E9400C91918 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -3115,6 +3116,7 @@
 				354691B222C0D97000626C4F /* yo */,
 				8B808F982487D2BE00EEE453 /* el */,
 				DA6C925924C60A43003A0AD6 /* tr */,
+				DA0DBA2125FC4CC200E86BDF /* ca */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";
