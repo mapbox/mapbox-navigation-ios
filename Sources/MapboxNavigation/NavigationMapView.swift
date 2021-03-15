@@ -1151,8 +1151,8 @@ open class NavigationMapView: UIView {
                     "selected"
                 }
             }
-            UIColor.white
-            UIColor.black
+            routeDurationAnnotationSelectedTextColor
+            routeDurationAnnotationTextColor
         })
 
         shapeLayer.layout?.textSize = .expression(
@@ -1172,18 +1172,67 @@ open class NavigationMapView: UIView {
         shapeLayer.layout?.textJustify = .left
         shapeLayer.layout?.symbolZOrder = .auto
         shapeLayer.layout?.textFont = .constant([self.routeDurationAnnotationFontName])
+        shapeLayer.layout?.symbolSortKey = .expression(Exp(.switchCase) {
+            Exp(.any) {
+                Exp(.get) {
+                    "selected"
+                }
+            }
+            1.0
+            0.0
+        })
+
+        let expressionString =
+        """
+        [
+          "match",
+          ["get", "tailPosition"],
+          ["0"],
+          "bottom-right",
+          "bottom-left"
+        ]
+        """
+
+        // Try to use the image name attribute since the tailPosition one isn't working
+        //"RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
+        let builtExpression = Exp(.switchCase) { // Switching on a value
+            Exp(.eq) { // Evaluates if conditions are equal
+                Exp(.get) { "imageName" } // Get the current value for `POITYPE`
+                "RouteInfoAnnotationRightHanded" // returns true for the equal expression if the type is equal to "0"
+            }
+            "bottom-right" // Use the icon named "restrooms" on the sprite sheet if the above condition is true
+            "bottom-left" // default case is to return an empty string so no icon will be loaded
+        }
+
+//        shapeLayer.layout?.iconAnchor = builtExpression
+
+        try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+                                                           property: "icon-anchor",
+                                                           value: builtExpression.jsonObject())
+        try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+                                                           property: "text-anchor",
+                                                           value: builtExpression.jsonObject())
+
+        #if false
+        if let expressionData = expressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+
+            try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+                                                          property: "icon-anchor",
+                                                          value: expJSONObject)
+            try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+                                                          property: "text-anchor",
+                                                          value: expJSONObject)
+        }
+        #endif
 
         style.addLayer(layer: shapeLayer, layerPosition: nil)
 
         #if false
+        shapeLayer.iconAnchor = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
+                                             trueExpression: NSExpression(forConstantValue: "bottom-left"),
+                                                falseExpression: NSExpression(forConstantValue: "bottom-right"))
+        shapeLayer.textAnchor = shapeLayer.iconAnchor
 
-        shapeLayer.textColor = NSExpression(forConditional: NSPredicate(format: "selected == true"),
-                                            trueExpression: NSExpression(forConstantValue: routeDurationAnnotationSelectedTextColor),
-                     falseExpression: NSExpression(forConstantValue: routeDurationAnnotationTextColor))
-
-        shapeLayer.symbolSortKey = NSExpression(forConditional: NSPredicate(format: "selected == true"),
-                                                trueExpression: NSExpression(forConstantValue: 1),
-                                                   falseExpression: NSExpression(format: "sortOrder"))
         shapeLayer.iconOffset = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
                                              trueExpression: NSExpression(forConstantValue: CGVector(dx: 0.5, dy: -1.0)),
                       falseExpression: NSExpression(forConstantValue: CGVector(dx: -0.5, dy: -1.0)))
