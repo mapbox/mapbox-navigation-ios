@@ -1,19 +1,20 @@
 import XCTest
-import FBSnapshotTestCase
-import TestHelper
 import MapboxDirections
 @testable import MapboxCoreNavigation
-@testable import MapboxNavigation
+#if !SWIFT_PACKAGE
+import TestHelper
 
-class SimulatedLocationManagerTests: FBSnapshotTestCase {
+class SimulatedLocationManagerTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        recordMode = false
-        agnosticOptions = [.OS, .device]
+    }
+    
+    override func tearDown() {
+        super.tearDown()
     }
 
     func testSimulateRouteDoublesBack() {
-        let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: NavigationMatchOptions(coordinates: [
+        let coordinates:[CLLocationCoordinate2D] = [
             .init(latitude: 59.337928, longitude: 18.076841),
             .init(latitude: 59.337661, longitude: 18.075897),
             .init(latitude: 59.337129, longitude: 18.075478),
@@ -27,7 +28,8 @@ class SimulatedLocationManagerTests: FBSnapshotTestCase {
             .init(latitude: 59.338156, longitude: 18.075723),
             .init(latitude: 59.338311, longitude: 18.074968),
             .init(latitude: 59.33865, longitude: 18.074935),
-        ]))![0]
+        ]
+        let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: NavigationMatchOptions(coordinates: coordinates))![0]
         let locationManager = SimulatedLocationManager(route: route)
         let locationManagerSpy = SimulatedLocationManagerSpy()
         locationManager.delegate = locationManagerSpy
@@ -39,11 +41,9 @@ class SimulatedLocationManagerTests: FBSnapshotTestCase {
         
         locationManager.delegate = nil
         
-        let view = NavigationPlotter(frame: CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000)))
-        view.routePlotters = [RoutePlotter(route: route)]
-        view.locationPlotters = [LocationPlotter(locations: locationManagerSpy.locations, color: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 0.5043463908), drawIndexesAsText: true)]
+        let testCoordinates:[CLLocationCoordinate2D] = locationManagerSpy.locations.map { $0.coordinate }
         
-        verify(view)
+        XCTAssert(testCoordinates == coordinates)
     }
 }
 
@@ -54,3 +54,4 @@ class SimulatedLocationManagerSpy: NSObject, CLLocationManagerDelegate {
         self.locations.append(contentsOf: locations)
     }
 }
+#endif

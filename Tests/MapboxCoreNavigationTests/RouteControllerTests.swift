@@ -1,18 +1,15 @@
 import XCTest
-import FBSnapshotTestCase
 import Turf
 import MapboxDirections
-import TestHelper
 @testable import MapboxCoreNavigation
-@testable import MapboxNavigation
+#if !SWIFT_PACKAGE
+import TestHelper
 
-class RouteControllerSnapshotTests: FBSnapshotTestCase {
+class RouteControllerTests: XCTestCase {
     var replayManager: ReplayLocationManager?
 
     override func setUp() {
         super.setUp()
-        recordMode = false
-        agnosticOptions = [.OS, .device]
     }
 
     override func tearDown() {
@@ -21,7 +18,7 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
     }
     
     func testRouteSnappingOvershooting() {
-        let options = NavigationMatchOptions(coordinates: [
+        let coordinates:[CLLocationCoordinate2D] = [
             .init(latitude: 59.337928, longitude: 18.076841),
             .init(latitude: 59.337661, longitude: 18.075897),
             .init(latitude: 59.337129, longitude: 18.075478),
@@ -35,10 +32,11 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
             .init(latitude: 59.338156, longitude: 18.075723),
             .init(latitude: 59.338311, longitude: 18.074968),
             .init(latitude: 59.33865, longitude: 18.074935),
-        ])
+        ]
+        let options = NavigationMatchOptions(coordinates: coordinates)
         let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: options)![0]
         
-        let bundle = Bundle(for: RouteControllerSnapshotTests.self)
+        let bundle = Bundle(for: RouteControllerTests.self)
         let filePath = bundle.path(forResource: "sthlm-double-back-replay", ofType: "json")
         
         let locations = Array<CLLocation>.locations(from: filePath!)
@@ -49,23 +47,18 @@ class RouteControllerSnapshotTests: FBSnapshotTestCase {
         let routeController = RouteController(along: route, routeIndex: 0, options: equivalentRouteOptions, dataSource: self)
         locationManager.delegate = routeController
         
-        var snappedLocations = [CLLocation]()
+        var testCoordinates = [CLLocationCoordinate2D]()
         
-        while snappedLocations.count < locationManager.locations.count {
+        while testCoordinates.count < locationManager.locations.count {
             locationManager.tick()
-            snappedLocations.append(routeController.location!)
+            testCoordinates.append(routeController.location!.coordinate)
         }
         
-        let view = NavigationPlotter(frame: CGRect(origin: .zero, size: CGSize(width: 1000, height: 1000)))
-        view.routePlotters = [RoutePlotter(route: route)]
-        view.locationPlotters = [LocationPlotter(locations: locations, color: #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 0.5043463908), drawIndexesAsText: true),
-                                 LocationPlotter(locations: snappedLocations, color: #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 0.3969795335), drawIndexesAsText: true)]
-        
-        verify(view)
+        XCTAssert(coordinates == testCoordinates)
     }
 }
 
-extension RouteControllerSnapshotTests: RouterDataSource {
+extension RouteControllerTests: RouterDataSource {
     var location: CLLocation? {
         return replayManager?.location
     }
@@ -74,3 +67,4 @@ extension RouteControllerSnapshotTests: RouterDataSource {
         return NavigationLocationManager.self
     }
 }
+#endif

@@ -91,7 +91,6 @@
 		3557506D21A827E800AEF9B6 /* li.tar in Resources */ = {isa = PBXBuildFile; fileRef = 3557506C21A827E800AEF9B6 /* li.tar */; };
 		355832AB2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AA2192F60800141922 /* PipeFittersUnion-FourSeasonsBoston.json */; };
 		355832AD2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = 355832AC2192F7E300141922 /* PipeFittersUnion-FourSeasonsBoston.trace.json */; };
-		3559FE4F21C3195700B6613F /* NavigationPlotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3559FE4E21C3195700B6613F /* NavigationPlotter.swift */; };
 		355B469B22B902C9009CE634 /* SKUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469A22B902C9009CE634 /* SKUTests.swift */; };
 		355B469D22B9031E009CE634 /* SKUTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469C22B9031E009CE634 /* SKUTestable.swift */; };
 		355B469F22B904D3009CE634 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 355B469E22B904D2009CE634 /* OHHTTPStubs.framework */; };
@@ -99,7 +98,6 @@
 		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
 		355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */; };
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
-		3573EA71215A5A9F009899D7 /* RouteControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */; };
 		3575671E22C53EA400002D95 /* MMEEventsManager+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = 3575671C22C53EA400002D95 /* MMEEventsManager+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3575671F22C53EA400002D95 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3575671D22C53EA400002D95 /* MMEEventsManager+Spy.m */; };
 		3577B878214FF35800094294 /* FavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3577B877214FF35800094294 /* FavoritesList.swift */; };
@@ -114,7 +112,6 @@
 		359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A91F28CCBB00838209 /* LocationTests.swift */; };
 		3595FE48219190400035B765 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
 		3595FE49219190420035B765 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
-		3597ABD021553B6F00C12785 /* SimulatedLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */; };
 		3597ABD421553F6800C12785 /* sthlm-double-back.json in Resources */ = {isa = PBXBuildFile; fileRef = 3597ABD321553F6800C12785 /* sthlm-double-back.json */; };
 		3597B9A42149B2C20021B0D9 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 352AFFA22139986E00EB3567 /* UIViewController.swift */; };
 		359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359A8AEC1FA78D3000BDB486 /* DistanceFormatterTests.swift */; };
@@ -291,8 +288,11 @@
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
 		AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		B419BFF225F00A9C0086639B /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B419BFF125F00A9C0086639B /* Feature.swift */; };
+		B426FEF425FFD5DC001884C8 /* RouteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3573EA70215A5A9F009899D7 /* RouteControllerTests.swift */; };
+		B426FF0525FFD679001884C8 /* SimulatedLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */; };
 		B430D2FA25534FDC0088CC23 /* UserHaloCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */; };
 		B48CEFC125796FD300696BB3 /* route-for-vanishing-route-line.json in Resources */ = {isa = PBXBuildFile; fileRef = B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */; };
+		B4F2BF3C25FAF69500D7AE2E /* NavigationPlotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3559FE4E21C3195700B6613F /* NavigationPlotter.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC31620F689F800400CE7 /* CustomStyles.swift */; };
@@ -342,7 +342,6 @@
 		DA1A1AE325E072F90097BBD7 /* SpeechSynthesizerSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93170CB959F3065ACFFC3 /* SpeechSynthesizerSpy.swift */; };
 		DA1A1B0425E087A20097BBD7 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = DA1A1B0325E087A20097BBD7 /* MapboxNavigation */; };
 		DA2157C525E093920086B294 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = DA2157C425E093920086B294 /* MapboxNavigation */; };
-		DA2157D925E094760086B294 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = DA2157D825E094760086B294 /* MapboxNavigation */; };
 		DA2157EB25E094D00086B294 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = DA2157EA25E094D00086B294 /* MapboxNavigation */; };
 		DA303C9521B728DD00F921DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9321B728DD00F921DC /* Localizable.strings */; };
 		DA303C9621B728DD00F921DC /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9321B728DD00F921DC /* Localizable.strings */; };
@@ -599,7 +598,7 @@
 		355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "UnionSquare-to-GGPark.route"; sourceTree = "<group>"; };
 		355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBannerViewLayout.swift; sourceTree = "<group>"; };
 		35726EE71F0856E900AFA1B6 /* DayStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStyle.swift; sourceTree = "<group>"; };
-		3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteControllerSnapshotTests.swift; sourceTree = "<group>"; };
+		3573EA70215A5A9F009899D7 /* RouteControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteControllerTests.swift; sourceTree = "<group>"; };
 		3575671C22C53EA400002D95 /* MMEEventsManager+Spy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMEEventsManager+Spy.h"; sourceTree = "<group>"; };
 		3575671D22C53EA400002D95 /* MMEEventsManager+Spy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MMEEventsManager+Spy.m"; sourceTree = "<group>"; };
 		3577B877214FF35800094294 /* FavoritesList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FavoritesList.swift; path = Example/FavoritesList.swift; sourceTree = "<group>"; };
@@ -1043,7 +1042,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA2157D925E094760086B294 /* MapboxNavigation in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1286,8 +1284,6 @@
 				AE00A739209A2C38006A3DC7 /* StepsViewControllerTests.swift */,
 				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
 				8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */,
-				3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */,
-				3573EA70215A5A9F009899D7 /* RouteControllerSnapshotTests.swift */,
 				35BC7177226F6667003BB5F1 /* CarPlayCompassViewTests.swift */,
 				35E5B962227B4B620033A124 /* CarPlayCompassViewSnapshotTests.swift */,
 				355B469A22B902C9009CE634 /* SKUTests.swift */,
@@ -1735,7 +1731,9 @@
 				8DB7EF692176674800DA83A3 /* MapboxNavigationServiceSpec.swift */,
 				C52AC1251DF0E48600396B9F /* RouteProgressTests.swift */,
 				C582BA2B2073E77E00647DAA /* StringTests.swift */,
+				3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */,
 				AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */,
+				3573EA70215A5A9F009899D7 /* RouteControllerTests.swift */,
 				3519D01D21F0842900582FF5 /* CLLocationTests.swift */,
 				352762A3225B751A0015B632 /* OptionsTests.swift */,
 				5A43FC8A24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift */,
@@ -1908,7 +1906,6 @@
 			);
 			name = TestHelper;
 			packageProductDependencies = (
-				DA2157D825E094760086B294 /* MapboxNavigation */,
 			);
 			productName = TestHelper;
 			productReference = 35CDA85E2190F2A30072B675 /* TestHelper.framework */;
@@ -2527,7 +2524,6 @@
 				16AC9D11212E356200CECE44 /* CPMapTemplate+MBTestable.mm in Sources */,
 				2B81EC28241A237E00145086 /* SpeechSynthesizersControllerTests.swift in Sources */,
 				35BC7178226F6667003BB5F1 /* CarPlayCompassViewTests.swift in Sources */,
-				3597ABD021553B6F00C12785 /* SimulatedLocationManagerTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
 				439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */,
 				35E5B963227B4B620033A124 /* CarPlayCompassViewSnapshotTests.swift in Sources */,
@@ -2545,11 +2541,11 @@
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
 				DA1755F82357B6BD00B06C1D /* StringTests.swift in Sources */,
+				B4F2BF3C25FAF69500D7AE2E /* NavigationPlotter.swift in Sources */,
 				355B469D22B9031E009CE634 /* SKUTestable.swift in Sources */,
 				3510300F1F54B67000E3B7E7 /* LaneTests.swift in Sources */,
 				160A4A712127A46C0028B070 /* CPBarButton+MBTestable.m in Sources */,
 				169A970A216440820082A6A0 /* NavigationViewControllerTestDoubles.swift in Sources */,
-				3573EA71215A5A9F009899D7 /* RouteControllerSnapshotTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2580,7 +2576,6 @@
 				3537DCE721E6447600E78CE6 /* Date.swift in Sources */,
 				35C8DC122191E15A0053328C /* DummyURLSessionDataTask.swift in Sources */,
 				35CDA8782190F2F00072B675 /* Fixture.swift in Sources */,
-				3559FE4F21C3195700B6613F /* NavigationPlotter.swift in Sources */,
 				3575671F22C53EA400002D95 /* MMEEventsManager+Spy.m in Sources */,
 				35C8DBFD2191D0370053328C /* CoreLocation.swift in Sources */,
 				358E856421DD23E200E415C2 /* DummyLocationManager.swift in Sources */,
@@ -2684,8 +2679,10 @@
 				5A43FC8B24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
 				C582BA2C2073E77E00647DAA /* StringTests.swift in Sources */,
+				B426FEF425FFD5DC001884C8 /* RouteControllerTests.swift in Sources */,
 				352762A4225B751A0015B632 /* OptionsTests.swift in Sources */,
 				8DB7EF6A2176674800DA83A3 /* MapboxNavigationServiceSpec.swift in Sources */,
+				B426FF0525FFD679001884C8 /* SimulatedLocationManagerTests.swift in Sources */,
 				5A8DB89624DE16A10041F863 /* SkuTokenProviderTests.swift in Sources */,
 				35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */,
 				3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */,
@@ -3676,10 +3673,6 @@
 			productName = MapboxNavigation;
 		};
 		DA2157C425E093920086B294 /* MapboxNavigation */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigation;
-		};
-		DA2157D825E094760086B294 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigation;
 		};
