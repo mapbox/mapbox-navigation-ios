@@ -394,6 +394,30 @@ open class RouteController: NSObject {
     public func locationHistory() throws -> Data {
         return try Navigator.shared.history()
     }
+    
+    /**
+     A custom configuration for electronic horizon observations.
+     
+     Set this property to `nil` to use the default configuration.
+     */
+    public var electronicHorizonOptions: ElectronicHorizonOptions? {
+        get {
+            Navigator.shared.electronicHorizonOptions
+        }
+        set {
+            Navigator.shared.electronicHorizonOptions = newValue
+        }
+    }
+    
+    /// The road graph that is updated as the route controller tracks the user’s location.
+    public var roadGraph: RoadGraph {
+        return Navigator.shared.roadGraph
+    }
+
+    /// The road objects store that is updated as the route controller tracks the user’s location.
+    public var roadObjectsStore: RoadObjectsStore {
+        return Navigator.shared.roadObjectsStore
+    }
 }
 
 extension RouteController: Router {

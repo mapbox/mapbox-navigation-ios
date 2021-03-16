@@ -39,14 +39,23 @@ class Navigator {
     
     var cacheHandle: CacheHandle!
     
+    var roadGraph: RoadGraph!
+    
+    lazy var roadObjectsStore: RoadObjectsStore = {
+        return RoadObjectsStore(try! navigator.roadObjectStore())
+    }()
+    
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `tilesURL`).
      */
-    static let shared: Navigator = {
-        let instance = Navigator()
-        
-        var tilesPath: String! = tilesURL?.path
+    static let shared: Navigator = Navigator()
+    
+    /**
+     Restrict direct initializer access.
+     */
+    private init() {
+        var tilesPath: String! = Self.tilesURL?.path
         if tilesPath == nil {
             let bundle = Bundle.mapboxCoreNavigation
             if bundle.ensureSuggestedTileURLExists() {
@@ -60,7 +69,7 @@ class Navigator {
                                               platform: ProfilePlatform.KIOS)
         
         let endpointConfig = TileEndpointConfiguration(credentials: Directions.shared.credentials,
-                                                       tilesVersion: tilesVersion,
+                                                       tilesVersion: Self.tilesVersion,
                                                        minimumDaysToPersistVersion: nil)
         
         let tilesConfig = TilesConfig(tilesPath: tilesPath,
@@ -74,27 +83,66 @@ class Navigator {
                                                      config: NavigatorConfig(),
                                                      customConfig: "")
         
-        instance.historyRecorder = try! HistoryRecorderHandle.build(forHistoryFile: "",
-                                                                    config: configFactory)
+        historyRecorder = try! HistoryRecorderHandle.build(forHistoryFile: "", config: configFactory)
         
         let runloopExecutor = try! RunLoopExecutorFactory.build()
-        instance.cacheHandle = try! CacheFactory.build(for: tilesConfig,
-                                                       config: configFactory,
-                                                       runLoop: runloopExecutor,
-                                                       historyRecorder: instance.historyRecorder)
+        cacheHandle = try! CacheFactory.build(for: tilesConfig,
+                                              config: configFactory,
+                                              runLoop: runloopExecutor,
+                                              historyRecorder: historyRecorder)
         
-        instance.navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
-                                                                   runLoopExecutor: runloopExecutor,
-                                                                   cache: instance.cacheHandle,
-                                                                   historyRecorder: instance.historyRecorder)
+        roadGraph = RoadGraph(try! MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
         
-        return instance
-    }()
+        navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
+                                                          runLoopExecutor: runloopExecutor,
+                                                          cache: cacheHandle,
+                                                          historyRecorder: historyRecorder)
+        try! navigator.setElectronicHorizonObserverFor(self)
+    }
     
-    /**
-     Restrict direct initializer access.
-     */
-    private init() {
-        
+    deinit {
+        try! navigator.setElectronicHorizonObserverFor(nil)
+    }
+    
+    var electronicHorizonOptions: ElectronicHorizonOptions? {
+        didSet {
+            let nativeOptions: MapboxNavigationNative.ElectronicHorizonOptions?
+            if let electronicHorizonOptions = electronicHorizonOptions {
+                nativeOptions = MapboxNavigationNative.ElectronicHorizonOptions(electronicHorizonOptions)
+            } else {
+                nativeOptions = nil
+            }
+            try! navigator.setElectronicHorizonOptionsFor(nativeOptions)
+        }
+    }
+    
+    var peer: MBXPeerWrapper?
+}
+
+extension Navigator: ElectronicHorizonObserver {
+    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
+        let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
+            .positionKey: RoadGraph.Position(try! position.position()),
+            .treeKey: ElectronicHorizon(try! position.tree()),
+            .updatesMostProbablePathKey: try! position.type() == .UPDATE,
+            .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init),
+        ]
+        NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
+    }
+    
+    public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
+        let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
+            .roadObjectIdentifierKey: info.roadObjectId,
+            .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
+        ]
+        NotificationCenter.default.post(name: .electronicHorizonDidEnterRoadObject, object: nil, userInfo: userInfo)
+    }
+    
+    public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
+        let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
+            .roadObjectIdentifierKey: info.roadObjectId,
+            .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
+        ]
+        NotificationCenter.default.post(name: .electronicHorizonDidExitRoadObject, object: nil, userInfo: userInfo)
     }
 }

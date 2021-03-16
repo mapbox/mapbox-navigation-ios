@@ -56,6 +56,30 @@ open class PassiveLocationDataSource: NSObject {
     public func startUpdatingLocation() {
         systemLocationManager.startUpdatingLocation()
     }
+
+    /**
+     A custom configuration for electronic horizon observations.
+     
+     Set this property to `nil` to use the default configuration.
+     */
+    public var electronicHorizonOptions: ElectronicHorizonOptions? {
+        get {
+            Navigator.shared.electronicHorizonOptions
+        }
+        set {
+            Navigator.shared.electronicHorizonOptions = newValue
+        }
+    }
+    
+    /// The road graph that is updated as the passive location data source tracks the user’s location.
+    public var roadGraph: RoadGraph {
+        return Navigator.shared.roadGraph
+    }
+    
+    /// The road objects store that is updated as the passive location data source tracks the user’s location.
+    public var roadObjectsStore: RoadObjectsStore {
+        return Navigator.shared.roadObjectsStore
+    }
     
     /**
      Manually sets the current location.
