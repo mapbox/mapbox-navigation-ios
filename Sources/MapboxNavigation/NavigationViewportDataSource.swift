@@ -17,42 +17,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
     public var overviewHeadUnitCamera: CameraOptions = CameraOptions()
     
     /**
-     Returns the altitude that the `NavigationCamera` initally defaults to.
-     This value is changed whenever user double taps on `MapView`.
-     */
-    // TODO: On CarPlay `defaultAltitude` should be set to 500.
-    public var altitude: CLLocationDistance = 1000.0
-    
-    /**
-     Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
-     */
-    // TODO: Implement ability to handle `zoomedOutMotorwayAltitude` on iOS (2000 meters) and CarPlay (1000 meters).
-    public var zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
-    
-    /**
-     Returns the threshold for what the map considers a "long-enough" maneuver distance to trigger a zoom-out when the user enters a motorway.
-     */
-    // TODO: On CarPlay `longManeuverDistance` should be set to 500.
-    public var longManeuverDistance: CLLocationDistance = 1000.0
-    
-    /**
      Returns the pitch that the `NavigationCamera` initally defaults to.
      */
     public var defaultPitch: Double = 45.0
     
-    /**
-     The minimum default insets from the content frame to the edges of the user course view.
-     */
-    public let courseViewMinimumInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
-    
-    /**
-     Showcases route array. Adds routes and waypoints to map, and sets camera to point encompassing the route.
-     */
-    public let defaultPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-    
     weak var mapView: MapView?
     
-    let maxPitch = 45.0
     var lastKnownEdgeInsets: UIEdgeInsets = .zero
     var showEdgeInsetsDebugView = true
     var edgeInsetsDebugView = UIView()
@@ -65,17 +35,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
         self.mapView = mapView
         
         subscribeForNotifications()
-        makeGestureRecognizersUpdateAltitude()
     }
     
     deinit {
         unsubscribeFromNotifications()
-    }
-    
-    func makeGestureRecognizersUpdateAltitude() {
-        for gestureRecognizer in mapView?.gestureRecognizers ?? [] {
-            gestureRecognizer.addTarget(self, action: #selector(updateAltitude(_:)))
-        }
     }
     
     // MARK: - Notifications observer methods
@@ -87,11 +50,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                object: nil)
         
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(didReroute(_:)),
-                                               name: .routeControllerDidReroute,
-                                               object: nil)
-        
-        NotificationCenter.default.addObserver(self,
                                                selector: #selector(progressDidChange(_:)),
                                                name: .passiveLocationDataSourceDidUpdate,
                                                object: nil)
@@ -100,18 +58,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                selector: #selector(orientationDidChange),
                                                name: UIDevice.orientationDidChangeNotification,
                                                object: nil)
-        
-        // TODO: Subscribe for .routeControllerDidPassSpokenInstructionPoint to be able to control
-        // change camera in case when building highlighting is required.
     }
     
     func unsubscribeFromNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: .routeControllerProgressDidChange,
-                                                  object: nil)
-        
-        NotificationCenter.default.removeObserver(self,
-                                                  name: .routeControllerDidReroute,
                                                   object: nil)
         
         NotificationCenter.default.removeObserver(self,
@@ -162,234 +113,174 @@ public class NavigationViewportDataSource: ViewportDataSource {
         guard let mapView = mapView else { return }
         
         if let location = passiveLocation {
+            let followingWithoutRouteZoomLevel = CGFloat(14.0)
+            
             followingMobileCamera.center = location.coordinate
-            followingMobileCamera.zoom = 14.0
+            followingMobileCamera.zoom = followingWithoutRouteZoomLevel
             followingMobileCamera.bearing = 0
             followingMobileCamera.anchor = mapView.center
             followingMobileCamera.pitch = 0
             followingMobileCamera.padding = .zero
             
+            followingHeadUnitCamera.center = location.coordinate
+            followingHeadUnitCamera.zoom = followingWithoutRouteZoomLevel
+            followingHeadUnitCamera.bearing = 0
+            followingHeadUnitCamera.anchor = mapView.center
+            followingHeadUnitCamera.pitch = 0
+            followingHeadUnitCamera.padding = .zero
+            
             return
         }
         
         if let location = activeLocation, let routeProgress = routeProgress {
-            let heading = location.course
             let edgeInsets: UIEdgeInsets = UIEdgeInsets(top: 100.0, left: 80.0, bottom: 150.0, right: 80.0)
             
             lastKnownEdgeInsets = edgeInsets
             updateEdgeInsetsDebugView()
             
-            let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: activeLocation?.coordinate) ?? []
+            let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
+            
+            let anchor = self.anchor(pitchСoefficient,
+                                     maxPitch: defaultPitch,
+                                     bounds: mapView.bounds,
+                                     edgeInsets: edgeInsets)
+            let pitch = defaultPitch * pitchСoefficient
+            
+            var compoundManeuvers: [[CLLocationCoordinate2D]] = []
             let stepIndex = routeProgress.currentLegProgress.stepIndex
             let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
             let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...].map({ $0.shape?.coordinates })
-            
-            var cameraShouldIgnoreManeuver = false
-            if let upcomingStep = routeProgress.currentLeg.steps[safe: routeProgress.currentLegProgress.stepIndex + 1] {
-                if routeProgress.currentLegProgress.stepIndex == routeProgress.currentLegProgress.leg.steps.count - 2 {
-                    cameraShouldIgnoreManeuver = true
-                }
-                
-                let maneuvers: [ManeuverType] = [.continue, .merge, .takeOnRamp, .takeOffRamp, .reachFork]
-                if maneuvers.contains(upcomingStep.maneuverType) {
-                    cameraShouldIgnoreManeuver = true
-                }
-            }
-            
-            let coordinatesToManeuver = untraveledCoordinatesOnCurrentStep
-            guard let distance = LineString(coordinatesToManeuver).distance() else { return }
-            let pitchEffectDistanceStart: CLLocationDistance = 180
-            let pitchEffectDistanceEnd: CLLocationDistance = 150
-            let pitchPercentage = cameraShouldIgnoreManeuver ? 1.0 : getPitchEffectPercentage(currentDistance: distance,
-                                                                                              effectStartRemainingDistance: pitchEffectDistanceStart,
-                                                                                              effectEndRemainingDistance: pitchEffectDistanceEnd)
-            let pitchAndScreenCoordinate = getPitchAndScreenCenterPoint(pitchEffectPercentage: pitchPercentage,
-                                                                        maxPitch: maxPitch,
-                                                                        bounds: mapView.bounds,
-                                                                        edgeInsets: edgeInsets)
-            let newPitch = pitchAndScreenCoordinate.pitch
-            let newCenterScreenCoordinate = pitchAndScreenCoordinate.screenCenterPoint
-            
-            var coordinatesForManeuverFraming: [CLLocationCoordinate2D]
-            var compoundManeuvers: [[CLLocationCoordinate2D]] = []
             for step in coordinatesAfterCurrentStep {
-                if let coordsForStep = step {
-                    let distance = coordsForStep.distance()
-                    if distance < 150 && distance > 0 {
-                        compoundManeuvers.append(coordsForStep)
-                    } else {
-                        let distanceAfterManeuverToIncludeInFraming = 30.0
-                        compoundManeuvers.append(coordsForStep.trimmed(distance: distanceAfterManeuverToIncludeInFraming))
-                        break
-                    }
+                guard let stepCoordinates = step, let distance = stepCoordinates.distance() else { continue }
+                if distance > 0 && distance < 150 {
+                    compoundManeuvers.append(stepCoordinates)
+                } else {
+                    let distanceAfterManeuverToIncludeInFraming = 30.0
+                    compoundManeuvers.append(stepCoordinates.trimmed(distance: distanceAfterManeuverToIncludeInFraming))
+                    break
                 }
             }
             
-            coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
+            let coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
+            let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
+            let zoom = zoomLevel(coordinatesToManeuver + coordinatesForManeuverFraming,
+                                 pitch: pitch,
+                                 edgeInsets: edgeInsets,
+                                 defaultZoomLevel: 2.0,
+                                 maxZoomLevel: 16.35,
+                                 minZoomLevel: 2.0)
             
-            let cameraParams = getZoomLevelAndCenterCoordinateForFollowing(coordinates: coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                                           heading: heading,
-                                                                           pitch: newPitch,
-                                                                           edgeInsets: edgeInsets)
-            let newZoomLevel = cameraParams.zoomLevel
+            let centerLineString = LineString([location.coordinate, (coordinatesToManeuver + coordinatesForManeuverFraming).map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate])
+            let centerLineStringTotalDistance = centerLineString.distance() ?? 0.0
+            let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchСoefficient)
             
-            var newCenter: CLLocationCoordinate2D = location.coordinate
-            let centerLineString = LineString([location.coordinate, cameraParams.centerCoordinate!])
-            guard let centerLineStringTotalDistance = centerLineString.distance() else { return }
-            let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchPercentage)
-            let adjustedCenterCoord = centerLineString.coordinateFromStart(distance: centerCoordDistance)
-            newCenter = adjustedCenterCoord!
+            var centerCoordinate: CLLocationCoordinate2D = location.coordinate
+            if let adjustedCenterCoordinate = centerLineString.coordinateFromStart(distance: centerCoordDistance) {
+                centerCoordinate = adjustedCenterCoordinate
+            }
             
-            let newMapBearing = normalizeAngle(angle: heading, anchorAngle: mapView.bearing)
+            let bearing = normalizeAngle(angle: location.course, anchorAngle: mapView.bearing)
             
-            followingMobileCamera.center = newCenter
-            followingMobileCamera.zoom = CGFloat(newZoomLevel)
-            followingMobileCamera.bearing = newMapBearing
-            followingMobileCamera.anchor = newCenterScreenCoordinate
-            followingMobileCamera.pitch = CGFloat(newPitch)
+            followingMobileCamera.center = centerCoordinate
+            followingMobileCamera.zoom = CGFloat(zoom)
+            followingMobileCamera.bearing = bearing
+            followingMobileCamera.anchor = anchor
+            followingMobileCamera.pitch = CGFloat(pitch)
             followingMobileCamera.padding = edgeInsets
+            
+            followingHeadUnitCamera.center = centerCoordinate
+            followingHeadUnitCamera.zoom = CGFloat(zoom)
+            followingHeadUnitCamera.bearing = bearing
+            followingHeadUnitCamera.anchor = anchor
+            followingHeadUnitCamera.pitch = CGFloat(pitch)
+            followingHeadUnitCamera.padding = UIEdgeInsets(top: 40.0, left: 200.0, bottom: 40.0, right: 40.0)
         }
-    }
-    
-    func getZoomLevelAndCenterCoordinateForFollowing(coordinates: [CLLocationCoordinate2D],
-                                                     heading: CLLocationDirection = 0,
-                                                     pitch: Double = 0,
-                                                     edgeInsets: UIEdgeInsets = .zero) -> (zoomLevel: Double, centerCoordinate: CLLocationCoordinate2D?) {
-        let maxNavigationZoomLevel = 16.35
-        let minNavigationZoomLevel = 2.0
-        
-        return getZoomLevelAndCenterCoordinate(coordinates: coordinates,
-                                               heading: heading,
-                                               pitch: pitch,
-                                               edgeInsets: edgeInsets,
-                                               maxZoomLevel: maxNavigationZoomLevel,
-                                               minZoomLevel: minNavigationZoomLevel,
-                                               defaultZoomLevel: minNavigationZoomLevel)
     }
     
     func updateOverviewCamera(_ passiveLocation: CLLocation?, activeLocation: CLLocation?, routeProgress: RouteProgress?) {
-        guard let mapView = mapView else { return }
-        guard let location = activeLocation?.coordinate else { return }
-        guard let heading = activeLocation?.course else { return }
+        guard let mapView = mapView,
+              let coordinate = activeLocation?.coordinate,
+              let heading = activeLocation?.course,
+              let routeProgress = routeProgress else { return }
         
-        let edgeInsets: UIEdgeInsets = UIEdgeInsets(top: 100.0, left: 80.0, bottom: 100.0, right: 80.0)
-        let pitchPercentage = 0.0
-        let pitchAndScreenCoordinate = getPitchAndScreenCenterPoint(pitchEffectPercentage: pitchPercentage,
-                                                                    maxPitch: maxPitch,
-                                                                    bounds: mapView.bounds,
-                                                                    edgeInsets: edgeInsets)
-        let newPitch = pitchAndScreenCoordinate.pitch
-        let newCenterScreenCoordinate = pitchAndScreenCoordinate.screenCenterPoint
-
-        guard let routeProgress = routeProgress else { return }
+        let edgeInsets = UIEdgeInsets(top: 100.0, left: 80.0, bottom: 100.0, right: 80.0)
+        let anchor = self.anchor(0.0,
+                                 maxPitch: defaultPitch,
+                                 bounds: mapView.bounds,
+                                 edgeInsets: edgeInsets)
         let stepIndex = routeProgress.currentLegProgress.stepIndex
         let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
         let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...].map({ $0.shape?.coordinates })
-        let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: activeLocation?.coordinate) ?? []
-        let remainingCoordsOnRoute = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
-        let cameraParams = getZoomLevelAndCenterCoordinateForOverview(coordinates: remainingCoordsOnRoute,
-                                                                      // TODO: Heading should be 0.0 if already in overview.
-                                                                      heading: heading,
-                                                                      // TODO: Pitch should be 0.0 if already in overview.
-                                                                      pitch: newPitch,
-                                                                      edgeInsets: edgeInsets)
-        let newZoomLevel = cameraParams.zoomLevel
+        let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: coordinate) ?? []
+        let remainingCoordinatesOnRoute = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
+
+        let zoom = zoomLevel(remainingCoordinatesOnRoute,
+                             pitch: 0.0,
+                             edgeInsets: edgeInsets,
+                             maxZoomLevel: 16.35,
+                             minZoomLevel: 2.0)
         
-        var newCenter: CLLocationCoordinate2D = location
-        if cameraParams.centerCoordinate != nil {
-            newCenter = cameraParams.centerCoordinate!
-        }
+        let center = remainingCoordinatesOnRoute.map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate
         
-        overviewMobileCamera.pitch = CGFloat(newPitch)
-        overviewMobileCamera.center = newCenter
-        overviewMobileCamera.zoom = CGFloat(newZoomLevel)
-        overviewMobileCamera.anchor = newCenterScreenCoordinate
+        overviewMobileCamera.pitch = 0.0
+        overviewMobileCamera.center = center
+        overviewMobileCamera.zoom = CGFloat(zoom)
+        overviewMobileCamera.anchor = anchor
         // TODO: Heading should be 0.0 if already in overview.
         overviewMobileCamera.bearing = CLLocationDirection(mapView.cameraView.bearing) + shortestRotationDiff(angle: heading,
                                                                                                               anchorAngle: CLLocationDirection(mapView.cameraView.bearing))
     }
     
-    @objc func didReroute(_ notification: NSNotification) {
-        // TODO: Change `CameraOptions` when re-reouting occurs.
-    }
-    
-    @objc func updateAltitude(_ sender: UIGestureRecognizer) {
-        if sender.state == .ended, let validAltitude = mapView?.altitude {
-            altitude = validAltitude
-        }
-        
-        // Capture altitude for double tap and two finger tap after animation finishes
-        if sender is UITapGestureRecognizer, sender.state == .ended {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                if let altitude = self.mapView?.altitude {
-                    self.altitude = altitude
-                }
-            })
-        }
-    }
-    
-    func getZoomLevelAndCenterCoordinateForOverview(coordinates: [CLLocationCoordinate2D],
-                                                    heading: CLLocationDirection = 0,
-                                                    pitch: Double = 0,
-                                                    edgeInsets: UIEdgeInsets = .zero) -> (zoomLevel: Double, centerCoordinate: CLLocationCoordinate2D?) {
-        let maxNavigationZoomLevel = 16.35
-        return getZoomLevelAndCenterCoordinate(coordinates: coordinates,
-                                               heading: heading,
-                                               pitch: pitch,
-                                               edgeInsets: edgeInsets,
-                                               maxZoomLevel: maxNavigationZoomLevel,
-                                               minZoomLevel: 2.0,
-                                               defaultZoomLevel: 12.0)
-    }
-    
-    func getZoomLevelAndCenterCoordinate(coordinates: [CLLocationCoordinate2D],
-                                         heading: CLLocationDirection = 0,
-                                         pitch: Double = 0,
-                                         edgeInsets: UIEdgeInsets = .zero,
-                                         maxZoomLevel: Double = 22.0,
-                                         minZoomLevel: Double = 2.0,
-                                         defaultZoomLevel: Double = 12.0) -> (zoomLevel: Double, centerCoordinate: CLLocationCoordinate2D?) {
-        guard let mapView = mapView else {
-            return (zoomLevel: defaultZoomLevel, centerCoordinate: nil)
-        }
+    func zoomLevel(_ coordinates: [CLLocationCoordinate2D],
+                   pitch: Double = 0,
+                   edgeInsets: UIEdgeInsets = .zero,
+                   defaultZoomLevel: Double = 12.0,
+                   maxZoomLevel: Double = 22.0,
+                   minZoomLevel: Double = 2.0) -> Double {
+        guard let mapView = mapView,
+              let boundingBox = BoundingBox(from: coordinates) else { return defaultZoomLevel }
         
         let mapInsetWidth = mapView.bounds.size.width - edgeInsets.left - edgeInsets.right
         let mapInsetHeight = mapView.bounds.size.height - edgeInsets.top - edgeInsets.bottom
+        let widthDelta = mapInsetHeight * 2 - mapInsetWidth
+        let widthWithPitchEffect = CGFloat(mapInsetWidth + (CGFloat(pitch / defaultPitch) * widthDelta))
+        let heightWithPitchEffect = CGFloat(Double(mapInsetHeight) + (Double(mapInsetHeight) * sin(pitch * .pi / 180.0) * 1.25))
+        let zoomLevel = coordinateBoundsZoomLevel(boundingBox, fitToSize: CGSize(width: widthWithPitchEffect, height: heightWithPitchEffect))
         
-        let widthForMinPitch = mapInsetWidth
-        let widthForMaxPitch = mapInsetHeight * 2
-        let widthDelta = widthForMaxPitch - widthForMinPitch
-        let widthWithPitchEffect = CGFloat(Double(widthForMinPitch) + ((pitch / maxPitch) * Double(widthDelta)))
-        let heightWithPitchEffect = CGFloat( Double(mapInsetHeight) + (Double(mapInsetHeight) * sin(pitch * .pi / 180.0) * 1.25) )
-        
-        let coordinateScreenPoints = coordinates.map { mapView.point(for: $0) }
-        let coordinateScreenPointsBbox = coordinateScreenPoints.getBoxPoints()
-        let coordinatesFromScreenPointBbox = coordinateScreenPointsBbox.map { mapView.coordinate(for: $0) }
-        let centerCoordinateOfBbox = coordinatesFromScreenPointBbox.getCenterCoordinate()
-        
-        let coordinateScreenPointsBboxSizeInMeters = (width: coordinatesFromScreenPointBbox[0].distance(to: coordinatesFromScreenPointBbox[1]), height: coordinatesFromScreenPointBbox[1].distance(to: coordinatesFromScreenPointBbox[2]))
-        let bboxNorth = centerCoordinateOfBbox.coordinate(at: coordinateScreenPointsBboxSizeInMeters.height / 2, facing: 0)
-        let bboxSouth = centerCoordinateOfBbox.coordinate(at: coordinateScreenPointsBboxSizeInMeters.height / 2, facing: 180)
-        let bboxWest = centerCoordinateOfBbox.coordinate(at: coordinateScreenPointsBboxSizeInMeters.width / 2, facing: 270)
-        let bboxEast = centerCoordinateOfBbox.coordinate(at: coordinateScreenPointsBboxSizeInMeters.width / 2, facing: 90)
-        let rotatedBbox = [
-            CLLocationCoordinate2D(latitude: bboxNorth.latitude, longitude: bboxWest.longitude),
-            CLLocationCoordinate2D(latitude: bboxNorth.latitude, longitude: bboxEast.longitude),
-            CLLocationCoordinate2D(latitude: bboxSouth.latitude, longitude: bboxEast.longitude),
-            CLLocationCoordinate2D(latitude: bboxSouth.latitude, longitude: bboxWest.longitude)
-        ]
-        
-        let zl = getCoordinateBoundsZoomLevel(bounds: rotatedBbox, fitToSize: CGSize(width: widthWithPitchEffect, height: heightWithPitchEffect))
-        
-        return (zoomLevel: max(min(zl, maxZoomLevel), minZoomLevel), centerCoordinate: centerCoordinateOfBbox)
+        return max(min(zoomLevel, maxZoomLevel), minZoomLevel)
     }
     
-    func getPitchAndScreenCenterPoint(pitchEffectPercentage: Double, maxPitch: Double, bounds: CGRect, edgeInsets: UIEdgeInsets) -> (pitch: Double, screenCenterPoint: CGPoint) {
+    func pitchСoefficient(_ routeProgress: RouteProgress, currentCoordinate: CLLocationCoordinate2D) -> Double {
+        var shouldIgnoreManeuver = false
+        if let upcomingStep = routeProgress.currentLeg.steps[safe: routeProgress.currentLegProgress.stepIndex + 1] {
+            if routeProgress.currentLegProgress.stepIndex == routeProgress.currentLegProgress.leg.steps.count - 2 {
+                shouldIgnoreManeuver = true
+            }
+            
+            let maneuvers: [ManeuverType] = [.continue, .merge, .takeOnRamp, .takeOffRamp, .reachFork]
+            if maneuvers.contains(upcomingStep.maneuverType) {
+                shouldIgnoreManeuver = true
+            }
+        }
+        
+        let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: currentCoordinate) ?? []
+        let defaultPitchСoefficient = 1.0
+        guard let distance = LineString(coordinatesToManeuver).distance() else { return defaultPitchСoefficient }
+        let pitchEffectDistanceStart: CLLocationDistance = 180
+        let pitchEffectDistanceEnd: CLLocationDistance = 150
+        let pitchСoefficient = shouldIgnoreManeuver
+            ? defaultPitchСoefficient
+            : (max(min(distance, pitchEffectDistanceStart), pitchEffectDistanceEnd) - pitchEffectDistanceEnd) / (pitchEffectDistanceStart - pitchEffectDistanceEnd)
+        
+        return pitchСoefficient
+    }
+    
+    func anchor(_ pitchСoefficient: Double, maxPitch: Double, bounds: CGRect, edgeInsets: UIEdgeInsets) -> CGPoint {
         let xCenter = max(((bounds.size.width - edgeInsets.left - edgeInsets.right) / 2.0) + edgeInsets.left, 0.0)
         let height = (bounds.size.height - edgeInsets.top - edgeInsets.bottom)
         let yCenter = max((height / 2.0) + edgeInsets.top, 0.0)
-        let yOffsetCenter = max((height / 2.0) - 7.0, 0.0) * CGFloat(pitchEffectPercentage) + yCenter
-        return (pitch: maxPitch * pitchEffectPercentage, screenCenterPoint: CGPoint(x: xCenter, y: yOffsetCenter))
+        let yOffsetCenter = max((height / 2.0) - 7.0, 0.0) * CGFloat(pitchСoefficient) + yCenter
+        return CGPoint(x: xCenter, y: yOffsetCenter)
     }
     
     func shortestRotationDiff(angle: CLLocationDirection, anchorAngle: CLLocationDirection) -> CLLocationDirection {
@@ -397,35 +288,24 @@ public class NavigationViewportDataSource: ViewportDataSource {
         return (angle - anchorAngle).wrap(min: -180.0, max: 180.0)
     }
     
-    func getCoordinateBoundsZoomLevel(bounds: [CLLocationCoordinate2D], fitToSize: CGSize) -> Double {
-        let bbox = bounds.getBoxCoordinates()
-        let ne = bbox[1]
-        let sw = bbox[3]
-        let latFraction = (latRad(ne.latitude) - latRad(sw.latitude)) / .pi
-        
-        let lngDiff = ne.longitude - sw.longitude
+    func coordinateBoundsZoomLevel(_ boundingBox: BoundingBox, fitToSize: CGSize) -> Double {
+        let latFraction = (latRad(boundingBox.northEast.latitude) - latRad(boundingBox.southWest.latitude)) / .pi
+        let lngDiff = boundingBox.northEast.longitude - boundingBox.southWest.longitude
         let lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360
-        
         let latZoom = zoom(displayDimensionSize: Double(fitToSize.height), tileSize: 512.0, fraction: latFraction)
         let lngZoom = zoom(displayDimensionSize: Double(fitToSize.width), tileSize: 512.0, fraction: lngFraction)
         
         return min(latZoom, lngZoom, 21.0)
     }
     
-    func latRad(_ lat: CLLocationDegrees) -> Double {
-        let sinVal = sin(lat * .pi / 180)
+    func latRad(_ latitude: CLLocationDegrees) -> Double {
+        let sinVal = sin(latitude * .pi / 180)
         let radX2 = log((1 + sinVal) / (1 - sinVal)) / 2
         return max(min(radX2, .pi), -.pi) / 2
     }
     
     func zoom(displayDimensionSize: Double, tileSize: Double, fraction: Double) -> Double {
         return log(displayDimensionSize / tileSize / fraction) / M_LN2
-    }
-    
-    func getPitchEffectPercentage(currentDistance: CLLocationDistance,
-                                  effectStartRemainingDistance: CLLocationDistance,
-                                  effectEndRemainingDistance: CLLocationDistance) -> Double {
-        return (max(min(currentDistance, effectStartRemainingDistance), effectEndRemainingDistance) - effectEndRemainingDistance) / (effectStartRemainingDistance - effectEndRemainingDistance)
     }
     
     func normalizeAngle(angle: CLLocationDirection, anchorAngle: CLLocationDirection) -> CLLocationDirection {

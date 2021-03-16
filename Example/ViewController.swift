@@ -311,8 +311,7 @@ class ViewController: UIViewController {
         // Modify default `NavigationViewportDataSource` and `NavigationCameraStateTransition` to change
         // `NavigationCamera` behavior during active guidance.
         if let mapView = navigationViewController.navigationMapView?.mapView {
-            let customViewportDataSource = NavigationViewportDataSource(mapView)
-            customViewportDataSource.altitude = 800.0
+            let customViewportDataSource = CustomViewportDataSource(mapView)
             navigationViewController.navigationMapView?.navigationCamera.viewportDataSource = customViewportDataSource
             
             let customCameraStateTransition = CustomCameraStateTransition(mapView)

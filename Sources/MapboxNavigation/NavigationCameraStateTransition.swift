@@ -7,10 +7,6 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     
     public var cameraView: CameraView!
     
-    let followingWithoutRouteZoomLevel = 16.0
-    let maxPitch = 60.0
-    let bearingDiffForEasing = 60.0
-    
     let bezierParamsCenter = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
     let bezierParamsUserLocation = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
     let bezierParamsZoom = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
@@ -128,6 +124,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     public func updateForOverview(_ cameraOptions: CameraOptions, completion: (() -> Void)?) {
+        cameraOptions.bearing = 0.0
+        
         update(cameraOptions) {
             completion?()
         }
@@ -577,6 +575,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     func shouldEaseBearing(_ newBearing: CLLocationDirection) -> Bool {
+        let bearingDiffForEasing = 60.0
         if let mapView = mapView,
            fabs(shortestRotationDiff(angle: newBearing, anchorAngle: CLLocationDirection(mapView.cameraView.bearing))) >= bearingDiffForEasing {
             return true
