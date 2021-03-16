@@ -51,8 +51,8 @@ extension ElectronicHorizon.Edge {
         /** The ISO 3166-2 code of the country subdivision where this edge is located. */
         public let regionCode: String?
         
-        /** True if in the current place/state uses right-hand traffic, false if left-hand. */
-        public let isRightHandTraffic: Bool
+        /** Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the rule of the road.. */
+        public let drivingSide: DrivingSide
 
         init(_ native: EdgeMetadata) {
             heading = native.heading
@@ -85,7 +85,7 @@ extension ElectronicHorizon.Edge {
             curvature = UInt(native.curvature)
             countryCode = native.countryCode
             regionCode = native.stateCode
-            isRightHandTraffic = native.isIsRightHandTraffic
+            drivingSide = native.isIsRightHandTraffic ? .right : .left
         }
     }
 }
