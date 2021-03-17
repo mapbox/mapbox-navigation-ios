@@ -115,7 +115,7 @@ extension Route {
     var tollIntersections: [Intersection]? {
         let allSteps = legs.flatMap { return $0.steps }
 
-        let allIntersections = allSteps.compactMap { return $0.intersections }.reduce([], +)
+        let allIntersections = allSteps.flatMap { $0.intersections ?? [] }
         let intersectionsWithTolls = allIntersections.filter { return $0.tollCollection != nil }
 
         return intersectionsWithTolls
@@ -160,13 +160,6 @@ extension Route {
 
 extension RouteStep {
     func intersects(_ boundingBox: Turf.BoundingBox) -> Bool {
-        guard let coordinates = shape?.coordinates else { return false }
-
-        for coordinate in coordinates {
-            if boundingBox.contains(coordinate) {
-                return true
-            }
-        }
-        return false
+        return shape?.coordinates.contains(where: { boundingBox.contains($0) }) ?? false
     }
 }
