@@ -3,6 +3,7 @@ import MapboxDirections
 import CoreLocation
 import Turf
 import CoreGraphics
+import MapboxDirections
 
 extension Array {
     /**
@@ -141,5 +142,27 @@ extension Array where Iterator.Element == CGPoint {
         }
         
         return []
+    }
+
+extension Array where Element == RouteStep {
+    // Find the longest contiguous series of RouteSteps connected to the first one.
+    //
+    // tolerance: -- Maximum distance between the end of one RouteStep and the start of the next to still consider them connected. Defaults to 100 meters
+    func continuousShape(tolerance: CLLocationDistance = 100) -> LineString? {
+        guard count > 0 else { return nil }
+        guard count > 1 else { return self[0].shape }
+
+        let stepShapes = compactMap { $0.shape }
+        let filteredStepShapes = zip(stepShapes, stepShapes.suffix(from: 1)).filter({
+            guard let maneuverLocation = $1.coordinates.first else { return false }
+            
+            return $0.coordinates.last?.distance(to: maneuverLocation) ?? Double.greatestFiniteMagnitude < tolerance
+        })
+
+        let coordinates = filteredStepShapes.flatMap { (firstLine, secondLine) -> [CLLocationCoordinate2D] in
+            return firstLine.coordinates
+        }
+
+        return LineString(coordinates)
     }
 }
