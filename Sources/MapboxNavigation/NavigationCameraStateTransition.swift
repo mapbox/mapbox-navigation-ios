@@ -53,36 +53,31 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         cameraView.isActive = true
         
         if transitionDestinationIsOffScreen(location, edgeInsets: padding) {
-            let midPointPitchAndScreenCoordinate = getPitchAndScreenCenterPoint(pitchEffectPercentage: 0,
-                                                                                maxPitch: 0,
-                                                                                bounds: mapView.bounds,
-                                                                                edgeInsets: padding)
-            
+            let screenCenterPoint = self.screenCenterPoint(0.0, bounds: mapView.bounds, edgeInsets: padding)
             let lineString = LineString([cameraView.centerCoordinate, location])
-            let inputCamera = mapView.cameraManager.camera(fitting: .lineString(lineString))
-            inputCamera.bearing = cameraView.bearing
-            inputCamera.pitch = 0
-            guard let midPointZoom = inputCamera.zoom else { return }
-
-            let cameraOptions = CameraOptions(center: location,
-                                              anchor: midPointPitchAndScreenCoordinate.screenCenterPoint,
-                                              zoom: CGFloat(midPointZoom),
-                                              bearing: bearing,
-                                              pitch: 0.0)
-            
-            transitionFromHighZoomToMidpoint(cameraOptions) {
-                self.stopAnimators()
+            let camera = mapView.cameraManager.camera(fitting: .lineString(lineString))
+            camera.bearing = cameraView.bearing
+            camera.pitch = 0
+            if let midPointZoom = camera.zoom {
                 let cameraOptions = CameraOptions(center: location,
-                                                  anchor: anchor,
-                                                  zoom: CGFloat(zoom),
+                                                  anchor: screenCenterPoint,
+                                                  zoom: CGFloat(midPointZoom),
                                                   bearing: bearing,
-                                                  pitch: CGFloat(pitch))
+                                                  pitch: 0.0)
                 
-                self.transitionFromLowZoomToHighZoom(cameraOptions) {
-                    completion()
+                transitionFromHighZoomToMidpoint(cameraOptions) {
+                    self.stopAnimators()
+                    let cameraOptions = CameraOptions(center: location,
+                                                      anchor: anchor,
+                                                      zoom: CGFloat(zoom),
+                                                      bearing: bearing,
+                                                      pitch: CGFloat(pitch))
+                    
+                    self.transitionFromLowZoomToHighZoom(cameraOptions) {
+                        completion()
+                    }
                 }
             }
-            
         } else {
             if cameraView.zoomLevel < zoom {
                 transitionFromLowZoomToHighZoom(cameraOptions) {
@@ -164,7 +159,6 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             }
         }
         
-        // TODO: Clarify whether zoom, bearing and pitch should only be eased in following mode.
         if cameraParameters.contains(.zoom),
            let animator = shouldEaseZoom(Double(zoom)) ? animatorEasedZoom : animatorZoom {
             if animator.state == .inactive || animator.state == .stopped {
@@ -275,10 +269,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
               let location = cameraOptions.center,
               let bearing = cameraOptions.bearing else { return }
         
-        let currentCenter = cameraView.centerCoordinate
-        let point1 = CLLocation(latitude: currentCenter.latitude, longitude: currentCenter.longitude)
-        let point2 = CLLocation(latitude: location.latitude, longitude: location.longitude)
-        let centerTranslationDistance = point1.distance(from: point2)
+        let centerTranslationDistance = CLLocation.distance(from: cameraView.centerCoordinate, to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1500.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.6), 0.6)
         let centerAnimationDelay: TimeInterval = 0
@@ -291,7 +282,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
         let currentBearing = cameraView.bearing
-        let newBearing: CLLocationDirection = cameraView.bearing + shortestRotationDiff(angle: bearing, anchorAngle: cameraView.bearing)
+        let newBearing: CLLocationDirection = cameraView.bearing + bearing.shortestRotation(angle: cameraView.bearing)
         let bearingDegreesChange: CLLocationDirection = fabs(newBearing - currentBearing)
         let degreesPerSecondMaxBearingAnimation: Double = 60
         let bearingAnimationDuration: TimeInterval = max(min(bearingDegreesChange / degreesPerSecondMaxBearingAnimation, 1.2), 0.6)
@@ -322,27 +313,19 @@ public class NavigationCameraStateTransition: CameraStateTransition {
               let zoom = cameraOptions.zoom,
               let location = cameraOptions.center,
               let bearing = cameraOptions.bearing else { return }
-
-        let currentZoomLevel = Double(cameraView.zoomLevel)
-        let newZoomLevel: CLLocationDistance = CLLocationDistance(zoom)
-        let zoomLevelDistance: CLLocationDistance = fabs(newZoomLevel - currentZoomLevel)
+        
+        let zoomLevelDistance = CLLocationDistance(abs(cameraView.zoomLevel - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 0.6
         let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 0.8), 0.2)
         let zoomAnimationDelay: TimeInterval = 0
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
-        let currentCenter = cameraView.centerCoordinate
-        let newCenter: CLLocationCoordinate2D = location
-        let point1 = CLLocation(latitude: currentCenter.latitude, longitude: currentCenter.longitude)
-        let point2 = CLLocation(latitude: newCenter.latitude, longitude: newCenter.longitude)
-        let centerTranslationDistance = point1.distance(from: point2)
+        let centerTranslationDistance = CLLocation.distance(from: cameraView.centerCoordinate, to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1000.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.4), 0.6)
         let centerAnimationDelay: TimeInterval = max(endZoomAnimation - centerAnimationDuration, 0)
         
-        let currentBearing = cameraView.bearing
-        let newBearing: CLLocationDirection = cameraView.bearing + shortestRotationDiff(angle: bearing, anchorAngle: cameraView.bearing)
-        let bearingDegreesChange: CLLocationDirection = fabs(newBearing - currentBearing)
+        let bearingDegreesChange: CLLocationDirection = bearing.shortestRotation(angle: cameraView.bearing)
         let degreesPerSecondMaxBearingAnimation: Double = 60
         let bearingAnimationDuration: TimeInterval = max(min(bearingDegreesChange / degreesPerSecondMaxBearingAnimation, 1.2), 0.8)
         let bearingAnimationDelay: TimeInterval = max(endZoomAnimation - bearingAnimationDuration - 0.4, 0)
@@ -409,7 +392,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let durationCenterAnimation: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.4), 0.8)
         let delayCenterAnimation: TimeInterval = max(endZoomAnimation - durationCenterAnimation, 0)
         
-        let newBearing: CLLocationDirection = cameraView.bearing + shortestRotationDiff(angle: bearing, anchorAngle: cameraView.bearing)
+        let newBearing: CLLocationDirection = cameraView.bearing + bearing.shortestRotation(angle: cameraView.bearing)
         let currentBearing = cameraView.bearing
         let bearingDegreesChange: CLLocationDirection = fabs(newBearing - currentBearing)
         let degreesPerSecondMaxBearingAnimation: Double = 60
@@ -537,20 +520,6 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         animatorPitch.startAnimation(afterDelay: fmax(transitionParameters.pitchAndAnchorAnimationDelay, 0))
     }
     
-    func normalizeAngle(angle: CLLocationDirection, anchorAngle: CLLocationDirection) -> CLLocationDirection {
-        guard !angle.isNaN && !anchorAngle.isNaN else { return 0.0 }
-        
-        var localAngle = angle.wrap(min: 0.0, max: 360.0)
-        let diff = abs(localAngle - anchorAngle)
-        if abs(localAngle - 360.0 - anchorAngle) < diff {
-            localAngle -= 360.0
-        }
-        if abs(localAngle + 360.0 - anchorAngle) < diff {
-            localAngle += 360.0
-        }
-        return localAngle
-    }
-    
     func transitionDestinationIsOffScreen(_ transitionDestination: CLLocationCoordinate2D, edgeInsets: UIEdgeInsets = .zero) -> Bool {
         guard let mapView = mapView else { return false }
         
@@ -558,44 +527,33 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         return !halo.rectValue(mapView.bounds).contains(mapView.point(for: transitionDestination))
     }
     
-    func getPitchAndScreenCenterPoint(pitchEffectPercentage: Double,
-                                      maxPitch: Double,
-                                      bounds: CGRect,
-                                      edgeInsets: UIEdgeInsets) -> (pitch: Double, screenCenterPoint: CGPoint) {
+    func screenCenterPoint(_ pitchEffectCoefficient: Double, bounds: CGRect, edgeInsets: UIEdgeInsets) -> CGPoint {
         let xCenter = max(((bounds.size.width - edgeInsets.left - edgeInsets.right) / 2.0) + edgeInsets.left, 0.0)
         let height = (bounds.size.height - edgeInsets.top - edgeInsets.bottom)
         let yCenter = max((height / 2.0) + edgeInsets.top, 0.0)
-        let yOffsetCenter = max((height / 2.0) - 7.0, 0.0) * CGFloat(pitchEffectPercentage) + yCenter
-        return (pitch: maxPitch * pitchEffectPercentage, screenCenterPoint: CGPoint(x: xCenter, y: yOffsetCenter))
+        let yOffsetCenter = max((height / 2.0) - 7.0, 0.0) * CGFloat(pitchEffectCoefficient) + yCenter
+        return CGPoint(x: xCenter, y: yOffsetCenter)
     }
     
-    func shortestRotationDiff(angle: CLLocationDirection, anchorAngle: CLLocationDirection) -> CLLocationDirection {
-        guard !angle.isNaN && !anchorAngle.isNaN else { return 0.0 }
-        return (angle - anchorAngle).wrap(min: -180.0, max: 180.0)
-    }
-    
-    func shouldEaseBearing(_ newBearing: CLLocationDirection) -> Bool {
-        let bearingDiffForEasing = 60.0
-        if let mapView = mapView,
-           fabs(shortestRotationDiff(angle: newBearing, anchorAngle: CLLocationDirection(mapView.cameraView.bearing))) >= bearingDiffForEasing {
+    func shouldEaseBearing(_ bearing: CLLocationDirection) -> Bool {
+        let bearingDifferenceForEasing = 60.0
+        if let mapView = mapView, bearing.shortestRotation(angle: CLLocationDirection(mapView.cameraView.bearing)) >= bearingDifferenceForEasing {
             return true
         }
         
         return false
     }
     
-    func shouldEaseZoom(_ newZoom: Double) -> Bool {
-        if let mapView = mapView,
-           newZoom < floor(Double(mapView.zoom) * 10) / 10 {
+    func shouldEaseZoom(_ zoom: Double) -> Bool {
+        if let mapView = mapView, zoom < floor(Double(mapView.zoom) * 10) / 10 {
             return true
         }
         
         return false
     }
     
-    func shouldEasePitch(_ newPitch: Double) -> Bool {
-        if let mapView = mapView,
-           CGFloat(newPitch) > mapView.cameraView.pitch {
+    func shouldEasePitch(_ pitch: Double) -> Bool {
+        if let mapView = mapView, CGFloat(pitch) > mapView.cameraView.pitch {
             return true
         }
         

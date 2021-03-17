@@ -16,20 +16,9 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     public var overviewHeadUnitCamera: CameraOptions = CameraOptions()
     
-    /**
-     Returns the pitch that the `NavigationCamera` initally defaults to.
-     */
-    public var defaultPitch: Double = 45.0
+    public var maximumPitch: Double = 45.0
     
     weak var mapView: MapView?
-    
-    var lastKnownEdgeInsets: UIEdgeInsets = .zero
-    var showEdgeInsetsDebugView = true
-    var edgeInsetsDebugView = UIView()
-    var topEdgeInsetView = UIView()
-    var rightEdgeInsetView = UIView()
-    var bottomEdgeInsetView = UIView()
-    var leftEdgeInsetView = UIView()
     
     public required init(_ mapView: MapView) {
         self.mapView = mapView
@@ -133,18 +122,14 @@ public class NavigationViewportDataSource: ViewportDataSource {
         }
         
         if let location = activeLocation, let routeProgress = routeProgress {
-            let edgeInsets: UIEdgeInsets = UIEdgeInsets(top: 100.0, left: 80.0, bottom: 150.0, right: 80.0)
-            
-            lastKnownEdgeInsets = edgeInsets
-            updateEdgeInsetsDebugView()
-            
+            let edgeInsets: UIEdgeInsets = UIEdgeInsets(top: 150.0, left: 80.0, bottom: 150.0, right: 80.0)
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
             
             let anchor = self.anchor(pitchСoefficient,
-                                     maxPitch: defaultPitch,
+                                     maxPitch: maximumPitch,
                                      bounds: mapView.bounds,
                                      edgeInsets: edgeInsets)
-            let pitch = defaultPitch * pitchСoefficient
+            let pitch = maximumPitch * pitchСoefficient
             
             var compoundManeuvers: [[CLLocationCoordinate2D]] = []
             let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -163,7 +148,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             let coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
             let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
-            let zoom = zoomLevel(coordinatesToManeuver + coordinatesForManeuverFraming,
+            let zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                  pitch: pitch,
                                  edgeInsets: edgeInsets,
                                  defaultZoomLevel: 2.0,
@@ -179,8 +164,30 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 centerCoordinate = adjustedCenterCoordinate
             }
             
-            let bearing = normalizeAngle(angle: location.course, anchorAngle: mapView.bearing)
+            let averageIntersectionDistances = routeProgress.route.legs.map { (leg) -> [CLLocationDistance] in
+                return leg.steps.map { (step) -> CLLocationDistance in
+                    if let firstStepCoordinate = step.shape?.coordinates.first,
+                       let lastStepCoordinate = step.shape?.coordinates.last {
+                        let intersectionLocations = [firstStepCoordinate] + (step.intersections?.map({ $0.location }) ?? []) + [lastStepCoordinate]
+                        let intersectionDistances = intersectionLocations[1...].enumerated().map({ (index, intersection) -> CLLocationDistance in
+                            return intersection.distance(to: intersectionLocations[index])
+                        })
+                        let filteredIntersectionDistances = intersectionDistances.filter { $0 > 20 }
+                        let averageIntersectionDistance = filteredIntersectionDistances.reduce(0.0, +) / Double(filteredIntersectionDistances.count)
+                        return averageIntersectionDistance
+                    }
+                    
+                    return 0.0
+                }
+            }
             
+            let currentRouteLegIndex = routeProgress.legIndex
+            let currentRouteStepIndex = routeProgress.currentLegProgress.stepIndex
+            let numberOfIntersections = 10
+            let lookaheadDistance = averageIntersectionDistances[currentRouteLegIndex][currentRouteStepIndex] * Double(numberOfIntersections)
+            let coordinatesForIntersections = coordinatesToManeuver.sliced(from: nil, to: LineString(coordinatesToManeuver).coordinateFromStart(distance: fmax(lookaheadDistance, 150.0)))
+            let bearing = self.bearing(location.course, coordinatesToManeuver: coordinatesForIntersections)
+
             followingMobileCamera.center = centerCoordinate
             followingMobileCamera.zoom = CGFloat(zoom)
             followingMobileCamera.bearing = bearing
@@ -194,6 +201,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingHeadUnitCamera.anchor = anchor
             followingHeadUnitCamera.pitch = CGFloat(pitch)
             followingHeadUnitCamera.padding = UIEdgeInsets(top: 40.0, left: 200.0, bottom: 40.0, right: 40.0)
+            
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ViewportDidChange"), object: self, userInfo: [
+                "EdgeInsets": edgeInsets,
+                "Anchor": anchor
+            ])
         }
     }
     
@@ -205,7 +217,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         
         let edgeInsets = UIEdgeInsets(top: 100.0, left: 80.0, bottom: 100.0, right: 80.0)
         let anchor = self.anchor(0.0,
-                                 maxPitch: defaultPitch,
+                                 maxPitch: maximumPitch,
                                  bounds: mapView.bounds,
                                  edgeInsets: edgeInsets)
         let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -214,37 +226,57 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: coordinate) ?? []
         let remainingCoordinatesOnRoute = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
 
-        let zoom = zoomLevel(remainingCoordinatesOnRoute,
+        let center = remainingCoordinatesOnRoute.map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate
+        
+        let zoom = self.zoom(remainingCoordinatesOnRoute,
                              pitch: 0.0,
                              edgeInsets: edgeInsets,
                              maxZoomLevel: 16.35,
                              minZoomLevel: 2.0)
         
-        let center = remainingCoordinatesOnRoute.map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate
+        // In case if `NavigationCamera` is already in `NavigationCameraState.overview` value of bearing will be ignored.
+        let bearing = CLLocationDirection(mapView.cameraView.bearing) +
+            heading.shortestRotation(angle: CLLocationDirection(mapView.cameraView.bearing))
         
         overviewMobileCamera.pitch = 0.0
         overviewMobileCamera.center = center
         overviewMobileCamera.zoom = CGFloat(zoom)
         overviewMobileCamera.anchor = anchor
-        // TODO: Heading should be 0.0 if already in overview.
-        overviewMobileCamera.bearing = CLLocationDirection(mapView.cameraView.bearing) + shortestRotationDiff(angle: heading,
-                                                                                                              anchorAngle: CLLocationDirection(mapView.cameraView.bearing))
+        overviewMobileCamera.bearing = bearing
     }
     
-    func zoomLevel(_ coordinates: [CLLocationCoordinate2D],
-                   pitch: Double = 0,
-                   edgeInsets: UIEdgeInsets = .zero,
-                   defaultZoomLevel: Double = 12.0,
-                   maxZoomLevel: Double = 22.0,
-                   minZoomLevel: Double = 2.0) -> Double {
+    func bearing(_ initialBearing: CLLocationDirection, coordinatesToManeuver: [CLLocationCoordinate2D]? = nil) -> CLLocationDirection {
+        let bearingModeClampedManeuverMaxDiff = 20.0
+        var bearing = initialBearing
+
+        if let coords = coordinatesToManeuver, let firstCoordinate = coords.first, let lastCoordinate = coords.last {
+            let directionToManeuver = firstCoordinate.direction(to: lastCoordinate)
+            let directionDiff = directionToManeuver.shortestRotation(angle: initialBearing)
+            if fabs(directionDiff) > bearingModeClampedManeuverMaxDiff {
+                bearing += bearingModeClampedManeuverMaxDiff * (directionDiff < 0.0 ? -1.0 : 1.0)
+            } else {
+                bearing = firstCoordinate.direction(to: lastCoordinate)
+            }
+        }
+        
+        let mapViewBearing = Double(mapView?.cameraView.bearing ?? 0.0)
+        return mapViewBearing + bearing.shortestRotation(angle: mapViewBearing)
+    }
+    
+    func zoom(_ coordinates: [CLLocationCoordinate2D],
+              pitch: Double = 0,
+              edgeInsets: UIEdgeInsets = .zero,
+              defaultZoomLevel: Double = 12.0,
+              maxZoomLevel: Double = 22.0,
+              minZoomLevel: Double = 2.0) -> Double {
         guard let mapView = mapView,
               let boundingBox = BoundingBox(from: coordinates) else { return defaultZoomLevel }
         
         let mapInsetWidth = mapView.bounds.size.width - edgeInsets.left - edgeInsets.right
         let mapInsetHeight = mapView.bounds.size.height - edgeInsets.top - edgeInsets.bottom
         let widthDelta = mapInsetHeight * 2 - mapInsetWidth
-        let widthWithPitchEffect = CGFloat(mapInsetWidth + (CGFloat(pitch / defaultPitch) * widthDelta))
-        let heightWithPitchEffect = CGFloat(Double(mapInsetHeight) + (Double(mapInsetHeight) * sin(pitch * .pi / 180.0) * 1.25))
+        let widthWithPitchEffect = CGFloat(mapInsetWidth + CGFloat(pitch / maximumPitch) * widthDelta)
+        let heightWithPitchEffect = CGFloat(mapInsetHeight + mapInsetHeight * CGFloat(sin(pitch * .pi / 180.0)) * 1.25)
         let zoomLevel = coordinateBoundsZoomLevel(boundingBox, fitToSize: CGSize(width: widthWithPitchEffect, height: heightWithPitchEffect))
         
         return max(min(zoomLevel, maxZoomLevel), minZoomLevel)
@@ -283,85 +315,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
         return CGPoint(x: xCenter, y: yOffsetCenter)
     }
     
-    func shortestRotationDiff(angle: CLLocationDirection, anchorAngle: CLLocationDirection) -> CLLocationDirection {
-        guard !angle.isNaN && !anchorAngle.isNaN else { return 0.0 }
-        return (angle - anchorAngle).wrap(min: -180.0, max: 180.0)
-    }
-    
     func coordinateBoundsZoomLevel(_ boundingBox: BoundingBox, fitToSize: CGSize) -> Double {
-        let latFraction = (latRad(boundingBox.northEast.latitude) - latRad(boundingBox.southWest.latitude)) / .pi
+        let latFraction = (boundingBox.northEast.latitude.radius - boundingBox.southWest.latitude.radius) / .pi
         let lngDiff = boundingBox.northEast.longitude - boundingBox.southWest.longitude
         let lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360
-        let latZoom = zoom(displayDimensionSize: Double(fitToSize.height), tileSize: 512.0, fraction: latFraction)
-        let lngZoom = zoom(displayDimensionSize: Double(fitToSize.width), tileSize: 512.0, fraction: lngFraction)
-        
+        let latZoom = log(Double(fitToSize.height) / 512.0 / latFraction) / M_LN2
+        let lngZoom = log(Double(fitToSize.width) / 512.0 / lngFraction) / M_LN2
         return min(latZoom, lngZoom, 21.0)
-    }
-    
-    func latRad(_ latitude: CLLocationDegrees) -> Double {
-        let sinVal = sin(latitude * .pi / 180)
-        let radX2 = log((1 + sinVal) / (1 - sinVal)) / 2
-        return max(min(radX2, .pi), -.pi) / 2
-    }
-    
-    func zoom(displayDimensionSize: Double, tileSize: Double, fraction: Double) -> Double {
-        return log(displayDimensionSize / tileSize / fraction) / M_LN2
-    }
-    
-    func normalizeAngle(angle: CLLocationDirection, anchorAngle: CLLocationDirection) -> CLLocationDirection {
-        guard !angle.isNaN && !anchorAngle.isNaN else { return 0.0 }
-        
-        var localAngle = angle.wrap(min: 0.0, max: 360.0)
-        let diff = abs(localAngle - anchorAngle)
-        if abs(localAngle - 360.0 - anchorAngle) < diff {
-            localAngle -= 360.0
-        }
-        if abs(localAngle + 360.0 - anchorAngle) < diff {
-            localAngle += 360.0
-        }
-        return localAngle
-    }
-    
-    func updateEdgeInsetsDebugView(_ color: UIColor = .green) {
-        guard showEdgeInsetsDebugView else {
-            edgeInsetsDebugView.subviews.forEach { view in
-                view.removeFromSuperview()
-            }
-            
-            edgeInsetsDebugView.removeFromSuperview()
-            return
-        }
-        
-        if let mapView = mapView {
-            edgeInsetsDebugView.frame = CGRect(x: 0,
-                                               y: 0,
-                                               width: mapView.bounds.size.width,
-                                               height: mapView.bounds.size.height)
-            
-            if edgeInsetsDebugView.superview == nil {
-                edgeInsetsDebugView.isUserInteractionEnabled = false
-                edgeInsetsDebugView.addSubview(topEdgeInsetView)
-                edgeInsetsDebugView.addSubview(rightEdgeInsetView)
-                edgeInsetsDebugView.addSubview(bottomEdgeInsetView)
-                edgeInsetsDebugView.addSubview(leftEdgeInsetView)
-            }
-            
-            mapView.insertSubview(edgeInsetsDebugView, at: mapView.subviews.count)
-        }
-        
-        let width = edgeInsetsDebugView.frame.size.width
-        let height = edgeInsetsDebugView.frame.size.height
-        
-        topEdgeInsetView.frame = CGRect(x: 0, y: lastKnownEdgeInsets.top, width: width, height: 2.0)
-        topEdgeInsetView.backgroundColor = color
-        
-        rightEdgeInsetView.frame = CGRect(x: width - lastKnownEdgeInsets.right - 2.0, y: 0, width: 2.0, height: height)
-        rightEdgeInsetView.backgroundColor = color
-        
-        bottomEdgeInsetView.frame = CGRect(x: 0, y: height - lastKnownEdgeInsets.bottom - 2.0, width: width, height: 2.0)
-        bottomEdgeInsetView.backgroundColor = color
-        
-        leftEdgeInsetView.frame = CGRect(x: lastKnownEdgeInsets.left, y: 0, width: 2.0, height: height)
-        leftEdgeInsetView.backgroundColor = color
     }
 }

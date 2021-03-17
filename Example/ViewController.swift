@@ -278,6 +278,11 @@ class ViewController: UIViewController {
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
         
+        if let mapView = navigationViewController.navigationMapView?.mapView {
+            let navigationCameraDebugView = NavigationCameraDebugView(mapView, frame: mapView.frame)
+            mapView.addSubview(navigationCameraDebugView)
+        }
+        
         present(navigationViewController, completion: nil)
     }
     
