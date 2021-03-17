@@ -407,13 +407,6 @@
 			remoteGlobalIDString = 351BEBD61E5BCC28006FE110;
 			remoteInfo = MapboxNavigation;
 		};
-		35C8DBF2219193180053328C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
-			remoteInfo = Example;
-		};
 		35C8DBFF2191DA470053328C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
@@ -2020,7 +2013,6 @@
 			dependencies = (
 				3595FE4B219191FE0035B765 /* PBXTargetDependency */,
 				C5ADFBD51DDCC7840011824B /* PBXTargetDependency */,
-				35C8DBF3219193180053328C /* PBXTargetDependency */,
 			);
 			name = MapboxCoreNavigationTests;
 			productName = MapboxNavigationTests;
@@ -2779,11 +2771,6 @@
 			isa = PBXTargetDependency;
 			target = 351BEBD61E5BCC28006FE110 /* MapboxNavigation */;
 			targetProxy = 35B711D51E5E7AD2001EDA8D /* PBXContainerItemProxy */;
-		};
-		35C8DBF3219193180053328C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 358D14621E5E3B7700ADE590 /* Example */;
-			targetProxy = 35C8DBF2219193180053328C /* PBXContainerItemProxy */;
 		};
 		35C8DC002191DA470053328C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
