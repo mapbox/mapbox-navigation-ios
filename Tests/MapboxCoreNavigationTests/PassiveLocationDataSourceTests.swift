@@ -69,13 +69,9 @@ class PassiveLocationDataSourceTests: XCTestCase {
         let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
 
         // Create PassiveLocationDataSource and configure it with the tiles version (version is used to find the tiles in the cache folder)
+        Navigator.tilesVersion = tilesVersion
+        Navigator.tilesURL = filePathURL
         let locationManager = PassiveLocationDataSource()
-        do {
-            try locationManager.configureNavigator(withTilesVersion: tilesVersion)
-            try locationManager.configureNavigator(withURL: filePathURL, tilesVersion: tilesVersion)
-        } catch {
-            XCTAssertTrue(false)
-        }
 
         let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
         locationUpdateExpectation.expectedFulfillmentCount = 1
