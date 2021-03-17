@@ -111,7 +111,6 @@
 * Added option to show route duration callouts when previewing route alternatives ([#2734](https://github.com/mapbox/mapbox-navigation-ios/pull/2734)):
   * `NavigationMapView.showRouteDurations(along routes:)` to show duration annotation callouts on the map for the provided routes.
   * `NavigationMapView.removeRouteDurations()` to remove any route duration annotations currently displayed on the map.
-* Added convenience methods for visualizing geographic information on a map style as a debugging tool. ([#2734](https://github.com/mapbox/mapbox-navigation-ios/pull/2734)):
 
 ### Instruction banners
 
