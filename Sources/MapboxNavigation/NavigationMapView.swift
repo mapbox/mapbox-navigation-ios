@@ -258,20 +258,6 @@ open class NavigationMapView: UIView {
                   let location = self.mostRecentUserCourseViewLocation else { return }
             self.updateUserCourseView(location, animated: false)
         }
-
-        mapView.on(.cameraChanged, handler: { [weak self] event in
-            guard let self = self else { return }
-            guard let typedEvent = MapEvents.EventKind(rawValue: event.type), let routes = self.routes else {
-                return
-            }
-            switch typedEvent {
-            case .cameraChanged:
-                self.showRouteDurations(along: routes)
-
-            default:
-                break
-            }
-        })
         
         addSubview(mapView)
         
@@ -850,15 +836,14 @@ open class NavigationMapView: UIView {
     private func updateAnnotationSymbolImages() {
         guard let style = mapView.style, style.getStyleImage(with: "RouteInfoAnnotationLeftHanded") == nil, style.getStyleImage(with: "RouteInfoAnnotationRightHanded") == nil else { return }
 
-        // define the "stretchable" areas in the image that will be fitted to the text label
-        // Both the left and right-handed images have the same insets in our image asset
-        let stretchX = [ImageStretches(first: Float(32), second: Float(42))]
-        let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
-        let imageContent = ImageContent(left: 32, top: 26, right: 47, bottom: 33)
-
         // Right-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
+
+            // define the "stretchable" areas in the image that will be fitted to the text label
+            let stretchX = [ImageStretches(first: Float(24), second: Float(40))]
+            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
+            let imageContent = ImageContent(left: 24, top: 25, right: 40, bottom: 35)
 
             style.setStyleImage(image: regularAnnotationImage,
                                 with: "RouteInfoAnnotationRightHanded",
@@ -879,6 +864,11 @@ open class NavigationMapView: UIView {
         // Left-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
+
+            // define the "stretchable" areas in the image that will be fitted to the text label
+            let stretchX = [ImageStretches(first: Float(34), second: Float(50))]
+            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
+            let imageContent = ImageContent(left: 34, top: 25, right: 50, bottom: 35)
 
             style.setStyleImage(image: regularAnnotationImage,
                                 with: "RouteInfoAnnotationLeftHanded",
