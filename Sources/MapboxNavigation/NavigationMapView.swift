@@ -119,14 +119,6 @@ open class NavigationMapView: UIView {
     var fractionTraveled: Double = 0.0
     var preFractionTraveled: Double = 0.0
     var vanishingRouteLineUpdateTimer: Timer? = nil
-
-    var shouldPositionCourseViewFrameByFrame = false {
-        didSet {
-            if shouldPositionCourseViewFrameByFrame {
-                mapView.preferredFPS = .maximum
-            }
-        }
-    }
     
     var showsRoute: Bool {
         get {
@@ -184,7 +176,6 @@ open class NavigationMapView: UIView {
     }
     
     fileprivate func commonInit() {
-        makeGestureRecognizersUpdateCourseView()
         setupGestureRecognizers()
         installUserCourseView()
         subscribeForNotifications()
@@ -274,11 +265,6 @@ open class NavigationMapView: UIView {
     
     // MARK: - Overridden methods
     
-    open override func layoutMarginsDidChange() {
-        super.layoutMarginsDidChange()
-        enableFrameByFrameCourseViewTracking(for: 3)
-    }
-    
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         
@@ -294,39 +280,26 @@ open class NavigationMapView: UIView {
     /**
      Updates the map view’s preferred frames per second to the appropriate value for the current route progress.
      
-     This method accounts for the proximity to a maneuver and the current power source. It has no effect if `tracksUserCourse` is set to `true`.
+     This method accounts for the proximity to a maneuver and the current power source.
+     It has no effect if `NavigationCameraState` is in `.following` mode.
      */
-    open func updatePreferredFrameRate(for routeProgress: RouteProgress) {
+    public func updatePreferredFrameRate(for routeProgress: RouteProgress) {
         guard navigationCamera.state == .following else { return }
         
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let expectedTravelTime = stepProgress.step.expectedTravelTime
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
-        let conservativeFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         
-        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
-           upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
-            mapView.preferredFPS = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
-        } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
-                    durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
-            mapView.preferredFPS = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
+        let maneuverDirections: [ManeuverDirection] = [.straightAhead, .slightLeft, .slightRight]
+        if let maneuverDirection = routeProgress.currentLegProgress.upcomingStep?.maneuverDirection,
+           maneuverDirections.contains(maneuverDirection) ||
+            (durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
+                durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver) {
+            mapView.preferredFPS = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         } else {
-            mapView.preferredFPS = FrameIntervalOptions.pluggedInFramesPerSecond
+            mapView.preferredFPS = FrameIntervalOptions.defaultFramesPerSecond
         }
-    }
-    
-    /**
-     Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
-     */
-    public func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(disableFrameByFramePositioning), object: nil)
-        perform(#selector(disableFrameByFramePositioning), with: nil, afterDelay: duration)
-        shouldPositionCourseViewFrameByFrame = true
-    }
-    
-    @objc fileprivate func disableFrameByFramePositioning() {
-        shouldPositionCourseViewFrameByFrame = false
     }
     
     // MARK: - User tracking methods
@@ -936,27 +909,5 @@ open class NavigationMapView: UIView {
         }
         
         return candidates
-    }
-    
-    func makeGestureRecognizersUpdateCourseView() {
-        for gestureRecognizer in mapView.gestureRecognizers ?? [] {
-            gestureRecognizer.addTarget(self, action: #selector(updateCourseView(_:)))
-        }
-    }
-    
-    @objc func updateCourseView(_ sender: UIGestureRecognizer) {
-        if let panGesture = sender as? UIPanGestureRecognizer,
-           sender.state == .ended || sender.state == .cancelled {
-            let velocity = panGesture.velocity(in: self)
-            let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
-            if didFling {
-                enableFrameByFrameCourseViewTracking(for: 1)
-            }
-        }
-        
-        if sender.state == .changed {
-            guard let location = mostRecentUserCourseViewLocation else { return }
-            updateUserCourseView(location)
-        }
     }
 }
