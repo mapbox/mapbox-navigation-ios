@@ -521,7 +521,8 @@ open class NavigationMapView: UIView {
                 IdentifierString.arrowSymbol,
                 IdentifierString.arrowCasingSymbol,
                 IdentifierString.arrowStroke,
-                IdentifierString.waypointCircle
+                IdentifierString.waypointCircle,
+                IdentifierString.buildingExtrusionLayer
             ]
             
             guard let layers = try? mapView.__map.getStyleLayers().reversed() else { return nil }
