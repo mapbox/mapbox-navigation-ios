@@ -126,11 +126,11 @@ public class CarPlayManager: NSObject {
     public lazy var userTrackingButton: CPMapButton = {
         let userTrackingButton = CPMapButton { [weak self] button in
             guard let navigationViewController = self?.currentNavigator,
-                  let navigationCameraState = self?.navigationMapView?.navigationCamera.navigationCameraState else {
+                  let state = self?.navigationMapView?.navigationCamera.state else {
                 return
             }
             
-            if navigationCameraState == .following {
+            if state == .following {
                 self?.navigationMapView?.navigationCamera.requestNavigationCameraToOverview()
             } else {
                 self?.navigationMapView?.navigationCamera.requestNavigationCameraToFollowing()
@@ -217,8 +217,8 @@ public class CarPlayManager: NSObject {
     }
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
-        guard let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.stateKey] as? NavigationCameraState else { return }
-        switch navigationCameraState {
+        guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.stateKey] as? NavigationCameraState else { return }
+        switch state {
         case .idle:
             break
         case .transitionToFollowing, .following:
@@ -552,12 +552,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
         navigationMapView.removeRoutes()
         navigationMapView.removeWaypoints()
         delegate?.carPlayManagerDidEndNavigation(self)
-    }
-
-    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
-        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
-            navigationViewController.beginPanGesture()
-        }
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {

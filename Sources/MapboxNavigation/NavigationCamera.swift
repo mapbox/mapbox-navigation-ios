@@ -3,12 +3,12 @@ import MapboxMaps
 
 public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
-    public private(set) var navigationCameraState: NavigationCameraState = .idle {
+    public private(set) var state: NavigationCameraState = .idle {
         didSet {
             NotificationCenter.default.post(name: .navigationCameraStateDidChange,
                                             object: self,
                                             userInfo: [
-                                                NavigationCamera.NotificationUserInfoKey.stateKey: navigationCameraState
+                                                NavigationCamera.NotificationUserInfoKey.stateKey: state
                                             ])
         }
     }
@@ -47,7 +47,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     // MARK: - ViewportDataSourceDelegate methods
     
     public func viewportDataSource(_ dataSource: ViewportDataSource, didUpdate cameraOptions: [String: CameraOptions]) {
-        switch navigationCameraState {
+        switch state {
         case .following:
             switch navigationCameraType {
             case .headUnit:
@@ -82,12 +82,12 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     // MARK: - NavigationCamera state related methods
     
     public func requestNavigationCameraToFollowing() {
-        switch navigationCameraState {
+        switch state {
         case .transitionToFollowing, .following:
             return
             
         case .idle, .transitionToOverview, .overview:
-            navigationCameraState = .transitionToFollowing
+            state = .transitionToFollowing
             
             var cameraOptions: CameraOptions
             switch navigationCameraType {
@@ -98,7 +98,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             }
             
             cameraStateTransition.transitionToFollowing(cameraOptions) { 
-                self.navigationCameraState = .following
+                self.state = .following
             }
             
             break
@@ -106,12 +106,12 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     }
     
     public func requestNavigationCameraToOverview() {
-        switch navigationCameraState {
+        switch state {
         case .transitionToOverview, .overview:
             return
             
         case .idle, .transitionToFollowing, .following:
-            navigationCameraState = .transitionToOverview
+            state = .transitionToOverview
             
             var cameraOptions: CameraOptions
             switch navigationCameraType {
@@ -122,7 +122,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             }
             
             cameraStateTransition.transitionToOverview(cameraOptions) { 
-                self.navigationCameraState = .overview
+                self.state = .overview
             }
             
             break
@@ -130,7 +130,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     }
     
     @objc public func requestNavigationCameraToIdle() {
-        if navigationCameraState == .idle { return }
+        if state == .idle { return }
         
         cameraStateTransition.cancelPendingTransition()
         
@@ -138,7 +138,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             navigationCameraStateTransition.cameraView.isActive = false
         }
         
-        navigationCameraState = .idle
+        state = .idle
     }
     
     /**

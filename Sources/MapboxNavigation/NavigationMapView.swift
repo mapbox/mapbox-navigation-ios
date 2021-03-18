@@ -234,12 +234,9 @@ open class NavigationMapView: UIView {
             $0.ornaments.showsScale = false
         }
         
-        mapView.on(.renderFrameFinished) { [weak self] _ in
-            guard let self = self,
-                  self.shouldPositionCourseViewFrameByFrame,
-                  let location = self.mostRecentUserCourseViewLocation else { return }
-            
-            self.userCourseView.center = self.mapView.screenCoordinate(for: location.coordinate).point
+        mapView.on(.renderFrameFinished) { _ in
+            guard let location = self.mostRecentUserCourseViewLocation else { return }
+            self.updateUserCourseView(location, animated: false)
         }
         
         addSubview(mapView)
@@ -294,24 +291,13 @@ open class NavigationMapView: UIView {
         addSubview(imageView)
     }
     
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        // If the `NavigationCamera` is in `.following` or `.transitionToFollowing` mode,
-        // make sure to update `UserCourseView`.
-        let states = [NavigationCameraState.following, NavigationCameraState.transitionToFollowing]
-        if states.contains(navigationCamera.navigationCameraState), let location = mostRecentUserCourseViewLocation {
-            updateUserCourseView(location)
-        }
-    }
-    
     /**
      Updates the map view’s preferred frames per second to the appropriate value for the current route progress.
      
      This method accounts for the proximity to a maneuver and the current power source. It has no effect if `tracksUserCourse` is set to `true`.
      */
     open func updatePreferredFrameRate(for routeProgress: RouteProgress) {
-        guard navigationCamera.navigationCameraState == .following else { return }
+        guard navigationCamera.state == .following else { return }
         
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let expectedTravelTime = stepProgress.step.expectedTravelTime
@@ -359,7 +345,7 @@ open class NavigationMapView: UIView {
         mostRecentUserCourseViewLocation = location
         
         // While animating to overview mode, don't animate the puck.
-        let duration: TimeInterval = animated && navigationCamera.navigationCameraState != .transitionToOverview ? 1 : 0
+        let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
             guard let point = self?.mapView.screenCoordinate(for: location.coordinate).point else { return }
             self?.userCourseView.center = point
@@ -369,7 +355,7 @@ open class NavigationMapView: UIView {
                               pitch: mapView.pitch,
                               direction: mapView.bearing,
                               animated: animated,
-                              navigationCameraState: navigationCamera.navigationCameraState)
+                              navigationCameraState: navigationCamera.state)
     }
     
     // MARK: Feature Addition/removal properties and methods

@@ -237,13 +237,10 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func overview(_ sender: Any) {
-        navigationMapView.enableFrameByFrameCourseViewTracking(for: 3)
         navigationMapView.navigationCamera.requestNavigationCameraToOverview()
     }
     
-    func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
-        navigationMapView.enableFrameByFrameCourseViewTracking(for: 1)
-        
+    func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {        
         // TODO: Verify that camera is positioned correctly.
         let camera = CameraOptions(center: step.maneuverLocation,
                                    zoom: navigationMapView.mapView.zoom,
@@ -265,7 +262,6 @@ class RouteMapViewController: UIViewController {
         navigationMapView.updateUserCourseView(location)
         delegate?.mapViewController(self, didCenterOn: location)
         
-        navigationMapView.enableFrameByFrameCourseViewTracking(for: 3)
         navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
         navigationMapView.addArrow(route: router.route,
                                    legIndex: router.routeProgress.legIndex,
@@ -284,11 +280,6 @@ class RouteMapViewController: UIViewController {
         let feedbackViewController = FeedbackViewController(eventsManager: navigationService.eventsManager)
         feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
         parent.present(feedbackViewController, animated: true)
-    }
-
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        navigationMapView.enableFrameByFrameCourseViewTracking(for: 3)
     }
 
     override func viewDidLayoutSubviews() {
@@ -370,44 +361,27 @@ class RouteMapViewController: UIViewController {
         endOfRouteViewController.destination = destination
         navigationView.endOfRouteView?.isHidden = false
         
-        // flush layout queue
-        view.layoutIfNeeded()
-        
         navigationView.endOfRouteHideConstraint?.isActive = false
         navigationView.endOfRouteShowConstraint?.isActive = true
-
-        navigationMapView.enableFrameByFrameCourseViewTracking(for: duration)
-        navigationMapView.mapView.setNeedsUpdateConstraints()
-
-        let animate = {
-            self.view.layoutIfNeeded()
-            self.navigationView.floatingStackView.alpha = 0.0
-        }
-
-        let noAnimation = {
-            animate();
-            completion?(true)
-        }
-
-        guard duration > 0.0 else { return noAnimation() }
-
-        navigationMapView.navigationCamera.requestNavigationCameraToIdle()
-        UIView.animate(withDuration: duration, delay: 0.0, options: [.curveLinear], animations: animate, completion: completion)
-
-        guard let height = navigationView.endOfRouteHeightConstraint?.constant else { return }
-        let insets = UIEdgeInsets(top: topBannerContainerView.bounds.height, left: 20, bottom: height + 20, right: 20)
         
-        if let shape = route.shape,
-           let userLocation = navigationService.router.location?.coordinate,
-           !shape.coordinates.isEmpty,
-           let slicedLineString = shape.sliced(from: userLocation) {
-            
-            let newCamera = navigationMapView.mapView.cameraManager.camera(fitting: .lineString(slicedLineString),
-                                                                           edgePadding: insets,
-                                                                           bearing: CGFloat(navigationMapView.mapView.bearing),
-                                                                           pitch: 0)
-
-            navigationMapView.mapView.cameraManager.setCamera(to: newCamera, completion: nil)
+        navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+        
+        if let height = navigationView.endOfRouteHeightConstraint?.constant {
+            self.navigationView.floatingStackView.alpha = 0.0
+            let camera = navigationMapView.mapView.cameraView.camera
+            // Since `padding` is not an animatable property `zoom` is increased to cover up abrupt camera change.
+            if let zoom = camera.zoom {
+                camera.zoom = zoom + 1.0
+            }
+            camera.padding = UIEdgeInsets(top: topBannerContainerView.bounds.height,
+                                          left: 20,
+                                          bottom: height + 20,
+                                          right: 20)
+            navigationMapView.mapView.cameraManager.setCamera(to: camera,
+                                                              animated: duration > 0.0 ? true : false,
+                                                              duration: duration) { (completed) in
+                completion?(completed)
+            }
         }
     }
 
@@ -466,10 +440,6 @@ extension RouteMapViewController: NavigationComponent {
         
         navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
         navigationView.speedLimitView.speedLimit = progress.currentLegProgress.currentSpeedLimit
-    }
-    
-    public func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
-
     }
     
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {

@@ -176,7 +176,6 @@ class CustomViewController: UIViewController {
         
         // stop tracking user, and move camera to step location
         navigationMapView.navigationCamera.requestNavigationCameraToIdle()
-        navigationMapView.enableFrameByFrameCourseViewTracking(for: 1)
         navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: maneuverStep.maneuverLocation,
                                                           bearing: maneuverStep.initialHeading!,
                                                           animated: true)

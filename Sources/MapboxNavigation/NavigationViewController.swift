@@ -650,10 +650,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         let advancesToNextLeg = componentsWantAdvance && (delegate?.navigationViewController(self, didArriveAt: waypoint) ?? defaultBehavior)
         
         if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
-            // In case of final destination present end of route view first and then re-center final destination.
-            showEndOfRouteFeedback { [weak self] _ in
-                self?.frameDestinationArrival(for: service.router.location)
-            }
+            showEndOfRouteFeedback()
         }
         return advancesToNextLeg
     }
@@ -731,26 +728,22 @@ extension NavigationViewController: NavigationServiceDelegate {
         // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
         if progress.fractionTraveled >= 1.0 { return }
         if waypointStyle == .annotation { return }
-        guard let mapView = navigationMapView else { return }
-        
-        // TODO: Altitude should be automatically adjusted by `NavigationViewportDataSource`
-        // to be able to highlight buildings.
 
-        if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
-            mapView.highlightBuildings(at: [currentLegWaypoint],
-                                       in3D: waypointStyle == .extrudedBuilding ? true : false,
-                                       completion: { (result) -> Void in
-                                        self.foundAllBuildings = result
-                                       })
+        if currentLeg != progress.currentLeg {
+            currentLeg = progress.currentLeg
+            passedApproachingDestinationThreshold = false
+            foundAllBuildings = false
         }
-    }
-
-    private func frameDestinationArrival(for location: CLLocation?) {
-        if waypointStyle == .annotation { return }
-        guard let location = location else { return }
         
-        // Update user course view to correctly place it in map view.
-        self.navigationMapView?.updateUserCourseView(location)
+        if !passedApproachingDestinationThreshold, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
+            passedApproachingDestinationThreshold = true
+        }
+        
+        if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
+            navigationMapView?.highlightBuildings(at: [currentLegWaypoint], in3D: waypointStyle == .extrudedBuilding ? true : false, completion: { (found) in
+                self.foundAllBuildings = found
+            })
+        }
     }
 }
 

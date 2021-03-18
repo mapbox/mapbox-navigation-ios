@@ -122,7 +122,6 @@ extension ViewController {
             let branchNames = branchEdgeIdentifiers.flatMap { edgeNames(identifier: $0) }
             statusString += " at \(branchNames.joined(separator: ", "))"
         }
-        print(statusString)
     }
     
     func edgeNames(identifier: ElectronicHorizon.Edge.Identifier) -> [String] {

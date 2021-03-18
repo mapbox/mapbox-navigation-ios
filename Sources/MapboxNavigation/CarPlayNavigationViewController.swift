@@ -194,14 +194,6 @@ public class CarPlayNavigationViewController: UIViewController {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
     }
     
-    // MARK: - Overridden methods
-    
-    public override func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        
-        navigationMapView?.enableFrameByFrameCourseViewTracking(for: 1)
-    }
-    
     /**
      Begins a navigation session along the given trip.
      
@@ -228,10 +220,6 @@ public class CarPlayNavigationViewController: UIViewController {
      */
     public func showFeedback() {
         carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
-    }
-    
-    public func beginPanGesture() {
-        navigationMapView?.enableFrameByFrameCourseViewTracking(for: 1)
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {
