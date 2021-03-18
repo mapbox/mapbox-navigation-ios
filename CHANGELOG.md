@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v1.4.0
+
+* Fixed an issue when feedback UI was always appearing for short routes ([#2871](https://github.com/mapbox/mapbox-navigation-ios/pull/2871))
+
 ## v1.3.0
 
 * MapboxCoreNavigation can now be installed using Swift Package Manager. ([#2771](https://github.com/mapbox/mapbox-navigation-ios/pull/2771))
