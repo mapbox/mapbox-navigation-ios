@@ -353,7 +353,6 @@
 		DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF521A5C5D900AEA9AA /* UIViewController.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
-		DA5F448825F079F300F573EC /* EHorizonTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F447E25F079AA00F573EC /* EHorizonTests.swift */; };
 		DA5F449A25F07A5C00F573EC /* ElectronicHorizon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */; };
 		DA5F44AA25F07A6800F573EC /* RoadObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A325F07A6500F573EC /* RoadObjectType.swift */; };
 		DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */; };
@@ -407,13 +406,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 351BEBD61E5BCC28006FE110;
 			remoteInfo = MapboxNavigation;
-		};
-		35C8DBF2219193180053328C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 358D14621E5E3B7700ADE590;
-			remoteInfo = Example;
 		};
 		35C8DBFF2191DA470053328C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -915,7 +907,6 @@
 		DA545AC41FAA86450090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA5AD03C1FEBA03700FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Main.strings; sourceTree = "<group>"; };
 		DA5AD0401FEBA23200FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DA5F447E25F079AA00F573EC /* EHorizonTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EHorizonTests.swift; sourceTree = "<group>"; };
 		DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizon.swift; sourceTree = "<group>"; };
 		DA5F44A325F07A6500F573EC /* RoadObjectType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectType.swift; sourceTree = "<group>"; };
 		DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphPosition.swift; sourceTree = "<group>"; };
@@ -1773,7 +1764,6 @@
 				3519D01D21F0842900582FF5 /* CLLocationTests.swift */,
 				352762A3225B751A0015B632 /* OptionsTests.swift */,
 				5A43FC8A24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift */,
-				DA5F447E25F079AA00F573EC /* EHorizonTests.swift */,
 			);
 			name = MapboxCoreNavigationTests;
 			path = Tests/MapboxCoreNavigationTests;
@@ -2023,7 +2013,6 @@
 			dependencies = (
 				3595FE4B219191FE0035B765 /* PBXTargetDependency */,
 				C5ADFBD51DDCC7840011824B /* PBXTargetDependency */,
-				35C8DBF3219193180053328C /* PBXTargetDependency */,
 			);
 			name = MapboxCoreNavigationTests;
 			productName = MapboxNavigationTests;
@@ -2394,7 +2383,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/TestHelper/tiles",
+				"$(SRCROOT)/Tests/TestHelper/tiles",
 			);
 			name = "Copy Tiles";
 			outputFileListPaths = (
@@ -2404,7 +2393,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp -r $SRCROOT/TestHelper/tiles $TARGET_BUILD_DIR\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp -r $SRCROOT/Tests/TestHelper/tiles $TARGET_BUILD_DIR\n";
 		};
 		DA408F661FB3CA3C004D9661 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -2750,7 +2739,6 @@
 				DAD903AF23E3DCC80057CF1F /* DateTests.swift in Sources */,
 				C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,
-				DA5F448825F079F300F573EC /* EHorizonTests.swift in Sources */,
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
 				5A43FC8B24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift in Sources */,
 				359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */,
@@ -2783,11 +2771,6 @@
 			isa = PBXTargetDependency;
 			target = 351BEBD61E5BCC28006FE110 /* MapboxNavigation */;
 			targetProxy = 35B711D51E5E7AD2001EDA8D /* PBXContainerItemProxy */;
-		};
-		35C8DBF3219193180053328C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 358D14621E5E3B7700ADE590 /* Example */;
-			targetProxy = 35C8DBF2219193180053328C /* PBXContainerItemProxy */;
 		};
 		35C8DC002191DA470053328C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3619,7 +3602,6 @@
 				SWIFT_OBJC_BRIDGING_HEADER = "Tests/MapboxCoreNavigationTests/MapboxCoreNavigationTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 			};
 			name = Debug;
 		};
@@ -3644,7 +3626,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Tests/MapboxCoreNavigationTests/MapboxCoreNavigationTests-Bridging-Header.h";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Off;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 			};
 			name = Release;
 		};
