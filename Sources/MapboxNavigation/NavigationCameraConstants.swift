@@ -14,7 +14,9 @@ extension CameraOptions {
 
 public extension Notification.Name {
 
-    static let navigationCameraStateDidChange: Notification.Name = .init(rawValue: "NavigationCameraState")
+    static let navigationCameraStateDidChange: Notification.Name = .init(rawValue: "NavigationCameraStateDidChange")
+    
+    static let navigationCameraViewportDidChange: Notification.Name = .init(rawValue: "NavigationViewportDidChange")
 }
 
 extension NavigationCamera {
@@ -29,5 +31,7 @@ extension NavigationCamera {
         }
         
         public static let stateKey: NotificationUserInfoKey = .init(rawValue: "state")
+        
+        public static let cameraOptionsKey: NotificationUserInfoKey = .init(rawValue: "cameraOptions")
     }
 }

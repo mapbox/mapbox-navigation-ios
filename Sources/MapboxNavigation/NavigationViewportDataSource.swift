@@ -62,6 +62,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let passiveLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation
         let cameraOptions = self.cameraOptions(passiveLocation, activeLocation: activeLocation, routeProgress: routeProgress)
         delegate?.viewportDataSource(self, didUpdate: cameraOptions)
+        
+        NotificationCenter.default.post(name: .navigationCameraViewportDidChange, object: self, userInfo: [
+            NavigationCamera.NotificationUserInfoKey.cameraOptionsKey: cameraOptions
+        ])
     }
     
     func cameraOptions(_ passiveLocation: CLLocation?, activeLocation: CLLocation?, routeProgress: RouteProgress?) -> [String: CameraOptions] {
@@ -180,11 +184,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingHeadUnitCamera.anchor = anchor
             followingHeadUnitCamera.pitch = CGFloat(pitch)
             followingHeadUnitCamera.padding = UIEdgeInsets(top: 40.0, left: 200.0, bottom: 40.0, right: 40.0)
-            
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ViewportDidChange"), object: self, userInfo: [
-                "EdgeInsets": viewportPadding,
-                "Anchor": anchor
-            ])
         }
     }
     
@@ -194,11 +193,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
               let heading = activeLocation?.course,
               let routeProgress = routeProgress else { return }
         
-        let edgeInsets = UIEdgeInsets(top: 100.0, left: 80.0, bottom: 100.0, right: 80.0)
         let anchor = self.anchor(0.0,
                                  maxPitch: maximumPitch,
                                  bounds: mapView.bounds,
-                                 edgeInsets: edgeInsets)
+                                 edgeInsets: viewportPadding)
         let stepIndex = routeProgress.currentLegProgress.stepIndex
         let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
         let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...].map({ $0.shape?.coordinates })
@@ -209,7 +207,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         
         let zoom = self.zoom(remainingCoordinatesOnRoute,
                              pitch: 0.0,
-                             edgeInsets: edgeInsets,
+                             edgeInsets: viewportPadding,
                              maxZoomLevel: 16.35,
                              minZoomLevel: 2.0)
         

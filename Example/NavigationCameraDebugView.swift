@@ -1,5 +1,6 @@
 import UIKit
 import MapboxMaps
+import MapboxNavigation
 
 class NavigationCameraDebugView: UIView {
     
@@ -37,28 +38,30 @@ class NavigationCameraDebugView: UIView {
     
     func subscribeForNotifications() {
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(viewportDidChange(_:)),
-                                               name: NSNotification.Name(rawValue: "ViewportDidChange"),
+                                               selector: #selector(navigationCameraViewportDidChange(_:)),
+                                               name: .navigationCameraViewportDidChange,
                                                object: nil)
     }
     
     func unsubscribeFromNotifications() {
         NotificationCenter.default.removeObserver(self,
-                                                  name: NSNotification.Name(rawValue: "ViewportDidChange"),
+                                                  name: .navigationCameraViewportDidChange,
                                                   object: nil)
     }
     
-    @objc func viewportDidChange(_ notification: NSNotification) {
-        guard let mapView = mapView else { return }
+    @objc func navigationCameraViewportDidChange(_ notification: NSNotification) {
+        guard let mapView = mapView,
+              let cameraOptions = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.cameraOptionsKey] as? Dictionary<String, CameraOptions>,
+              let followingMobileCamera = cameraOptions[CameraOptions.followingMobileCameraKey] else { return }
         
-        if let edgeInsets = notification.userInfo?["EdgeInsets"] as? UIEdgeInsets {
+        if let edgeInsets = followingMobileCamera.padding {
             viewportLayer.frame = CGRect(x: edgeInsets.left,
                                          y: edgeInsets.top,
                                          width: mapView.cameraView.frame.width - edgeInsets.left - edgeInsets.right,
                                          height: mapView.cameraView.frame.height - edgeInsets.top - edgeInsets.bottom)
         }
         
-        if let anchorPosition = notification.userInfo?["Anchor"] as? CGPoint {
+        if let anchorPosition = followingMobileCamera.anchor {
             anchorLayer.position = anchorPosition
         }
     }
