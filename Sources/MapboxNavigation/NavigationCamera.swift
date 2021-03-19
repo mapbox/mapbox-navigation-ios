@@ -41,7 +41,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     // MARK: - Setting-up methods
     
     func setupGestureRegonizers() {
-        makeGestureRecognizersRespectCourseTracking()
+        makeGestureRecognizersDisableCameraFollowing()
     }
     
     // MARK: - ViewportDataSourceDelegate methods
@@ -145,7 +145,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      Modifies `MapView` gesture recognizers to disable follow mode and move `NavigationCamera` to
      `NavigationCameraState.idle` state.
      */
-    func makeGestureRecognizersRespectCourseTracking() {
+    func makeGestureRecognizersDisableCameraFollowing() {
         for gestureRecognizer in mapView?.gestureRecognizers ?? []
         where gestureRecognizer is UIPanGestureRecognizer
             || gestureRecognizer is UIRotationGestureRecognizer
