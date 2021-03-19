@@ -10,9 +10,9 @@ public protocol CameraStateTransition {
     
     func transitionToOverview(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void))
     
-    func updateForFollowing(_ cameraOptions: CameraOptions, completion: (() -> Void)?)
+    func updateForFollowing(_ cameraOptions: CameraOptions)
     
-    func updateForOverview(_ cameraOptions: CameraOptions, completion: (() -> Void)?)
+    func updateForOverview(_ cameraOptions: CameraOptions)
     
     func cancelPendingTransition()
 }

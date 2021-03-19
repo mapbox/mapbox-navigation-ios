@@ -52,11 +52,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             switch navigationCameraType {
             case .headUnit:
                 if let followingHeadUnitCamera = cameraOptions[CameraOptions.followingHeadUnitCameraKey] {
-                    cameraStateTransition.updateForFollowing(followingHeadUnitCamera, completion: nil)
+                    cameraStateTransition.updateForFollowing(followingHeadUnitCamera)
                 }
             case .mobile:
                 if let followingMobileCamera = cameraOptions[CameraOptions.followingMobileCameraKey] {
-                    cameraStateTransition.updateForFollowing(followingMobileCamera, completion: nil)
+                    cameraStateTransition.updateForFollowing(followingMobileCamera)
                 }
             }
             break
@@ -65,11 +65,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             switch navigationCameraType {
             case .headUnit:
                 if let overviewHeadUnitCamera = cameraOptions[CameraOptions.overviewHeadUnitCameraKey] {
-                    cameraStateTransition.updateForOverview(overviewHeadUnitCamera, completion: nil)
+                    cameraStateTransition.updateForOverview(overviewHeadUnitCamera)
                 }
             case .mobile:
                 if let overviewMobileCamera = cameraOptions[CameraOptions.overviewMobileCameraKey] {
-                    cameraStateTransition.updateForOverview(overviewMobileCamera, completion: nil)
+                    cameraStateTransition.updateForOverview(overviewMobileCamera)
                 }
             }
             break

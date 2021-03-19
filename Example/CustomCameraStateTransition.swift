@@ -27,22 +27,18 @@ class CustomCameraStateTransition: CameraStateTransition {
                                          })
     }
     
-    func updateForFollowing(_ cameraOptions: CameraOptions, completion: (() -> Void)?) {
+    func updateForFollowing(_ cameraOptions: CameraOptions) {
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
                                          duration: 0.5,
-                                         completion: { _ in
-                                            completion?()
-                                         })
+                                         completion: nil)
     }
     
-    func updateForOverview(_ cameraOptions: CameraOptions, completion: (() -> Void)?) {
+    func updateForOverview(_ cameraOptions: CameraOptions) {
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
                                          duration: 0.5,
-                                         completion: { _ in
-                                            completion?()
-                                         })
+                                         completion: nil)
     }
     
     func cancelPendingTransition() {

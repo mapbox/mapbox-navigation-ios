@@ -424,8 +424,6 @@ class ViewController: UIViewController {
     
     func overrideViewportDataSourceAndCameraTransition() {
         let customViewportDataSource = CustomViewportDataSource(navigationMapView.mapView)
-        // let customViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView)
-        // customViewportDataSource.defaultAltitude = 300.0
         navigationMapView.navigationCamera.viewportDataSource = customViewportDataSource
         
         let customCameraStateTransition = CustomCameraStateTransition(navigationMapView.mapView)

@@ -110,6 +110,9 @@ class RouteMapViewController: UIViewController {
 
     convenience init(navigationService: NavigationService, delegate: RouteMapViewControllerDelegate? = nil, topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
         self.init()
+        
+        resumeNotifications()
+        
         self.navigationService = navigationService
         self.delegate = delegate
         
@@ -154,9 +157,9 @@ class RouteMapViewController: UIViewController {
         navigationView.muteButton.addTarget(self, action: Actions.mute, for: .touchUpInside)
         navigationView.reportButton.addTarget(self, action: Actions.feedback, for: .touchUpInside)
         navigationView.resumeButton.addTarget(self, action: Actions.recenter, for: .touchUpInside)
-        resumeNotifications()
         
         self.navigationMapView.userCourseView.isHidden = false
+        self.navigationView.resumeButton.isHidden = true
     }
 
     deinit {

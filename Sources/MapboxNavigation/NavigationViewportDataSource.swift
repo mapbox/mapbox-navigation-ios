@@ -18,6 +18,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     public var maximumPitch: Double = 45.0
     
+    public var viewportPadding: UIEdgeInsets = UIEdgeInsets(top: 150.0, left: 80.0, bottom: 150.0, right: 80.0)
+    
     weak var mapView: MapView?
     
     public required init(_ mapView: MapView) {
@@ -122,13 +124,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
         }
         
         if let location = activeLocation, let routeProgress = routeProgress {
-            let edgeInsets: UIEdgeInsets = UIEdgeInsets(top: 150.0, left: 80.0, bottom: 150.0, right: 80.0)
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
             
             let anchor = self.anchor(pitchСoefficient,
                                      maxPitch: maximumPitch,
                                      bounds: mapView.bounds,
-                                     edgeInsets: edgeInsets)
+                                     edgeInsets: viewportPadding)
             let pitch = maximumPitch * pitchСoefficient
             
             var compoundManeuvers: [[CLLocationCoordinate2D]] = []
@@ -150,7 +151,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
             let zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                  pitch: pitch,
-                                 edgeInsets: edgeInsets,
+                                 edgeInsets: viewportPadding,
                                  defaultZoomLevel: 2.0,
                                  maxZoomLevel: 16.35,
                                  minZoomLevel: 2.0)
@@ -193,7 +194,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingMobileCamera.bearing = bearing
             followingMobileCamera.anchor = anchor
             followingMobileCamera.pitch = CGFloat(pitch)
-            followingMobileCamera.padding = edgeInsets
+            followingMobileCamera.padding = viewportPadding
             
             followingHeadUnitCamera.center = centerCoordinate
             followingHeadUnitCamera.zoom = CGFloat(zoom)
@@ -203,7 +204,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingHeadUnitCamera.padding = UIEdgeInsets(top: 40.0, left: 200.0, bottom: 40.0, right: 40.0)
             
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "ViewportDidChange"), object: self, userInfo: [
-                "EdgeInsets": edgeInsets,
+                "EdgeInsets": viewportPadding,
                 "Anchor": anchor
             ])
         }
@@ -243,9 +244,16 @@ public class NavigationViewportDataSource: ViewportDataSource {
         overviewMobileCamera.zoom = CGFloat(zoom)
         overviewMobileCamera.anchor = anchor
         overviewMobileCamera.bearing = bearing
+        
+        overviewHeadUnitCamera.pitch = 0.0
+        overviewHeadUnitCamera.center = center
+        overviewHeadUnitCamera.zoom = CGFloat(zoom)
+        overviewHeadUnitCamera.anchor = anchor
+        overviewHeadUnitCamera.bearing = bearing
     }
     
-    func bearing(_ initialBearing: CLLocationDirection, coordinatesToManeuver: [CLLocationCoordinate2D]? = nil) -> CLLocationDirection {
+    func bearing(_ initialBearing: CLLocationDirection,
+                 coordinatesToManeuver: [CLLocationCoordinate2D]? = nil) -> CLLocationDirection {
         let bearingModeClampedManeuverMaxDiff = 20.0
         var bearing = initialBearing
 
@@ -282,6 +290,17 @@ public class NavigationViewportDataSource: ViewportDataSource {
         return max(min(zoomLevel, maxZoomLevel), minZoomLevel)
     }
     
+    func anchor(_ pitchСoefficient: Double,
+                maxPitch: Double,
+                bounds: CGRect,
+                edgeInsets: UIEdgeInsets) -> CGPoint {
+        let xCenter = max(((bounds.size.width - edgeInsets.left - edgeInsets.right) / 2.0) + edgeInsets.left, 0.0)
+        let height = (bounds.size.height - edgeInsets.top - edgeInsets.bottom)
+        let yCenter = max((height / 2.0) + edgeInsets.top, 0.0)
+        let yOffsetCenter = max((height / 2.0) - 7.0, 0.0) * CGFloat(pitchСoefficient) + yCenter
+        return CGPoint(x: xCenter, y: yOffsetCenter)
+    }
+    
     func pitchСoefficient(_ routeProgress: RouteProgress, currentCoordinate: CLLocationCoordinate2D) -> Double {
         var shouldIgnoreManeuver = false
         if let upcomingStep = routeProgress.currentLeg.steps[safe: routeProgress.currentLegProgress.stepIndex + 1] {
@@ -305,14 +324,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
             : (max(min(distance, pitchEffectDistanceStart), pitchEffectDistanceEnd) - pitchEffectDistanceEnd) / (pitchEffectDistanceStart - pitchEffectDistanceEnd)
         
         return pitchСoefficient
-    }
-    
-    func anchor(_ pitchСoefficient: Double, maxPitch: Double, bounds: CGRect, edgeInsets: UIEdgeInsets) -> CGPoint {
-        let xCenter = max(((bounds.size.width - edgeInsets.left - edgeInsets.right) / 2.0) + edgeInsets.left, 0.0)
-        let height = (bounds.size.height - edgeInsets.top - edgeInsets.bottom)
-        let yCenter = max((height / 2.0) + edgeInsets.top, 0.0)
-        let yOffsetCenter = max((height / 2.0) - 7.0, 0.0) * CGFloat(pitchСoefficient) + yCenter
-        return CGPoint(x: xCenter, y: yOffsetCenter)
     }
     
     func coordinateBoundsZoomLevel(_ boundingBox: BoundingBox, fitToSize: CGSize) -> Double {
