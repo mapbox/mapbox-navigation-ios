@@ -147,7 +147,9 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      */
     func makeGestureRecognizersRespectCourseTracking() {
         for gestureRecognizer in mapView?.gestureRecognizers ?? []
-        where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
+        where gestureRecognizer is UIPanGestureRecognizer
+            || gestureRecognizer is UIRotationGestureRecognizer
+            || gestureRecognizer is UIPinchGestureRecognizer {
             gestureRecognizer.addTarget(self, action: #selector(requestNavigationCameraToIdle))
         }
     }

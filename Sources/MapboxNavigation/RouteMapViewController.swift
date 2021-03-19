@@ -103,6 +103,16 @@ class RouteMapViewController: UIViewController {
             navigationMapView.routeLineTracksTraversal = routeLineTracksTraversal
         }
     }
+    
+    var viewportPadding: UIEdgeInsets {
+        let courseViewMinimumInsets = UIEdgeInsets(top: 75.0, left: 75.0, bottom: 75.0, right: 75.0)
+        var insets = navigationMapView.mapView.safeArea
+        insets += courseViewMinimumInsets
+        insets.top += topBannerContainerView.bounds.height
+        insets.bottom += bottomBannerContainerView.bounds.height
+    
+        return insets
+    }
 
     typealias LabelRoadNameCompletionHandler = (_ defaultRoadNameAssigned: Bool) -> Void
 
@@ -202,14 +212,16 @@ class RouteMapViewController: UIViewController {
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
         guard let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.stateKey] as? NavigationCameraState else { return }
+        
+        updateNavigationCameraViewport()
+        
         switch navigationCameraState {
-        case .idle:
-            break
         case .transitionToFollowing, .following:
             navigationView.overviewButton.isHidden = false
             navigationView.resumeButton.isHidden = true
+            navigationView.wayNameView.isHidden = false
             break
-        case .transitionToOverview, .overview:
+        case .idle, .transitionToOverview, .overview:
             navigationView.overviewButton.isHidden = true
             navigationView.resumeButton.isHidden = false
             navigationView.wayNameView.isHidden = true
@@ -288,11 +300,12 @@ class RouteMapViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        updateMapViewComponents()
+        updateMapViewOrnaments()
     }
     
     @objc func orientationDidChange(_ notification: Notification) {
-        updateMapViewComponents()
+        updateMapViewOrnaments()
+        updateNavigationCameraViewport()
     }
 
     func updateMapOverlays(for routeProgress: RouteProgress) {
@@ -320,7 +333,7 @@ class RouteMapViewController: UIViewController {
      Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
      reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
      */
-    func updateMapViewComponents() {
+    func updateMapViewOrnaments() {
         let bottomBannerHeight = bottomBannerContainerView.bounds.height
         let bottomBannerVerticalOffset = UIScreen.main.bounds.height - bottomBannerHeight - bottomBannerContainerView.frame.origin.y
         let defaultOffset: CGFloat = 10.0
@@ -339,6 +352,12 @@ class RouteMapViewController: UIViewController {
             } else {
                 $0.ornaments.attributionButtonMargins = CGPoint(x: x, y: y)
             }
+        }
+    }
+    
+    func updateNavigationCameraViewport() {
+        if let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource {
+            navigationViewportDataSource.viewportPadding = viewportPadding
         }
     }
 

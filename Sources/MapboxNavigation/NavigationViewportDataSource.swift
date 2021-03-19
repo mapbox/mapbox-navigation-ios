@@ -44,11 +44,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                selector: #selector(progressDidChange(_:)),
                                                name: .passiveLocationDataSourceDidUpdate,
                                                object: nil)
-        
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(orientationDidChange),
-                                               name: UIDevice.orientationDidChangeNotification,
-                                               object: nil)
     }
     
     func unsubscribeFromNotifications() {
@@ -59,10 +54,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
         NotificationCenter.default.removeObserver(self,
                                                   name: .passiveLocationDataSourceDidUpdate,
                                                   object: nil)
-        
-        NotificationCenter.default.removeObserver(self,
-                                                  name: UIDevice.orientationDidChangeNotification,
-                                                  object: nil)
     }
     
     @objc func progressDidChange(_ notification: NSNotification) {
@@ -70,19 +61,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
         let passiveLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation
         let cameraOptions = self.cameraOptions(passiveLocation, activeLocation: activeLocation, routeProgress: routeProgress)
-        delegate?.viewportDataSource(self, didUpdate: cameraOptions)
-    }
-    
-    @objc func orientationDidChange() {
-        if UIDevice.current.orientation.isPortrait {
-            followingMobileCamera.padding = UIEdgeInsets(top: 300.0, left: 0.0, bottom: 0.0, right: 0.0)
-        } else {
-            followingMobileCamera.padding = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
-        }
-        
-        let cameraOptions = [
-            CameraOptions.followingMobileCameraKey: followingMobileCamera,
-        ]
         delegate?.viewportDataSource(self, didUpdate: cameraOptions)
     }
     
