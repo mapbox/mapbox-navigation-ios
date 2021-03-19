@@ -62,15 +62,19 @@ class PassiveLocationDataSourceTests: XCTestCase {
         }
     }
     
-    func testManualLocations() {
+    override func setUpWithError() throws {
+        try super.setUpWithError()
+        
+        // Configure the navigator (used by PassiveLocationDataSource) with the tiles version (version is used to find the tiles in the cache folder)
         let tilesVersion = "preloadedtiles" // any string
+        Navigator.tilesVersion = tilesVersion
 
         let bundle = Bundle(for: Fixture.self)
         let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
-
-        // Create PassiveLocationDataSource and configure it with the tiles version (version is used to find the tiles in the cache folder)
-        Navigator.tilesVersion = tilesVersion
         Navigator.tilesURL = filePathURL
+    }
+    
+    func testManualLocations() {
         let locationManager = PassiveLocationDataSource()
 
         let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
