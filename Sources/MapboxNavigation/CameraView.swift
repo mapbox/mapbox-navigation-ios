@@ -1,5 +1,6 @@
 import UIKit
 import MapboxMaps
+import CoreLocation
 
 /**
  A view that represents a camera view port.
@@ -141,7 +142,9 @@ public class CameraView: UIView {
     
     @objc private func update() {
         let cameraOptions = CameraOptions()
-        cameraOptions.center = localCenterCoordinate
+        if CLLocationCoordinate2DIsValid(localCenterCoordinate) {
+            cameraOptions.center = localCenterCoordinate
+        }
         cameraOptions.zoom = CGFloat(localZoomLevel)
         cameraOptions.bearing = localBearing.wrap(min: 0, max: 360)
         cameraOptions.pitch = localPitch
