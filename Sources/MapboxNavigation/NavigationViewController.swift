@@ -329,17 +329,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         mapViewController.destination = route.legs.last?.destination
         mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
         
-        embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
-            return map.view.constraintsForPinning(to: parent.view)
-        }
-        
         //Manually update the map style since the RMVC missed the "map style change" notification when the style manager was set up.
         if let currentStyle = styleManager.currentStyle {
             updateMapStyle(currentStyle, animated: false)
         }
-        
-        mapViewController.view.pinInSuperview()
-        mapViewController.reportButton.isHidden = !showsReportFeedback
         
         if !(routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
@@ -365,6 +358,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     override open func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let mapViewController = mapViewController {
+            embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
+                return map.view.constraintsForPinning(to: parent.view)
+            }
+            mapViewController.view.pinInSuperview()
+            mapViewController.reportButton.isHidden = !showsReportFeedback
+        }
+        
         // Initialize voice controller if it hasn't been overridden.
         // This is optional and lazy so it can be mutated by the developer after init.
         _ = voiceController
