@@ -297,4 +297,4 @@ workflows:
       - ios-trigger-metrics:
           filters:
             branches:
-              only: main
+              only: release-v2.0
