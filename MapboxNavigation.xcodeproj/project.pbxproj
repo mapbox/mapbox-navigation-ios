@@ -233,6 +233,8 @@
 		8A41F5EC25BF624900BD6FCF /* MapOrnamentPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */; };
 		8A41F63C25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */; };
 		8A41F63D25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F63B25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift */; };
+		8A44662B260A6C51008BA55E /* ViewportDataSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */; };
+		8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A446644260A7B24008BA55E /* BoundingBox.swift */; };
 		8A8C3D8E26016DC40071D274 /* CLLocationDegrees.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3D8D26016DC40071D274 /* CLLocationDegrees.swift */; };
 		8A8C3D98260175D20071D274 /* CLLocationDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3D97260175D20071D274 /* CLLocationDirection.swift */; };
 		8A8C3DA2260182790071D274 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3DA1260182790071D274 /* CLLocation.swift */; };
@@ -765,6 +767,8 @@
 		8A41F65C25BF642200BD6FCF /* MapboxMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMaps.xcframework; path = MapboxNavigation/MapboxMaps/MapboxMaps.xcframework; sourceTree = "<group>"; };
 		8A41F65D25BF642200BD6FCF /* MapboxCommon.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCommon.xcframework; path = MapboxNavigation/MapboxMaps/MapboxCommon.xcframework; sourceTree = "<group>"; };
 		8A41F65E25BF642200BD6FCF /* MapboxCoreMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCoreMaps.xcframework; path = MapboxNavigation/MapboxMaps/MapboxCoreMaps.xcframework; sourceTree = "<group>"; };
+		8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataSourceType.swift; sourceTree = "<group>"; };
+		8A446644260A7B24008BA55E /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		8A8C3D8D26016DC40071D274 /* CLLocationDegrees.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationDegrees.swift; sourceTree = "<group>"; };
 		8A8C3D97260175D20071D274 /* CLLocationDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationDirection.swift; sourceTree = "<group>"; };
 		8A8C3DA1260182790071D274 /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocation.swift; sourceTree = "<group>"; };
@@ -1545,6 +1549,7 @@
 				8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */,
 				8AD866EE25CA1BF00019A638 /* ViewportDataSource.swift */,
 				8AD866F425CA1BF10019A638 /* NavigationViewportDataSource.swift */,
+				8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */,
 				8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */,
 			);
 			name = Camera;
@@ -1670,6 +1675,7 @@
 				8A8C3D8D26016DC40071D274 /* CLLocationDegrees.swift */,
 				8A8C3D97260175D20071D274 /* CLLocationDirection.swift */,
 				8A8C3DA1260182790071D274 /* CLLocation.swift */,
+				8A446644260A7B24008BA55E /* BoundingBox.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2499,6 +2505,7 @@
 				8A8C3D8E26016DC40071D274 /* CLLocationDegrees.swift in Sources */,
 				8DB45E90201698EB001EA6A3 /* UIStackView.swift in Sources */,
 				B419BFF225F00A9C0086639B /* Feature.swift in Sources */,
+				8A44662B260A6C51008BA55E /* ViewportDataSourceType.swift in Sources */,
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
 				AE7DE6C621A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift in Sources */,
 				8D8EA9BC20575CD80077F478 /* FeedbackCollectionViewCell.swift in Sources */,
@@ -2567,6 +2574,7 @@
 				8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */,
 				DA66063023B32F99007832E5 /* Array.swift in Sources */,
 				8DEDEF3421E3FBE80049E114 /* NavigationViewControllerDelegate.swift in Sources */,
+				8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */,
 				8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,

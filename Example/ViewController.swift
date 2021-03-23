@@ -126,12 +126,6 @@ class ViewController: UIViewController {
         requestNotificationCenterAuthorization()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        passiveLocationDataSource?.systemLocationManager.stopUpdatingLocation()
-    }
-    
     private func configure(_ navigationMapView: NavigationMapView) {
         setupPassiveLocationManager()
         
@@ -295,8 +289,6 @@ class ViewController: UIViewController {
         customViewController.userRouteOptions = routeOptions
         customViewController.simulateLocation = simulationButton.isSelected
         
-        passiveLocationDataSource?.systemLocationManager.stopUpdatingLocation()
-
         present(customViewController, animated: true) {
             if let destinationCoordinate = route.shape?.coordinates.last {
                 let destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)

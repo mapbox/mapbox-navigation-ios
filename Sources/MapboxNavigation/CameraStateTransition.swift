@@ -1,6 +1,6 @@
 import MapboxMaps
 
-public protocol CameraStateTransition {
+public protocol CameraStateTransition: class {
     
     var mapView: MapView? { get }
     

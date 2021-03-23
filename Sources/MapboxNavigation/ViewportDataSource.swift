@@ -1,6 +1,6 @@
 import MapboxMaps
 
-public protocol ViewportDataSource {
+public protocol ViewportDataSource: class {
     
     var delegate: ViewportDataSourceDelegate? { get set }
     

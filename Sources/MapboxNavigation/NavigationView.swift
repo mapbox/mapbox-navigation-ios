@@ -59,6 +59,8 @@ open class NavigationView: UIView {
     lazy var navigationMapView: NavigationMapView = {
         let navigationMapView: NavigationMapView = .forAutoLayout(frame: self.bounds)
         navigationMapView.delegate = delegate
+        navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                                             viewportDataSourceType: .active)
         
         return navigationMapView
     }()

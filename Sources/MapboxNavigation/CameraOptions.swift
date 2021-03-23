@@ -2,6 +2,9 @@ import MapboxMaps
 
 extension CameraOptions {
     
+    /**
+     Returns description of all properties in `CameraOptions`.
+     */
     public override var description: String {
         var propertiesCount: UInt32 = 0
         let properties = class_copyPropertyList(CameraOptions.self, &propertiesCount)

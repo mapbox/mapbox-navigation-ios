@@ -1,4 +1,3 @@
-import UIKit
 import MapboxMaps
 import MapboxCoreNavigation
 import Turf
@@ -22,10 +21,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     weak var mapView: MapView?
     
-    public required init(_ mapView: MapView) {
+    // MARK: - Initializer methods
+    
+    public required init(_ mapView: MapView, viewportDataSourceType: ViewportDataSourceType = .passive) {
         self.mapView = mapView
         
-        subscribeForNotifications()
+        subscribeForNotifications(viewportDataSourceType)
     }
     
     deinit {
@@ -34,16 +35,22 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     // MARK: - Notifications observer methods
     
-    func subscribeForNotifications() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(progressDidChange(_:)),
-                                               name: .routeControllerProgressDidChange,
-                                               object: nil)
+    func subscribeForNotifications(_ viewportDataSourceType: ViewportDataSourceType = .passive) {
         
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(progressDidChange(_:)),
-                                               name: .passiveLocationDataSourceDidUpdate,
-                                               object: nil)
+        switch viewportDataSourceType {
+        case .raw:
+            self.mapView?.locationManager.addLocationConsumer(newConsumer: self)
+        case .passive:
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(progressDidChange(_:)),
+                                                   name: .passiveLocationDataSourceDidUpdate,
+                                                   object: nil)
+        case .active:
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(progressDidChange(_:)),
+                                                   name: .routeControllerProgressDidChange,
+                                                   object: nil)
+        }
     }
     
     func unsubscribeFromNotifications() {
@@ -57,10 +64,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
     
     @objc func progressDidChange(_ notification: NSNotification) {
+        let passiveLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation
         let activeLocation = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
         let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
-        let passiveLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation
-        let cameraOptions = self.cameraOptions(passiveLocation, activeLocation: activeLocation, routeProgress: routeProgress)
+        let cameraOptions = self.cameraOptions(passiveLocation: passiveLocation,
+                                               activeLocation: activeLocation,
+                                               routeProgress: routeProgress)
         delegate?.viewportDataSource(self, didUpdate: cameraOptions)
         
         NotificationCenter.default.post(name: .navigationCameraViewportDidChange, object: self, userInfo: [
@@ -68,9 +77,20 @@ public class NavigationViewportDataSource: ViewportDataSource {
         ])
     }
     
-    func cameraOptions(_ passiveLocation: CLLocation?, activeLocation: CLLocation?, routeProgress: RouteProgress?) -> [String: CameraOptions] {
-        updateFollowingCamera(passiveLocation, activeLocation: activeLocation, routeProgress: routeProgress)
-        updateOverviewCamera(passiveLocation, activeLocation: activeLocation, routeProgress: routeProgress)
+    // MARK: - CameraOptions methods
+    
+    func cameraOptions(_ rawLocation: CLLocation? = nil,
+                       passiveLocation: CLLocation? = nil,
+                       activeLocation: CLLocation? = nil,
+                       routeProgress: RouteProgress? = nil) -> [String: CameraOptions] {
+        updateFollowingCamera(rawLocation,
+                              passiveLocation: passiveLocation,
+                              activeLocation: activeLocation,
+                              routeProgress: routeProgress)
+        
+        // In active guidance navigation, only camera in overview mode is relevant.
+        updateOverviewCamera(activeLocation,
+                             routeProgress: routeProgress)
         
         let cameraOptions = [
             CameraOptions.followingMobileCameraKey: followingMobileCamera,
@@ -82,10 +102,13 @@ public class NavigationViewportDataSource: ViewportDataSource {
         return cameraOptions
     }
     
-    func updateFollowingCamera(_ passiveLocation: CLLocation?, activeLocation: CLLocation?, routeProgress: RouteProgress?) {
+    func updateFollowingCamera(_ rawLocation: CLLocation? = nil,
+                               passiveLocation: CLLocation? = nil,
+                               activeLocation: CLLocation? = nil,
+                               routeProgress: RouteProgress? = nil) {
         guard let mapView = mapView else { return }
         
-        if let location = passiveLocation {
+        if let location = rawLocation ?? passiveLocation {
             let followingWithoutRouteZoomLevel = CGFloat(14.0)
             
             followingMobileCamera.center = location.coordinate
@@ -187,7 +210,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         }
     }
     
-    func updateOverviewCamera(_ passiveLocation: CLLocation?, activeLocation: CLLocation?, routeProgress: RouteProgress?) {
+    func updateOverviewCamera(_ activeLocation: CLLocation?, routeProgress: RouteProgress?) {
         guard let mapView = mapView,
               let coordinate = activeLocation?.coordinate,
               let heading = activeLocation?.course,
@@ -256,12 +279,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
         guard let mapView = mapView,
               let boundingBox = BoundingBox(from: coordinates) else { return defaultZoomLevel }
         
-        let mapInsetWidth = mapView.bounds.size.width - edgeInsets.left - edgeInsets.right
-        let mapInsetHeight = mapView.bounds.size.height - edgeInsets.top - edgeInsets.bottom
-        let widthDelta = mapInsetHeight * 2 - mapInsetWidth
-        let widthWithPitchEffect = CGFloat(mapInsetWidth + CGFloat(pitch / maximumPitch) * widthDelta)
-        let heightWithPitchEffect = CGFloat(mapInsetHeight + mapInsetHeight * CGFloat(sin(pitch * .pi / 180.0)) * 1.25)
-        let zoomLevel = coordinateBoundsZoomLevel(boundingBox, fitToSize: CGSize(width: widthWithPitchEffect, height: heightWithPitchEffect))
+        let mapViewInsetWidth = mapView.bounds.size.width - edgeInsets.left - edgeInsets.right
+        let mapViewInsetHeight = mapView.bounds.size.height - edgeInsets.top - edgeInsets.bottom
+        let widthDelta = mapViewInsetHeight * 2 - mapViewInsetWidth
+        let widthWithPitchEffect = CGFloat(mapViewInsetWidth + CGFloat(pitch / maximumPitch) * widthDelta)
+        let heightWithPitchEffect = CGFloat(mapViewInsetHeight + mapViewInsetHeight * CGFloat(sin(pitch * .pi / 180.0)) * 1.25)
+        let zoomLevel = boundingBox.zoomLevel(fitTo: CGSize(width: widthWithPitchEffect, height: heightWithPitchEffect))
         
         return max(min(zoomLevel, maxZoomLevel), minZoomLevel)
     }
@@ -274,6 +297,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let height = (bounds.size.height - edgeInsets.top - edgeInsets.bottom)
         let yCenter = max((height / 2.0) + edgeInsets.top, 0.0)
         let yOffsetCenter = max((height / 2.0) - 7.0, 0.0) * CGFloat(pitchСoefficient) + yCenter
+        
         return CGPoint(x: xCenter, y: yOffsetCenter)
     }
     
@@ -301,13 +325,23 @@ public class NavigationViewportDataSource: ViewportDataSource {
         
         return pitchСoefficient
     }
+}
+
+// MARK: - LocationConsumer delegate
+
+extension NavigationViewportDataSource: LocationConsumer {
     
-    func coordinateBoundsZoomLevel(_ boundingBox: BoundingBox, fitToSize: CGSize) -> Double {
-        let latFraction = (boundingBox.northEast.latitude.radius - boundingBox.southWest.latitude.radius) / .pi
-        let lngDiff = boundingBox.northEast.longitude - boundingBox.southWest.longitude
-        let lngFraction = ((lngDiff < 0) ? (lngDiff + 360) : lngDiff) / 360
-        let latZoom = log(Double(fitToSize.height) / 512.0 / latFraction) / M_LN2
-        let lngZoom = log(Double(fitToSize.width) / 512.0 / lngFraction) / M_LN2
-        return min(latZoom, lngZoom, 21.0)
+    public var shouldTrackLocation: Bool {
+        get {
+            return true
+        }
+        set(newValue) {
+            self.shouldTrackLocation = newValue
+        }
+    }
+
+    public func locationUpdate(newLocation: Location) {
+        let cameraOptions = self.cameraOptions(newLocation.internalLocation)
+        delegate?.viewportDataSource(self, didUpdate: cameraOptions)
     }
 }
