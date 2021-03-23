@@ -268,16 +268,18 @@ open class LaneView: UIView {
                                         flipHorizontally: side == .left)
         case .straightOrTurn(side: let side, straight: let straight, turn: let turn):
             if isValid && straight && !turn {
-                LanesStyleKit.drawLaneStraightOnly(frame: bounds, resizing: resizing,
-                                                   primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                   flipHorizontally: side == .left)
+                LanesStyleKit.drawLaneStraightNotRight(frame: bounds, resizing: resizing,
+                                                       primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
+                                                       flipHorizontally: side == .left)
             } else if isValid && !straight && turn {
-                LanesStyleKit.drawLaneRightOnly(frame: bounds, resizing: resizing,
-                                                primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                flipHorizontally: side == .left)
+                LanesStyleKit.drawLaneRightNotStraight(frame: bounds, resizing: resizing,
+                                                       primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
+                                                       flipHorizontally: side == .left)
             } else {
-                LanesStyleKit.drawLaneStraightRight(frame: bounds, resizing: resizing, primaryColor: appropriateColor,
-                                                    flipHorizontally: side == .left)
+                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
+                LanesStyleKit.drawLaneStraightNotRight(frame: bounds, resizing: resizing,
+                                                       primaryColor: appropriateColor, secondaryColor: appropriateColor,
+                                                       flipHorizontally: side == .left)
             }
         }
     }
