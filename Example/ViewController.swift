@@ -478,63 +478,6 @@ class ViewController: UIViewController {
 
 extension ViewController: NavigationMapViewDelegate {
     
-    func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
-        var circleLayer = CircleLayer(id: identifier)
-        circleLayer.source = sourceIdentifier
-        let opacity = Exp(.switchCase) {
-            Exp(.any) {
-                Exp(.get) {
-                    "waypointCompleted"
-                }
-            }
-            0.5
-            1
-        }
-        circleLayer.paint?.circleColor = .constant(.init(color: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
-        circleLayer.paint?.circleOpacity = .expression(opacity)
-        circleLayer.paint?.circleRadius = .constant(.init(10))
-        circleLayer.paint?.circleStrokeColor = .constant(.init(color: UIColor.black))
-        circleLayer.paint?.circleStrokeWidth = .constant(.init(1))
-        circleLayer.paint?.circleStrokeOpacity = .expression(opacity)
-        return circleLayer
-    }
-
-    func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer? {
-        var symbolLayer = SymbolLayer(id: identifier)
-        symbolLayer.source = sourceIdentifier
-        symbolLayer.layout?.textField = .expression(Exp(.toString){
-                                                        Exp(.get){
-                                                            "name"
-                                                        }
-                                                    })
-        symbolLayer.layout?.textSize = .constant(.init(10))
-        symbolLayer.paint?.textOpacity = .expression(Exp(.switchCase) {
-            Exp(.any) {
-                Exp(.get) {
-                    "waypointCompleted"
-                }
-            }
-            0.5
-            1
-        })
-        symbolLayer.paint?.textHaloWidth = .constant(.init(0.25))
-        symbolLayer.paint?.textHaloColor = .constant(.init(color: UIColor.black))
-        return symbolLayer
-    }
-    
-    func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
-        var features = [Feature]()
-        for (waypointIndex, waypoint) in waypoints.enumerated() {
-            var feature = Feature(Point(waypoint.coordinate))
-            feature.properties = [
-                "waypointCompleted": waypointIndex < legIndex,
-                "name": "#\(waypointIndex + 1)"
-            ]
-            features.append(feature)
-        }
-        return FeatureCollection(features: features)
-    }
-    
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
         guard let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint: waypoint)
@@ -581,63 +524,6 @@ extension ViewController: NavigationViewControllerDelegate {
     
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         dismissActiveNavigationViewController()
-    }
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
-        var circleLayer = CircleLayer(id: identifier)
-        circleLayer.source = sourceIdentifier
-        let opacity = Exp(.switchCase) {
-            Exp(.any) {
-                Exp(.get) {
-                    "waypointCompleted"
-                }
-            }
-            0.5
-            1
-        }
-        circleLayer.paint?.circleColor = .constant(.init(color: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
-        circleLayer.paint?.circleOpacity = .expression(opacity)
-        circleLayer.paint?.circleRadius = .constant(.init(10))
-        circleLayer.paint?.circleStrokeColor = .constant(.init(color: UIColor.black))
-        circleLayer.paint?.circleStrokeWidth = .constant(.init(1))
-        circleLayer.paint?.circleStrokeOpacity = .expression(opacity)
-        return circleLayer
-    }
-
-    func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer? {
-        var symbolLayer = SymbolLayer(id: identifier)
-        symbolLayer.source = sourceIdentifier
-        symbolLayer.layout?.textField = .expression(Exp(.toString) {
-                                                        Exp(.get){
-                                                            "name"
-                                                        }
-                                                    })
-        symbolLayer.layout?.textSize = .constant(.init(10))
-        symbolLayer.paint?.textOpacity = .expression(Exp(.switchCase) {
-            Exp(.any) {
-                Exp(.get) {
-                    "waypointCompleted"
-                }
-            }
-            0.5
-            1
-        })
-        symbolLayer.paint?.textHaloWidth = .constant(.init(0.25))
-        symbolLayer.paint?.textHaloColor = .constant(.init(color: UIColor.black))
-        return symbolLayer
-    }
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
-        var features = [Feature]()
-        for (waypointIndex, waypoint) in waypoints.enumerated() {
-            var feature = Feature(Point(waypoint.coordinate))
-            feature.properties = [
-                "waypointCompleted": waypointIndex < legIndex,
-                "name": "#\(waypointIndex + 1)"
-            ]
-            features.append(feature)
-        }
-        return FeatureCollection(features: features)
     }
 }
 
