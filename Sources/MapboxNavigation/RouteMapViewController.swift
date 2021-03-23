@@ -911,10 +911,10 @@ extension RouteMapViewController: NavigationViewDelegate {
     func roadShieldAttributedText(for text: String, textColor: UIColor, imageName: String) -> NSAttributedString? {
         guard let image = navigationMapView.mapView.style.getStyleImage(with: imageName)?.cgImage() else { return nil }
         let attachment = ShieldAttachment()
-        attachment.image = UIImage(cgImage: image.takeUnretainedValue()).withCenteredText(text,
-                                                                                          color: textColor,
-                                                                                          font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
-                                                                                          scale: UIScreen.main.scale)
+        attachment.image = UIImage(cgImage: image.takeRetainedValue()).withCenteredText(text,
+                                                                                        color: textColor,
+                                                                                        font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
+                                                                                        scale: UIScreen.main.scale)
         return NSAttributedString(attachment: attachment)
     }
     
