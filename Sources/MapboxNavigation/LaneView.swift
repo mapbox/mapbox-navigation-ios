@@ -87,10 +87,10 @@ extension LaneIndication {
  A generalized representation of the drawing methods available in LanesStyleKit.
  */
 enum LaneConfiguration: Equatable {
-    case straightOnly
-    case slightTurnOnly(side: DrivingSide)
-    case turnOnly(side: DrivingSide)
-    case uTurnOnly(side: DrivingSide)
+    case straight
+    case slightTurn(side: DrivingSide)
+    case turn(side: DrivingSide)
+    case uTurn(side: DrivingSide)
     
     case straightOrTurn(side: DrivingSide, straight: Bool, turn: Bool)
     
@@ -98,18 +98,18 @@ enum LaneConfiguration: Equatable {
         switch (rankedIndications.primary, rankedIndications.secondary) {
         // Single-use lanes
         case (.straightAhead, .none):
-            self = .straightOnly
+            self = .straight
         case (.slightLeft, .none):
-            self = .slightTurnOnly(side: .left)
+            self = .slightTurn(side: .left)
         case (.slightRight, .none):
-            self = .slightTurnOnly(side: .right)
+            self = .slightTurn(side: .right)
         case (.left, .none):
-            self = .turnOnly(side: .left)
+            self = .turn(side: .left)
         case (.right, .none):
-            self = .turnOnly(side: .right)
+            self = .turn(side: .right)
         case (.uTurn, .none):
             // When you drive on the right, you U-turn to the left and vice versa.
-            self = .uTurnOnly(side: drivingSide == .right ? .left : .right)
+            self = .uTurn(side: drivingSide == .right ? .left : .right)
         
         // Dual-use lanes
         case (.straightAhead, .some(.left)):
@@ -255,15 +255,15 @@ open class LaneView: UIView {
         }
         
         switch laneConfiguration {
-        case .straightOnly:
+        case .straight:
             LanesStyleKit.drawLaneStraight(frame: bounds, resizing: resizing, primaryColor: appropriateColor)
-        case .slightTurnOnly(side: let side):
+        case .slightTurn(side: let side):
             LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriateColor,
                                               flipHorizontally: side == .left)
-        case .turnOnly(side: let side):
+        case .turn(side: let side):
             LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriateColor,
                                         flipHorizontally: side == .left)
-        case .uTurnOnly(side: let side):
+        case .uTurn(side: let side):
             LanesStyleKit.drawLaneUturn(frame: bounds, resizing: resizing, primaryColor: appropriateColor,
                                         flipHorizontally: side == .left)
         case .straightOrTurn(side: let side, straight: let straight, turn: let turn):

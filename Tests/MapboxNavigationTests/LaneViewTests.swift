@@ -161,25 +161,25 @@ class LaneViewTests: XCTestCase {
     
     func testLaneConfiguration() {
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .uTurn, secondary: nil), drivingSide: .right),
-                       .uTurnOnly(side: .left))
+                       .uTurn(side: .left))
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .uTurn, secondary: nil), drivingSide: .left),
-                       .uTurnOnly(side: .right))
+                       .uTurn(side: .right))
         XCTAssertNil(LaneConfiguration(rankedIndications: .init(primary: .uTurn, secondary: .left), drivingSide: .right))
         
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .straightAhead, secondary: nil), drivingSide: .right),
-                       .straightOnly)
+                       .straight)
         XCTAssertNil(LaneConfiguration(rankedIndications: .init(primary: .straightAhead, secondary: .slightLeft), drivingSide: .right))
         
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .slightLeft, secondary: nil), drivingSide: .right),
-                       .slightTurnOnly(side: .left))
+                       .slightTurn(side: .left))
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .slightRight, secondary: nil), drivingSide: .right),
-                       .slightTurnOnly(side: .right))
+                       .slightTurn(side: .right))
         XCTAssertNil(LaneConfiguration(rankedIndications: .init(primary: .slightLeft, secondary: .straightAhead), drivingSide: .right))
         
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .left, secondary: nil), drivingSide: .right),
-                       .turnOnly(side: .left))
+                       .turn(side: .left))
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .right, secondary: nil), drivingSide: .right),
-                       .turnOnly(side: .right))
+                       .turn(side: .right))
         XCTAssertNil(LaneConfiguration(rankedIndications: .init(primary: .left, secondary: .right), drivingSide: .right))
         
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .left, secondary: .straightAhead), drivingSide: .right),
