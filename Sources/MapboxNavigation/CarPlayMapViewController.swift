@@ -142,7 +142,7 @@ public class CarPlayMapViewController: UIViewController {
         setupStyleManager()
         navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
         navigationMapView.mapView.update {
-            $0.location.showUserLocation = true
+            $0.location.puckType = .puck2D()
         }
     }
     

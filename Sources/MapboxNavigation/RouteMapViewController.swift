@@ -403,10 +403,8 @@ class RouteMapViewController: UIViewController {
                                           right: 20)
             navigationMapView.mapView.cameraManager.setCamera(to: camera,
                                                               animated: duration > 0.0 ? true : false,
-                                                              duration: duration) { (animatingPosition) in
-                if animatingPosition == .end {
-                    completion?(true)
-                }
+                                                              duration: duration) { (completed) in
+                completion?(completed)
             }
         }
     }

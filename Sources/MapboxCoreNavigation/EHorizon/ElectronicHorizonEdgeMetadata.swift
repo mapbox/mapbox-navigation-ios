@@ -83,7 +83,8 @@ extension ElectronicHorizon.Edge {
             laneCount = native.laneCount as? UInt
             altitude = native.meanElevation as? Double
             curvature = UInt(native.curvature)
-            countryCode = native.countryCode
+            // TODO: Make sure to use correct country code.
+            countryCode = native.countryCodeIso3
             regionCode = native.stateCode
             drivingSide = native.isIsRightHandTraffic ? .right : .left
         }
