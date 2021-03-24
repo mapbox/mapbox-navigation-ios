@@ -64,6 +64,16 @@ public protocol RouterDelegate: class, UnimplementedLogging {
     func router(_ router: Router, didFailToRerouteWith error: Error)
 
     /**
+     Called immediately before the router refreshes the current route.
+
+     This method is called before `router(_:didRefresh:)` is called.
+
+     - parameter router: The router that will refresh the current route.
+     - parameter routeProgress: The route progress object that the router will refresh.
+     */
+    func router(_ router: Router, willRefresh routeProgress: RouteProgress)
+
+    /**
      Called immediately after the router refreshes the route.
      
      - parameter router: The router that has refreshed the route.
@@ -163,6 +173,10 @@ public extension RouterDelegate {
     }
     
     func router(_ router: Router, didFailToRerouteWith error: Error) {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+    }
+
+    func router(_ router: Router, willRefresh routeProgress: RouteProgress) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
 

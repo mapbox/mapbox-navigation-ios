@@ -90,6 +90,16 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate{
      - parameter error: An error raised during the process of obtaining a new route.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error)
+
+    /**
+     Called immediately before the navigation view controller refreshes the current route.
+
+     This method is called simultaneously with the `Notification.Name.routeControllerWillRefreshRoute` notification being posted, and before `navigationViewController(_:didRefresh:)` is called.
+
+     - parameter navigationViewController: The navigation view controller that will refresh the current route.
+     - parameter routeProgress: The current route progress that will be refreshed.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, willRefresh routeProgress: RouteProgress)
     
     /**
      Called immediately after the navigation view controller refreshes the route.
@@ -256,6 +266,13 @@ public extension NavigationViewControllerDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didFailToRerouteWith error: Error) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, willRefresh routeProgress: RouteProgress) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
     
     /**

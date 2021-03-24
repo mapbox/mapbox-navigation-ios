@@ -67,6 +67,16 @@ public protocol NavigationServiceDelegate: class, UnimplementedLogging {
      - parameter error: An error raised during the process of obtaining a new route.
      */
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error)
+
+    /**
+     Called immediately before the navigation service refreshes the current route.
+
+     This method is called simultaneously with the `Notification.Name.routeControllerWillRefreshRoute` notification being posted, and before `navigationService(_:didRefresh:)` is called.
+
+     - parameter service: The navigation service that will refresh the current route.
+     - parameter routeProgress: The current RouteProgress model that will be refreshed.
+     */
+    func navigationService(_ service: NavigationService, willRefresh routeProgress: RouteProgress)
     
     /**
      Called immediately after the navigation service refreshes the route.
@@ -239,6 +249,13 @@ public extension NavigationServiceDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, willRefresh routeProgress: RouteProgress) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     

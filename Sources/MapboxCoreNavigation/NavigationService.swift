@@ -460,6 +460,10 @@ extension MapboxNavigationService: RouterDelegate {
     public func router(_ router: Router, didFailToRerouteWith error: Error) {
         delegate?.navigationService(self, didFailToRerouteWith: error)
     }
+
+    public func router(_ router: Router, willRefresh routeProgress: RouteProgress) {
+        delegate?.navigationService(self, willRefresh: routeProgress)
+    }
     
     public func router(_ router: Router, didRefresh routeProgress: RouteProgress) {
         delegate?.navigationService(self, didRefresh: routeProgress)
