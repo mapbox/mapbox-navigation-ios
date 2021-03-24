@@ -159,10 +159,7 @@ open class NavigationMapView: UIView {
                 return !userCourseView.isHidden
             }
             
-            // TODO: Provide the ability to check what type of puck is currently shown.
-            // return mapView.locationManager.locationOptions.puckType != .none
-            
-            return true
+            return mapView.locationManager.locationOptions.puckType != .none
         }
         set {
             if tracksUserCourse || userLocationForCourseTracking != nil {

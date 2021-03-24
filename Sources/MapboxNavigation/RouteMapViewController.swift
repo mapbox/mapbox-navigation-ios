@@ -336,11 +336,11 @@ class RouteMapViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        // TODO: Provide the ability to check what type of puck is currently shown.
-        // if navigationMapView.mapView.locationManager.showUserLocation && !navigationMapView.tracksUserCourse {
-        //    // Don't move mapView content on rotation or when e.g. top banner expands.
-        //    return
-        // }
+        if navigationMapView.mapView.locationManager.locationOptions.puckType != .none &&
+            !navigationMapView.tracksUserCourse {
+            // Don't move mapView content on rotation or when e.g. top banner expands.
+            return
+        }
         
         updateMapViewContentInsets()
     }
