@@ -24,7 +24,6 @@ open class NavigationMapView: UIView {
      
      This property takes effect when the application has limited resources for animation, such as when the device is running on battery power. By default, this property is set to `PreferredFPS.normal`.
      */
-    // TODO: Mapbox Maps should provide the ability to set custom `PreferredFPS` value.
     public var minimumFramesPerSecond = PreferredFPS.normal
     
     /**
@@ -134,7 +133,9 @@ open class NavigationMapView: UIView {
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
             if shouldPositionCourseViewFrameByFrame {
-                mapView.preferredFPS = .maximum
+                mapView.update {
+                    $0.render.preferredFramesPerSecond = .maximum
+                }
             }
         }
     }
@@ -358,14 +359,17 @@ open class NavigationMapView: UIView {
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
         let conservativeFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         
+        var preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
         if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
            upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
-            mapView.preferredFPS = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
         } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
                     durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
-            mapView.preferredFPS = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
-        } else {
-            mapView.preferredFPS = FrameIntervalOptions.pluggedInFramesPerSecond
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
+        }
+        
+        mapView.update {
+            $0.render.preferredFramesPerSecond = preferredFramesPerSecond
         }
     }
     
@@ -507,8 +511,8 @@ open class NavigationMapView: UIView {
         var lineLayer = LineLayer(id: layerIdentifier)
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression())
-        lineLayer.layout?.lineJoin = .round
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.layout?.lineCap = .constant(.round)
         
         if let gradientStops = routeLineGradient(route, fractionTraveled: fractionTraveledForStops) {
             lineLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
@@ -564,8 +568,8 @@ open class NavigationMapView: UIView {
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeCasingColor))
         lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
-        lineLayer.layout?.lineJoin = .round
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.layout?.lineCap = .constant(.round)
         
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
@@ -590,8 +594,8 @@ open class NavigationMapView: UIView {
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeAlternateColor))
         lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression())
-        lineLayer.layout?.lineJoin = .round
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.layout?.lineCap = .constant(.round)
 
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
@@ -613,8 +617,8 @@ open class NavigationMapView: UIView {
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeAlternateCasingColor))
         lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
-        lineLayer.layout?.lineJoin = .round
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.layout?.lineCap = .constant(.round)
         
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
@@ -811,8 +815,8 @@ open class NavigationMapView: UIView {
                 let _ = mapView.style.updateGeoJSON(for: IdentifierString.arrowSource, with: geoJSON)
             } else {
                 arrow.minZoom = Double(minimumZoomLevel)
-                arrow.layout?.lineCap = .butt
-                arrow.layout?.lineJoin = .round
+                arrow.layout?.lineCap = .constant(.butt)
+                arrow.layout?.lineJoin = .constant(.round)
                 arrow.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.7))
                 arrow.paint?.lineColor = .constant(.init(color: maneuverArrowColor))
                 
@@ -852,7 +856,7 @@ open class NavigationMapView: UIView {
                 arrowSymbolLayer.minZoom = Double(minimumZoomLevel)
                 arrowSymbolLayer.layout?.iconImage = .constant(.name(IdentifierString.arrowImage))
                 arrowSymbolLayer.paint?.iconColor = .constant(.init(color: maneuverArrowColor))
-                arrowSymbolLayer.layout?.iconRotationAlignment = .map
+                arrowSymbolLayer.layout?.iconRotationAlignment = .constant(.map)
                 arrowSymbolLayer.layout?.iconRotate = .constant(.init(shaftDirection))
                 arrowSymbolLayer.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.12))
                 arrowSymbolLayer.layout?.iconAllowOverlap = .constant(true)
@@ -936,8 +940,8 @@ open class NavigationMapView: UIView {
             symbolLayer.paint?.textHaloWidth = .constant(1)
             symbolLayer.paint?.textHaloColor = .constant(.init(color: .white))
             symbolLayer.paint?.textOpacity = .constant(0.75)
-            symbolLayer.layout?.textAnchor = .bottom
-            symbolLayer.layout?.textJustify = .left
+            symbolLayer.layout?.textAnchor = .constant(.bottom)
+            symbolLayer.layout?.textJustify = .constant(.left)
             mapView.style.addLayer(layer: symbolLayer)
             
             var circleLayer = CircleLayer(id: IdentifierString.instructionCircle)

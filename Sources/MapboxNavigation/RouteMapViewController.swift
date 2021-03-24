@@ -190,7 +190,7 @@ class RouteMapViewController: UIViewController {
 
         navigationMapView.tracksUserCourse = true
         
-        navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        navigationMapView.mapView.on(.styleLoaded) { _ in
             self.showRouteIfNeeded()
             navigationMapView.localizeLabels()
             navigationMapView.mapView.showsTraffic = false
@@ -405,7 +405,9 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        navigationMapView.mapView.preferredFPS = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        mapView.update {
+            $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        }
     }
     
     /**
