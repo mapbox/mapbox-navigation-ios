@@ -3,6 +3,7 @@
 ## v1.4.0
 
 * Fixed an issue when feedback UI was always appearing for short routes ([#2871](https://github.com/mapbox/mapbox-navigation-ios/pull/2871))
+* Add a new `Notification.Name.routeControllerWillRefreshRoute` notification, `NavigationServiceDelegate.navigationService(_:willRefresh:)` method, and `NavigationViewControllerDelegate.navigationViewController(_:willRefresh:)` method ([#2871](https://github.com/mapbox/mapbox-navigation-ios/pull/2885))
 
 ## v1.3.0
 
