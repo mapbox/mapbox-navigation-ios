@@ -405,7 +405,7 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        mapView.update {
+        navigationMapView.mapView.update {
             $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
         }
     }
