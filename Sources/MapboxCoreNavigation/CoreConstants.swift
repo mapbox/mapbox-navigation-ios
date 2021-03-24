@@ -131,6 +131,13 @@ public extension Notification.Name {
      - seealso: `passiveLocationDataSourceDidUpdate`
      */
     static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
+
+    /**
+     Posted when `RouteController` will request updated information about the current route.
+
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.routeProgressKey`.
+     */
+    static let routeControllerWillRefreshRoute: Notification.Name = .init(rawValue: "RouteControllerWillRefreshRoute")
     
     /**
      Posted when `RouteController` receives updated information about the current route.

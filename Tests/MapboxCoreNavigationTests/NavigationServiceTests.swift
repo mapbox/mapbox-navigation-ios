@@ -621,7 +621,7 @@ class NavigationServiceTests: XCTestCase {
 
         let ourLogs = logs.filter { $0.0 == "EmptyNavigationServiceDelegate" }
 
-        XCTAssertEqual(ourLogs.count, 7, "Expected logs to be populated and expected number of messages sent")
+        XCTAssertEqual(ourLogs.count, 8, "Expected logs to be populated and expected number of messages sent")
         unimplementedTestLogs = nil
     }
 }

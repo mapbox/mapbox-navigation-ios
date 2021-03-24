@@ -605,6 +605,14 @@ extension NavigationViewController: NavigationServiceDelegate {
 
         delegate?.navigationViewController(self, didFailToRerouteWith: error)
     }
+
+    public func navigationService(_ service: NavigationService, willRefresh routeProgress: RouteProgress) {
+        for component in navigationComponents {
+            component.navigationService(service, willRefresh: routeProgress)
+        }
+
+        delegate?.navigationViewController(self, willRefresh: routeProgress)
+    }
     
     public func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
         for component in navigationComponents {
