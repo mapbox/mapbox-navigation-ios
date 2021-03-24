@@ -58,7 +58,7 @@ class CustomViewController: UIViewController {
         // Start navigation
         navigationService.start()
         
-        navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
+        navigationMapView.mapView.on(.styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
             self?.navigationMapView.show([route])
         })

@@ -5,8 +5,6 @@ public class NavigationCameraStateTransition: CameraStateTransition {
 
     public weak var mapView: MapView?
     
-    public var cameraView: CameraView!
-    
     let bezierParamsCenter = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
     let bezierParamsUserLocation = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
     let bezierParamsZoom = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
@@ -33,9 +31,6 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     required public init(_ mapView: MapView) {
         self.mapView = mapView
         
-        cameraView = CameraView(mapView: mapView)
-        mapView.addSubview(cameraView)
-        
         resetAnimators()
     }
     
@@ -53,9 +48,9 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         
         if transitionDestinationIsOffScreen(location, edgeInsets: padding) {
             let screenCenterPoint = self.screenCenterPoint(0.0, bounds: mapView.bounds, edgeInsets: padding)
-            let lineString = LineString([cameraView.centerCoordinate, location])
+            let lineString = LineString([mapView.cameraView.centerCoordinate, location])
             let camera = mapView.cameraManager.camera(fitting: .lineString(lineString))
-            camera.bearing = cameraView.bearing
+            camera.bearing = CLLocationDirection(mapView.cameraView.bearing)
             camera.pitch = 0
             if let midPointZoom = camera.zoom {
                 let cameraOptions = CameraOptions(center: location,
@@ -77,7 +72,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
                 }
             }
         } else {
-            if cameraView.zoomLevel < zoom {
+            if mapView.cameraView.zoom < zoom {
                 transitionFromLowZoomToHighZoom(cameraOptions) {
                     self.resetAnimators()
                     completion()
@@ -92,14 +87,15 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     public func transitionToOverview(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
-        guard let zoom = cameraOptions.zoom else {
+        guard let mapView = mapView,
+              let zoom = cameraOptions.zoom else {
             completion()
             return
         }
         
         cameraOptions.pitch = 0
         
-        if cameraView.zoomLevel < zoom {
+        if mapView.cameraView.zoom < zoom {
             transitionFromLowZoomToHighZoom(cameraOptions) {
                 completion()
             }
@@ -130,14 +126,12 @@ public class NavigationCameraStateTransition: CameraStateTransition {
               let pitch = cameraOptions.pitch,
               let anchor = cameraOptions.anchor else { return }
         
-        cameraView.isActive = true
-
         if animatorCenter.state == .inactive || animatorCenter.state == .stopped {
             animatorCenter.startAnimation(afterDelay: 0)
         }
         
         animatorCenter.addAnimations {
-            self.cameraView.centerCoordinate = location
+            self.mapView?.cameraView.centerCoordinate = location
         }
         
         if animatorZoom.state == .inactive || animatorZoom.state == .stopped {
@@ -145,7 +139,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         
         animatorZoom.addAnimations {
-            self.cameraView.zoomLevel = zoom
+            self.mapView?.cameraView.zoom = zoom
         }
         
         if animatorBearing.state == .inactive || animatorBearing.state == .stopped {
@@ -153,7 +147,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         
         animatorBearing.addAnimations {
-            self.cameraView.bearing = bearing
+            self.mapView?.cameraView.bearing = CGFloat(bearing)
         }
 
         if animatorPitch.state == .inactive || animatorPitch.state == .stopped {
@@ -161,8 +155,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         
         animatorPitch.addAnimations {
-            self.cameraView.pitch = pitch
-            self.cameraView.anchorPoint = anchor
+            self.mapView?.cameraView.pitch = pitch
+            self.mapView?.cameraView.anchor = anchor
         }
     }
     
@@ -187,25 +181,25 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     func transitionFromLowZoomToHighZoom(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
-        guard let _ = mapView,
+        guard let mapView = mapView,
               let zoom = cameraOptions.zoom,
               let location = cameraOptions.center,
               let bearing = cameraOptions.bearing else { return }
         
-        let centerTranslationDistance = CLLocation.distance(from: cameraView.centerCoordinate, to: location)
+        let centerTranslationDistance = CLLocation.distance(from: mapView.cameraView.centerCoordinate, to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1500.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.6), 0.6)
         let centerAnimationDelay: TimeInterval = 0
         
-        let zoomLevelDistance = CLLocationDistance(abs(cameraView.zoomLevel - zoom))
+        let zoomLevelDistance = CLLocationDistance(abs(mapView.cameraView.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 3.0
         let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 1.6), 0.6)
         let zoomAnimationDelay: TimeInterval = centerAnimationDuration * 0.5
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
-        let currentBearing = cameraView.bearing
-        let newBearing: CLLocationDirection = cameraView.bearing + bearing.shortestRotation(angle: cameraView.bearing)
-        let bearingDegreesChange: CLLocationDirection = fabs(newBearing - currentBearing)
+        let currentBearing = mapView.cameraView.bearing
+        let newBearing: CLLocationDirection = Double(mapView.cameraView.bearing) + bearing.shortestRotation(angle: CLLocationDirection(mapView.cameraView.bearing))
+        let bearingDegreesChange: CLLocationDirection = fabs(newBearing - Double(currentBearing))
         let degreesPerSecondMaxBearingAnimation: Double = 60
         let bearingAnimationDuration: TimeInterval = max(min(bearingDegreesChange / degreesPerSecondMaxBearingAnimation, 1.2), 0.6)
         let bearingAnimationDelay: TimeInterval = max(endZoomAnimation - bearingAnimationDuration - 0.2, 0)
@@ -231,23 +225,23 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     func transitionFromHighZoomToLowZoom(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
-        guard let _ = mapView,
+        guard let mapView = mapView,
               let zoom = cameraOptions.zoom,
               let location = cameraOptions.center,
               let bearing = cameraOptions.bearing else { return }
         
-        let zoomLevelDistance = CLLocationDistance(abs(cameraView.zoomLevel - zoom))
+        let zoomLevelDistance = CLLocationDistance(abs(mapView.cameraView.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 0.6
         let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 0.8), 0.2)
         let zoomAnimationDelay: TimeInterval = 0
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
-        let centerTranslationDistance = CLLocation.distance(from: cameraView.centerCoordinate, to: location)
+        let centerTranslationDistance = CLLocation.distance(from: mapView.cameraView.centerCoordinate, to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1000.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.4), 0.6)
         let centerAnimationDelay: TimeInterval = max(endZoomAnimation - centerAnimationDuration, 0)
         
-        let bearingDegreesChange: CLLocationDirection = bearing.shortestRotation(angle: cameraView.bearing)
+        let bearingDegreesChange: CLLocationDirection = bearing.shortestRotation(angle: CLLocationDirection(mapView.cameraView.bearing))
         let degreesPerSecondMaxBearingAnimation: Double = 60
         let bearingAnimationDuration: TimeInterval = max(min(bearingDegreesChange / degreesPerSecondMaxBearingAnimation, 1.2), 0.8)
         let bearingAnimationDelay: TimeInterval = max(endZoomAnimation - bearingAnimationDuration - 0.4, 0)
@@ -273,23 +267,23 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     func transitionFromHighZoomToMidpoint(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
-        guard let _ = mapView,
+        guard let mapView = mapView,
               let zoom = cameraOptions.zoom,
               let location = cameraOptions.center,
               let bearing = cameraOptions.bearing else { return }
         
-        let zoomLevelDistance = CLLocationDistance(abs(cameraView.zoomLevel - zoom))
+        let zoomLevelDistance = CLLocationDistance(abs(mapView.cameraView.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 0.6
         let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 0.8), 0.2)
         let zoomAnimationDelay: TimeInterval = 0
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
-        let centerTranslationDistance = CLLocation.distance(from: cameraView.centerCoordinate, to: location)
+        let centerTranslationDistance = CLLocation.distance(from: mapView.cameraView.centerCoordinate, to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1000.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.4), 0.8)
         let centerAnimationDelay: TimeInterval = max(endZoomAnimation - centerAnimationDuration, 0)
         
-        let bearingDegreesChange: CLLocationDirection = bearing.shortestRotation(angle: cameraView.bearing)
+        let bearingDegreesChange: CLLocationDirection = bearing.shortestRotation(angle: CLLocationDirection(mapView.cameraView.bearing))
         let degreesPerSecondMaxBearingAnimation: Double = 60
         let bearingAnimationDuration: TimeInterval = max(min(bearingDegreesChange / degreesPerSecondMaxBearingAnimation, 1.2), 0.8)
         let bearingAnimationDelay: TimeInterval = max(endZoomAnimation - bearingAnimationDuration - 0.4, 0)
@@ -315,21 +309,21 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     func transition(_ transitionParameters: TransitionParameters, completion: @escaping (() -> Void)) {
-        guard let zoom = transitionParameters.cameraOptions.zoom,
+        guard let mapView = mapView,
+              let zoom = transitionParameters.cameraOptions.zoom,
               let location = transitionParameters.cameraOptions.center,
               let bearing = transitionParameters.cameraOptions.bearing,
               let pitch = transitionParameters.cameraOptions.pitch,
               let anchor = transitionParameters.cameraOptions.anchor else { return }
         
         stopAnimators()
-        cameraView.isActive = true
         
         let animationsGroup = DispatchGroup()
         
         let bezierParamsCenter = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
         animatorCenter = UIViewPropertyAnimator(duration: transitionParameters.centerAnimationDuration, timingParameters: bezierParamsCenter)
         animatorCenter.addAnimations {
-            self.cameraView.centerCoordinate = location
+            mapView.cameraView.centerCoordinate = location
         }
         animatorCenter.addCompletion { _ in
             animationsGroup.leave()
@@ -338,7 +332,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let bezierParamsZoom = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.2, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
         animatorZoom = UIViewPropertyAnimator(duration: transitionParameters.zoomAnimationDuration, timingParameters: bezierParamsZoom)
         animatorZoom.addAnimations {
-            self.cameraView.zoomLevel = zoom
+            mapView.cameraView.zoom = zoom
         }
         animatorZoom.addCompletion { _ in
             animationsGroup.leave()
@@ -347,7 +341,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let bezierParamsBearing = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
         animatorBearing = UIViewPropertyAnimator(duration: transitionParameters.bearingAnimationDuration, timingParameters: bezierParamsBearing)
         animatorBearing.addAnimations {
-            self.cameraView.bearing = bearing
+            mapView.cameraView.bearing = CGFloat(bearing)
         }
         animatorBearing.addCompletion { _ in
             animationsGroup.leave()
@@ -356,8 +350,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let bezierParamsPitch = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.6, y: 0.0), controlPoint2: CGPoint(x: 0.4, y: 1.0))
         animatorPitch = UIViewPropertyAnimator(duration: transitionParameters.pitchAndAnchorAnimationDuration, timingParameters: bezierParamsPitch)
         animatorPitch.addAnimations {
-            self.cameraView.pitch = CGFloat(pitch)
-            self.cameraView.anchorPoint = anchor
+            mapView.cameraView.pitch = CGFloat(pitch)
+            mapView.cameraView.anchor = anchor
         }
         animatorPitch.addCompletion { _ in
             animationsGroup.leave()
@@ -377,8 +371,6 @@ public class NavigationCameraStateTransition: CameraStateTransition {
 
         animationsGroup.notify(queue: .main) {
             self.resetAnimators()
-            self.cameraView.isActive = false
-            
             completion()
         }
     }

@@ -153,7 +153,7 @@ class RouteMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        self.navigationMapView.mapView.on(.styleLoaded) { _ in
             self.showRouteIfNeeded()
             self.navigationMapView.localizeLabels()
             self.navigationMapView.mapView.showsTraffic = false
@@ -326,7 +326,9 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        navigationMapView.mapView.preferredFPS = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        navigationMapView.mapView.update {
+            $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        }
     }
     
     /**
@@ -401,8 +403,10 @@ class RouteMapViewController: UIViewController {
                                           right: 20)
             navigationMapView.mapView.cameraManager.setCamera(to: camera,
                                                               animated: duration > 0.0 ? true : false,
-                                                              duration: duration) { (completed) in
-                completion?(completed)
+                                                              duration: duration) { (animatingPosition) in
+                if animatingPosition == .end {
+                    completion?(true)
+                }
             }
         }
     }

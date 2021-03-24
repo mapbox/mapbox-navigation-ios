@@ -129,7 +129,7 @@ public class CarPlayMapViewController: UIViewController {
     
     override public func loadView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .headUnit)
-        navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        navigationMapView.mapView.on(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
         }
         
