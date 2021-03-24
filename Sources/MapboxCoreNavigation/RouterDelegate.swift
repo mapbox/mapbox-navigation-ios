@@ -165,6 +165,10 @@ public extension RouterDelegate {
     func router(_ router: Router, didFailToRerouteWith error: Error) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
+
+    func router(_ router: Router, didRefresh routeProgress: RouteProgress) {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
+    }
     
     func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
