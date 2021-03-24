@@ -111,7 +111,7 @@ class ViewController: UIViewController {
             self.addStyledFeature(self.rawTrackStyledFeature)
         })
         navigationMapView.mapView.update {
-            $0.location.showUserLocation = true
+            $0.location.puckType = .puck2D()
         }
         
         // TODO: Provide a reliable way of setting camera to current coordinate.

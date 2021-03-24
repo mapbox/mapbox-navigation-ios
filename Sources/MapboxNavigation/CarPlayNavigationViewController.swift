@@ -149,7 +149,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         navigationMapView.mapView.update {
             $0.ornaments.compassVisiblity = .hidden
-            $0.location.showUserLocation = true
+            $0.location.puckType = .puck2D()
         }
         
         view.addSubview(navigationMapView)
