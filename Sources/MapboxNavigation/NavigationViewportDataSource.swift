@@ -235,8 +235,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
                              minZoomLevel: 2.0)
         
         // In case if `NavigationCamera` is already in `NavigationCameraState.overview` value of bearing will be ignored.
-        let bearing = CLLocationDirection(mapView.cameraView.bearing) +
-            heading.shortestRotation(angle: CLLocationDirection(mapView.cameraView.bearing))
+        let bearing = CLLocationDirection(mapView.bearing) +
+            heading.shortestRotation(angle: CLLocationDirection(mapView.bearing))
         
         overviewMobileCamera.pitch = 0.0
         overviewMobileCamera.center = center
@@ -266,7 +266,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
         }
         
-        let mapViewBearing = Double(mapView?.cameraView.bearing ?? 0.0)
+        let mapViewBearing = Double(mapView?.bearing ?? 0.0)
         return mapViewBearing + bearing.shortestRotation(angle: mapViewBearing)
     }
     

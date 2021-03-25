@@ -57,8 +57,8 @@ class NavigationCameraDebugView: UIView {
         if let edgeInsets = followingMobileCamera.padding {
             viewportLayer.frame = CGRect(x: edgeInsets.left,
                                          y: edgeInsets.top,
-                                         width: mapView.cameraView.frame.width - edgeInsets.left - edgeInsets.right,
-                                         height: mapView.cameraView.frame.height - edgeInsets.top - edgeInsets.bottom)
+                                         width: mapView.frame.width - edgeInsets.left - edgeInsets.right,
+                                         height: mapView.frame.height - edgeInsets.top - edgeInsets.bottom)
         }
         
         if let anchorPosition = followingMobileCamera.anchor {

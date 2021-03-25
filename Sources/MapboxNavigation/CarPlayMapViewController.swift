@@ -60,7 +60,7 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.requestNavigationCameraToIdle()
             
-            let cameraOptions = mapView.cameraView.camera
+            let cameraOptions = mapView.camera
             cameraOptions.zoom = mapView.zoom + 1.0
             mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
         }
@@ -80,7 +80,7 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.requestNavigationCameraToIdle()
             
-            let cameraOptions = mapView.cameraView.camera
+            let cameraOptions = mapView.camera
             cameraOptions.zoom = mapView.zoom - 1.0
             mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
         }
