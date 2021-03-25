@@ -44,8 +44,7 @@ public class PredictiveCacheManager {
                                                  maxConcurrentRequests: UInt32 = 2) -> PredictiveCacheController? {
         let cacheOptions = PredictiveCacheControllerOptions(version: version,
                                                             dataset: dataset,
-                                                            // TODO: Make sure to use correct domain.
-                                                            dataDomain: .navigation,
+                                                            dataDomain: .maps,
                                                             concurrency: maxConcurrentRequests,
                                                             maxAverageDownloadBytesPerSecond: 0)
         let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(options)
