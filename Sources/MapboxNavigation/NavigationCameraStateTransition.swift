@@ -11,10 +11,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     let bezierParamsBearing = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
     let bezierParamsPitch = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
     
-    var animatorCenter: UIViewPropertyAnimator!
-    var animatorZoom: UIViewPropertyAnimator!
-    var animatorBearing: UIViewPropertyAnimator!
-    var animatorPitch: UIViewPropertyAnimator!
+    var animatorCenter: CameraAnimator!
+    var animatorZoom: CameraAnimator!
+    var animatorBearing: CameraAnimator!
+    var animatorPitch: CameraAnimator!
     
     typealias TransitionParameters = (
         cameraOptions: CameraOptions,
@@ -161,10 +161,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     func resetAnimators() {
-        animatorCenter = UIViewPropertyAnimator(duration: 1.0, timingParameters: bezierParamsCenter)
-        animatorZoom = UIViewPropertyAnimator(duration: 1.0, timingParameters: bezierParamsZoom)
-        animatorBearing = UIViewPropertyAnimator(duration: 1.0, timingParameters: bezierParamsBearing)
-        animatorPitch = UIViewPropertyAnimator(duration: 1.0, timingParameters: bezierParamsPitch)
+        animatorCenter = mapView?.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsCenter)
+        animatorZoom = mapView?.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsZoom)
+        animatorBearing = mapView?.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsBearing)
+        animatorPitch = mapView?.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsPitch)
     }
     
     func stopAnimators() {
@@ -176,7 +176,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         ]
         
         animators.forEach {
-            $0?.stopAnimation(true)
+            $0?.stopAnimation()
         }
     }
     
@@ -321,43 +321,54 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let animationsGroup = DispatchGroup()
         
         let bezierParamsCenter = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
-        animatorCenter = UIViewPropertyAnimator(duration: transitionParameters.centerAnimationDuration, timingParameters: bezierParamsCenter)
+        animatorCenter = mapView.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsCenter)
         animatorCenter.addAnimations {
             mapView.cameraView.centerCoordinate = location
         }
-        animatorCenter.addCompletion { _ in
-            animationsGroup.leave()
+        
+        animatorCenter.addCompletion { (animatingPosition) in
+            if animatingPosition == .end {
+                animationsGroup.leave()
+            }
         }
-
+        
+        animatorCenter.startAnimation()
+        
         let bezierParamsZoom = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.2, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
-        animatorZoom = UIViewPropertyAnimator(duration: transitionParameters.zoomAnimationDuration, timingParameters: bezierParamsZoom)
+        animatorZoom = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.zoomAnimationDuration, timingParameters: bezierParamsZoom)
         animatorZoom.addAnimations {
             mapView.cameraView.zoom = zoom
         }
-        animatorZoom.addCompletion { _ in
-            animationsGroup.leave()
+        animatorZoom.addCompletion { (animatingPosition) in
+            if animatingPosition == .end {
+                animationsGroup.leave()
+            }
         }
         
         let bezierParamsBearing = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
-        animatorBearing = UIViewPropertyAnimator(duration: transitionParameters.bearingAnimationDuration, timingParameters: bezierParamsBearing)
+        animatorBearing = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.bearingAnimationDuration, timingParameters: bezierParamsBearing)
         animatorBearing.addAnimations {
             mapView.cameraView.bearing = CGFloat(bearing)
         }
-        animatorBearing.addCompletion { _ in
-            animationsGroup.leave()
+        animatorBearing.addCompletion { (animatingPosition) in
+            if animatingPosition == .end {
+                animationsGroup.leave()
+            }
         }
         
         let bezierParamsPitch = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.6, y: 0.0), controlPoint2: CGPoint(x: 0.4, y: 1.0))
-        animatorPitch = UIViewPropertyAnimator(duration: transitionParameters.pitchAndAnchorAnimationDuration, timingParameters: bezierParamsPitch)
+        animatorPitch = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.pitchAndAnchorAnimationDuration, timingParameters: bezierParamsPitch)
         animatorPitch.addAnimations {
             mapView.cameraView.pitch = CGFloat(pitch)
             mapView.cameraView.anchor = anchor
         }
-        animatorPitch.addCompletion { _ in
-            animationsGroup.leave()
+        animatorPitch.addCompletion { (animatingPosition) in
+            if animatingPosition == .end {
+                animationsGroup.leave()
+            }
         }
         
-        let animations: [(UIViewPropertyAnimator, TimeInterval)] = [
+        let animations: [(CameraAnimator, TimeInterval)] = [
             (animatorCenter, transitionParameters.centerAnimationDelay),
             (animatorZoom, transitionParameters.zoomAnimationDelay),
             (animatorBearing, transitionParameters.bearingAnimationDelay),

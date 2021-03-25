@@ -253,12 +253,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     func bearing(_ initialBearing: CLLocationDirection,
                  coordinatesToManeuver: [CLLocationCoordinate2D]? = nil) -> CLLocationDirection {
-        let bearingModeClampedManeuverMaxDiff = 20.0
         var bearing = initialBearing
 
         if let coords = coordinatesToManeuver, let firstCoordinate = coords.first, let lastCoordinate = coords.last {
             let directionToManeuver = firstCoordinate.direction(to: lastCoordinate)
             let directionDiff = directionToManeuver.shortestRotation(angle: initialBearing)
+            let bearingModeClampedManeuverMaxDiff = 20.0
             if fabs(directionDiff) > bearingModeClampedManeuverMaxDiff {
                 bearing += bearingModeClampedManeuverMaxDiff * (directionDiff < 0.0 ? -1.0 : 1.0)
             } else {
@@ -336,7 +336,7 @@ extension NavigationViewportDataSource: LocationConsumer {
             return true
         }
         set(newValue) {
-            self.shouldTrackLocation = newValue
+
         }
     }
 
