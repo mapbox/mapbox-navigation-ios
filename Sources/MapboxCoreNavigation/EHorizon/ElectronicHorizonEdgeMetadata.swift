@@ -54,7 +54,7 @@ extension ElectronicHorizon.Edge {
         /** The edge’s curvature. */
         public let curvature: UInt
 
-        /** The ISO 3166-1 code of the country where this edge is located. */
+        /** The ISO 3166-1 alpha-2 code of the country where this edge is located. */
         public let countryCode: String?
 
         /** The ISO 3166-2 code of the country subdivision where this edge is located. */
@@ -95,8 +95,7 @@ extension ElectronicHorizon.Edge {
             laneCount = native.laneCount as? UInt
             altitude = native.meanElevation as? Double
             curvature = UInt(native.curvature)
-            // TODO: Use the ISO 3166-1 alpha-2 code instead.
-            countryCode = native.countryCodeIso3
+            countryCode = native.countryCodeIso2
             regionCode = native.stateCode
             drivingSide = native.isIsRightHandTraffic ? .right : .left
             directionality = native.isIsOneway ? .oneWay : .bothWays
