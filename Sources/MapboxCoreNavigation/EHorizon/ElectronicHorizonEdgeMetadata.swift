@@ -4,6 +4,15 @@ import MapboxDirections
 import MapboxNavigationNative
 
 extension ElectronicHorizon.Edge {
+    /**
+     Indicates how many directions the user may travel along an edge.
+     */
+    public enum Directionality {
+        /// The user may only travel in one direction along the edge.
+        case oneWay
+        /// The user may travel in either direction along the edge.
+        case bothWays
+    }
 
     /** Edge metadata */
     public struct Metadata {
@@ -53,6 +62,9 @@ extension ElectronicHorizon.Edge {
         
         /** Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the rule of the road.. */
         public let drivingSide: DrivingSide
+        
+        /** Indicates how many directions the user may travel along the edge. */
+        public let directionality: Directionality
 
         init(_ native: EdgeMetadata) {
             heading = native.heading
@@ -87,6 +99,7 @@ extension ElectronicHorizon.Edge {
             countryCode = native.countryCodeIso3
             regionCode = native.stateCode
             drivingSide = native.isIsRightHandTraffic ? .right : .left
+            directionality = native.isIsOneway ? .oneWay : .bothWays
         }
     }
 }
