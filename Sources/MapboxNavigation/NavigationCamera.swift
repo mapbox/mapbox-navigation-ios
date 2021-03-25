@@ -134,10 +134,6 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         
         cameraStateTransition.cancelPendingTransition()
         
-//        if let navigationCameraStateTransition = self.cameraStateTransition as? NavigationCameraStateTransition {
-//            navigationCameraStateTransition.cameraView.isActive = false
-//        }
-        
         state = .idle
     }
     
