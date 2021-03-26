@@ -146,7 +146,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         navigationMapView.mapView.update {
             $0.ornaments.compassVisiblity = .hidden
-            $0.location.puckType = .puck2D()
+            $0.location.puckType = .none
         }
         
         navigationMapView.userCourseView.isHidden = false
