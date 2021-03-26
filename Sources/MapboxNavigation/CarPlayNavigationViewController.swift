@@ -149,6 +149,7 @@ public class CarPlayNavigationViewController: UIViewController {
             $0.location.puckType = .puck2D()
         }
         
+        navigationMapView.userCourseView.isHidden = false
         navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
         
         view.addSubview(navigationMapView)
