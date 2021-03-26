@@ -272,7 +272,8 @@ open class NavigationMapView: UIView {
         }
         
         let options = ResourceOptions(accessToken: accessToken,
-                                      tileStorePath: Bundle.mapboxNavigation.suggestedTileURL?.path)
+                                      tileStorePath: Bundle.mapboxNavigation.suggestedTileURL?.path,
+                                      loadTilePacksFromNetwork: false)
         
         mapView = MapView(with: frame, resourceOptions: options)
         mapView.translatesAutoresizingMaskIntoConstraints = false
