@@ -261,7 +261,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var annotatesSpokenInstructions = false
     
-    var styleManager: StyleManager!
+    public private(set) var styleManager: StyleManager!
     
     var currentStatusBarStyle: UIStatusBarStyle = .default
     

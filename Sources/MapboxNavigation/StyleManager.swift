@@ -87,8 +87,8 @@ open class StyleManager {
     internal var date: Date?
     private var timeOfDayTimer: Timer?
     
-    var currentStyleType: StyleType?
-    private(set) var currentStyle: Style? {
+    public private(set) var currentStyleType: StyleType?
+    public private(set) var currentStyle: Style? {
         didSet {
             guard let style = currentStyle else { return }
             postDidApplyStyleNotification(style: style)
@@ -146,7 +146,7 @@ open class StyleManager {
         resetTimeOfDayTimer()
     }
     
-    func applyStyle(type styleType: StyleType) {
+    public func applyStyle(type styleType: StyleType) {
         guard currentStyleType != styleType else { return }
         
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
