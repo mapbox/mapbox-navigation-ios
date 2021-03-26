@@ -343,10 +343,10 @@ open class NavigationMapView: UIView {
         
         // If the map is in tracking mode, make sure we update the camera and anchor after the layout pass.
         if tracksUserCourse {
-            updateCourseTracking(location: userLocationForCourseTracking, camera:mapView.cameraView.camera, animated: false)
+            updateCourseTracking(location: userLocationForCourseTracking, camera:mapView.camera, animated: false)
             
             // TODO: Find appropriate place where anchor can be updated.
-            mapView.cameraView.anchor = userAnchorPoint
+            mapView.anchor = userAnchorPoint
         }
     }
     
@@ -438,7 +438,7 @@ open class NavigationMapView: UIView {
         }
         
         userCourseView.update(location: location,
-                              pitch: mapView.cameraView.pitch,
+                              pitch: mapView.pitch,
                               direction: mapView.bearing,
                               animated: animated,
                               tracksUserCourse: tracksUserCourse)
@@ -1108,7 +1108,7 @@ open class NavigationMapView: UIView {
     
     private func updateCourseView(to location: CLLocation, pitch: CGFloat? = nil, direction: CLLocationDirection? = nil, animated: Bool = false) {
         userCourseView.update(location: location,
-                              pitch: pitch ?? mapView.cameraView.pitch,
+                              pitch: pitch ?? mapView.pitch,
                               direction: direction ?? mapView.bearing,
                               animated: animated,
                               tracksUserCourse: tracksUserCourse)

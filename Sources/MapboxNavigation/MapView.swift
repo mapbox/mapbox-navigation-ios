@@ -107,7 +107,7 @@ extension MapView {
     // TODO: Consider replacing after Maps SDK provides the ability to convert zoom to altitude and vice versa.
     var altitude: CLLocationDistance? {
         guard let latitude = locationManager.latestLocation?.coordinate.latitude else { return nil }
-        return AltitudeForZoomLevel(Double(cameraView.zoom), cameraView.pitch, latitude, bounds.size)
+        return AltitudeForZoomLevel(Double(zoom), pitch, latitude, bounds.size)
     }
     
     /**

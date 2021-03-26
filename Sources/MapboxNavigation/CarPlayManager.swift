@@ -534,7 +534,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapTemplate.updateEstimates(estimates, for: trip)
 
         // FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
-        let topDownCamera = navigationMapView.mapView.cameraView.camera
+        let topDownCamera = navigationMapView.mapView.camera
         topDownCamera.pitch = 0
         navigationMapView.mapView.cameraManager.setCamera(to: topDownCamera, completion: nil)
         navigationMapView.showcase([route])
@@ -632,7 +632,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         guard let relativeDirection = CLLocationDirection(panDirection: direction) else {
             return
         }
-        let shiftedDirection = (Double(navigationMapView.mapView.cameraView.bearing) + relativeDirection).wrap(min: 0, max: 360)
+        let shiftedDirection = (Double(navigationMapView.mapView.bearing) + relativeDirection).wrap(min: 0, max: 360)
         let shiftedCenterCoordinate = navigationMapView.mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
         navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: shiftedCenterCoordinate, animated: true)
     }

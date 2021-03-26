@@ -209,7 +209,7 @@ public class CarPlayNavigationViewController: UIViewController {
         super.viewDidLayoutSubviews()
         if isOverviewingRoutes { return } // Don't move content when overlays change.
         
-        navigationMapView?.mapView.cameraView.padding = contentInset(forOverviewing: false)
+        navigationMapView?.mapView.padding = contentInset(forOverviewing: false)
     }
 
     func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
@@ -279,7 +279,7 @@ public class CarPlayNavigationViewController: UIViewController {
                 navigationMapView?.addArrow(route: progress.route,
                                   legIndex: progress.legIndex,
                                   stepIndex: progress.currentLegProgress.stepIndex + 1)
-                navigationMapView?.mapView.cameraView.padding = contentInset(forOverviewing: false)
+                navigationMapView?.mapView.padding = contentInset(forOverviewing: false)
             } else if tracksUserCourse && !newValue {
                 isOverviewingRoutes = !isPanningAway
                 guard let userLocation = self.navigationService.router.location,
@@ -287,7 +287,7 @@ public class CarPlayNavigationViewController: UIViewController {
                     return
                 }
                 navigationMapView?.enableFrameByFrameCourseViewTracking(for: 1)
-                navigationMapView?.mapView.cameraView.padding = contentInset(forOverviewing: isOverviewingRoutes)
+                navigationMapView?.mapView.padding = contentInset(forOverviewing: isOverviewingRoutes)
                 if (isOverviewingRoutes) {
                     navigationMapView?.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
                 }

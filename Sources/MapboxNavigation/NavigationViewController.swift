@@ -742,17 +742,20 @@ extension NavigationViewController: NavigationServiceDelegate {
         // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
         if progress.fractionTraveled >= 1.0 { return }
         if waypointStyle == .annotation { return }
-        guard let mapView = navigationMapView else { return }
+        guard let navigationMapView = navigationMapView else { return }
 
         if currentLeg != progress.currentLeg {
             currentLeg = progress.currentLeg
             passedApproachingDestinationThreshold = false
             mapViewController?.suppressAutomaticAltitudeChanges = false
             foundAllBuildings = false
-            mapView.altitude = mapView.defaultAltitude
+            navigationMapView.altitude = navigationMapView.defaultAltitude
         }
 
-        let altitude = AltitudeForZoomLevel(16.1, mapView.mapView.cameraView.pitch, location.coordinate.latitude, mapView.mapView.frame.size)
+        let altitude = AltitudeForZoomLevel(16.1,
+                                            navigationMapView.mapView.pitch,
+                                            location.coordinate.latitude,
+                                            navigationMapView.mapView.frame.size)
 
         if !passedApproachingDestinationThreshold, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
             passedApproachingDestinationThreshold = true
@@ -765,16 +768,18 @@ extension NavigationViewController: NavigationServiceDelegate {
         // - Previous attempt to decrease altitude failed (happens when highlighted building is within destination
         // threshold right after starting navigation).
         // FIXME: When device was rotated to landscape mode altitude should be adjusted so that building is highlighted.
-        if passedApproachingDestinationThreshold, mapView.altitude == mapView.defaultAltitude, altitude < mapView.altitude {
-            mapView.altitude = altitude
+        if passedApproachingDestinationThreshold,
+           navigationMapView.altitude == navigationMapView.defaultAltitude,
+           altitude < navigationMapView.altitude {
+            navigationMapView.altitude = altitude
         }
 
         if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
-            mapView.highlightBuildings(at: [currentLegWaypoint],
-                                       in3D: waypointStyle == .extrudedBuilding ? true : false,
-                                       completion: { (result) -> Void in
-                                        self.foundAllBuildings = result
-                                       })
+            navigationMapView.highlightBuildings(at: [currentLegWaypoint],
+                                                 in3D: waypointStyle == .extrudedBuilding ? true : false,
+                                                 completion: { (result) -> Void in
+                                                    self.foundAllBuildings = result
+                                                 })
         }
     }
 

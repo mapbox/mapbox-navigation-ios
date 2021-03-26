@@ -83,7 +83,7 @@ class RouteMapViewController: UIViewController {
     
     var tiltedCamera: CameraOptions {
         get {
-            let currentCamera = navigationMapView.mapView.cameraView.camera
+            let currentCamera = navigationMapView.mapView.camera
             let pitch: CGFloat = 45.0
             let zoom = CGFloat(ZoomLevelForAltitude(1000,
                                                     pitch,
@@ -288,7 +288,7 @@ class RouteMapViewController: UIViewController {
         // TODO: Verify that camera is positioned correctly.
         let camera = CameraOptions(center: step.maneuverLocation,
                                    zoom: navigationMapView.mapView.zoom,
-                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.cameraView.bearing))
+                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
         
         navigationMapView.mapView.cameraManager.setCamera(to: camera,
                                                           animated: animated,
@@ -346,7 +346,7 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateMapViewContentInsets() {
-        navigationMapView.mapView.cameraView.padding = contentInset(forOverviewing: isInOverviewMode)
+        navigationMapView.mapView.padding = contentInset(forOverviewing: isInOverviewMode)
         navigationMapView.mapView.setNeedsUpdateConstraints()
         
         updateMapViewComponents()
