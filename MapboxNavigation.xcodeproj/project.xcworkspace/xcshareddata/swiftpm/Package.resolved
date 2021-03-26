@@ -42,7 +42,7 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
           "branch": "feature/camera-animations-v2",
-          "revision": "4c26e451240dfad397a328aa3f9d687ce10c178f",
+          "revision": "963e2a78e82a6edcb6fb8f532292bc90ac0f22dc",
           "version": null
         }
       },
