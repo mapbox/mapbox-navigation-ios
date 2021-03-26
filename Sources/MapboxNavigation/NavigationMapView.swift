@@ -88,6 +88,12 @@ open class NavigationMapView: UIView {
     @objc dynamic public var trafficModerateColor: UIColor = .trafficModerate
     @objc dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
     @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
+    @objc dynamic public var alternativeTrafficUnknownColor: UIColor = .alternativeTrafficUnknown
+    @objc dynamic public var alternativeTrafficLowColor: UIColor = .alternativeTrafficLow
+    @objc dynamic public var alternativeTrafficModerateColor: UIColor = .alternativeTrafficModerate
+    @objc dynamic public var alternativeTrafficHeavyColor: UIColor = .alternativeTrafficHeavy
+    @objc dynamic public var alternativeTrafficSevereColor: UIColor = .alternativeTrafficSevere
+    
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
     @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
@@ -552,7 +558,7 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .constant(.round)
         lineLayer.layout?.lineCap = .constant(.round)
         
-        if let gradientStops = routeLineGradient(route, fractionTraveled: fractionTraveledForStops) {
+        if let gradientStops = routeLineGradient(route, fractionTraveled: fractionTraveledForStops, isMain: true) {
             lineLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
         }
         
@@ -635,6 +641,9 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .constant(.round)
         lineLayer.layout?.lineCap = .constant(.round)
 
+        if let gradientStops = routeLineGradient(route, fractionTraveled: 0.0, isMain: false) {
+            lineLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
+        }
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
         return layerIdentifier

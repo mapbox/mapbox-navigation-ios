@@ -206,7 +206,7 @@ extension NavigationMapView {
                 return
             }
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
-            guard let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled) else { return }
+            guard let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled, isMain: true) else { return }
             let mainRouteCasingLayerGradient = self.routeCasingGradient(newFractionTraveled)
             
             guard var mainRouteLineLayer = try? self.mapView.style.getLayer(with: mainRouteLayerIdentifier, type: LineLayer.self).get(),
@@ -217,7 +217,7 @@ extension NavigationMapView {
         })
     }
     
-    func routeLineGradient(_ route: Route, fractionTraveled: Double) -> [Double: UIColor]? {
+    func routeLineGradient(_ route: Route, fractionTraveled: Double, isMain: Bool) -> [Double: UIColor]? {
         var gradientStops = [CGFloat: UIColor]()
         
         /**
@@ -250,7 +250,7 @@ extension NavigationMapView {
             // Get congestion color for the stop.
             
             let congestionLevel = feature.properties?[CongestionAttribute] as? String
-            let associatedCongestionColor = congestionColor(for: congestionLevel)
+            let associatedCongestionColor = congestionColor(for: congestionLevel, isMain: isMain)
             
             // Measure the line length of the traffic segment.
             let lineString = feature.geometry.value as? LineString
@@ -267,7 +267,7 @@ extension NavigationMapView {
                 gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
                 
                 if index + 1 < congestionSegments.count {
-                    gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String)
+                    gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String, isMain: isMain)
                 }
                 
                 continue
@@ -297,7 +297,7 @@ extension NavigationMapView {
             gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
             
             if index + 1 < congestionSegments.count {
-                gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String)
+                gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String, isMain: isMain)
             }
         }
         
@@ -343,18 +343,33 @@ extension NavigationMapView {
     /**
      Given a congestion level, return its associated color.
      */
-    func congestionColor(for congestionLevel: String?) -> UIColor {
-        switch congestionLevel {
-        case "low":
-            return trafficLowColor
-        case "moderate":
-            return trafficModerateColor
-        case "heavy":
-            return trafficHeavyColor
-        case "severe":
-            return trafficSevereColor
-        default:
-            return trafficUnknownColor
+    func congestionColor(for congestionLevel: String?, isMain: Bool) -> UIColor {
+        if isMain {
+            switch congestionLevel {
+            case "low":
+                return trafficLowColor
+            case "moderate":
+                return trafficModerateColor
+            case "heavy":
+                return trafficHeavyColor
+            case "severe":
+                return trafficSevereColor
+            default:
+                return trafficUnknownColor
+            }
+        } else {
+            switch congestionLevel {
+            case "low":
+                return alternativeTrafficLowColor
+            case "moderate":
+                return alternativeTrafficModerateColor
+            case "heavy":
+                return alternativeTrafficHeavyColor
+            case "severe":
+                return alternativeTrafficSevereColor
+            default:
+                return alternativeTrafficUnknownColor
+            }
         }
     }
     
