@@ -87,7 +87,15 @@ open class StyleManager {
     internal var date: Date?
     private var timeOfDayTimer: Timer?
     
+    /**
+     The currently applied style. Use `StyleManager.applyStyle(type:)` to update this value.
+     */
     public private(set) var currentStyleType: StyleType?
+    
+    /**
+     The current style associated with `currentStyleType`. Calling `StyleManager.applyStyle(type)` will
+     result in this value being updated.
+     */
     public private(set) var currentStyle: Style? {
         didSet {
             guard let style = currentStyle else { return }
@@ -146,6 +154,9 @@ open class StyleManager {
         resetTimeOfDayTimer()
     }
     
+    /**
+     Applies the `Style` with type matching `type`and notifies `StyleManager.delegate` upon completion. 
+     */
     public func applyStyle(type styleType: StyleType) {
         guard currentStyleType != styleType else { return }
         
