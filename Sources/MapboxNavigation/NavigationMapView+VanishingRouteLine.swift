@@ -217,7 +217,7 @@ extension NavigationMapView {
         })
     }
     
-    func routeLineGradient(_ route: Route, fractionTraveled: Double, isMain: Bool) -> [Double: UIColor]? {
+    func routeLineGradient(_ route: Route, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor]? {
         var gradientStops = [CGFloat: UIColor]()
         
         /**

@@ -57,6 +57,8 @@ class ViewController: UIViewController {
             }
             
             startButton.isEnabled = true
+            // Show congestion levels on alternative route lines if there're multiple routes in the response.
+            navigationMapView.showsAlternativeCongestion = true
             navigationMapView.show(routes)
             navigationMapView.showWaypoints(on: currentRoute)
         }
