@@ -44,7 +44,9 @@ public class PredictiveCacheManager {
                                                  maxConcurrentRequests: UInt32 = 2) -> PredictiveCacheController? {
         let cacheOptions = PredictiveCacheControllerOptions(version: version,
                                                             dataset: dataset,
-                                                            concurrency: maxConcurrentRequests)
+                                                            dataDomain: .maps,
+                                                            concurrency: maxConcurrentRequests,
+                                                            maxAverageDownloadBytesPerSecond: 0)
         let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(options)
         if let tileStore = tileStore {
             return try! Navigator.shared.navigator.createPredictiveCacheController(for: tileStore,

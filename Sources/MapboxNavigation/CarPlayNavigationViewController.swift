@@ -140,7 +140,7 @@ public class CarPlayNavigationViewController: UIViewController {
         navigationMapView.longManeuverDistance = 500
         navigationMapView.recenterMap()
         
-        navigationMapView.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        navigationMapView.mapView.on(.styleLoaded) { [weak self] _ in
             self?.navigationMapView?.localizeLabels()
             self?.updateRouteOnMap()
             self?.navigationMapView?.recenterMap()
@@ -149,7 +149,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         navigationMapView.mapView.update {
             $0.ornaments.compassVisiblity = .hidden
-            $0.location.showUserLocation = true
+            $0.location.puckType = .puck2D()
         }
         
         view.addSubview(navigationMapView)
@@ -209,7 +209,7 @@ public class CarPlayNavigationViewController: UIViewController {
         super.viewDidLayoutSubviews()
         if isOverviewingRoutes { return } // Don't move content when overlays change.
         
-        navigationMapView?.mapView.cameraView.padding = contentInset(forOverviewing: false)
+        navigationMapView?.mapView.padding = contentInset(forOverviewing: false)
     }
 
     func contentInset(forOverviewing overviewing: Bool) -> UIEdgeInsets {
@@ -279,7 +279,7 @@ public class CarPlayNavigationViewController: UIViewController {
                 navigationMapView?.addArrow(route: progress.route,
                                   legIndex: progress.legIndex,
                                   stepIndex: progress.currentLegProgress.stepIndex + 1)
-                navigationMapView?.mapView.cameraView.padding = contentInset(forOverviewing: false)
+                navigationMapView?.mapView.padding = contentInset(forOverviewing: false)
             } else if tracksUserCourse && !newValue {
                 isOverviewingRoutes = !isPanningAway
                 guard let userLocation = self.navigationService.router.location,
@@ -287,7 +287,7 @@ public class CarPlayNavigationViewController: UIViewController {
                     return
                 }
                 navigationMapView?.enableFrameByFrameCourseViewTracking(for: 1)
-                navigationMapView?.mapView.cameraView.padding = contentInset(forOverviewing: isOverviewingRoutes)
+                navigationMapView?.mapView.padding = contentInset(forOverviewing: isOverviewingRoutes)
                 if (isOverviewingRoutes) {
                     navigationMapView?.setOverheadCameraView(from: userLocation, along: shape, for: contentInset(forOverviewing: true))
                 }
@@ -360,7 +360,9 @@ public class CarPlayNavigationViewController: UIViewController {
         }
     }
     
-    /** Modifies the gesture recognizers to also update the map’s frame rate. */
+    /**
+     Modifies the gesture recognizers to also update the map’s frame rate.
+     */
     func makeGestureRecognizersResetFrameRate() {
         for gestureRecognizer in navigationMapView?.gestureRecognizers ?? [] {
             gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
@@ -368,7 +370,9 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        navigationMapView?.mapView.preferredFPS = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        navigationMapView?.mapView.update {
+            $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        }
     }
     
     @objc func rerouted(_ notification: NSNotification) {

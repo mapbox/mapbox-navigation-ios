@@ -83,7 +83,7 @@ class RouteMapViewController: UIViewController {
     
     var tiltedCamera: CameraOptions {
         get {
-            let currentCamera = navigationMapView.mapView.cameraView.camera
+            let currentCamera = navigationMapView.mapView.camera
             let pitch: CGFloat = 45.0
             let zoom = CGFloat(ZoomLevelForAltitude(1000,
                                                     pitch,
@@ -155,9 +155,8 @@ class RouteMapViewController: UIViewController {
         self.init()
         self.navigationService = navigationService
         self.delegate = delegate
-        automaticallyAdjustsScrollViewInsets = false
-        let topContainer = navigationView.topBannerContainerView
         
+        let topContainer = navigationView.topBannerContainerView
         embed(topBanner, in: topContainer) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: self.navigationView.topBannerContainerView)
@@ -190,7 +189,7 @@ class RouteMapViewController: UIViewController {
 
         navigationMapView.tracksUserCourse = true
         
-        navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        navigationMapView.mapView.on(.styleLoaded) { _ in
             self.showRouteIfNeeded()
             navigationMapView.localizeLabels()
             navigationMapView.mapView.showsTraffic = false
@@ -271,7 +270,7 @@ class RouteMapViewController: UIViewController {
         navigationMapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
         
-        navigationMapView.updateCourseTracking(location: navigationMapView.userLocationForCourseTracking)
+        navigationMapView.updateCourseTracking(location: navigationMapView.userLocationForCourseTracking, animated: true)
         updateCameraAltitude(for: router.routeProgress)
         
         navigationMapView.addArrow(route: router.route,
@@ -288,7 +287,7 @@ class RouteMapViewController: UIViewController {
         // TODO: Verify that camera is positioned correctly.
         let camera = CameraOptions(center: step.maneuverLocation,
                                    zoom: navigationMapView.mapView.zoom,
-                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.cameraView.bearing))
+                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
         
         navigationMapView.mapView.cameraManager.setCamera(to: camera,
                                                           animated: animated,
@@ -335,7 +334,9 @@ class RouteMapViewController: UIViewController {
 
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        if navigationMapView.mapView.locationManager.showUserLocation && !navigationMapView.tracksUserCourse {
+        
+        if navigationMapView.mapView.locationManager.locationOptions.puckType != .none &&
+            !navigationMapView.tracksUserCourse {
             // Don't move mapView content on rotation or when e.g. top banner expands.
             return
         }
@@ -344,7 +345,7 @@ class RouteMapViewController: UIViewController {
     }
     
     func updateMapViewContentInsets() {
-        navigationMapView.mapView.cameraView.padding = contentInset(forOverviewing: isInOverviewMode)
+        navigationMapView.mapView.padding = contentInset(forOverviewing: isInOverviewMode)
         navigationMapView.mapView.setNeedsUpdateConstraints()
         
         updateMapViewComponents()
@@ -405,7 +406,9 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        navigationMapView.mapView.preferredFPS = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        navigationMapView.mapView.update {
+            $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        }
     }
     
     /**

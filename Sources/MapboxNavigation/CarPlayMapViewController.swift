@@ -74,7 +74,7 @@ public class CarPlayMapViewController: UIViewController {
         let zoomInButton = CPMapButton { [weak self] (button) in
             guard let self = self else { return }
             
-            let cameraOptions = self.navigationMapView.mapView.cameraView.camera
+            let cameraOptions = self.navigationMapView.mapView.camera
             cameraOptions.zoom = self.navigationMapView.mapView.zoom + 1.0
             self.navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
         }
@@ -92,7 +92,7 @@ public class CarPlayMapViewController: UIViewController {
         let zoomOutButton = CPMapButton { [weak self] button in
             guard let self = self else { return }
 
-            let cameraOptions = self.navigationMapView.mapView.cameraView.camera
+            let cameraOptions = self.navigationMapView.mapView.camera
             cameraOptions.zoom = self.navigationMapView.mapView.zoom - 1.0
             self.navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
         }
@@ -141,7 +141,7 @@ public class CarPlayMapViewController: UIViewController {
     
     override public func loadView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds)
-        navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        navigationMapView.mapView.on(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
         }
         
@@ -199,7 +199,7 @@ public class CarPlayMapViewController: UIViewController {
     }
     
     func resetCamera(animated: Bool = false, altitude: CLLocationDistance? = nil) {
-        let camera = navigationMapView.mapView.cameraView.camera
+        let camera = navigationMapView.mapView.camera
         let pitch: CGFloat = 60
         if let altitude = altitude,
            let latitude = navigationMapView.mapView.locationManager.latestLocation?.internalLocation.coordinate.latitude {
@@ -228,7 +228,7 @@ public class CarPlayMapViewController: UIViewController {
         
         if isOverviewingRoutes {
             // FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
-            let topDownCamera = navigationMapView.mapView.cameraView.camera
+            let topDownCamera = navigationMapView.mapView.camera
             topDownCamera.pitch = 0
             navigationMapView.mapView.cameraManager.setCamera(to: topDownCamera, completion: nil)
             navigationMapView.fit(to: activeRoute, animated: false)

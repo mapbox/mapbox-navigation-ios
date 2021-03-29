@@ -105,13 +105,13 @@ class ViewController: UIViewController {
         view.addSubview(navigationMapView)
         
         navigationMapView.delegate = self
-        navigationMapView.mapView.on(.styleLoadingFinished, handler: { [weak self] _ in
+        navigationMapView.mapView.on(.styleLoaded, handler: { [weak self] _ in
             guard let self = self else { return }
             self.addStyledFeature(self.trackStyledFeature)
             self.addStyledFeature(self.rawTrackStyledFeature)
         })
         navigationMapView.mapView.update {
-            $0.location.showUserLocation = true
+            $0.location.puckType = .puck2D()
         }
         
         // TODO: Provide a reliable way of setting camera to current coordinate.

@@ -24,7 +24,6 @@ open class NavigationMapView: UIView {
      
      This property takes effect when the application has limited resources for animation, such as when the device is running on battery power. By default, this property is set to `PreferredFPS.normal`.
      */
-    // TODO: Mapbox Maps should provide the ability to set custom `PreferredFPS` value.
     public var minimumFramesPerSecond = PreferredFPS.normal
     
     /**
@@ -54,6 +53,8 @@ open class NavigationMapView: UIView {
      will be replaced with the `CongestionLevel.low` congestion level.
      */
     public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
+    
+    var cameraAnimator: CameraAnimator!
     
     enum IdentifierType: Int {
         case source
@@ -134,7 +135,9 @@ open class NavigationMapView: UIView {
     var shouldPositionCourseViewFrameByFrame = false {
         didSet {
             if shouldPositionCourseViewFrameByFrame {
-                mapView.preferredFPS = .maximum
+                mapView.update {
+                    $0.render.preferredFramesPerSecond = .maximum
+                }
             }
         }
     }
@@ -158,12 +161,12 @@ open class NavigationMapView: UIView {
                 return !userCourseView.isHidden
             }
             
-            return mapView.locationManager.showUserLocation
+            return mapView.locationManager.locationOptions.puckType != .none
         }
         set {
             if tracksUserCourse || userLocationForCourseTracking != nil {
                 mapView.update {
-                    $0.location.showUserLocation = false
+                    $0.location.puckType = .none
                 }
                 
                 userCourseView.isHidden = !newValue
@@ -171,7 +174,11 @@ open class NavigationMapView: UIView {
                 userCourseView.isHidden = true
 
                 mapView.update {
-                    $0.location.showUserLocation = newValue
+                    if newValue {
+                        $0.location.puckType = .puck2D()
+                    } else {
+                        $0.location.puckType = .none
+                    }
                 }
             }
         }
@@ -267,7 +274,8 @@ open class NavigationMapView: UIView {
         }
         
         let options = ResourceOptions(accessToken: accessToken,
-                                      tileStorePath: Bundle.mapboxNavigation.suggestedTileURL?.path)
+                                      tileStorePath: Bundle.mapboxNavigation.suggestedTileURL?.path,
+                                      loadTilePacksFromNetwork: false)
         
         mapView = MapView(with: frame, resourceOptions: options)
         mapView.translatesAutoresizingMaskIntoConstraints = false
@@ -337,10 +345,10 @@ open class NavigationMapView: UIView {
         
         // If the map is in tracking mode, make sure we update the camera and anchor after the layout pass.
         if tracksUserCourse {
-            updateCourseTracking(location: userLocationForCourseTracking, camera:mapView.cameraView.camera, animated: false)
+            updateCourseTracking(location: userLocationForCourseTracking)
             
             // TODO: Find appropriate place where anchor can be updated.
-            mapView.cameraView.anchor = userAnchorPoint
+            mapView.anchor = userAnchorPoint
         }
     }
     
@@ -358,14 +366,17 @@ open class NavigationMapView: UIView {
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
         let conservativeFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         
+        var preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
         if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
            upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
-            mapView.preferredFPS = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
         } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
                     durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
-            mapView.preferredFPS = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
-        } else {
-            mapView.preferredFPS = FrameIntervalOptions.pluggedInFramesPerSecond
+            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
+        }
+        
+        mapView.update {
+            $0.render.preferredFramesPerSecond = preferredFramesPerSecond
         }
     }
     
@@ -422,14 +433,43 @@ open class NavigationMapView: UIView {
                                                  zoom: zoomLevel,
                                                  bearing: location.course,
                                                  pitch: 45)
-            mapView.cameraManager.setCamera(to: camera, animated: animated, duration: duration, completion: nil)
+            
+            cameraAnimator = mapView.cameraManager.makeCameraAnimator(duration: duration, curve: .linear)
+            cameraAnimator.stopAnimation()
+            cameraAnimator.addAnimations {
+                if let center = camera.center {
+                    self.mapView.centerCoordinate = center
+                }
+                
+                if let zoom = camera.zoom {
+                    self.mapView.zoom = zoom
+                }
+                
+                if let bearing = camera.bearing {
+                    self.mapView.bearing = bearing
+                }
+                
+                if let anchor = camera.anchor {
+                    self.mapView.anchor = anchor
+                }
+                
+                if let pitch = camera.pitch {
+                    self.mapView.pitch = pitch
+                }
+                
+                if let padding = camera.padding {
+                    self.mapView.padding = padding
+                }
+            }
+            
+            cameraAnimator.startAnimation()
         } else {
             // Animate course view updates in overview mode
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: centerUserCourseView)
         }
         
         userCourseView.update(location: location,
-                              pitch: mapView.cameraView.pitch,
+                              pitch: mapView.pitch,
                               direction: mapView.bearing,
                               animated: animated,
                               tracksUserCourse: tracksUserCourse)
@@ -507,8 +547,8 @@ open class NavigationMapView: UIView {
         var lineLayer = LineLayer(id: layerIdentifier)
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression())
-        lineLayer.layout?.lineJoin = .round
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.layout?.lineCap = .constant(.round)
         
         if let gradientStops = routeLineGradient(route, fractionTraveled: fractionTraveledForStops) {
             lineLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
@@ -564,8 +604,8 @@ open class NavigationMapView: UIView {
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeCasingColor))
         lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
-        lineLayer.layout?.lineJoin = .round
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.layout?.lineCap = .constant(.round)
         
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
@@ -590,8 +630,8 @@ open class NavigationMapView: UIView {
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeAlternateColor))
         lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression())
-        lineLayer.layout?.lineJoin = .round
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.layout?.lineCap = .constant(.round)
 
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
@@ -613,8 +653,8 @@ open class NavigationMapView: UIView {
         lineLayer.source = sourceIdentifier
         lineLayer.paint?.lineColor = .constant(.init(color: routeAlternateCasingColor))
         lineLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
-        lineLayer.layout?.lineJoin = .round
-        lineLayer.layout?.lineCap = .round
+        lineLayer.layout?.lineJoin = .constant(.round)
+        lineLayer.layout?.lineCap = .constant(.round)
         
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
@@ -811,8 +851,8 @@ open class NavigationMapView: UIView {
                 let _ = mapView.style.updateGeoJSON(for: IdentifierString.arrowSource, with: geoJSON)
             } else {
                 arrow.minZoom = Double(minimumZoomLevel)
-                arrow.layout?.lineCap = .butt
-                arrow.layout?.lineJoin = .round
+                arrow.layout?.lineCap = .constant(.butt)
+                arrow.layout?.lineJoin = .constant(.round)
                 arrow.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.7))
                 arrow.paint?.lineColor = .constant(.init(color: maneuverArrowColor))
                 
@@ -852,7 +892,7 @@ open class NavigationMapView: UIView {
                 arrowSymbolLayer.minZoom = Double(minimumZoomLevel)
                 arrowSymbolLayer.layout?.iconImage = .constant(.name(IdentifierString.arrowImage))
                 arrowSymbolLayer.paint?.iconColor = .constant(.init(color: maneuverArrowColor))
-                arrowSymbolLayer.layout?.iconRotationAlignment = .map
+                arrowSymbolLayer.layout?.iconRotationAlignment = .constant(.map)
                 arrowSymbolLayer.layout?.iconRotate = .constant(.init(shaftDirection))
                 arrowSymbolLayer.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.12))
                 arrowSymbolLayer.layout?.iconAllowOverlap = .constant(true)
@@ -936,8 +976,8 @@ open class NavigationMapView: UIView {
             symbolLayer.paint?.textHaloWidth = .constant(1)
             symbolLayer.paint?.textHaloColor = .constant(.init(color: .white))
             symbolLayer.paint?.textOpacity = .constant(0.75)
-            symbolLayer.layout?.textAnchor = .bottom
-            symbolLayer.layout?.textJustify = .left
+            symbolLayer.layout?.textAnchor = .constant(.bottom)
+            symbolLayer.layout?.textJustify = .constant(.left)
             mapView.style.addLayer(layer: symbolLayer)
             
             var circleLayer = CircleLayer(id: IdentifierString.instructionCircle)
@@ -1099,7 +1139,7 @@ open class NavigationMapView: UIView {
     
     private func updateCourseView(to location: CLLocation, pitch: CGFloat? = nil, direction: CLLocationDirection? = nil, animated: Bool = false) {
         userCourseView.update(location: location,
-                              pitch: pitch ?? mapView.cameraView.pitch,
+                              pitch: pitch ?? mapView.pitch,
                               direction: direction ?? mapView.bearing,
                               animated: animated,
                               tracksUserCourse: tracksUserCourse)
