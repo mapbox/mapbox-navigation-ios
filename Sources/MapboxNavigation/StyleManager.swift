@@ -131,12 +131,10 @@ open class StyleManager {
             print("Unable to get sunrise or sunset. Automatic style switching has been disabled.")
             return
         }
-        
-        timeOfDayTimer = Timer(timeInterval: interval + 1,
-                               repeats: false,
-                               block: { [weak self] _ in
+
+        timeOfDayTimer = Timer.scheduledTimer(withTimeInterval: interval + 1, repeats: false) { [weak self] _ in
             self?.timeOfDayChanged()
-        })
+        }
     }
     
     @objc func preferredContentSizeChanged(_ notification: Notification) {
@@ -159,6 +157,7 @@ open class StyleManager {
                 currentStyleType = styleType
                 currentStyle = style
                 delegate?.styleManager(self, didApply: style)
+                break
             }
         }
         

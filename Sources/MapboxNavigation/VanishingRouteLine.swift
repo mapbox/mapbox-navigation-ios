@@ -205,7 +205,12 @@ extension NavigationMapView {
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
             guard let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled) else { return }
             let mainCasingLayerStops = self.routeCasingGradient(newFractionTraveled)
-            
+
+            guard let mainRouteLayer = self.style?.layer(withIdentifier: mainRouteLayerIdentifier) as? MGLLineStyleLayer,
+                  let mainRouteCasingLayer = self.style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) as? MGLLineStyleLayer else {
+                timer.invalidate()
+                return
+            }
             mainRouteLayer.lineGradient = mainRouteLayerGradient
             mainRouteCasingLayer.lineGradient = mainCasingLayerStops
         })
