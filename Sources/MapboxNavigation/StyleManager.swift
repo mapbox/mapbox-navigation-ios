@@ -93,7 +93,7 @@ open class StyleManager {
     public private(set) var currentStyleType: StyleType?
     
     /**
-     The current style associated with `currentStyleType`. Calling `StyleManager.applyStyle(type)` will
+     The current style associated with `currentStyleType`. Calling `StyleManager.applyStyle(type:)` will
      result in this value being updated.
      */
     public private(set) var currentStyle: Style? {
