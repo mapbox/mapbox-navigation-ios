@@ -14,8 +14,8 @@ public protocol StyleManagerDelegate: class, UnimplementedLogging {
     /**
      Asks the delegate for the view to be used when refreshing appearance. 
      
-     The default implementation of this method will attempt to cast delegate to an 
-     instance of `UIViewController` and use its `view`property.
+     The default implementation of this method will attempt to cast the delegate to type
+     `UIViewController` and use its `view` property.
      */
     func viewToRefreshOnAppearanceChange(_ styleManager: StyleManager) -> UIView?
     
