@@ -343,6 +343,12 @@ open class LaneView: UIView {
         }
     }
     
+    var preferredDirection: LaneIndication {
+        didSet {
+            setNeedsDisplay()
+        }
+    }
+    
     var drivingSide: DrivingSide = .right {
         didSet {
             setNeedsDisplay()
@@ -403,6 +409,7 @@ open class LaneView: UIView {
         self.indications = indications
         maneuverDirection = direction ?? ManeuverDirection(rawValue: indications.description)
         isValid = isUsable
+        preferredDirection = direction
     }
 
     override init(frame: CGRect) {
@@ -435,7 +442,7 @@ open class LaneView: UIView {
         let resizing = LanesStyleKit.ResizingBehavior.aspectFit
         let appropriateColor = isValid ? appropriatePrimaryColor : appropriateSecondaryColor
         
-        let rankedIndications = indications.ranked(favoring: maneuverDirection)
+        let rankedIndications = indications.ranked(favoring: ManeuverDirection(preferredDirection.description))
         guard let laneConfiguration = LaneConfiguration(rankedIndications: rankedIndications, drivingSide: drivingSide) else {
             return
         }
