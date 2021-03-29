@@ -150,6 +150,7 @@ jobs:
           steps:
             - run: cd Tests/CocoaPodsTest/PodInstall && bundle exec pod install --repo-update
       - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' clean build | xcpretty
+      - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -sdk iphoneos<< parameters.iOS >> -destination generic/platform=iOS clean archive CODE_SIGNING_ALLOWED="NO" | xcpretty
       - when:
           condition: << parameters.lint >>
           steps:
