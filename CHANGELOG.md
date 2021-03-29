@@ -4,6 +4,7 @@
 
 * Fixed an issue when feedback UI was always appearing for short routes ([#2871](https://github.com/mapbox/mapbox-navigation-ios/pull/2871))
 * Fixed automatic day/night switching ([#2881](https://github.com/mapbox/mapbox-navigation-ios/pull/2881))
+* Fixed crash when switching between day / night modes ([#2896](https://github.com/mapbox/mapbox-navigation-ios/pull/2896))
 
 ## v1.3.0
 
