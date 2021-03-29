@@ -12,6 +12,14 @@ public protocol StyleManagerDelegate: class, UnimplementedLogging {
     func location(for styleManager: StyleManager) -> CLLocation?
     
     /**
+     Asks the delegate for the view to be used when refreshing appearance. 
+     
+     The default implementation of this method will attempt to cast delegate to an 
+     instance of `UIViewController` and use its `view`property.
+     */
+    func viewToRefreshOnAppearanceChange(_ styleManager: StyleManager) -> UIView?
+    
+    /**
      Informs the delegate that a style was applied.
      
      This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
@@ -45,6 +53,16 @@ public extension StyleManagerDelegate {
      */
     func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
+    }
+    
+    func viewToRefreshOnAppearanceChange(_ styleManager: StyleManager) -> UIView? {
+        // Short-circuit refresh logic if the view hasn't yet loaded since we don't want the `self.view` 
+        // call to trigger `loadView`.
+        if let vc = self as? UIViewController, vc.isViewLoaded { 
+            return vc.view
+        }
+        
+        return nil
     }
 }
 
@@ -225,13 +243,15 @@ open class StyleManager {
         forceRefreshAppearance()
     }
     
-    // workaround to refresh appearance by removing all views and then adding them again
+    // workaround to refresh appearance by removing the view and then adding it again
     func forceRefreshAppearance() {
-        for window in UIApplication.shared.windows {
-            for view in window.subviews {
-                view.removeFromSuperview()
-                window.addSubview(view)
-            }
+        if 
+            let view = delegate?.viewToRefreshOnAppearanceChange(self), 
+            let superview = view.superview, 
+            let index = superview.subviews.firstIndex(of: view) 
+        {
+            view.removeFromSuperview()
+            superview.insertSubview(view, at: index)
         }
         
         delegate?.styleManagerDidRefreshAppearance(self)
