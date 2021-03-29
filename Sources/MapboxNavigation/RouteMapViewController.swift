@@ -155,9 +155,8 @@ class RouteMapViewController: UIViewController {
         self.init()
         self.navigationService = navigationService
         self.delegate = delegate
-        automaticallyAdjustsScrollViewInsets = false
-        let topContainer = navigationView.topBannerContainerView
         
+        let topContainer = navigationView.topBannerContainerView
         embed(topBanner, in: topContainer) { (parent, banner) -> [NSLayoutConstraint] in
             banner.view.translatesAutoresizingMaskIntoConstraints = false
             return banner.view.constraintsForPinning(to: self.navigationView.topBannerContainerView)
@@ -271,7 +270,7 @@ class RouteMapViewController: UIViewController {
         navigationMapView.enableFrameByFrameCourseViewTracking(for: 3)
         isInOverviewMode = false
         
-        navigationMapView.updateCourseTracking(location: navigationMapView.userLocationForCourseTracking)
+        navigationMapView.updateCourseTracking(location: navigationMapView.userLocationForCourseTracking, animated: true)
         updateCameraAltitude(for: router.routeProgress)
         
         navigationMapView.addArrow(route: router.route,

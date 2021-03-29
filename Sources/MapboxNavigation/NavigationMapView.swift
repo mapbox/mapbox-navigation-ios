@@ -54,6 +54,8 @@ open class NavigationMapView: UIView {
      */
     public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
     
+    var cameraAnimator: CameraAnimator!
+    
     enum IdentifierType: Int {
         case source
         
@@ -343,7 +345,7 @@ open class NavigationMapView: UIView {
         
         // If the map is in tracking mode, make sure we update the camera and anchor after the layout pass.
         if tracksUserCourse {
-            updateCourseTracking(location: userLocationForCourseTracking, camera:mapView.camera, animated: false)
+            updateCourseTracking(location: userLocationForCourseTracking)
             
             // TODO: Find appropriate place where anchor can be updated.
             mapView.anchor = userAnchorPoint
@@ -431,7 +433,36 @@ open class NavigationMapView: UIView {
                                                  zoom: zoomLevel,
                                                  bearing: location.course,
                                                  pitch: 45)
-            mapView.cameraManager.setCamera(to: camera, animated: animated, duration: duration, completion: nil)
+            
+            cameraAnimator = mapView.cameraManager.makeCameraAnimator(duration: duration, curve: .linear)
+            cameraAnimator.stopAnimation()
+            cameraAnimator.addAnimations {
+                if let center = camera.center {
+                    self.mapView.centerCoordinate = center
+                }
+                
+                if let zoom = camera.zoom {
+                    self.mapView.zoom = zoom
+                }
+                
+                if let bearing = camera.bearing {
+                    self.mapView.bearing = bearing
+                }
+                
+                if let anchor = camera.anchor {
+                    self.mapView.anchor = anchor
+                }
+                
+                if let pitch = camera.pitch {
+                    self.mapView.pitch = pitch
+                }
+                
+                if let padding = camera.padding {
+                    self.mapView.padding = padding
+                }
+            }
+            
+            cameraAnimator.startAnimation()
         } else {
             // Animate course view updates in overview mode
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: centerUserCourseView)
