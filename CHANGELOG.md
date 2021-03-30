@@ -26,7 +26,7 @@
 * Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.highlightBuildings(at:in3D:)` was renamed to `NavigationMapView.highlightBuildings(at:in3D:completion:)`. ([#2827](https://github.com/mapbox/mapbox-navigation-ios/pull/2827))
-* Add ability to show congestion levels with different colors on alternative route lines, after receiving multiple routes in `RouteResponse`  if  `NavigationMapView.showsAlternativeCongestion`  is set to  `true`. ([#2887](https://github.com/mapbox/mapbox-navigation-ios/pull/2887))
+* Add ability to show congestion levels with different colors on alternative route lines, after receiving multiple routes in `RouteResponse` if `NavigationMapView.showsCongestionForAlternativeRoutes` is set to `true`. ([#2887](https://github.com/mapbox/mapbox-navigation-ios/pull/2887))
 
 ### Location tracking
 

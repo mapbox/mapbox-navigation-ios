@@ -344,32 +344,17 @@ extension NavigationMapView {
      Given a congestion level, return its associated color.
      */
     func congestionColor(for congestionLevel: String?, isMain: Bool) -> UIColor {
-        if isMain {
-            switch congestionLevel {
-            case "low":
-                return trafficLowColor
-            case "moderate":
-                return trafficModerateColor
-            case "heavy":
-                return trafficHeavyColor
-            case "severe":
-                return trafficSevereColor
-            default:
-                return trafficUnknownColor
-            }
-        } else {
-            switch congestionLevel {
-            case "low":
-                return alternativeTrafficLowColor
-            case "moderate":
-                return alternativeTrafficModerateColor
-            case "heavy":
-                return alternativeTrafficHeavyColor
-            case "severe":
-                return alternativeTrafficSevereColor
-            default:
-                return alternativeTrafficUnknownColor
-            }
+        switch congestionLevel {
+        case "low":
+            return isMain ? trafficLowColor : alternativeTrafficLowColor
+        case "moderate":
+            return isMain ? trafficModerateColor : alternativeTrafficModerateColor
+        case "heavy":
+            return isMain ? trafficHeavyColor : alternativeTrafficHeavyColor
+        case "severe":
+            return isMain ? trafficSevereColor : alternativeTrafficSevereColor
+        default:
+            return isMain ? trafficUnknownColor : alternativeTrafficUnknownColor
         }
     }
     
