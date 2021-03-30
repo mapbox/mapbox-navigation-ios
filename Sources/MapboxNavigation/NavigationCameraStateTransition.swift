@@ -1,6 +1,10 @@
 import MapboxMaps
 import Turf
 
+/**
+ Class, which conforms to `CameraStateTransition` protocol and provides default implementation of
+ camera related transitions by using `CameraAnimator` functionality provided by Mapbox Maps SDK.
+ */
 public class NavigationCameraStateTransition: CameraStateTransition {
 
     public weak var mapView: MapView?
@@ -177,7 +181,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         guard let mapView = mapView,
               let zoom = cameraOptions.zoom,
               let location = cameraOptions.center,
-              let bearing = cameraOptions.bearing else { return }
+              let bearing = cameraOptions.bearing else {
+            completion()
+            return
+        }
         
         let centerTranslationDistance = CLLocation.distance(from: mapView.centerCoordinate, to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1500.0
@@ -221,7 +228,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         guard let mapView = mapView,
               let zoom = cameraOptions.zoom,
               let location = cameraOptions.center,
-              let bearing = cameraOptions.bearing else { return }
+              let bearing = cameraOptions.bearing else {
+            completion()
+            return
+        }
         
         let zoomLevelDistance = CLLocationDistance(abs(mapView.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 0.6
@@ -263,7 +273,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         guard let mapView = mapView,
               let zoom = cameraOptions.zoom,
               let location = cameraOptions.center,
-              let bearing = cameraOptions.bearing else { return }
+              let bearing = cameraOptions.bearing else {
+            completion()
+            return
+        }
         
         let zoomLevelDistance = CLLocationDistance(abs(mapView.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 0.6
@@ -307,7 +320,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
               let location = transitionParameters.cameraOptions.center,
               let bearing = transitionParameters.cameraOptions.bearing,
               let pitch = transitionParameters.cameraOptions.pitch,
-              let anchor = transitionParameters.cameraOptions.anchor else { return }
+              let anchor = transitionParameters.cameraOptions.anchor else {
+            completion()
+            return
+        }
         
         stopAnimators()
         
