@@ -4,6 +4,7 @@
 
 * Fixed an issue when feedback UI was always appearing for short routes ([#2871](https://github.com/mapbox/mapbox-navigation-ios/pull/2871))
 * Fixed automatic day/night switching ([#2881](https://github.com/mapbox/mapbox-navigation-ios/pull/2881))
+* Added the `NavigationViewController.styleManager`, `StyleManager.currentStyleType`, and `StyleManager.currentStyle` properties and the `StyleManager.applyStyle(type:)` method to manually change the UI style at any time. ([#2888](https://github.com/mapbox/mapbox-navigation-ios/pull/2888))
 * Fixed crash when switching between day / night modes ([#2896](https://github.com/mapbox/mapbox-navigation-ios/pull/2896))
 
 ## v1.3.0
