@@ -8,8 +8,12 @@ class NavigationCameraDebugView: UIView {
     
     var viewportLayer = CALayer()
     var anchorLayer = CALayer()
+    var anchorTextLayer = CATextLayer()
     var centerLayer = CALayer()
-    var pitchLayer = CATextLayer()
+    var centerTextLayer = CATextLayer()
+    var pitchTextLayer = CATextLayer()
+    var zoomTextLayer = CATextLayer()
+    var bearingTextLayer = CATextLayer()
     
     required init(_ mapView: MapView, frame: CGRect) {
         self.mapView = mapView
@@ -29,18 +33,46 @@ class NavigationCameraDebugView: UIView {
         anchorLayer.cornerRadius = 3.0
         layer.addSublayer(anchorLayer)
         
+        anchorTextLayer = CATextLayer()
+        anchorTextLayer.string = "Anchor"
+        anchorTextLayer.fontSize = UIFont.systemFontSize
+        anchorTextLayer.backgroundColor = UIColor.clear.cgColor
+        anchorTextLayer.foregroundColor = UIColor.red.cgColor
+        anchorTextLayer.frame = .zero
+        layer.addSublayer(anchorTextLayer)
+        
         centerLayer.backgroundColor = UIColor.blue.cgColor
         centerLayer.frame = .init(x: 0.0, y: 0.0, width: 6.0, height: 6.0)
         centerLayer.cornerRadius = 3.0
         layer.addSublayer(centerLayer)
         
-        pitchLayer = CATextLayer()
-        pitchLayer.string = ""
-        pitchLayer.fontSize = UIFont.systemFontSize
-        pitchLayer.backgroundColor = UIColor.clear.cgColor
-        pitchLayer.foregroundColor = UIColor.black.cgColor
-        pitchLayer.frame = .zero
-        layer.addSublayer(pitchLayer)
+        centerTextLayer = CATextLayer()
+        centerTextLayer.string = "Center"
+        centerTextLayer.fontSize = UIFont.systemFontSize
+        centerTextLayer.backgroundColor = UIColor.clear.cgColor
+        centerTextLayer.foregroundColor = UIColor.blue.cgColor
+        centerTextLayer.frame = .zero
+        layer.addSublayer(centerTextLayer)
+        
+        pitchTextLayer = createDefaultTextLayer()
+        layer.addSublayer(pitchTextLayer)
+        
+        zoomTextLayer = createDefaultTextLayer()
+        layer.addSublayer(zoomTextLayer)
+        
+        bearingTextLayer = createDefaultTextLayer()
+        layer.addSublayer(bearingTextLayer)
+    }
+    
+    func createDefaultTextLayer() -> CATextLayer {
+        let textLayer = CATextLayer()
+        textLayer.string = ""
+        textLayer.fontSize = UIFont.systemFontSize
+        textLayer.backgroundColor = UIColor.clear.cgColor
+        textLayer.foregroundColor = UIColor.black.cgColor
+        textLayer.frame = .zero
+        
+        return textLayer
     }
     
     required init?(coder: NSCoder) {
@@ -78,18 +110,42 @@ class NavigationCameraDebugView: UIView {
         
         if let anchorPosition = followingMobileCamera.anchor {
             anchorLayer.position = anchorPosition
+            anchorTextLayer.frame = .init(x: anchorLayer.frame.origin.x + 5.0,
+                                          y: anchorLayer.frame.origin.y + 5.0,
+                                          width: 80.0,
+                                          height: 20.0)
         }
         
         if let centerCoordinate = followingMobileCamera.center {
             centerLayer.position = mapView.point(for: centerCoordinate)
+            centerTextLayer.frame = .init(x: centerLayer.frame.origin.x + 5.0,
+                                          y: centerLayer.frame.origin.y + 5.0,
+                                          width: 80.0,
+                                          height: 20.0)
         }
         
         if let pitch = followingMobileCamera.pitch {
-            pitchLayer.frame = .init(x: viewportLayer.frame.origin.x,
-                                     y: viewportLayer.frame.origin.y,
-                                     width: viewportLayer.frame.size.width,
-                                     height: 30.0)
-            pitchLayer.string = "Pitch: \(pitch)"
+            pitchTextLayer.frame = .init(x: viewportLayer.frame.origin.x + 5.0,
+                                         y: viewportLayer.frame.origin.y + 5.0,
+                                         width: viewportLayer.frame.size.width - 10.0,
+                                         height: 20.0)
+            pitchTextLayer.string = "Pitch: \(pitch)"
+        }
+        
+        if let zoom = followingMobileCamera.zoom {
+            zoomTextLayer.frame = .init(x: viewportLayer.frame.origin.x + 5.0,
+                                        y: viewportLayer.frame.origin.y + 30.0,
+                                        width: viewportLayer.frame.size.width - 10.0,
+                                        height: 20.0)
+            zoomTextLayer.string = "Zoom: \(zoom)"
+        }
+        
+        if let bearing = followingMobileCamera.bearing {
+            bearingTextLayer.frame = .init(x: viewportLayer.frame.origin.x + 5.0,
+                                           y: viewportLayer.frame.origin.y + 55.0,
+                                           width: viewportLayer.frame.size.width - 10.0,
+                                           height: 20.0)
+            bearingTextLayer.string = "Bearing: \(bearing)º"
         }
     }
 }
