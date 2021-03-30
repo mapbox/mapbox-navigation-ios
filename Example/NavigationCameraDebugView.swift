@@ -8,6 +8,8 @@ class NavigationCameraDebugView: UIView {
     
     var viewportLayer = CALayer()
     var anchorLayer = CALayer()
+    var centerLayer = CALayer()
+    var pitchLayer = CATextLayer()
     
     required init(_ mapView: MapView, frame: CGRect) {
         self.mapView = mapView
@@ -18,14 +20,27 @@ class NavigationCameraDebugView: UIView {
         backgroundColor = .clear
         subscribeForNotifications()
         
-        viewportLayer.borderWidth = 5
+        viewportLayer.borderWidth = 3.0
         viewportLayer.borderColor = UIColor.green.cgColor
         layer.addSublayer(viewportLayer)
         
         anchorLayer.backgroundColor = UIColor.red.cgColor
-        anchorLayer.frame = .init(x: 0.0, y: 0.0, width: 10.0, height: 10.0)
-        anchorLayer.cornerRadius = 5.0
+        anchorLayer.frame = .init(x: 0.0, y: 0.0, width: 6.0, height: 6.0)
+        anchorLayer.cornerRadius = 3.0
         layer.addSublayer(anchorLayer)
+        
+        centerLayer.backgroundColor = UIColor.blue.cgColor
+        centerLayer.frame = .init(x: 0.0, y: 0.0, width: 6.0, height: 6.0)
+        centerLayer.cornerRadius = 3.0
+        layer.addSublayer(centerLayer)
+        
+        pitchLayer = CATextLayer()
+        pitchLayer.string = ""
+        pitchLayer.fontSize = UIFont.systemFontSize
+        pitchLayer.backgroundColor = UIColor.clear.cgColor
+        pitchLayer.foregroundColor = UIColor.black.cgColor
+        pitchLayer.frame = .zero
+        layer.addSublayer(pitchLayer)
     }
     
     required init?(coder: NSCoder) {
@@ -63,6 +78,18 @@ class NavigationCameraDebugView: UIView {
         
         if let anchorPosition = followingMobileCamera.anchor {
             anchorLayer.position = anchorPosition
+        }
+        
+        if let centerCoordinate = followingMobileCamera.center {
+            centerLayer.position = mapView.point(for: centerCoordinate)
+        }
+        
+        if let pitch = followingMobileCamera.pitch {
+            pitchLayer.frame = .init(x: viewportLayer.frame.origin.x,
+                                     y: viewportLayer.frame.origin.y,
+                                     width: viewportLayer.frame.size.width,
+                                     height: 30.0)
+            pitchLayer.string = "Pitch: \(pitch)"
         }
     }
 }

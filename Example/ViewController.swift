@@ -139,15 +139,6 @@ class ViewController: UIViewController {
         
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()
-        
-        // TODO: Provide a reliable way of setting camera to current coordinate.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            if let coordinate = navigationMapView.mapView.locationManager.latestLocation?.coordinate {
-                navigationMapView.mapView.cameraManager.setCamera(to: CameraOptions(center: coordinate, zoom: 13),
-                                                                  animated: true,
-                                                                  completion: nil)
-            }
-        }
     }
     
     private func uninstall(_ navigationMapView: NavigationMapView) {

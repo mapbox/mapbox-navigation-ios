@@ -47,7 +47,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     /**
      Value of default viewport padding.
      */
-    public var viewportPadding: UIEdgeInsets = UIEdgeInsets(top: 150.0, left: 80.0, bottom: 150.0, right: 80.0)
+    public var viewportPadding: UIEdgeInsets = .zero
     
     weak var mapView: MapView?
     
@@ -193,20 +193,19 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             let coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
             let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
-            let zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+            var zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                  pitch: pitch,
                                  edgeInsets: viewportPadding,
                                  defaultZoomLevel: 2.0,
-                                 maxZoomLevel: 16.35,
-                                 minZoomLevel: 2.0)
+                                 maxZoomLevel: 16.35)
             
             let centerLineString = LineString([location.coordinate, (coordinatesToManeuver + coordinatesForManeuverFraming).map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate])
             let centerLineStringTotalDistance = centerLineString.distance() ?? 0.0
             let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchСoefficient)
             
-            var centerCoordinate: CLLocationCoordinate2D = location.coordinate
-            if let adjustedCenterCoordinate = centerLineString.coordinateFromStart(distance: centerCoordDistance) {
-                centerCoordinate = adjustedCenterCoordinate
+            var center: CLLocationCoordinate2D = location.coordinate
+            if let adjustedCenter = centerLineString.coordinateFromStart(distance: centerCoordDistance) {
+                center = adjustedCenter
             }
             
             let averageIntersectionDistances = routeProgress.route.legs.map { (leg) -> [CLLocationDistance] in
@@ -233,21 +232,26 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let coordinatesForIntersections = coordinatesToManeuver.sliced(from: nil, to: LineString(coordinatesToManeuver).coordinateFromStart(distance: fmax(lookaheadDistance, 150.0)))
             let bearing = self.bearing(location.course, coordinatesToManeuver: coordinatesForIntersections)
 
-            followingMobileCamera.center = centerCoordinate
+            followingMobileCamera.center = center
             followingMobileCamera.zoom = CGFloat(zoom)
             followingMobileCamera.bearing = bearing
             followingMobileCamera.anchor = anchor
             followingMobileCamera.pitch = CGFloat(pitch)
             followingMobileCamera.padding = viewportPadding
             
-            followingHeadUnitCamera.center = centerCoordinate
-            // TODO: Fix zoom issues on CarPlay.
+            zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+                             pitch: pitch,
+                             edgeInsets: .zero,
+                             defaultZoomLevel: 2.0,
+                             maxZoomLevel: 16.35)
+            
+            followingHeadUnitCamera.center = center
             followingHeadUnitCamera.zoom = CGFloat(zoom)
             followingHeadUnitCamera.bearing = bearing
             followingHeadUnitCamera.anchor = anchor
             followingHeadUnitCamera.pitch = CGFloat(pitch)
             // TODO: Fix padding issues on CarPlay.
-            followingHeadUnitCamera.padding = UIEdgeInsets(top: 40.0, left: 200.0, bottom: 40.0, right: 40.0)
+            followingHeadUnitCamera.padding = .zero
         }
     }
     
@@ -270,10 +274,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let center = remainingCoordinatesOnRoute.map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate
         
         let zoom = self.zoom(remainingCoordinatesOnRoute,
-                             pitch: 0.0,
                              edgeInsets: viewportPadding,
-                             maxZoomLevel: 16.35,
-                             minZoomLevel: 2.0)
+                             maxZoomLevel: 16.35)
         
         // In case if `NavigationCamera` is already in `NavigationCameraState.overview` value of bearing will be ignored.
         let bearing = CLLocationDirection(mapView.bearing) +
@@ -312,7 +314,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
     
     func zoom(_ coordinates: [CLLocationCoordinate2D],
-              pitch: Double = 0,
+              pitch: Double = 0.0,
               edgeInsets: UIEdgeInsets = .zero,
               defaultZoomLevel: Double = 12.0,
               maxZoomLevel: Double = 22.0,
