@@ -1,5 +1,6 @@
 import Foundation
 import MapboxMaps
+import MapboxCoreNavigation
 
 #if canImport(CarPlay)
 import CarPlay
@@ -134,6 +135,8 @@ public class CarPlayMapViewController: UIViewController {
         }
         
         self.view = navigationMapView
+        
+        setupPassiveLocationManager(navigationMapView.mapView)
     }
 
     override public func viewDidLoad() {
@@ -150,6 +153,12 @@ public class CarPlayMapViewController: UIViewController {
         styleManager = StyleManager()
         styleManager?.delegate = self
         styleManager?.styles = styles
+    }
+    
+    func setupPassiveLocationManager(_ mapView: MapView) {
+        let passiveLocationDataSource = PassiveLocationDataSource()
+        let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
+        navigationMapView.mapView.locationManager.overrideLocationProvider(with: passiveLocationManager)
     }
     
     /**
