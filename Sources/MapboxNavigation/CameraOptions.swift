@@ -13,11 +13,10 @@ extension CameraOptions {
         for i in 0..<propertiesCount {
             guard let property = properties?[Int(i)] else { continue }
             let key = NSString(cString: property_getName(property), encoding: String.Encoding.utf8.rawValue) as String?
-
+            
             if let key = key,
                key != "description",
                let value = self.value(forKey: key) {
-                
                 description.append("\(key): \(value)")
             }
         }
