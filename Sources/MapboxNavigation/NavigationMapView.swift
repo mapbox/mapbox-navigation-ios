@@ -297,9 +297,11 @@ open class NavigationMapView: UIView {
     }
     
     func setupGestureRecognizers() {
-        let gestures = gestureRecognizers ?? []
-        let mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
-        mapTapGesture.requireFailure(of: gestures)
+        let gestures = mapView.gestureRecognizers ?? []
+        let mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didReceiveTap(sender:)))
+        for recognizer in gestures where recognizer is UITapGestureRecognizer {
+            mapTapGesture.requireFailure(of: [recognizer])
+        }
         mapView.addGestureRecognizer(mapTapGesture)
     }
     
@@ -1023,7 +1025,7 @@ open class NavigationMapView: UIView {
     /**
      Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
      */
-    @objc func didRecieveTap(sender: UITapGestureRecognizer) {
+    @objc func didReceiveTap(sender: UITapGestureRecognizer) {
         guard let routes = routes, let tapPoint = sender.point else { return }
         
         let waypointTest = waypoints(on: routes, closeTo: tapPoint)
