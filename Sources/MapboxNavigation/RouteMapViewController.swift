@@ -153,7 +153,7 @@ class RouteMapViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        self.navigationMapView.mapView.on(.styleLoaded) { _ in
             self.showRouteIfNeeded()
             self.navigationMapView.localizeLabels()
             self.navigationMapView.mapView.showsTraffic = false
@@ -259,7 +259,7 @@ class RouteMapViewController: UIViewController {
         // TODO: Verify that camera is positioned correctly.
         let camera = CameraOptions(center: step.maneuverLocation,
                                    zoom: navigationMapView.mapView.zoom,
-                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.cameraView.bearing))
+                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
         
         navigationMapView.mapView.cameraManager.setCamera(to: camera,
                                                           animated: animated,
@@ -326,7 +326,9 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        navigationMapView.mapView.preferredFPS = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        navigationMapView.mapView.update {
+            $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        }
     }
     
     /**
@@ -390,7 +392,7 @@ class RouteMapViewController: UIViewController {
         
         if let height = navigationView.endOfRouteHeightConstraint?.constant {
             self.navigationView.floatingStackView.alpha = 0.0
-            let camera = navigationMapView.mapView.cameraView.camera
+            let camera = navigationMapView.mapView.camera
             // Since `padding` is not an animatable property `zoom` is increased to cover up abrupt camera change.
             if let zoom = camera.zoom {
                 camera.zoom = zoom + 1.0
@@ -401,8 +403,10 @@ class RouteMapViewController: UIViewController {
                                           right: 20)
             navigationMapView.mapView.cameraManager.setCamera(to: camera,
                                                               animated: duration > 0.0 ? true : false,
-                                                              duration: duration) { (completed) in
-                completion?(completed)
+                                                              duration: duration) { (animatingPosition) in
+                if animatingPosition == .end {
+                    completion?(true)
+                }
             }
         }
     }

@@ -1,8 +1,16 @@
 import Foundation
 import MapboxMaps
 
+/**
+ `NavigationCamera` class provides functionality, which allows to manage camera related states
+ and transitions in a typical navigation scenarios. It's fed with `CameraOptions` via the `ViewportDataSource`
+ protocol and executes transitions using `CameraStateTransition` protocol.
+ */
 public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
+    /**
+     Current state of `NavigationCamera`. Defaults to `NavigationCameraState.idle`.
+     */
     public private(set) var state: NavigationCameraState = .idle {
         didSet {
             NotificationCenter.default.post(name: .navigationCameraStateDidChange,
@@ -13,18 +21,32 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         }
     }
     
+    /**
+     Protocol, which is used to provide location related data to continuously perform camera related updates.
+     By default `NavigationMapView` uses `NavigationViewportDataSource`.
+     */
     public var viewportDataSource: ViewportDataSource {
         didSet {
             viewportDataSource.delegate = self
         }
     }
     
+    /**
+     Protocol, which is used to execute camera transitions. By default `NavigationMapView` uses
+     `NavigationCameraStateTransition`.
+     */
     public var cameraStateTransition: CameraStateTransition
     
     weak var mapView: MapView?
     
     var navigationCameraType: NavigationCameraType = .mobile
     
+    /**
+     Initializer of `NavigationCamera` object.
+     
+     - parameter mapView: Instance of `MapView`, on which camera related transitions will be executed.
+     - parameter navigationCameraType: Type of camera, which is used to perform camera transition (either iOS or CarPlay).
+     */
     public required init(_ mapView: MapView, navigationCameraType: NavigationCameraType = .mobile) {
         self.mapView = mapView
         self.viewportDataSource = NavigationViewportDataSource(mapView)
@@ -81,6 +103,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
     // MARK: - NavigationCamera state related methods
     
+    /**
+     Call to this method executes a transition to `NavigationCameraState.following` state.
+     When started, state will first change to `NavigationCameraState.transitionToFollowing` and then
+     to the final `NavigationCameraState.following` when ended.
+     */
     public func requestNavigationCameraToFollowing() {
         switch state {
         case .transitionToFollowing, .following:
@@ -105,6 +132,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         }
     }
     
+    /**
+     Call to this method executes a transition to `NavigationCameraState.overview` state.
+     When started, state will first change to `NavigationCameraState.transitionToOverview` and then
+     to the final `NavigationCameraState.overview` when ended.
+     */
     public func requestNavigationCameraToOverview() {
         switch state {
         case .transitionToOverview, .overview:
@@ -129,14 +161,14 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         }
     }
     
+    /**
+     Call to this method immediately moves `NavigationCamera` to `NavigationCameraState.idle` state
+     and stops all pending transitions.
+     */
     @objc public func requestNavigationCameraToIdle() {
         if state == .idle { return }
         
         cameraStateTransition.cancelPendingTransition()
-        
-        if let navigationCameraStateTransition = self.cameraStateTransition as? NavigationCameraStateTransition {
-            navigationCameraStateTransition.cameraView.isActive = false
-        }
         
         state = .idle
     }

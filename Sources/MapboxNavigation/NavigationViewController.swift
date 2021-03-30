@@ -338,6 +338,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
             return map.view.constraintsForPinning(to: parent.view)
         }
+        
+        setInitialCoordinate(in: mapViewController)
+    }
+    
+    func setInitialCoordinate(in routeMapViewController: RouteMapViewController) {
+        guard let mapView = routeMapViewController.navigationMapView.mapView,
+              let centerCoordinate = routeMapViewController.navigationService.routeProgress.route.shape?.coordinates.first else { return }
+        
+        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate, zoom: 14.0))
     }
     
     func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {

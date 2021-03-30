@@ -3,26 +3,65 @@ import MapboxCoreNavigation
 import Turf
 import MapboxDirections
 
+/**
+ Class, which conforms to `ViewportDataSource` protocol and provides default implementation of it.
+ */
 public class NavigationViewportDataSource: ViewportDataSource {
     
+    /**
+     Delegate, which is used to notify `NavigationCamera` regarding upcoming `CameraOptions`
+     related changes.
+     */
     public var delegate: ViewportDataSourceDelegate?
     
+    /**
+     `CameraOptions`, which are used on iOS when transitioning to `NavigationCameraState.following` or
+     for continuous updates when already in `NavigationCameraState.following` state.
+     */
     public var followingMobileCamera: CameraOptions = CameraOptions()
     
+    /**
+     `CameraOptions`, which are used on CarPlay when transitioning to `NavigationCameraState.following` or
+     for continuous updates when already in `NavigationCameraState.following` state.
+     */
     public var followingHeadUnitCamera: CameraOptions = CameraOptions()
     
+    /**
+     `CameraOptions`, which are used on iOS when transitioning to `NavigationCameraState.overview` or
+     for continuous updates when already in `NavigationCameraState.overview` state.
+     */
     public var overviewMobileCamera: CameraOptions = CameraOptions()
     
+    /**
+     `CameraOptions`, which are used on CarPlay when transitioning to `NavigationCameraState.overview` or
+     for continuous updates when already in `NavigationCameraState.overview` state.
+     */
     public var overviewHeadUnitCamera: CameraOptions = CameraOptions()
     
+    /**
+     Value of maximum pitch, which will be taken into account when preparing `CameraOption`s during
+     active guidance navigation.
+     */
     public var maximumPitch: Double = 45.0
     
+    /**
+     Value of default viewport padding.
+     */
     public var viewportPadding: UIEdgeInsets = UIEdgeInsets(top: 150.0, left: 80.0, bottom: 150.0, right: 80.0)
     
     weak var mapView: MapView?
     
     // MARK: - Initializer methods
     
+    /**
+     Initializer of `NavigationViewportDataSource` object.
+     
+     - parameter mapView: Instance of `MapView`, which is going to be used for several operations,
+     which includes (but not limited to) subscription to raw location updates via `LocationConsumer`
+     (in case if `viewportDataSourceType` was set to `.raw`). `MapView` will be weakly stored by
+     `NavigationViewportDataSource`.
+     - parameter viewportDataSourceType: Type of locations, which will be used to prepare `CameraOptions`.
+     */
     public required init(_ mapView: MapView, viewportDataSourceType: ViewportDataSourceType = .passive) {
         self.mapView = mapView
         
@@ -36,7 +75,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
     // MARK: - Notifications observer methods
     
     func subscribeForNotifications(_ viewportDataSourceType: ViewportDataSourceType = .passive) {
-        
         switch viewportDataSourceType {
         case .raw:
             self.mapView?.locationManager.addLocationConsumer(newConsumer: self)
@@ -88,7 +126,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
                               activeLocation: activeLocation,
                               routeProgress: routeProgress)
         
-        // In active guidance navigation, only camera in overview mode is relevant.
+        // In active guidance navigation, camera in overview mode is relevant, during free-drive
+        // navigation it's not used.
         updateOverviewCamera(activeLocation,
                              routeProgress: routeProgress)
         
@@ -202,10 +241,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingMobileCamera.padding = viewportPadding
             
             followingHeadUnitCamera.center = centerCoordinate
+            // TODO: Fix zoom issues on CarPlay.
             followingHeadUnitCamera.zoom = CGFloat(zoom)
             followingHeadUnitCamera.bearing = bearing
             followingHeadUnitCamera.anchor = anchor
             followingHeadUnitCamera.pitch = CGFloat(pitch)
+            // TODO: Fix padding issues on CarPlay.
             followingHeadUnitCamera.padding = UIEdgeInsets(top: 40.0, left: 200.0, bottom: 40.0, right: 40.0)
         }
     }
@@ -235,8 +276,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
                              minZoomLevel: 2.0)
         
         // In case if `NavigationCamera` is already in `NavigationCameraState.overview` value of bearing will be ignored.
-        let bearing = CLLocationDirection(mapView.cameraView.bearing) +
-            heading.shortestRotation(angle: CLLocationDirection(mapView.cameraView.bearing))
+        let bearing = CLLocationDirection(mapView.bearing) +
+            heading.shortestRotation(angle: CLLocationDirection(mapView.bearing))
         
         overviewMobileCamera.pitch = 0.0
         overviewMobileCamera.center = center
@@ -253,12 +294,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     func bearing(_ initialBearing: CLLocationDirection,
                  coordinatesToManeuver: [CLLocationCoordinate2D]? = nil) -> CLLocationDirection {
-        let bearingModeClampedManeuverMaxDiff = 20.0
         var bearing = initialBearing
 
         if let coords = coordinatesToManeuver, let firstCoordinate = coords.first, let lastCoordinate = coords.last {
             let directionToManeuver = firstCoordinate.direction(to: lastCoordinate)
             let directionDiff = directionToManeuver.shortestRotation(angle: initialBearing)
+            let bearingModeClampedManeuverMaxDiff = 20.0
             if fabs(directionDiff) > bearingModeClampedManeuverMaxDiff {
                 bearing += bearingModeClampedManeuverMaxDiff * (directionDiff < 0.0 ? -1.0 : 1.0)
             } else {
@@ -266,7 +307,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
         }
         
-        let mapViewBearing = Double(mapView?.cameraView.bearing ?? 0.0)
+        let mapViewBearing = Double(mapView?.bearing ?? 0.0)
         return mapViewBearing + bearing.shortestRotation(angle: mapViewBearing)
     }
     
@@ -336,7 +377,7 @@ extension NavigationViewportDataSource: LocationConsumer {
             return true
         }
         set(newValue) {
-            self.shouldTrackLocation = newValue
+
         }
     }
 

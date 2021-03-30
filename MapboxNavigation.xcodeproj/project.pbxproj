@@ -209,7 +209,6 @@
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		7C12F2D8225B7C320010A931 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */; };
-		8A047AA925E84425001CE518 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A047AA825E84425001CE518 /* CameraView.swift */; };
 		8A07D31825CA0B50005E1790 /* MapboxMaps.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A07D31325CA0B50005E1790 /* MapboxMaps.xcframework */; };
 		8A07D31925CA0B50005E1790 /* MapboxMaps.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 8A07D31325CA0B50005E1790 /* MapboxMaps.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		8A07D31A25CA0B50005E1790 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A07D31425CA0B50005E1790 /* MapboxMobileEvents.xcframework */; };
@@ -745,7 +744,6 @@
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		7C12F2D7225B7C310010A931 /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
-		8A047AA825E84425001CE518 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		8A07D31325CA0B50005E1790 /* MapboxMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMaps.xcframework; path = Sources/MapboxNavigation/MapboxMaps/MapboxMaps.xcframework; sourceTree = "<group>"; };
 		8A07D31425CA0B50005E1790 /* MapboxMobileEvents.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMobileEvents.xcframework; path = Sources/MapboxNavigation/MapboxMaps/MapboxMobileEvents.xcframework; sourceTree = "<group>"; };
 		8A07D31525CA0B50005E1790 /* MapboxCoreMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCoreMaps.xcframework; path = Sources/MapboxNavigation/MapboxMaps/MapboxCoreMaps.xcframework; sourceTree = "<group>"; };
@@ -1541,7 +1539,6 @@
 		8AD866EA25CA1BC90019A638 /* Camera */ = {
 			isa = PBXGroup;
 			children = (
-				8A047AA825E84425001CE518 /* CameraView.swift */,
 				8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */,
 				8AC3965225DC66570027A035 /* NavigationCameraType.swift */,
 				8AD866F025CA1BF10019A638 /* NavigationCameraState.swift */,
@@ -2097,7 +2094,7 @@
 					New,
 				);
 				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					351BEBD61E5BCC28006FE110 = {
@@ -2551,7 +2548,6 @@
 				8DDBFCA32205016E0064DEBB /* NavigationCustomizable.swift in Sources */,
 				3531C2701F9E095400D92F9A /* InstructionsBannerView.swift in Sources */,
 				2B8098432411447E00FED452 /* MultiplexedSpeechSynthesizer.swift in Sources */,
-				8A047AA925E84425001CE518 /* CameraView.swift in Sources */,
 				35DA85791FC45787004092EC /* StatusView.swift in Sources */,
 				AE46F95520EA735B00537AC2 /* VisualInstruction.swift in Sources */,
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,

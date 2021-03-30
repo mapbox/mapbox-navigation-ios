@@ -15,8 +15,6 @@ extension RouteState: CustomStringConvertible {
             return "complete"
         case .offRoute:
             return "offRoute"
-        case .stale:
-            return "stale"
         case .uncertain:
             return "uncertain"
         }

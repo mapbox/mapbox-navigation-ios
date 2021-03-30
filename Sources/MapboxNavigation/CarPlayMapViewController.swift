@@ -60,7 +60,7 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.requestNavigationCameraToIdle()
             
-            let cameraOptions = mapView.cameraView.camera
+            let cameraOptions = mapView.camera
             cameraOptions.zoom = mapView.zoom + 1.0
             mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
         }
@@ -80,7 +80,7 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.requestNavigationCameraToIdle()
             
-            let cameraOptions = mapView.cameraView.camera
+            let cameraOptions = mapView.camera
             cameraOptions.zoom = mapView.zoom - 1.0
             mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
         }
@@ -129,7 +129,7 @@ public class CarPlayMapViewController: UIViewController {
     
     override public func loadView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .headUnit)
-        navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        navigationMapView.mapView.on(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
         }
         
@@ -142,7 +142,7 @@ public class CarPlayMapViewController: UIViewController {
         setupStyleManager()
         navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
         navigationMapView.mapView.update {
-            $0.location.showUserLocation = true
+            $0.location.puckType = .puck2D()
         }
     }
     

@@ -138,7 +138,7 @@ public class CarPlayNavigationViewController: UIViewController {
                                                                                              viewportDataSourceType: .active)
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
         
-        navigationMapView.mapView.on(.styleLoadingFinished) { [weak self] _ in
+        navigationMapView.mapView.on(.styleLoaded) { [weak self] _ in
             self?.navigationMapView?.localizeLabels()
             self?.updateRouteOnMap()
             self?.navigationMapView?.mapView.showsTraffic = false
@@ -146,9 +146,10 @@ public class CarPlayNavigationViewController: UIViewController {
         
         navigationMapView.mapView.update {
             $0.ornaments.compassVisiblity = .hidden
-            $0.location.showUserLocation = false
+            $0.location.puckType = .none
         }
         
+        navigationMapView.userCourseView.isHidden = false
         navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
         
         view.addSubview(navigationMapView)
@@ -267,7 +268,9 @@ public class CarPlayNavigationViewController: UIViewController {
         }
     }
     
-    /** Modifies the gesture recognizers to also update the map’s frame rate. */
+    /**
+     Modifies the gesture recognizers to also update the map’s frame rate.
+     */
     func makeGestureRecognizersResetFrameRate() {
         for gestureRecognizer in navigationMapView?.gestureRecognizers ?? [] {
             gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
@@ -275,7 +278,9 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        navigationMapView?.mapView.preferredFPS = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        navigationMapView?.mapView.update {
+            $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        }
     }
     
     @objc func rerouted(_ notification: NSNotification) {

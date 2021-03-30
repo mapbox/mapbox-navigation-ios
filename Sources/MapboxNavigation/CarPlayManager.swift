@@ -631,7 +631,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         guard let relativeDirection = CLLocationDirection(panDirection: direction) else {
             return
         }
-        let shiftedDirection = (Double(navigationMapView.mapView.cameraView.bearing) + relativeDirection).wrap(min: 0, max: 360)
+        let shiftedDirection = (Double(navigationMapView.mapView.bearing) + relativeDirection).wrap(min: 0, max: 360)
         let shiftedCenterCoordinate = navigationMapView.mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
         navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: shiftedCenterCoordinate, animated: true)
     }
