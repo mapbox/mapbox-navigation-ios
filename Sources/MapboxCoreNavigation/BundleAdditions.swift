@@ -23,12 +23,6 @@ extension Bundle {
         }
     }
     
-    var locationAlwaysUsageDescription: String? {
-        get {
-            return object(forInfoDictionaryKey: "NSLocationAlwaysUsageDescription") as? String
-        }
-    }
-    
     /**
      The Mapbox Core Navigation framework bundle.
      */

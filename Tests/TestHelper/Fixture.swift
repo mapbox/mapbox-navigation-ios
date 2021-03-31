@@ -52,14 +52,7 @@ public class Fixture: NSObject {
     }
     
     public class func locations(from name: String) -> [CLLocation] {
-        guard let path = Bundle(for: Fixture.self).path(forResource: name, ofType: "json") else {
-            assert(false, "Fixture \(name) not found.")
-            return []
-        }
-        guard let data = NSData(contentsOfFile: path) as Data? else {
-            assert(false, "No data found at \(path).")
-            return []
-        }
+        let data = JSONFromFileNamed(name: name)
         
         let locations = try! JSONDecoder().decode([Location].self, from: data)
         
@@ -115,6 +108,7 @@ public class Fixture: NSObject {
     
     // Returns `Route` objects from a match response
     public class func routesFromMatches(at filePath: String, options: MatchOptions) -> [Route]? {
+        options.shapeFormat = .polyline
         let response = mapMatchingResponse(from: filePath, options: options)
         let routeResponse = try! RouteResponse(matching: response, options: options, credentials: Fixture.credentials)
         guard let routes = routeResponse.routes else {

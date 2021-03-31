@@ -1,5 +1,5 @@
 import MapboxNavigationNative
-
+import MapboxDirections
 /**
  Specifies the content that a predictive cache fetches and how it fetches the content.
  
@@ -34,6 +34,11 @@ public struct PredictiveCacheOptions {
      Defaults to 2 concurrent requests.
      */
     public var maximumConcurrentRequests: UInt32 = 2
+    
+     /**
+     The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.
+     */
+    public var credentials: DirectionsCredentials = .init()
     
     public init() {
         // No-op

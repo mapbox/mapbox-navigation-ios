@@ -36,15 +36,12 @@ class RouteControllerTests: XCTestCase {
         let options = NavigationMatchOptions(coordinates: coordinates)
         let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: options)![0]
         
-        let bundle = Bundle(for: RouteControllerTests.self)
-        let filePath = bundle.path(forResource: "sthlm-double-back-replay", ofType: "json")
-        
-        let locations = Array<CLLocation>.locations(from: filePath!)
+        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay")
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
         locationManager.startDate = Date()
         let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
-        let routeController = RouteController(along: route, routeIndex: 0, options: equivalentRouteOptions, dataSource: self)
+        let routeController = RouteController(along: route, routeIndex: 0, options: equivalentRouteOptions, directions: DirectionsSpy(), dataSource: self)
         locationManager.delegate = routeController
         
         var testCoordinates = [CLLocationCoordinate2D]()
@@ -54,7 +51,8 @@ class RouteControllerTests: XCTestCase {
             testCoordinates.append(routeController.location!.coordinate)
         }
         
-        XCTAssert(coordinates == testCoordinates)
+        let expectedCoordinates = locations.map{$0.coordinate}
+        XCTAssert(expectedCoordinates == testCoordinates)
     }
 }
 
