@@ -261,7 +261,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var annotatesSpokenInstructions = false
     
-    var styleManager: StyleManager!
+    /**
+     Controls the styling of NavigationViewController and its components.
+     
+     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`. 
+     */
+    public private(set) var styleManager: StyleManager!
     
     var currentStatusBarStyle: UIStatusBarStyle = .default
     

@@ -105,8 +105,16 @@ open class StyleManager {
     internal var date: Date?
     private var timeOfDayTimer: Timer?
     
-    var currentStyleType: StyleType?
-    private(set) var currentStyle: Style? {
+    /**
+     The currently applied style. Use `StyleManager.applyStyle(type:)` to update this value.
+     */
+    public private(set) var currentStyleType: StyleType?
+    
+    /**
+     The current style associated with `currentStyleType`. Calling `StyleManager.applyStyle(type:)` will
+     result in this value being updated.
+     */
+    public private(set) var currentStyle: Style? {
         didSet {
             guard let style = currentStyle else { return }
             postDidApplyStyleNotification(style: style)
@@ -164,7 +172,10 @@ open class StyleManager {
         resetTimeOfDayTimer()
     }
     
-    func applyStyle(type styleType: StyleType) {
+    /**
+     Applies the `Style` with type matching `type`and notifies `StyleManager.delegate` upon completion. 
+     */
+    public func applyStyle(type styleType: StyleType) {
         guard currentStyleType != styleType else { return }
         
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
