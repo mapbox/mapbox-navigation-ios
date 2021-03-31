@@ -9,11 +9,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
 
     public weak var mapView: MapView?
     
-    let bezierParamsCenter = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-    let bezierParamsUserLocation = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-    let bezierParamsZoom = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-    let bezierParamsBearing = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-    let bezierParamsPitch = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
+    let centerTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
+    let zoomTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
+    let bearingTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
+    let pitchTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
     
     var animatorCenter: CameraAnimator!
     var animatorZoom: CameraAnimator!
@@ -158,10 +157,11 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     func resetAnimators() {
-        animatorCenter = mapView?.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsCenter)
-        animatorZoom = mapView?.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsZoom)
-        animatorBearing = mapView?.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsBearing)
-        animatorPitch = mapView?.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsPitch)
+        let duration = 1.0
+        animatorCenter = mapView?.cameraManager.makeCameraAnimator(duration: duration, timingParameters: centerTimingParameters)
+        animatorZoom = mapView?.cameraManager.makeCameraAnimator(duration: duration, timingParameters: zoomTimingParameters)
+        animatorBearing = mapView?.cameraManager.makeCameraAnimator(duration: duration, timingParameters: bearingTimingParameters)
+        animatorPitch = mapView?.cameraManager.makeCameraAnimator(duration: duration, timingParameters: pitchTimingParameters)
     }
     
     func stopAnimators() {
@@ -189,7 +189,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let centerTranslationDistance = CLLocation.distance(from: mapView.centerCoordinate, to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1500.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.6), 0.6)
-        let centerAnimationDelay: TimeInterval = 0
+        let centerAnimationDelay: TimeInterval = 0.0
         
         let zoomLevelDistance = CLLocationDistance(abs(mapView.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 3.0
@@ -236,7 +236,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let zoomLevelDistance = CLLocationDistance(abs(mapView.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 0.6
         let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 0.8), 0.2)
-        let zoomAnimationDelay: TimeInterval = 0
+        let zoomAnimationDelay: TimeInterval = 0.0
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
         let centerTranslationDistance = CLLocation.distance(from: mapView.centerCoordinate, to: location)
@@ -250,7 +250,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let bearingAnimationDelay: TimeInterval = max(endZoomAnimation - bearingAnimationDuration - 0.4, 0)
         
         let pitchAndAnchorAnimationDuration: TimeInterval = 0.6
-        let pitchAndAnchorAnimationDelay: TimeInterval = 0
+        let pitchAndAnchorAnimationDelay: TimeInterval = 0.0
         
         let transitionParameters = TransitionParameters(
             cameraOptions,
@@ -281,7 +281,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let zoomLevelDistance = CLLocationDistance(abs(mapView.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 0.6
         let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 0.8), 0.2)
-        let zoomAnimationDelay: TimeInterval = 0
+        let zoomAnimationDelay: TimeInterval = 0.0
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
         let centerTranslationDistance = CLLocation.distance(from: mapView.centerCoordinate, to: location)
@@ -295,7 +295,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let bearingAnimationDelay: TimeInterval = max(endZoomAnimation - bearingAnimationDuration - 0.4, 0)
         
         let pitchAndAnchorAnimationDuration: TimeInterval = 0.6
-        let pitchAndAnchorAnimationDelay: TimeInterval = 0
+        let pitchAndAnchorAnimationDelay: TimeInterval = 0.0
         
         let transitionParameters = TransitionParameters(
             cameraOptions,
@@ -329,8 +329,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         
         let animationsGroup = DispatchGroup()
         
-        let bezierParamsCenter = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
-        animatorCenter = mapView.cameraManager.makeCameraAnimator(duration: 1.0, timingParameters: bezierParamsCenter)
+        let centerTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
+        animatorCenter = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.centerAnimationDuration, timingParameters: centerTimingParameters)
         animatorCenter.addAnimations {
             mapView.centerCoordinate = location
         }
@@ -340,8 +340,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             }
         }
         
-        let bezierParamsZoom = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.2, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
-        animatorZoom = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.zoomAnimationDuration, timingParameters: bezierParamsZoom)
+        let zoomTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.2, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
+        animatorZoom = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.zoomAnimationDuration, timingParameters: zoomTimingParameters)
         animatorZoom.addAnimations {
             mapView.zoom = zoom
         }
@@ -351,8 +351,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             }
         }
         
-        let bezierParamsBearing = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
-        animatorBearing = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.bearingAnimationDuration, timingParameters: bezierParamsBearing)
+        let bearingTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0), controlPoint2: CGPoint(x: 0.6, y: 1.0))
+        animatorBearing = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.bearingAnimationDuration, timingParameters: bearingTimingParameters)
         animatorBearing.addAnimations {
             mapView.bearing = bearing
         }
@@ -362,8 +362,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             }
         }
         
-        let bezierParamsPitch = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.6, y: 0.0), controlPoint2: CGPoint(x: 0.4, y: 1.0))
-        animatorPitch = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.pitchAndAnchorAnimationDuration, timingParameters: bezierParamsPitch)
+        let pitchTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.6, y: 0.0), controlPoint2: CGPoint(x: 0.4, y: 1.0))
+        animatorPitch = mapView.cameraManager.makeCameraAnimator(duration: transitionParameters.pitchAndAnchorAnimationDuration, timingParameters: pitchTimingParameters)
         animatorPitch.addAnimations {
             mapView.pitch = CGFloat(pitch)
             mapView.anchor = anchor
