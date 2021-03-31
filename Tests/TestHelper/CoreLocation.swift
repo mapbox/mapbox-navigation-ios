@@ -169,9 +169,7 @@ extension Array where Element == CLLocation {
     }
     
     public static func locations(from filePath: String) -> [CLLocation] {
-        let url = URL(fileURLWithPath: filePath)
-        
-        let data = try! Data(contentsOf: url)
+        let data = Fixture.JSONFromFileNamed(name: filePath)
         let locations = try! JSONDecoder().decode([Location].self, from: data)
         
         return locations.map { CLLocation($0) }

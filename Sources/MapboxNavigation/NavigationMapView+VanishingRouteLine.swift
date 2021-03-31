@@ -217,7 +217,7 @@ extension NavigationMapView {
         })
     }
     
-    func routeLineGradient(_ route: Route, fractionTraveled: Double) -> [Double: UIColor]? {
+    func routeLineGradient(_ route: Route, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor]? {
         var gradientStops = [CGFloat: UIColor]()
         
         /**
@@ -250,7 +250,7 @@ extension NavigationMapView {
             // Get congestion color for the stop.
             
             let congestionLevel = feature.properties?[CongestionAttribute] as? String
-            let associatedCongestionColor = congestionColor(for: congestionLevel)
+            let associatedCongestionColor = congestionColor(for: congestionLevel, isMain: isMain)
             
             // Measure the line length of the traffic segment.
             let lineString = feature.geometry.value as? LineString
@@ -267,7 +267,7 @@ extension NavigationMapView {
                 gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
                 
                 if index + 1 < congestionSegments.count {
-                    gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String)
+                    gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String, isMain: isMain)
                 }
                 
                 continue
@@ -297,7 +297,7 @@ extension NavigationMapView {
             gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
             
             if index + 1 < congestionSegments.count {
-                gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String)
+                gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String, isMain: isMain)
             }
         }
         
@@ -343,18 +343,18 @@ extension NavigationMapView {
     /**
      Given a congestion level, return its associated color.
      */
-    func congestionColor(for congestionLevel: String?) -> UIColor {
+    func congestionColor(for congestionLevel: String?, isMain: Bool) -> UIColor {
         switch congestionLevel {
         case "low":
-            return trafficLowColor
+            return isMain ? trafficLowColor : alternativeTrafficLowColor
         case "moderate":
-            return trafficModerateColor
+            return isMain ? trafficModerateColor : alternativeTrafficModerateColor
         case "heavy":
-            return trafficHeavyColor
+            return isMain ? trafficHeavyColor : alternativeTrafficHeavyColor
         case "severe":
-            return trafficSevereColor
+            return isMain ? trafficSevereColor : alternativeTrafficSevereColor
         default:
-            return trafficUnknownColor
+            return isMain ? trafficUnknownColor : alternativeTrafficUnknownColor
         }
     }
     

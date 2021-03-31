@@ -18,6 +18,7 @@ public class PredictiveCacheManager {
      - parameter mapOptions: Information about `MapView` tiles such as the location and tilesets to cache. If this argument is set to `nil`, predictive caching is disabled for map tiles.
      */
     public init(predictiveCacheOptions: PredictiveCacheOptions, mapOptions: MapOptions?) {
+        Navigator.credentials = predictiveCacheOptions.credentials
         self.controllers.append(initNavigatorController(options: predictiveCacheOptions))
         if let mapOptions = mapOptions {
             self.controllers.append(contentsOf: initMapControllers(options: predictiveCacheOptions, mapOptions: mapOptions))

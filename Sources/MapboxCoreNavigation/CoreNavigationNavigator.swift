@@ -46,6 +46,13 @@ class Navigator {
     }()
     
     /**
+     The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.
+     
+     - precondition: `credentials` should be set before getting the shared navigator for the first time.
+     */
+    static var credentials: DirectionsCredentials? = nil
+    
+    /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `tilesURL`).
      */
@@ -68,7 +75,7 @@ class Navigator {
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
                                               platform: ProfilePlatform.KIOS)
         
-        let endpointConfig = TileEndpointConfiguration(credentials: Directions.shared.credentials,
+        let endpointConfig = TileEndpointConfiguration(credentials:Navigator.credentials ?? Directions.shared.credentials,
                                                        tilesVersion: Self.tilesVersion,
                                                        minimumDaysToPersistVersion: nil)
         
