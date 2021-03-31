@@ -152,16 +152,16 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             followingMobileCamera.center = location.coordinate
             followingMobileCamera.zoom = followingWithoutRouteZoomLevel
-            followingMobileCamera.bearing = 0
+            followingMobileCamera.bearing = 0.0
             followingMobileCamera.anchor = mapView.center
-            followingMobileCamera.pitch = 0
+            followingMobileCamera.pitch = 0.0
             followingMobileCamera.padding = .zero
             
             followingHeadUnitCamera.center = location.coordinate
             followingHeadUnitCamera.zoom = followingWithoutRouteZoomLevel
-            followingHeadUnitCamera.bearing = 0
+            followingHeadUnitCamera.bearing = 0.0
             followingHeadUnitCamera.anchor = mapView.center
-            followingHeadUnitCamera.pitch = 0
+            followingHeadUnitCamera.pitch = 0.0
             followingHeadUnitCamera.padding = .zero
             
             return
@@ -182,7 +182,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...].map({ $0.shape?.coordinates })
             for step in coordinatesAfterCurrentStep {
                 guard let stepCoordinates = step, let distance = stepCoordinates.distance() else { continue }
-                if distance > 0 && distance < 150 {
+                if distance > 0.0 && distance < 150.0 {
                     compoundManeuvers.append(stepCoordinates)
                 } else {
                     let distanceAfterManeuverToIncludeInFraming = 30.0
@@ -241,7 +241,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                              pitch: pitch,
-                             edgeInsets: .zero,
                              defaultZoomLevel: 2.0,
                              maxZoomLevel: 16.35)
             
@@ -298,7 +297,9 @@ public class NavigationViewportDataSource: ViewportDataSource {
                  coordinatesToManeuver: [CLLocationCoordinate2D]? = nil) -> CLLocationDirection {
         var bearing = initialBearing
 
-        if let coords = coordinatesToManeuver, let firstCoordinate = coords.first, let lastCoordinate = coords.last {
+        if let coordinates = coordinatesToManeuver,
+           let firstCoordinate = coordinates.first,
+           let lastCoordinate = coordinates.last {
             let directionToManeuver = firstCoordinate.direction(to: lastCoordinate)
             let directionDiff = directionToManeuver.shortestRotation(angle: initialBearing)
             let bearingModeClampedManeuverMaxDiff = 20.0
@@ -360,8 +361,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: currentCoordinate) ?? []
         let defaultPitchСoefficient = 1.0
         guard let distance = LineString(coordinatesToManeuver).distance() else { return defaultPitchСoefficient }
-        let pitchEffectDistanceStart: CLLocationDistance = 180
-        let pitchEffectDistanceEnd: CLLocationDistance = 150
+        let pitchEffectDistanceStart: CLLocationDistance = 180.0
+        let pitchEffectDistanceEnd: CLLocationDistance = 150.0
         let pitchСoefficient = shouldIgnoreManeuver
             ? defaultPitchСoefficient
             : (max(min(distance, pitchEffectDistanceStart), pitchEffectDistanceEnd) - pitchEffectDistanceEnd) / (pitchEffectDistanceStart - pitchEffectDistanceEnd)
