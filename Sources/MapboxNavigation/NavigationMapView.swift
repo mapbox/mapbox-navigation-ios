@@ -55,6 +55,12 @@ open class NavigationMapView: UIView {
     public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
     
     var cameraAnimator: CameraAnimator!
+    /**
+     Controls whether to show congestion levels on alternative route lines. Defaults to `false`.
+     
+     If `true` and there're multiple routes to choose, the alternative route lines would display the congestion levels at different colors, similar to the main route. To customize the congestion colors that represent different congestion levels, override the `alternativeTrafficUnknownColor`, `alternativeTrafficLowColor`, `alternativeTrafficModerateColor`, `alternativeTrafficHeavyColor`, `alternativeTrafficSevereColor` property for the `NavigationMapView.appearance()`.
+     */
+    public var showsCongestionForAlternativeRoutes: Bool = false
     
     enum IdentifierType: Int {
         case source
@@ -88,6 +94,12 @@ open class NavigationMapView: UIView {
     @objc dynamic public var trafficModerateColor: UIColor = .trafficModerate
     @objc dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
     @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
+    @objc dynamic public var alternativeTrafficUnknownColor: UIColor = .alternativeTrafficUnknown
+    @objc dynamic public var alternativeTrafficLowColor: UIColor = .alternativeTrafficLow
+    @objc dynamic public var alternativeTrafficModerateColor: UIColor = .alternativeTrafficModerate
+    @objc dynamic public var alternativeTrafficHeavyColor: UIColor = .alternativeTrafficHeavy
+    @objc dynamic public var alternativeTrafficSevereColor: UIColor = .alternativeTrafficSevere
+    
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
     @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
@@ -635,6 +647,9 @@ open class NavigationMapView: UIView {
         lineLayer.layout?.lineJoin = .constant(.round)
         lineLayer.layout?.lineCap = .constant(.round)
 
+        if showsCongestionForAlternativeRoutes, let gradientStops = routeLineGradient(route, fractionTraveled: 0.0, isMain: false) {
+            lineLayer.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
+        }
         mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         
         return layerIdentifier
