@@ -294,4 +294,7 @@ workflows:
           iOS: "14.0"
           lint: true
       - xcode-12-examples
-      - ios-trigger-metrics
+      - ios-trigger-metrics:
+          filters:
+            branches:
+              only: release-v2.0
