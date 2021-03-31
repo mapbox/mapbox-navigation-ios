@@ -1,5 +1,6 @@
 import XCTest
 import MapboxDirections
+import Turf
 @testable import MapboxCoreNavigation
 #if !SWIFT_PACKAGE
 import TestHelper
@@ -39,11 +40,20 @@ class SimulatedLocationManagerTests: XCTestCase {
             locationManager.tick()
         }
         
+        var testCoordinates:[CLLocationCoordinate2D] = locationManagerSpy.locations.map { $0.coordinate }
+        let expectedDistance = LineString(coordinates).distance()
+        let testDistance = LineString(testCoordinates).distance()
+        XCTAssert(abs(expectedDistance! - testDistance!) < 70)
+        
+        while locationManager.currentDistance < route.distance + 30 {
+            locationManager.tick()
+        }
+
         locationManager.delegate = nil
-        
-        let testCoordinates:[CLLocationCoordinate2D] = locationManagerSpy.locations.map { $0.coordinate }
-        
-        XCTAssert(testCoordinates == coordinates)
+
+        testCoordinates = locationManagerSpy.locations.map { $0.coordinate }
+        let endPointDifferences = (testCoordinates.first?.distance(to: coordinates.first!))! + (testCoordinates.last?.distance(to: coordinates.last!))!
+        XCTAssert(endPointDifferences < 5)
     }
 }
 

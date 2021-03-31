@@ -61,6 +61,12 @@ class NavigationViewControllerTests: XCTestCase {
         customRoadName.removeAll()
     }
     
+    func testDefaultUserInterfaceUsage() {
+        let navigationViewController = dependencies.navigationViewController
+        let service = dependencies.navigationService
+        XCTAssertTrue(service.eventsManager.usesDefaultUserInterface, "MapboxNavigationTests should run inside the Example application target.")
+    }
+    
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a road name provided and wayNameView label is visible.
     func testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {

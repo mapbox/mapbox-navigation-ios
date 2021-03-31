@@ -23,6 +23,17 @@ let waitForInterval: TimeInterval = 5
 class MapboxCoreNavigationTests: XCTestCase {
     var navigation: MapboxNavigationService!
     
+    override func setUp() {
+        super.setUp()
+        UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationWhenInUseUsageDescription")
+        UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationAlwaysAndWhenInUseUsageDescription")
+    }
+    
+    override func tearDown() {
+        super.tearDown()
+        UserDefaults.resetStandardUserDefaults()
+    }
+    
     func testNavigationNotificationsInfoDict() {
         navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .never)
         let now = Date()
