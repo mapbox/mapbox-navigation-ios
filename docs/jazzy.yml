@@ -119,9 +119,9 @@ custom_categories:
       - RouteControllerMaximumDistanceBeforeRecalculating
       - RouteControllerUserLocationSnappingDistance
       - MapOrnamentPosition
-      - MBCongestionAttribute
-      - MBCurrentLegAttribute
-      - MBRouteLineWidthByZoomLevel
+      - CongestionAttribute
+      - CurrentLegAttribute
+      - RouteLineWidthByZoomLevel
       - NavigationMapViewMinimumDistanceForOverheadZooming
       - NavigationViewMinimumVolumeForWarning
       - RouteControllerIncorrectCourseMultiplier
@@ -150,3 +150,14 @@ custom_categories:
       - RoadClosureSubtype
       - FeedbackSource
       - EndOfRouteFeedback
+  - name: Camera
+    children:
+      - NavigationCamera
+      - NavigationCameraType
+      - NavigationCameraState
+      - CameraStateTransition
+      - NavigationCameraStateTransition
+      - ViewportDataSource
+      - NavigationViewportDataSource
+      - ViewportDataSourceType
+      - ViewportDataSourceDelegate
