@@ -51,7 +51,7 @@ extension VisualInstruction {
 
     func lanesImage(side: DrivingSide, direction: ManeuverDirection?, useableColor: UIColor, unuseableColor: UIColor, size: CGSize, scale: CGFloat) -> UIImage? {
         let subimages = components.compactMap { (component) -> UIImage? in
-            if case let .lane(indications: indications, isUsable: isUsable, preferredDirection: _) = component {
+            if case let .lane(indications: indications, isUsable: isUsable, preferredDirection: preferredDirection) = component {
                 return laneImage(side: side, indication: indications, maneuverDirection: direction, isUsable: isUsable, useableColor: useableColor, unuseableColor: unuseableColor, size: CGSize(width: size.height, height: size.height))
             } else {
                 return nil
