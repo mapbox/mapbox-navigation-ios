@@ -39,6 +39,13 @@
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationManager.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
 
+### Camera
+
+* Removed `CarPlayNavigationViewController.tracksUserCourse`, `NavigationMapView.defaultAltitude`, `NavigationMapView.zoomedOutMotorwayAltitude`, `NavigationMapView.longManeuverDistance`, `NavigationMapView.showsUserLocation`, `NavigationMapView.tracksUserCourse`, `NavigationMapView.enableFrameByFrameCourseViewTracking(for:)`, `NavigationMapView.updateCourseTracking(location:camera:animated:)` `NavigationMapView.defaultPadding`, `NavigationMapView.setOverheadCameraView(from:along:for:)`, `NavigationMapView.recenterMap()`, `NavigationMapViewDelegate.navigationMapViewUserAnchorPoint(_:)`, `NavigationMapViewCourseTrackingDelegate`, `NavigationViewController.pendingCamera` in favor of new Navigation Viewport Camera APIs. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Replaced `CourseUpdatable.update(location:pitch:direction:animated:tracksUserCourse:)` with `CourseUpdatable.update(location:pitch:direction:animated:navigationCameraState:)` to provide more agile way of handling `NavigationCameraState`. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Added `NavigationMapView.init(frame:navigationCameraType:)` to be able to provide type of `NavigationCamera`, which should be used for that specific instance of `NavigationMapView` (either iOS or CarPlay). ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Added `NavigationCamera`, `ViewportDataSourceType`, `ViewportDataSourceDelegate`, `NavigationCameraState` Navigation Viewport Camera APIs. By default Navigation SDK for iOS provides default camera behavior via `NavigationViewportDataSource` and `NavigationCameraStateTransition` classes. If you'd like to override current behavior use `ViewportDataSource` and `CameraStateTransition` protocols for custom behavior. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+
 ### CarPlay
 
 * Removed deprecated `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))

@@ -61,18 +61,10 @@ custom_categories:
     children:
       - NavigationMapView
       - NavigationMapViewDelegate
-      - MGLMapView
-      - MGLAccountManager
-      - MGLMultiPolygonFeature
-      - MGLMultiPolyline
-      - MGLMultiPolylineFeature
-      - MGLPointAnnotation
-      - MGLPointFeature
-      - MGLPolygon
-      - MGLPolygonFeature
-      - MGLPolyline
-      - MGLPolylineFeature
-      - MGLStyle
+      - MapView
+      - AccountManager
+      - PointAnnotation
+      - Style
       - PassiveLocationManager
       - WaypointStyle
   - name: Styling
