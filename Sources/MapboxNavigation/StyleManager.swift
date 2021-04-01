@@ -17,7 +17,7 @@ public protocol StyleManagerDelegate: class, UnimplementedLogging {
      The default implementation of this method will attempt to cast the delegate to type
      `UIViewController` and use its `view` property.
      */
-    func viewToRefreshOnAppearanceChange(_ styleManager: StyleManager) -> UIView?
+    func styleManager(_ styleManager: StyleManager, viewForApplying currentStyle: Style?) -> UIView?
     
     /**
      Informs the delegate that a style was applied.
@@ -55,7 +55,7 @@ public extension StyleManagerDelegate {
         logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
     }
     
-    func viewToRefreshOnAppearanceChange(_ styleManager: StyleManager) -> UIView? {
+    func styleManager(_ styleManager: StyleManager, viewForApplying currentStyle: Style?) -> UIView? {
         // Short-circuit refresh logic if the view hasn't yet loaded since we don't want the `self.view` 
         // call to trigger `loadView`.
         if let vc = self as? UIViewController, vc.isViewLoaded { 
@@ -257,7 +257,7 @@ open class StyleManager {
     // workaround to refresh appearance by removing the view and then adding it again
     func forceRefreshAppearance() {
         if 
-            let view = delegate?.viewToRefreshOnAppearanceChange(self), 
+            let view = delegate?.styleManager(self, viewForApplying: currentStyle), 
             let superview = view.superview, 
             let index = superview.subviews.firstIndex(of: view) 
         {
