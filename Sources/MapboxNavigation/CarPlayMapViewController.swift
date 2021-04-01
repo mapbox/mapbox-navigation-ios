@@ -136,7 +136,7 @@ public class CarPlayMapViewController: UIViewController {
         
         self.view = navigationMapView
         
-        setupPassiveLocationManager(navigationMapView.mapView)
+        setupPassiveLocationManager()
     }
 
     override public func viewDidLoad() {
@@ -155,7 +155,7 @@ public class CarPlayMapViewController: UIViewController {
         styleManager?.styles = styles
     }
     
-    func setupPassiveLocationManager(_ mapView: MapView) {
+    func setupPassiveLocationManager() {
         let passiveLocationDataSource = PassiveLocationDataSource()
         let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
         navigationMapView.mapView.locationManager.overrideLocationProvider(with: passiveLocationManager)

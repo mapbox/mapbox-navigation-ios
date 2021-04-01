@@ -1,10 +1,11 @@
 import UIKit
 import MapboxMaps
-import MapboxNavigation
 
 class NavigationCameraDebugView: UIView {
     
     weak var mapView: MapView?
+    
+    var navigationViewportDataSource: NavigationViewportDataSource?
     
     var viewportLayer = CALayer()
     var anchorLayer = CALayer()
@@ -15,7 +16,7 @@ class NavigationCameraDebugView: UIView {
     var zoomTextLayer = CATextLayer()
     var bearingTextLayer = CATextLayer()
     
-    required init(_ mapView: MapView, frame: CGRect) {
+    required init(_ mapView: MapView, frame: CGRect, navigationViewportDataSource: NavigationViewportDataSource?) {
         self.mapView = mapView
         
         super.init(frame: frame)
@@ -87,13 +88,13 @@ class NavigationCameraDebugView: UIView {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigationCameraViewportDidChange(_:)),
                                                name: .navigationCameraViewportDidChange,
-                                               object: nil)
+                                               object: navigationViewportDataSource)
     }
     
     func unsubscribeFromNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: .navigationCameraViewportDidChange,
-                                                  object: nil)
+                                                  object: navigationViewportDataSource)
     }
     
     @objc func navigationCameraViewportDidChange(_ notification: NSNotification) {

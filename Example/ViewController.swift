@@ -138,6 +138,7 @@ class ViewController: UIViewController {
         navigationMapView.mapView.update {
             $0.location.puckType = .puck2D()
         }
+        navigationMapView.shouldShowNavigationCameraDebugView = true
         
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()
@@ -265,18 +266,14 @@ class ViewController: UIViewController {
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
         
-        if let mapView = navigationViewController.navigationMapView?.mapView {
-            let navigationCameraDebugView = NavigationCameraDebugView(mapView, frame: mapView.frame)
-            mapView.addSubview(navigationCameraDebugView)
-        }
-        
-        present(navigationViewController, completion: nil)
+        present(navigationViewController)
     }
     
     func startCustomNavigation() {
-        guard let route = response?.routes?.first, let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
-
-        guard let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
+        guard let route = response?.routes?.first,
+              let responseOptions = response?.options,
+              case let .route(routeOptions) = responseOptions,
+              let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
 
         customViewController.userIndexedRoute = (route, 0)
         customViewController.userRouteOptions = routeOptions

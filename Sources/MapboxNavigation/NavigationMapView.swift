@@ -43,6 +43,17 @@ open class NavigationMapView: UIView {
      `NavigationCamera`, which allows to control camera states.
      */
     public private(set) var navigationCamera: NavigationCamera!
+    
+    /**
+     Property, which allows to hide/show navigation camera debug view.
+     */
+    public var shouldShowNavigationCameraDebugView: Bool = false {
+        didSet {
+            navigationCameraDebugView.isHidden = !shouldShowNavigationCameraDebugView
+        }
+    }
+    
+    var navigationCameraDebugView: NavigationCameraDebugView!
 
     /**
      Controls whether to show congestion levels on alternative route lines. Defaults to `false`.
@@ -249,6 +260,17 @@ open class NavigationMapView: UIView {
         
         navigationCamera = NavigationCamera(mapView, navigationCameraType: navigationCameraType)
         navigationCamera.requestNavigationCameraToFollowing()
+        
+        setupNavigationCameraDebugView(mapView,
+                                       navigationViewportDataSource: navigationCamera.viewportDataSource as? NavigationViewportDataSource)
+    }
+    
+    func setupNavigationCameraDebugView(_ mapView: MapView, navigationViewportDataSource: NavigationViewportDataSource?) {
+        navigationCameraDebugView = NavigationCameraDebugView(mapView,
+                                                              frame: mapView.frame,
+                                                              navigationViewportDataSource: navigationViewportDataSource)
+        navigationCameraDebugView.isHidden = true
+        mapView.addSubview(navigationCameraDebugView)
     }
     
     func setupGestureRecognizers() {

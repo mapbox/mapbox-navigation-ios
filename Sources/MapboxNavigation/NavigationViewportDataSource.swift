@@ -272,7 +272,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
 
         let center = remainingCoordinatesOnRoute.map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate
         
-        let zoom = self.zoom(remainingCoordinatesOnRoute,
+        var zoom = self.zoom(remainingCoordinatesOnRoute,
                              edgeInsets: viewportPadding,
                              maxZoomLevel: 16.35)
         
@@ -285,12 +285,16 @@ public class NavigationViewportDataSource: ViewportDataSource {
         overviewMobileCamera.zoom = CGFloat(zoom)
         overviewMobileCamera.anchor = anchor
         overviewMobileCamera.bearing = bearing
+        overviewMobileCamera.padding = viewportPadding
+        
+        zoom = self.zoom(remainingCoordinatesOnRoute, maxZoomLevel: 16.35)
         
         overviewHeadUnitCamera.pitch = 0.0
         overviewHeadUnitCamera.center = center
         overviewHeadUnitCamera.zoom = CGFloat(zoom)
         overviewHeadUnitCamera.anchor = anchor
         overviewHeadUnitCamera.bearing = bearing
+        overviewHeadUnitCamera.padding = .zero
     }
     
     func bearing(_ initialBearing: CLLocationDirection,
@@ -380,7 +384,7 @@ extension NavigationViewportDataSource: LocationConsumer {
             return true
         }
         set(newValue) {
-
+            // No-op
         }
     }
 
