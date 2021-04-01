@@ -156,6 +156,8 @@ public class CarPlayNavigationViewController: UIViewController {
         navigationMapView.pinInSuperview()
         
         self.navigationMapView = navigationMapView
+        
+        setInitialCoordinate()
     }
     
     func setupOrnaments() {
@@ -181,6 +183,12 @@ public class CarPlayNavigationViewController: UIViewController {
         styleManager = StyleManager()
         styleManager?.delegate = self
         styleManager?.styles = self.styles
+    }
+    
+    func setInitialCoordinate() {
+        guard let centerCoordinate = navigationService.routeProgress.route.shape?.coordinates.first else { return }
+        navigationMapView?.mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate, zoom: 14.0))
+        navigationMapView?.updateUserCourseView(CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude))
     }
     
     // MARK: - Notifications observer methods
