@@ -137,7 +137,6 @@ public class CarPlayNavigationViewController: UIViewController {
         navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                                              viewportDataSourceType: .active)
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
-        navigationMapView.shouldShowNavigationCameraDebugView = true
         
         navigationMapView.mapView.on(.styleLoaded) { [weak self] _ in
             self?.navigationMapView?.localizeLabels()
@@ -444,7 +443,7 @@ public class CarPlayNavigationViewController: UIViewController {
         let exitTitle = NSLocalizedString("CARPLAY_EXIT_NAVIGATION", bundle: .mapboxNavigation, value: "Exit navigation", comment: "Title on the exit button in the arrival form")
         let exitAction = CPAlertAction(title: exitTitle, style: .cancel) { (action) in
             self.exitNavigation()
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: true)
         }
         let rateTitle = NSLocalizedString("CARPLAY_RATE_TRIP", bundle: .mapboxNavigation, value: "Rate your trip", comment: "Title on rate button in CarPlay")
         let rateAction = CPAlertAction(title: rateTitle, style: .default) { (action) in

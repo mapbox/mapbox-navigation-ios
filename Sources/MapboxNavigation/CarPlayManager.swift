@@ -491,7 +491,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController
 
-        carPlayMapViewController.present(navigationViewController, animated: true, completion: nil)
+        carPlayMapViewController.present(navigationViewController, animated: true)
 
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.removeRoutes()

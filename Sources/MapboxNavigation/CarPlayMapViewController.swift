@@ -63,7 +63,7 @@ public class CarPlayMapViewController: UIViewController {
             
             let cameraOptions = mapView.camera
             cameraOptions.zoom = mapView.zoom + 1.0
-            mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
+            mapView.cameraManager.setCamera(to: cameraOptions)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -83,7 +83,7 @@ public class CarPlayMapViewController: UIViewController {
             
             let cameraOptions = mapView.camera
             cameraOptions.zoom = mapView.zoom - 1.0
-            mapView.cameraManager.setCamera(to: cameraOptions, completion: nil)
+            mapView.cameraManager.setCamera(to: cameraOptions)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -133,7 +133,6 @@ public class CarPlayMapViewController: UIViewController {
         navigationMapView.mapView.on(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
         }
-        navigationMapView.shouldShowNavigationCameraDebugView = true
         
         self.view = navigationMapView
         
@@ -202,12 +201,18 @@ public class CarPlayMapViewController: UIViewController {
     override public func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
-        guard let _ = navigationMapView.routes?.first else {
+        guard let activeRoute = navigationMapView.routes?.first else {
             navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
             return
         }
         
-        // TODO: Verify whether camera related changes are required here.
+        if navigationMapView.navigationCamera.state == .idle {
+            let cameraOptions = navigationMapView.mapView.camera
+            cameraOptions.pitch = 0
+            navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions)
+            
+            navigationMapView.fitCamera(to: activeRoute)
+        }
     }
 }
 

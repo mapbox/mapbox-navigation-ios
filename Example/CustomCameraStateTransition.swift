@@ -30,15 +30,13 @@ class CustomCameraStateTransition: CameraStateTransition {
     func updateForFollowing(_ cameraOptions: CameraOptions) {
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
-                                         duration: 0.5,
-                                         completion: nil)
+                                         duration: 0.5)
     }
     
     func updateForOverview(_ cameraOptions: CameraOptions) {
         mapView?.cameraManager.setCamera(to: cameraOptions,
                                          animated: true,
-                                         duration: 0.5,
-                                         completion: nil)
+                                         duration: 0.5)
     }
     
     func cancelPendingTransition() {

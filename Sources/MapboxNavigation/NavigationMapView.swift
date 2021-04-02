@@ -375,8 +375,14 @@ open class NavigationMapView: UIView {
                               navigationCameraState: navigationCamera.state)
     }
     
-    // MARK: Feature Addition/removal properties and methods
+    // MARK: Feature addition/removal properties and methods
     
+    /**
+     Showcases route array. Adds routes and waypoints to map, and sets camera to point encompassing the route.
+     
+     - parameter routes: List of `Route` objects, which will be shown on `MapView.`
+     - parameter animated: Property, which determines whether camera movement will be animated while fitting first route.
+     */
     public func showcase(_ routes: [Route], animated: Bool = false) {
         guard let activeRoute = routes.first,
               let coordinates = activeRoute.shape?.coordinates,
@@ -393,12 +399,11 @@ open class NavigationMapView: UIView {
         fitCamera(to: activeRoute, animated: animated)
     }
     
-    func fitCamera(to route: Route, facing direction: CLLocationDirection = 0, animated: Bool = false) {
+    func fitCamera(to route: Route, animated: Bool = false) {
         guard let routeShape = route.shape, !routeShape.coordinates.isEmpty else { return }
-        let cameraOptions = mapView?.cameraManager.camera(fitting: .lineString(routeShape))
-        cameraOptions?.padding = safeArea
-        
-        if let cameraOptions = cameraOptions {
+        let edgeInsets = safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+        if let cameraOptions = mapView?.cameraManager.camera(fitting: .lineString(routeShape),
+                                                             edgePadding: edgeInsets) {
             mapView?.cameraManager.setCamera(to: cameraOptions, animated: animated)
         }
     }
@@ -633,11 +638,11 @@ open class NavigationMapView: UIView {
     func defaultWaypointSymbolLayer() -> SymbolLayer {
         var symbols = SymbolLayer(id: IdentifierString.waypointSymbol)
         symbols.source = IdentifierString.waypointSource
-        symbols.layout?.textField = .expression(Exp(.toString){
-                                                    Exp(.get){
-                                                        "name"
-                                                    }
-                                                })
+        symbols.layout?.textField = .expression(Exp(.toString) {
+            Exp(.get) {
+                "name"
+            }
+        })
         symbols.layout?.textSize = .constant(.init(10))
         symbols.paint?.textOpacity = .expression(Exp(.switchCase) {
             Exp(.any) {

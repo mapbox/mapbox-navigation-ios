@@ -249,7 +249,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingHeadUnitCamera.bearing = bearing
             followingHeadUnitCamera.anchor = anchor
             followingHeadUnitCamera.pitch = CGFloat(pitch)
-            followingHeadUnitCamera.padding = UIEdgeInsets(top: 50.0, left: 220.0, bottom: 10.0, right: 10.0)
+            followingHeadUnitCamera.padding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
         }
     }
     
