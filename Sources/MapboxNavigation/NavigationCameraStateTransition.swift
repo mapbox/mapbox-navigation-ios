@@ -123,7 +123,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     func update(_ cameraOptions: CameraOptions) {
-        guard let zoom = cameraOptions.zoom,
+        guard let mapView = mapView,
+              let zoom = cameraOptions.zoom,
               let location = cameraOptions.center,
               let bearing = cameraOptions.bearing,
               let pitch = cameraOptions.pitch,
@@ -132,26 +133,26 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         
         animatorCenter.stopAnimation()
         animatorCenter.addAnimations {
-            self.mapView?.centerCoordinate = location
+            mapView.centerCoordinate = location
         }
         
         animatorZoom.stopAnimation()
         animatorZoom.addAnimations {
-            self.mapView?.zoom = zoom
+            mapView.zoom = zoom
         }
         
         animatorBearing.stopAnimation()
         animatorBearing.addAnimations {
-            self.mapView?.bearing = bearing
+            mapView.bearing = bearing
         }
         
         animatorPitch.stopAnimation()
         animatorPitch.addAnimations {
-            self.mapView?.pitch = pitch
-            self.mapView?.anchor = anchor
+            mapView.pitch = pitch
+            mapView.anchor = anchor
         }
         
-        self.mapView?.padding = padding
+        mapView.padding = padding
         
         animatorCenter.startAnimation()
         animatorZoom.startAnimation()
@@ -323,7 +324,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
               let location = transitionParameters.cameraOptions.center,
               let bearing = transitionParameters.cameraOptions.bearing,
               let pitch = transitionParameters.cameraOptions.pitch,
-              let anchor = transitionParameters.cameraOptions.anchor else {
+              let anchor = transitionParameters.cameraOptions.anchor,
+              let padding = transitionParameters.cameraOptions.padding else {
             completion()
             return
         }
@@ -376,6 +378,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
                 animationsGroup.leave()
             }
         }
+        
+        mapView.padding = padding
         
         let animations: [(CameraAnimator, TimeInterval)] = [
             (animatorCenter, transitionParameters.centerAnimationDelay),

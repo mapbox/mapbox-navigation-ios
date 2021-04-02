@@ -293,7 +293,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         overviewHeadUnitCamera.zoom = CGFloat(zoom)
         overviewHeadUnitCamera.anchor = anchor
         overviewHeadUnitCamera.bearing = bearing
-        overviewHeadUnitCamera.padding = .zero
+        overviewHeadUnitCamera.padding = mapView.safeArea + UIEdgeInsets(top: 50.0, left: 50.0, bottom: 50.0, right: 50.0)
     }
     
     func bearing(_ initialBearing: CLLocationDirection,
