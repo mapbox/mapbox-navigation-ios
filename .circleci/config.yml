@@ -84,7 +84,9 @@ step-library:
   - &install-dependencies
       unless:
         condition:
-          equal: [ "12.1.0", << parameters.xcode >> ]
+          or:
+            - equal: [ "12.1.0", << parameters.xcode >> ]
+            - equal: [ true, << parameters.spm >> ]
         steps:
           run:
             name: Install Dependencies
@@ -95,7 +97,9 @@ step-library:
   - &install-dependencies-12
       when:
         condition:
-          equal: [ "12.1.0", << parameters.xcode >> ]
+          and:
+            - equal: [ "12.1.0", << parameters.xcode >> ]
+            - not: << parameters.spm >>
         steps:
           run:
             name: Install Dependencies
@@ -246,6 +250,9 @@ jobs:
       xcode:
         type: string
         default: "11.4.1"
+      spm:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
