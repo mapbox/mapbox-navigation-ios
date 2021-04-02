@@ -8,6 +8,7 @@ class NavigationCameraDebugView: UIView {
     var navigationViewportDataSource: NavigationViewportDataSource?
     
     var viewportLayer = CALayer()
+    var viewportTextLayer = CATextLayer()
     var anchorLayer = CALayer()
     var anchorTextLayer = CATextLayer()
     var centerLayer = CALayer()
@@ -63,6 +64,9 @@ class NavigationCameraDebugView: UIView {
         
         bearingTextLayer = createDefaultTextLayer()
         layer.addSublayer(bearingTextLayer)
+        
+        viewportTextLayer = createDefaultTextLayer()
+        layer.addSublayer(viewportTextLayer)
     }
     
     func createDefaultTextLayer() -> CATextLayer {
@@ -102,13 +106,6 @@ class NavigationCameraDebugView: UIView {
               let cameraOptions = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.cameraOptionsKey] as? Dictionary<String, CameraOptions>,
               let followingMobileCamera = cameraOptions[CameraOptions.followingMobileCameraKey] else { return }
         
-        if let edgeInsets = followingMobileCamera.padding {
-            viewportLayer.frame = CGRect(x: edgeInsets.left,
-                                         y: edgeInsets.top,
-                                         width: mapView.frame.width - edgeInsets.left - edgeInsets.right,
-                                         height: mapView.frame.height - edgeInsets.top - edgeInsets.bottom)
-        }
-        
         if let anchorPosition = followingMobileCamera.anchor {
             anchorLayer.position = anchorPosition
             anchorTextLayer.frame = .init(x: anchorLayer.frame.origin.x + 5.0,
@@ -130,7 +127,7 @@ class NavigationCameraDebugView: UIView {
                                          y: viewportLayer.frame.origin.y + 5.0,
                                          width: viewportLayer.frame.size.width - 10.0,
                                          height: 20.0)
-            pitchTextLayer.string = "Pitch: \(pitch)"
+            pitchTextLayer.string = "Pitch: \(pitch)º"
         }
         
         if let zoom = followingMobileCamera.zoom {
@@ -147,6 +144,19 @@ class NavigationCameraDebugView: UIView {
                                            width: viewportLayer.frame.size.width - 10.0,
                                            height: 20.0)
             bearingTextLayer.string = "Bearing: \(bearing)º"
+        }
+        
+        if let edgeInsets = followingMobileCamera.padding {
+            viewportLayer.frame = CGRect(x: edgeInsets.left,
+                                         y: edgeInsets.top,
+                                         width: mapView.frame.width - edgeInsets.left - edgeInsets.right,
+                                         height: mapView.frame.height - edgeInsets.top - edgeInsets.bottom)
+            
+            viewportTextLayer.frame = .init(x: viewportLayer.frame.origin.x + 5.0,
+                                            y: viewportLayer.frame.origin.y + 80.0,
+                                            width: viewportLayer.frame.size.width - 10.0,
+                                            height: 20.0)
+            viewportTextLayer.string = "Padding: (top: \(edgeInsets.top), left: \(edgeInsets.left), bottom: \(edgeInsets.bottom), right: \(edgeInsets.right))"
         }
     }
 }
