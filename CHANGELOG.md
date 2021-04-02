@@ -2,6 +2,7 @@
 
 ## v1.4.0
 
+* Increased the minimum version of `MapboxNavigationNative` to v32.0.0. ([#2910](https://github.com/mapbox/mapbox-navigation-ios/pull/2910))
 * Fixed an issue when feedback UI was always appearing for short routes ([#2871](https://github.com/mapbox/mapbox-navigation-ios/pull/2871))
 * Fixed automatic day/night switching ([#2881](https://github.com/mapbox/mapbox-navigation-ios/pull/2881))
 * Fixed an issue where presenting `NavigationViewController` could sometimes interfere with view presentation in other windows. ([#2897](https://github.com/mapbox/mapbox-navigation-ios/pull/2897))
