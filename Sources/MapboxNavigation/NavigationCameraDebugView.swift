@@ -7,7 +7,7 @@ class NavigationCameraDebugView: UIView {
     
     let navigationCameraType: NavigationCameraType
     
-    var navigationViewportDataSource: NavigationViewportDataSource?
+    weak var navigationViewportDataSource: NavigationViewportDataSource?
     
     var viewportLayer = CALayer()
     var viewportTextLayer = CATextLayer()
