@@ -125,15 +125,12 @@ public class CarPlayManager: NSObject {
      */
     public lazy var userTrackingButton: CPMapButton = {
         let userTrackingButton = CPMapButton { [weak self] button in
-            guard let navigationViewController = self?.currentNavigator,
-                  let state = self?.navigationMapView?.navigationCamera.state else {
-                return
-            }
+            guard let navigationMapView = self?.currentNavigator?.navigationMapView else { return }
             
-            if state == .following {
-                self?.navigationMapView?.navigationCamera.requestNavigationCameraToOverview()
+            if navigationMapView.navigationCamera.state == .following {
+                navigationMapView.navigationCamera.requestNavigationCameraToOverview()
             } else {
-                self?.navigationMapView?.navigationCamera.requestNavigationCameraToFollowing()
+                navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
             }
         }
         
@@ -207,13 +204,13 @@ public class CarPlayManager: NSObject {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigationCameraStateDidChange(_:)),
                                                name: .navigationCameraStateDidChange,
-                                               object: navigationMapView?.navigationCamera)
+                                               object: currentNavigator?.navigationMapView?.navigationCamera)
     }
     
     func unsubscribeFromNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: .navigationCameraStateDidChange,
-                                                  object: nil)
+                                                  object: currentNavigator?.navigationMapView?.navigationCamera)
     }
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
