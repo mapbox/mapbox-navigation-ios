@@ -278,12 +278,9 @@ open class NavigationMapView: UIView {
     }
     
     func setupGestureRecognizers() {
-        let gestures = mapView.gestureRecognizers ?? []
-        let mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didReceiveTap(sender:)))
-        for recognizer in gestures where recognizer is UITapGestureRecognizer {
-            mapTapGesture.requireFailure(of: [recognizer])
+        for recognizer in mapView.gestureRecognizers ?? [] where recognizer is UITapGestureRecognizer {
+            recognizer.addTarget(self, action: #selector(didReceiveTap(sender:)))
         }
-        mapView.addGestureRecognizer(mapTapGesture)
     }
     
     /**
