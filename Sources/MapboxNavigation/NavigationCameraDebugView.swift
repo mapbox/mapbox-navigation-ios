@@ -5,6 +5,8 @@ class NavigationCameraDebugView: UIView {
     
     weak var mapView: MapView?
     
+    let navigationCameraType: NavigationCameraType
+    
     var navigationViewportDataSource: NavigationViewportDataSource?
     
     var viewportLayer = CALayer()
@@ -16,9 +18,15 @@ class NavigationCameraDebugView: UIView {
     var pitchTextLayer = CATextLayer()
     var zoomTextLayer = CATextLayer()
     var bearingTextLayer = CATextLayer()
+    var centerCoordinateTextLayer = CATextLayer()
     
-    required init(_ mapView: MapView, frame: CGRect, navigationViewportDataSource: NavigationViewportDataSource?) {
+    required init(_ mapView: MapView,
+                  frame: CGRect,
+                  navigationCameraType: NavigationCameraType,
+                  navigationViewportDataSource: NavigationViewportDataSource?) {
         self.mapView = mapView
+        self.navigationCameraType = navigationCameraType
+        self.navigationViewportDataSource = navigationViewportDataSource
         
         super.init(frame: frame)
         
@@ -67,6 +75,9 @@ class NavigationCameraDebugView: UIView {
         
         viewportTextLayer = createDefaultTextLayer()
         layer.addSublayer(viewportTextLayer)
+        
+        centerCoordinateTextLayer = createDefaultTextLayer()
+        layer.addSublayer(centerCoordinateTextLayer)
     }
     
     func createDefaultTextLayer() -> CATextLayer {
@@ -103,10 +114,18 @@ class NavigationCameraDebugView: UIView {
     
     @objc func navigationCameraViewportDidChange(_ notification: NSNotification) {
         guard let mapView = mapView,
-              let cameraOptions = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.cameraOptionsKey] as? Dictionary<String, CameraOptions>,
-              let followingMobileCamera = cameraOptions[CameraOptions.followingMobileCameraKey] else { return }
+              let cameraOptions = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.cameraOptionsKey] as? Dictionary<String, CameraOptions> else { return }
         
-        if let anchorPosition = followingMobileCamera.anchor {
+        var camera: CameraOptions? = nil
+        
+        switch navigationCameraType {
+        case .headUnit:
+            camera = cameraOptions[CameraOptions.followingHeadUnitCameraKey]
+        case .mobile:
+            camera = cameraOptions[CameraOptions.followingMobileCameraKey]
+        }
+        
+        if let anchorPosition = camera?.anchor {
             anchorLayer.position = anchorPosition
             anchorTextLayer.frame = .init(x: anchorLayer.frame.origin.x + 5.0,
                                           y: anchorLayer.frame.origin.y + 5.0,
@@ -114,15 +133,7 @@ class NavigationCameraDebugView: UIView {
                                           height: 20.0)
         }
         
-        if let centerCoordinate = followingMobileCamera.center {
-            centerLayer.position = mapView.point(for: centerCoordinate)
-            centerTextLayer.frame = .init(x: centerLayer.frame.origin.x + 5.0,
-                                          y: centerLayer.frame.origin.y + 5.0,
-                                          width: 80.0,
-                                          height: 20.0)
-        }
-        
-        if let pitch = followingMobileCamera.pitch {
+        if let pitch = camera?.pitch {
             pitchTextLayer.frame = .init(x: viewportLayer.frame.origin.x + 5.0,
                                          y: viewportLayer.frame.origin.y + 5.0,
                                          width: viewportLayer.frame.size.width - 10.0,
@@ -130,7 +141,7 @@ class NavigationCameraDebugView: UIView {
             pitchTextLayer.string = "Pitch: \(pitch)º"
         }
         
-        if let zoom = followingMobileCamera.zoom {
+        if let zoom = camera?.zoom {
             zoomTextLayer.frame = .init(x: viewportLayer.frame.origin.x + 5.0,
                                         y: viewportLayer.frame.origin.y + 30.0,
                                         width: viewportLayer.frame.size.width - 10.0,
@@ -138,7 +149,7 @@ class NavigationCameraDebugView: UIView {
             zoomTextLayer.string = "Zoom: \(zoom)"
         }
         
-        if let bearing = followingMobileCamera.bearing {
+        if let bearing = camera?.bearing {
             bearingTextLayer.frame = .init(x: viewportLayer.frame.origin.x + 5.0,
                                            y: viewportLayer.frame.origin.y + 55.0,
                                            width: viewportLayer.frame.size.width - 10.0,
@@ -146,7 +157,7 @@ class NavigationCameraDebugView: UIView {
             bearingTextLayer.string = "Bearing: \(bearing)º"
         }
         
-        if let edgeInsets = followingMobileCamera.padding {
+        if let edgeInsets = camera?.padding {
             viewportLayer.frame = CGRect(x: edgeInsets.left,
                                          y: edgeInsets.top,
                                          width: mapView.frame.width - edgeInsets.left - edgeInsets.right,
@@ -157,6 +168,20 @@ class NavigationCameraDebugView: UIView {
                                             width: viewportLayer.frame.size.width - 10.0,
                                             height: 20.0)
             viewportTextLayer.string = "Padding: (top: \(edgeInsets.top), left: \(edgeInsets.left), bottom: \(edgeInsets.bottom), right: \(edgeInsets.right))"
+        }
+        
+        if let centerCoordinate = camera?.center {
+            centerLayer.position = mapView.point(for: centerCoordinate)
+            centerTextLayer.frame = .init(x: centerLayer.frame.origin.x + 5.0,
+                                          y: centerLayer.frame.origin.y + 5.0,
+                                          width: 80.0,
+                                          height: 20.0)
+            
+            centerCoordinateTextLayer.frame = .init(x: viewportLayer.frame.origin.x + 5.0,
+                                                    y: viewportLayer.frame.origin.y + 105.0,
+                                                    width: viewportLayer.frame.size.width - 10.0,
+                                                    height: 20.0)
+            centerCoordinateTextLayer.string = "Center coordinate: (lat: \(centerCoordinate.latitude), lng: \(centerCoordinate.longitude))"
         }
     }
 }

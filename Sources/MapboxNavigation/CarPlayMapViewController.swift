@@ -133,6 +133,7 @@ public class CarPlayMapViewController: UIViewController {
         navigationMapView.mapView.on(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
         }
+        navigationMapView.shouldShowNavigationCameraDebugView = true
         
         self.view = navigationMapView
         

@@ -137,6 +137,7 @@ public class CarPlayNavigationViewController: UIViewController {
         navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                                              viewportDataSourceType: .active)
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
+        navigationMapView.shouldShowNavigationCameraDebugView = true
         
         navigationMapView.mapView.on(.styleLoaded) { [weak self] _ in
             self?.navigationMapView?.localizeLabels()
