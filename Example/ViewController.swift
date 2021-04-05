@@ -138,7 +138,6 @@ class ViewController: UIViewController {
         navigationMapView.mapView.update {
             $0.location.puckType = .puck2D()
         }
-        navigationMapView.shouldShowNavigationCameraDebugView = true
         
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()

@@ -44,15 +44,6 @@ open class NavigationMapView: UIView {
      */
     public private(set) var navigationCamera: NavigationCamera!
     
-    /**
-     Property, which allows to hide/show navigation camera debug view.
-     */
-    public var shouldShowNavigationCameraDebugView: Bool = false {
-        didSet {
-            navigationCameraDebugView.isHidden = !shouldShowNavigationCameraDebugView
-        }
-    }
-    
     var navigationCameraDebugView: NavigationCameraDebugView!
 
     /**
