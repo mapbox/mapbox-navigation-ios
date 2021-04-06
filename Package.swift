@@ -57,11 +57,21 @@ let package = Package(
             name: "CTestHelper",
             dependencies: ["MapboxMobileEvents"]),
         .testTarget(
+            name: "TestHelper",
+            dependencies: ["CTestHelper"],
+            exclude: [
+                "Info.plist",
+                "TestHelper.h",
+                "MMEEventsManager+Spy.h",
+                "MMEEventsManager+Spy.m",
+            ]),
+        .testTarget(
             name: "MapboxCoreNavigationTests",
             dependencies: [
                 "MapboxCoreNavigation",
                 "Quick",
                 "Nimble",
+                "TestHelper",
             ],
             exclude: ["Info.plist"],
             resources: [
