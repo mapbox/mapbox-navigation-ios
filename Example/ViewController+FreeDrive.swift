@@ -11,9 +11,9 @@ import MapboxMaps
 extension ViewController {
     
     func setupPassiveLocationManager() {
-        guard let passiveLocationDataSource = passiveLocationDataSource else { return }
         setupFreeDriveStyledFeatures()
-        
+
+        let passiveLocationDataSource = PassiveLocationDataSource()
         let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
         navigationMapView.mapView.locationManager.overrideLocationProvider(with: passiveLocationManager)
         

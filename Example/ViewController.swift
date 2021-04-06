@@ -19,8 +19,6 @@ class ViewController: UIViewController {
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
     var speedLimitView: SpeedLimitView!
-    // let passiveLocationDataSource: PassiveLocationDataSource? = nil
-    let passiveLocationDataSource: PassiveLocationDataSource? = PassiveLocationDataSource()
     
     var currentEdgeIdentifier: ElectronicHorizon.Edge.Identifier?
     var nextEdgeIdentifier: ElectronicHorizon.Edge.Identifier?
@@ -119,7 +117,6 @@ class ViewController: UIViewController {
         if navigationMapView == nil {
             navigationMapView = NavigationMapView(frame: view.bounds)
         }
-        passiveLocationDataSource?.systemLocationManager.startUpdatingLocation()
     }
     
     override func viewDidAppear(_ animated: Bool) {
