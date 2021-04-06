@@ -98,7 +98,6 @@
 		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
 		355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */; };
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
-		3575671F22C53EA400002D95 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = 3575671D22C53EA400002D95 /* MMEEventsManager+Spy.m */; };
 		3577B878214FF35800094294 /* FavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3577B877214FF35800094294 /* FavoritesList.swift */; };
 		357DEC44221AEE150019BAEC /* multileg-route.json in Resources */ = {isa = PBXBuildFile; fileRef = 357DEC43221AEE150019BAEC /* multileg-route.json */; };
 		3582A25020EEC46B0029C5DE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A24F20EEC46B0029C5DE /* Router.swift */; };
@@ -2018,7 +2017,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B4F4414B261CCEA700849818 /* PBXTargetDependency */,
 			);
 			name = TestHelper;
 			packageProductDependencies = (
@@ -2706,7 +2704,6 @@
 				35C8DC122191E15A0053328C /* DummyURLSessionDataTask.swift in Sources */,
 				B4F44128261CCBB400849818 /* MMEEventsManager+Spy.m in Sources */,
 				35CDA8782190F2F00072B675 /* Fixture.swift in Sources */,
-				3575671F22C53EA400002D95 /* MMEEventsManager+Spy.m in Sources */,
 				35C8DBFD2191D0370053328C /* CoreLocation.swift in Sources */,
 				358E856421DD23E200E415C2 /* DummyLocationManager.swift in Sources */,
 				35C8DC112191E1140053328C /* DirectionsSpy.swift in Sources */,
@@ -2893,10 +2890,6 @@
 			isa = PBXTargetDependency;
 			target = 358D14621E5E3B7700ADE590 /* Example */;
 			targetProxy = 8DBCA7772080174600981EB2 /* PBXContainerItemProxy */;
-		};
-		B4F4414B261CCEA700849818 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = B4F4414A261CCEA700849818 /* CTestHelper */;
 		};
 		C5ADFBD51DDCC7840011824B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3813,10 +3806,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		B4F4414A261CCEA700849818 /* CTestHelper */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = CTestHelper;
-		};
 		DA1A1B0325E087A20097BBD7 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigation;
