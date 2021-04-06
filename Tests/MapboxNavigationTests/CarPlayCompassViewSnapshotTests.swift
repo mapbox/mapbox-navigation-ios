@@ -1,5 +1,7 @@
 import XCTest
+#if !SWIFT_PACKAGE
 import SnappyShrimp
+#endif
 import MapboxMaps
 @testable import MapboxNavigation
 

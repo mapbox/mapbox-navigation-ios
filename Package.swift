@@ -30,6 +30,7 @@ let package = Package(
         .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0-alpha.1"),
         .package(name: "Quick", url: "https://github.com/Quick/Quick.git", from: "2.0.0"),
         .package(name: "Nimble", url: "https://github.com/Quick/Nimble.git", from: "8.0.0"),
+        .package(name: "FBSnapshotTestCase", url: "https://github.com/alanzeino/ios-snapshot-test-case.git", .branch("master")),
     ],
     targets: [
         .target(
@@ -73,5 +74,24 @@ let package = Package(
             name: "MapboxCoreNavigationTests",
             dependencies: ["TestHelper"],
             exclude: ["Info.plist"]),
+        .testTarget(
+            name: "MapboxNavigationTests",
+            dependencies: [
+                "MapboxNavigation",
+                "FBSnapshotTestCase",
+            ],
+            exclude: [
+                "Info.plist",
+                "CPBarButton+MBTestable.h",
+                "CPBarButton+MBTestable.m",
+                "CPMapTemplate+MBTestable.h",
+                "CPMapTemplate+MBTestable.mm",
+                "MapboxNavigationTests-Bridging.h",
+            ],
+            resources: [
+                .process("Fixtures"),
+                .process("ReferenceImages"),
+                .process("ReferenceImages_64"),
+            ]),
     ]
 )

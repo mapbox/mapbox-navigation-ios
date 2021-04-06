@@ -1,8 +1,10 @@
 import XCTest
 import Foundation
+#if !SWIFT_PACKAGE
 import SnappyShrimp
-import MapboxDirections
 @testable import TestHelper
+#endif
+import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
