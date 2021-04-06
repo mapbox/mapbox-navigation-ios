@@ -85,8 +85,13 @@ open class LanesView: UIView, NavigationComponent {
 
             if case let .lane(indications: indications, isUsable: isUsable, preferredDirection: preferredDirection) = component {
 //                let maneuverDirection = visualInstruction?.primaryInstruction.maneuverDirection ?? ManeuverDirection(rawValue: indications.description)
-                let preferred = preferredDirection?.description
-                let maneuverDirection = ManeuverDirection(rawValue: preferred!) ?? visualInstruction?.primaryInstruction.maneuverDirection
+                var maneuverDirection: ManeuverDirection?
+                if let preferred = preferredDirection?.descriptions.first {
+                    maneuverDirection = ManeuverDirection(rawValue: preferred)
+                } else {
+                    maneuverDirection = visualInstruction?.primaryInstruction.maneuverDirection
+                }
+                
                 return LaneView(indications: indications, isUsable: isUsable, direction: maneuverDirection)
             } else {
                 return nil

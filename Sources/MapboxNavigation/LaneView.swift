@@ -435,7 +435,6 @@ open class LaneView: UIView {
         let resizing = LanesStyleKit.ResizingBehavior.aspectFit
         let appropriateColor = isValid ? appropriatePrimaryColor : appropriateSecondaryColor
         
-//        let rankedIndications = indications.ranked(favoring: ManeuverDirection(rawValue: preferredDirection.description))
         let rankedIndications = indications.ranked(favoring: maneuverDirection)
         guard let laneConfiguration = LaneConfiguration(rankedIndications: rankedIndications, drivingSide: drivingSide) else {
             return
