@@ -5,7 +5,6 @@ import MapboxMobileEvents
 @testable import TestHelper
 @testable import MapboxNavigation
 
-#if canImport(CarPlay)
 import CarPlay
 
 // For some reason XCTest bundles ignore @available annotations and these tests are run on iOS < 12 :(
@@ -445,6 +444,10 @@ class CarPlayManagerSpec: QuickSpec {
             let directionsFake = Directions(credentials: Fixture.credentials)
             return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
         }
+
+        func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+            //no-op
+        }
     }
 }
 
@@ -481,6 +484,10 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+        fatalError("This is an empty stub.")
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
         fatalError("This is an empty stub.")
     }
 }
@@ -529,6 +536,10 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         XCTAssertTrue(navigationInitiated)
         navigationEnded = true
         currentService = nil
+    }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        XCTAssertTrue(navigationInitiated)
     }
 }
 
@@ -657,4 +668,3 @@ class FakeCPInterfaceController: CPInterfaceController {
         }
     }
 }
-#endif

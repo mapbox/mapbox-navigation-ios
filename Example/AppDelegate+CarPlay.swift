@@ -1,6 +1,5 @@
 import UIKit
 import MapboxNavigation
-#if canImport(CarPlay)
 import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
@@ -147,6 +146,10 @@ extension AppDelegate: CarPlayManagerDelegate {
             return nil
         }
     }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        // no-op
+    }
 }
 
 @available(iOS 12.0, *)
@@ -184,4 +187,23 @@ extension AppDelegate: CPListTemplateDelegate {
         completionHandler()
     }
 }
-#endif
+
+@available(iOS 13.0, *)
+class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
+
+    func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
+                                  didConnect interfaceController: CPInterfaceController, to window: CPWindow) {
+
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        appDelegate.carPlayManager.delegate = appDelegate
+        appDelegate.carPlaySearchController.delegate = appDelegate
+        appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene, didConnectCarInterfaceController: interfaceController, to: window)
+    }
+
+    func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
+                                  didDisconnect interfaceController: CPInterfaceController, from window: CPWindow) {
+
+        guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene, didDisconnectCarInterfaceController: interfaceController, from: window)
+    }
+}

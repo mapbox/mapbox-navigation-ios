@@ -1,4 +1,3 @@
-#if canImport(CarPlay)
 import CarPlay
 import Turf
 import MapboxCoreNavigation
@@ -153,6 +152,8 @@ public protocol CarPlayManagerDelegate: class, UnimplementedLogging {
      - returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when disconnected.
      */
     func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) -> ()
 }
 
 @available(iOS 12.0, *)
@@ -247,5 +248,11 @@ public extension CarPlayManagerDelegate {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
         return false
     }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+    }
 }
-#endif

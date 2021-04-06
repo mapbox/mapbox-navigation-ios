@@ -1,7 +1,6 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
-#if canImport(CarPlay)
 import CarPlay
 
 /**
@@ -594,4 +593,3 @@ public extension CarPlayNavigationDelegate {
         //no-op, deprecated method
     }
 }
-#endif

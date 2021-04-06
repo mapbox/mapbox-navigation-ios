@@ -80,13 +80,11 @@ open class DayStyle: Style {
         Button.appearance().textColor = .defaultPrimaryText
         CancelButton.appearance().tintColor = .defaultPrimaryText
         
-        #if canImport(CarPlay)
         CarPlayCompassView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.6022227113)
         CarPlayCompassView.appearance().cornerRadius = 4
         CarPlayCompassView.appearance().borderWidth = 1.0 / (UIScreen.mainCarPlay?.scale ?? 2.0)
         CarPlayCompassView.appearance().borderColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 0.6009573063)
-        #endif
-        
+
         DismissButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         DismissButton.appearance().textColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         DismissButton.appearance().textFont = UIFont.systemFont(ofSize: 20, weight: .medium).adjustedFont
@@ -135,6 +133,10 @@ open class DayStyle: Style {
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColor = .defaultLaneArrowSecondary
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
         LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
+        LaneView.appearance().primaryColor = .defaultLaneArrowPrimaryCarPlay
+        LaneView.appearance().secondaryColor = .defaultLaneArrowSecondaryCarPlay
+        LaneView.appearance().primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
+        LaneView.appearance().secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
         LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         LineView.appearance().lineColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1)
         ManeuverView.appearance().backgroundColor = .clear

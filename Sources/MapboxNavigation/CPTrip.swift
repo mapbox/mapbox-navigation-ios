@@ -1,7 +1,5 @@
 import MapboxDirections
-#if canImport(CarPlay)
 import CarPlay
-#endif
 
 @available(iOS 12.0, *)
 extension CPTrip {

@@ -1,7 +1,5 @@
 import MapboxDirections
-#if canImport(CarPlay)
 import CarPlay
-#endif
 
 extension VisualInstruction {
     var laneComponents: [Component] {
@@ -73,7 +71,6 @@ extension VisualInstruction {
         return newImage
     }
     
-    #if canImport(CarPlay)
     /// Returns a `CPImageSet` representing the maneuver.
     @available(iOS 12.0, *)
     public func maneuverImageSet(side: DrivingSide) -> CPImageSet? {
@@ -172,5 +169,4 @@ extension VisualInstruction {
         }
         return nil
     }
-    #endif
 }
