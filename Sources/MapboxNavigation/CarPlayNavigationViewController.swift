@@ -3,7 +3,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 import MapboxMaps
 
-#if canImport(CarPlay)
 import CarPlay
 
 /**
