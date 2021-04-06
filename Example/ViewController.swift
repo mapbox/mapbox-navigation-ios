@@ -293,16 +293,6 @@ class ViewController: UIViewController {
         let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
-        
-        // Modify default `NavigationViewportDataSource` and `NavigationCameraStateTransition` to change
-        // `NavigationCamera` behavior during active guidance.
-        if let mapView = navigationViewController.navigationMapView?.mapView {
-            let customViewportDataSource = CustomViewportDataSource(mapView)
-            navigationViewController.navigationMapView?.navigationCamera.viewportDataSource = customViewportDataSource
-            
-            let customCameraStateTransition = CustomCameraStateTransition(mapView)
-            navigationViewController.navigationMapView?.navigationCamera.cameraStateTransition = customCameraStateTransition
-        }
 
         present(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -366,13 +356,11 @@ class ViewController: UIViewController {
         let toggleDayNightStyle: ActionHandler = { _ in self.toggleDayNightStyle() }
         let requestNavigationFollowingCamera: ActionHandler = { _ in self.requestNavigationFollowingCamera() }
         let requestNavigationIdleCamera: ActionHandler = { _ in self.requestNavigationIdleCamera() }
-        let overrideViewportDataSourceAndCameraTransition: ActionHandler = { _ in self.overrideViewportDataSourceAndCameraTransition() }
         
         let actions: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Toggle Day/Night Style", .default, toggleDayNightStyle),
             ("Request Following Camera", .default, requestNavigationFollowingCamera),
             ("Request Idle Camera", .default, requestNavigationIdleCamera),
-            ("Override camera", .default, overrideViewportDataSourceAndCameraTransition),
             ("Cancel", .cancel, nil)
         ]
         
@@ -401,14 +389,6 @@ class ViewController: UIViewController {
     
     func requestNavigationIdleCamera() {
         navigationMapView.navigationCamera.requestNavigationCameraToIdle()
-    }
-    
-    func overrideViewportDataSourceAndCameraTransition() {
-        let customViewportDataSource = CustomViewportDataSource(navigationMapView.mapView)
-        navigationMapView.navigationCamera.viewportDataSource = customViewportDataSource
-        
-        let customCameraStateTransition = CustomCameraStateTransition(navigationMapView.mapView)
-        navigationMapView.navigationCamera.cameraStateTransition = customCameraStateTransition
     }
     
     func requestRoute() {
