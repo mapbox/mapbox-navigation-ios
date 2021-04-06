@@ -2,7 +2,6 @@ import XCTest
 import MapboxDirections
 import Turf
 @testable import MapboxCoreNavigation
-#if !SWIFT_PACKAGE
 import TestHelper
 
 class SimulatedLocationManagerTests: XCTestCase {
@@ -64,4 +63,3 @@ class SimulatedLocationManagerSpy: NSObject, CLLocationManagerDelegate {
         self.locations.append(contentsOf: locations)
     }
 }
-#endif

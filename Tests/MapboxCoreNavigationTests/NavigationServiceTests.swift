@@ -3,7 +3,6 @@ import MapboxDirections
 import Turf
 import MapboxMobileEvents
 import os.log
-#if !SWIFT_PACKAGE
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -632,4 +631,3 @@ class NavigationServiceTests: XCTestCase {
 }
 
 class EmptyNavigationServiceDelegate: NavigationServiceDelegate {}
-#endif

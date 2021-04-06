@@ -2,7 +2,6 @@ import XCTest
 import CoreLocation
 import MapboxDirections
 import Turf
-#if !SWIFT_PACKAGE
 import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -354,4 +353,3 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
 }
-#endif

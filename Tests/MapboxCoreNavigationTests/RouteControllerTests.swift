@@ -2,7 +2,6 @@ import XCTest
 import Turf
 import MapboxDirections
 @testable import MapboxCoreNavigation
-#if !SWIFT_PACKAGE
 import TestHelper
 
 class RouteControllerTests: XCTestCase {
@@ -65,4 +64,3 @@ extension RouteControllerTests: RouterDataSource {
         return NavigationLocationManager.self
     }
 }
-#endif

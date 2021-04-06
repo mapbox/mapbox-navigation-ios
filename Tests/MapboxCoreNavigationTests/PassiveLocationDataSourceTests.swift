@@ -1,6 +1,5 @@
 import Foundation
 import MapboxNavigationNative
-#if !SWIFT_PACKAGE
 import TestHelper
 import XCTest
 @testable import MapboxCoreNavigation
@@ -111,4 +110,3 @@ private extension CLLocation {
         )
     }
 }
-#endif
