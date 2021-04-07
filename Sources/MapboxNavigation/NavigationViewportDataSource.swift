@@ -169,13 +169,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         
         if let location = activeLocation, let routeProgress = routeProgress {
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
-            
-            var anchor = self.anchor(pitchСoefficient,
-                                     maxPitch: maximumPitch,
-                                     bounds: mapView.bounds,
-                                     edgeInsets: viewportPadding)
             let pitch = maximumPitch * pitchСoefficient
-            
             var compoundManeuvers: [[CLLocationCoordinate2D]] = []
             let stepIndex = routeProgress.currentLegProgress.stepIndex
             let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
@@ -193,12 +187,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             let coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
             let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
-            var zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                                 pitch: pitch,
-                                 edgeInsets: viewportPadding,
-                                 defaultZoomLevel: 2.0,
-                                 maxZoomLevel: 16.35)
-            
             let centerLineString = LineString([location.coordinate, (coordinatesToManeuver + coordinatesForManeuverFraming).map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate])
             let centerLineStringTotalDistance = centerLineString.distance() ?? 0.0
             let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchСoefficient)
@@ -233,28 +221,31 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let bearing = self.bearing(location.course, coordinatesToManeuver: coordinatesForIntersections)
 
             followingMobileCamera.center = center
-            followingMobileCamera.zoom = CGFloat(zoom)
+            followingMobileCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+                                                           pitch: pitch,
+                                                           edgeInsets: viewportPadding,
+                                                           defaultZoomLevel: 2.0,
+                                                           maxZoomLevel: 16.35))
             followingMobileCamera.bearing = bearing
-            followingMobileCamera.anchor = anchor
+            followingMobileCamera.anchor = self.anchor(pitchСoefficient,
+                                                       maxPitch: maximumPitch,
+                                                       bounds: mapView.bounds,
+                                                       edgeInsets: viewportPadding)
             followingMobileCamera.pitch = CGFloat(pitch)
             followingMobileCamera.padding = viewportPadding
             
             let headUnitCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
-            zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                             pitch: pitch,
-                             edgeInsets: headUnitCameraPadding,
-                             defaultZoomLevel: 2.0,
-                             maxZoomLevel: 16.35)
-            
-            anchor = self.anchor(pitchСoefficient,
-                                 maxPitch: maximumPitch,
-                                 bounds: mapView.bounds,
-                                 edgeInsets: headUnitCameraPadding)
-            
             followingHeadUnitCamera.center = center
-            followingHeadUnitCamera.zoom = CGFloat(zoom)
+            followingHeadUnitCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+                                                             pitch: pitch,
+                                                             edgeInsets: headUnitCameraPadding,
+                                                             defaultZoomLevel: 2.0,
+                                                             maxZoomLevel: 16.35))
             followingHeadUnitCamera.bearing = bearing
-            followingHeadUnitCamera.anchor = anchor
+            followingHeadUnitCamera.anchor = self.anchor(pitchСoefficient,
+                                                         maxPitch: maximumPitch,
+                                                         bounds: mapView.bounds,
+                                                         edgeInsets: headUnitCameraPadding)
             followingHeadUnitCamera.pitch = CGFloat(pitch)
             followingHeadUnitCamera.padding = headUnitCameraPadding
         }
@@ -266,10 +257,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
               let heading = activeLocation?.course,
               let routeProgress = routeProgress else { return }
         
-        let anchor = self.anchor(0.0,
-                                 maxPitch: maximumPitch,
-                                 bounds: mapView.bounds,
-                                 edgeInsets: viewportPadding)
         let stepIndex = routeProgress.currentLegProgress.stepIndex
         let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
         let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...].map({ $0.shape?.coordinates })
@@ -289,18 +276,28 @@ public class NavigationViewportDataSource: ViewportDataSource {
         overviewMobileCamera.pitch = 0.0
         overviewMobileCamera.center = center
         overviewMobileCamera.zoom = CGFloat(zoom)
-        overviewMobileCamera.anchor = anchor
+        overviewMobileCamera.anchor = self.anchor(0.0,
+                                                  maxPitch: maximumPitch,
+                                                  bounds: mapView.bounds,
+                                                  edgeInsets: viewportPadding)
         overviewMobileCamera.bearing = bearing
         overviewMobileCamera.padding = viewportPadding
         
-        zoom = self.zoom(remainingCoordinatesOnRoute, maxZoomLevel: 16.35)
+        let headUnitCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+
+        zoom = self.zoom(remainingCoordinatesOnRoute,
+                         edgeInsets: headUnitCameraPadding,
+                         maxZoomLevel: 16.35)
         
         overviewHeadUnitCamera.pitch = 0.0
         overviewHeadUnitCamera.center = center
         overviewHeadUnitCamera.zoom = CGFloat(zoom)
-        overviewHeadUnitCamera.anchor = anchor
+        overviewHeadUnitCamera.anchor = self.anchor(0.0,
+                                                    maxPitch: maximumPitch,
+                                                    bounds: mapView.bounds,
+                                                    edgeInsets: headUnitCameraPadding)
         overviewHeadUnitCamera.bearing = bearing
-        overviewHeadUnitCamera.padding = mapView.safeArea + UIEdgeInsets(top: 50.0, left: 50.0, bottom: 50.0, right: 50.0)
+        overviewHeadUnitCamera.padding = headUnitCameraPadding
     }
     
     func bearing(_ initialBearing: CLLocationDirection,
