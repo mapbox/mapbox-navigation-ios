@@ -28,6 +28,8 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     public var viewportDataSource: ViewportDataSource {
         didSet {
             viewportDataSource.delegate = self
+            
+            navigationCameraDebugView?.navigationViewportDataSource = viewportDataSource as? NavigationViewportDataSource
         }
     }
     
@@ -40,6 +42,8 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     weak var mapView: MapView?
     
     var navigationCameraType: NavigationCameraType = .mobile
+    
+    var navigationCameraDebugView: NavigationCameraDebugView? = nil
     
     /**
      Initializer of `NavigationCamera` object.
@@ -58,6 +62,10 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         self.viewportDataSource.delegate = self
         
         setupGestureRegonizers()
+        
+        setupNavigationCameraDebugView(mapView,
+                                       navigationCameraType: navigationCameraType,
+                                       navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
     }
     
     // MARK: - Setting-up methods
@@ -184,5 +192,15 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             || gestureRecognizer is UIPinchGestureRecognizer {
             gestureRecognizer.addTarget(self, action: #selector(requestNavigationCameraToIdle))
         }
+    }
+    
+    func setupNavigationCameraDebugView(_ mapView: MapView,
+                                        navigationCameraType: NavigationCameraType,
+                                        navigationViewportDataSource: NavigationViewportDataSource?) {
+        navigationCameraDebugView = NavigationCameraDebugView(mapView,
+                                                              frame: mapView.frame,
+                                                              navigationCameraType: navigationCameraType,
+                                                              navigationViewportDataSource: navigationViewportDataSource)
+        mapView.addSubview(navigationCameraDebugView!)
     }
 }

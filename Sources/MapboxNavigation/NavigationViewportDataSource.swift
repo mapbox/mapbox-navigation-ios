@@ -47,7 +47,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     /**
      Value of default viewport padding.
      */
-    public var viewportPadding: UIEdgeInsets = .zero
+    var viewportPadding: UIEdgeInsets = .zero
     
     weak var mapView: MapView?
     
@@ -170,7 +170,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         if let location = activeLocation, let routeProgress = routeProgress {
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
             
-            let anchor = self.anchor(pitchСoefficient,
+            var anchor = self.anchor(pitchСoefficient,
                                      maxPitch: maximumPitch,
                                      bounds: mapView.bounds,
                                      edgeInsets: viewportPadding)
@@ -239,17 +239,24 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingMobileCamera.pitch = CGFloat(pitch)
             followingMobileCamera.padding = viewportPadding
             
+            let headUnitCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
             zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                              pitch: pitch,
+                             edgeInsets: headUnitCameraPadding,
                              defaultZoomLevel: 2.0,
                              maxZoomLevel: 16.35)
+            
+            anchor = self.anchor(pitchСoefficient,
+                                 maxPitch: maximumPitch,
+                                 bounds: mapView.bounds,
+                                 edgeInsets: headUnitCameraPadding)
             
             followingHeadUnitCamera.center = center
             followingHeadUnitCamera.zoom = CGFloat(zoom)
             followingHeadUnitCamera.bearing = bearing
             followingHeadUnitCamera.anchor = anchor
             followingHeadUnitCamera.pitch = CGFloat(pitch)
-            followingHeadUnitCamera.padding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+            followingHeadUnitCamera.padding = headUnitCameraPadding
         }
     }
     

@@ -7,7 +7,11 @@ class NavigationCameraDebugView: UIView {
     
     let navigationCameraType: NavigationCameraType
     
-    weak var navigationViewportDataSource: NavigationViewportDataSource?
+    weak var navigationViewportDataSource: NavigationViewportDataSource? {
+        didSet {
+            subscribeForNotifications(navigationViewportDataSource)
+        }
+    }
     
     var viewportLayer = CALayer()
     var viewportTextLayer = CATextLayer()
@@ -32,7 +36,7 @@ class NavigationCameraDebugView: UIView {
         
         isUserInteractionEnabled = false
         backgroundColor = .clear
-        subscribeForNotifications()
+        subscribeForNotifications(navigationViewportDataSource)
         
         viewportLayer.borderWidth = 3.0
         viewportLayer.borderColor = UIColor.green.cgColor
@@ -96,20 +100,20 @@ class NavigationCameraDebugView: UIView {
     }
     
     deinit {
-        unsubscribeFromNotifications()
+        unsubscribeFromNotifications(navigationViewportDataSource)
     }
     
-    func subscribeForNotifications() {
+    func subscribeForNotifications(_ object: Any?) {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigationCameraViewportDidChange(_:)),
                                                name: .navigationCameraViewportDidChange,
-                                               object: navigationViewportDataSource)
+                                               object: object)
     }
     
-    func unsubscribeFromNotifications() {
+    func unsubscribeFromNotifications(_ object: Any?) {
         NotificationCenter.default.removeObserver(self,
                                                   name: .navigationCameraViewportDidChange,
-                                                  object: navigationViewportDataSource)
+                                                  object: object)
     }
     
     @objc func navigationCameraViewportDidChange(_ notification: NSNotification) {

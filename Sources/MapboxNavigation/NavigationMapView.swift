@@ -251,21 +251,6 @@ open class NavigationMapView: UIView {
         
         navigationCamera = NavigationCamera(mapView, navigationCameraType: navigationCameraType)
         navigationCamera.requestNavigationCameraToFollowing()
-        
-        setupNavigationCameraDebugView(mapView,
-                                       navigationCameraType: navigationCameraType,
-                                       navigationViewportDataSource: navigationCamera.viewportDataSource as? NavigationViewportDataSource)
-    }
-    
-    func setupNavigationCameraDebugView(_ mapView: MapView,
-                                        navigationCameraType: NavigationCameraType,
-                                        navigationViewportDataSource: NavigationViewportDataSource?) {
-        navigationCameraDebugView = NavigationCameraDebugView(mapView,
-                                                              frame: mapView.frame,
-                                                              navigationCameraType: navigationCameraType,
-                                                              navigationViewportDataSource: navigationViewportDataSource)
-        navigationCameraDebugView.isHidden = true
-        mapView.addSubview(navigationCameraDebugView)
     }
     
     func setupGestureRecognizers() {
