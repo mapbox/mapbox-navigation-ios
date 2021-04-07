@@ -61,7 +61,6 @@ let package = Package(
             dependencies: ["CTestHelper"],
             exclude: [
                 "Info.plist",
-                "TestHelper.h",
                 "MMEEventsManager+Spy.h",
                 "MMEEventsManager+Spy.m",
             ]),
