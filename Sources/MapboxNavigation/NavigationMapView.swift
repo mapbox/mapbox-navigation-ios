@@ -240,8 +240,9 @@ open class NavigationMapView: UIView {
             $0.ornaments.showsScale = false
         }
         
-        mapView.on(.renderFrameFinished) { _ in
-            guard let location = self.mostRecentUserCourseViewLocation else { return }
+        mapView.on(.renderFrameFinished) { [weak self] _ in
+            guard let self = self,
+                  let location = self.mostRecentUserCourseViewLocation else { return }
             self.updateUserCourseView(location, animated: false)
         }
         
