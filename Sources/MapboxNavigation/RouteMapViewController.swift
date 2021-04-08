@@ -182,17 +182,13 @@ class RouteMapViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        let navigationMapView = self.navigationMapView
-        // TODO: Verify whether content insets should be changed on map view.
-        view.layoutIfNeeded()
 
-        navigationMapView.tracksUserCourse = true
+        self.navigationMapView.tracksUserCourse = true
         
-        navigationMapView.mapView.on(.styleLoaded) { _ in
-            self.showRouteIfNeeded()
-            navigationMapView.localizeLabels()
-            navigationMapView.mapView.showsTraffic = false
+        self.navigationMapView.mapView.on(.styleLoaded) { [weak self] _ in
+            self?.showRouteIfNeeded()
+            self?.navigationMapView.localizeLabels()
+            self?.navigationMapView.mapView.showsTraffic = false
             
             // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
             // regarding building identification such highlighted building will disappear.
