@@ -32,6 +32,7 @@ class MapboxCoreNavigationTests: XCTestCase {
     override func tearDown() {
         super.tearDown()
         UserDefaults.resetStandardUserDefaults()
+        try? Navigator.shared.navigator.resetRideSession()
     }
     
     func testNavigationNotificationsInfoDict() {

@@ -53,6 +53,10 @@ class NavigationServiceTests: XCTestCase {
         directionsClientSpy.reset()
         delegate.reset()
     }
+    
+    override func tearDown() {
+        try? Navigator.shared.navigator.resetRideSession()
+    }
 
     func testDefaultUserInterfaceUsage() {
         XCTAssertTrue(!dependencies.navigationService.eventsManager.usesDefaultUserInterface, "MapboxCoreNavigationTests shouldn't have an implicit dependency on MapboxNavigation due to removing the Example application target as the test host.")
