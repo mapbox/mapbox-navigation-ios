@@ -15,8 +15,8 @@ open class NavigationMapView: UIView {
     struct FrameIntervalOptions {
         static let durationUntilNextManeuver: TimeInterval = 7
         static let durationSincePreviousManeuver: TimeInterval = 3
-        static let defaultFramesPerSecond = PreferredFPS.maximum
-        static let pluggedInFramesPerSecond = PreferredFPS.lowPower
+        static let defaultFramesPerSecond = PreferredFPS.normal
+        static let pluggedInFramesPerSecond = PreferredFPS.maximum
     }
     
     /**
