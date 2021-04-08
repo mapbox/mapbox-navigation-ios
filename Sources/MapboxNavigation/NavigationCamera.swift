@@ -39,10 +39,19 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      */
     public var cameraStateTransition: CameraStateTransition
     
+    /**
+     `MapView` instance, which will be used for performing camera related transitions.
+     */
     weak var mapView: MapView?
     
+    /**
+     Type of `NavigationCamera`. Used to decide on which platform (iOS or CarPlay) transitions and updates should be executed.
+     */
     var type: NavigationCameraType = .mobile
     
+    /**
+     Instance of `NavigationCameraDebugView`, which is drawn on `MapView` surface for debugging purposes.
+     */
     var debugView: NavigationCameraDebugView? = nil
     
     /**
@@ -63,9 +72,9 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         
         setupGestureRegonizers()
         
-        setupDebugView(mapView,
-                       navigationCameraType: navigationCameraType,
-                       navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
+        // setupDebugView(mapView,
+        //               navigationCameraType: navigationCameraType,
+        //               navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
     }
     
     // MARK: - Setting-up methods
