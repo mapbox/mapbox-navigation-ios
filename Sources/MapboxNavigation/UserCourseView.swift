@@ -17,7 +17,7 @@ public extension CourseUpdatable {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             let isCameraFollowing = navigationCameraState == .following
-            let angle = CGFloat(isCameraFollowing ? 0.0 : CLLocationDegrees(direction - location.course).toRadians())
+            let angle = CGFloat(CLLocationDegrees(direction - location.course).toRadians())
             let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
             
             let isCameraTransitioning = navigationCameraState == .transitionToFollowing || navigationCameraState == .transitionToOverview
@@ -56,7 +56,7 @@ public class UserPuckCourseView: UIView, CourseUpdatable {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             let isCameraFollowing = navigationCameraState == .following
-            let angle = CGFloat(isCameraFollowing ? 0.0 : CLLocationDegrees(direction - location.course).toRadians())
+            let angle = CGFloat(CLLocationDegrees(direction - location.course).toRadians())
             let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
             
             let isCameraTransitioning = navigationCameraState == .transitionToFollowing || navigationCameraState == .transitionToOverview
