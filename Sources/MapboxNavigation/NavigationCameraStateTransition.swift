@@ -190,7 +190,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             return
         }
         
-        let centerTranslationDistance = CLLocation.distance(from: mapView.centerCoordinate, to: location)
+        let centerTranslationDistance = mapView.centerCoordinate.distance(to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1500.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.6), 0.6)
         let centerAnimationDelay: TimeInterval = 0.0
@@ -243,7 +243,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let zoomAnimationDelay: TimeInterval = 0.0
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
-        let centerTranslationDistance = CLLocation.distance(from: mapView.centerCoordinate, to: location)
+        let centerTranslationDistance = mapView.centerCoordinate.distance(to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1000.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.4), 0.6)
         let centerAnimationDelay: TimeInterval = max(endZoomAnimation - centerAnimationDuration, 0.0)
@@ -288,7 +288,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         let zoomAnimationDelay: TimeInterval = 0.0
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
-        let centerTranslationDistance = CLLocation.distance(from: mapView.centerCoordinate, to: location)
+        let centerTranslationDistance = mapView.centerCoordinate.distance(to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1000.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.4), 0.8)
         let centerAnimationDelay: TimeInterval = max(endZoomAnimation - centerAnimationDuration, 0.0)

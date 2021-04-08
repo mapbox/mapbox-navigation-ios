@@ -237,7 +237,6 @@
 		8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A446644260A7B24008BA55E /* BoundingBox.swift */; };
 		8A8C3D8E26016DC40071D274 /* CLLocationDegrees.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3D8D26016DC40071D274 /* CLLocationDegrees.swift */; };
 		8A8C3D98260175D20071D274 /* CLLocationDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3D97260175D20071D274 /* CLLocationDirection.swift */; };
-		8A8C3DA2260182790071D274 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3DA1260182790071D274 /* CLLocation.swift */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
 		8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3965225DC66570027A035 /* NavigationCameraType.swift */; };
 		8AC6191025881F8D00430AA8 /* route-with-mixed-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190B25881F8D00430AA8 /* route-with-mixed-road-classes.json */; };
@@ -765,7 +764,6 @@
 		8A446644260A7B24008BA55E /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		8A8C3D8D26016DC40071D274 /* CLLocationDegrees.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationDegrees.swift; sourceTree = "<group>"; };
 		8A8C3D97260175D20071D274 /* CLLocationDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationDirection.swift; sourceTree = "<group>"; };
-		8A8C3DA1260182790071D274 /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocation.swift; sourceTree = "<group>"; };
 		8A997F2A2581A9E4005D50D6 /* MapboxMapsAnnotations.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMapsAnnotations.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A997F2D2581A9EA005D50D6 /* MapboxMaps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
@@ -1662,7 +1660,6 @@
 				8AE9081125FAA53300F37077 /* Collection.swift */,
 				8A8C3D8D26016DC40071D274 /* CLLocationDegrees.swift */,
 				8A8C3D97260175D20071D274 /* CLLocationDirection.swift */,
-				8A8C3DA1260182790071D274 /* CLLocation.swift */,
 				8A446644260A7B24008BA55E /* BoundingBox.swift */,
 			);
 			name = Extensions;
@@ -2555,7 +2552,6 @@
 				CFD47D9020FD85EC00BC1E49 /* AccountManager.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
 				8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */,
-				8A8C3DA2260182790071D274 /* CLLocation.swift in Sources */,
 				DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */,
 				35B7837E1F9547B300291F9A /* Transitioning.swift in Sources */,
 				8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */,
