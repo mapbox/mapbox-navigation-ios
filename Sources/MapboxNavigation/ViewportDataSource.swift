@@ -25,7 +25,7 @@ public protocol ViewportDataSource: class {
      `CameraOptions`, which are used on CarPlay when transitioning to `NavigationCameraState.following` or
      for continuous updates when already in `NavigationCameraState.following` state.
      */
-    var followingHeadUnitCamera: CameraOptions { get }
+    var followingCarPlayCamera: CameraOptions { get }
     
     /**
      `CameraOptions`, which are used on iOS when transitioning to `NavigationCameraState.overview` or
@@ -37,7 +37,7 @@ public protocol ViewportDataSource: class {
      `CameraOptions`, which are used on CarPlay when transitioning to `NavigationCameraState.overview` or
      for continuous updates when already in `NavigationCameraState.overview` state.
      */
-    var overviewHeadUnitCamera: CameraOptions { get }
+    var overviewCarPlayCamera: CameraOptions { get }
 }
 
 /**

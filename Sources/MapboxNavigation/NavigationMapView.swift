@@ -44,8 +44,6 @@ open class NavigationMapView: UIView {
      */
     public private(set) var navigationCamera: NavigationCamera!
     
-    var navigationCameraDebugView: NavigationCameraDebugView!
-
     /**
      Controls whether to show congestion levels on alternative route lines. Defaults to `false`.
      
@@ -168,6 +166,11 @@ open class NavigationMapView: UIView {
      */
     private(set) var predictiveCacheManager: PredictiveCacheManager?
     
+    /**
+     Initializes a newly allocated `NavigationMapView` object with the specified frame rectangle.
+     
+     - parameter frame: The frame rectangle for the `NavigationMapView`.
+     */
     public override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -175,6 +178,12 @@ open class NavigationMapView: UIView {
         commonInit()
     }
     
+    /**
+     Initializes a newly allocated `NavigationMapView` object with the specified frame rectangle and type of `NavigationCamera`.
+     
+     - parameter frame: The frame rectangle for the `NavigationMapView`.
+     - parameter navigationCameraType: Type of `NavigationCamera`, which is used for the current instance of `NavigationMapView`.
+     */
     public init(frame: CGRect, navigationCameraType: NavigationCameraType = .mobile) {
         super.init(frame: frame)
         
@@ -182,6 +191,11 @@ open class NavigationMapView: UIView {
         commonInit()
     }
     
+    /**
+     Returns a `NavigationMapView` object initialized from data in a given unarchiver.
+     
+     - parameter coder: An unarchiver object.
+     */
     public required init?(coder: NSCoder) {
         super.init(coder: coder)
         

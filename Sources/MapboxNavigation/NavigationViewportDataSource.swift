@@ -24,7 +24,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
      `CameraOptions`, which are used on CarPlay when transitioning to `NavigationCameraState.following` or
      for continuous updates when already in `NavigationCameraState.following` state.
      */
-    public var followingHeadUnitCamera: CameraOptions = CameraOptions()
+    public var followingCarPlayCamera: CameraOptions = CameraOptions()
     
     /**
      `CameraOptions`, which are used on iOS when transitioning to `NavigationCameraState.overview` or
@@ -36,7 +36,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
      `CameraOptions`, which are used on CarPlay when transitioning to `NavigationCameraState.overview` or
      for continuous updates when already in `NavigationCameraState.overview` state.
      */
-    public var overviewHeadUnitCamera: CameraOptions = CameraOptions()
+    public var overviewCarPlayCamera: CameraOptions = CameraOptions()
     
     /**
      Value of maximum pitch, which will be taken into account when preparing `CameraOption`s during
@@ -134,8 +134,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let cameraOptions = [
             CameraOptions.followingMobileCameraKey: followingMobileCamera,
             CameraOptions.overviewMobileCameraKey: overviewMobileCamera,
-            CameraOptions.followingHeadUnitCameraKey: followingHeadUnitCamera,
-            CameraOptions.overviewHeadUnitCameraKey: overviewHeadUnitCamera
+            CameraOptions.followingCarPlayCameraKey: followingCarPlayCamera,
+            CameraOptions.overviewCarPlayCameraKey: overviewCarPlayCamera
         ]
         
         return cameraOptions
@@ -157,12 +157,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingMobileCamera.pitch = 0.0
             followingMobileCamera.padding = .zero
             
-            followingHeadUnitCamera.center = location.coordinate
-            followingHeadUnitCamera.zoom = followingWithoutRouteZoomLevel
-            followingHeadUnitCamera.bearing = 0.0
-            followingHeadUnitCamera.anchor = mapView.center
-            followingHeadUnitCamera.pitch = 0.0
-            followingHeadUnitCamera.padding = .zero
+            followingCarPlayCamera.center = location.coordinate
+            followingCarPlayCamera.zoom = followingWithoutRouteZoomLevel
+            followingCarPlayCamera.bearing = 0.0
+            followingCarPlayCamera.anchor = mapView.center
+            followingCarPlayCamera.pitch = 0.0
+            followingCarPlayCamera.padding = .zero
             
             return
         }
@@ -219,7 +219,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let lookaheadDistance = averageIntersectionDistances[currentRouteLegIndex][currentRouteStepIndex] * Double(numberOfIntersections)
             let coordinatesForIntersections = coordinatesToManeuver.sliced(from: nil, to: LineString(coordinatesToManeuver).coordinateFromStart(distance: fmax(lookaheadDistance, 150.0)))
             let bearing = self.bearing(location.course, coordinatesToManeuver: coordinatesForIntersections)
-
+            
             followingMobileCamera.center = center
             followingMobileCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                                            pitch: pitch,
@@ -234,20 +234,20 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingMobileCamera.pitch = CGFloat(pitch)
             followingMobileCamera.padding = viewportPadding
             
-            let headUnitCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
-            followingHeadUnitCamera.center = center
-            followingHeadUnitCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                             pitch: pitch,
-                                                             edgeInsets: headUnitCameraPadding,
-                                                             defaultZoomLevel: 2.0,
-                                                             maxZoomLevel: 16.35))
-            followingHeadUnitCamera.bearing = bearing
-            followingHeadUnitCamera.anchor = self.anchor(pitchСoefficient,
-                                                         maxPitch: maximumPitch,
-                                                         bounds: mapView.bounds,
-                                                         edgeInsets: headUnitCameraPadding)
-            followingHeadUnitCamera.pitch = CGFloat(pitch)
-            followingHeadUnitCamera.padding = headUnitCameraPadding
+            let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+            followingCarPlayCamera.center = center
+            followingCarPlayCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+                                                            pitch: pitch,
+                                                            edgeInsets: carPlayCameraPadding,
+                                                            defaultZoomLevel: 2.0,
+                                                            maxZoomLevel: 16.35))
+            followingCarPlayCamera.bearing = bearing
+            followingCarPlayCamera.anchor = self.anchor(pitchСoefficient,
+                                                        maxPitch: maximumPitch,
+                                                        bounds: mapView.bounds,
+                                                        edgeInsets: carPlayCameraPadding)
+            followingCarPlayCamera.pitch = CGFloat(pitch)
+            followingCarPlayCamera.padding = carPlayCameraPadding
         }
     }
     
@@ -262,7 +262,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let coordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...].map({ $0.shape?.coordinates })
         let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: coordinate) ?? []
         let remainingCoordinatesOnRoute = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
-
+        
         let center = remainingCoordinatesOnRoute.map({ mapView.point(for: $0) }).boundingBoxPoints.map({ mapView.coordinate(for: $0) }).centerCoordinate
         
         var zoom = self.zoom(remainingCoordinatesOnRoute,
@@ -283,27 +283,27 @@ public class NavigationViewportDataSource: ViewportDataSource {
         overviewMobileCamera.bearing = bearing
         overviewMobileCamera.padding = viewportPadding
         
-        let headUnitCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
-
+        let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+        
         zoom = self.zoom(remainingCoordinatesOnRoute,
-                         edgeInsets: headUnitCameraPadding,
+                         edgeInsets: carPlayCameraPadding,
                          maxZoomLevel: 16.35)
         
-        overviewHeadUnitCamera.pitch = 0.0
-        overviewHeadUnitCamera.center = center
-        overviewHeadUnitCamera.zoom = CGFloat(zoom)
-        overviewHeadUnitCamera.anchor = self.anchor(0.0,
-                                                    maxPitch: maximumPitch,
-                                                    bounds: mapView.bounds,
-                                                    edgeInsets: headUnitCameraPadding)
-        overviewHeadUnitCamera.bearing = bearing
-        overviewHeadUnitCamera.padding = headUnitCameraPadding
+        overviewCarPlayCamera.pitch = 0.0
+        overviewCarPlayCamera.center = center
+        overviewCarPlayCamera.zoom = CGFloat(zoom)
+        overviewCarPlayCamera.anchor = self.anchor(0.0,
+                                                   maxPitch: maximumPitch,
+                                                   bounds: mapView.bounds,
+                                                   edgeInsets: carPlayCameraPadding)
+        overviewCarPlayCamera.bearing = bearing
+        overviewCarPlayCamera.padding = carPlayCameraPadding
     }
     
     func bearing(_ initialBearing: CLLocationDirection,
                  coordinatesToManeuver: [CLLocationCoordinate2D]? = nil) -> CLLocationDirection {
         var bearing = initialBearing
-
+        
         if let coordinates = coordinatesToManeuver,
            let firstCoordinate = coordinates.first,
            let lastCoordinate = coordinates.last {
@@ -390,7 +390,7 @@ extension NavigationViewportDataSource: LocationConsumer {
             // No-op
         }
     }
-
+    
     public func locationUpdate(newLocation: Location) {
         let cameraOptions = self.cameraOptions(newLocation.internalLocation)
         delegate?.viewportDataSource(self, didUpdate: cameraOptions)

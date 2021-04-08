@@ -133,7 +133,7 @@ public class CarPlayNavigationViewController: UIViewController {
     // MARK: - Setting-up methods
     
     func setupNavigationMapView() {
-        let navigationMapView = NavigationMapView(frame: view.bounds, navigationCameraType: .headUnit)
+        let navigationMapView = NavigationMapView(frame: view.bounds, navigationCameraType: .carPlay)
         navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                                              viewportDataSourceType: .active)
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false

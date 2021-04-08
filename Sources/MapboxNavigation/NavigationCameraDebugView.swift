@@ -127,8 +127,8 @@ class NavigationCameraDebugView: UIView {
         var camera: CameraOptions? = nil
         
         switch navigationCameraType {
-        case .headUnit:
-            camera = cameraOptions[CameraOptions.followingHeadUnitCameraKey]
+        case .carPlay:
+            camera = cameraOptions[CameraOptions.followingCarPlayCameraKey]
         case .mobile:
             camera = cameraOptions[CameraOptions.followingMobileCameraKey]
         }

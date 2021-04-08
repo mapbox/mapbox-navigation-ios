@@ -7,9 +7,9 @@ extension CameraOptions {
     
     public static let overviewMobileCameraKey = "OverviewMobileCamera"
     
-    public static let followingHeadUnitCameraKey = "FollowingHeadUnitCamera"
+    public static let followingCarPlayCameraKey = "FollowingCarPlayCamera"
     
-    public static let overviewHeadUnitCameraKey = "OverviewHeadUnitCamera"
+    public static let overviewCarPlayCameraKey = "OverviewCarPlayCamera"
 }
 
 extension Notification.Name {

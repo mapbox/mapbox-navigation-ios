@@ -29,7 +29,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         didSet {
             viewportDataSource.delegate = self
             
-            navigationCameraDebugView?.navigationViewportDataSource = viewportDataSource as? NavigationViewportDataSource
+            debugView?.navigationViewportDataSource = viewportDataSource as? NavigationViewportDataSource
         }
     }
     
@@ -41,9 +41,9 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
     weak var mapView: MapView?
     
-    var navigationCameraType: NavigationCameraType = .mobile
+    var type: NavigationCameraType = .mobile
     
-    var navigationCameraDebugView: NavigationCameraDebugView? = nil
+    var debugView: NavigationCameraDebugView? = nil
     
     /**
      Initializer of `NavigationCamera` object.
@@ -55,7 +55,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         self.mapView = mapView
         self.viewportDataSource = NavigationViewportDataSource(mapView)
         self.cameraStateTransition = NavigationCameraStateTransition(mapView)
-        self.navigationCameraType = navigationCameraType
+        self.type = navigationCameraType
         
         super.init()
         
@@ -79,10 +79,10 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     public func viewportDataSource(_ dataSource: ViewportDataSource, didUpdate cameraOptions: [String: CameraOptions]) {
         switch state {
         case .following:
-            switch navigationCameraType {
-            case .headUnit:
-                if let followingHeadUnitCamera = cameraOptions[CameraOptions.followingHeadUnitCameraKey] {
-                    cameraStateTransition.updateForFollowing(followingHeadUnitCamera)
+            switch type {
+            case .carPlay:
+                if let followingCarPlayCamera = cameraOptions[CameraOptions.followingCarPlayCameraKey] {
+                    cameraStateTransition.updateForFollowing(followingCarPlayCamera)
                 }
             case .mobile:
                 if let followingMobileCamera = cameraOptions[CameraOptions.followingMobileCameraKey] {
@@ -92,10 +92,10 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             break
 
         case .overview:
-            switch navigationCameraType {
-            case .headUnit:
-                if let overviewHeadUnitCamera = cameraOptions[CameraOptions.overviewHeadUnitCameraKey] {
-                    cameraStateTransition.updateForOverview(overviewHeadUnitCamera)
+            switch type {
+            case .carPlay:
+                if let overviewCarPlayCamera = cameraOptions[CameraOptions.overviewCarPlayCameraKey] {
+                    cameraStateTransition.updateForOverview(overviewCarPlayCamera)
                 }
             case .mobile:
                 if let overviewMobileCamera = cameraOptions[CameraOptions.overviewMobileCameraKey] {
@@ -125,11 +125,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             state = .transitionToFollowing
             
             var cameraOptions: CameraOptions
-            switch navigationCameraType {
+            switch type {
             case .mobile:
                 cameraOptions = viewportDataSource.followingMobileCamera
-            case .headUnit:
-                cameraOptions = viewportDataSource.followingHeadUnitCamera
+            case .carPlay:
+                cameraOptions = viewportDataSource.followingCarPlayCamera
             }
             
             cameraStateTransition.transitionToFollowing(cameraOptions) { 
@@ -154,11 +154,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             state = .transitionToOverview
             
             var cameraOptions: CameraOptions
-            switch navigationCameraType {
+            switch type {
             case .mobile:
                 cameraOptions = viewportDataSource.overviewMobileCamera
-            case .headUnit:
-                cameraOptions = viewportDataSource.overviewHeadUnitCamera
+            case .carPlay:
+                cameraOptions = viewportDataSource.overviewCarPlayCamera
             }
             
             cameraStateTransition.transitionToOverview(cameraOptions) { 
@@ -197,10 +197,10 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     func setupNavigationCameraDebugView(_ mapView: MapView,
                                         navigationCameraType: NavigationCameraType,
                                         navigationViewportDataSource: NavigationViewportDataSource?) {
-        navigationCameraDebugView = NavigationCameraDebugView(mapView,
-                                                              frame: mapView.frame,
-                                                              navigationCameraType: navigationCameraType,
-                                                              navigationViewportDataSource: navigationViewportDataSource)
-        mapView.addSubview(navigationCameraDebugView!)
+        debugView = NavigationCameraDebugView(mapView,
+                                              frame: mapView.frame,
+                                              navigationCameraType: navigationCameraType,
+                                              navigationViewportDataSource: navigationViewportDataSource)
+        mapView.addSubview(debugView!)
     }
 }
