@@ -303,10 +303,10 @@
 		B426FEF425FFD5DC001884C8 /* RouteControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3573EA70215A5A9F009899D7 /* RouteControllerTests.swift */; };
 		B426FF0525FFD679001884C8 /* SimulatedLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */; };
 		B430D2FA25534FDC0088CC23 /* UserHaloCourseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */; };
+		B47C1AAC261FCDF70078546C /* MMEEventsManager+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = B47C1AA9261FCDF30078546C /* MMEEventsManager+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B47C1ABD261FCDFB0078546C /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = B47C1AAB261FCDF30078546C /* MMEEventsManager+Spy.m */; };
 		B48CEFC125796FD300696BB3 /* route-for-vanishing-route-line.json in Resources */ = {isa = PBXBuildFile; fileRef = B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */; };
 		B4F2BF3C25FAF69500D7AE2E /* NavigationPlotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3559FE4E21C3195700B6613F /* NavigationPlotter.swift */; };
-		B4F44128261CCBB400849818 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = B4F4411F261CCB8B00849818 /* MMEEventsManager+Spy.m */; };
-		B4F44131261CCBC100849818 /* MMEEventsManager+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = B4F4411D261CCB8B00849818 /* MMEEventsManager+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC31620F689F800400CE7 /* CustomStyles.swift */; };
@@ -844,10 +844,10 @@
 		AEF2C8F12072B603007B061F /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
 		B419BFF125F00A9C0086639B /* Feature.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Feature.swift; sourceTree = "<group>"; };
 		B430D2F925534FDC0088CC23 /* UserHaloCourseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseView.swift; sourceTree = "<group>"; };
+		B47C1AA9261FCDF30078546C /* MMEEventsManager+Spy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMEEventsManager+Spy.h"; sourceTree = "<group>"; };
+		B47C1AAA261FCDF30078546C /* CTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestHelper.h; sourceTree = "<group>"; };
+		B47C1AAB261FCDF30078546C /* MMEEventsManager+Spy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MMEEventsManager+Spy.m"; sourceTree = "<group>"; };
 		B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-vanishing-route-line.json"; sourceTree = "<group>"; };
-		B4F4411D261CCB8B00849818 /* MMEEventsManager+Spy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MMEEventsManager+Spy.h"; sourceTree = "<group>"; };
-		B4F4411E261CCB8B00849818 /* CTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestHelper.h; sourceTree = "<group>"; };
-		B4F4411F261CCB8B00849818 /* MMEEventsManager+Spy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MMEEventsManager+Spy.m"; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
 		C51FC31620F689F800400CE7 /* CustomStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomStyles.swift; path = Example/CustomStyles.swift; sourceTree = "<group>"; };
@@ -1615,15 +1615,15 @@
 			name = "Guidance Cards";
 			sourceTree = "<group>";
 		};
-		B4F4411C261CCB8B00849818 /* CTestHelper */ = {
+		B47C1AA8261FCDF30078546C /* CTestHelper */ = {
 			isa = PBXGroup;
 			children = (
-				B4F4411D261CCB8B00849818 /* MMEEventsManager+Spy.h */,
-				B4F4411E261CCB8B00849818 /* CTestHelper.h */,
-				B4F4411F261CCB8B00849818 /* MMEEventsManager+Spy.m */,
+				B47C1AA9261FCDF30078546C /* MMEEventsManager+Spy.h */,
+				B47C1AAA261FCDF30078546C /* CTestHelper.h */,
+				B47C1AAB261FCDF30078546C /* MMEEventsManager+Spy.m */,
 			);
 			name = CTestHelper;
-			path = Tests/CTestHelper;
+			path = Sources/CTestHelper;
 			sourceTree = "<group>";
 		};
 		C51923B41EA55C5E002AF9E1 /* Extensions */ = {
@@ -1726,7 +1726,7 @@
 		C5ADFBBF1DDCC7840011824B = {
 			isa = PBXGroup;
 			children = (
-				B4F4411C261CCB8B00849818 /* CTestHelper */,
+				B47C1AA8261FCDF30078546C /* CTestHelper */,
 				8DF8E4DD2202694100B29FEF /* Documents */,
 				35B711DB1E5E7B70001EDA8D /* Example */,
 				DA1A1AFC25E085D40097BBD7 /*  */,
@@ -1877,7 +1877,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4F44131261CCBC100849818 /* MMEEventsManager+Spy.h in Headers */,
+				B47C1AAC261FCDF70078546C /* MMEEventsManager+Spy.h in Headers */,
 				35CDA86E2190F2A40072B675 /* TestHelper.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2695,10 +2695,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4F44128261CCBB400849818 /* MMEEventsManager+Spy.m in Sources */,
 				35C8DC172191E5DB0053328C /* NavigationServiceTestDoubles.swift in Sources */,
 				3537DCE721E6447600E78CE6 /* Date.swift in Sources */,
 				35C8DC122191E15A0053328C /* DummyURLSessionDataTask.swift in Sources */,
+				B47C1ABD261FCDFB0078546C /* MMEEventsManager+Spy.m in Sources */,
 				35CDA8782190F2F00072B675 /* Fixture.swift in Sources */,
 				35C8DBFD2191D0370053328C /* CoreLocation.swift in Sources */,
 				358E856421DD23E200E415C2 /* DummyLocationManager.swift in Sources */,

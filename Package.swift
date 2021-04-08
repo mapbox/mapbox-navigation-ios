@@ -53,7 +53,7 @@ let package = Package(
                 "Solar",
             ],
             exclude: ["Info.plist"]),
-        .testTarget(
+        .target(
             name: "CTestHelper",
             dependencies: ["MapboxMobileEvents"]),
         .testTarget(
