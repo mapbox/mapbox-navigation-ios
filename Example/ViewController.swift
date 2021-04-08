@@ -351,13 +351,13 @@ class ViewController: UIViewController {
                                                 message: "Select specific action to perform it", preferredStyle: .actionSheet)
         
         let toggleDayNightStyle: ActionHandler = { _ in self.toggleDayNightStyle() }
-        let requestNavigationFollowingCamera: ActionHandler = { _ in self.requestNavigationFollowingCamera() }
-        let requestNavigationIdleCamera: ActionHandler = { _ in self.requestNavigationIdleCamera() }
+        let requestFollowCamera: ActionHandler = { _ in self.requestFollowCamera() }
+        let requestIdleCamera: ActionHandler = { _ in self.requestIdleCamera() }
         
         let actions: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Toggle Day/Night Style", .default, toggleDayNightStyle),
-            ("Request Following Camera", .default, requestNavigationFollowingCamera),
-            ("Request Idle Camera", .default, requestNavigationIdleCamera),
+            ("Request Following Camera", .default, requestFollowCamera),
+            ("Request Idle Camera", .default, requestIdleCamera),
             ("Cancel", .cancel, nil)
         ]
         
@@ -380,12 +380,12 @@ class ViewController: UIViewController {
         }
     }
     
-    func requestNavigationFollowingCamera() {
-        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+    func requestFollowCamera() {
+        navigationMapView.navigationCamera.follow()
     }
     
-    func requestNavigationIdleCamera() {
-        navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+    func requestIdleCamera() {
+        navigationMapView.navigationCamera.stop()
     }
     
     func requestRoute() {

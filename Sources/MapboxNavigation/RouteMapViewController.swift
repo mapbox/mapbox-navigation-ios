@@ -184,7 +184,7 @@ class RouteMapViewController: UIViewController {
             $0.ornaments.showsCompass = false
         }
 
-        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView.navigationCamera.follow()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -211,7 +211,7 @@ class RouteMapViewController: UIViewController {
     }
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
-        guard let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.stateKey] as? NavigationCameraState else { return }
+        guard let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
         
         updateNavigationCameraViewport()
         
@@ -252,7 +252,7 @@ class RouteMapViewController: UIViewController {
     }
 
     @objc func overview(_ sender: Any) {
-        navigationMapView.navigationCamera.requestNavigationCameraToOverview()
+        navigationMapView.navigationCamera.moveToOverview()
     }
     
     func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {        
@@ -277,7 +277,7 @@ class RouteMapViewController: UIViewController {
         navigationMapView.updateUserCourseView(location)
         delegate?.mapViewController(self, didCenterOn: location)
         
-        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView.navigationCamera.follow()
         navigationMapView.addArrow(route: router.route,
                                    legIndex: router.routeProgress.legIndex,
                                    stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
@@ -388,7 +388,7 @@ class RouteMapViewController: UIViewController {
         navigationView.endOfRouteHideConstraint?.isActive = false
         navigationView.endOfRouteShowConstraint?.isActive = true
         
-        navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+        navigationMapView.navigationCamera.stop()
         
         if let height = navigationView.endOfRouteHeightConstraint?.constant {
             self.navigationView.floatingStackView.alpha = 0.0

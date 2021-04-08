@@ -42,7 +42,7 @@ public class CarPlayMapViewController: UIViewController {
      */
     public lazy var recenterButton: CPMapButton = {
         let recenter = CPMapButton { [weak self] button in
-            self?.navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+            self?.navigationMapView.navigationCamera.follow()
             button.isHidden = true
         }
         
@@ -59,7 +59,7 @@ public class CarPlayMapViewController: UIViewController {
         let zoomInButton = CPMapButton { [weak self] (button) in
             guard let self = self, let mapView = self.navigationMapView.mapView else { return }
             
-            self.navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+            self.navigationMapView.navigationCamera.stop()
             
             let cameraOptions = mapView.camera
             cameraOptions.zoom = mapView.zoom + 1.0
@@ -79,7 +79,7 @@ public class CarPlayMapViewController: UIViewController {
         let zoomOutButton = CPMapButton { [weak self] button in
             guard let self = self, let mapView = self.navigationMapView.mapView else { return }
             
-            self.navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+            self.navigationMapView.navigationCamera.stop()
             
             let cameraOptions = mapView.camera
             cameraOptions.zoom = mapView.zoom - 1.0
@@ -143,7 +143,7 @@ public class CarPlayMapViewController: UIViewController {
         super.viewDidLoad()
         
         setupStyleManager()
-        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView.navigationCamera.follow()
         navigationMapView.mapView.update {
             $0.location.puckType = .puck2D()
         }
@@ -202,7 +202,7 @@ public class CarPlayMapViewController: UIViewController {
         super.viewSafeAreaInsetsDidChange()
         
         guard let activeRoute = navigationMapView.routes?.first else {
-            navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+            navigationMapView.navigationCamera.follow()
             return
         }
         

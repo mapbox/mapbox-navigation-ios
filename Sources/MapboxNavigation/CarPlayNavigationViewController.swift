@@ -150,7 +150,7 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         navigationMapView.userCourseView.isHidden = false
-        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView.navigationCamera.follow()
         
         view.addSubview(navigationMapView)
         navigationMapView.pinInSuperview()

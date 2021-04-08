@@ -47,10 +47,10 @@ public protocol ViewportDataSource: class {
 public protocol ViewportDataSourceDelegate {
     
     /**
-     Method, which must be called upon each location change to notify `NavigationCamera` that there is new data to consume.
+     Notifies `NavigationCamera` that the camera options have changed in response to a location update.
      
      - parameter dataSource: Object, which conforms to `ViewportDataSource` protocol.
-     - parameter cameraOptions: Dictionary, which contains `CameraOptions` objects for both `iOS` and `CarPlay`.
+     - parameter cameraOptions: Dictionary, which contains `CameraOptions` objects for both iOS and CarPlay.
      */
     func viewportDataSource(_ dataSource: ViewportDataSource, didUpdate cameraOptions: [String: CameraOptions])
 }

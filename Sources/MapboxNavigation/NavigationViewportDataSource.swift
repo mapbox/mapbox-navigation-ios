@@ -111,7 +111,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         delegate?.viewportDataSource(self, didUpdate: cameraOptions)
         
         NotificationCenter.default.post(name: .navigationCameraViewportDidChange, object: self, userInfo: [
-            NavigationCamera.NotificationUserInfoKey.cameraOptionsKey: cameraOptions
+            NavigationCamera.NotificationUserInfoKey.cameraOptions: cameraOptions
         ])
     }
     
@@ -132,10 +132,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
                              routeProgress: routeProgress)
         
         let cameraOptions = [
-            CameraOptions.followingMobileCameraKey: followingMobileCamera,
-            CameraOptions.overviewMobileCameraKey: overviewMobileCamera,
-            CameraOptions.followingCarPlayCameraKey: followingCarPlayCamera,
-            CameraOptions.overviewCarPlayCameraKey: overviewCarPlayCamera
+            CameraOptions.followingMobileCamera: followingMobileCamera,
+            CameraOptions.overviewMobileCamera: overviewMobileCamera,
+            CameraOptions.followingCarPlayCamera: followingCarPlayCamera,
+            CameraOptions.overviewCarPlayCamera: overviewCarPlayCamera
         ]
         
         return cameraOptions

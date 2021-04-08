@@ -128,9 +128,9 @@ public class CarPlayManager: NSObject {
             guard let navigationMapView = self?.currentNavigator?.navigationMapView else { return }
             
             if navigationMapView.navigationCamera.state == .following {
-                navigationMapView.navigationCamera.requestNavigationCameraToOverview()
+                navigationMapView.navigationCamera.moveToOverview()
             } else {
-                navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+                navigationMapView.navigationCamera.follow()
             }
         }
         
@@ -214,7 +214,7 @@ public class CarPlayManager: NSObject {
     }
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
-        guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.stateKey] as? NavigationCameraState else { return }
+        guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
         switch state {
         case .idle:
             break
@@ -361,7 +361,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         guard let top = interface.topTemplate,
               type(of: top) == CPSearchTemplate.self || onFreedriveMapOrNavigating else { return }
         
-        navigationMapView?.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView?.navigationCamera.follow()
     }
 }
 
@@ -612,7 +612,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         guard let carPlayMapViewController = carPlayMapViewController else { return }
         
         // After `MapView` panning `NavigationCamera` should be moved to idle state to prevent any further changes.
-        navigationMapView?.navigationCamera.requestNavigationCameraToIdle()
+        navigationMapView?.navigationCamera.stop()
 
         // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
         let navigationMapView = carPlayMapViewController.navigationMapView

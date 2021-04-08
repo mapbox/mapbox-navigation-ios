@@ -228,7 +228,7 @@ open class NavigationMapView: UIView {
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
         guard let location = mostRecentUserCourseViewLocation,
-              let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.stateKey] as? NavigationCameraState else { return }
+              let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
         
         switch navigationCameraState {
         case .idle:
@@ -265,7 +265,7 @@ open class NavigationMapView: UIView {
         mapView.pinTo(parentView: self)
         
         navigationCamera = NavigationCamera(mapView, navigationCameraType: navigationCameraType)
-        navigationCamera.requestNavigationCameraToFollowing()
+        navigationCamera.follow()
     }
     
     func setupGestureRecognizers() {
@@ -383,7 +383,7 @@ open class NavigationMapView: UIView {
         show(routes)
         showWaypoints(on: activeRoute)
         
-        navigationCamera.requestNavigationCameraToIdle()
+        navigationCamera.stop()
         fitCamera(to: activeRoute, animated: animated)
     }
     

@@ -5,7 +5,7 @@ extension CameraOptions {
     /**
      Returns description of all properties in `CameraOptions`.
      */
-    public override var description: String {
+    public override var debugDescription: String {
         var propertiesCount: UInt32 = 0
         let properties = class_copyPropertyList(CameraOptions.self, &propertiesCount)
         
@@ -15,7 +15,7 @@ extension CameraOptions {
             let key = NSString(cString: property_getName(property), encoding: String.Encoding.utf8.rawValue) as String?
             
             if let key = key,
-               key != "description",
+               key != "debugDescription",
                let value = self.value(forKey: key) {
                 description.append("\(key): \(value)")
             }

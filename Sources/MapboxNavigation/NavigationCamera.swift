@@ -16,7 +16,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             NotificationCenter.default.post(name: .navigationCameraStateDidChange,
                                             object: self,
                                             userInfo: [
-                                                NavigationCamera.NotificationUserInfoKey.stateKey: state
+                                                NavigationCamera.NotificationUserInfoKey.state: state
                                             ])
         }
     }
@@ -63,9 +63,9 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         
         setupGestureRegonizers()
         
-        setupNavigationCameraDebugView(mapView,
-                                       navigationCameraType: navigationCameraType,
-                                       navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
+        setupDebugView(mapView,
+                       navigationCameraType: navigationCameraType,
+                       navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
     }
     
     // MARK: - Setting-up methods
@@ -81,11 +81,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         case .following:
             switch type {
             case .carPlay:
-                if let followingCarPlayCamera = cameraOptions[CameraOptions.followingCarPlayCameraKey] {
+                if let followingCarPlayCamera = cameraOptions[CameraOptions.followingCarPlayCamera] {
                     cameraStateTransition.updateForFollowing(followingCarPlayCamera)
                 }
             case .mobile:
-                if let followingMobileCamera = cameraOptions[CameraOptions.followingMobileCameraKey] {
+                if let followingMobileCamera = cameraOptions[CameraOptions.followingMobileCamera] {
                     cameraStateTransition.updateForFollowing(followingMobileCamera)
                 }
             }
@@ -94,11 +94,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         case .overview:
             switch type {
             case .carPlay:
-                if let overviewCarPlayCamera = cameraOptions[CameraOptions.overviewCarPlayCameraKey] {
+                if let overviewCarPlayCamera = cameraOptions[CameraOptions.overviewCarPlayCamera] {
                     cameraStateTransition.updateForOverview(overviewCarPlayCamera)
                 }
             case .mobile:
-                if let overviewMobileCamera = cameraOptions[CameraOptions.overviewMobileCameraKey] {
+                if let overviewMobileCamera = cameraOptions[CameraOptions.overviewMobileCamera] {
                     cameraStateTransition.updateForOverview(overviewMobileCamera)
                 }
             }
@@ -116,7 +116,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      When started, state will first change to `NavigationCameraState.transitionToFollowing` and then
      to the final `NavigationCameraState.following` when ended.
      */
-    public func requestNavigationCameraToFollowing() {
+    public func follow() {
         switch state {
         case .transitionToFollowing, .following:
             return
@@ -145,7 +145,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      When started, state will first change to `NavigationCameraState.transitionToOverview` and then
      to the final `NavigationCameraState.overview` when ended.
      */
-    public func requestNavigationCameraToOverview() {
+    public func moveToOverview() {
         switch state {
         case .transitionToOverview, .overview:
             return
@@ -173,7 +173,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      Call to this method immediately moves `NavigationCamera` to `NavigationCameraState.idle` state
      and stops all pending transitions.
      */
-    @objc public func requestNavigationCameraToIdle() {
+    @objc public func stop() {
         if state == .idle { return }
         
         cameraStateTransition.cancelPendingTransition()
@@ -190,13 +190,13 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         where gestureRecognizer is UIPanGestureRecognizer
             || gestureRecognizer is UIRotationGestureRecognizer
             || gestureRecognizer is UIPinchGestureRecognizer {
-            gestureRecognizer.addTarget(self, action: #selector(requestNavigationCameraToIdle))
+            gestureRecognizer.addTarget(self, action: #selector(stop))
         }
     }
     
-    func setupNavigationCameraDebugView(_ mapView: MapView,
-                                        navigationCameraType: NavigationCameraType,
-                                        navigationViewportDataSource: NavigationViewportDataSource?) {
+    func setupDebugView(_ mapView: MapView,
+                        navigationCameraType: NavigationCameraType,
+                        navigationViewportDataSource: NavigationViewportDataSource?) {
         debugView = NavigationCameraDebugView(mapView,
                                               frame: mapView.frame,
                                               navigationCameraType: navigationCameraType,

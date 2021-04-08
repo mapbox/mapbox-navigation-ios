@@ -395,7 +395,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         navigationService(navigationService, didPassVisualInstructionPoint: firstInstruction, routeProgress: navigationService.routeProgress)
         
         // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
-        navigationMapView?.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView?.navigationCamera.follow()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -863,7 +863,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
                            steps: remaining)
         }
         
-        navigationMapView?.navigationCamera.requestNavigationCameraToIdle()
+        navigationMapView?.navigationCamera.stop()
         mapViewController?.center(on: upcomingStep,
                                   route: route,
                                   legIndex: legIndex,

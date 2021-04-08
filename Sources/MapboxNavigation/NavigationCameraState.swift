@@ -6,14 +6,14 @@ public enum NavigationCameraState {
     /**
      State when `NavigationCamera` does not execute any transitions.
      
-     Such state is set after invoking `NavigationCamera.requestNavigationCameraToIdle()`.
+     Such state is set after invoking `NavigationCamera.stop()`.
      */
     case idle
     
     /**
      State when `NavigationCamera` transitions to the `NavigationCameraState.following` state.
      
-     Such state is set after invoking `NavigationCamera.requestNavigationCameraToFollowing()`.
+     Such state is set after invoking `NavigationCamera.follow()`.
      */
     case transitionToFollowing
     
@@ -25,7 +25,7 @@ public enum NavigationCameraState {
     /**
      State when `NavigationCamera` is transitioning to the `NavigationCameraState.overview` state.
      
-     Such state is set after invoking `NavigationCamera.requestNavigationCameraToOverview()`.
+     Such state is set after invoking `NavigationCamera.moveToOverview()`.
      */
     case transitionToOverview
     

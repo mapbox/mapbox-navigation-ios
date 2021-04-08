@@ -3,13 +3,29 @@ import MapboxMaps
 
 extension CameraOptions {
     
-    public static let followingMobileCameraKey = "FollowingMobileCamera"
+    /**
+     Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
+     so that it can be consumed by `NavigationCamera` in `.transitionToFollowing` or `.following` states on iOS.
+     */
+    public static let followingMobileCamera = "FollowingMobileCamera"
     
-    public static let overviewMobileCameraKey = "OverviewMobileCamera"
+    /**
+     Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
+     so that it can be consumed by `NavigationCamera` in `.transitionToOverview` or `.overview` states on iOS.
+     */
+    public static let overviewMobileCamera = "OverviewMobileCamera"
     
-    public static let followingCarPlayCameraKey = "FollowingCarPlayCamera"
+    /**
+     Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
+     so that it can be consumed by `NavigationCamera` in `.transitionToFollowing` or `.following` states on CarPlay.
+     */
+    public static let followingCarPlayCamera = "FollowingCarPlayCamera"
     
-    public static let overviewCarPlayCameraKey = "OverviewCarPlayCamera"
+    /**
+     Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
+     so that it can be consumed by `NavigationCamera` in `.transitionToOverview` or `.overview` states on CarPlay.
+     */
+    public static let overviewCarPlayCamera = "OverviewCarPlayCamera"
 }
 
 extension Notification.Name {
@@ -17,7 +33,7 @@ extension Notification.Name {
     /**
      Posted when value of `NavigationCamera.state` property changes.
      
-     The user info dictionary contains `NavigationCamera.NotificationUserInfoKey.stateKey` key.
+     The user info dictionary contains `NavigationCamera.NotificationUserInfoKey.state` key.
      */
     public static let navigationCameraStateDidChange: Notification.Name = .init(rawValue: "NavigationCameraStateDidChange")
     
@@ -25,7 +41,7 @@ extension Notification.Name {
      Posted when `NavigationViewportDataSource` changes underlying `CameraOptions`, which will be used by
      `NavigationCameraStateTransition` when running camera related transitions on `iOS` and `CarPlay`.
      
-     The user info dictionary contains `NavigationCamera.NotificationUserInfoKey.cameraOptionsKey` key.
+     The user info dictionary contains `NavigationCamera.NotificationUserInfoKey.cameraOptions` key.
      */
     public static let navigationCameraViewportDidChange: Notification.Name = .init(rawValue: "NavigationViewportDidChange")
 }
@@ -44,11 +60,11 @@ extension NavigationCamera {
         /**
          A key in the user info dictionary of a `Notification.Name.navigationCameraStateDidChange` notification. The corresponding value is a `NavigationCameraState` object.
          */
-        public static let stateKey: NotificationUserInfoKey = .init(rawValue: "state")
+        public static let state: NotificationUserInfoKey = .init(rawValue: "state")
         
         /**
          A key in the user info dictionary of a `Notification.Name.navigationCameraViewportDidChange` notification. The corresponding value is a `[String: CameraOptions]` dictionary object.
          */
-        public static let cameraOptionsKey: NotificationUserInfoKey = .init(rawValue: "cameraOptions")
+        public static let cameraOptions: NotificationUserInfoKey = .init(rawValue: "cameraOptions")
     }
 }

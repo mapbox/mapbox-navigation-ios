@@ -131,7 +131,7 @@ class CustomViewController: UIViewController {
     }
     
     @IBAction func recenterMap(_ sender: Any) {
-        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
+        navigationMapView.navigationCamera.follow()
     }
     
     @IBAction func showFeedback(_ sender: Any) {
@@ -181,7 +181,7 @@ class CustomViewController: UIViewController {
         updatePreviewBannerWith(step: step, maneuverStep: maneuverStep)
         
         // stop tracking user, and move camera to step location
-        navigationMapView.navigationCamera.requestNavigationCameraToIdle()
+        navigationMapView.navigationCamera.stop()
         navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: maneuverStep.maneuverLocation,
                                                           bearing: maneuverStep.initialHeading!,
                                                           animated: true)

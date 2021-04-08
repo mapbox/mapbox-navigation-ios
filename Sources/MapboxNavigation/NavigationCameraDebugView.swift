@@ -122,15 +122,15 @@ class NavigationCameraDebugView: UIView {
     
     @objc func navigationCameraViewportDidChange(_ notification: NSNotification) {
         guard let mapView = mapView,
-              let cameraOptions = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.cameraOptionsKey] as? Dictionary<String, CameraOptions> else { return }
+              let cameraOptions = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.cameraOptions] as? Dictionary<String, CameraOptions> else { return }
         
         var camera: CameraOptions? = nil
         
         switch navigationCameraType {
         case .carPlay:
-            camera = cameraOptions[CameraOptions.followingCarPlayCameraKey]
+            camera = cameraOptions[CameraOptions.followingCarPlayCamera]
         case .mobile:
-            camera = cameraOptions[CameraOptions.followingMobileCameraKey]
+            camera = cameraOptions[CameraOptions.followingMobileCamera]
         }
         
         if let anchorPosition = camera?.anchor {
