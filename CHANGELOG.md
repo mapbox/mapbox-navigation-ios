@@ -60,6 +60,7 @@
 * A new predictive cache proactively fetches tiles which may become necessary if the device loses its Internet connection at some point during passive or active turn-by-turn navigation. Pass a `PredictiveCacheOptions` instance into the `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:predictiveCacheOptions:)` initializer as you configure a `NavigationViewController`, or manually call `NavigationMapView.enablePredictiveCaching(options:)`. ([#2830](https://github.com/mapbox/mapbox-navigation-ios/pull/2830))
 * Added the `Directions.calculateOffline(options:completionHandler:)` and `Directions.calculateWithCache(options:completionHandler:)` methods, which incorporate routing tiles from the predictive cache when possible to avoid relying on a network connection to calculate the route. `RouteController` now also uses the predictive cache when rerouting. ([#2848](https://github.com/mapbox/mapbox-navigation-ios/pull/2848)) 
 * Added the `Navigator.credentials` to accept `DirectionsCredentials` from `PassiveLocationDataSource`, `RouteController` and `PredictiveCacheManager`. Added the `PredictiveCacheOptions.credentials` to allow developers dynamically switching between access tokens. ([#2876](https://github.com/mapbox/mapbox-navigation-ios/pull/2876))
+* The top banner can now show a wider variety of turn lane configurations, such as combination U-turn/left turn lanes and combination through/slight right turn lanes. ([#2882](https://github.com/mapbox/mapbox-navigation-ios/pull/2882))
 
 ## v1.3.0
 
