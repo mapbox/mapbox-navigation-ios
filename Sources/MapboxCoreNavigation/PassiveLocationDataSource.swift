@@ -147,6 +147,18 @@ open class PassiveLocationDataSource: NSObject {
         }
         NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: userInfo)
     }
+    
+    public func enableLocationRecording() {
+        try! Navigator.shared.enableHistoryRecorder()
+    }
+    
+    public func disableLocationRecording() {
+        try! Navigator.shared.disableHistoryRecorder()
+    }
+    
+    public func locationHistory() throws -> Data {
+        return try Navigator.shared.history()
+    }
 }
 
 extension PassiveLocationDataSource: CLLocationManagerDelegate {
