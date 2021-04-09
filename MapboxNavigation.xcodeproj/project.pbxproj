@@ -820,6 +820,7 @@
 		B456A8EB2620D26A00FD86D8 /* LeakTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeakTest.swift; sourceTree = "<group>"; };
 		B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CLHeadingPrivate.h; path = include/CLHeadingPrivate.h; sourceTree = "<group>"; };
 		B47C1AAA261FCDF30078546C /* CTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestHelper.h; sourceTree = "<group>"; };
+		B47C1AAB261FCDF30078546C /* MMEEventsManager+Spy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MMEEventsManager+Spy.m"; sourceTree = "<group>"; };
 		B47C1ACF261FD0A30078546C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		B47C1AD0261FD0A30078546C /* NavigationEventsManagerTestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEventsManagerTestDoubles.swift; sourceTree = "<group>"; };
 		B47C1AD2261FD0A30078546C /* DummyURLSessionDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyURLSessionDataTask.swift; sourceTree = "<group>"; };
