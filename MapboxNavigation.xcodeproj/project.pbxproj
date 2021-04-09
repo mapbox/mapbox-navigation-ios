@@ -2454,7 +2454,7 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Tests/TestHelper/tiles",
+				"$(SRCROOT)/Sources/TestHelper/tiles",
 			);
 			name = "Copy Tiles";
 			outputFileListPaths = (
@@ -2464,7 +2464,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp -r $SRCROOT/Tests/TestHelper/tiles $TARGET_BUILD_DIR\n";
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\ncp -r $SRCROOT/Sources/TestHelper/tiles $TARGET_BUILD_DIR\n";
 		};
 		DA408F661FB3CA3C004D9661 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -3379,7 +3379,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = Tests/TestHelper/Info.plist;
+				INFOPLIST_FILE = Sources/TestHelper/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -3418,7 +3418,7 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = Tests/TestHelper/Info.plist;
+				INFOPLIST_FILE = Sources/TestHelper/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
