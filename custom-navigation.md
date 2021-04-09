@@ -30,7 +30,7 @@ To install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
    # Latest stable release
-   pod 'MapboxCoreNavigation', '~> 1.3'
+   pod 'MapboxCoreNavigation', '~> 1.4'
    # Latest prerelease
    pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v1.3.0-beta.1'
    ```
@@ -57,7 +57,7 @@ To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Cartha
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
    # Latest stable release
-   github "mapbox/mapbox-navigation-ios" ~> 1.3
+   github "mapbox/mapbox-navigation-ios" ~> 1.4
    # Latest prerelease
    github "mapbox/mapbox-navigation-ios" "v1.3.0-beta.1"
    ```
@@ -81,9 +81,9 @@ To install the MapboxCoreNavigation framework using [Swift Package Manager](http
 1. Run `swift package init` to create a Package.swift, then add the following dependency:
    ```swift
    // Latest stable release
-   .package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "1.3.0")
+   .package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "1.4.0")
    // Latest prerelease
-   .package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "1.3.0")
+   .package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "1.4.0")
    ```
 
 ### Using Xcode
@@ -102,4 +102,4 @@ To install the MapboxCoreNavigation framework using [Swift Package Manager](http
 
 1. Enter `https://github.com/mapbox/mapbox-navigation-ios.git` as the package repository and click Next.
 
-1. Set Rules to Version, Up to Next Major, and enter `1.3.0` as the minimum version requirement. Click Next.
+1. Set Rules to Version, Up to Next Major, and enter `1.4.0` as the minimum version requirement. Click Next.
