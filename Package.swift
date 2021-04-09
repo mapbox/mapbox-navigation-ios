@@ -60,6 +60,8 @@ let package = Package(
             name: "TestHelper",
             dependencies: [
                 "CTestHelper",
+                "Quick",
+                "Nimble",
                 "MapboxCoreNavigation",
                 "MapboxNavigation",
             ],
