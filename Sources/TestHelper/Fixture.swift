@@ -4,8 +4,18 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 
 public class Fixture: NSObject {
+    public class var bundle: Bundle {
+        get {
+            #if SWIFT_PACKAGE
+            return .module
+            #else
+            return Bundle(for: self)
+            #endif
+        }
+    }
+    
     public class func stringFromFileNamed(name: String) -> String {
-        guard let path = Bundle(for: self).path(forResource: name, ofType: "json") else {
+        guard let path = bundle.path(forResource: name, ofType: "json") else {
             assert(false, "Fixture \(name) not found.")
             return ""
         }
@@ -18,7 +28,7 @@ public class Fixture: NSObject {
     }
     
     public class func JSONFromFileNamed(name: String) -> Data {
-        guard let path = Bundle(for: Fixture.self).path(forResource: name, ofType: "json") else {
+        guard let path = bundle.path(forResource: name, ofType: "json") else {
             preconditionFailure("Fixture \(name) not found.")
         }
         guard let data = NSData(contentsOfFile: path) as Data? else {
@@ -47,7 +57,7 @@ public class Fixture: NSObject {
     }
     
     public class var blankStyle: URL {
-        let path = Bundle(for: self).path(forResource: "EmptyStyle", ofType: "json")
+        let path = bundle.path(forResource: "EmptyStyle", ofType: "json")
         return URL(fileURLWithPath: path!)
     }
     
