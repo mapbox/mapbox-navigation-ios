@@ -95,7 +95,13 @@ struct NavigationEventDetails: EventDetails {
     let simulation: Bool
     let startTimestamp: Date?
     let sdkIdentifier: String
-    let sdkVersion: String = String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
+    var sdkVersion: String {
+        if let stringForShortVersion = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString") {
+            return String(describing: stringForShortVersion)
+        } else {
+            return String(describing: UserDefaults.standard.object(forKey: "CFBundleShortVersionString"))
+        }
+    }
     let userAbsoluteDistanceToDestination: CLLocationDistance?
     let volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)
     
