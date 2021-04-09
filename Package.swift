@@ -56,7 +56,7 @@ let package = Package(
         .target(
             name: "CTestHelper",
             dependencies: ["MapboxMobileEvents"]),
-        .testTarget(
+        .target(
             name: "TestHelper",
             dependencies: ["CTestHelper"],
             exclude: ["Info.plist"]),
