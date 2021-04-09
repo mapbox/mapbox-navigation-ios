@@ -7,3 +7,4 @@ FOUNDATION_EXPORT double CTestHelperVersionNumber;
 FOUNDATION_EXPORT const unsigned char CTestHelperVersionString[];
 
 #import "MMEEventsManager+Spy.h"
+#import "CLHeadingPrivate.h"
