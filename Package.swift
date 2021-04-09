@@ -61,7 +61,7 @@ let package = Package(
             dependencies: [
                 "CTestHelper",
                 "MapboxCoreNavigation",
-                "MapboxDirections",
+                "MapboxNavigation",
             ],
             exclude: ["Info.plist"]),
         .testTarget(
