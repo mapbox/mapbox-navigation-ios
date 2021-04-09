@@ -72,6 +72,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         
         setupGestureRegonizers()
         
+        // Uncomment to be able to see `NavigationCameraDebugView`.
         // setupDebugView(mapView,
         //               navigationCameraType: navigationCameraType,
         //               navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)

@@ -45,6 +45,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
     public var maximumPitch: Double = 45.0
     
     /**
+     Altitude that the `NavigationCamera` initally defaults to when navigation starts.
+     */
+    public var defaultAltitude: CLLocationDistance = 1000.0
+    
+    /**
      Value of default viewport padding.
      */
     var viewportPadding: UIEdgeInsets = .zero

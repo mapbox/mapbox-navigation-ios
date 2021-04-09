@@ -420,6 +420,23 @@ open class NavigationMapView: UIView {
         }
     }
     
+    /**
+     Sets initial `CameraOptions` for specific coordinate.
+     
+     - parameter coordinate: Coordinate, where `MapView` will be centered.
+     */
+    func setInitialCamera(_ coordinate: CLLocationCoordinate2D) {
+        guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
+        
+        let zoom = CGFloat(ZoomLevelForAltitude(navigationViewportDataSource.defaultAltitude,
+                                                mapView.pitch,
+                                                coordinate.latitude,
+                                                mapView.bounds.size))
+        
+        mapView.cameraManager.setCamera(to: CameraOptions(center: coordinate, zoom: zoom))
+        updateUserCourseView(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+    }
+    
     @discardableResult func addMainRouteLayer(_ route: Route) -> String? {
         guard let shape = route.shape else { return nil }
         
