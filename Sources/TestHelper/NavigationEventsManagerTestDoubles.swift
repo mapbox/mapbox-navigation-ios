@@ -2,6 +2,7 @@ import Foundation
 import MapboxMobileEvents
 @testable import MapboxCoreNavigation
 import MapboxDirections
+import CTestHelper
 
 public class NavigationEventsManagerSpy: NavigationEventsManager {
     var mobileEventsManagerSpy: MMEEventsManagerSpy!
