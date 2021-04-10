@@ -133,7 +133,7 @@ class InstructionPresenter {
                 let exitSide: ExitSide = instruction.maneuverDirection == .left ? .left : .right
                 return exitShield(side: exitSide, text: text.text, dataSource: dataSource, cacheKey: component.cacheKey!)
                     ?? NSAttributedString(string: text.text, attributes: defaultAttributes)
-            case .lane(_, _):
+            case .lane(_, _, _):
                 preconditionFailure("Lane component has no attributed string representation.")
             case .guidanceView(_, let alternativeText):
                 return NSAttributedString(string: alternativeText.text, attributes: defaultAttributes)
