@@ -26,7 +26,7 @@
 * Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.highlightBuildings(at:in3D:)` was renamed to `NavigationMapView.highlightBuildings(at:in3D:completion:)`. ([#2827](https://github.com/mapbox/mapbox-navigation-ios/pull/2827))
-* Add ability to show congestion levels with different colors on alternative route lines, after receiving multiple routes in `RouteResponse` if `NavigationMapView.showsCongestionForAlternativeRoutes` is set to `true`. ([#2887](https://github.com/mapbox/mapbox-navigation-ios/pull/2887))
+* Added the `NavigationMapView.showsCongestionForAlternativeRoutes` property to show congestion levels with different colors on alternative route lines. ([#2887](https://github.com/mapbox/mapbox-navigation-ios/pull/2887))
 
 ### Location tracking
 
@@ -52,7 +52,7 @@
 * Removed `NavigationViewController.origin` property, which was not used. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * A new predictive cache proactively fetches tiles which may become necessary if the device loses its Internet connection at some point during passive or active turn-by-turn navigation. Pass a `PredictiveCacheOptions` instance into the `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:predictiveCacheOptions:)` initializer as you configure a `NavigationViewController`, or manually call `NavigationMapView.enablePredictiveCaching(options:)`. ([#2830](https://github.com/mapbox/mapbox-navigation-ios/pull/2830))
 * Added the `Directions.calculateOffline(options:completionHandler:)` and `Directions.calculateWithCache(options:completionHandler:)` methods, which incorporate routing tiles from the predictive cache when possible to avoid relying on a network connection to calculate the route. `RouteController` now also uses the predictive cache when rerouting. ([#2848](https://github.com/mapbox/mapbox-navigation-ios/pull/2848)) 
-* Added the `Navigator.credentials` to accept `DirectionsCredentials` from `PassiveLocationDataSource`, `RouteController` and `PredictiveCacheManager`. Added the `PredictiveCacheOptions.credentials` to allow developers dynamically switching between access tokens. ([#2876](https://github.com/mapbox/mapbox-navigation-ios/pull/2876))
+* Fixed an issue where `PassiveLocationDataSource` and `RouteController` did not use the access token and host specified by `PassiveLocationDataSource.directions` and `RouteController.directions`, respectively. Added the `PredictiveCacheOptions.credentials` property for specifying the access token and host used for prefetching resources. ([#2876](https://github.com/mapbox/mapbox-navigation-ios/pull/2876))
 * The top banner can now show a wider variety of turn lane configurations, such as combination U-turn/left turn lanes and combination through/slight right turn lanes. ([#2882](https://github.com/mapbox/mapbox-navigation-ios/pull/2882))
 
 ## v1.3.0
