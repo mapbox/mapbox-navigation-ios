@@ -27,7 +27,13 @@ extension Bundle {
      The Mapbox Core Navigation framework bundle.
      */
     public class var mapboxCoreNavigation: Bundle {
-        return Bundle(for: RouteController.self)
+        get {
+            #if SWIFT_PACKAGE
+            return .module
+            #else
+            return Bundle(for: RouteController.self)
+            #endif
+        }
     }
     
     /**

@@ -40,7 +40,8 @@ let package = Package(
                 "MapboxMobileEvents",
                 "MapboxNavigationNative",
             ],
-            exclude: ["Info.plist"]),
+            exclude: ["Info.plist"],
+            resources: [.copy("MBXInfo.plist")]),
         .target(name: "CMapboxCoreNavigation"),
         .target(
             name: "MapboxNavigation",

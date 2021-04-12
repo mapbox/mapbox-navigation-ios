@@ -83,12 +83,18 @@ open class NavigationEventsManager {
     func start() {
         let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
 
-        if let stringForShortVersion = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString") {
-            mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
+        var stringForShortVersion: String?
+        if let stringFromInfo = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String {
+            stringForShortVersion = stringFromInfo
+        } else if let fileURL = Bundle.mapboxCoreNavigation.url(forResource: "MBXInfo", withExtension: "plist"),
+                  let infoDictionary = NSDictionary(contentsOf: fileURL) as? Dictionary<String, Any>,
+                  let stringFromMBX = infoDictionary["CFBundleShortVersionString"] as? String {
+            stringForShortVersion = stringFromMBX
         } else {
-            mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: UserDefaults.standard.object(forKey: "CFBundleShortVersionString")!))
+            preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
-
+        
+        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
         mobileEventsManager.sendTurnstileEvent()
     }
     
