@@ -75,6 +75,11 @@ open class NavigationMapView: UIView {
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     @objc dynamic public var buildingDefaultColor: UIColor = .defaultBuildingColor
     @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
+    @objc dynamic public var intersectionAnnotationDefaultBackgroundColor: UIColor = .intersectionAnnotationDefaultBackgroundColor
+    @objc dynamic public var intersectionAnnotationSelectedBackgroundColor: UIColor = .intersectionAnnotationSelectedBackgroundColor
+    @objc dynamic public var intersectionAnnotationDefaultLabelColor: UIColor = .intersectionAnnotationDefaultLabelColor
+    @objc dynamic public var intersectionAnnotationSelectedLabelColor: UIColor = .intersectionAnnotationSelectedLabelColor
+
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
             let frame = CGRect(origin: .zero, size: 75.0)
@@ -348,6 +353,10 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
+        }
+
+        mapView.on(.mapLoaded)  { [weak self] _ in
+            self?.addAnnotationSymbolImages()
         }
         
         addSubview(mapView)
@@ -1464,11 +1473,616 @@ open class NavigationMapView: UIView {
         
         return candidates
     }
-    
+
     func makeGestureRecognizersResetFrameRate() {
         for gestureRecognizer in gestureRecognizers ?? [] {
             gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
         }
+    }
+
+    public var showIntersectionAnnotations: Bool = false {
+        didSet {
+            guard oldValue != showIntersectionAnnotations else { return }
+            intersectionsToAnnotate = nil
+            if showIntersectionAnnotations {
+                NotificationCenter.default.addObserver(self,
+                                                       selector: #selector(didUpdateElectronicHorizonPosition),
+                                                       name: .electronicHorizonDidUpdatePosition,
+                                                       object: nil)
+            } else {
+                removeRouteAnnotationsLayerFromStyle()
+                NotificationCenter.default.removeObserver(self, name: .electronicHorizonDidUpdatePosition, object: nil)
+            }
+        }
+    }
+
+    private func updateIntersectionAnnotations(horizon: ElectronicHorizon, roadGraph: RoadGraph) {
+
+        guard let currentWayname = horizon.start.edgeNames(roadGraph: roadGraph).first else { return }
+
+        // grab the MPP from the Electronic Horizon
+        guard let edges = horizon.start.mpp else { return }
+
+        var intersections = [EdgeIntersection]()
+
+        var intersectingWaynames = [String]()
+
+        for mppEdge in edges {
+            let metadata = roadGraph.edgeMetadata(edgeIdentifier: mppEdge.identifier)
+            guard metadata?.names != nil else { continue }
+            // look through all the edges to filter out ones we don't want to consider
+            // These are ones that lack a name, are very short, or are not on-screen
+            let level1Edges = mppEdge.outletEdges.filter { outEdge -> Bool in
+                let nonMPP = outEdge.level != 0
+
+                // omit the next MPP edge, road classes for small roads (service roads, etc.), and unnamed roads
+                guard nonMPP else { return false }
+                guard let edgeMetadata = roadGraph.edgeMetadata(edgeIdentifier: outEdge.identifier), let geometry = roadGraph.edgeShape(edgeIdentifier: mppEdge.identifier) else { return false }
+
+                let names = edgeMetadata.names.map { name -> String in
+                    switch name {
+                    case .name(let name):
+                        return name
+                    case .code(let code):
+                        return "(\(code))"
+                    }
+                }
+
+                guard let firstName = names.first, firstName != "" else {
+                    print("rejecting edge: for no name")
+                    return false
+                }
+                guard firstName != currentWayname else {
+                    print("rejecting edge: for matching way: \(firstName)")
+                    return false
+                }
+
+                guard !intersectingWaynames.contains(firstName) else {
+                    print("rejecting edge: \(firstName) as already present")
+                    return false
+                }
+
+                guard ![MapboxStreetsRoadClass.service, MapboxStreetsRoadClass.ferry, MapboxStreetsRoadClass.path, MapboxStreetsRoadClass.majorRail, MapboxStreetsRoadClass.minorRail, MapboxStreetsRoadClass.serviceRail, MapboxStreetsRoadClass.aerialway, MapboxStreetsRoadClass.golf].contains(edgeMetadata.mapboxStreetsRoadClass) else {
+                    print("rejecting edge \(firstName) for roadclass: \(edgeMetadata.mapboxStreetsRoadClass) ")
+                    return false
+                }
+
+                guard edgeMetadata.length >= 5 else {
+                    print("rejecting edge: \(firstName) for short length")
+                    return false
+                }
+
+                guard let length = geometry.distance() else { return false }
+
+                let targetDistance = min(length / 2, Double.random(in: 15...30))
+                guard let annotationPoint = geometry.coordinateFromStart(distance: targetDistance) else {
+                    print("rejecting edge: \(firstName) for no annotationPoint")
+                    return false
+                }
+
+                let onscreenPoint = self.mapView.point(for: annotationPoint, in: nil)
+
+                guard mapView.bounds.insetBy(dx: 20, dy: 20).contains(onscreenPoint) else {
+                    print("rejecting edge: \(firstName) for not being onscreen")
+                    return false
+                }
+
+                print("accepted edge: \(firstName) at: \(annotationPoint)")
+                intersectingWaynames.append(firstName)
+                return true
+            }
+
+            let rootMetadata: ElectronicHorizon.Edge.Metadata? = roadGraph.edgeMetadata(edgeIdentifier: mppEdge.identifier)
+            let rootShape: LineString? = roadGraph.edgeShape(edgeIdentifier: mppEdge.identifier)
+            for branch in level1Edges {
+                let branchMetadata: ElectronicHorizon.Edge.Metadata? = roadGraph.edgeMetadata(edgeIdentifier: branch.identifier)
+                let branchShape: LineString? = roadGraph.edgeShape(edgeIdentifier: branch.identifier)
+                guard let rootMetadata = rootMetadata, let rootShape = rootShape, let branchInfo = branchMetadata, let branchGeometry = branchShape else { return }
+
+                intersections.append(EdgeIntersection(root: mppEdge, branch: branch, rootMetadata: rootMetadata, rootShape: rootShape, branchMetadata: branchInfo, branchShape: branchGeometry))
+            }
+        }
+        // sort the edges by distance from the user
+        if let userCoordinate = userLocationForCourseTracking?.coordinate {
+            intersections.sort { (intersection1, intersection2) -> Bool in
+                if let edge1Start = intersection1.coordinate, let edge2Start = intersection2.coordinate {
+                    return userCoordinate.distance(to: edge1Start) < userCoordinate.distance(to: edge2Start)
+                }
+                return true
+            }
+        }
+
+        // form a set of the names of current intersections
+        let currentNames = intersections.compactMap { return $0.intersectingWayName }
+        let currentNameSet = Set(currentNames)
+
+        // if the road set hasn't changed then we can just short-circuit out
+        guard previousNameSet != currentNameSet else { return }
+
+        // go ahead and update our list and figure out where on the map the annotations should be placed
+        previousNameSet = currentNameSet
+
+        intersectionsToAnnotate = intersections
+    }
+
+    var previousNameSet: Set<String>?
+    var intersectionsToAnnotate: [EdgeIntersection]?
+
+    open func updateAnnotations(for routeProgress: RouteProgress) {
+        var features = [Feature]()
+
+        // add an annotation for the next step
+
+        if let upcomingStep = routeProgress.upcomingStep {
+            let maneuverLocation = upcomingStep.maneuverLocation
+            var labelText = upcomingStep.names?.first ?? ""
+            let currentLeg = routeProgress.currentLeg
+
+            if upcomingStep == currentLeg.steps.last, let destination = currentLeg.destination?.name {
+                labelText = destination
+            }
+
+            if labelText == "", let destinationCodes = upcomingStep.destinationCodes, destinationCodes.count > 0 {
+                labelText = destinationCodes[0]
+
+                destinationCodes.dropFirst().forEach { destination in
+                    labelText += " / " + destination
+                }
+            }
+
+            if labelText == "", let exitCodes = upcomingStep.exitCodes, let code = exitCodes.first {
+                labelText = "Exit \(code)"
+            }
+
+            if labelText == "", let destination = upcomingStep.destinations?.first {
+                labelText = destination
+            }
+
+            if labelText == "", let exitName = upcomingStep.exitNames?.first {
+                labelText = exitName
+            }
+
+            if labelText != "" {
+                var featurePoint: Feature
+                if let cachedEntry = cachedFeature(for: labelText) {
+                    featurePoint = cachedEntry.feature
+                } else {
+                    featurePoint = Feature(Point(maneuverLocation))
+
+                    let tailPosition = AnnotationTailPosition.center
+
+                    // set the feature attributes which will be used in styling the symbol style layer
+                    featurePoint.properties = ["highlighted": true, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": "AnnotationCentered-Highlighted", "sortOrder": 0]
+
+                    annotationCache?.setValue(feature: featurePoint, coordinate: maneuverLocation, intersection: nil, for: labelText)
+                }
+                features.append(featurePoint)
+            } else {
+                print("no label for maneuver")
+            }
+        }
+
+        guard let intersectionsToAnnotate = intersectionsToAnnotate else { return }
+        for (index, intersection) in intersectionsToAnnotate.enumerated() {
+            guard let coordinate = intersection.annotationPoint else { continue }
+            var featurePoint: Feature
+
+            if let intersectingWayName = intersection.intersectingWayName, let cachedEntry = cachedFeature(for: intersectingWayName) {
+                featurePoint = cachedEntry.feature
+            } else {
+                featurePoint = Feature(Point(coordinate))
+
+                let tailPosition = intersection.incidentAngle < 180 ? AnnotationTailPosition.left : AnnotationTailPosition.right
+
+                let imageName = tailPosition == .left ? "AnnotationLeftHanded" : "AnnotationRightHanded"
+
+                // set the feature attributes which will be used in styling the symbol style layer
+                featurePoint.properties = ["highlighted": false, "tailPosition": tailPosition.rawValue, "text": intersection.intersectingWayName, "imageName": imageName, "sortOrder": -index]
+
+                if let intersectingWayName = intersection.intersectingWayName {
+                    annotationCache?.setValue(feature: featurePoint, coordinate: coordinate, intersection: nil, for: intersectingWayName)
+                }
+            }
+            features.append(featurePoint)
+        }
+
+        addAnnotationSymbolLayer(features: FeatureCollection(features: features))
+    }
+
+    private func addAnnotationSymbolImages() {
+        guard let style = mapView.style, style.getStyleImage(with: "AnnotationLeftHanded") == nil, style.getStyleImage(with: "AnnotationRightHanded") == nil else { return }
+
+        // Centered pin
+        if let image = UIImage(named: "AnnotationCentered", in: .mapboxNavigation, compatibleWith: nil) {
+            let stretchX = [ImageStretches(first: Float(20), second: Float(30)), ImageStretches(first: Float(90), second: Float(100))]
+            let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
+            let imageContent = ImageContent(left: 20, top: 26, right: 100, bottom: 33)
+
+            let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
+
+            style.setStyleImage(image: regularAnnotationImage,
+                                with: "AnnotationCentered",
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
+
+            let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
+            style.setStyleImage(image: highlightedAnnotationImage,
+                                with: "AnnotationCentered-Highlighted",
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
+        }
+
+        let stretchX = [ImageStretches(first: Float(32), second: Float(42))]
+        let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
+        let imageContent = ImageContent(left: 32, top: 26, right: 47, bottom: 33)
+
+        // Right-hand pin
+        if let image =  UIImage(named: "AnnotationRightHanded", in: .mapboxNavigation, compatibleWith: nil) {
+            let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
+
+            style.setStyleImage(image: regularAnnotationImage,
+                                with: "AnnotationRightHanded",
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
+
+            let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
+            style.setStyleImage(image: highlightedAnnotationImage,
+                                with: "AnnotationRightHanded-Highlighted",
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
+        }
+
+        // Left-hand pin
+        if let image =  UIImage(named: "AnnotationLeftHanded", in: .mapboxNavigation, compatibleWith: nil) {
+            let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
+
+            style.setStyleImage(image: regularAnnotationImage,
+                                with: "AnnotationLeftHanded",
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
+
+            let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
+            style.setStyleImage(image: highlightedAnnotationImage,
+                                with: "AnnotationLeftHanded-Highlighted",
+                                stretchX: stretchX,
+                                stretchY: stretchY,
+                                scale: 2.0,
+                                imageContent: imageContent)
+        }
+    }
+
+    private func removeRouteAnnotationsLayerFromStyle() {
+        mapView.style.removeLayers([NavigationMapView.intersectionAnnotations])
+        _ = mapView.style.removeSource(for: NavigationMapView.intersectionAnnotations)
+    }
+
+    var annotationCache: AnnotationCache?
+    static let intersectionAnnotations = "intersectionAnnotations"
+
+    private func cachedFeature(for labelText: String) -> AnnotationCacheEntry? {
+        if let existingFeature = annotationCache?.value(for: labelText) {
+            // ensure the cached feature is still visible on-screen. If it is not then remove the entry and return nil
+            let unprojectedCoordinate = self.mapView.point(for: existingFeature.coordinate, in: nil)
+            if mapView.bounds.contains(unprojectedCoordinate) {
+                return existingFeature
+            } else {
+                annotationCache?.remove(existingFeature)
+            }
+        }
+
+        return nil
+    }
+
+    private func addAnnotationSymbolLayer(features: FeatureCollection) {
+        guard let style = mapView.style else { return }
+        let existingDataSource = try? mapView.style.getSource(identifier: NavigationMapView.intersectionAnnotations, type: GeoJSONSource.self).get()
+        if existingDataSource != nil {
+            _ = mapView.style.updateGeoJSON(for: NavigationMapView.intersectionAnnotations, with: features)
+            return
+        } else {
+            var dataSource = GeoJSONSource()
+            dataSource.data = .featureCollection(features)
+            mapView.style.addSource(source: dataSource, identifier: NavigationMapView.intersectionAnnotations)
+        }
+
+        _ = mapView.style.removeStyleLayer(forLayerId: NavigationMapView.intersectionAnnotations)
+
+        var shapeLayer = SymbolLayer(id: NavigationMapView.intersectionAnnotations)
+        shapeLayer.source = NavigationMapView.intersectionAnnotations
+
+        shapeLayer.layout?.textField = .expression(Exp(.get) {
+            "text"
+        })
+
+        shapeLayer.layout?.iconImage = .expression(Exp(.get) {
+            "imageName"
+        })
+
+        shapeLayer.paint?.textColor = .expression(Exp(.switchCase) {
+            Exp(.any) {
+                Exp(.get) {
+                    "highlighted"
+                }
+            }
+            self.intersectionAnnotationSelectedLabelColor
+            self.intersectionAnnotationDefaultLabelColor
+        })
+
+        shapeLayer.layout?.textSize = .constant(16)
+        shapeLayer.layout?.iconTextFit = .constant(.both)
+        shapeLayer.layout?.iconAllowOverlap = .constant(true)
+        shapeLayer.layout?.textAllowOverlap = .constant(true)
+        shapeLayer.layout?.textJustify = .constant(.left)
+        shapeLayer.layout?.symbolZOrder = .constant(.auto)
+        shapeLayer.layout?.textFont = .constant(["DIN Pro Medium"])
+
+        style.addLayer(layer: shapeLayer, layerPosition: nil)//LayerPosition(above: parentLayer))
+
+        let symbolSortKeyString =
+        """
+        ["get", "sortOrder"]
+        """
+
+        if let expressionData = symbolSortKeyString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+
+            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
+                                                          property: "symbol-sort-key",
+                                                          value: expJSONObject)
+        }
+
+        let expressionString =
+        """
+        [
+          "match",
+          ["get", "tailPosition"],
+          [0],
+          "bottom-left",
+          [1],
+          "bottom-right",
+          [2],
+          "bottom",
+          "center"
+        ]
+        """
+
+        if let expressionData = expressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+
+            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
+                                                          property: "icon-anchor",
+                                                          value: expJSONObject)
+            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
+                                                          property: "text-anchor",
+                                                          value: expJSONObject)
+        }
+
+        let offsetExpressionString =
+        """
+        [
+          "match",
+          ["get", "tailPosition"],
+          [0],
+          ["literal", [0.5, -1]],
+          [1],
+          ["literal", [-0.5, -1]],
+          [2],
+          ["literal", [0.0, -1]],
+          ["literal", [0.0, 0.0]]
+        ]
+        """
+
+        if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+
+            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
+                                                          property: "icon-offset",
+                                                          value: expJSONObject)
+
+            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
+                                                          property: "text-offset",
+                                                          value: expJSONObject)
+        }
+    }
+
+    @objc func didUpdateElectronicHorizonPosition(_ notification: Notification) {
+        guard let horizon = notification.userInfo?[ElectronicHorizon.NotificationUserInfoKey.treeKey] as? ElectronicHorizon, let roadGraph = notification.userInfo?[ElectronicHorizon.NotificationUserInfoKey.roadGraphIdentifierKey] as? RoadGraph else {
+            return
+        }
+
+        DispatchQueue.main.async {
+            self.updateIntersectionAnnotations(horizon: horizon, roadGraph: roadGraph)
+        }
+    }
+
+    func edgeNames(identifier: ElectronicHorizon.Edge.Identifier, roadGraph: RoadGraph) -> [String] {
+        guard let metadata = roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
+            return []
+        }
+        let names = metadata.names.map { name -> String in
+            switch name {
+            case .name(let name):
+                return name
+            case .code(let code):
+                return "(\(code))"
+            }
+        }
+
+        // If the road is unnamed, fall back to the road class.
+        if names.isEmpty {
+            return ["\(metadata.mapboxStreetsRoadClass.rawValue)"]
+        }
+        return names
+    }
+}
+
+extension ElectronicHorizon.Edge {
+    var mpp: [ElectronicHorizon.Edge]? {
+
+        guard level == 0 else { return nil }
+
+        var mostProbablePath = [self]
+
+        for child in outletEdges {
+            if let childMPP = child.mpp {
+                mostProbablePath.append(contentsOf: childMPP)
+            }
+        }
+
+        return mostProbablePath
+    }
+}
+
+extension ElectronicHorizon.Edge {
+    func edgeNames(roadGraph: RoadGraph) -> [String] {
+        guard let metadata = roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
+            return []
+        }
+        let names = metadata.names.map { name -> String in
+            switch name {
+            case .name(let name):
+                return name
+            case .code(let code):
+                return "(\(code))"
+            }
+        }
+
+        // If the road is unnamed, fall back to the road class.
+        if names.isEmpty {
+            return ["\(metadata.mapboxStreetsRoadClass.rawValue)"]
+        }
+        return names
+    }
+}
+
+struct EdgeIntersection {
+    var root: ElectronicHorizon.Edge
+    var branch: ElectronicHorizon.Edge
+    var rootMetadata: ElectronicHorizon.Edge.Metadata
+    var rootShape: LineString
+    var branchMetadata: ElectronicHorizon.Edge.Metadata
+    var branchShape: LineString
+
+    var coordinate: CLLocationCoordinate2D? {
+        rootShape.coordinates.first
+    }
+
+    var annotationPoint: CLLocationCoordinate2D? {
+        guard let length = branchShape.distance() else { return nil }
+        let targetDistance = min(length / 2, Double.random(in: 15...30))
+        guard let annotationPoint = branchShape.coordinateFromStart(distance: targetDistance) else { return nil }
+        return annotationPoint
+    }
+
+    var wayName: String? {
+        guard let roadName = rootMetadata.names.first else { return nil }
+
+        switch roadName {
+        case .name(let name):
+            return name
+        case .code(let code):
+            return "(\(code))"
+        }
+    }
+    var intersectingWayName: String? {
+        guard let roadName = branchMetadata.names.first else { return nil }
+
+        switch roadName {
+        case .name(let name):
+            return name
+        case .code(let code):
+            return "(\(code))"
+        }
+    }
+
+    var incidentAngle: CLLocationDegrees {
+        return (branchMetadata.heading - rootMetadata.heading).wrap(min: 0, max: 360)
+    }
+
+    var description: String {
+        return "EdgeIntersection: root: \(wayName ?? "") intersection: \(intersectingWayName ?? "") coordinate: \(String(describing: coordinate))"
+    }
+}
+
+private enum AnnotationTailPosition: Int {
+    case left
+    case right
+    case center
+}
+
+class AnnotationCacheEntry: Equatable, Hashable {
+    var wayname: String
+    var coordinate: CLLocationCoordinate2D
+    var intersection: EdgeIntersection?
+    var feature: Feature
+    var lastAccessTime: Date
+
+    init(coordinate: CLLocationCoordinate2D, wayname: String, intersection: EdgeIntersection? = nil, feature: Feature) {
+        self.wayname = wayname
+        self.coordinate = coordinate
+        self.intersection = intersection
+        self.feature = feature
+        self.lastAccessTime = Date()
+    }
+
+    static func == (lhs: AnnotationCacheEntry, rhs: AnnotationCacheEntry) -> Bool {
+        return lhs.wayname == rhs.wayname
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(wayname.hashValue)
+    }
+}
+
+class AnnotationCache {
+    private let maxEntryAge = TimeInterval(30)
+    var entries = Set<AnnotationCacheEntry>()
+    var cachePruningTimer: Timer?
+
+    init() {
+        // periodically prune the cache to remove entries that have been passed already
+        cachePruningTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true, block: { [weak self] _ in
+            self?.prune()
+        })
+    }
+
+    deinit {
+        cachePruningTimer?.invalidate()
+        cachePruningTimer = nil
+    }
+
+    func setValue(feature: Feature, coordinate: CLLocationCoordinate2D, intersection: EdgeIntersection?, for wayname: String) {
+        entries.insert(AnnotationCacheEntry(coordinate: coordinate, wayname: wayname, intersection: intersection, feature: feature))
+    }
+
+    func value(for wayname: String) -> AnnotationCacheEntry? {
+        let matchingEntry = entries.first { entry -> Bool in
+            entry.wayname == wayname
+        }
+
+        if let matchingEntry = matchingEntry {
+            // update the timestamp used for pruning the cache
+            matchingEntry.lastAccessTime = Date()
+        }
+
+        return matchingEntry
+    }
+
+    private func prune() {
+        let now = Date()
+
+        entries.filter { now.timeIntervalSince($0.lastAccessTime) > maxEntryAge }.forEach { remove($0) }
+    }
+
+    public func remove(_ entry: AnnotationCacheEntry) {
+        entries.remove(entry)
     }
 }
 

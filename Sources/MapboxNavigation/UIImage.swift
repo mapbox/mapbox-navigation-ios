@@ -44,6 +44,8 @@ extension UIImage {
         return scaledImage
     }
 
+    // Produce a copy of the image with tint color applied.
+    // Useful for deployment to iOS versions prior to 13 where tinting support was added to UIImage natively.
     func tint(_ tintColor: UIColor) -> UIImage {
         let imageSize = size
         let imageScale = scale

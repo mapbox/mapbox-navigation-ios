@@ -371,6 +371,8 @@ extension RoadGraph {
         /**
          A key in the user info dictionary of a `Notification.Name.electronicHorizonDidEnterRoadObject` or `Notification.Name.electronicHorizonDidExitRoadObject` notification. The corresponding value is a `RoadObjectIdentifier` identifying the road object that the user entered or exited. */
         public static let roadObjectIdentifierKey: NotificationUserInfoKey = .init(rawValue: "roadObjectIdentifier")
+
+        public static let roadGraphIdentifierKey: NotificationUserInfoKey = .init(rawValue: "roadGraph")
         
         /**
          A key in the user info dictionary of a `Notification.Name.electronicHorizonDidEnterRoadObject` or `Notification.Name.electronicHorizonDidExitRoadObject` notification. The corresponding value is an `NSNumber` containing a Boolean value set to `true` if the user entered at the beginning or exited at the end of the road object, or `false` if they entered or exited somewhere along the road object. */
