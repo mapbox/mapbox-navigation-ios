@@ -50,6 +50,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
     public var defaultAltitude: CLLocationDistance = 1000.0
     
     /**
+     Controls the distance on route after the current maneuver to include in the frame.
+     */
+    public var distanceToFrameAfterManeuver: CLLocationDistance = 100.0
+    
+    /**
      If enabled, the bearing property of `CameraOptions` in `.following` mode won't exactly reflect the bearing returned by the location,
      but will also be affected by the direction to the upcoming framed geometry, to maximize the viewable area.
      
@@ -199,8 +204,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 if distance > 0.0 && distance < 150.0 {
                     compoundManeuvers.append(stepCoordinates)
                 } else {
-                    let distanceAfterManeuverToIncludeInFraming = 30.0
-                    compoundManeuvers.append(stepCoordinates.trimmed(distance: distanceAfterManeuverToIncludeInFraming))
+                    compoundManeuvers.append(stepCoordinates.trimmed(distance: distanceToFrameAfterManeuver))
                     break
                 }
             }
