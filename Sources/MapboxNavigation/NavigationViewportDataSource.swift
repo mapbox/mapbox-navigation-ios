@@ -62,7 +62,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
      
      Defaults to `20.0` degrees.
      */
-    public var maxBearingAngleDiffWhenSmoothing: CLLocationDegrees = 0.0
+    public var maxBearingAngleDiffWhenSmoothing: CLLocationDirection = 20.0
     
     /**
      Value of default viewport padding.
