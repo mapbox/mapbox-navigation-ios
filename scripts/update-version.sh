@@ -36,6 +36,10 @@ cd Tests/CocoaPodsTest/PodInstall/
 pod update
 cd -
 
+cd Sources/MapboxCoreNavigation/
+cp Info.plist MBXInfo.plist
+cd -
+
 step "Updating changelog to version ${SHORT_VERSION}…"
 
 sed -i '' -E "s/## *main/## ${SHORT_VERSION}/g" CHANGELOG.md
