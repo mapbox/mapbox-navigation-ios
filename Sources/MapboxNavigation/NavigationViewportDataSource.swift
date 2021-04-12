@@ -39,7 +39,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     public var overviewCarPlayCamera: CameraOptions = CameraOptions()
     
     /**
-     Value of maximum pitch, which will be taken into account when preparing `CameraOption`s during
+     Value of maximum pitch, which will be taken into account when preparing `CameraOptions` during
      active guidance navigation.
      */
     public var maximumPitch: Double = 45.0
@@ -48,6 +48,21 @@ public class NavigationViewportDataSource: ViewportDataSource {
      Altitude that the `NavigationCamera` initally defaults to when navigation starts.
      */
     public var defaultAltitude: CLLocationDistance = 1000.0
+    
+    /**
+     If enabled, the bearing property of `CameraOptions` in `.following` mode won't exactly reflect the bearing returned by the location,
+     but will also be affected by the direction to the upcoming framed geometry, to maximize the viewable area.
+     
+     Defaults to `true`.
+     */
+    public var useBearingSmoothing: Bool = true
+    
+    /**
+     When `useBearingSmoothing` is enabled, this controls how much the bearing can deviate from the location's bearing, in degrees.
+     
+     Defaults to `20.0` degrees.
+     */
+    public var maxBearingAngleDiffWhenSmoothing: CLLocationDegrees = 0.0
     
     /**
      Value of default viewport padding.
@@ -314,9 +329,14 @@ public class NavigationViewportDataSource: ViewportDataSource {
            let lastCoordinate = coordinates.last {
             let directionToManeuver = firstCoordinate.direction(to: lastCoordinate)
             let directionDiff = directionToManeuver.shortestRotation(angle: initialBearing)
-            let bearingModeClampedManeuverMaxDiff = 20.0
-            if fabs(directionDiff) > bearingModeClampedManeuverMaxDiff {
-                bearing += bearingModeClampedManeuverMaxDiff * (directionDiff < 0.0 ? -1.0 : 1.0)
+            
+            var bearingMaxDiff = 0.0
+            if useBearingSmoothing {
+                bearingMaxDiff = maxBearingAngleDiffWhenSmoothing
+            }
+            
+            if fabs(directionDiff) > bearingMaxDiff {
+                bearing += bearingMaxDiff * (directionDiff < 0.0 ? -1.0 : 1.0)
             } else {
                 bearing = firstCoordinate.direction(to: lastCoordinate)
             }
