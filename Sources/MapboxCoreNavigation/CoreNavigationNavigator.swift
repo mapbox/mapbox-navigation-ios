@@ -313,6 +313,7 @@ class NavigatorElectronicHorizonObserver: ElectronicHorizonObserver {
             .treeKey: RoadGraph.Edge(position.tree().start),
             .updatesMostProbablePathKey: position.type() == .update,
             .distancesByRoadObjectKey: distances.map(DistancedRoadObject.init),
+            .roadGraphIdentifierKey: Navigator.shared.roadGraph,
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
     }

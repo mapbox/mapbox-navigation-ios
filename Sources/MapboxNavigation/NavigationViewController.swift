@@ -81,6 +81,22 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
+    public var showIntersectionAnnotations: Bool {
+        get {
+            navigationMapView?.showIntersectionAnnotations ?? false
+        }
+        set {
+            navigationMapView?.showIntersectionAnnotations = newValue
+            if let routeController = router as? RouteController {
+                if newValue {
+                    routeController.startUpdatingElectronicHorizon(with: nil)
+                } else {
+                    routeController.stopUpdatingElectronicHorizon()
+                }
+            }
+        }
+    }
+    
     // MARK: Configuring Spoken Instructions
     
     /**
@@ -328,6 +344,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     deinit {
+        showIntersectionAnnotations = false
         navigationService?.stop()
     }
     
@@ -417,6 +434,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         viewObservers.forEach {
             $0?.navigationViewDidDisappear(animated)
         }
+        
+        showIntersectionAnnotations = false
     }
     
     open override func viewDidLayoutSubviews() {

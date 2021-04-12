@@ -15,6 +15,7 @@ extension NavigationMapView {
         static let waypointSymbolLayer = "\(identifier)_waypointSymbolLayer"
         static let buildingExtrusionLayer = "\(identifier)_buildingExtrusionLayer"
         static let routeDurationAnnotationsLayer: String = "\(identifier)_routeDurationAnnotationsLayer"
+        static let intersectionAnnotationsLayer = "\(identifier)_intersectionAnnotationsLayer"
         static let puck2DLayer: String = "puck"
         static let puck3DLayer: String = "puck-model-layer"
     }
@@ -26,6 +27,7 @@ extension NavigationMapView {
         static let voiceInstructionSource = "\(identifier)_instructionSource"
         static let waypointSource = "\(identifier)_waypointSource"
         static let routeDurationAnnotationsSource: String = "\(identifier)_routeDurationAnnotationsSource"
+        static let intersectionAnnotationsSource = "\(identifier)_intersectionAnnotationsSource"
         static let puck3DSource: String = "puck-model-source"
     }
     
