@@ -41,33 +41,35 @@ public class NavigationViewportDataSource: ViewportDataSource {
     /**
      Value of maximum pitch, which will be taken into account when preparing `CameraOptions` during
      active guidance navigation.
+     
+     Defaults to `45.0` degrees.
      */
     public var maximumPitch: Double = 45.0
     
     /**
      Altitude that the `NavigationCamera` initally defaults to when navigation starts.
+     
+     Defaults to `1000.0` meters.
      */
     public var defaultAltitude: CLLocationDistance = 1000.0
     
     /**
      Controls the distance on route after the current maneuver to include in the frame.
+     
+     Defaults to `100.0` meters.
      */
     public var distanceToFrameAfterManeuver: CLLocationDistance = 100.0
     
     /**
-     If enabled, the bearing property of `CameraOptions` in `.following` mode won't exactly reflect the bearing returned by the location,
-     but will also be affected by the direction to the upcoming framed geometry, to maximize the viewable area.
+     Controls how much the bearing can deviate from the location's bearing, in degrees.
      
-     Defaults to `true`.
-     */
-    public var useBearingSmoothing: Bool = true
-    
-    /**
-     When `useBearingSmoothing` is enabled, this controls how much the bearing can deviate from the location's bearing, in degrees.
+     In case if set, the `bearing` property of `CameraOptions` during active guidance navigation
+     won't exactly reflect the bearing returned by the location, but will also be affected by the
+     direction to the upcoming framed geometry, to maximize the viewable area.
      
      Defaults to `20.0` degrees.
      */
-    public var maxBearingAngleDiffWhenSmoothing: CLLocationDirection = 20.0
+    public var maximumBearingSmoothingAngle: CLLocationDirection? = 20.0
     
     /**
      Value of default viewport padding.
@@ -333,12 +335,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
            let lastCoordinate = coordinates.last {
             let directionToManeuver = firstCoordinate.direction(to: lastCoordinate)
             let directionDiff = directionToManeuver.shortestRotation(angle: initialBearing)
-            
-            var bearingMaxDiff = 0.0
-            if useBearingSmoothing {
-                bearingMaxDiff = maxBearingAngleDiffWhenSmoothing
-            }
-            
+            let bearingMaxDiff = maximumBearingSmoothingAngle ?? 0.0
             if fabs(directionDiff) > bearingMaxDiff {
                 bearing += bearingMaxDiff * (directionDiff < 0.0 ? -1.0 : 1.0)
             } else {
