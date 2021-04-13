@@ -42,4 +42,8 @@ extension Route {
             return LineString(trimmedPrecedingCoordinates + followingPolyline.trimmed(from: followingPolyline.coordinates[0], distance: distance)!.coordinates.suffix(from: 1))
         }
     }
+    
+    func leg(containing step: RouteStep) -> RouteLeg? {
+        return legs.first { $0.steps.contains(step) }
+    }
 }

@@ -19,8 +19,7 @@ extension ViewController: InstructionsCardCollectionDelegate {
         let maneuverStep = leg.steps[stepIndex + 1]
         
         // stop tracking user, and move camera to step location
-        navigationMapView.tracksUserCourse = false
-        navigationMapView.enableFrameByFrameCourseViewTracking(for: 1)
+        navigationMapView.navigationCamera.stop()
         
         let camera = CameraOptions(center: maneuverStep.maneuverLocation,
                                    zoom: navigationMapView.mapView.zoom,

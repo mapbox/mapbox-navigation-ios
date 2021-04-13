@@ -63,11 +63,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     An optional `CameraOptions` you can use to improve the initial transition from a previous viewport and prevent a trigger from an excessive significant location update.
-     */
-    public var pendingCamera: CameraOptions?
-    
-    /**
      The receiver’s delegate.
      */
     public weak var delegate: NavigationViewControllerDelegate?
@@ -329,34 +324,24 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     func addRouteMapViewController(_ navigationOptions: NavigationOptions?) {
-        let mapViewController = RouteMapViewController(navigationService: self.navigationService,
-                                                       delegate: self,
-                                                       topBanner: addTopBanner(navigationOptions),
-                                                       bottomBanner: addBottomBanner(navigationOptions))
-        mapViewController.destination = route.legs.last?.destination
-        mapViewController.view.pinInSuperview()
-        mapViewController.reportButton.isHidden = !showsReportFeedback
-        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
+        let routeMapViewController = RouteMapViewController(navigationService: self.navigationService,
+                                                            delegate: self,
+                                                            topBanner: addTopBanner(navigationOptions),
+                                                            bottomBanner: addBottomBanner(navigationOptions))
+        routeMapViewController.destination = route.legs.last?.destination
+        routeMapViewController.view.pinInSuperview()
+        routeMapViewController.reportButton.isHidden = !showsReportFeedback
+        routeMapViewController.view.translatesAutoresizingMaskIntoConstraints = false
         
-        self.mapViewController = mapViewController
+        self.mapViewController = routeMapViewController
         
-        embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
+        embed(routeMapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
             return map.view.constraintsForPinning(to: parent.view)
         }
         
-        setInitialCoordinate(in: mapViewController)
-    }
-    
-    func setInitialCoordinate(in routeMapViewController: RouteMapViewController) {
-        guard let mapView = routeMapViewController.navigationMapView.mapView,
-              let centerCoordinate = routeMapViewController.navigationService.routeProgress.route.shape?.coordinates.first else { return }
-        
-        let zoom = CGFloat(ZoomLevelForAltitude(routeMapViewController.navigationMapView.defaultAltitude,
-                                                mapView.pitch,
-                                                centerCoordinate.latitude,
-                                                mapView.bounds.size))
-        
-        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate, zoom: zoom))
+        if let coordinate = routeMapViewController.navigationService.routeProgress.route.shape?.coordinates.first {
+            routeMapViewController.navigationMapView.setInitialCamera(coordinate)
+        }
     }
     
     func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {
@@ -403,6 +388,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             return
         }
         navigationService(navigationService, didPassVisualInstructionPoint: firstInstruction, routeProgress: navigationService.routeProgress)
+        
+        // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
+        navigationMapView?.navigationCamera.follow()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -538,10 +526,6 @@ extension NavigationViewController: RouteMapViewControllerDelegate {
         }
     }
     
-    public func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
-        return delegate?.navigationViewController(self, mapViewUserAnchorPoint: navigationMapView) ?? .zero
-    }
-    
     func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
         return annotatesSpokenInstructions
     }
@@ -629,16 +613,11 @@ extension NavigationViewController: NavigationServiceDelegate {
         let shouldPrevent = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
         let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
         
-        if snapsUserLocationAnnotationToRoute,
-            userHasArrivedAndShouldPreventRerouting {
+        if snapsUserLocationAnnotationToRoute, userHasArrivedAndShouldPreventRerouting {
             mapViewController?.labelCurrentRoad(at: rawLocation, for: location)
+            mapViewController?.navigationMapView.updateUserCourseView(location, animated: true)
         } else  {
             mapViewController?.labelCurrentRoad(at: rawLocation)
-        }
-        
-        if snapsUserLocationAnnotationToRoute,
-            userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.navigationMapView.updateCourseTracking(location: location, animated: true)
         }
         
         attemptToHighlightBuildings(progress, with: location)
@@ -675,10 +654,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         let advancesToNextLeg = componentsWantAdvance && (delegate?.navigationViewController(self, didArriveAt: waypoint) ?? defaultBehavior)
         
         if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
-            // In case of final destination present end of route view first and then re-center final destination.
-            showEndOfRouteFeedback { [weak self] _ in
-                self?.frameDestinationArrival(for: service.router.location)
-            }
+            showEndOfRouteFeedback()
         }
         return advancesToNextLeg
     }
@@ -756,56 +732,22 @@ extension NavigationViewController: NavigationServiceDelegate {
         // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
         if progress.fractionTraveled >= 1.0 { return }
         if waypointStyle == .annotation { return }
-        guard let navigationMapView = navigationMapView else { return }
 
         if currentLeg != progress.currentLeg {
             currentLeg = progress.currentLeg
             passedApproachingDestinationThreshold = false
-            mapViewController?.suppressAutomaticAltitudeChanges = false
             foundAllBuildings = false
-            navigationMapView.altitude = navigationMapView.defaultAltitude
         }
-
-        let altitude = AltitudeForZoomLevel(16.1,
-                                            navigationMapView.mapView.pitch,
-                                            location.coordinate.latitude,
-                                            navigationMapView.mapView.frame.size)
-
+        
         if !passedApproachingDestinationThreshold, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
             passedApproachingDestinationThreshold = true
-            mapViewController?.suppressAutomaticAltitudeChanges = true
         }
-
-        // Attempt to decrease altitude so that highlighted building becomes visible.
-        // This is required in cases when:
-        // - Switching from overview to follow mode.
-        // - Previous attempt to decrease altitude failed (happens when highlighted building is within destination
-        // threshold right after starting navigation).
-        // FIXME: When device was rotated to landscape mode altitude should be adjusted so that building is highlighted.
-        if passedApproachingDestinationThreshold,
-           navigationMapView.altitude == navigationMapView.defaultAltitude,
-           altitude < navigationMapView.altitude {
-            navigationMapView.altitude = altitude
-        }
-
+        
         if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
-            navigationMapView.highlightBuildings(at: [currentLegWaypoint],
-                                                 in3D: waypointStyle == .extrudedBuilding ? true : false,
-                                                 completion: { (result) -> Void in
-                                                    self.foundAllBuildings = result
-                                                 })
+            navigationMapView?.highlightBuildings(at: [currentLegWaypoint], in3D: waypointStyle == .extrudedBuilding ? true : false, completion: { (found) in
+                self.foundAllBuildings = found
+            })
         }
-    }
-
-    private func frameDestinationArrival(for location: CLLocation?) {
-        if waypointStyle == .annotation { return }
-        guard let mapViewController = self.mapViewController else { return }
-        guard let location = location else { return }
-
-        // Update insets to be able to correctly center map view after presenting end of route view.
-        mapViewController.updateMapViewContentInsets()
-        // Update user course view to correctly place it in map view.
-        self.navigationMapView?.updateCourseTracking(location: location, animated: false)
     }
 }
 
@@ -916,6 +858,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
                            steps: remaining)
         }
         
+        navigationMapView?.navigationCamera.stop()
         mapViewController?.center(on: upcomingStep,
                                   route: route,
                                   legIndex: legIndex,
@@ -929,22 +872,11 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         let legProgress = RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
         self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
-        
-        // After selecting maneuver and dismissing steps table make sure to update contentInsets of NavigationMapView
-        // to correctly place selected maneuver in the center of the screen (taking into account top and bottom banner heights).
-        banner.dismissStepsTable { [weak self] in
-            self?.mapViewController?.updateMapViewContentInsets()
-        }
+        banner.dismissStepsTable()
     }
     
     public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
         mapViewController?.recenter(self)
-    }
-}
-
-fileprivate extension Route {
-    func leg(containing step: RouteStep) -> RouteLeg? {
-        return legs.first { $0.steps.contains(step) }
     }
 }
 

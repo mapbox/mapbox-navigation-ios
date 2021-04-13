@@ -4,10 +4,16 @@ import MapboxNavigation
 import MapboxDirections
 import MapboxMaps
 
-// FIXME: Currently if `MapView` is created using storyboard crash occurs.
 class CustomViewController: UIViewController {
     
+    var destinationAnnotation: PointAnnotation! {
+        didSet {
+            navigationMapView.mapView.annotationManager.addAnnotation(destinationAnnotation)
+        }
+    }
+    
     var navigationService: NavigationService!
+    
     var simulateLocation = false
 
     var userIndexedRoute: IndexedRoute?
@@ -34,6 +40,7 @@ class CustomViewController: UIViewController {
         super.viewDidLoad()
         
         navigationMapView.mapView.style.styleURL = .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!)
+        navigationMapView.userCourseView.isHidden = false
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
         navigationService = MapboxNavigationService(route: userIndexedRoute!.0, routeIndex: userIndexedRoute!.1, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
@@ -51,13 +58,15 @@ class CustomViewController: UIViewController {
         // Start navigation
         navigationService.start()
         
-        // Center map on user
-        navigationMapView.recenterMap()
-        
         navigationMapView.mapView.on(.styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
             self?.navigationMapView.show([route])
         })
+        
+        // By default `NavigationViewportDataSource` tracks location changes from `PassiveLocationDataSource`, to consume
+        // locations in active guidance navigation `ViewportDataSourceType` should be set to `.active`.
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView, viewportDataSourceType: .active)
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -101,8 +110,8 @@ class CustomViewController: UIViewController {
         instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress)
         instructionsBannerView.isHidden = false
         
-        // Update the user puck
-        navigationMapView.updateCourseTracking(location: location, animated: true)
+        // Update `UserCourseView` to be placed on the most recent location.
+        navigationMapView.updateUserCourseView(location, animated: true)
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
@@ -122,7 +131,7 @@ class CustomViewController: UIViewController {
     }
     
     @IBAction func recenterMap(_ sender: Any) {
-        navigationMapView.recenterMap()
+        navigationMapView.navigationCamera.follow()
     }
     
     @IBAction func showFeedback(_ sender: Any) {
@@ -172,8 +181,7 @@ class CustomViewController: UIViewController {
         updatePreviewBannerWith(step: step, maneuverStep: maneuverStep)
         
         // stop tracking user, and move camera to step location
-        navigationMapView.tracksUserCourse = false
-        navigationMapView.enableFrameByFrameCourseViewTracking(for: 1)
+        navigationMapView.navigationCamera.stop()
         navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: maneuverStep.maneuverLocation,
                                                           bearing: maneuverStep.initialHeading!,
                                                           animated: true)

@@ -50,14 +50,6 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - returns: Optionally, a `FeatureCollection` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection?
-    
-    /**
-     Asks the receiver to return a `CGPoint` to serve as the anchor for the user icon.
-     - important: The return value should be returned in the normal UIKit coordinate-space, NOT CoreAnimation's unit coordinate-space.
-     - parameter navigationMapView: The `NavigationMapView`.
-     - returns: A `CGPoint` (in regular coordinate-space) that represents the point on-screen where the user location icon should be drawn.
-     */
-    func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint
 }
 
 public extension NavigationMapViewDelegate {
@@ -106,37 +98,5 @@ public extension NavigationMapViewDelegate {
     func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
         return .zero
-    }
-}
-
-// MARK: - NavigationMapViewCourseTrackingDelegate methods
-
-/**
- The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
- */
-public protocol NavigationMapViewCourseTrackingDelegate: class, UnimplementedLogging {
-    /**
-     Tells the receiver that the map is now tracking the user course.
-     - seealso: NavigationMapView.tracksUserCourse
-     - parameter mapView: The NavigationMapView.
-     */
-    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView)
-    
-    /**
-     Tells the receiver that `tracksUserCourse` was set to false, signifying that the map is no longer tracking the user course.
-     - seealso: NavigationMapView.tracksUserCourse
-     - parameter mapView: The NavigationMapView.
-     */
-    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView)
-}
-
-public extension NavigationMapViewCourseTrackingDelegate {
-    
-    func navigationMapViewDidStartTrackingCourse(_ mapView: NavigationMapView) {
-        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
-    }
-    
-    func navigationMapViewDidStopTrackingCourse(_ mapView: NavigationMapView) {
-        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
 }

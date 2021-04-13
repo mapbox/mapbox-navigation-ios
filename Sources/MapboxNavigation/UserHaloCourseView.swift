@@ -7,21 +7,6 @@ import CoreLocation
 public class UserHaloCourseView: UIView, CourseUpdatable {
     private var lastLocationUpdate: Date?
 
-    /**
-     Transforms the location of the user halo.
-     */
-    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, tracksUserCourse: Bool) {
-        let duration: TimeInterval = animated ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            let angle = tracksUserCourse ? 0 : CLLocationDegrees(direction - location.course)
-            self.haloView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -CGFloat(angle.toRadians())))
-            var transform = CATransform3DRotate(CATransform3DIdentity, CGFloat(CLLocationDegrees(pitch).toRadians()), 1.0, 0, 0)
-            transform = CATransform3DScale(transform, tracksUserCourse ? 1 : 0.5, tracksUserCourse ? 1 : 0.5, 1)
-            transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
-            self.layer.sublayerTransform = transform
-        }, completion: nil)
-    }
-
     // Sets the inner fill color of the user halo
     @objc public dynamic var haloColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5) {
         didSet {

@@ -226,17 +226,31 @@
 		8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0E0A51257AD9C300C2E924 /* NightStyle.swift */; };
 		8A17635B25CC89D800737520 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A17635A25CC89D800737520 /* Expression.swift */; };
 		8A1763D025CCC38C00737520 /* Double.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1763CF25CCC38C00737520 /* Double.swift */; };
+		8A2DFA8626168A300034A87E /* NavigationCameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */; };
+		8A30113C25DDCC8A00CE192A /* NavigationCameraConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */; };
 		8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */; };
 		8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */; };
 		8A41F5EC25BF624900BD6FCF /* MapOrnamentPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */; };
 		8A41F63C25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */; };
 		8A41F63D25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F63B25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift */; };
+		8A44662B260A6C51008BA55E /* ViewportDataSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */; };
+		8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A446644260A7B24008BA55E /* BoundingBox.swift */; };
+		8A8C3D98260175D20071D274 /* CLLocationDirection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3D97260175D20071D274 /* CLLocationDirection.swift */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
+		8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3965225DC66570027A035 /* NavigationCameraType.swift */; };
 		8AC6191025881F8D00430AA8 /* route-with-mixed-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190B25881F8D00430AA8 /* route-with-mixed-road-classes.json */; };
 		8AC6191125881F8D00430AA8 /* route-with-missing-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190C25881F8D00430AA8 /* route-with-missing-road-classes.json */; };
 		8AC6191225881F8D00430AA8 /* route-with-not-present-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190D25881F8D00430AA8 /* route-with-not-present-road-classes.json */; };
 		8AC6191325881F8D00430AA8 /* route-with-road-classes-single-congestion.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190E25881F8D00430AA8 /* route-with-road-classes-single-congestion.json */; };
 		8AC6191425881F8D00430AA8 /* route-with-same-congestion-different-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AC6190F25881F8D00430AA8 /* route-with-same-congestion-different-road-classes.json */; };
+		8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */; };
+		8AD866F725CA1BF10019A638 /* NavigationCameraStateTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */; };
+		8AD866F925CA1BF10019A638 /* ViewportDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EE25CA1BF00019A638 /* ViewportDataSource.swift */; };
+		8AD866FB25CA1BF10019A638 /* NavigationCameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866F025CA1BF10019A638 /* NavigationCameraState.swift */; };
+		8AD866FD25CA1BF10019A638 /* CameraStateTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866F225CA1BF10019A638 /* CameraStateTransition.swift */; };
+		8AD866FF25CA1BF10019A638 /* NavigationViewportDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866F425CA1BF10019A638 /* NavigationViewportDataSource.swift */; };
+		8AE9081225FAA53300F37077 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AE9081125FAA53300F37077 /* Collection.swift */; };
+		8AFF437125F847340053CBB1 /* CameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AFF437025F847340053CBB1 /* CameraOptions.swift */; };
 		8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */ = {isa = PBXBuildFile; fileRef = 8D07C5A720B612310093D779 /* EmptyStyle.json */; };
 		8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D1A5CD1212DDFCD0059BA4A /* DispatchTimer.swift */; };
 		8D24A2F62040960C0098CBF8 /* UIEdgeInsets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D24A2F52040960C0098CBF8 /* UIEdgeInsets.swift */; };
@@ -733,6 +747,8 @@
 		8A0E0A51257AD9C300C2E924 /* NightStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightStyle.swift; sourceTree = "<group>"; };
 		8A17635A25CC89D800737520 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 		8A1763CF25CCC38C00737520 /* Double.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Double.swift; sourceTree = "<group>"; };
+		8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraDebugView.swift; sourceTree = "<group>"; };
+		8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraConstants.swift; sourceTree = "<group>"; };
 		8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreNavigationNavigator.swift; sourceTree = "<group>"; };
 		8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayActivity.swift; sourceTree = "<group>"; };
 		8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapOrnamentPosition.swift; sourceTree = "<group>"; };
@@ -743,14 +759,26 @@
 		8A41F65C25BF642200BD6FCF /* MapboxMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMaps.xcframework; path = MapboxNavigation/MapboxMaps/MapboxMaps.xcframework; sourceTree = "<group>"; };
 		8A41F65D25BF642200BD6FCF /* MapboxCommon.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCommon.xcframework; path = MapboxNavigation/MapboxMaps/MapboxCommon.xcframework; sourceTree = "<group>"; };
 		8A41F65E25BF642200BD6FCF /* MapboxCoreMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCoreMaps.xcframework; path = MapboxNavigation/MapboxMaps/MapboxCoreMaps.xcframework; sourceTree = "<group>"; };
+		8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataSourceType.swift; sourceTree = "<group>"; };
+		8A446644260A7B24008BA55E /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
+		8A8C3D97260175D20071D274 /* CLLocationDirection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationDirection.swift; sourceTree = "<group>"; };
 		8A997F2A2581A9E4005D50D6 /* MapboxMapsAnnotations.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMapsAnnotations.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8A997F2D2581A9EA005D50D6 /* MapboxMaps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
+		8AC3965225DC66570027A035 /* NavigationCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraType.swift; sourceTree = "<group>"; };
 		8AC6190B25881F8D00430AA8 /* route-with-mixed-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-mixed-road-classes.json"; sourceTree = "<group>"; };
 		8AC6190C25881F8D00430AA8 /* route-with-missing-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-missing-road-classes.json"; sourceTree = "<group>"; };
 		8AC6190D25881F8D00430AA8 /* route-with-not-present-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-not-present-road-classes.json"; sourceTree = "<group>"; };
 		8AC6190E25881F8D00430AA8 /* route-with-road-classes-single-congestion.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-road-classes-single-congestion.json"; sourceTree = "<group>"; };
 		8AC6190F25881F8D00430AA8 /* route-with-same-congestion-different-road-classes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-same-congestion-different-road-classes.json"; sourceTree = "<group>"; };
+		8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCamera.swift; sourceTree = "<group>"; };
+		8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraStateTransition.swift; sourceTree = "<group>"; };
+		8AD866EE25CA1BF00019A638 /* ViewportDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewportDataSource.swift; sourceTree = "<group>"; };
+		8AD866F025CA1BF10019A638 /* NavigationCameraState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraState.swift; sourceTree = "<group>"; };
+		8AD866F225CA1BF10019A638 /* CameraStateTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraStateTransition.swift; sourceTree = "<group>"; };
+		8AD866F425CA1BF10019A638 /* NavigationViewportDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewportDataSource.swift; sourceTree = "<group>"; };
+		8AE9081125FAA53300F37077 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
+		8AFF437025F847340053CBB1 /* CameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraOptions.swift; sourceTree = "<group>"; };
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8B808F862487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Navigation.strings; sourceTree = "<group>"; };
 		8B808F892487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1201,6 +1229,7 @@
 		351BEBD81E5BCC28006FE110 /* MapboxNavigation */ = {
 			isa = PBXGroup;
 			children = (
+				8AD866EA25CA1BC90019A638 /* Camera */,
 				8A0E0A66257ADD3D00C2E924 /* Navigation */,
 				8A0E0A6E257AE59100C2E924 /* Instructions */,
 				8A0E0A6D257AE4B300C2E924 /* Cache */,
@@ -1493,6 +1522,23 @@
 			name = Instructions;
 			sourceTree = "<group>";
 		};
+		8AD866EA25CA1BC90019A638 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */,
+				8AC3965225DC66570027A035 /* NavigationCameraType.swift */,
+				8AD866F025CA1BF10019A638 /* NavigationCameraState.swift */,
+				8AD866F225CA1BF10019A638 /* CameraStateTransition.swift */,
+				8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */,
+				8AD866EE25CA1BF00019A638 /* ViewportDataSource.swift */,
+				8AD866F425CA1BF10019A638 /* NavigationViewportDataSource.swift */,
+				8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */,
+				8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */,
+				8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */,
+			);
+			name = Camera;
+			sourceTree = "<group>";
+		};
 		8DF8E4DD2202694100B29FEF /* Documents */ = {
 			isa = PBXGroup;
 			children = (
@@ -1608,6 +1654,10 @@
 				8A17635A25CC89D800737520 /* Expression.swift */,
 				8A1763CF25CCC38C00737520 /* Double.swift */,
 				B419BFF125F00A9C0086639B /* Feature.swift */,
+				8AFF437025F847340053CBB1 /* CameraOptions.swift */,
+				8AE9081125FAA53300F37077 /* Collection.swift */,
+				8A8C3D97260175D20071D274 /* CLLocationDirection.swift */,
+				8A446644260A7B24008BA55E /* BoundingBox.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2029,7 +2079,7 @@
 					New,
 				);
 				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1230;
+				LastUpgradeCheck = 1240;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					351BEBD61E5BCC28006FE110 = {
@@ -2436,6 +2486,7 @@
 				350E2C5F22707EB80014CEB3 /* UIScreen.swift in Sources */,
 				8DB45E90201698EB001EA6A3 /* UIStackView.swift in Sources */,
 				B419BFF225F00A9C0086639B /* Feature.swift in Sources */,
+				8A44662B260A6C51008BA55E /* ViewportDataSourceType.swift in Sources */,
 				351BEBFC1E5BCC63006FE110 /* NavigationViewController.swift in Sources */,
 				AE7DE6C621A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift in Sources */,
 				8D8EA9BC20575CD80077F478 /* FeedbackCollectionViewCell.swift in Sources */,
@@ -2443,13 +2494,16 @@
 				35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */,
 				C588C3C21F33882100520EF2 /* String.swift in Sources */,
 				C53208AB1E81FFB900910266 /* NavigationMapView.swift in Sources */,
+				8A30113C25DDCC8A00CE192A /* NavigationCameraConstants.swift in Sources */,
 				16EF6C22211BA4B300AA580B /* CarPlayMapViewController.swift in Sources */,
 				8A41F63C25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift in Sources */,
+				8AD866F725CA1BF10019A638 /* NavigationCameraStateTransition.swift in Sources */,
 				351BEBF61E5BCC63006FE110 /* RouteMapViewController.swift in Sources */,
 				16A509D7202BC0CA0011D788 /* ImageDownload.swift in Sources */,
 				8A1763D025CCC38C00737520 /* Double.swift in Sources */,
 				8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */,
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
+				8AE9081225FAA53300F37077 /* Collection.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */,
 				AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */,
@@ -2462,6 +2516,7 @@
 				8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */,
 				8A41F5EC25BF624900BD6FCF /* MapOrnamentPosition.swift in Sources */,
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
+				8AD866FF25CA1BF10019A638 /* NavigationViewportDataSource.swift in Sources */,
 				C5FFAC1520D96F5C009E7F98 /* CarPlayNavigationViewController.swift in Sources */,
 				8DE879661FBB9980002F06C0 /* EndOfRouteViewController.swift in Sources */,
 				AE47A33422B1F6AE0096458C /* InstructionsCardContainerView.swift in Sources */,
@@ -2487,6 +2542,7 @@
 				AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */,
 				AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */,
 				8DCB4248218A540A00D6FCAD /* NavigationComponent.swift in Sources */,
+				8AD866FB25CA1BF10019A638 /* NavigationCameraState.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneView.swift in Sources */,
 				C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */,
 				CFD47D9020FD85EC00BC1E49 /* AccountManager.swift in Sources */,
@@ -2497,8 +2553,11 @@
 				8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */,
 				DA66063023B32F99007832E5 /* Array.swift in Sources */,
 				8DEDEF3421E3FBE80049E114 /* NavigationViewControllerDelegate.swift in Sources */,
+				8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */,
+				8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
+				8AD866F925CA1BF10019A638 /* ViewportDataSource.swift in Sources */,
 				4316D95C24340555000DD8F8 /* Match.swift in Sources */,
 				8DEB4066220CE596008BAAB4 /* NavigationMapViewDelegate.swift in Sources */,
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
@@ -2509,12 +2568,16 @@
 				2B5407EB24470B0A006C820B /* AVAudioSession.swift in Sources */,
 				35F611C41F1E1C0500C43249 /* FeedbackViewController.swift in Sources */,
 				353AA5601FCEF583009F0384 /* StyleManager.swift in Sources */,
+				8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */,
 				35F520C01FB482A200FC9C37 /* NextBannerView.swift in Sources */,
+				8AD866FD25CA1BF10019A638 /* CameraStateTransition.swift in Sources */,
 				C5A6B2DD1F4CE8E8004260EA /* StyleType.swift in Sources */,
 				C5381F03204E052A00A5493E /* UIDevice.swift in Sources */,
+				8A2DFA8626168A300034A87E /* NavigationCameraDebugView.swift in Sources */,
 				351BEC021E5BCC63006FE110 /* UIView.swift in Sources */,
 				2EBF20AE25D6F89000DB7BF2 /* Utils.swift in Sources */,
 				160D8279205996DA00D278D6 /* DataCache.swift in Sources */,
+				8AFF437125F847340053CBB1 /* CameraOptions.swift in Sources */,
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
 				43FB386923A202420064481E /* Route.swift in Sources */,
 				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
@@ -2522,6 +2585,7 @@
 				3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */,
 				2B8098412411375700FED452 /* SpeechSynthesizing.swift in Sources */,
 				3EA9371104016CD402547F1A /* ImageCache.swift in Sources */,
+				8A8C3D98260175D20071D274 /* CLLocationDirection.swift in Sources */,
 				8D4B60E7219CBEB300C41906 /* CarPlayManagerDelegate.swift in Sources */,
 				3EA9369C33A8F10DAE9043AA /* ImageDownloader.swift in Sources */,
 				3EA9301B03F8679BEDD4795F /* Cache.swift in Sources */,
@@ -3366,10 +3430,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-CarPlay";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mapbox.CarPlay-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "69c90fd8-c53b-41a4-ac73-5bc11068a49a";
-				PROVISIONING_PROFILE_SPECIFIER = "Navigation Example";
+				PROVISIONING_PROFILE_SPECIFIER = "CarPlay Provisioning Profile";
 				SWIFT_OBJC_BRIDGING_HEADER = "Example/Example-Swift-BridgingHeader.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -3392,10 +3456,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.mapbox.Example-CarPlay";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.Mapbox.CarPlay-Example";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "69c90fd8-c53b-41a4-ac73-5bc11068a49a";
-				PROVISIONING_PROFILE_SPECIFIER = "Navigation Example";
+				PROVISIONING_PROFILE_SPECIFIER = "CarPlay Provisioning Profile";
 				SWIFT_OBJC_BRIDGING_HEADER = "Example/Example-Swift-BridgingHeader.h";
 			};
 			name = Release;

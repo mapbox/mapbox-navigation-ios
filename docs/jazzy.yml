@@ -61,19 +61,10 @@ custom_categories:
     children:
       - NavigationMapView
       - NavigationMapViewDelegate
-      - NavigationMapViewCourseTrackingDelegate
-      - MGLMapView
-      - MGLAccountManager
-      - MGLMultiPolygonFeature
-      - MGLMultiPolyline
-      - MGLMultiPolylineFeature
-      - MGLPointAnnotation
-      - MGLPointFeature
-      - MGLPolygon
-      - MGLPolygonFeature
-      - MGLPolyline
-      - MGLPolylineFeature
-      - MGLStyle
+      - MapView
+      - AccountManager
+      - PointAnnotation
+      - Style
       - PassiveLocationManager
       - WaypointStyle
   - name: Styling
@@ -128,9 +119,9 @@ custom_categories:
       - RouteControllerMaximumDistanceBeforeRecalculating
       - RouteControllerUserLocationSnappingDistance
       - MapOrnamentPosition
-      - MBCongestionAttribute
-      - MBCurrentLegAttribute
-      - MBRouteLineWidthByZoomLevel
+      - CongestionAttribute
+      - CurrentLegAttribute
+      - RouteLineWidthByZoomLevel
       - NavigationMapViewMinimumDistanceForOverheadZooming
       - NavigationViewMinimumVolumeForWarning
       - RouteControllerIncorrectCourseMultiplier
@@ -159,3 +150,14 @@ custom_categories:
       - RoadClosureSubtype
       - FeedbackSource
       - EndOfRouteFeedback
+  - name: Camera
+    children:
+      - NavigationCamera
+      - NavigationCameraType
+      - NavigationCameraState
+      - CameraStateTransition
+      - NavigationCameraStateTransition
+      - ViewportDataSource
+      - NavigationViewportDataSource
+      - ViewportDataSourceType
+      - ViewportDataSourceDelegate

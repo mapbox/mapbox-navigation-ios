@@ -10,9 +10,9 @@ import MapboxMaps
 
 extension ViewController {
     
-    func setupPassiveLocationManager(_ navigationMapView: NavigationMapView) {
+    func setupPassiveLocationManager() {
         setupFreeDriveStyledFeatures()
-        
+
         let passiveLocationDataSource = PassiveLocationDataSource()
         let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
         navigationMapView.mapView.locationManager.overrideLocationProvider(with: passiveLocationManager)
@@ -67,6 +67,12 @@ extension ViewController {
                                               color: .lightGray,
                                               lineWidth: 3.0,
                                               lineString: LineString([]))
+        
+        navigationMapView.mapView.on(.styleLoaded, handler: { [weak self] _ in
+            guard let self = self else { return }
+            self.addStyledFeature(self.trackStyledFeature)
+            self.addStyledFeature(self.rawTrackStyledFeature)
+        })
     }
     
     func updateFreeDriveStyledFeatures() {
@@ -116,7 +122,6 @@ extension ViewController {
             let branchNames = branchEdgeIdentifiers.flatMap { edgeNames(identifier: $0) }
             statusString += " at \(branchNames.joined(separator: ", "))"
         }
-        print(statusString)
     }
     
     func edgeNames(identifier: ElectronicHorizon.Edge.Identifier) -> [String] {

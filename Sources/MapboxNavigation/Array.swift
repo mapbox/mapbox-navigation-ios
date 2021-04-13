@@ -1,4 +1,7 @@
 import Foundation
+import CoreLocation
+import Turf
+import CoreGraphics
 
 extension Array {
     /**
@@ -32,5 +35,65 @@ extension Array where Element: NSAttributedString {
             joinedAttributedString.append(element)
         }
         return joinedAttributedString
+    }
+}
+
+extension Array where Iterator.Element == [CLLocationCoordinate2D]? {
+    
+    func flatten() -> [CLLocationCoordinate2D] {
+        return self.map({ coords -> [CLLocationCoordinate2D] in
+            if let coords = coords {
+                return coords
+            } else {
+                return [kCLLocationCoordinate2DInvalid]
+            }
+        }).reduce([], +)
+    }
+}
+
+extension Array where Iterator.Element == CLLocationCoordinate2D {
+    
+    func sliced(from: CLLocationCoordinate2D? = nil, to: CLLocationCoordinate2D? = nil) -> [CLLocationCoordinate2D] {
+        return LineString(self).sliced(from: from, to: to)?.coordinates ?? []
+    }
+    
+    func distance(from: CLLocationCoordinate2D? = nil, to: CLLocationCoordinate2D? = nil) -> CLLocationDistance? {
+        return LineString(self).distance(from: from, to: to)
+    }
+    
+    func trimmed(from: CLLocationCoordinate2D? = nil, distance: CLLocationDistance) -> [CLLocationCoordinate2D] {
+        if let fromCoord = from ?? self.first {
+            return LineString(self).trimmed(from: fromCoord, distance: distance)?.coordinates ?? []
+        } else {
+            return []
+        }
+    }
+    
+    var centerCoordinate: CLLocationCoordinate2D {
+        let avgLat = self.map({ $0.latitude }).reduce(0.0, +) / Double(self.count)
+        let avgLng = self.map({ $0.longitude }).reduce(0.0, +) / Double(self.count)
+        
+        return CLLocationCoordinate2D(latitude: avgLat, longitude: avgLng)
+    }
+}
+
+extension Array where Iterator.Element == CGPoint {
+    
+    var boundingBoxPoints: [CGPoint] {
+        let yCoordinates = self.map({ $0.y })
+        let xCoordinates = self.map({ $0.x })
+        if let yMax = yCoordinates.max(),
+           let xMin = xCoordinates.min(),
+           let yMin = yCoordinates.min(),
+           let xMax = xCoordinates.max() {
+            let topLeftPoint = CGPoint(x: xMin, y: yMin)
+            let topRightPoint = CGPoint(x: xMax, y: yMin)
+            let bottomRightPoint = CGPoint(x: xMax, y: yMax)
+            let bottomLeftPoint = CGPoint(x: xMin, y: yMax)
+            
+            return [topLeftPoint, topRightPoint, bottomRightPoint, bottomLeftPoint]
+        }
+        
+        return []
     }
 }
