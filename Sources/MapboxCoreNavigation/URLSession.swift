@@ -16,10 +16,18 @@ extension URLSession {
             .init(for: Directions.self),
         ]
         let bundleComponents = bundles.compactMap { (bundle) -> String? in
-            guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier,
-                let version = bundle?.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String else {
-                return nil
+            guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier else { return nil }
+            var stringForShortVersion: String? {
+                switch name {
+                case "MapboxNavigation":
+                    return Bundle.object(forMapboxNavigationInfoDictionaryKey: "CFBundleShortVersionString")
+                case "MapboxCoreNavigation":
+                    return Bundle.object(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString")
+                default:
+                    return bundle?.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String
+                }
             }
+            guard let version = stringForShortVersion else { return nil }
             return "\(name)/\(version)"
         }
 

@@ -54,6 +54,49 @@ extension Bundle {
     }
     
     /**
+     Returns a dictionary of `MBXInfo.plist` in Mapbox Core Navigation.
+     */
+    static var mapboxCoreNavigationMBX: Dictionary<String, Any>? {
+        guard let fileURL = Bundle.mapboxCoreNavigation.url(forResource: "MBXInfo", withExtension: "plist"),
+              let infoDictionary = NSDictionary(contentsOf: fileURL) as? Dictionary<String, Any> else { return nil }
+        return infoDictionary
+    }
+    
+    /**
+     Returns a dictionary of `MBXInfo.plist` in Mapbox Navigation framework bundle, if installed.
+     */
+    static var mapboxNavigationMBX: Dictionary<String, Any>? {
+        guard let fileURL = Bundle.mapboxNavigationIfInstalled?.url(forResource: "MBXInfo", withExtension: "plist"),
+              let infoDictionary = NSDictionary(contentsOf: fileURL) as? Dictionary<String, Any> else { return nil }
+        return infoDictionary
+    }
+    
+    /**
+     Returns the value associated with the specific key in the Mapbox Navigation bundle's  information property list, if installed.
+     */
+    public class func object(forMapboxNavigationInfoDictionaryKey key: String) -> String? {
+        if let stringForKey = Bundle.mapboxNavigationIfInstalled?.object(forInfoDictionaryKey: key) {
+            return stringForKey as? String
+        } else if let infoDictionary = Bundle.mapboxNavigationMBX {
+            return infoDictionary[key] as? String
+        } else {
+            return nil
+        }
+    }
+    /**
+     Returns the value associated with the specific key in the Mapbox Core Navigation bundle's  information property list.
+     */
+    public class func object(forMapboxCoreNavigationInfoDictionaryKey key: String) -> String? {
+        if let stringForKey = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: key) {
+            return stringForKey as? String
+        } else if let infoDictionary = Bundle.mapboxCoreNavigationMBX {
+            return infoDictionary[key] as? String
+        } else {
+            return nil
+        }
+    }
+    
+    /**
      A file URL representing a directory in which the application can place downloaded tile files.
      */
     public var suggestedTileURL: URL? {

@@ -96,15 +96,10 @@ struct NavigationEventDetails: EventDetails {
     let startTimestamp: Date?
     let sdkIdentifier: String
     var sdkVersion: String {
-        if let stringForShortVersion = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString") {
-            return String(describing: stringForShortVersion)
-        } else if let fileURL = Bundle.mapboxCoreNavigation.url(forResource: "MBXInfo", withExtension: "plist"),
-                  let infoDictionary = NSDictionary(contentsOf: fileURL) as? Dictionary<String, Any>,
-                  let stringFromMBX = infoDictionary["CFBundleShortVersionString"] as? String {
-            return stringFromMBX
-        } else {
+        guard let stringForShortVersion = Bundle.object(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
             preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
+        return stringForShortVersion
     }
     let userAbsoluteDistanceToDestination: CLLocationDistance?
     let volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)

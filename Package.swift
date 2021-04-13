@@ -53,7 +53,8 @@ let package = Package(
                 "MapboxSpeech",
                 "Solar",
             ],
-            exclude: ["Info.plist"]),
+            exclude: ["Info.plist"],
+            resources: [.copy("MBXInfo.plist")]),
         .target(
             name: "CTestHelper",
             dependencies: ["MapboxMobileEvents"]),
