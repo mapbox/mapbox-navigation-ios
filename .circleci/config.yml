@@ -255,6 +255,26 @@ jobs:
       - *build-Example
       - *save-cache
 
+  spm-integration-test:
+    parameters:
+      iOS:
+        type: string
+        default: "14.4"
+      xcode:
+        type: string
+        default: "12.4.0"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - run: sed -i '' -e "s/6cc9728a615ed9b08632a6c2d09f7fca57a5c542/`git rev-parse --verify HEAD`/" Tests/SPMTest/SPMTest.xcodeproj/project.pbxproj # Replace SPM package reference with current revision
+      - run: cd Tests/SPMTest && xcodebuild -scheme SPMTest -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' -derivedDataPath derivedData/ clean build | xcpretty
+      - run: cd Tests/SPMTest && xcodebuild -scheme SPMTest -sdk iphoneos<< parameters.iOS >> -destination generic/platform=iOS -derivedDataPath derivedData/ clean archive CODE_SIGNING_ALLOWED="NO" | xcpretty
+
   ios-trigger-metrics:
     parameters:
       xcode:
@@ -294,6 +314,7 @@ workflows:
           iOS: "14.0"
           lint: true
       - xcode-12-examples
+      - spm-integration-test
       - ios-trigger-metrics:
           filters:
             branches:
