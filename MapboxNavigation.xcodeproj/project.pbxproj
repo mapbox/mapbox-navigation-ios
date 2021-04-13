@@ -1470,6 +1470,8 @@
 				8AE9081125FAA53300F37077 /* Collection.swift */,
 				8A8C3D97260175D20071D274 /* CLLocationDirection+Camera.swift */,
 				8A446644260A7B24008BA55E /* BoundingBox.swift */,
+				F488A0BD26261C4600A4CC8C /* NavigationMapView+IntersectionAnnotations.swift */,
+				F488A0C726261D8100A4CC8C /* ElectronicHorizon.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2263,6 +2265,7 @@
 				8DEDEF3421E3FBE80049E114 /* NavigationViewControllerDelegate.swift in Sources */,
 				8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */,
 				8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */,
+				F488A0C826261D8100A4CC8C /* ElectronicHorizon.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
 				8A2081CB25E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
@@ -2291,6 +2294,7 @@
 				2EBF20AE25D6F89000DB7BF2 /* Utils.swift in Sources */,
 				160D8279205996DA00D278D6 /* DataCache.swift in Sources */,
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
+				F488A0BE26261C4600A4CC8C /* NavigationMapView+IntersectionAnnotations.swift in Sources */,
 				43FB386923A202420064481E /* Route.swift in Sources */,
 				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
 				5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */,
