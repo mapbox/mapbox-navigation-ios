@@ -271,6 +271,7 @@ open class NavigationMapView: UIView {
     }
     
     deinit {
+        annotationCache = nil
         unsubscribeFromNotifications()
     }
     
@@ -1591,7 +1592,7 @@ open class NavigationMapView: UIView {
         }
 
         // sort the edges by distance from the user
-        if let userCoordinate = userLocationForCourseTracking?.coordinate {
+        if let userCoordinate = mostRecentUserCourseViewLocation?.coordinate {
             intersections.sort { (intersection1, intersection2) -> Bool in
                 if let edge1Start = intersection1.coordinate, let edge2Start = intersection2.coordinate {
                     return userCoordinate.distance(to: edge1Start) < userCoordinate.distance(to: edge2Start)
