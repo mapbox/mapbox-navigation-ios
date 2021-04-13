@@ -12,9 +12,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var longPressHintView: UIView!
     @IBOutlet weak var simulationButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
-    @IBOutlet weak var bottomBar: UIView!
     @IBOutlet weak var clearMap: UIButton!
-    @IBOutlet weak var bottomBarBackground: UIView!
     
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
@@ -26,8 +24,6 @@ class ViewController: UIViewController {
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)
     typealias ActionHandler = (UIAlertAction) -> Void
-    
-    private var foundAllBuildings = false
 
     var navigationMapView: NavigationMapView! {
         didSet {
@@ -129,7 +125,6 @@ class ViewController: UIViewController {
         setupPassiveLocationManager()
         
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        view.addSubview(navigationMapView)
         
         navigationMapView.delegate = self
         navigationMapView.mapView.update {
