@@ -93,4 +93,9 @@ class NavigationEventsManagerTests: XCTestCase {
         // Sanity check to verify that no issues occur when creating NavigationEventDetails from main queue.
         let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
     }
+    
+    func encodeNavigationEventsJSON() {
+        
+    }
+    
 }
