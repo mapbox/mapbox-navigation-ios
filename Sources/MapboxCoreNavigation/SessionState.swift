@@ -8,6 +8,8 @@ import UIKit.UIDevice
  */
 struct SessionState {
     let identifier = UUID()
+    var name: String?
+    var version: String?
     var departureTimestamp: Date?
     var arrivalTimestamp: Date?
     

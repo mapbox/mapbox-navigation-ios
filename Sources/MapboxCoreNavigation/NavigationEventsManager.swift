@@ -57,6 +57,14 @@ open class NavigationEventsManager {
     }
     
     /**
+     Metadata that can be used to associate app state, specifically app name and version, with feedback events in the telemetry pipeline.
+    */
+    var appMetadata: [String: String?]? = [
+        "name": Bundle.main.bundleIdentifier,
+        "version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    ]
+    
+    /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
      */
     var usesDefaultUserInterface = {
@@ -183,6 +191,9 @@ open class NavigationEventsManager {
     
     func navigationFeedbackEventDetails(type: FeedbackType, description: String?) -> NavigationEventDetails? {
         var event: NavigationEventDetails
+        guard var sessionState = sessionState else { return nil }
+        sessionState.name = appMetadata?["name"]
+        sessionState.version = appMetadata?["version"]
         
         if let activeNavigationDataSource = activeNavigationDataSource {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
