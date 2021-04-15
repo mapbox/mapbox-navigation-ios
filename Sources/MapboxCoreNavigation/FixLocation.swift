@@ -8,7 +8,7 @@ extension FixLocation {
         if #available(iOS 13.4, *) {
             bearingAccuracy = location.courseAccuracy >= 0 ? location.courseAccuracy as NSNumber : nil
         }
-        
+
         self.init(coordinate: location.coordinate,
                   monotonicTimestampNanoseconds: 0, // use time instead; see also `Navigator.status(at:)`
                   time: location.timestamp,

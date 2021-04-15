@@ -8,7 +8,7 @@ public class DispatchTimer {
     public enum State {
         case armed, disarmed
     }
-    
+
     public typealias Payload = DispatchSource.DispatchSourceHandler
     public static let defaultAccuracy: DispatchTimeInterval = .milliseconds(500)
     var countdownInterval: DispatchTimeInterval {
@@ -23,9 +23,9 @@ public class DispatchTimer {
     let timerQueue = DispatchQueue(label: "com.mapbox.coreNavigation.timer")
     let executionQueue: DispatchQueue
     let timer: DispatchSourceTimer
-    
+
     private(set) public var state: State = .disarmed
-    
+
     /**
      Initializes a new timer.
      
@@ -43,7 +43,7 @@ public class DispatchTimer {
         self.accuracy = accuracy
         self.timer = DispatchSource.makeTimerSource(flags: [], queue: timerQueue)
     }
-    
+
     deinit {
         timer.setEventHandler {}
         timer.cancel()
@@ -55,11 +55,11 @@ public class DispatchTimer {
             timer.resume()
         }
     }
-    
+
     private func scheduleTimer() {
         timer.schedule(deadline: deadline, repeating: repetitionInterval, leeway: accuracy)
     }
-    
+
     /**
      Arm the timer. Countdown will begin after this function returns.
      */
@@ -74,7 +74,7 @@ public class DispatchTimer {
         }
         timer.resume()
     }
-    
+
     /**
      Re-arm the timer. Countdown will restart after this function returns.
      */

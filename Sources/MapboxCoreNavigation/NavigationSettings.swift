@@ -8,7 +8,7 @@ import Foundation
  To specify criteria when calculating routes, use the `NavigationRouteOptions` class. To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class when initializing a `NavigationViewController`.
  */
 public class NavigationSettings {
-    
+
     public enum StoredProperty: CaseIterable {
         case voiceVolume, voiceMuted, distanceUnit
 
@@ -23,7 +23,7 @@ public class NavigationSettings {
             }
         }
     }
-    
+
     /**
      The volume that the voice controller will use.
      
@@ -34,7 +34,7 @@ public class NavigationSettings {
             notifyChanged(property: .voiceVolume, value: voiceVolume)
         }
     }
-    
+
     /**
      Specifies whether to mute the voice controller or not.
      */
@@ -43,7 +43,7 @@ public class NavigationSettings {
             notifyChanged(property: .voiceMuted, value: voiceMuted)
         }
     }
-    
+
     /**
      Specifies the preferred distance measurement unit.
      - note: Anything but `kilometer` and `mile` will fall back to the default measurement for the current locale.
@@ -54,7 +54,7 @@ public class NavigationSettings {
             notifyChanged(property: .distanceUnit, value: distanceUnit.rawValue)
         }
     }
-    
+
     var usesMetric: Bool {
         switch distanceUnit {
         case .kilometer:
@@ -65,12 +65,12 @@ public class NavigationSettings {
             return Locale.current.usesMetric
         }
     }
-    
+
     /**
      The shared navigation settings object that affects the entire application.
      */
     public static let shared = NavigationSettings()
-    
+
     /// Returns a reflection of this class excluding the `properties` variable.
     lazy var properties: [Mirror.Child] = {
         let properties = Mirror(reflecting: self).children
@@ -81,17 +81,17 @@ public class NavigationSettings {
             return false
         })
     }()
-    
+
     private func notifyChanged(property: StoredProperty, value: Any) {
         UserDefaults.standard.set(value, forKey: property.key.prefixed)
         NotificationCenter.default.post(name: .navigationSettingsDidChange,
                                         object: nil,
                                         userInfo: [property.key: value])
     }
-    
+
     private func setupFromDefaults() {
         for property in StoredProperty.allCases {
-            
+
             guard let val = UserDefaults.standard.object(forKey: property.key.prefixed) else { continue }
             switch property {
             case .voiceVolume:
@@ -109,7 +109,7 @@ public class NavigationSettings {
             }
         }
     }
-    
+
     init() {
         setupFromDefaults()
     }

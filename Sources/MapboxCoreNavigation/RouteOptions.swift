@@ -10,7 +10,7 @@ extension RouteOptions {
             return .automotiveNavigation
         }
     }
-    
+
     /**
      Returns a tuple containing the waypoints along the leg at the given index and the waypoints that separate subsequent legs.
      
@@ -21,7 +21,7 @@ extension RouteOptions {
         let legSeparators = waypoints.filterKeepingFirstAndLast { $0.separatesLegs }
         let viaPointsByLeg = waypoints.splitExceptAtStartAndEnd(omittingEmptySubsequences: false) { $0.separatesLegs }
             .dropFirst() // No leg precedes first separator.
-        
+
         let reconstitutedWaypoints = zip(legSeparators, viaPointsByLeg).dropFirst(legIndex).map { [$0.0] + $0.1 }
         let legWaypoints = reconstitutedWaypoints.first ?? []
         let subsequentWaypoints = reconstitutedWaypoints.dropFirst()
@@ -38,7 +38,7 @@ extension RouteOptions: NSCopying {
             preconditionFailure("Unable to copy RouteOptions by round-tripping it through JSON")
         }
     }
-    
+
     /**
      Returns a copy of RouteOptions without the specified waypoint.
      
@@ -49,7 +49,7 @@ extension RouteOptions: NSCopying {
         let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
         guard let copy = self.copy() as? RouteOptions else { fatalError() }
         copy.waypoints = waypointsWithoutSpecified
-        
+
         return copy
     }
 }
@@ -63,7 +63,7 @@ extension Array {
             try isIncluded($0.element) || $0.offset == 0 || $0.offset == indices.last
         }.map { $0.element }
     }
-    
+
     /**
      - seealso: Array.split(maxSplits:omittingEmptySubsequences:whereSeparator:)
      */

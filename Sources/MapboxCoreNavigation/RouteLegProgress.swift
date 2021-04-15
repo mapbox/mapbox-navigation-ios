@@ -112,7 +112,7 @@ open class RouteLegProgress: Codable {
     public var upComingStep: RouteStep? {
         fatalError()
     }
-    
+
     public var upcomingStep: RouteStep? {
         guard stepIndex + 1 < leg.steps.endIndex else {
             return nil
@@ -153,9 +153,9 @@ open class RouteLegProgress: Codable {
     public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0) {
         self.leg = leg
         self.stepIndex = stepIndex
-        
+
         precondition(leg.steps.indices.contains(stepIndex), "It's not possible to create RouteLegProgress without any steps or when stepIndex is higher than steps count.")
-        
+
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
 
@@ -184,7 +184,7 @@ open class RouteLegProgress: Codable {
 
         return currentClosest
     }
-    
+
     /**
      The waypoints remaining on the current leg, not including the leg’s destination.
      */
@@ -219,14 +219,14 @@ open class RouteLegProgress: Codable {
         guard let segmentMaximumSpeedLimits = leg.segmentMaximumSpeedLimits else {
             return nil
         }
-        
+
         let distanceTraveled = currentStepProgress.distanceTraveled
         guard var index = currentStep.shape?.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
             return nil
         }
-        
+
         var range = leg.segmentRangesByStep[stepIndex]
-        
+
         // indexedCoordinateFromStart(distance:) can return a coordinate indexed to the last coordinate of the step, which is past any segment on the current step.
         if index == range.count && upcomingStep != nil {
             range = leg.segmentRangesByStep[stepIndex.advanced(by: 1)]
@@ -235,7 +235,7 @@ open class RouteLegProgress: Codable {
         guard index < range.count && range.upperBound <= segmentMaximumSpeedLimits.endIndex else {
             return nil
         }
-        
+
         let speedLimit = segmentMaximumSpeedLimits[range][range.lowerBound.advanced(by: index)]
         if let speedUnit = currentStep.speedLimitUnit {
             return speedLimit?.converted(to: speedUnit)
@@ -243,9 +243,9 @@ open class RouteLegProgress: Codable {
             return speedLimit
         }
     }
-    
+
     // MARK: - Codable implementation
-    
+
     private enum CodingKeys: String, CodingKey {
         case leg
         case stepIndex

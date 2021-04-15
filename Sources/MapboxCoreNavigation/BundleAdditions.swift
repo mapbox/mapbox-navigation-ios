@@ -10,22 +10,22 @@ extension Bundle {
         }
         return []
     }
-    
+
     var locationAlwaysAndWhenInUseUsageDescription: String? {
         return object(forInfoDictionaryKey: "NSLocationAlwaysAndWhenInUseUsageDescription") as? String
     }
-    
+
     var locationWhenInUseUsageDescription: String? {
         return object(forInfoDictionaryKey: "NSLocationWhenInUseUsageDescription") as? String
     }
-    
+
     /**
      The Mapbox Core Navigation framework bundle.
      */
     public class var mapboxCoreNavigation: Bundle {
         return Bundle(for: RouteController.self)
     }
-    
+
     /**
      The Mapbox Navigation framework bundle, if installed.
      */
@@ -36,13 +36,13 @@ extension Bundle {
         }
         return Bundle(for: NavigationViewController)
     }
-    
+
     public func ensureSuggestedTileURLExists() -> Bool {
         guard let tilePath = suggestedTileURL else { return false }
         try? FileManager.default.createDirectory(at: tilePath, withIntermediateDirectories: true, attributes: nil)
         return true
     }
-    
+
     /**
      A file URL representing a directory in which the application can place downloaded tile files.
      */
@@ -50,13 +50,13 @@ extension Bundle {
         guard let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first else {
             return nil
         }
-        
+
         guard let bundleIdentifier = self.bundleIdentifier else { return nil }
         let url = URL(fileURLWithPath: cachesDirectory, isDirectory: true).appendingPathComponent(bundleIdentifier)
-        
+
         return url.appendingPathComponent("tiles")
     }
-    
+
     /**
      A file URL at which the application can place a downloaded tile file with the given version identifier.
      */

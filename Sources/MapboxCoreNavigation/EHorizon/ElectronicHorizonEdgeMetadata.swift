@@ -22,10 +22,10 @@ extension ElectronicHorizon.Edge {
 
         /** The edge’s length in meters. */
         public let length: CLLocationDistance
-        
+
         /// The edge’s general road classes.
         public let roadClasses: RoadClasses
-        
+
         /**
          The edge’s functional road class, according to the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#road), version 8.
          */
@@ -59,10 +59,10 @@ extension ElectronicHorizon.Edge {
 
         /** The ISO 3166-2 code of the country subdivision where this edge is located. */
         public let regionCode: String?
-        
+
         /** Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the rule of the road.. */
         public let drivingSide: DrivingSide
-        
+
         /** Indicates how many directions the user may travel along the edge. */
         public let directionality: Directionality
 
@@ -77,7 +77,7 @@ extension ElectronicHorizon.Edge {
                 speedLimit = nil
             }
             speed = native.speed
-            
+
             var roadClasses: RoadClasses = []
             if native.isMotorway {
                 roadClasses.update(with: .motorway)
@@ -89,7 +89,7 @@ extension ElectronicHorizon.Edge {
                 roadClasses.update(with: .toll)
             }
             self.roadClasses = roadClasses
-            
+
             isBridge = native.isBridge
             names = native.names.map(RoadName.init)
             laneCount = native.laneCount as? UInt

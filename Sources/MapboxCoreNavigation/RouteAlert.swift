@@ -22,10 +22,10 @@ public struct RouteAlert {
         /// Restricted area alert
         case restrictedArea
     }
-    
+
     /// Alert data with specific info. Contents depend on exact alert type.
     public let alert: Alert
-    
+
     /// Distance to route alert relative to start of the route, meters.
     public let distance: CLLocationDistance
     /**
@@ -39,17 +39,17 @@ public struct RouteAlert {
      
      This value will be non-null for composite route alerts */
     public let length: CLLocationDistance?
-    
+
     /// Coordinate of route alert beginning point
     public let beginCoordinate: CLLocationCoordinate2D
     /// Coordinate of route alert ending point
     public let endCoordinate: CLLocationCoordinate2D
-    
+
     /// Segment index in corresponding `Route.shape` where this alert begins.
     public let beginSegmentIndex: UInt32
     /// Segment index in corresponding `Route.shape` where this alert ends.
     public let endSegmentIndex: UInt32
-    
+
     init(_ upcomingAlert: UpcomingRouteAlert) {
         self.distance = upcomingAlert.alert.distance
         self.distanceToStart = upcomingAlert.distanceToStart
@@ -58,7 +58,7 @@ public struct RouteAlert {
         self.endCoordinate = upcomingAlert.alert.endCoordinate
         self.beginSegmentIndex = upcomingAlert.alert.beginGeometryIndex
         self.endSegmentIndex = upcomingAlert.alert.endGeometryIndex
-        
+
         switch upcomingAlert.alert.type {
         case .incident:
             guard let incidentInfo = upcomingAlert.alert.incidentInfo else {

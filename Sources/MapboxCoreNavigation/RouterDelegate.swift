@@ -31,7 +31,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - parameter location: The user’s current location.
      */
     func router(_ router: Router, willRerouteFrom location: CLLocation)
-    
+
     /**
      Called when a location has been identified as unqualified to navigate on.
      
@@ -70,7 +70,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - parameter routeProgress: The route progress updated with the refreshed route.
      */
     func router(_ router: Router, didRefresh routeProgress: RouteProgress)
-    
+
     /**
      Called when the router updates the route progress model.
      
@@ -80,7 +80,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      */
     func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
-    
+
     /**
      Called when the router detects that the user has passed a point at which an instruction should be displayed.
      - parameter router: The router that passed the instruction point.
@@ -88,7 +88,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - parameter routeProgress: The route progress object that the router is updating.
      */
     func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
-    
+
     /**
      Called when the router detects that the user has passed a point at which an instruction should be spoken.
      - parameter router: The router that passed the instruction point.
@@ -96,7 +96,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - parameter routeProgress: The route progress object that the router is updating.
      */
     func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
-    
+
     /**
      Called as the router approaches a waypoint.
      
@@ -108,7 +108,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is recommended.
      */
     func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
-    
+
     /**
      Called when the router arrives at a waypoint.
      
@@ -120,7 +120,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - returns: True to advance to the next leg, if any, or false to remain on the completed leg.
      */
     func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool
-    
+
     /**
      Called when the router arrives at a waypoint.
      
@@ -148,50 +148,50 @@ public extension RouterDelegate {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
-    
+
     func router(_ router: Router, willRerouteFrom location: CLLocation) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
-    
+
     func router(_ router: Router, shouldDiscard location: CLLocation) -> Bool {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.shouldDiscardLocation
     }
-    
+
     func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
     }
-    
+
     func router(_ router: Router, didFailToRerouteWith error: Error) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
-    
+
     func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
     }
-    
+
     func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
-    
+
     func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
-    
+
     func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
-    
+
     func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
         return RouteController.DefaultBehavior.didArriveAtWaypoint
     }
-    
+
     func router(_ router: Router, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
         return RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
     }
-    
+
     func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
         return RouteController.DefaultBehavior.shouldDisableBatteryMonitoring

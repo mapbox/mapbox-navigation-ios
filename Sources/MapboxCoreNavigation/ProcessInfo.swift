@@ -16,7 +16,7 @@ extension ProcessInfo {
             return "unknown"
         #endif
     }
-    
+
     static var systemVersion: String {
         let versionObject = ProcessInfo().operatingSystemVersion
         return "\(versionObject.majorVersion).\(versionObject.minorVersion).\(versionObject.patchVersion)"

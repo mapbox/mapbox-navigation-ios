@@ -11,11 +11,11 @@ open class ReplayLocationManager: NavigationLocationManager {
      `speedMultiplier` adjusts the speed of the replay.
      */
     public var speedMultiplier: TimeInterval = 1
-    
+
     var currentIndex: Int = 0
-    
+
     var startDate: Date?
-    
+
     /**
      `locations` to be replayed.
      */
@@ -34,33 +34,33 @@ open class ReplayLocationManager: NavigationLocationManager {
             synthesizedLocation = newValue
         }
     }
-    
+
     public init(locations: [CLLocation]) {
         self.locations = locations.sorted { $0.timestamp < $1.timestamp }
         super.init()
     }
-    
+
     deinit {
         stopUpdatingLocation()
     }
-    
+
     override open func startUpdatingLocation() {
         startDate = Date()
         tick()
     }
-    
+
     override open func stopUpdatingLocation() {
         startDate = nil
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
     }
-    
+
     @objc internal func tick() {
         guard let startDate = startDate else { return }
         let location = locations[currentIndex]
         synthesizedLocation = location
         delegate?.locationManager?(self, didUpdateLocations: [location])
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
-        
+
         if currentIndex < locations.count - 1 {
             let nextLocation = locations[currentIndex+1]
             let interval = nextLocation.timestamp.timeIntervalSince(location.timestamp) / TimeInterval(speedMultiplier)
@@ -68,7 +68,7 @@ open class ReplayLocationManager: NavigationLocationManager {
             let actualInterval = nextLocation.timestamp.timeIntervalSince(locations.first!.timestamp)
             let diff = min(max(0, intervalSinceStart-actualInterval), 0.9) // Don't try to resync more than 0.9 seconds per location update
             let syncedInterval = interval-diff
-            
+
             perform(#selector(tick), with: nil, afterDelay: syncedInterval)
             currentIndex += 1
         } else {

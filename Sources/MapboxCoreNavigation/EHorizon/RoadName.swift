@@ -11,7 +11,7 @@ public enum RoadName {
      If you display a name to the user, you may need to abbreviate common words like “East” or “Boulevard” to ensure that it fits in the allotted space.
      */
     case name(_ name: String)
-    
+
     /**
      A route reference code assigned to a road.
      

@@ -42,7 +42,7 @@ open class RouteStepProgress: Codable {
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
-    
+
     /**
      Intializes a new `RouteStepProgress`.
 
@@ -146,17 +146,17 @@ open class RouteStepProgress: Codable {
         guard visualInstructionIndex < instructionsDisplayedAlongStep.count else { return nil }
         return instructionsDisplayedAlongStep[visualInstructionIndex]
     }
-    
+
     public var keyPathsAffectingValueForRemainingVisualInstructions: Set<String> {
         return ["step.instructionsDisplayedAlongStep", "visualInstructionIndex"]
     }
-    
+
     public var keyPathsAffectingValueForRemainingSpokenInstructions: Set<String> {
         return ["step.instructionsDisplayedAlongStep", "spokenInstructionIndex"]
     }
-    
+
     // MARK: - Codable implementation
-    
+
     private enum CodingKeys: String, CodingKey {
         case step
         case userDistanceToManeuverLocation

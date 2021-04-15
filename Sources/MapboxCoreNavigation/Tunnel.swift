@@ -9,7 +9,7 @@ public struct Tunnel {
      The name of the tunnel.
      */
     public let name: String?
-    
+
     init(_ tunnelInfo: TunnelInfo) {
         name = tunnelInfo.name
     }

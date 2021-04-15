@@ -7,7 +7,7 @@ import MapboxNavigationNative
 public enum RoadObjectLocation {
     /** Location of a linear object. */
     case path(_ path: RoadGraph.Path)
-    
+
     /** Location of a point object. */
     case position(_ position: RoadGraph.Position)
 

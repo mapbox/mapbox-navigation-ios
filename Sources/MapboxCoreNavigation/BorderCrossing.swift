@@ -14,7 +14,7 @@ extension AdministrativeRegion {
 public struct BorderCrossing {
     public let from: AdministrativeRegion
     public let to: AdministrativeRegion
-    
+
     init(_ borderCrossing: BorderCrossingInfo) {
         from = AdministrativeRegion(borderCrossing.from)
         to = AdministrativeRegion(borderCrossing.to)

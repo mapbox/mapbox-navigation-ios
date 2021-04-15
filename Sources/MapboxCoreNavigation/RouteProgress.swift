@@ -8,7 +8,7 @@ import Turf
  */
 open class RouteProgress: Codable {
     private static let reroutingAccuracy: CLLocationAccuracy = 90
-    
+
     var indexedRoute: IndexedRoute
 
     /**
@@ -17,7 +17,7 @@ open class RouteProgress: Codable {
     public var route: Route {
         return indexedRoute.0
     }
-    
+
     public let routeOptions: RouteOptions
 
     /**
@@ -28,7 +28,7 @@ open class RouteProgress: Codable {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
             // TODO: Set stepIndex to 0 or last index based on whether leg index was incremented or decremented.
             currentLegProgress = RouteLegProgress(leg: currentLeg)
-            
+
             legIndexHandler?(oldValue, legIndex)
         }
     }
@@ -54,7 +54,7 @@ open class RouteProgress: Codable {
     public var remainingSteps: [RouteStep] {
         return currentLegProgress.remainingSteps + remainingLegs.flatMap { $0.steps }
     }
-    
+
     /**
      Returns true if `currentLeg` is the last leg.
      */
@@ -99,7 +99,7 @@ open class RouteProgress: Codable {
     public var remainingWaypoints: [Waypoint] {
         return route.legs.suffix(from: legIndex).compactMap { $0.destination }
     }
-    
+
     /**
      The waypoints remaining on the current route, including any waypoints that do not separate legs.
      */
@@ -113,11 +113,11 @@ open class RouteProgress: Codable {
      Returns the progress along the current `RouteLeg`.
      */
     public var currentLegProgress: RouteLegProgress
-    
+
     public var priorLeg: RouteLeg? {
         return legIndex > 0 ? route.legs[legIndex - 1] : nil
     }
-    
+
     /**
      The step prior to the current step along this route.
      
@@ -126,7 +126,7 @@ open class RouteProgress: Codable {
     public var priorStep: RouteStep? {
         return currentLegProgress.priorStep ?? priorLeg?.steps.last
     }
-    
+
     /**
      The leg following the current leg along this route.
      
@@ -135,7 +135,7 @@ open class RouteProgress: Codable {
     public var upcomingLeg: RouteLeg? {
         return legIndex + 1 < route.legs.endIndex ? route.legs[legIndex + 1] : nil
     }
-    
+
     /**
      The step following the current step along this route.
      
@@ -144,14 +144,14 @@ open class RouteProgress: Codable {
     public var upcomingStep: RouteStep? {
         return currentLegProgress.upcomingStep ?? upcomingLeg?.steps.first
     }
-    
+
     /**
      Upcoming `RouteAlerts` as reported by the navigation engine.
      
      The contents of the array depend on user's current progress along the route and are modified on each location update. This array contains only the alerts that the user has not passed. Some events may have non-zero length and are also included while the user is traversing it. You can use this property to get information about incoming points of interest.
      */
     public internal(set) var upcomingRouteAlerts: [RouteAlert] = []
-    
+
     /**
      Returns an array of `CLLocationCoordinate2D` of the coordinates along the current step and any adjacent steps.
      
@@ -166,7 +166,7 @@ open class RouteProgress: Codable {
         }
         return LineString(priorCoordinates + (currentShape?.coordinates ?? []) + upcomingCoordinates)
     }
-    
+
     /**
      Tuple containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.
      */
@@ -202,7 +202,7 @@ open class RouteProgress: Codable {
         guard let coordinates = currentLegProgress.currentStepProgress.step.shape?.coordinates else {
             return .unknown
         }
-        
+
         let coordinatesLeftOnStepCount = Int(floor((Double(coordinates.count)) * currentLegProgress.currentStepProgress.fractionTraveled))
 
         guard coordinatesLeftOnStepCount >= 0 else { return .unknown }
@@ -252,11 +252,11 @@ open class RouteProgress: Codable {
 
         return newOptions
     }
-    
+
     func calculateLegsCongestion() {
         congestionTimesPerStep.removeAll()
         congestionTravelTimesSegmentsByStep.removeAll()
-        
+
         for (legIndex, leg) in route.legs.enumerated() {
             var maneuverCoordinateIndex = 0
 
@@ -292,7 +292,7 @@ open class RouteProgress: Codable {
             congestionTravelTimesSegmentsByStep.append(congestionTravelTimesSegmentsByLeg)
         }
     }
-    
+
     /**
      Updates the current route with attributes from the given skeletal route.
      */
@@ -304,7 +304,7 @@ open class RouteProgress: Codable {
         calculateLegsCongestion()
         updateDistanceTraveled(with: location)
     }
-    
+
     /**
      Increments the progress according to new location specified.
      - parameter location: Updated user location.
@@ -312,7 +312,7 @@ open class RouteProgress: Codable {
     public func updateDistanceTraveled(with location: CLLocation) {
         let stepProgress = currentLegProgress.currentStepProgress
         let step = stepProgress.step
-        
+
         // Increment the progress model
         guard let polyline = step.shape else {
             preconditionFailure("Route steps used for navigation must have shape data")
@@ -323,9 +323,9 @@ open class RouteProgress: Codable {
             stepProgress.distanceTraveled = distanceTraveled
         }
     }
-    
+
     // MARK: - Codable implementation
-    
+
     private enum CodingKeys: String, CodingKey {
         case indexedRoute
         case indexedRouteIndex
@@ -333,23 +333,23 @@ open class RouteProgress: Codable {
         case legIndex
         case currentLegProgress
     }
-        
+
     required public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        
+
         let route = try container.decode(Route.self, forKey: .indexedRoute)
         let routeIndex = try container.decode(Int.self, forKey: .indexedRouteIndex)
         self.indexedRoute = (route, routeIndex)
         self.routeOptions = try container.decode(RouteOptions.self, forKey: .routeOptions)
         self.legIndex = try container.decode(Int.self, forKey: .legIndex)
         self.currentLegProgress = try container.decode(RouteLegProgress.self, forKey: .currentLegProgress)
-        
+
         calculateLegsCongestion()
     }
-    
+
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        
+
         try container.encode(indexedRoute.0, forKey: .indexedRoute)
         try container.encode(indexedRoute.1, forKey: .indexedRouteIndex)
         try container.encode(routeOptions, forKey: .routeOptions)

@@ -4,20 +4,20 @@ import Polyline
 
 class CoreFeedbackEvent: Hashable {
     var id = UUID()
-    
+
     var timestamp: Date
-    
+
     var eventDictionary: [String: Any]
-    
+
     init(timestamp: Date, eventDictionary: [String: Any]) {
         self.timestamp = timestamp
         self.eventDictionary = eventDictionary
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(id.hashValue)
     }
-    
+
     static func == (lhs: CoreFeedbackEvent, rhs: CoreFeedbackEvent) -> Bool {
         return lhs.id == rhs.id
     }
