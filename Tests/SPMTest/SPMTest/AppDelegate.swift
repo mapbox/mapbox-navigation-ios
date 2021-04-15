@@ -1,10 +1,3 @@
-//
-//  AppDelegate.swift
-//  SPMTest
-//
-//  Created by Alexander Azarov on 13.04.21.
-//
-
 import UIKit
 
 @main
