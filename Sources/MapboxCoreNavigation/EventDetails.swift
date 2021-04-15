@@ -17,7 +17,7 @@ struct PerformanceEventDetails: EventDetails {
     let sessionIdentifier: String
     var counters: [Counter] = []
     var attributes: [Attribute] = []
-    
+
     private enum CodingKeys: String, CodingKey {
         case event
         case created
@@ -25,23 +25,23 @@ struct PerformanceEventDetails: EventDetails {
         case counters
         case attributes
     }
-    
+
     struct Counter: Encodable {
         let name: String
         let value: Double
     }
-    
+
     struct Attribute: Encodable {
         let name: String
         let value: String
     }
-    
+
     init(event: String?, session: SessionState, createdOn created: Date?) {
         self.event = event
         sessionIdentifier = session.identifier.uuidString
         self.created = created ?? Date()
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(event, forKey: .event)
@@ -63,7 +63,7 @@ struct NavigationEventDetails: EventDetails {
                 state = UIApplication.shared.applicationState
             }
         }
-        
+
         return state
     }()
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
@@ -98,13 +98,13 @@ struct NavigationEventDetails: EventDetails {
     let sdkVersion: String = String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!)
     let userAbsoluteDistanceToDestination: CLLocationDistance?
     let volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)
-    
+
     let stepIndex: Int
     let stepCount: Int
     let legIndex: Int
     let legCount: Int
     let totalStepCount: Int
-    
+
     var created: Date = Date()
     var event: String?
     var arrivalTimestamp: Date?
@@ -120,18 +120,18 @@ struct NavigationEventDetails: EventDetails {
     var newGeometry: String?
     var totalTimeInForeground: TimeInterval
     var totalTimeInBackground: TimeInterval
-    
+
     init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         profile = dataSource.routeProgress.routeOptions.profileIdentifier.rawValue
         simulation = dataSource.locationProvider is SimulatedLocationManager.Type
-        
+
         sessionIdentifier = session.identifier.uuidString
         originalRequestIdentifier = session.originalRoute.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
-                
+
         if let location = dataSource.router.rawLocation,
             let coordinates = dataSource.routeProgress.route.shape?.coordinates,
             let lastCoord = coordinates.last {
@@ -139,7 +139,7 @@ struct NavigationEventDetails: EventDetails {
         } else {
             userAbsoluteDistanceToDestination = nil
         }
-        
+
         if let shape = session.originalRoute.shape {
             originalGeometry = Polyline(coordinates: shape.coordinates)
             originalDistance = round(session.originalRoute.distance)
@@ -151,7 +151,7 @@ struct NavigationEventDetails: EventDetails {
             originalEstimatedDuration = nil
             originalStepCount = nil
         }
-        
+
         if let shape = session.currentRoute.shape {
             self.geometry = Polyline(coordinates: shape.coordinates)
             distance = round(session.currentRoute.distance)
@@ -161,16 +161,16 @@ struct NavigationEventDetails: EventDetails {
             distance = nil
             estimatedDuration = nil
         }
-        
+
         distanceCompleted = round(session.totalDistanceCompleted + dataSource.routeProgress.distanceTraveled)
         distanceRemaining = round(dataSource.routeProgress.distanceRemaining)
         durationRemaining = round(dataSource.routeProgress.durationRemaining)
-        
+
         rerouteCount = session.numberOfReroutes
-        
+
         locationEngine = String(describing: dataSource.locationProvider)
         locationManagerDesiredAccuracy = dataSource.desiredAccuracy
-        
+
         var totalTimeInPortrait = session.timeSpentInPortrait
         var totalTimeInLandscape = session.timeSpentInLandscape
         if UIDevice.current.orientation.isPortrait {
@@ -179,7 +179,7 @@ struct NavigationEventDetails: EventDetails {
             totalTimeInLandscape += abs(session.lastTimeInLandscape.timeIntervalSinceNow)
         }
         percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)) * 100)
-        
+
         totalTimeInForeground = session.timeSpentInForeground
         totalTimeInBackground = session.timeSpentInBackground
         if applicationState == .active {
@@ -188,14 +188,14 @@ struct NavigationEventDetails: EventDetails {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
         }
         percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
-        
+
         stepIndex = dataSource.routeProgress.currentLegProgress.stepIndex
         stepCount = dataSource.routeProgress.currentLeg.steps.count
         legIndex = dataSource.routeProgress.legIndex
         legCount = dataSource.routeProgress.route.legs.count
         totalStepCount = dataSource.routeProgress.route.legs.map { $0.steps.count }.reduce(0, +)
     }
-    
+
     private enum CodingKeys: String, CodingKey {
         case originalRequestIdentifier
         case requestIdentifier
@@ -254,7 +254,7 @@ struct NavigationEventDetails: EventDetails {
         case totalTimeInForeground
         case totalTimeInBackground
     }
-    
+
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(originalRequestIdentifier, forKey: .originalRequestIdentifier)

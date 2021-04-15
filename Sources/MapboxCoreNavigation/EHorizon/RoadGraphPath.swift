@@ -14,7 +14,7 @@ extension RoadGraph {
 
         /** The distance from the end of the linear object to the end of an edge as a fraction of the edge’s length from 0 to 1. */
         public let fractionToEnd: Double
-        
+
         /** Length of a path, measured in meters. */
         public let length: CLLocationDistance
 

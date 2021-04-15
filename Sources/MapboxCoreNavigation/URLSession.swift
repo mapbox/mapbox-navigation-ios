@@ -49,7 +49,7 @@ extension URLSession {
         chip = "i386"
         #endif
         let chipComponent = "(\(chip))"
-        
+
         let components: [String] = bundleComponents + [
             systemComponent,
             chipComponent

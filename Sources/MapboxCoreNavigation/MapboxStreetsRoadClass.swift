@@ -7,7 +7,7 @@ extension MapboxStreetsRoadClass {
     public var isRamp: Bool {
         return self == .motorwayLink || self == .trunkLink || self == .primaryLink || self == .secondaryLink
     }
-    
+
     init(_ native: FunctionalRoadClass, isRamp: Bool) {
         switch native {
         case .motorway:

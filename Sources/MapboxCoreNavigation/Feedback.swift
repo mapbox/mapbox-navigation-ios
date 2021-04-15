@@ -162,7 +162,7 @@ public enum FeedbackSource: Int, CustomStringConvertible {
     case user
     case reroute
     case unknown
-    
+
     public var description: String {
         switch self {
         case .user:

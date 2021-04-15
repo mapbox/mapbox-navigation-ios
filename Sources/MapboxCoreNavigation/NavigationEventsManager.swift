@@ -22,11 +22,11 @@ public typealias EventsManager = NSObject
  */
 open class NavigationEventsManager {
     var sessionState: SessionState?
-    
+
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
-    
+
     weak var dataSource: EventsManagerDataSource?
-    
+
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
      */
@@ -48,7 +48,7 @@ open class NavigationEventsManager {
         }
         return token
     }()
-    
+
     public required init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
         dataSource = source
         if let tokenOverride = possibleToken {
@@ -58,23 +58,23 @@ open class NavigationEventsManager {
         start()
         resumeNotifications()
     }
-    
+
     deinit {
         suspendNotifications()
         sessionState = nil
     }
-    
+
     private func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeOrientation(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState(_:)), name: UIApplication.willEnterForegroundNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(didChangeApplicationState(_:)), name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
-    
+
     private func suspendNotifications() {
         NotificationCenter.default.removeObserver(self)
     }
-    
+
     /**
      When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
      */
@@ -85,25 +85,25 @@ open class NavigationEventsManager {
         mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
         mobileEventsManager.sendTurnstileEvent()
     }
-    
+
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
-        
+
         let rating = potentialRating ?? MMEEventsManager.unrated
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState.arrivalTimestamp
-        
+
         let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
         assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
         guard validRating else { return event }
-        
+
         event.rating = rating
         event.comment = comment
-        
+
         return event
     }
-    
+
     func navigationRouteRetrievalEvent() -> PerformanceEventDetails? {
         guard let sessionState = sessionState,
             let responseEndDate = sessionState.currentRoute.responseEndDate,
@@ -119,7 +119,7 @@ open class NavigationEventsManager {
         }
         return event
     }
-    
+
     func navigationDepartEvent() -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
@@ -127,17 +127,17 @@ open class NavigationEventsManager {
         event.event = MMEEventTypeNavigationDepart
         return event
     }
-    
+
     func navigationArriveEvent() -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
-        
+
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         return event
     }
-    
+
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
         eventDictionary["feedbackId"] = event.id.uuidString
@@ -145,43 +145,43 @@ open class NavigationEventsManager {
         eventDictionary["locationsAfter"] = sessionState?.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
         return eventDictionary
     }
-    
+
     func navigationFeedbackEvent(type: FeedbackType, description: String?) -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationFeedback
-        
+
         event.userId = UIDevice.current.identifierForVendor?.uuidString
         event.feedbackType = type.description
         event.description = description
-        
+
         event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
-        
+
         return event
     }
-    
+
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
-        
+
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
         event.created = timestamp
-        
+
         if let lastRerouteDate = sessionState.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))
         } else {
             event.secondsSinceLastReroute = -1
         }
-        
+
         // These are placeholders until the route controller's RouteProgress is updated after rerouting
         event.newDistanceRemaining = -1
         event.newDurationRemaining = -1
         event.newGeometry = nil
         event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
-        
+
         return event
     }
 
@@ -196,7 +196,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayDisconnect, attributes: [MMEEventKeyEvent: MMEventTypeNavigationCarplayDisconnect, MMEEventKeyCreated: date.ISO8601])
         mobileEventsManager.flush()
     }
-    
+
     func sendRouteRetrievalEvent() {
         guard let attributes = (try? navigationRouteRetrievalEvent()?.asDictionary()) as [String: Any]?? else { return }
         mobileEventsManager.enqueueEvent(withName: NavigationEventTypeRouteRetrieval, attributes: attributes ?? [:])
@@ -208,34 +208,34 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes ?? [:])
         mobileEventsManager.flush()
     }
-    
+
     func sendArriveEvent() {
         guard let attributes = (try? navigationArriveEvent()?.asDictionary()) as [String: Any]?? else { return }
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes ?? [:])
         mobileEventsManager.flush()
     }
-    
+
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         guard let attributes = (try? navigationCancelEvent(rating: rating, comment: comment)?.asDictionary()) as [String: Any]?? else { return }
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes ?? [:])
         mobileEventsManager.flush()
     }
-    
+
     func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
         events.forEach { event in
             // remove from outstanding event queue
             if let index = outstandingFeedbackEvents.firstIndex(of: event) {
                 outstandingFeedbackEvents.remove(at: index)
             }
-            
+
             guard let eventName = event.eventDictionary["event"] as? String else { fatalError() }
             let eventDictionary = navigationFeedbackEventWithLocationsAdded(event: event)
-            
+
             mobileEventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
         }
         mobileEventsManager.flush()
     }
-    
+
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID? {
         guard let eventDictionary = (try? navigationFeedbackEvent(type: type, description: description)?.asDictionary()) as [String: Any]?? else { return nil }
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
@@ -246,15 +246,15 @@ open class NavigationEventsManager {
     func enqueueRerouteEvent() {
         guard let eventDictionary = (try? navigationRerouteEvent()?.asDictionary()) as [String: Any]?? else { return }
         let timestamp = dataSource?.router.location?.timestamp ?? Date()
-        
+
         sessionState?.lastRerouteDate = timestamp
         sessionState?.numberOfReroutes += 1
-        
+
         let event = RerouteEvent(timestamp: timestamp, eventDictionary: eventDictionary ?? [:])
-        
+
         outstandingFeedbackEvents.append(event)
     }
-    
+
     func resetSession() {
         guard let dataSource = dataSource else { return }
 
@@ -267,19 +267,19 @@ open class NavigationEventsManager {
 
         let timestamp = Date()
         sessionState?.lastRerouteDate = timestamp
-        
+
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
-        
+
         outstandingFeedbackEvents.append(event)
     }
-    
+
     func sendOutstandingFeedbackEvents(forceAll: Bool) {
         let flushAll = forceAll || !shouldDelayEvents()
         let eventsToPush = eventsToFlush(flushAll: flushAll)
-        
+
         sendFeedbackEvents(eventsToPush)
     }
-    
+
     func eventsToFlush(flushAll: Bool) -> [CoreFeedbackEvent] {
         let now = Date()
         let eventsToPush = flushAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
@@ -287,11 +287,11 @@ open class NavigationEventsManager {
         }
         return eventsToPush
     }
-    
+
     private func shouldDelayEvents() -> Bool {
         return delaysEventFlushing
     }
-    
+
     /**
      Send feedback about the current road segment/maneuver to the Mapbox data team.
      
@@ -308,7 +308,7 @@ open class NavigationEventsManager {
     public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID? {
         return enqueueFeedbackEvent(type: type, description: description)
     }
-    
+
     /**
      Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
      
@@ -319,7 +319,7 @@ open class NavigationEventsManager {
             lastFeedback.update(type: type, source: source, description: description)
         }
     }
-    
+
     /**
      Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.
      */
@@ -328,56 +328,56 @@ open class NavigationEventsManager {
             outstandingFeedbackEvents.remove(at: index)
         }
     }
-    
+
     // MARK: - Session State Management
     @objc private func didChangeOrientation(_ notification: NSNotification) {
         sessionState?.reportChange(to: UIDevice.current.orientation)
     }
-    
+
     @objc private func didChangeApplicationState(_ notification: NSNotification) {
         sessionState?.reportChange(to: UIApplication.shared.applicationState)
     }
-    
+
     @objc private func applicationWillTerminate(_ notification: NSNotification) {
         if sessionState?.terminated == false {
             sendCancelEvent(rating: nil, comment: nil)
             sessionState?.terminated = true
         }
-        
+
         sendOutstandingFeedbackEvents(forceAll: true)
     }
-    
+
     func reportReroute(progress: RouteProgress, proactive: Bool) {
         let route = progress.route
-        
+
         // if the user has already arrived and a new route has been set, restart the navigation session
         if sessionState?.arrivalTimestamp != nil {
             resetSession()
         } else {
             sessionState?.currentRoute = route
         }
-        
+
         if proactive {
             enqueueFoundFasterRouteEvent()
         }
         let latestReroute = outstandingFeedbackEvents.compactMap({ $0 as? RerouteEvent }).last
         latestReroute?.update(newRoute: route)
     }
-    
+
     func update(progress: RouteProgress) {
         defer {
             // ensure we always flush, irrespective of how the method exits
             sendOutstandingFeedbackEvents(forceAll: false)
         }
-        
+
         if sessionState?.arrivalTimestamp == nil,
             progress.currentLegProgress.userHasArrivedAtWaypoint {
             sessionState?.arrivalTimestamp = dataSource?.router.location?.timestamp ?? Date()
             sendArriveEvent()
-            
+
             return
         }
-        
+
         if sessionState?.departureTimestamp == nil {
             sessionState?.departureTimestamp = dataSource?.router.location?.timestamp ?? Date()
             sendDepartEvent()

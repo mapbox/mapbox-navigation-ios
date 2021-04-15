@@ -31,11 +31,11 @@ extension Incident {
         case .weather:
             incidentType = .weather
         }
-        
+
         guard incidentType != nil else {
             return nil
         }
-        
+
         self.init(identifier: incidentInfo.id,
                   type: incidentType,
                   description: incidentInfo.description ?? "",

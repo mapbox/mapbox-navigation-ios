@@ -58,7 +58,7 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
     public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
@@ -98,7 +98,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
     public convenience init(locations: [CLLocation], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
     }
-    
+
     /**
      Initializes a navigation match options object for routes between the given geographic coordinates and an optional profile identifier optimized for navigation.
      
@@ -107,7 +107,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
     public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: DirectionsProfileIdentifier? = .automobileAvoidingTraffic) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
-    
+
     required public init(from decoder: Decoder) throws {
         try super.init(from: decoder)
     }
@@ -122,7 +122,7 @@ protocol OptimizedForNavigation: class {
     var distanceMeasurementSystem: MeasurementSystem { get set }
     var includesSpokenInstructions: Bool { get set }
     var includesVisualInstructions: Bool { get set }
-    
+
     func optimizeForNavigation()
 }
 

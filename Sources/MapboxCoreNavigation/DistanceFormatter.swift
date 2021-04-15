@@ -5,7 +5,7 @@ struct RoundingTable {
         let maximumDistance: Measurement<UnitLength>
         let roundingIncrement: Double
         let maximumFractionDigits: Int
-        
+
         func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
             var measurement = Measurement(value: distance, unit: .meters).converted(to: maximumDistance.unit)
             measurement.value.round(roundingIncrement: roundingIncrement)
@@ -13,9 +13,9 @@ struct RoundingTable {
             return measurement
         }
     }
-    
+
     let thresholds: [Threshold]
-    
+
     /**
      Returns the most applicable threshold for the given distance, falling back to the last threshold.
      */
@@ -24,7 +24,7 @@ struct RoundingTable {
             distance < $0.maximumDistance.distance
         } ?? thresholds.last!
     }
-    
+
     static var metric: RoundingTable = RoundingTable(thresholds: [
         .init(maximumDistance: Measurement(value: 25, unit: .meters), roundingIncrement: 5, maximumFractionDigits: 0),
         .init(maximumDistance: Measurement(value: 100, unit: .meters), roundingIncrement: 25, maximumFractionDigits: 0),
@@ -33,7 +33,7 @@ struct RoundingTable {
         .init(maximumDistance: Measurement(value: 3, unit: .kilometers), roundingIncrement: 0.0001, maximumFractionDigits: 1),
         .init(maximumDistance: Measurement(value: 5, unit: .kilometers), roundingIncrement: 0.0001, maximumFractionDigits: 0)
     ])
-    
+
     static var uk: RoundingTable = RoundingTable(thresholds: [
         .init(maximumDistance: Measurement(value: 20, unit: .yards), roundingIncrement: 10, maximumFractionDigits: 0),
         .init(maximumDistance: Measurement(value: 100, unit: .yards), roundingIncrement: 25, maximumFractionDigits: 0),
@@ -41,7 +41,7 @@ struct RoundingTable {
         .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
         .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0.0001, maximumFractionDigits: 0)
     ])
-    
+
     static var us: RoundingTable = RoundingTable(thresholds: [
         .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .feet), roundingIncrement: 50, maximumFractionDigits: 0),
         .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
@@ -58,14 +58,14 @@ extension Measurement where UnitType == UnitLength {
     public init(distance: CLLocationDistance) {
         self.init(value: distance, unit: .meters)
     }
-    
+
     /**
      The distance in meters.
      */
     public var distance: CLLocationDistance {
         return converted(to: .meters).value
     }
-    
+
     /**
      Returns a length measurement equivalent to the receiver but converted to the most appropriate unit based on the given locale and rounded based on the unit.
      
@@ -98,7 +98,7 @@ extension NSAttributedString.Key {
  */
 open class DistanceFormatter: Formatter, NSSecureCoding {
     public static var supportsSecureCoding = true
-    
+
     /**
      Options for choosing and formatting the unit.
      
@@ -112,7 +112,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
             measurementFormatter.unitOptions = newValue
         }
     }
-    
+
     /**
      The unit style.
      
@@ -126,7 +126,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
             measurementFormatter.unitStyle = newValue
         }
     }
-    
+
     /**
      The locale that determines the chosen unit, name of the unit, and number formatting.
      
@@ -140,22 +140,22 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
             measurementFormatter.locale = newValue
         }
     }
-    
+
     /**
      The underlying measurement formatter.
      */
     @NSCopying open var measurementFormatter = MeasurementFormatter()
-    
+
     public override init() {
         super.init()
         unitOptions = .providedUnit
         locale = .nationalizedCurrent
     }
-    
+
     public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
     }
-    
+
     /**
      Creates and returns a localized, formatted string representation of the given distance in meters.
      
@@ -168,7 +168,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     open func string(from distance: CLLocationDistance) -> String {
         return string(from: Measurement(distance: distance))
     }
-    
+
     /**
      Creates and returns a localized, formatted attributed string representation of the given distance in meters.
      
@@ -181,7 +181,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     open func attributedString(from distance: CLLocationDistance, defaultAttributes attributes: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
         return attributedString(from: Measurement(distance: distance), defaultAttributes: attributes)
     }
-    
+
     /**
      Creates and returns a localized, formatted string representation of the given measurement.
      
@@ -192,7 +192,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     open func string(from measurement: Measurement<UnitLength>) -> String {
         return measurementFormatter.string(from: measurement.localized(into: locale))
     }
-    
+
     /**
      Creates and returns a localized, formatted attributed string representation of the given measurement.
      
@@ -205,7 +205,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     open func attributedString(from measurement: Measurement<UnitLength>, defaultAttributes attributes: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString {
         let string = self.string(from: measurement)
         let localizedMeasurement = measurement.localized(into: locale)
-        
+
         let attributedString = NSMutableAttributedString(string: string, attributes: attributes)
         if let quantityString = measurementFormatter.numberFormatter.string(from: localizedMeasurement.value as NSNumber) {
             // NSMutableAttributedString methods accept NSRange, not Range.
@@ -216,7 +216,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
         }
         return attributedString
     }
-    
+
     open override func string(for obj: Any?) -> String? {
         if let distanceFromObj = obj as? CLLocationDistance {
             return self.string(from: distanceFromObj)
@@ -226,7 +226,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
             return nil
         }
     }
-    
+
     open override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString? {
         if let distanceFromObj = obj as? CLLocationDistance {
             return self.attributedString(from: distanceFromObj, defaultAttributes: attrs)
@@ -243,22 +243,22 @@ extension Double {
         if precision == 0 {
             return Double(Int(rounded()))
         }
-        
+
         return (self * precision).rounded() / precision
     }
-    
+
     mutating func round(precision: Double) {
         self = rounded(precision: precision)
     }
-    
+
     func rounded(roundingIncrement: Double) -> Double {
         if roundingIncrement == 0 {
             return self
         }
-        
+
         return (self / roundingIncrement).rounded() * roundingIncrement
     }
-    
+
     mutating func round(roundingIncrement: Double) {
         self = rounded(roundingIncrement: roundingIncrement)
     }

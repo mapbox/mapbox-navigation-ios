@@ -8,9 +8,9 @@ import MapboxNavigationNative
  */
 public class PredictiveCacheManager {
     public typealias MapOptions = (tileStore: TileStore, styleSourcePaths: [String])
-    
+
     private(set) var controllers: [PredictiveCacheController] = []
-    
+
     /**
      Initializes a predictive cache.
     
@@ -24,7 +24,7 @@ public class PredictiveCacheManager {
             self.controllers.append(contentsOf: initMapControllers(options: predictiveCacheOptions, mapOptions: mapOptions))
         }
     }
-    
+
     private func initMapControllers(options: PredictiveCacheOptions,
                                     mapOptions: MapOptions) -> [PredictiveCacheController] {
         return mapOptions.styleSourcePaths.compactMap {
@@ -33,11 +33,11 @@ public class PredictiveCacheManager {
                                             dataset: $0)
         }
     }
-    
+
     private func initNavigatorController(options: PredictiveCacheOptions) -> PredictiveCacheController {
         return createPredictiveCacheController(options: options)!
     }
-    
+
     private func createPredictiveCacheController(options: PredictiveCacheOptions,
                                                  tileStore: TileStore? = nil,
                                                  version: String = "",

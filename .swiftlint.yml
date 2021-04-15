@@ -1,5 +1,4 @@
 disabled_rules:
-  - trailing_whitespace
   - todo
   - line_length
   - identifier_name

@@ -10,28 +10,28 @@ public enum RoadObjectMetadata {
      Objects provided by Mapbox have additional information about the incident.
      */
     case incident(Incident?)
-    
+
     /**
      Tunnel entrance.
      
      Objects provided by Mapbox have additional information about the tunnel.
      */
     case tunnelEntrance(Tunnel?)
-    
+
     /**
      Tunnel exit.
      
      Objects provided by Mapbox have additional information about the tunnel.
      */
     case tunnelExit(Tunnel?)
-    
+
     /**
      Border crossing.
      
      Objects provided by Mapbox have additional information about the border crossing.
      */
     case borderCrossing(BorderCrossing?)
-    
+
     /**
      Toll collection point.
      
@@ -45,19 +45,19 @@ public enum RoadObjectMetadata {
      Objects provided by Mapbox have additional information about the service area.
      */
     case serviceArea(RestStop?)
-    
+
     /// Restricted area entrance
     case restrictedAreaEntrance
 
     /// Restricted area exit
     case restrictedAreaExit
-    
+
     /// Bridge entrance
     case bridgeEntrance
 
     /// Bridge exit
     case bridgeExit
-    
+
     /// Reserved for future use.
     case userDefined
 

@@ -9,10 +9,10 @@ extension CLLocationDirection {
         let inY = cos(inAngle)
         let outX = sin(outAngle)
         let outY = cos(outAngle)
-        
+
         return acos((inX * outX + inY * outY) / 1.0) * (180 / .pi)
     }
-    
+
     var isQualified: Bool {
         return self > -1
     }

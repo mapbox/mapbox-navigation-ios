@@ -23,34 +23,34 @@ open class PassiveLocationDataSource: NSObject {
         Navigator.credentials = directions.credentials
 
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
-        
+
         super.init()
-        
+
         self.systemLocationManager.delegate = self
     }
-    
+
     /**
      The directions service that allows the location data source to access road network data.
      */
     public let directions: Directions
-    
+
     /**
      The location manager that provides raw locations for the receiver to match against the road network.
      */
     public let systemLocationManager: NavigationLocationManager
-    
+
     /**
      The underlying navigator that performs map matching.
      */
     var navigator: MapboxNavigationNative.Navigator {
         return Navigator.shared.navigator
     }
-    
+
     /**
      The location data source’s delegate.
      */
     public weak var delegate: PassiveLocationDataSourceDelegate?
-    
+
     /**
      Starts the generation of location updates with an optional completion handler that gets called when the location data source is ready to receive snapped location updates.
      */
@@ -71,17 +71,17 @@ open class PassiveLocationDataSource: NSObject {
             Navigator.shared.electronicHorizonOptions = newValue
         }
     }
-    
+
     /// The road graph that is updated as the passive location data source tracks the user’s location.
     public var roadGraph: RoadGraph {
         return Navigator.shared.roadGraph
     }
-    
+
     /// The road objects store that is updated as the passive location data source tracks the user’s location.
     public var roadObjectsStore: RoadObjectsStore {
         return Navigator.shared.roadObjectsStore
     }
-    
+
     /**
      Manually sets the current location.
      
@@ -132,7 +132,7 @@ open class PassiveLocationDataSource: NSObject {
                 speedLimit = nil
             }
         }
-        
+
         var userInfo: [NotificationUserInfoKey: Any] = [
             .locationKey: lastLocation,
             .rawLocationKey: lastRawLocation,
@@ -147,15 +147,15 @@ open class PassiveLocationDataSource: NSObject {
         }
         NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: userInfo)
     }
-    
+
     public func enableLocationRecording() {
         try? Navigator.shared.enableHistoryRecorder()
     }
-    
+
     public func disableLocationRecording() {
         try? Navigator.shared.disableHistoryRecorder()
     }
-    
+
     public func locationHistory() throws -> Data {
         return try Navigator.shared.history()
     }
@@ -173,7 +173,7 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         delegate?.passiveLocationDataSource(self, didFailWithError: error)
     }
-    
+
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if #available(iOS 14.0, *) {
             delegate?.passiveLocationDataSourceDidChangeAuthorization(self)
@@ -188,13 +188,13 @@ public protocol PassiveLocationDataSourceDelegate: class {
     /// - seealso: `CLLocationManagerDelegate.locationManagerDidChangeAuthorization(_:)`
     @available(iOS 14.0, *)
     func passiveLocationDataSourceDidChangeAuthorization(_ dataSource: PassiveLocationDataSource)
-    
+
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateLocations:)`
     func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation)
-    
+
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateHeading:)`
     func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateHeading newHeading: CLHeading)
-    
+
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didFailWithError:)`
     func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error)
 }
@@ -213,7 +213,7 @@ extension TileEndpointConfiguration {
             preconditionFailure("No access token specified in Info.plist")
         }
         let skuTokenProvider = SkuTokenProvider(with: credentials)
-        
+
         self.init(host: host,
                   dataset: "mapbox/driving",
                   version: tilesVersion,

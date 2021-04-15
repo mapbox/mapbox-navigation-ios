@@ -4,7 +4,7 @@ import MapboxDirections
 import MapboxNavigationNative
 
 extension Directions {
-    
+
     /**
      Begins asynchronously calculating routes using the given options and delivers the results to a closure.
      
@@ -29,10 +29,9 @@ extension Directions {
                     completionHandler(session, result)
                 }
             }
-            
         }
     }
-    
+
     /**
      Begins asynchronously calculating routes using the given options and delivers the results to a closure.
      
@@ -45,7 +44,7 @@ extension Directions {
      */
     open func calculateOffline(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
         let directionsUri = url(forCalculating: options)
-        
+
         let nativeRouter = try? MapboxNavigationNative.Router(cache: Navigator.shared.cacheHandle,
                                                               historyRecorder: Navigator.shared.historyRecorder)
         try? nativeRouter?.getRouteForDirectionsUri(directionsUri.path) { (result) in
@@ -54,9 +53,9 @@ extension Directions {
             let decoder = JSONDecoder()
             decoder.userInfo = [.options: options,
                                 .credentials: self.credentials]
-            
+
             let session = (options: options as DirectionsOptions, credentials: self.credentials)
-            
+
             if let jsonData = data,
                let response = try? decoder.decode(RouteResponse.self, from: jsonData) {
                 DispatchQueue.main.async {

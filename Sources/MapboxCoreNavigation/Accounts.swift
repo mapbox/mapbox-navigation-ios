@@ -4,7 +4,7 @@ import MapboxCommon
 enum NavigationBillingMethod: String {
     case user
     case request
-    
+
     static let allValues: [Self] = [.user, .request]
 }
 
@@ -15,7 +15,7 @@ public class Accounts: NSObject {
         if billingMethodValue == "" {
             billingMethodValue = nil
         }
-        
+
         switch NavigationBillingMethod(rawValue: billingMethodValue ?? NavigationBillingMethod.user.rawValue) {
         case .user:
             return try? TokenGenerator.getSKUToken(for: .navigationMAUS)

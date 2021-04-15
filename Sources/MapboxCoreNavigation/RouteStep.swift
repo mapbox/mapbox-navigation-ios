@@ -6,20 +6,20 @@ extension RouteStep {
         if let leftFinalHeading = left.finalHeading, let rightFinalHeading = right.finalHeading {
             finalHeading = leftFinalHeading == rightFinalHeading
         }
-        
+
         let maneuverType = left.maneuverType == right.maneuverType
         let maneuverLocation = left.maneuverLocation == right.maneuverLocation
-        
+
         return maneuverLocation && maneuverType && finalHeading
     }
-    
+
     /**
      Returns true if the route step is on a motorway.
      */
     open var isMotorway: Bool {
         return intersections?.first?.outletRoadClasses?.contains(.motorway) ?? false
     }
-    
+
     /**
      Returns true if the route travels on a motorway primarily identified by a route number rather than a road name.
      */
@@ -30,7 +30,7 @@ extension RouteStep {
         }
         return !digitRange.isEmpty
     }
-    
+
     /**
      Returns the last instruction for a given step.
      */

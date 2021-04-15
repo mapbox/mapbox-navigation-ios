@@ -10,9 +10,9 @@ import UIKit
 open class NavigationLocationManager: CLLocationManager {
     override public init() {
         super.init()
-        
+
         requestWhenInUseAuthorization()
-        
+
         if Bundle.main.backgroundModes.contains("location") {
             allowsBackgroundLocationUpdates = true
         }
