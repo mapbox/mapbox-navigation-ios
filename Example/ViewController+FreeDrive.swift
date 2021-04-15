@@ -70,6 +70,7 @@ extension ViewController {
         
         navigationMapView.mapView.on(.styleLoaded, handler: { [weak self] _ in
             guard let self = self else { return }
+            self.navigationMapView.localizeLabels()
             self.addStyledFeature(self.trackStyledFeature)
             self.addStyledFeature(self.rawTrackStyledFeature)
         })

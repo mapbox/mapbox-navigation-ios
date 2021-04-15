@@ -393,6 +393,7 @@
 		DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA591425E58D5600D0C1DB /* Accounts.swift */; };
 		DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */; };
 		DAD903AF23E3DCC80057CF1F /* DateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD903AE23E3DCC80057CF1F /* DateTests.swift */; };
+		DADD28EF2627607D00EA6A47 /* VectorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD28EE2627607D00EA6A47 /* VectorSource.swift */; };
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
@@ -1003,6 +1004,7 @@
 		DAD88E01202AC80100AAA536 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAD88E02202AC81F00AAA536 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = da; path = Resources/da.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DAD903AE23E3DCC80057CF1F /* DateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateTests.swift; sourceTree = "<group>"; };
+		DADD28EE2627607D00EA6A47 /* VectorSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorSource.swift; sourceTree = "<group>"; };
 		DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewAnimationOptionsTests.swift; sourceTree = "<group>"; };
 		DAE26B1A20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE26B1C20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Navigation.strings; sourceTree = "<group>"; };
@@ -1658,6 +1660,7 @@
 				8AE9081125FAA53300F37077 /* Collection.swift */,
 				8A8C3D97260175D20071D274 /* CLLocationDirection.swift */,
 				8A446644260A7B24008BA55E /* BoundingBox.swift */,
+				DADD28EE2627607D00EA6A47 /* VectorSource.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2468,6 +2471,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				351BEBF11E5BCC63006FE110 /* MapView.swift in Sources */,
+				DADD28EF2627607D00EA6A47 /* VectorSource.swift in Sources */,
 				DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */,
 				2B72EC5E241276D10003B370 /* RouteVoiceController.swift in Sources */,
 				2B72EC602412AA800003B370 /* SystemSpeechSynthesizer.swift in Sources */,
