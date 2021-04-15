@@ -54,7 +54,6 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     
     @objc func overview(_ sender: Any) {
         navigationMapView.navigationCamera.moveToOverview()
-//        navigationMapView.navigationCamera.requestNavigationCameraToOverview()
     }
     
     @objc func recenter(_ sender: AnyObject) {
@@ -68,14 +67,13 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         completion?(self, location)
         
         navigationMapView.navigationCamera.follow()
-//        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
         navigationMapView.addArrow(route: router.route,
                                    legIndex: router.routeProgress.legIndex,
                                    stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
     }
     
     func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
-        
+        navigationMapView.navigationCamera.stop()
         // TODO: Verify that camera is positioned correctly.
         let camera = CameraOptions(center: step.maneuverLocation,
                                    zoom: navigationMapView.mapView.zoom,
@@ -113,13 +111,13 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         }
     }
     
-    func updateNavigationCameraViewport() {
+    private func updateNavigationCameraViewport() {
         if let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource {
             navigationViewportDataSource.viewportPadding = viewportPadding
         }
     }
 
-    var viewportPadding: UIEdgeInsets {
+    private var viewportPadding: UIEdgeInsets {
         let courseViewMinimumInsets = UIEdgeInsets(top: 75.0, left: 75.0, bottom: 75.0, right: 75.0)
         var insets = navigationMapView.mapView.safeArea
         insets += courseViewMinimumInsets
@@ -153,7 +151,6 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         }
 
         navigationMapView.navigationCamera.follow()
-//        navigationMapView.navigationCamera.requestNavigationCameraToFollowing()
     }
     
     func navigationViewDidDisappear(_: Bool) {

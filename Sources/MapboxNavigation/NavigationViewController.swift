@@ -910,7 +910,6 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
                            steps: remaining)
         }
         
-        navigationMapView?.navigationCamera.stop()
         cameraController?.center(on: upcomingStep,
                                  route: route,
                                  legIndex: legIndex,

@@ -40,7 +40,7 @@ class RouteLineController: NavigationComponent, NavigationComponentDelegate {
     
     // MARK: - Private methods
     
-    fileprivate func showRouteIfNeeded() {
+    private func showRouteIfNeeded() {
         guard navigationViewData.navigationViewController.isViewLoaded &&
                 navigationViewData.navigationViewController.view.window != nil else { return }
         guard !navigationMapView.showsRoute else { return }

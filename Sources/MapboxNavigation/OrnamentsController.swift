@@ -97,11 +97,12 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         parent.present(feedbackViewController, animated: true)
     }
     
-    // TODO: Improve documentation.
     /**
      Updates the current road name label to reflect the road on which the user is currently traveling.
 
-     - parameter location: The user’s current location.
+     - parameter at: The user’s current location as provided by the system location management system. This has less priority then `snappedLocation` (see below) and is used only if method will attempt to resolve road name automatically.
+     - parameter suggestedName: The road name to put onto label. If not provided - method will attempt to extract the closest road name from map features.
+     - parameter snappedLocation: User's location, snapped to the road network. Has higher priority then `at` location.
      */
     func labelCurrentRoad(at rawLocation: CLLocation, suggestedName roadName: String?, for snappedLocation: CLLocation? = nil) {
         guard navigationView.resumeButton.isHidden else { return }
@@ -289,7 +290,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
      Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
      reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
      */
-    func updateMapViewOrnaments() {
+    private func updateMapViewOrnaments() {
         let bottomBannerHeight = navigationViewData.navigationView.bottomBannerContainerView.bounds.height
         let bottomBannerVerticalOffset = UIScreen.main.bounds.height - bottomBannerHeight - navigationViewData.navigationView.bottomBannerContainerView.frame.origin.y
         let defaultOffset: CGFloat = 10.0

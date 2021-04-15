@@ -52,7 +52,6 @@ class ArrivalController: NavigationComponentDelegate {
         navigationViewData.navigationView.endOfRouteShowConstraint?.isActive = true
 
         navigationMapView.navigationCamera.stop()
-//        navigationMapView.navigationCamera.requestNavigationCameraToIdle()
         
         if let height = navigationViewData.navigationView.endOfRouteHeightConstraint?.constant {
             self.navigationViewData.navigationView.floatingStackView.alpha = 0.0
