@@ -90,7 +90,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     }
     
     @objc func feedback(_ sender: Any) {
-//        showFeedback()
         guard let parent = navigationViewData.navigationViewController else { return }
         let feedbackViewController = FeedbackViewController(eventsManager: navigationViewData.navigationService.eventsManager)
         feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
@@ -278,13 +277,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
             }
         })
     }
-    
-//    private func showFeedback(source: FeedbackSource = .user) {
-//        guard let parent = navigationViewData.navigationViewController else { return }
-//        let feedbackViewController = FeedbackViewController(eventsManager: navigationViewData.navigationService.eventsManager)
-//        feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
-//        parent.present(feedbackViewController, animated: true)
-//    }
     
     /**
      Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
