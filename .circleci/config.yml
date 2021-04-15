@@ -112,6 +112,13 @@ step-library:
           else
             echo "MOBILE_METRICS_TOKEN not provided"
           fi
+  - &swiftlint
+      run:
+        name: SwiftLint check
+        command: |
+         curl -OL "https://github.com/realm/SwiftLint/releases/download/0.43.1/SwiftLint.pkg"
+         sudo installer -pkg SwiftLint.pkg -target /
+         swiftlint --strict
 
 jobs:
   pod-job:
@@ -206,6 +213,7 @@ jobs:
           command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
       - *verify-missing-localizable-strings
       - *add-github-to-known-hosts
+      - *swiftlint
       - when:
           condition:
             not: << parameters.spm >>

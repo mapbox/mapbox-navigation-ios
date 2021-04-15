@@ -1,8 +1,14 @@
 disabled_rules:
   - trailing_whitespace
-  - private_over_fileprivate
-excluded: # paths to ignore during linting. Takes precedence over `included`.
-  - Carthage
-  - MapboxCoreNavigationTests
-  - MapboxNavigationTests
-  - scripts
+  - todo
+  - line_length
+  - identifier_name
+  - cyclomatic_complexity
+  - type_body_length
+  - file_length
+  - nesting
+  - notification_center_detachment
+  - function_body_length
+  - unused_setter_value
+included:
+  - Sources/MapboxCoreNavigation
