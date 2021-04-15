@@ -26,7 +26,6 @@ class MapboxCoreNavigationTests: XCTestCase {
         super.setUp()
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationWhenInUseUsageDescription")
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationAlwaysAndWhenInUseUsageDescription")
-        UserDefaults.standard.set("2.0.0", forKey: "CFBundleShortVersionString")
     }
     
     override func tearDown() {
