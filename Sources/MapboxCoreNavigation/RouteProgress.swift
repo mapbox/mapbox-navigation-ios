@@ -32,7 +32,7 @@ open class RouteProgress: Codable {
             legIndexHandler?(oldValue, legIndex)
         }
     }
-    typealias LegIndexHandlerAction = (_ oldValue: Int, _ newValue: Int) -> ()
+    typealias LegIndexHandlerAction = (_ oldValue: Int, _ newValue: Int) -> Void
     var legIndexHandler: LegIndexHandlerAction?
     /**
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
@@ -242,12 +242,12 @@ open class RouteProgress: Codable {
         let oldOptions = routeOptions
         let user = Waypoint(coordinate: current.coordinate)
 
-        if (current.course >= 0) {
+        if current.course >= 0 {
             user.heading = current.course
             user.headingAccuracy = RouteProgress.reroutingAccuracy
         }
         let newWaypoints = [user] + remainingWaypointsForCalculatingRoute()
-        let newOptions = oldOptions.copy() as! RouteOptions
+        guard let newOptions = oldOptions.copy() as? RouteOptions else { fatalError() }
         newOptions.waypoints = newWaypoints
 
         return newOptions
@@ -313,7 +313,7 @@ open class RouteProgress: Codable {
         let stepProgress = currentLegProgress.currentStepProgress
         let step = stepProgress.step
         
-        //Increment the progress model
+        // Increment the progress model
         guard let polyline = step.shape else {
             preconditionFailure("Route steps used for navigation must have shape data")
         }

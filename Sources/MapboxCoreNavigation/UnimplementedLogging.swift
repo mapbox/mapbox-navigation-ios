@@ -40,7 +40,6 @@ public extension UnimplementedLogging {
     }
 }
 
-fileprivate var warned: [(String, String)] = []
+private var warned: [(String, String)] = []
 
-
-var unimplementedTestLogs: [(String, String)]? = nil
+var unimplementedTestLogs: [(String, String)]?

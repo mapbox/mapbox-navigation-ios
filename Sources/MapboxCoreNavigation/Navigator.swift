@@ -4,8 +4,9 @@ import MapboxNavigationNative
 extension MapboxNavigationNative.Navigator {
     
     func status(at timestamp: Date) -> NavigationStatus {
-        return try! getStatusForMonotonicTimestampNanoseconds(
-            Int64(timestamp.nanosecondsSince1970)
-        )
+        guard let status = try? getStatusForMonotonicTimestampNanoseconds(Int64(timestamp.nanosecondsSince1970)) else {
+            fatalError()
+        }
+        return status
     }
 }

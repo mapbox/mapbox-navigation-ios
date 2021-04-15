@@ -89,8 +89,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
 
         optimizeForNavigation()
     }
-    
-    
+
     /**
      Initializes a navigation match options object for routes between the given locations and an optional profile identifier optimized for navigation.
      

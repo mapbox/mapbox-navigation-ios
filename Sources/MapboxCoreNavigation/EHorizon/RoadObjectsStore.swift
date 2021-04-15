@@ -18,9 +18,9 @@ public final class RoadObjectsStore {
     public weak var delegate: RoadObjectsStoreDelegate? {
         didSet {
             if delegate != nil {
-                try! native.setObserverForOptions(self)
+                try? native.setObserverForOptions(self)
             } else {
-                try! native.setObserverForOptions(nil)
+                try? native.setObserverForOptions(nil)
             }
         }
     }
@@ -30,9 +30,9 @@ public final class RoadObjectsStore {
      which are lying on the edge with given identifier.
      - parameter edgeIdentifier: The identifier of the edge to query.
      */
-    public func roadObjectEdgeLocations(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> [RoadObjectIdentifier : RoadObjectEdgeLocation] {
-        let objects = try! native.getForEdgeId(UInt64(edgeIdentifier))
-        return objects.mapValues(RoadObjectEdgeLocation.init)
+    public func roadObjectEdgeLocations(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> [RoadObjectIdentifier: RoadObjectEdgeLocation] {
+        let objects = try? native.getForEdgeId(UInt64(edgeIdentifier))
+        return objects?.mapValues(RoadObjectEdgeLocation.init) ?? [:]
     }
 
     /**
@@ -42,7 +42,7 @@ public final class RoadObjectsStore {
      - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
     public func roadObjectMetadata(identifier roadObjectIdentifier: RoadObjectIdentifier) -> RoadObjectMetadata? {
-        if let metadata = try! native.getRoadObjectMetadata(forRoadObjectId: roadObjectIdentifier) {
+        if let metadata = try? native.getRoadObjectMetadata(forRoadObjectId: roadObjectIdentifier) {
             return RoadObjectMetadata(metadata)
         }
         return nil
@@ -55,7 +55,7 @@ public final class RoadObjectsStore {
      - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
     public func roadObjectLocation(identifier roadObjectIdentifier: RoadObjectIdentifier) -> RoadObjectLocation? {
-        if let location = try! native.getRoadObjectLocation(forRoadObjectId: roadObjectIdentifier) {
+        if let location = try? native.getRoadObjectLocation(forRoadObjectId: roadObjectIdentifier) {
             return RoadObjectLocation(location)
         }
         return nil
@@ -66,7 +66,7 @@ public final class RoadObjectsStore {
      - parameter edgeIds list of edge ids
      */
     public func roadObjectIdentifiers(edgeIdentifiers: [ElectronicHorizon.Edge.Identifier]) -> [RoadObjectIdentifier] {
-        return try! native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))
+        return (try? native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))) ?? []
     }
 
     public var peer: MBXPeerWrapper?
@@ -76,7 +76,7 @@ public final class RoadObjectsStore {
     }
 
     deinit {
-        try! native.setObserverForOptions(nil)
+        try? native.setObserverForOptions(nil)
     }
 
     private let native: MapboxNavigationNative.RoadObjectsStore

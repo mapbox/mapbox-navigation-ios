@@ -1,4 +1,3 @@
-
 import Foundation
 import Network
 import MapboxDirections
@@ -20,7 +19,7 @@ extension Directions {
     @discardableResult open func calculateWithCache(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) -> URLSessionDataTask? {
         return calculate(options) { (session, result) in
             switch result {
-            case .success(_):
+            case .success:
                 completionHandler(session, result)
             case .failure(let error):
                 if case DirectionsError.network(_) = error {
@@ -47,9 +46,9 @@ extension Directions {
     open func calculateOffline(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
         let directionsUri = url(forCalculating: options)
         
-        let nativeRouter = try! MapboxNavigationNative.Router(cache: Navigator.shared.cacheHandle,
+        let nativeRouter = try? MapboxNavigationNative.Router(cache: Navigator.shared.cacheHandle,
                                                               historyRecorder: Navigator.shared.historyRecorder)
-        try? nativeRouter.getRouteForDirectionsUri(directionsUri.path) { (result) in
+        try? nativeRouter?.getRouteForDirectionsUri(directionsUri.path) { (result) in
             let json = result?.value as? String
             let data = json?.data(using: .utf8)
             let decoder = JSONDecoder()

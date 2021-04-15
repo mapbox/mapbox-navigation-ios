@@ -38,7 +38,7 @@ public class NavigationSettings {
     /**
      Specifies whether to mute the voice controller or not.
      */
-    public dynamic var voiceMuted : Bool = false {
+    public dynamic var voiceMuted: Bool = false {
         didSet {
             notifyChanged(property: .voiceMuted, value: voiceMuted)
         }
@@ -49,22 +49,20 @@ public class NavigationSettings {
      - note: Anything but `kilometer` and `mile` will fall back to the default measurement for the current locale.
         Meters and feets will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
      */
-    public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile {
+    public dynamic var distanceUnit: LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile {
         didSet {
             notifyChanged(property: .distanceUnit, value: distanceUnit.rawValue)
         }
     }
     
     var usesMetric: Bool {
-        get {
-            switch distanceUnit {
-            case .kilometer:
-                return true
-            case .mile:
-                return false
-            default:
-                return Locale.current.usesMetric
-            }
+        switch distanceUnit {
+        case .kilometer:
+            return true
+        case .mile:
+            return false
+        default:
+            return Locale.current.usesMetric
         }
     }
     

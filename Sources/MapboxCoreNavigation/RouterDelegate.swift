@@ -107,7 +107,7 @@ public protocol RouterDelegate: class, UnimplementedLogging {
      - parameter distance: The current distance from the waypoint, in meters.
      - important: This method will likely be called several times as you approach a destination. If only one consumption of this method is desired, then usage of an internal flag is recommended.
      */
-    func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval:TimeInterval, distance: CLLocationDistance)
+    func router(_ router: Router, willArriveAt waypoint: Waypoint, after remainingTimeInterval: TimeInterval, distance: CLLocationDistance)
     
     /**
      Called when the router arrives at a waypoint.
@@ -197,4 +197,3 @@ public extension RouterDelegate {
         return RouteController.DefaultBehavior.shouldDisableBatteryMonitoring
     }
 }
-

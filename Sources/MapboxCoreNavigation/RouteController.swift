@@ -222,16 +222,17 @@ open class RouteController: NSObject {
         let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
                                                           geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat),
                                                           waypoints: waypoints)
-        try! navigator.setRouteForRouteResponse(routeJSONString,
-                                                route: 0,
-                                                leg: UInt32(routeProgress.legIndex),
-                                                options: activeGuidanceOptions)
+        _ = try? navigator.setRouteForRouteResponse(routeJSONString,
+                                                    route: 0,
+                                                    leg: UInt32(routeProgress.legIndex),
+                                                    options: activeGuidanceOptions)
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        if try! navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
+        let routeLegChanged = (try? navigator.changeRouteLeg(forRoute: 0, leg: legIndex)) ?? false
+        if routeLegChanged, let timestamp = location?.timestamp {
             updateIndexes(status: navigator.status(at: timestamp), progress: routeProgress)
         }
     }
@@ -245,7 +246,7 @@ open class RouteController: NSObject {
         
         rawLocation = location
         
-        locations.forEach { try! navigator.updateLocation(for: FixLocation($0)) }
+        locations.forEach { _ = try? navigator.updateLocation(for: FixLocation($0)) }
 
         let status = navigator.status(at: location.timestamp)
         
@@ -272,19 +273,18 @@ open class RouteController: NSObject {
         let newStepIndex = Int(status.stepIndex)
         let newIntersectionIndex = Int(status.intersectionIndex)
         
-        if (newLegIndex != progress.legIndex) {
+        if newLegIndex != progress.legIndex {
             progress.legIndex = newLegIndex
         }
-        if (newStepIndex != progress.currentLegProgress.stepIndex) {
+        if newStepIndex != progress.currentLegProgress.stepIndex {
             progress.currentLegProgress.stepIndex = newStepIndex
         }
         
-        if (newIntersectionIndex != progress.currentLegProgress.currentStepProgress.intersectionIndex) {
+        if newIntersectionIndex != progress.currentLegProgress.currentStepProgress.intersectionIndex {
             progress.currentLegProgress.currentStepProgress.intersectionIndex = newIntersectionIndex
         }
         
-        if let spokenIndexPrimitive = status.voiceInstruction?.index, progress.currentLegProgress.currentStepProgress.spokenInstructionIndex != Int(spokenIndexPrimitive)
-            {
+        if let spokenIndexPrimitive = status.voiceInstruction?.index, progress.currentLegProgress.currentStepProgress.spokenInstructionIndex != Int(spokenIndexPrimitive) {
             progress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(spokenIndexPrimitive)
         }
         
@@ -347,14 +347,14 @@ open class RouteController: NSObject {
         progress.updateDistanceTraveled(with: rawLocation)
         progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
         
-        //Fire the delegate method
+        // Fire the delegate method
         delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
         
-        //Fire the notification (for now)
+        // Fire the notification (for now)
         NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
             NotificationUserInfoKey.routeProgressKey: progress,
-            NotificationUserInfoKey.locationKey: location, //guaranteed value
-            NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
+            NotificationUserInfoKey.locationKey: location, // guaranteed value
+            NotificationUserInfoKey.rawLocationKey: rawLocation // raw
         ])
     }
     
@@ -363,7 +363,7 @@ open class RouteController: NSObject {
         
         let info: [NotificationUserInfoKey: Any] = [
             .routeProgressKey: routeProgress,
-            .spokenInstructionKey: spokenInstructionPoint,
+            .spokenInstructionKey: spokenInstructionPoint
         ]
         
         NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: info)
@@ -374,7 +374,7 @@ open class RouteController: NSObject {
         
         let info: [NotificationUserInfoKey: Any] = [
             .routeProgressKey: routeProgress,
-            .visualInstructionKey: visualInstructionPoint,
+            .visualInstructionKey: visualInstructionPoint
         ]
         
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
@@ -385,11 +385,11 @@ open class RouteController: NSObject {
     }
     
     public func enableLocationRecording() {
-        try! Navigator.shared.enableHistoryRecorder()
+        try? Navigator.shared.enableHistoryRecorder()
     }
     
     public func disableLocationRecording() {
-        try! Navigator.shared.disableHistoryRecorder()
+        try? Navigator.shared.disableHistoryRecorder()
     }
     
     public func locationHistory() throws -> Data {
@@ -453,7 +453,7 @@ extension RouteController: Router {
         
         delegate?.router(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            NotificationUserInfoKey.locationKey: location,
+            NotificationUserInfoKey.locationKey: location
         ])
         
         self.lastRerouteLocation = location
@@ -462,7 +462,7 @@ extension RouteController: Router {
         if isRerouting { return }
         isRerouting = true
         
-        getDirections(from: location, along: progress) { [weak self] (session, result) in
+        getDirections(from: location, along: progress) { [weak self] (_, result) in
             self?.isRerouting = false
             
             guard let strongSelf: RouteController = self else {
@@ -472,7 +472,7 @@ extension RouteController: Router {
             switch result {
             case let .success(response):
                 guard let route = response.routes?.first else { return }
-                guard case let .route(routeOptions) = response.options else { return } //TODO: Can a match hit this codepoint?
+                guard case let .route(routeOptions) = response.options else { return } // TODO: Can a match hit this codepoint?
                 strongSelf._routeProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions, legIndex: 0)
                 strongSelf._routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.announce(reroute: route, at: location, proactive: false)
@@ -480,7 +480,7 @@ extension RouteController: Router {
             case let .failure(error):
                 strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                    NotificationUserInfoKey.routingErrorKey: error,
+                    NotificationUserInfoKey.routingErrorKey: error
                 ])
                 return
             }

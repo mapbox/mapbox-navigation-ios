@@ -137,7 +137,7 @@ open class PassiveLocationDataSource: NSObject {
             .locationKey: lastLocation,
             .rawLocationKey: lastRawLocation,
             .matchesKey: matches,
-            .roadNameKey: status.roadName,
+            .roadNameKey: status.roadName
         ]
         if let speedLimit = speedLimit {
             userInfo[.speedLimitKey] = speedLimit
@@ -149,11 +149,11 @@ open class PassiveLocationDataSource: NSObject {
     }
     
     public func enableLocationRecording() {
-        try! Navigator.shared.enableHistoryRecorder()
+        try? Navigator.shared.enableHistoryRecorder()
     }
     
     public func disableLocationRecording() {
-        try! Navigator.shared.disableHistoryRecorder()
+        try? Navigator.shared.disableHistoryRecorder()
     }
     
     public func locationHistory() throws -> Data {

@@ -1,7 +1,7 @@
 import MapboxDirections
 
 extension RouteStep {
-    static func ==(left: RouteStep, right: RouteStep) -> Bool {
+    static func == (left: RouteStep, right: RouteStep) -> Bool {
         var finalHeading = false
         if let leftFinalHeading = left.finalHeading, let rightFinalHeading = right.finalHeading {
             finalHeading = leftFinalHeading == rightFinalHeading

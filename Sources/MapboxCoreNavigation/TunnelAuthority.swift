@@ -31,7 +31,7 @@ class TunnelAuthority {
             // tunnel entrance radius or the location is not qualified
             if location.speed >= Constants.minimumTunnelEntranceSpeed,
                 let distanceToTunnel = currentStepProgress.userDistanceToUpcomingIntersection,
-                (distanceToTunnel <= Constants.tunnelEntranceRadius || !location.isQualified)  {
+                (distanceToTunnel <= Constants.tunnelEntranceRadius || !location.isQualified) {
                 return true
             }
             

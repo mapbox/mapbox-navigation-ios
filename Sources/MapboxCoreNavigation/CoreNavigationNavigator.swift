@@ -19,7 +19,7 @@ class Navigator {
      This property can only be modified before creating `Navigator` shared instance, all
      further changes to this property will have no effect.
      */
-    static var tilesURL: URL? = nil
+    static var tilesURL: URL?
     
     func enableHistoryRecorder() throws {
         try historyRecorder.enable(forEnabled: true)
@@ -42,7 +42,8 @@ class Navigator {
     var roadGraph: RoadGraph!
     
     lazy var roadObjectsStore: RoadObjectsStore = {
-        return RoadObjectsStore(try! navigator.roadObjectStore())
+        guard let roadObjectStore = try? navigator.roadObjectStore() else { fatalError() }
+        return RoadObjectsStore(roadObjectStore)
     }()
     
     /**
@@ -50,7 +51,7 @@ class Navigator {
      
      - precondition: `credentials` should be set before getting the shared navigator for the first time.
      */
-    static var credentials: DirectionsCredentials? = nil
+    static var credentials: DirectionsCredentials?
     
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
@@ -75,7 +76,7 @@ class Navigator {
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
                                               platform: ProfilePlatform.KIOS)
         
-        let endpointConfig = TileEndpointConfiguration(credentials:Navigator.credentials ?? Directions.shared.credentials,
+        let endpointConfig = TileEndpointConfiguration(credentials: Navigator.credentials ?? Directions.shared.credentials,
                                                        tilesVersion: Self.tilesVersion,
                                                        minimumDaysToPersistVersion: nil)
         
@@ -86,29 +87,30 @@ class Navigator {
                                       threadsCount: nil,
                                       endpointConfig: endpointConfig)
         
-        let configFactory = try! ConfigFactory.build(for: settingsProfile,
-                                                     config: NavigatorConfig(),
-                                                     customConfig: "")
+        guard let configFactory = try? ConfigFactory.build(for: settingsProfile,
+                                                           config: NavigatorConfig(),
+                                                           customConfig: "") else { fatalError() }
         
-        historyRecorder = try! HistoryRecorderHandle.build(forHistoryFile: "", config: configFactory)
-        
-        let runloopExecutor = try! RunLoopExecutorFactory.build()
-        cacheHandle = try! CacheFactory.build(for: tilesConfig,
+        historyRecorder = try? HistoryRecorderHandle.build(forHistoryFile: "", config: configFactory)
+
+        guard let runloopExecutor = try? RunLoopExecutorFactory.build() else { return }
+        cacheHandle = try? CacheFactory.build(for: tilesConfig,
                                               config: configFactory,
                                               runLoop: runloopExecutor,
                                               historyRecorder: historyRecorder)
-        
-        roadGraph = RoadGraph(try! MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
-        
-        navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
+
+        guard let graphAcessor = try? MapboxNavigationNative.GraphAccessor(cache: cacheHandle) else { fatalError() }
+        roadGraph = RoadGraph(graphAcessor)
+
+        navigator = try? MapboxNavigationNative.Navigator(config: configFactory,
                                                           runLoopExecutor: runloopExecutor,
                                                           cache: cacheHandle,
                                                           historyRecorder: historyRecorder)
-        try! navigator.setElectronicHorizonObserverFor(self)
+        try? navigator.setElectronicHorizonObserverFor(self)
     }
     
     deinit {
-        try! navigator.setElectronicHorizonObserverFor(nil)
+        try? navigator.setElectronicHorizonObserverFor(nil)
     }
     
     var electronicHorizonOptions: ElectronicHorizonOptions? {
@@ -119,7 +121,7 @@ class Navigator {
             } else {
                 nativeOptions = nil
             }
-            try! navigator.setElectronicHorizonOptionsFor(nativeOptions)
+            try? navigator.setElectronicHorizonOptionsFor(nativeOptions)
         }
     }
     
@@ -127,12 +129,15 @@ class Navigator {
 }
 
 extension Navigator: ElectronicHorizonObserver {
-    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
+    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String: MapboxNavigationNative.RoadObjectDistanceInfo]) {
+        guard let positionValue = try? position.position(),
+              let tree = try? position.tree(),
+              let type = try? position.type() else { fatalError() }
         let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
-            .positionKey: RoadGraph.Position(try! position.position()),
-            .treeKey: ElectronicHorizon(try! position.tree()),
-            .updatesMostProbablePathKey: try! position.type() == .UPDATE,
-            .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init),
+            .positionKey: RoadGraph.Position(positionValue),
+            .treeKey: ElectronicHorizon(tree),
+            .updatesMostProbablePathKey: type == .UPDATE,
+            .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init)
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
     }
@@ -140,7 +145,7 @@ extension Navigator: ElectronicHorizonObserver {
     public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
         let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
             .roadObjectIdentifierKey: info.roadObjectId,
-            .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
+            .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidEnterRoadObject, object: nil, userInfo: userInfo)
     }
@@ -148,7 +153,7 @@ extension Navigator: ElectronicHorizonObserver {
     public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
         let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
             .roadObjectIdentifierKey: info.roadObjectId,
-            .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
+            .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidExitRoadObject, object: nil, userInfo: userInfo)
     }

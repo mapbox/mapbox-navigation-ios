@@ -3,19 +3,19 @@ import CoreLocation
 import MapboxDirections
 import Turf
 
-fileprivate let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
-fileprivate let minimumSpeed: CLLocationSpeed = 6 // ~21 kmh
-fileprivate var distanceFilter: CLLocationDistance = 10
-fileprivate var verticalAccuracy: CLLocationAccuracy = 10
-fileprivate var horizontalAccuracy: CLLocationAccuracy = 40
+private let maximumSpeed: CLLocationSpeed = 30 // ~108 kmh
+private let minimumSpeed: CLLocationSpeed = 6 // ~21 kmh
+private var distanceFilter: CLLocationDistance = 10
+private var verticalAccuracy: CLLocationAccuracy = 10
+private var horizontalAccuracy: CLLocationAccuracy = 40
 // minimumSpeed will be used when a location have maximumTurnPenalty
-fileprivate let maximumTurnPenalty: CLLocationDirection = 90
+private let maximumTurnPenalty: CLLocationDirection = 90
 // maximumSpeed will be used when a location have minimumTurnPenalty
-fileprivate let minimumTurnPenalty: CLLocationDirection = 0
+private let minimumTurnPenalty: CLLocationDirection = 0
 // Go maximum speed if distance to nearest coordinate is >= `safeDistance`
-fileprivate let safeDistance: CLLocationDistance = 50
+private let safeDistance: CLLocationDistance = 50
 
-fileprivate class SimulatedLocation: CLLocation {
+private class SimulatedLocation: CLLocation {
     var turnPenalty: Double = 0
     
     override var description: String {
@@ -215,7 +215,7 @@ extension CLLocation {
     }
 }
 
-extension Array where Element : Hashable {
+extension Array where Element: Hashable {
     fileprivate struct OptionalSubscript {
         var elements: [Element]
         subscript (index: Int) -> Element? {
@@ -224,11 +224,11 @@ extension Array where Element : Hashable {
     }
     
     fileprivate var optional: OptionalSubscript {
-        get { return OptionalSubscript(elements: self) }
+        return OptionalSubscript(elements: self)
     }
 }
 
-extension Array where Element : Equatable {
+extension Array where Element: Equatable {
     fileprivate func after(element: Element) -> Element? {
         if let index = self.firstIndex(of: element), index + 1 <= self.count {
             return index + 1 == self.count ? self[0] : self[index + 1]

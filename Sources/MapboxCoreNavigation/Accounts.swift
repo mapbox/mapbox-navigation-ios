@@ -2,8 +2,8 @@ import Foundation
 import MapboxCommon
 
 enum NavigationBillingMethod: String {
-    case user = "user"
-    case request = "request"
+    case user
+    case request
     
     static let allValues: [Self] = [.user, .request]
 }
