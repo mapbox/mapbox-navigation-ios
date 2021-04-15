@@ -40,11 +40,20 @@ extension Bundle {
      The Mapbox Navigation framework bundle, if installed.
      */
     class var mapboxNavigationIfInstalled: Bundle? {
-        // Assumption: MapboxNavigation.framework includes NavigationViewController and exposes it to the Objective-C runtime as MapboxNavigation.NavigationViewController.
-        guard let NavigationViewController = NSClassFromString("MapboxNavigation.NavigationViewController") else {
+        get {
+            #if SWIFT_PACKAGE
+            for bundleIdentifier in Bundle.allBundles.compactMap({ $0.bundleIdentifier }) {
+                if bundleIdentifier.contains("MapboxNavigation-MapboxNavigation") {
+                    return Bundle(identifier: bundleIdentifier)
+                }
+            }
             return nil
+            #else
+            // Assumption: MapboxNavigation.framework includes NavigationViewController and exposes it to the Objective-C runtime as MapboxNavigation.NavigationViewController.
+            guard let NavigationViewController = NSClassFromString("MapboxNavigation.NavigationViewController") else { return nil }
+            return Bundle(for: NavigationViewController)
+            #endif
         }
-        return Bundle(for: NavigationViewController)
     }
     
     public func ensureSuggestedTileURLExists() -> Bool {
