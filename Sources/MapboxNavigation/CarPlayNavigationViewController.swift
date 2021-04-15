@@ -119,7 +119,6 @@ public class CarPlayNavigationViewController: UIViewController {
         setupOrnaments()
         setupStyleManager()
         
-        makeGestureRecognizersResetFrameRate()
         observeNotifications(navigationService)
         updateManeuvers(navigationService.routeProgress)
         navigationService.start()
@@ -269,21 +268,6 @@ public class CarPlayNavigationViewController: UIViewController {
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView?.updateTraveledRouteLine(location.coordinate)
             navigationMapView?.updateRoute(routeProgress)
-        }
-    }
-    
-    /**
-     Modifies the gesture recognizers to also update the map’s frame rate.
-     */
-    func makeGestureRecognizersResetFrameRate() {
-        for gestureRecognizer in navigationMapView?.gestureRecognizers ?? [] {
-            gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
-        }
-    }
-    
-    @objc func resetFrameRate(_ sender: UIGestureRecognizer) {
-        navigationMapView?.mapView.update {
-            $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
         }
     }
     

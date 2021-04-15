@@ -92,11 +92,11 @@ public extension NavigationMapViewDelegate {
         return nil
     }
     
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
-        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
-        return .zero
-    }
+//    /**
+//     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+//     */
+//    func navigationMapViewUserAnchorPoint(_ navigationMapView: NavigationMapView) -> CGPoint {
+//        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+//        return .zero
+//    }
 }

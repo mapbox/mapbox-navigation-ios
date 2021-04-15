@@ -204,6 +204,7 @@ open class NavigationMapView: UIView {
     }
     
     fileprivate func commonInit() {
+        makeGestureRecognizersResetFrameRate()
         setupGestureRecognizers()
         installUserCourseView()
         subscribeForNotifications()
@@ -306,6 +307,12 @@ open class NavigationMapView: UIView {
         addSubview(imageView)
     }
     
+    @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {
+        mapView.update {
+            $0.render.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        }
+    }
+    
     /**
      Updates the map view’s preferred frames per second to the appropriate value for the current route progress.
      
@@ -362,6 +369,11 @@ open class NavigationMapView: UIView {
                               animated: animated,
                               navigationCameraState: navigationCamera.state)
     }
+    
+//    func forceCourseCoordinate(_ centerCoordinate: CLLocationCoordinate2D) {
+//        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate, zoom: 14.0))
+//        updateUserCourseView(CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude))
+//    }
     
     // MARK: Feature addition/removal properties and methods
     
@@ -966,5 +978,11 @@ open class NavigationMapView: UIView {
         }
         
         return candidates
+    }
+    
+    func makeGestureRecognizersResetFrameRate() {
+        for gestureRecognizer in gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
+        }
     }
 }
