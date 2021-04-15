@@ -357,7 +357,7 @@
 			repositoryURL = "../..";
 			requirement = {
 				kind = revision;
-				revision = 6cc9728a615ed9b08632a6c2d09f7fca57a5c542;
+				revision = 0460c440b8b80dfe64356364787f41ea2ccf9ee8;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */

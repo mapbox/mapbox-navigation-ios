@@ -1,12 +1,12 @@
 import UIKit
-import MapboxCoreNavigation
+import MapboxNavigation
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let distanceFormatter = DistanceFormatter()
-        print(distanceFormatter.attributedString(from: .init(value: 10, unit: .meters)))
+        let stepsViewController = StepsViewController()
+        print(stepsViewController)
     }
 }
