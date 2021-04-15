@@ -56,20 +56,20 @@ extension Bundle {
     /**
      Returns a dictionary of `MBXInfo.plist` in Mapbox Core Navigation.
      */
-    static var mapboxCoreNavigationMBX: Dictionary<String, Any>? {
+    static let mapboxCoreNavigationInfoDictionary: [String: Any]? = {
         guard let fileURL = Bundle.mapboxCoreNavigation.url(forResource: "MBXInfo", withExtension: "plist"),
-              let infoDictionary = NSDictionary(contentsOf: fileURL) as? Dictionary<String, Any> else { return nil }
+              let infoDictionary = NSDictionary(contentsOf: fileURL) as? [String: Any] else { return nil }
         return infoDictionary
-    }
+    }()
     
     /**
      Returns a dictionary of `MBXInfo.plist` in Mapbox Navigation framework bundle, if installed.
      */
-    static var mapboxNavigationMBX: Dictionary<String, Any>? {
+    static let mapboxNavigationInfoDictionary: [String: Any]? = {
         guard let fileURL = Bundle.mapboxNavigationIfInstalled?.url(forResource: "MBXInfo", withExtension: "plist"),
-              let infoDictionary = NSDictionary(contentsOf: fileURL) as? Dictionary<String, Any> else { return nil }
+              let infoDictionary = NSDictionary(contentsOf: fileURL) as? [String: Any] else { return nil }
         return infoDictionary
-    }
+    }()
     
     /**
      Returns the value associated with the specific key in the Mapbox Navigation bundle's  information property list, if installed.
@@ -77,7 +77,7 @@ extension Bundle {
     public class func object(forMapboxNavigationInfoDictionaryKey key: String) -> String? {
         if let stringForKey = Bundle.mapboxNavigationIfInstalled?.object(forInfoDictionaryKey: key) {
             return stringForKey as? String
-        } else if let infoDictionary = Bundle.mapboxNavigationMBX {
+        } else if let infoDictionary = Bundle.mapboxNavigationInfoDictionary {
             return infoDictionary[key] as? String
         } else {
             return nil
@@ -89,7 +89,7 @@ extension Bundle {
     public class func object(forMapboxCoreNavigationInfoDictionaryKey key: String) -> String? {
         if let stringForKey = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: key) {
             return stringForKey as? String
-        } else if let infoDictionary = Bundle.mapboxCoreNavigationMBX {
+        } else if let infoDictionary = Bundle.mapboxCoreNavigationInfoDictionary {
             return infoDictionary[key] as? String
         } else {
             return nil
