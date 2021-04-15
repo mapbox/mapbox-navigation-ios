@@ -2,7 +2,7 @@ import UIKit
 import CoreLocation
 import MapboxDirections
 
-public enum SimulationIntent: Int{
+public enum SimulationIntent: Int {
     case manual, poorGPS
 }
 
@@ -122,7 +122,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     /**
      The default time interval before beginning simulation when the `.onPoorGPS` simulation option is enabled.
      */
-    static let defaultPoorGPSPatience: Double = 2.5 //seconds
+    static let defaultPoorGPSPatience: Double = 2.5 // seconds
     
     /**
      The Amount of time the service will wait until it begins simulation in a poor GPS scenerio. Defaults to 2.5 seconds.
@@ -241,7 +241,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         super.init()
         resumeNotifications()
         
-        poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
+        poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval) { [weak self] in
             guard let mode = self?.simulationMode, mode == .onPoorGPS else { return }
             self?.simulate(intent: .poorGPS)
         }
@@ -358,7 +358,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
 
     private func resetGPSCountdown() {
-        //Sanity check: if we're not on this mode, we have no business here.
+        // Sanity check: if we're not on this mode, we have no business here.
         guard simulationMode == .onPoorGPS else { return }
         
         // Immediately end simulation if it is occuring.
@@ -389,29 +389,29 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        //If we're always simulating, make sure this is a simulated update.
+        // If we're always simulating, make sure this is a simulated update.
         if simulationMode == .always, manager != simulatedLocationSource { return }
         
-        //update the events manager with the received locations
+        // update the events manager with the received locations
         eventsManager.record(locations: locations)
         
-        //sanity check: make sure the update actually contains a location
+        // sanity check: make sure the update actually contains a location
         guard let location = locations.last else { return }
         
-        //If this is a good organic update, reset the timer.
+        // If this is a good organic update, reset the timer.
         if simulationMode == .onPoorGPS,
             manager == nativeLocationSource,
             location.isQualified {
-            //If the timer is disarmed, arm it. This is a good update.
+            // If the timer is disarmed, arm it. This is a good update.
             if poorGPSTimer.state == .disarmed, location.isQualifiedForStartingRoute {
                 poorGPSTimer.arm()
             }
             
-            //pass this good update onto the poor GPS timer mechanism.
+            // pass this good update onto the poor GPS timer mechanism.
             resetGPSCountdown()
         }
         
-        //Finally, pass the update onto the router.
+        // Finally, pass the update onto the router.
         router.locationManager?(manager, didUpdateLocations: locations)
     }
     
@@ -429,27 +429,27 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     }
 }
 
-//MARK: - RouteControllerDelegate
+// MARK: - RouteControllerDelegate
 extension MapboxNavigationService: RouterDelegate {
     typealias Default = RouteController.DefaultBehavior
     
     public func router(_ router: Router, willRerouteFrom location: CLLocation) {
-        //save any progress made by the router until now
+        // save any progress made by the router until now
         eventsManager.enqueueRerouteEvent()
         eventsManager.incrementDistanceTraveled(by: router.routeProgress.distanceTraveled)
         
-        //notify our consumer
+        // notify our consumer
         delegate?.navigationService(self, willRerouteFrom: location)
     }
     
     public func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
-        //notify the events manager that the route has changed
+        // notify the events manager that the route has changed
         eventsManager.reportReroute(progress: router.routeProgress, proactive: proactive)
         
-        //update the route progress model of the simulated location manager, if applicable.
+        // update the route progress model of the simulated location manager, if applicable.
         simulatedLocationSource?.route = router.route
         
-        //notify our consumer
+        // notify our consumer
         delegate?.navigationService(self, didRerouteAlong: route, at: location, proactive: proactive)
     }
     
@@ -462,10 +462,10 @@ extension MapboxNavigationService: RouterDelegate {
     }
     
     public func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        //notify the events manager of the progress update
+        // notify the events manager of the progress update
         eventsManager.update(progress: progress)
         
-        //pass the update on to consumers
+        // pass the update on to consumers
         delegate?.navigationService(self, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
     
@@ -477,7 +477,7 @@ extension MapboxNavigationService: RouterDelegate {
         delegate?.navigationService(self, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress)
     }
     
-    //MARK: Questions
+    // MARK: Questions
     public func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool {
         return delegate?.navigationService(self, shouldRerouteFrom: location) ?? Default.shouldRerouteFromLocation
     }
@@ -491,7 +491,7 @@ extension MapboxNavigationService: RouterDelegate {
     }
     
     public func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool {
-        //Notify the events manager that we've arrived at a waypoint
+        // Notify the events manager that we've arrived at a waypoint
         eventsManager.arriveAtWaypoint()
         
         let shouldAutomaticallyAdvance =  delegate?.navigationService(self, didArriveAt: waypoint) ?? Default.didArriveAtWaypoint
@@ -510,7 +510,7 @@ extension MapboxNavigationService: RouterDelegate {
     }
 }
 
-//MARK: EventsManagerDataSource Logic
+// MARK: EventsManagerDataSource Logic
 extension MapboxNavigationService {
     public var routeProgress: RouteProgress {
         return self.router.routeProgress
@@ -521,7 +521,7 @@ extension MapboxNavigationService {
     }
 }
 
-//MARK: RouterDataSource
+// MARK: RouterDataSource
 extension MapboxNavigationService {
     public var locationProvider: NavigationLocationManager.Type {
         return type(of: locationManager)
@@ -546,7 +546,7 @@ fileprivate extension NavigationEventsManager {
 
 private extension Double {
     var dispatchInterval: DispatchTimeInterval {
-        let milliseconds = self * 1000.0 //milliseconds per second
+        let milliseconds = self * 1000.0 // milliseconds per second
         let intMilliseconds = Int(milliseconds)
         return .milliseconds(intMilliseconds)
     }
@@ -554,11 +554,11 @@ private extension Double {
 
 private func checkForUpdates() {
     #if TARGET_IPHONE_SIMULATOR
-    guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
+    guard NSClassFromString("XCTestCase") == nil else { return } // Short-circuit when running unit tests
     guard let version = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
     let latestVersion = String(describing: version)
     _ = URLSession.shared.dataTask(with: URL(string: "https://docs.mapbox.com/ios/navigation/latest_version.txt")!, completionHandler: { (data, response, error) in
-        if let _ = error { return }
+        if error != nil { return }
         guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
         
         guard let data = data, let currentVersion = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .newlines) else { return }
@@ -572,7 +572,7 @@ private func checkForUpdates() {
 }
 
 private func checkForLocationUsageDescription() {
-    guard let _ = Bundle.main.bundleIdentifier else {
+    guard Bundle.main.bundleIdentifier != nil else {
         return
     }
     if Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {

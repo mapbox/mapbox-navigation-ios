@@ -4,7 +4,7 @@ import MapboxNavigationNative
 
 extension FixLocation {
     convenience init(_ location: CLLocation) {
-        var bearingAccuracy: NSNumber? = nil
+        var bearingAccuracy: NSNumber?
         if #available(iOS 13.4, *) {
             bearingAccuracy = location.courseAccuracy >= 0 ? location.courseAccuracy as NSNumber : nil
         }

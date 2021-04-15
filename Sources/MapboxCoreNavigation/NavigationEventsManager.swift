@@ -41,8 +41,8 @@ open class NavigationEventsManager {
         guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
         let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
         let token = dict["MGLMapboxAccessToken"] as? String else {
-            //we can assert here because if the token was passed in, it would of overriden this closure.
-            //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
+            // we can assert here because if the token was passed in, it would of overriden this closure.
+            // we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
             assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
             return ""
         }
@@ -228,7 +228,7 @@ open class NavigationEventsManager {
                 outstandingFeedbackEvents.remove(at: index)
             }
             
-            let eventName = event.eventDictionary["event"] as! String
+            guard let eventName = event.eventDictionary["event"] as? String else { fatalError() }
             let eventDictionary = navigationFeedbackEventWithLocationsAdded(event: event)
             
             mobileEventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
@@ -329,7 +329,7 @@ open class NavigationEventsManager {
         }
     }
     
-    //MARK: - Session State Management
+    // MARK: - Session State Management
     @objc private func didChangeOrientation(_ notification: NSNotification) {
         sessionState?.reportChange(to: UIDevice.current.orientation)
     }
@@ -357,7 +357,7 @@ open class NavigationEventsManager {
             sessionState?.currentRoute = route
         }
         
-        if (proactive) {
+        if proactive {
             enqueueFoundFasterRouteEvent()
         }
         let latestReroute = outstandingFeedbackEvents.compactMap({ $0 as? RerouteEvent }).last

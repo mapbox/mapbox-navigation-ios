@@ -32,17 +32,17 @@ public enum FeedbackType: CustomStringConvertible {
         switch self {
         case .general:
             return "general"
-        case .incorrectVisual(_):
+        case .incorrectVisual:
             return "incorrect_visual_guidance"
-        case .confusingAudio(_):
+        case .confusingAudio:
             return "incorrect_audio_guidance"
-        case .routeQuality(_):
+        case .routeQuality:
             return "routing_error"
-        case .illegalRoute(_):
+        case .illegalRoute:
             return "not_allowed"
-        case .roadClosure(_):
+        case .roadClosure:
             return "road_closed"
-        case .positioning(_):
+        case .positioning:
             return "positioning_issue"
         }
     }

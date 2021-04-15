@@ -12,15 +12,11 @@ extension Bundle {
     }
     
     var locationAlwaysAndWhenInUseUsageDescription: String? {
-        get {
-            return object(forInfoDictionaryKey: "NSLocationAlwaysAndWhenInUseUsageDescription") as? String
-        }
+        return object(forInfoDictionaryKey: "NSLocationAlwaysAndWhenInUseUsageDescription") as? String
     }
     
     var locationWhenInUseUsageDescription: String? {
-        get {
-            return object(forInfoDictionaryKey: "NSLocationWhenInUseUsageDescription") as? String
-        }
+        return object(forInfoDictionaryKey: "NSLocationWhenInUseUsageDescription") as? String
     }
     
     /**

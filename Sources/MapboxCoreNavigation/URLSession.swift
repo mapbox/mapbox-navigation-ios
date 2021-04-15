@@ -13,11 +13,11 @@ extension URLSession {
             .main,
             .mapboxNavigationIfInstalled,
             .mapboxCoreNavigation,
-            .init(for: Directions.self),
+            .init(for: Directions.self)
         ]
         let bundleComponents = bundles.compactMap { (bundle) -> String? in
             guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier,
-                let version = bundle?.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String else {
+                let version = bundle?.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String else {
                 return nil
             }
             return "\(name)/\(version)"
@@ -52,7 +52,7 @@ extension URLSession {
         
         let components: [String] = bundleComponents + [
             systemComponent,
-            chipComponent,
+            chipComponent
         ]
         return components.joined(separator: " ")
     }()

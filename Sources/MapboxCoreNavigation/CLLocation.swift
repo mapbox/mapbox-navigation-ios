@@ -62,7 +62,7 @@ extension CLLocation {
         return closestCoordinate.coordinate.distance(to: coordinate) < maximumDistance
     }
     
-    //MARK: - Route Snapping
+    // MARK: - Route Snapping
     
     func snapped(to routeProgress: RouteProgress) -> CLLocation? {
         let legProgress = routeProgress.currentLegProgress

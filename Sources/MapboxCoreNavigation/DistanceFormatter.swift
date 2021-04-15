@@ -227,7 +227,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
         }
     }
     
-    open override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedString.Key : Any]? = nil) -> NSAttributedString? {
+    open override func attributedString(for obj: Any, withDefaultAttributes attrs: [NSAttributedString.Key: Any]? = nil) -> NSAttributedString? {
         if let distanceFromObj = obj as? CLLocationDistance {
             return self.attributedString(from: distanceFromObj, defaultAttributes: attrs)
         } else if let measurementFromObj = obj as? Measurement<UnitLength> {

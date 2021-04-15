@@ -173,7 +173,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         
         let maxUpdatesAwayFromRouteGivenAccuracy = Int(location.horizontalAccuracy / Double(RouteControllerIncorrectCourseMultiplier))
         
-        if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy)  {
+        if movementsAwayFromRoute >= max(RouteControllerMinNumberOfInCorrectCourses, maxUpdatesAwayFromRouteGivenAccuracy) {
             return false
         } else if location.shouldSnap(toRouteWith: calculatedCourseForLocationOnStep) {
             movementsAwayFromRoute = 0
@@ -292,14 +292,14 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         progress.updateDistanceTraveled(with: rawLocation)
         
-        //Fire the delegate method
+        // Fire the delegate method
         delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
         
-        //Fire the notification (for now)
+        // Fire the notification (for now)
         NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
             RouteController.NotificationUserInfoKey.routeProgressKey: progress,
-            RouteController.NotificationUserInfoKey.locationKey: location, //guaranteed value
-            RouteController.NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
+            RouteController.NotificationUserInfoKey.locationKey: location, // guaranteed value
+            RouteController.NotificationUserInfoKey.rawLocationKey: rawLocation // raw
         ])
     }
         
@@ -321,7 +321,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 1 && remainingVoiceInstructions.count <= 1 && currentDestination != previousArrivalWaypoint {
-            //Have we actually arrived? Last instruction is "You have arrived"
+            // Have we actually arrived? Last instruction is "You have arrived"
             if remainingVoiceInstructions.count == 0, legProgress.durationRemaining <= waypointArrivalThreshold {
                 previousArrivalWaypoint = currentDestination
                 legProgress.userHasArrivedAtWaypoint = true
@@ -331,7 +331,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else { return }
                 advanceLegIndex()
                 updateDistanceToManeuver()
-            } else { //we are approaching the destination
+            } else { // we are approaching the destination
                 delegate?.router(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)
             }
         }
@@ -352,12 +352,12 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         delegate?.router(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            RouteController.NotificationUserInfoKey.locationKey: location,
+            RouteController.NotificationUserInfoKey.locationKey: location
         ])
 
         self.lastRerouteLocation = location
 
-        getDirections(from: location, along: progress) { [weak self] (session, result) in
+        getDirections(from: location, along: progress) { [weak self] (_, result) in
             guard let strongSelf = self else {
                 return
             }
@@ -367,7 +367,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             case let .failure(error):
                 strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
                  NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                     RouteController.NotificationUserInfoKey.routingErrorKey: error,
+                     RouteController.NotificationUserInfoKey.routingErrorKey: error
                  ])
                  return
             case let .success(response):
@@ -384,11 +384,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     private func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
-        guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
+        guard NSClassFromString("XCTestCase") == nil else { return } // Short-circuit when running unit tests
         guard let version = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
             _ = URLSession.shared.dataTask(with: URL(string: "https://docs.mapbox.com/ios/navigation/latest_version.txt")!, completionHandler: { (data, response, error) in
-                if let _ = error { return }
+                guard error == nil else { return }
                 guard let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 else { return }
 
                 guard let data = data, let currentVersion = String(data: data, encoding: .utf8)?.trimmingCharacters(in: .newlines) else { return }
@@ -402,7 +402,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
 
     private func checkForLocationUsageDescription() {
-        guard let _ = Bundle.main.bundleIdentifier else {
+        guard Bundle.main.bundleIdentifier != nil else {
             return
         }
         if Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
@@ -488,7 +488,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 delegate?.router(self, didPassSpokenInstructionPoint: spokenInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassSpokenInstructionPoint, object: self, userInfo: [
                     RouteController.NotificationUserInfoKey.routeProgressKey: routeProgress,
-                    RouteController.NotificationUserInfoKey.spokenInstructionKey: spokenInstruction,
+                    RouteController.NotificationUserInfoKey.spokenInstructionKey: spokenInstruction
                 ])
 
                 routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex += 1
@@ -507,7 +507,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 delegate?.router(self, didPassVisualInstructionPoint: visualInstruction, routeProgress: routeProgress)
                 NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: [
                     RouteController.NotificationUserInfoKey.routeProgressKey: routeProgress,
-                    RouteController.NotificationUserInfoKey.visualInstructionKey: visualInstruction,
+                    RouteController.NotificationUserInfoKey.visualInstructionKey: visualInstruction
                 ])
                 currentStepProgress.visualInstructionIndex += 1
                 return
