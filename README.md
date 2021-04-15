@@ -47,8 +47,8 @@ To install Mapbox Navigation using [CocoaPods](https://cocoapods.org/):
    # Latest stable release
    pod 'MapboxNavigation', '~> 1.4'
    # Latest prerelease
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.3'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.3'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.5'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.5'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
