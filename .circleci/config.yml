@@ -302,7 +302,7 @@ workflows:
           name: "Xcode_11.4.1_iOS_12.2"
           xcode: "11.4.1"
           iOS: "12.2"
-          codecoverage: true
+          codecoverage: false
       - build-job:
           name: "Xcode_11.4.1_iOS_10.3.1"
           xcode: "11.4.1"
