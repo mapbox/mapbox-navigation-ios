@@ -83,7 +83,7 @@ extension Bundle {
     /**
      Returns the value associated with the specific key in the Mapbox Navigation bundle's  information property list, if installed.
      */
-    public class func object(forMapboxNavigationInfoDictionaryKey key: String) -> String? {
+    public class func string(forMapboxNavigationInfoDictionaryKey key: String) -> String? {
         if let stringForKey = Bundle.mapboxNavigationIfInstalled?.object(forInfoDictionaryKey: key) {
             return stringForKey as? String
         } else if let infoDictionary = Bundle.mapboxNavigationInfoDictionary {
@@ -96,7 +96,7 @@ extension Bundle {
     /**
      Returns the value associated with the specific key in the Mapbox Core Navigation bundle's  information property list.
      */
-    public class func object(forMapboxCoreNavigationInfoDictionaryKey key: String) -> String? {
+    public class func string(forMapboxCoreNavigationInfoDictionaryKey key: String) -> String? {
         if let stringForKey = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: key) {
             return stringForKey as? String
         } else if let infoDictionary = Bundle.mapboxCoreNavigationInfoDictionary {

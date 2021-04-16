@@ -96,7 +96,7 @@ struct NavigationEventDetails: EventDetails {
     let startTimestamp: Date?
     let sdkIdentifier: String
     var sdkVersion: String {
-        guard let stringForShortVersion = Bundle.object(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
+        guard let stringForShortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
             preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
         return stringForShortVersion
