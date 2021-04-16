@@ -40,7 +40,8 @@ let package = Package(
                 "MapboxMobileEvents",
                 "MapboxNavigationNative",
             ],
-            exclude: ["Info.plist"]),
+            exclude: ["Info.plist"],
+            resources: [.copy("MBXInfo.plist")]),
         .target(name: "CMapboxCoreNavigation"),
         .target(
             name: "MapboxNavigation",
@@ -52,17 +53,25 @@ let package = Package(
                 "MapboxSpeech",
                 "Solar",
             ],
-            exclude: ["Info.plist"]),
-        .testTarget(
-            name: "MapboxCoreNavigationTests",
+            exclude: ["Info.plist"],
+            resources: [.copy("MBXInfo.plist")]),
+        .target(
+            name: "CTestHelper",
+            dependencies: ["MapboxMobileEvents"]),
+        .target(
+            name: "TestHelper",
             dependencies: [
-                "MapboxCoreNavigation",
+                "CTestHelper",
                 "Quick",
                 "Nimble",
+                "MapboxCoreNavigation",
+                "MapboxNavigation",
             ],
             exclude: ["Info.plist"],
-            resources: [
-                .process("Fixtures"),
-            ]),
+            resources: [.process("Fixtures")]),
+        .testTarget(
+            name: "MapboxCoreNavigationTests",
+            dependencies: ["TestHelper"],
+            exclude: ["Info.plist"]),
     ]
 )

@@ -36,6 +36,16 @@ cd Tests/CocoaPodsTest/PodInstall/
 pod update
 cd -
 
+cd Sources/MapboxCoreNavigation/
+cp Info.plist MBXInfo.plist
+plutil -replace CFBundleName -string 'MapboxCoreNavigation' MBXInfo.plist
+cd -
+
+cd Sources/MapboxNavigation/
+cp Info.plist MBXInfo.plist
+plutil -replace CFBundleName -string 'MapboxNavigation' MBXInfo.plist
+cd -
+
 step "Updating changelog to version ${SHORT_VERSION}…"
 
 sed -i '' -E "s/## *main/## ${SHORT_VERSION}/g" CHANGELOG.md

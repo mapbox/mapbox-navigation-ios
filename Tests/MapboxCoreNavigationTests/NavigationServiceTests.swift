@@ -3,7 +3,6 @@ import MapboxDirections
 import Turf
 import MapboxMobileEvents
 import os.log
-#if !SWIFT_PACKAGE
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -62,7 +61,7 @@ class NavigationServiceTests: XCTestCase {
     func testDefaultUserInterfaceUsage() {
         XCTAssertTrue(!dependencies.navigationService.eventsManager.usesDefaultUserInterface, "MapboxCoreNavigationTests shouldn't have an implicit dependency on MapboxNavigation due to removing the Example application target as the test host.")
     }
-
+    
     func testUserIsOnRoute() {
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
@@ -632,4 +631,3 @@ class NavigationServiceTests: XCTestCase {
 }
 
 class EmptyNavigationServiceDelegate: NavigationServiceDelegate {}
-#endif
