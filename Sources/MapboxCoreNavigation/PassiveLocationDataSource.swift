@@ -96,7 +96,7 @@ open class PassiveLocationDataSource: NSObject {
 
     private func didUpdate(locations: [CLLocation]) {
         for location in locations {
-            _ = try? navigator.updateLocation(for: FixLocation(location))
+            navigator.updateLocation(for: FixLocation(location))
         }
 
         guard let lastRawLocation = locations.last else {
@@ -149,15 +149,15 @@ open class PassiveLocationDataSource: NSObject {
     }
     
     public func enableLocationRecording() {
-        try! Navigator.shared.enableHistoryRecorder()
+        Navigator.shared.enableHistoryRecorder()
     }
     
     public func disableLocationRecording() {
-        try! Navigator.shared.disableHistoryRecorder()
+        Navigator.shared.disableHistoryRecorder()
     }
     
     public func locationHistory() throws -> Data {
-        return try Navigator.shared.history()
+        return Navigator.shared.history()
     }
 }
 

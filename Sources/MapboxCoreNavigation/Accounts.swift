@@ -18,7 +18,7 @@ public class Accounts: NSObject {
         
         switch NavigationBillingMethod(rawValue: billingMethodValue ?? NavigationBillingMethod.user.rawValue) {
         case .user:
-            return try? TokenGenerator.getSKUToken(for: .navigationMAUS)
+            return TokenGenerator.getSKUToken(for: .navigationMAUS)
         case .request:
             return nil
         case .none:

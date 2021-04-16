@@ -222,16 +222,16 @@ open class RouteController: NSObject {
         let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
                                                           geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat),
                                                           waypoints: waypoints)
-        try! navigator.setRouteForRouteResponse(routeJSONString,
-                                                route: 0,
-                                                leg: UInt32(routeProgress.legIndex),
-                                                options: activeGuidanceOptions)
+        navigator.setRouteForRouteResponse(routeJSONString,
+                                           route: 0,
+                                           leg: UInt32(routeProgress.legIndex),
+                                           options: activeGuidanceOptions)
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        if try! navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
+        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
             updateIndexes(status: navigator.status(at: timestamp), progress: routeProgress)
         }
     }
@@ -245,7 +245,7 @@ open class RouteController: NSObject {
         
         rawLocation = location
         
-        locations.forEach { try! navigator.updateLocation(for: FixLocation($0)) }
+        locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
 
         let status = navigator.status(at: location.timestamp)
         
@@ -385,15 +385,15 @@ open class RouteController: NSObject {
     }
     
     public func enableLocationRecording() {
-        try! Navigator.shared.enableHistoryRecorder()
+        Navigator.shared.enableHistoryRecorder()
     }
     
     public func disableLocationRecording() {
-        try! Navigator.shared.disableHistoryRecorder()
+        Navigator.shared.disableHistoryRecorder()
     }
     
-    public func locationHistory() throws -> Data {
-        return try Navigator.shared.history()
+    public func locationHistory() -> Data {
+        return Navigator.shared.history()
     }
     
     /**

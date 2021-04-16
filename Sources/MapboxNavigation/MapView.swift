@@ -12,19 +12,13 @@ extension MapView {
      Returns a set of source identifiers for tilesets that are or include the Mapbox Incidents source.
      */
     func sourceIdentifiers(_ tileSetIdentifier: String) -> Set<String> {
-        do {
-            return Set(try __map.getStyleSources().compactMap {
-                $0
-            }.filter {
-                $0.type == "vector"
-            }.map {
-                $0.id
-            })
-        } catch {
-            NSLog("Failed to retrieve source identifiers. Error: \(error.localizedDescription).")
-        }
-
-        return []
+        return Set(__map.getStyleSources().compactMap {
+            $0
+        }.filter {
+            $0.type == "vector"
+        }.map {
+            $0.id
+        })
     }
     
     /**
@@ -36,19 +30,15 @@ extension MapView {
     func showsTileSet(withIdentifier tileSetIdentifier: String, layerIdentifier: String) -> Bool {
         let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
         
-        do {
-            for layer in try __map.getStyleLayers() {
-                guard let sourceIdentifier = try __map.getStyleLayerProperty(forLayerId: layer.id, property: "source").value as? String,
-                      let sourceLayerIdentifier = try __map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String else { return false }
+        for layer in __map.getStyleLayers() {
+            guard let sourceIdentifier = __map.getStyleLayerProperty(forLayerId: layer.id, property: "source").value as? String,
+                  let sourceLayerIdentifier = __map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String else { return false }
+            
+            if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
+                let visibility = __map.getStyleLayerProperty(forLayerId: layer.id, property: "visibility").value as? String
                 
-                if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
-                    let visibility = try __map.getStyleLayerProperty(forLayerId: layer.id, property: "visibility").value as? String
-                    
-                    return visibility == "visible"
-                }
+                return visibility == "visible"
             }
-        } catch {
-            NSLog("Error occured while retrieving layers. Error: \(error.localizedDescription).")
         }
         
         return false
@@ -64,19 +54,15 @@ extension MapView {
     func setShowsTileSet(_ isVisible: Bool, withIdentifier tileSetIdentifier: String, layerIdentifier: String) {
         let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
         
-        do {
-            for layer in try __map.getStyleLayers() {
-                guard let sourceIdentifier = try __map.getStyleLayerProperty(forLayerId: layer.id, property: "source").value as? String,
-                      let sourceLayerIdentifier = try __map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String else { return }
-                
-                if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
-                    try __map.setStyleLayerPropertiesForLayerId(layer.id, properties: [
-                        "visibility": isVisible ? "visible" : "none"
-                    ])
-                }
+        for layer in __map.getStyleLayers() {
+            guard let sourceIdentifier = __map.getStyleLayerProperty(forLayerId: layer.id, property: "source").value as? String,
+                  let sourceLayerIdentifier = __map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String else { return }
+            
+            if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
+                __map.setStyleLayerPropertiesForLayerId(layer.id, properties: [
+                    "visibility": isVisible ? "visible" : "none"
+                ])
             }
-        } catch {
-            NSLog("Error occured while retrieving layers. Error: \(error.localizedDescription).")
         }
     }
 
@@ -111,31 +97,25 @@ extension MapView {
      - parameter sourceTypes: List of `MapView` source types (e.g. `vector`).
      */
     func styleSourceDatasets(_ sourceTypes: [String]) -> [String] {
-        do {
-            let sources = try __map.getStyleSources().filter {
-                return sourceTypes.contains($0.type)
-            }
-            
-            var datasets = [String]()
-            for source in sources {
-                let properties = try __map.getStyleSourceProperties(forSourceId: source.id)
-                
-                // Ignore composite (https://docs.mapbox.com/studio-manual/reference/styles/#source-compositing)
-                // and non-mapbox sources.
-                if let contents = properties.value as? [String: AnyObject],
-                   let urlContent = contents["url"] as? String,
-                   let url = URL(string: urlContent),
-                   url.scheme == "mapbox",
-                   let dataset = url.host {
-                    datasets.append(dataset)
-                }
-            }
-            
-            return datasets
-        } catch {
-            NSLog("Failed to retrieve style source datasets. Error: \(error.localizedDescription).")
+        let sources = __map.getStyleSources().filter {
+            return sourceTypes.contains($0.type)
         }
         
-        return []
+        var datasets = [String]()
+        for source in sources {
+            let properties = __map.getStyleSourceProperties(forSourceId: source.id)
+            
+            // Ignore composite (https://docs.mapbox.com/studio-manual/reference/styles/#source-compositing)
+            // and non-mapbox sources.
+            if let contents = properties.value as? [String: AnyObject],
+               let urlContent = contents["url"] as? String,
+               let url = URL(string: urlContent),
+               url.scheme == "mapbox",
+               let dataset = url.host {
+                datasets.append(dataset)
+            }
+        }
+        
+        return datasets
     }
 }

@@ -181,7 +181,7 @@ class RouteMapViewController: UIViewController {
 
         navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
         navigationMapView.mapView.update {
-            $0.ornaments.showsCompass = false
+            $0.ornaments.compassVisiblity = .hidden
         }
 
         navigationMapView.navigationCamera.follow()
@@ -637,7 +637,7 @@ extension RouteMapViewController: NavigationViewDelegate {
                 streetLabelLayer.filter = filter
             }
             
-            let firstLayerIdentifier = try? mapView.__map.getStyleLayers().first?.id
+            let firstLayerIdentifier = mapView.__map.getStyleLayers().first?.id
             mapView.style.addLayer(layer: streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
         }
         
@@ -645,19 +645,21 @@ extension RouteMapViewController: NavigationViewDelegate {
         let position = mapView.point(for: closestCoordinate)
         mapView.visibleFeatures(at: position, styleLayers: Set([roadLabelStyleLayerIdentifier]), completion: { result in
             switch result {
-            case .success(let features):
+            case .success(let queriedFeatures):
                 var smallestLabelDistance = Double.infinity
                 var currentName: String?
                 var currentShieldName: NSAttributedString?
                 let slicedLine = stepShape.sliced(from: closestCoordinate)!
                 
-                for feature in features {
+                for queriedFeature in queriedFeatures {
                     var lineStrings: [LineString] = []
                     
-                    if let line = feature.geometry.value as? LineString {
-                        lineStrings.append(line)
-                    } else if let multiLine = feature.geometry.value as? MultiLineString {
-                        for coordinates in multiLine.coordinates {
+                    if queriedFeature.feature.geometry.geometryType == MBXGeometryType_Line,
+                       let coordinates = queriedFeature.feature.geometry.extractLocationsArray() as? [CLLocationCoordinate2D] {
+                        lineStrings.append(LineString(coordinates))
+                    } else if queriedFeature.feature.geometry.geometryType == MBXGeometryType_MultiLine,
+                              let coordinates = queriedFeature.feature.geometry.extractLocations2DArray() as? [[CLLocationCoordinate2D]] {
+                        for coordinates in coordinates {
                             lineStrings.append(LineString(coordinates))
                         }
                     }
@@ -675,7 +677,7 @@ extension RouteMapViewController: NavigationViewDelegate {
                         if minDistanceBetweenPoints < smallestLabelDistance {
                             smallestLabelDistance = minDistanceBetweenPoints
                             
-                            let roadNameRecord = self.roadFeature(for: feature)
+                            let roadNameRecord = self.roadFeature(for: queriedFeature.feature)
                             currentShieldName = roadNameRecord.shieldName
                             currentName = roadNameRecord.roadName
                         }
@@ -699,18 +701,18 @@ extension RouteMapViewController: NavigationViewDelegate {
         })
     }
 
-    func roadFeature(for line: Feature) -> (roadName: String?, shieldName: NSAttributedString?) {
+    func roadFeature(for line: MBXFeature) -> (roadName: String?, shieldName: NSAttributedString?) {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         
-        if let ref = line.properties?["ref"] as? String,
-           let shield = line.properties?["shield"] as? String,
-           let reflen = line.properties?["reflen"] as? Int {
+        if let ref = line.properties["ref"] as? String,
+           let shield = line.properties["shield"] as? String,
+           let reflen = line.properties["reflen"] as? Int {
             let textColor = roadShieldTextColor(line: line) ?? .black
             let imageName = "\(shield)-\(reflen)"
             currentShieldName = roadShieldAttributedText(for: ref, textColor: textColor, imageName: imageName)
         }
         
-        if let roadName = line.properties?["name"] as? String {
+        if let roadName = line.properties["name"] as? String {
             currentRoadName = roadName
         }
         
@@ -723,13 +725,13 @@ extension RouteMapViewController: NavigationViewDelegate {
         return (roadName: currentRoadName, shieldName: currentShieldName)
     }
     
-    func roadShieldTextColor(line: Feature) -> UIColor? {
-        guard let shield = line.properties?["shield"] as? String else {
+    func roadShieldTextColor(line: MBXFeature) -> UIColor? {
+        guard let shield = line.properties["shield"] as? String else {
             return nil
         }
         
         // shield_text_color is present in Mapbox Streets source v8 but not v7.
-        guard let shieldTextColor = line.properties?["shield_text_color"] as? String else {
+        guard let shieldTextColor = line.properties["shield_text_color"] as? String else {
             let currentShield = HighwayShield.RoadType(rawValue: shield)
             return currentShield?.textColor
         }
@@ -775,17 +777,13 @@ extension RouteMapViewController: NavigationViewDelegate {
      This array contains multiple entries for a composited source. This property is empty for non-Mapbox-hosted tile sets and sources with type other than `vector`.
      */
     func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
-        do {
-            if sourceType == "vector",
-               let properties = try navigationMapView.mapView.__map.getStyleSourceProperties(forSourceId: sourceIdentifier).value as? Dictionary<String, Any>,
-               let url = properties["url"] as? String,
-               let configurationURL = URL(string: url),
-               configurationURL.scheme == "mapbox",
-               let tileSetIdentifiers = configurationURL.host?.components(separatedBy: ",") {
-                return tileSetIdentifiers
-            }
-        } catch {
-            NSLog("Failed to get source properties with error: \(error.localizedDescription).")
+        if sourceType == "vector",
+           let properties = navigationMapView.mapView.__map.getStyleSourceProperties(forSourceId: sourceIdentifier).value as? Dictionary<String, Any>,
+           let url = properties["url"] as? String,
+           let configurationURL = URL(string: url),
+           configurationURL.scheme == "mapbox",
+           let tileSetIdentifiers = configurationURL.host?.components(separatedBy: ",") {
+            return tileSetIdentifiers
         }
         
         return []
@@ -795,12 +793,12 @@ extension RouteMapViewController: NavigationViewDelegate {
      Method, which returns list of source identifiers, which contain streets tile set.
      */
     func streetsSources() -> [StyleObjectInfo] {
-        let streetsSources = (try? navigationMapView.mapView.__map.getStyleSources().compactMap {
+        let streetsSources = (navigationMapView.mapView.__map.getStyleSources().compactMap {
             $0
         }.filter {
             let identifiers = tileSetIdentifiers($0.id, sourceType: $0.type)
             return isMapboxStreets(identifiers)
-        }) ?? []
+        })
         
         return streetsSources
     }

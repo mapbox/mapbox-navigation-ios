@@ -206,14 +206,17 @@ extension NavigationMapView {
                 return
             }
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
-            guard let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled) else { return }
-            let mainRouteCasingLayerGradient = self.routeCasingGradient(newFractionTraveled)
             
-            guard var mainRouteLineLayer = try? self.mapView.style.getLayer(with: mainRouteLayerIdentifier, type: LineLayer.self).get(),
-                  var mainRouteLineCasingLayer = try? self.mapView.style.getLayer(with: mainRouteCasingLayerIdentifier, type: LineLayer.self).get() else { return }
+            if let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled) {
+                self.mapView.style.updateLayer(id: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+                    lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
+                }
+            }
             
-            mainRouteLineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
-            mainRouteLineCasingLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
+            self.mapView.style.updateLayer(id: mainRouteCasingLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+                let mainRouteCasingLayerGradient = self.routeCasingGradient(newFractionTraveled)
+                lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
+            }
         })
     }
     
@@ -319,7 +322,7 @@ extension NavigationMapView {
         var resultGradientStops = [Double: UIColor]()
 
         filteredGradientStops.filter({ $0.0 >= 0.0 }).forEach {
-            resultGradientStops[Double($0.0).round(16)] = $0.1
+            resultGradientStops[Double($0.0)] = $0.1
         }
         
         return resultGradientStops

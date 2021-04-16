@@ -21,16 +21,16 @@ class Navigator {
      */
     static var tilesURL: URL? = nil
     
-    func enableHistoryRecorder() throws {
-        try historyRecorder.enable(forEnabled: true)
+    func enableHistoryRecorder() {
+        historyRecorder.enable(forEnabled: true)
     }
     
-    func disableHistoryRecorder() throws {
-        try historyRecorder.enable(forEnabled: false)
+    func disableHistoryRecorder() {
+        historyRecorder.enable(forEnabled: false)
     }
     
-    func history() throws -> Data {
-        return try historyRecorder.getHistory()
+    func history() -> Data {
+        return historyRecorder.getHistory()
     }
     
     var historyRecorder: HistoryRecorderHandle!
@@ -42,7 +42,7 @@ class Navigator {
     var roadGraph: RoadGraph!
     
     lazy var roadObjectsStore: RoadObjectsStore = {
-        return RoadObjectsStore(try! navigator.roadObjectStore())
+        return RoadObjectsStore(navigator.roadObjectStore())
     }()
     
     /**
@@ -86,29 +86,29 @@ class Navigator {
                                       threadsCount: nil,
                                       endpointConfig: endpointConfig)
         
-        let configFactory = try! ConfigFactory.build(for: settingsProfile,
+        let configFactory = ConfigFactory.build(for: settingsProfile,
                                                      config: NavigatorConfig(),
                                                      customConfig: "")
         
-        historyRecorder = try! HistoryRecorderHandle.build(forHistoryFile: "", config: configFactory)
+        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: "", config: configFactory)
         
-        let runloopExecutor = try! RunLoopExecutorFactory.build()
-        cacheHandle = try! CacheFactory.build(for: tilesConfig,
+        let runloopExecutor = RunLoopExecutorFactory.build()
+        cacheHandle = CacheFactory.build(for: tilesConfig,
                                               config: configFactory,
                                               runLoop: runloopExecutor,
                                               historyRecorder: historyRecorder)
         
-        roadGraph = RoadGraph(try! MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
+        roadGraph = RoadGraph(MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
         
-        navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
+        navigator = MapboxNavigationNative.Navigator(config: configFactory,
                                                           runLoopExecutor: runloopExecutor,
                                                           cache: cacheHandle,
                                                           historyRecorder: historyRecorder)
-        try! navigator.setElectronicHorizonObserverFor(self)
+        navigator.setElectronicHorizonObserverFor(self)
     }
     
     deinit {
-        try! navigator.setElectronicHorizonObserverFor(nil)
+        navigator.setElectronicHorizonObserverFor(nil)
     }
     
     var electronicHorizonOptions: ElectronicHorizonOptions? {
@@ -119,19 +119,17 @@ class Navigator {
             } else {
                 nativeOptions = nil
             }
-            try! navigator.setElectronicHorizonOptionsFor(nativeOptions)
+            navigator.setElectronicHorizonOptionsFor(nativeOptions)
         }
     }
-    
-    var peer: MBXPeerWrapper?
 }
 
 extension Navigator: ElectronicHorizonObserver {
     public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
         let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
-            .positionKey: RoadGraph.Position(try! position.position()),
-            .treeKey: ElectronicHorizon(try! position.tree()),
-            .updatesMostProbablePathKey: try! position.type() == .UPDATE,
+            .positionKey: RoadGraph.Position(position.position()),
+            .treeKey: ElectronicHorizon(position.tree()),
+            .updatesMostProbablePathKey: position.type() == .UPDATE,
             .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init),
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)

@@ -248,10 +248,10 @@ open class NavigationMapView: UIView {
                                       tileStorePath: Bundle.mapboxNavigation.suggestedTileURL?.path,
                                       loadTilePacksFromNetwork: false)
         
-        mapView = MapView(with: frame, resourceOptions: options)
+        mapView = MapView(frame: frame, resourceOptions: options)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.update {
-            $0.ornaments.showsScale = false
+            $0.ornaments.scaleBarVisibility = .hidden
         }
         
         mapView.on(.renderFrameFinished) { [weak self] _ in
@@ -282,11 +282,8 @@ open class NavigationMapView: UIView {
      - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
      */
     public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions) {
-        let mapTileSource = try? TileStoreManager.getTileStore(for: mapView.__map.getResourceOptions())
-        var mapOptions: PredictiveCacheManager.MapOptions?
-        if let tileStore = mapTileSource?.value as? TileStore {
-            mapOptions = PredictiveCacheManager.MapOptions(tileStore, mapView.styleSourceDatasets(["raster", "vector"]))
-        }
+        let mapOptions = PredictiveCacheManager.MapOptions(TileStore.getInstance(),
+                                                           mapView.styleSourceDatasets(["raster", "vector"]))
         
         predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
                                                         mapOptions: mapOptions)
@@ -352,8 +349,8 @@ open class NavigationMapView: UIView {
         // While animating to overview mode, don't animate the puck.
         let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-            guard let point = self?.mapView.screenCoordinate(for: location.coordinate).point else { return }
-            self?.userCourseView.center = point
+            guard let screenCoordinate = self?.mapView.screenCoordinate(for: location.coordinate) else { return }
+            self?.userCourseView.center = CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
         }
         
         userCourseView.update(location: location,
@@ -470,10 +467,9 @@ open class NavigationMapView: UIView {
                 IdentifierString.buildingExtrusionLayer
             ]
             
-            guard let layers = try? mapView.__map.getStyleLayers().reversed() else { return nil }
-            for layer in layers {
+            for layer in mapView.__map.getStyleLayers().reversed() {
                 if !(layer.type == "symbol") && !identifiers.contains(layer.id) {
-                    let sourceLayer = try? mapView.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String
+                    let sourceLayer = mapView.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String
                     
                     if let sourceLayer = sourceLayer,
                        sourceLayer.isEmpty {
@@ -793,8 +789,8 @@ open class NavigationMapView: UIView {
             if let _ = try? mapView.style.getSource(identifier: IdentifierString.arrowSymbolSource, type: GeoJSONSource.self).get() {
                 let geoJSON = Feature.init(geometry: Geometry.point(point))
                 let _ = mapView.style.updateGeoJSON(for: IdentifierString.arrowSymbolSource, with: geoJSON)
-                let _ = try? mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.arrowSymbol, property: "icon-rotate", value: shaftDirection)
-                let _ = try? mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.arrowCasingSymbol, property: "icon-rotate", value: shaftDirection)
+                mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.arrowSymbol, property: "icon-rotate", value: shaftDirection)
+                mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.arrowCasingSymbol, property: "icon-rotate", value: shaftDirection)
             } else {
                 var arrowSymbolLayer = SymbolLayer(id: IdentifierString.arrowSymbol)
                 arrowSymbolLayer.minZoom = Double(minimumZoomLevel)

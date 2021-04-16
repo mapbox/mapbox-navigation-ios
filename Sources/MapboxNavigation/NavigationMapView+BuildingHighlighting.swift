@@ -18,10 +18,7 @@ extension NavigationMapView {
                                    completion: ((_ foundAllBuildings: Bool) -> Void)? = nil) {
         var foundBuildingIds = Set<Int64>()
         let group = DispatchGroup()
-        guard let identifiers = try? mapView.__map.getStyleLayers().compactMap({ $0.id }).filter({ $0.contains("building") }) else {
-            completion?(false)
-            return
-        }
+        let identifiers = mapView.__map.getStyleLayers().compactMap({ $0.id }).filter({ $0.contains("building") })
         
         coordinates.forEach {
             group.enter()
@@ -30,8 +27,8 @@ extension NavigationMapView {
                                     styleLayers: Set(identifiers),
                                     completion: { [weak self] result in
                                         guard let _ = self else { return }
-                                        if case .success(let features) = result {
-                                            if let identifier = features.first?.featureIdentifier {
+                                        if case .success(let queriedFeatures) = result {
+                                            if let identifier = queriedFeatures.first?.feature.identifier as? Int64 {
                                                 foundBuildingIds.insert(identifier)
                                             }
                                             group.leave()
