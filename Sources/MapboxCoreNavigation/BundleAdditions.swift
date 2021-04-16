@@ -92,6 +92,7 @@ extension Bundle {
             return nil
         }
     }
+    
     /**
      Returns the value associated with the specific key in the Mapbox Core Navigation bundle's  information property list.
      */
