@@ -580,13 +580,13 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
         
         // Add Mapbox Streets if the map does not already have it
-        if streetsSources().isEmpty {
+        if mapView.streetsSources().isEmpty {
             var streetsSource = VectorSource()
             streetsSource.url = "mapbox://mapbox.mapbox-streets-v8"
             mapView.style.addSource(source: streetsSource, identifier: "com.mapbox.MapboxStreets")
         }
         
-        guard let mapboxStreetsSource = streetsSources().first else { return }
+        guard let mapboxStreetsSource = mapView.streetsSources().first else { return }
         
         let identifierNamespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
         let roadLabelStyleLayerIdentifier = "\(identifierNamespace).roadLabels"
@@ -597,14 +597,9 @@ extension RouteMapViewController: NavigationViewDelegate {
             streetLabelLayer.source = mapboxStreetsSource.id
             
             var sourceLayerIdentifier: String? {
-                let identifiers = tileSetIdentifiers(mapboxStreetsSource.id, sourceType: mapboxStreetsSource.type)
-                if isMapboxStreets(identifiers) {
-                    let roadLabelLayerIdentifiersByTileSetIdentifier = [
-                        "mapbox.mapbox-streets-v8": "road",
-                        "mapbox.mapbox-streets-v7": "road_label",
-                    ]
-                    
-                    return identifiers.compactMap({ roadLabelLayerIdentifiersByTileSetIdentifier[$0] }).first
+                let identifiers = mapView.tileSetIdentifiers(mapboxStreetsSource.id, sourceType: mapboxStreetsSource.type)
+                if mapView.isMapboxStreets(identifiers) {
+                    return identifiers.compactMap({ VectorSource.roadLabelLayerIdentifiersByTileSetIdentifier[$0] }).first
                 }
                 
                 return nil
@@ -761,49 +756,6 @@ extension RouteMapViewController: NavigationViewDelegate {
     }
     
     // MARK: - Current road feature labeling utility methods
-    
-    /**
-     Method, which returns a boolean value indicating whether the tile source is a supported version of the Mapbox Streets source.
-     */
-    func isMapboxStreets(_ identifiers: [String]) -> Bool {
-        return identifiers.contains("mapbox.mapbox-streets-v8") || identifiers.contains("mapbox.mapbox-streets-v7")
-    }
-    
-    /**
-     Method, which returns identifiers of the tile sets that make up specific source.
-     
-     This array contains multiple entries for a composited source. This property is empty for non-Mapbox-hosted tile sets and sources with type other than `vector`.
-     */
-    func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
-        do {
-            if sourceType == "vector",
-               let properties = try navigationMapView.mapView.__map.getStyleSourceProperties(forSourceId: sourceIdentifier).value as? Dictionary<String, Any>,
-               let url = properties["url"] as? String,
-               let configurationURL = URL(string: url),
-               configurationURL.scheme == "mapbox",
-               let tileSetIdentifiers = configurationURL.host?.components(separatedBy: ",") {
-                return tileSetIdentifiers
-            }
-        } catch {
-            NSLog("Failed to get source properties with error: \(error.localizedDescription).")
-        }
-        
-        return []
-    }
-    
-    /**
-     Method, which returns list of source identifiers, which contain streets tile set.
-     */
-    func streetsSources() -> [StyleObjectInfo] {
-        let streetsSources = (try? navigationMapView.mapView.__map.getStyleSources().compactMap {
-            $0
-        }.filter {
-            let identifiers = tileSetIdentifiers($0.id, sourceType: $0.type)
-            return isMapboxStreets(identifiers)
-        }) ?? []
-        
-        return streetsSources
-    }
 
     func showRouteIfNeeded() {
         guard isViewLoaded && view.window != nil else { return }

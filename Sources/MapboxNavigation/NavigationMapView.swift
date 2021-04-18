@@ -843,8 +843,39 @@ open class NavigationMapView: UIView {
         mapView.style.removeSources(sourceSet)
     }
     
+    /**
+     Attempts to localize road labels into the local language and other labels into the system’s preferred language.
+     
+     This method automatically modifies the `SymbolLayer.Layout.textField` property of any symbol style layer whose source is the <a href="https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#overview">Mapbox Streets source</a>. The user can set the system’s preferred language in Settings, General Settings, Language & Region.
+     
+     This method localizes road labels into the local language, regardless of the system’s preferred language, in an effort to match road signage. The turn banner always displays road names and exit destinations in the local language, so if this `NavigationMapView` stands alone outside a you should call the `BaseMapView.on(_:handler:)` on `mapView`, passing in `MapEvents.EventKind.styleLoaded`, and call this method inside the closure. The map view embedded in `NavigationViewController` is localized automatically, so you do not need to call this method on the value of `NavigationViewController.navigationMapView`.
+     */
     public func localizeLabels() {
-        // TODO: Implement ability to localize road labels.
+        guard !AccountManager.hasChinaBaseURL,
+              let layers = try? mapView.style.styleManager.getStyleLayers() else {
+            return
+        }
+        
+        let streetsSourceIdentifiers: [String] = mapView.streetsSources().map { $0.id }
+        
+        for layerInfo in layers where layerInfo.type == "symbol" {
+            guard var layer = try? mapView.style.getLayer(with: layerInfo.id, type: SymbolLayer.self).get(),
+                  let sourceIdentifier = layer.source,
+                  streetsSourceIdentifiers.contains(sourceIdentifier),
+                  case let .expression(textField) = layer.layout?.textField else {
+                continue
+            }
+            
+            // Road labels should match road signage.
+            let sourceLayerIdentifier = try? mapView.style.styleManager.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String
+            let isLabelLayer = VectorSource.roadLabelLayerIdentifiersByTileSetIdentifier.values.contains(sourceLayerIdentifier ?? "")
+            let locale = isLabelLayer ? Locale(identifier: "mul") : nil
+            
+            let localizedTextField = textField.localized(into: locale)
+            if localizedTextField != textField {
+                layer.layout?.textField = .expression(localizedTextField)
+            }
+        }
     }
     
     public func showVoiceInstructionsOnMap(route: Route) {
