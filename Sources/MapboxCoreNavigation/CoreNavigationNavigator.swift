@@ -21,16 +21,21 @@ class Navigator {
      */
     static var tilesURL: URL? = nil
     
-    func enableHistoryRecorder() {
-        historyRecorder.enable(forEnabled: true)
-    }
+    /**
+     Path to the file where history could be stored when `Navigator.dumpHistory(_:)` is called.
+     */
+    static var historyFilePath: URL? = nil
     
-    func disableHistoryRecorder() {
-        historyRecorder.enable(forEnabled: false)
-    }
-    
-    func history() -> Data {
-        return historyRecorder.getHistory()
+    /**
+     Store history to the file stored in `Navigator.historyFilePath` and asynchronously run a callback
+     when dumping finishes.
+     
+     - parameter completion: A block object to be executed when history dumping ends.
+     */
+    func dumpHistory(_ completion: @escaping (String?) -> Void) {
+        historyRecorder.dumpHistory { (path) in
+            completion(path)
+        }
     }
     
     var historyRecorder: HistoryRecorderHandle!
@@ -86,24 +91,36 @@ class Navigator {
                                       threadsCount: nil,
                                       endpointConfig: endpointConfig)
         
-        let configFactory = ConfigFactory.build(for: settingsProfile,
-                                                     config: NavigatorConfig(),
-                                                     customConfig: "")
+        let historyAutorecordingConfig = [
+            "features": [
+                "historyAutorecording": true
+            ]
+        ]
         
-        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: "", config: configFactory)
+        var customConfig = ""
+        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: historyAutorecordingConfig, options: []),
+           let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
+            customConfig = encodedConfig
+        }
+        
+        let configFactory = ConfigFactory.build(for: settingsProfile,
+                                                config: NavigatorConfig(),
+                                                customConfig: customConfig)
+        
+        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyFilePath?.absoluteString ?? "", config: configFactory)
         
         let runloopExecutor = RunLoopExecutorFactory.build()
         cacheHandle = CacheFactory.build(for: tilesConfig,
-                                              config: configFactory,
-                                              runLoop: runloopExecutor,
-                                              historyRecorder: historyRecorder)
+                                         config: configFactory,
+                                         runLoop: runloopExecutor,
+                                         historyRecorder: historyRecorder)
         
         roadGraph = RoadGraph(MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
         
         navigator = MapboxNavigationNative.Navigator(config: configFactory,
-                                                          runLoopExecutor: runloopExecutor,
-                                                          cache: cacheHandle,
-                                                          historyRecorder: historyRecorder)
+                                                     runLoopExecutor: runloopExecutor,
+                                                     cache: cacheHandle,
+                                                     historyRecorder: historyRecorder)
         navigator.setElectronicHorizonObserverFor(self)
     }
     

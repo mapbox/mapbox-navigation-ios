@@ -384,16 +384,23 @@ open class RouteController: NSObject {
         updateRouteLeg(to: routeProgress.legIndex + 1)
     }
     
-    public func enableLocationRecording() {
-        Navigator.shared.enableHistoryRecorder()
+    /**
+     Path to the file where history could be stored when `PassiveLocationDataSource.dumpHistory(_:)` is called.
+     */
+    public static var historyFilePath: URL? = nil {
+        didSet {
+            Navigator.historyFilePath = historyFilePath
+        }
     }
     
-    public func disableLocationRecording() {
-        Navigator.shared.disableHistoryRecorder()
-    }
-    
-    public func locationHistory() -> Data {
-        return Navigator.shared.history()
+    /**
+     Store history to the file stored in `PassiveLocationDataSource.historyFilePath` and asynchronously run a callback
+     when dumping finishes.
+     
+     - parameter completion: A block object to be executed when history dumping ends.
+     */
+    public static func dumpHistory(_ completion: @escaping (String?) -> Void) {
+        Navigator.shared.dumpHistory(completion)
     }
     
     /**
