@@ -101,7 +101,16 @@ extension NavigationMapView {
         highlightedBuildingsLayer.paint?.fillExtrusionColor = .constant(.init(color: buildingHighlightColor))
         highlightedBuildingsLayer.paint?.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
         highlightedBuildingsLayer.paint?.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
+
+        #if false
+        if let _ = try? mapView.style.getSource(identifier: NavigationMapView.intersectionAnnotations, type: GeoJSONSource.self).get() {
+            mapView.style.addLayer(layer: highlightedBuildingsLayer, layerPosition: LayerPosition(above: nil, below: IdentifierString.intersectionAnnotationsLayer, at: nil))
+        } else {
+            mapView.style.addLayer(layer: highlightedBuildingsLayer)
+        }
+        #else
         mapView.style.addLayer(layer: highlightedBuildingsLayer)
+        #endif
     }
 
 }

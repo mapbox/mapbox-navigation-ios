@@ -128,12 +128,15 @@ class Navigator {
 
 extension Navigator: ElectronicHorizonObserver {
     public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
-        let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
+        var userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
             .positionKey: RoadGraph.Position(try! position.position()),
             .treeKey: ElectronicHorizon(try! position.tree()),
             .updatesMostProbablePathKey: try! position.type() == .UPDATE,
             .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init),
         ]
+        if let roadGraph = roadGraph {
+            userInfo.updateValue(roadGraph, forKey: .roadGraphIdentifierKey)
+        }
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
     }
     
