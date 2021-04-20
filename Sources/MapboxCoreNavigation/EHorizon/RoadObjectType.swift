@@ -64,4 +64,31 @@ public enum RoadObjectType {
             self = .userDefined
         }
     }
+
+    init(_ native: MapboxNavigationNative.RoadObjectMetadata) {
+        switch native.type {
+        case .incident:
+            self = .incident(native.incident != nil ? Incident(native.incident!) : nil)
+        case .tunnelEntrance:
+            self = .tunnelEntrance(native.tunnelInfo != nil ? Tunnel(native.tunnelInfo!) : nil)
+        case .tunnelExit:
+            self = .tunnelExit(native.tunnelInfo != nil ? Tunnel(native.tunnelInfo!) : nil)
+        case .borderCrossing:
+            self = .borderCrossing(native.borderCrossingInfo != nil ? BorderCrossing(native.borderCrossingInfo!) : nil)
+        case .tollCollectionPoint:
+            self = .tollCollection(native.tollCollectionInfo != nil ? TollCollection(native.tollCollectionInfo!) : nil)
+        case .serviceArea:
+            self = .serviceArea(native.serviceAreaInfo != nil ? RestStop(native.serviceAreaInfo!) : nil)
+        case .restrictedAreaEntrance:
+            self = .restrictedAreaEntrance
+        case .restrictedAreaExit:
+            self = .restrictedAreaExit
+        case .bridgeEntrance:
+            self = .bridgeEntrance
+        case .bridgeExit:
+            self = .bridgeExit
+        case .custom:
+            self = .userDefined
+        }
+    }
 }

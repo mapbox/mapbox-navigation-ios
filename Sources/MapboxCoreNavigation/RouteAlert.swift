@@ -7,24 +7,8 @@ import MapboxDirections
  `RouteAlert` encapsulates information about various incoming events. Common attributes like location, distance to the event, length and other is provided for each POI, while specific meta data is supplied via `alert` property.
  */
 public struct RouteAlert {
-    /// Enumeration used for encapsulating additional details to describe specific type of alert
-    public enum Alert {
-        /// Incident alert with details
-        case incident(Incident)
-        /// Tunnel alert with details
-        case tunnel(Tunnel)
-        /// Border alert crossing with details
-        case borderCrossing(BorderCrossing)
-        /// Toll collect alert with details
-        case tollCollection(TollCollection)
-        /// Service area alert with details
-        case serviceArea(RestStop)
-        /// Restricted area alert
-        case restrictedArea
-    }
-    
     /// Alert data with specific info. Contents depend on exact alert type.
-    public let alert: Alert
+    public let alert: RoadObjectType
     
     /// Distance to route alert relative to start of the route, meters.
     public let distance: CLLocationDistance
@@ -69,7 +53,7 @@ public struct RouteAlert {
             guard let tunnelInfo = upcomingAlert.alert.tunnelInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
             }
-            self.alert = .tunnel(Tunnel(tunnelInfo))
+            self.alert = .tunnelEntrance(Tunnel(tunnelInfo))
         case .borderCrossing:
             guard let adminInfo = upcomingAlert.alert.borderCrossingInfo else {
                 preconditionFailure("Alert of type \(upcomingAlert.alert.type) did not contain an info data.")
@@ -86,7 +70,7 @@ public struct RouteAlert {
             }
             self.alert = .serviceArea(RestStop(serviceAreaInfo))
         case .restrictedArea:
-            self.alert = .restrictedArea
+            self.alert = .restrictedAreaEntrance
         }
     }
 }
