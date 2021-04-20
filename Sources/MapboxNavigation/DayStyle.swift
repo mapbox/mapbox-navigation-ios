@@ -174,7 +174,7 @@ open class DayStyle: Style {
         NavigationMapView.appearance().buildingHighlightColor = .defaultBuildingHighlightColor
         NavigationMapView.appearance().routeDurationAnnotationColor = .routeDurationAnnotationColor
         NavigationMapView.appearance().routeDurationAnnotationSelectedColor = .selectedRouteDurationAnnotationColor
-        NavigationMapView.appearance().routeDurationAnnotationFontName = "DIN Pro Medium"
+        NavigationMapView.appearance().routeDurationAnnotationFontName = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
         NavigationMapView.appearance().routeDurationAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         NavigationMapView.appearance().routeDurationAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         NavigationView.appearance().backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)

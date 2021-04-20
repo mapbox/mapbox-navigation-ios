@@ -107,7 +107,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
     @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
     @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
-    @objc dynamic public var routeDurationAnnotationFontName: String = "DIN Pro Medium"
+    @objc dynamic public var routeDurationAnnotationFontName: [String] = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
 
     var routes: [Route]?
     var routePoints: RoutePoints?
@@ -962,7 +962,7 @@ open class NavigationMapView: UIView {
             guard let annotationCoordinate = coordinate else { return }
 
             // form the appropriate text string for the annotation
-            let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)// + " Extra Long Super Long"
+            let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
 
             // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
             var feature = Feature(Point(annotationCoordinate))
@@ -1039,12 +1039,12 @@ open class NavigationMapView: UIView {
         })
 
         shapeLayer.layout?.textSize = .constant(16)
-        shapeLayer.layout?.iconTextFit = .both
+        shapeLayer.layout?.iconTextFit = .constant(IconTextFit.both)
         shapeLayer.layout?.iconAllowOverlap = .constant(true)
         shapeLayer.layout?.textAllowOverlap = .constant(true)
-        shapeLayer.layout?.textJustify = .left
-        shapeLayer.layout?.symbolZOrder = .auto
-        shapeLayer.layout?.textFont = .constant([self.routeDurationAnnotationFontName])
+        shapeLayer.layout?.textJustify = .constant(TextJustify.left)
+        shapeLayer.layout?.symbolZOrder = .constant(SymbolZOrder.auto)
+        shapeLayer.layout?.textFont = .constant(self.routeDurationAnnotationFontName)
 
         style.addLayer(layer: shapeLayer, layerPosition: nil)
 
