@@ -3,8 +3,8 @@ import MapboxNavigationNative
 import MapboxDirections
 
 extension Incident {
-    init?(_ incidentInfo: IncidentInfo) {
-        var incidentType: Incident.Kind!
+    init(_ incidentInfo: IncidentInfo) {
+        let incidentType: Incident.Kind
         switch incidentInfo.type {
         case .accident:
             incidentType = .accident
@@ -30,10 +30,6 @@ extension Incident {
             incidentType = .roadHazard
         case .weather:
             incidentType = .weather
-        }
-        
-        guard incidentType != nil else {
-            return nil
         }
         
         self.init(identifier: incidentInfo.id,
