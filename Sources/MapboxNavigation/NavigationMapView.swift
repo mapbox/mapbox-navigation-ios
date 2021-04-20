@@ -79,6 +79,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var intersectionAnnotationSelectedBackgroundColor: UIColor = .intersectionAnnotationSelectedBackgroundColor
     @objc dynamic public var intersectionAnnotationDefaultLabelColor: UIColor = .intersectionAnnotationDefaultLabelColor
     @objc dynamic public var intersectionAnnotationSelectedLabelColor: UIColor = .intersectionAnnotationSelectedLabelColor
+    @objc dynamic public var intersectionAnnotationFontNames: [String] = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
 
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
@@ -1833,7 +1834,7 @@ open class NavigationMapView: UIView {
         shapeLayer.layout?.textAllowOverlap = .constant(true)
         shapeLayer.layout?.textJustify = .constant(.center)
         shapeLayer.layout?.symbolZOrder = .constant(.auto)
-        shapeLayer.layout?.textFont = .constant(["DIN Pro Medium"])
+        shapeLayer.layout?.textFont = .constant(self.intersectionAnnotationFontNames)
         shapeLayer.layout?.iconTextFitPadding = .constant([-4, 0, -3, 0])
 
         style.addLayer(layer: shapeLayer, layerPosition: nil)

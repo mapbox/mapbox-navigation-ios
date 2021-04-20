@@ -184,6 +184,7 @@ open class DayStyle: Style {
         NavigationMapView.appearance().routeDurationAnnotationFontNames = UIFont.defaultNavigationSymbolLayerFontNames
         NavigationMapView.appearance().routeDurationAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         NavigationMapView.appearance().routeDurationAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        NavigationMapView.appearance().intersectionAnnotationFontNames = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
         NavigationView.appearance().backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)
         NextBannerView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         NextBannerView.appearance(whenContainedInInstancesOf:[InstructionsCardContainerView.self]).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
