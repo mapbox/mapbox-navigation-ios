@@ -117,6 +117,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var intersectionAnnotationSelectedBackgroundColor: UIColor = .intersectionAnnotationSelectedBackgroundColor
     @objc dynamic public var intersectionAnnotationDefaultLabelColor: UIColor = .intersectionAnnotationDefaultLabelColor
     @objc dynamic public var intersectionAnnotationSelectedLabelColor: UIColor = .intersectionAnnotationSelectedLabelColor
+    @objc dynamic public var intersectionAnnotationFontNames: [String] = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
     
     /**
      A pending user location coordinate, which is used to calculate the bottleneck distance for
@@ -2260,7 +2261,7 @@ open class NavigationMapView: UIView {
         shapeLayer.textAllowOverlap = .constant(true)
         shapeLayer.textJustify = .constant(.center)
         shapeLayer.symbolZOrder = .constant(.auto)
-        shapeLayer.textFont = .constant(["DIN Pro Medium"])
+        shapeLayer.textFont = .constant(self.intersectionAnnotationFontNames)
         shapeLayer.iconTextFitPadding = .constant([-4, 0, -3, 0])
         shapeLayer.symbolSortKey = .expression(Exp(.get) { "sortOrder" })
         
