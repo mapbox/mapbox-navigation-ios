@@ -3,8 +3,65 @@ import UIKit
 import Turf
 import MapboxMaps
 
+/// :nodoc:
+@objc(MBWayNameLabel)
+open class WayNameLabel: StylableLabel {}
 
-extension WayNameView {
+/// :nodoc:
+@objc(MBWayNameView)
+open class WayNameView: UIView {
+    private static let textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
+    
+    lazy var label: WayNameLabel = .forAutoLayout()
+    
+    var text: String? {
+        get {
+            return label.text
+        }
+        set {
+            label.text = newValue
+        }
+    }
+    
+    var attributedText: NSAttributedString? {
+        get {
+            return label.attributedText
+        }
+        set {
+            label.attributedText = newValue
+        }
+    }
+    
+    @objc dynamic public var borderColor: UIColor? {
+        get {
+            guard let color = layer.borderColor else { return nil }
+            return UIColor(cgColor: color)
+        }
+        set {
+            layer.borderColor = newValue?.cgColor
+        }
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    func commonInit() {
+        addSubview(label)
+        layoutMargins = WayNameView.textInsets
+        label.pinInSuperview(respectingMargins: true)
+    }
+    
+    open override func layoutSubviews() {
+        super.layoutSubviews()
+        layer.cornerRadius = bounds.midY
+    }
     
     /// Attempts to fill contents with road name and shield icon.
     ///

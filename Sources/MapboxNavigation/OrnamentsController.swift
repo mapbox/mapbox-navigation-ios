@@ -12,6 +12,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     // MARK: - Properties
     
     weak var navigationViewData: NavigationViewData!
+    weak var eventsManager: NavigationEventsManager!
     
     fileprivate var navigationView: NavigationView! {
         return navigationViewData.navigationView
@@ -59,8 +60,9 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     
     // MARK: - Lifecycle
     
-    init(_ navigationViewData: NavigationViewData) {
+    init(_ navigationViewData: NavigationViewData, eventsManager: NavigationEventsManager) {
         self.navigationViewData = navigationViewData
+        self.eventsManager = eventsManager
     }
     
     private func resumeNotifications() {
@@ -90,8 +92,8 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     }
     
     @objc func feedback(_ sender: Any) {
-        guard let parent = navigationViewData.navigationViewController else { return }
-        let feedbackViewController = FeedbackViewController(eventsManager: navigationViewData.navigationService.eventsManager)
+        guard let parent = navigationViewData.containerViewController else { return }
+        let feedbackViewController = FeedbackViewController(eventsManager: eventsManager)
         feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
         parent.present(feedbackViewController, animated: true)
     }
@@ -144,21 +146,21 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         
         bottomContainer.backgroundColor = .clear
         
-        navigationViewData.navigationViewController.view.bringSubviewToFront(navigationViewData.navigationView.topBannerContainerView)
+        navigationViewData.containerViewController.view.bringSubviewToFront(navigationViewData.navigationView.topBannerContainerView)
     }
     
     private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])?) {
-        child.willMove(toParent: navigationViewData.navigationViewController)
-        navigationViewData.navigationViewController.addChild(child)
+        child.willMove(toParent: navigationViewData.containerViewController)
+        navigationViewData.containerViewController.addChild(child)
         container.addSubview(child.view)
-        if let childConstraints: [NSLayoutConstraint] = constraints?(navigationViewData.navigationViewController, child) {
-            navigationViewData.navigationViewController.view.addConstraints(childConstraints)
+        if let childConstraints: [NSLayoutConstraint] = constraints?(navigationViewData.containerViewController, child) {
+            navigationViewData.containerViewController.view.addConstraints(childConstraints)
         }
-        child.didMove(toParent: navigationViewData.navigationViewController)
+        child.didMove(toParent: navigationViewData.containerViewController)
     }
     
     private func labelCurrentRoadFeature(at location: CLLocation) {
-        guard let router = navigationViewData.navigationService.router,
+        guard let router = navigationViewData.router,
               let stepShape = router.routeProgress.currentLegProgress.currentStep.shape,
               !stepShape.coordinates.isEmpty,
               let mapView = navigationMapView.mapView else {

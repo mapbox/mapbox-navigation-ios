@@ -17,7 +17,7 @@ class RouteLineController: NavigationComponent, NavigationComponentDelegate {
     }
     
     fileprivate var router: Router! {
-        navigationViewData.navigationService.router
+        navigationViewData.router
     }
     
     fileprivate var routeLineTracksTraversal: Bool {
@@ -41,8 +41,8 @@ class RouteLineController: NavigationComponent, NavigationComponentDelegate {
     // MARK: - Private methods
     
     private func showRouteIfNeeded() {
-        guard navigationViewData.navigationViewController.isViewLoaded &&
-                navigationViewData.navigationViewController.view.window != nil else { return }
+        guard navigationViewData.containerViewController.isViewLoaded &&
+                navigationViewData.containerViewController.view.window != nil else { return }
         guard !navigationMapView.showsRoute else { return }
         navigationMapView.show([router.route], legIndex: router.routeProgress.legIndex)
         navigationMapView.showWaypoints(on: router.route, legIndex: router.routeProgress.legIndex)

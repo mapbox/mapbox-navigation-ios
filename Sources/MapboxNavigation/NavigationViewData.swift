@@ -2,13 +2,16 @@
 import UIKit
 import MapboxCoreNavigation
 
+/// Protocol used by `NavigationViewController`'s components to get required data and manipulate it's contents.
 protocol NavigationViewData: class {
     var navigationView: NavigationView! { get }
-    var navigationService: NavigationService! { get }
-    var navigationViewController: UIViewController! { get }
+    var router: Router! { get }
+    var containerViewController: UIViewController! { get }
 }
 
-
+/// Protocol for observing basic `ViewController.view` lifecycle events.
+///
+/// Used by `NavigationViewController`'s components to monitor key events.
 protocol NavigationComponentDelegate {
     func navigationViewDidLoad(_: UIView)
     func navigationViewWillAppear(_: Bool)

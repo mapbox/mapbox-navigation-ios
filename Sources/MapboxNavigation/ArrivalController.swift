@@ -7,6 +7,8 @@ import MapboxMobileEvents
 /// A component to encapsulate `EndOfRouteViewController` presenting logic such as enabling/disabling, handling autolayout, keyboard, positioning camera, etc.
 class ArrivalController: NavigationComponentDelegate {
     
+    typealias EndOfRouteDismissHandler = (EndOfRouteFeedback?)->()
+    
     // MARK: - Properties
     
     weak private(set) var navigationViewData: NavigationViewData!
@@ -37,9 +39,9 @@ class ArrivalController: NavigationComponentDelegate {
         self.navigationViewData = navigationViewData
     }
     
-    func showEndOfRouteIfNeeded(_ viewController: UIViewController, advancesToNextLeg: Bool, duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil, onDismiss: (()->())? = nil) {
+    func showEndOfRouteIfNeeded(_ viewController: UIViewController, advancesToNextLeg: Bool, duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil, onDismiss: EndOfRouteDismissHandler? = nil) {
         
-        guard navigationViewData.navigationService.routeProgress.isFinalLeg &&
+        guard navigationViewData.router.routeProgress.isFinalLeg &&
                 advancesToNextLeg &&
                 showsEndOfRoute else {
             return
@@ -77,12 +79,12 @@ class ArrivalController: NavigationComponentDelegate {
     func updatePreferredContentSize(_ size: CGSize) {
         navigationViewData.navigationView.endOfRouteHeightConstraint?.constant = size.height
 
-        UIView.animate(withDuration: 0.3, animations: navigationViewData.navigationViewController.view.layoutIfNeeded)
+        UIView.animate(withDuration: 0.3, animations: navigationViewData.containerViewController.view.layoutIfNeeded)
     }
     
     // MARK: - Private methods
     
-    private func embedEndOfRoute(into viewController: UIViewController, onDismiss: (()->())? = nil) {
+    private func embedEndOfRoute(into viewController: UIViewController, onDismiss: EndOfRouteDismissHandler? = nil) {
         let endOfRoute = endOfRouteViewController
         viewController.addChild(endOfRoute)
         navigationViewData.navigationView.endOfRouteView = endOfRoute.view
@@ -91,9 +93,7 @@ class ArrivalController: NavigationComponentDelegate {
 
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
-            let feedback = EndOfRouteFeedback(rating: rating, comment: comment)
-            self?.navigationViewData.navigationService.endNavigation(feedback: feedback)
-            onDismiss?()
+            onDismiss?(EndOfRouteFeedback(rating: rating, comment: comment))
         }
     }
     

@@ -257,6 +257,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
+    /**
+     The navigation service that coordinates the view controller’s nonvisual components, tracking the user’s location as they proceed along the route.
+     */
+    private(set) public var navigationService: NavigationService! {
+        didSet {
+            arrivalController?.destination = route.legs.last?.destination
+        }
+    }
+    
     private var traversingTunnel = false
     private var approachingDestinationThreshold: CLLocationDistance = 250.0
     private var passedApproachingDestinationThreshold: Bool = false
@@ -276,16 +285,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         return (view as! NavigationView)
     }
     
-    /**
-     The navigation service that coordinates the view controller’s nonvisual components, tracking the user’s location as they proceed along the route.
-     */
-    private(set) public var navigationService: NavigationService! {
-        didSet {
-            arrivalController?.destination = route.legs.last?.destination
-        }
+    var router: Router! {
+        navigationService.router
     }
     
-    var navigationViewController: UIViewController! {
+    var containerViewController: UIViewController! {
         return self
     }
     
@@ -374,7 +378,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         arrivalController = ArrivalController(self)
         routeLineController = RouteLineController(self)
         cameraController = CameraController(self)
-        ornamentsController = OrnamentsController(self)
+        ornamentsController = OrnamentsController(self, eventsManager: navigationService.eventsManager)
         
         viewObservers = [routeLineController!, cameraController!, ornamentsController!, arrivalController!]
         
@@ -704,6 +708,7 @@ extension NavigationViewController: NavigationServiceDelegate {
                                                   advancesToNextLeg: advancesToNextLeg,
                                                   completion: nil,
                                                   onDismiss: { [weak self] in
+                                                    self?.navigationService.endNavigation(feedback: $0)
                                                     self?.handleCancelAction()
                                                   })
         return advancesToNextLeg
