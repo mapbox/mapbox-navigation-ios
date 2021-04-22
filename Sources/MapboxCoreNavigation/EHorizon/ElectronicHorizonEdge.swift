@@ -1,48 +1,47 @@
 import Foundation
 import MapboxNavigationNative
 
-extension ElectronicHorizon {
+/**
+ An electronic horizon is a probable path (or paths) of a vehicle. This structure contains metadata about an edge in a routing graph. For example, an edge may represent a road segment between two intersections or between the two ends of a bridge. An edge may traverse multiple road objects, and a road object may be associated with multiple edges. The road network ahead of the user is represented as a tree of edges. Each intersection has outlet edges. In turn, each edge has a probability of transition to another edge, as well as details about the road segment that the edge traverses. You can use these details to influence application behavior based on predicted upcoming conditions.
+
+ During active turn-by-turn navigation, the user-selected route and its metadata influence the path of the electronic horizon determined by `RouteController`. During passive navigation (free-driving), no route is actively selected, so `PassiveLocationDataSource` will determine the most probable path from the vehicle’s current location. You can receive notifications about changes in the current state of the electronic horizon by observing the `Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, and `Notification.Name.electronicHorizonDidExitRoadObject` notifications.
+
+ Use a `RoadGraph` object to get an edge with a given identifier.
+ */
+public struct ElectronicHorizonEdge {
+    /**
+     Unique identifier of a directed edge.
+
+     Use a `RoadGraph` object to get more information about the edge with a given identifier.
+     */
+    public typealias Identifier = UInt
+
+    /** Unique identifier of the directed edge. */
+    public let identifier: Identifier
 
     /**
-     An edge in a routing graph. For example, an edge may represent a road segment between two intersections or between the two ends of a bridge. An edge may traverse multiple road objects, and a road object may be associated with multiple edges.
-     
-     Use a `RoadGraph` object to get an edge with a given identifier.
+     The level of the edge.
+
+     A value of 0 indicates that the edge is part of the most probable path (MPP), a value of 1 indicates an edge that branches away from the MPP, and so on.
      */
-    public struct Edge {
-        /**
-         Unique identifier of a directed edge.
-         
-         Use a `RoadGraph` object to get more information about the edge with a given identifier.
-         */
-        public typealias Identifier = UInt
+    public let level: UInt
 
-        /** Unique identifier of the directed edge. */
-        public let identifier: Identifier
+    /**
+     The probability that the user will transition onto this edge, with 1 being certain and 0 being unlikely.
+     */
+    public let probability: Double
 
-        /**
-         The level of the edge.
-         
-         A value of 0 indicates that the edge is part of the most probable path (MPP), a value of 1 indicates an edge that branches away from the MPP, and so on.
-         */
-        public let level: UInt
+    /**
+     The edges to which the user could transition from this edge.
 
-        /**
-         The probability that the user will transition onto this edge, with 1 being certain and 0 being unlikely.
-         */
-        public let probability: Double
+     The most probable path may be split at some point if some of edges have a low probability difference (±0.05). For example, `outletEdges` can contain more than one edge with `level` set to 0. Currently, there is a maximum limit of one split per electronic horizon.
+     */
+    public let outletEdges: [ElectronicHorizonEdge]
 
-        /**
-         The edges to which the user could transition from this edge.
-         
-         The most probable path may be split at some point if some of edges have a low probability difference (±0.05). For example, `outletEdges` can contain more than one edge with `level` set to 0. Currently, there is a maximum limit of one split per electronic horizon.
-         */
-        public let outletEdges: [Edge]
-
-        init(_ native: ElectronicHorizonEdge) {
-            self.identifier = UInt(native.id)
-            self.level = UInt(native.level)
-            self.probability = native.probability
-            self.outletEdges = native.out.map(Edge.init)
-        }
+    init(_ native: MapboxNavigationNative.ElectronicHorizonEdge) {
+        self.identifier = UInt(native.id)
+        self.level = UInt(native.level)
+        self.probability = native.probability
+        self.outletEdges = native.out.map(ElectronicHorizonEdge.init)
     }
 }

@@ -7,7 +7,7 @@ extension RoadGraph {
     /** A position along a linear object in the road graph. */
     public struct Path {
         /** The edge identifiers that fully or partially coincide with the linear object. */
-        public let edgeIdentifiers: [ElectronicHorizon.Edge.Identifier]
+        public let edgeIdentifiers: [ElectronicHorizonEdge.Identifier]
 
         /** The distance from the start of an edge to the start of the linear object as a fraction of the edge’s length from 0 to 1. */
         public let fractionFromStart: Double

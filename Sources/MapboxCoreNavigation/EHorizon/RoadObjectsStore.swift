@@ -4,7 +4,7 @@ import MapboxNavigationNative
 /**
  Identifies a road object in an electronic horizon. A road object represents a notable transition point along a road, such as a toll booth or tunnel entrance. A road object is similar to a `RouteAlert` but is more closely associated with the routing graph managed by the `RoadGraph` class.
  
- Use a `RoadObjectsStore` object to get more information about a road object with a given identifier or get the locations of road objects along `ElectronicHorizon.Edge`s.
+ Use a `RoadObjectsStore` object to get more information about a road object with a given identifier or get the locations of road objects along `ElectronicHorizonEdge`s.
  */
 public typealias RoadObjectIdentifier = String
 
@@ -30,8 +30,8 @@ public final class RoadObjectsStore {
      which are lying on the edge with given identifier.
      - parameter edgeIdentifier: The identifier of the edge to query.
      */
-    public func roadObjectEdgeLocations(edgeIdentifier: ElectronicHorizon.Edge.Identifier) -> [RoadObjectIdentifier : RoadObjectEdgeLocation] {
         let objects = native.getForEdgeId(UInt64(edgeIdentifier))
+    public func roadObjectEdgeLocations(edgeIdentifier: ElectronicHorizonEdge.Identifier) -> [RoadObjectIdentifier : RoadObjectEdgeLocation] {
         return objects.mapValues(RoadObjectEdgeLocation.init)
     }
 
@@ -65,7 +65,7 @@ public final class RoadObjectsStore {
      Returns list of road object ids which are (partially) belong to `edgeIds`.
      - parameter edgeIds list of edge ids
      */
-    public func roadObjectIdentifiers(edgeIdentifiers: [ElectronicHorizon.Edge.Identifier]) -> [RoadObjectIdentifier] {
+    public func roadObjectIdentifiers(edgeIdentifiers: [ElectronicHorizonEdge.Identifier]) -> [RoadObjectIdentifier] {
         return native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))
     }
 

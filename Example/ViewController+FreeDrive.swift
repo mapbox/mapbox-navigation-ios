@@ -97,17 +97,17 @@ extension ViewController {
     }
     
     @objc func didUpdateElectronicHorizonPosition(_ notification: Notification) {
-        guard let horizon = notification.userInfo?[ElectronicHorizon.NotificationUserInfoKey.treeKey] as? ElectronicHorizon else {
+        guard let horizon = notification.userInfo?[ElectronicHorizonEdge.NotificationUserInfoKey.treeKey] as? ElectronicHorizonEdge else {
             return
         }
         
         // Avoid repeating edges that have already been printed out.
-        guard currentEdgeIdentifier != horizon.start.identifier ||
-                nextEdgeIdentifier != horizon.start.outletEdges.first?.identifier else {
+        guard currentEdgeIdentifier != horizon.identifier ||
+                nextEdgeIdentifier != horizon.outletEdges.first?.identifier else {
             return
         }
-        currentEdgeIdentifier = horizon.start.identifier
-        nextEdgeIdentifier = horizon.start.outletEdges.first?.identifier
+        currentEdgeIdentifier = horizon.identifier
+        nextEdgeIdentifier = horizon.outletEdges.first?.identifier
         guard let currentEdgeIdentifier = currentEdgeIdentifier,
               let nextEdgeIdentifier = nextEdgeIdentifier else {
             return
@@ -117,15 +117,15 @@ extension ViewController {
         var statusString = "Currently on \(edgeNames(identifier: currentEdgeIdentifier).joined(separator: " / ")), approaching \(edgeNames(identifier: nextEdgeIdentifier).joined(separator: " / "))"
         
         // If there is an upcoming intersection, include the names of the cross streets.
-        let branchEdgeIdentifiers = horizon.start.outletEdges.suffix(from: 1).map({ $0.identifier })
+        let branchEdgeIdentifiers = horizon.outletEdges.suffix(from: 1).map({ $0.identifier })
         if !branchEdgeIdentifiers.isEmpty {
             let branchNames = branchEdgeIdentifiers.flatMap { edgeNames(identifier: $0) }
             statusString += " at \(branchNames.joined(separator: ", "))"
         }
     }
     
-    func edgeNames(identifier: ElectronicHorizon.Edge.Identifier) -> [String] {
-        let passiveLocationDataSource = (navigationMapView.mapView.location.locationProvider as! PassiveLocationManager).dataSource
+    func edgeNames(identifier: ElectronicHorizonEdge.Identifier) -> [String] {
+        let passiveLocationDataSource = (navigationMapView.mapView.locationManager.locationProvider as! PassiveLocationManager).dataSource
         guard let metadata = passiveLocationDataSource.roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
             return []
         }
