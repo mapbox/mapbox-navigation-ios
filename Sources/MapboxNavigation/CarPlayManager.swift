@@ -370,7 +370,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
 extension CarPlayManager {
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
         guard let rootViewController = carPlayMapViewController,
-              let userLocation = rootViewController.navigationMapView.mapView.locationManager.latestLocation else {
+              let userLocation = rootViewController.navigationMapView.mapView.location.latestLocation else {
             completionHandler()
             return
         }
@@ -599,7 +599,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let coordinate = self.coordinate(of: offset, in: navigationMapView)
         let cameraOptions = CameraOptions(center: coordinate)
-        navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions, animated: true)
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
     }
 
     func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
@@ -633,7 +633,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let shiftedDirection = (Double(navigationMapView.mapView.bearing) + relativeDirection).wrap(min: 0, max: 360)
         let shiftedCenterCoordinate = navigationMapView.mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
         let cameraOptions = CameraOptions(center: shiftedCenterCoordinate)
-        navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions, animated: true)
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
     }
 
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {

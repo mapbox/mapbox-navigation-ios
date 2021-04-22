@@ -18,7 +18,7 @@ extension NavigationMapView {
                                    completion: ((_ foundAllBuildings: Bool) -> Void)? = nil) {
         var foundBuildingIds = Set<Int64>()
         let group = DispatchGroup()
-        let identifiers = mapView.__map.getStyleLayers().compactMap({ $0.id }).filter({ $0.contains("building") })
+        let identifiers = mapView.mapboxMap.__map.getStyleLayers().compactMap({ $0.id }).filter({ $0.contains("building") })
         
         coordinates.forEach {
             group.enter()

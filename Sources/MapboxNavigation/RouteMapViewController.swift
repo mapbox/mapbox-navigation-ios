@@ -257,13 +257,13 @@ class RouteMapViewController: UIViewController {
     
     func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {        
         // TODO: Verify that camera is positioned correctly.
-        let camera = CameraOptions(center: step.maneuverLocation,
-                                   zoom: navigationMapView.mapView.zoom,
-                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
+        let cameraOptions = CameraOptions(center: step.maneuverLocation,
+                                          zoom: navigationMapView.mapView.zoom,
+                                          bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
         
-        navigationMapView.mapView.cameraManager.setCamera(to: camera,
-                                                          animated: animated,
-                                                          duration: animated ? 1 : 0) { _ in
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions,
+                                                   animated: animated,
+                                                   duration: animated ? 1 : 0) { _ in
             completion?()
         }
         
@@ -392,18 +392,18 @@ class RouteMapViewController: UIViewController {
         
         if let height = navigationView.endOfRouteHeightConstraint?.constant {
             self.navigationView.floatingStackView.alpha = 0.0
-            let camera = navigationMapView.mapView.camera
+            var cameraOptions = navigationMapView.mapView.cameraOptions
             // Since `padding` is not an animatable property `zoom` is increased to cover up abrupt camera change.
-            if let zoom = camera.zoom {
-                camera.zoom = zoom + 1.0
+            if let zoom = cameraOptions.zoom {
+                cameraOptions.zoom = zoom + 1.0
             }
-            camera.padding = UIEdgeInsets(top: topBannerContainerView.bounds.height,
-                                          left: 20,
-                                          bottom: height + 20,
-                                          right: 20)
-            navigationMapView.mapView.cameraManager.setCamera(to: camera,
-                                                              animated: duration > 0.0 ? true : false,
-                                                              duration: duration) { (animatingPosition) in
+            cameraOptions.padding = UIEdgeInsets(top: topBannerContainerView.bounds.height,
+                                                 left: 20,
+                                                 bottom: height + 20,
+                                                 right: 20)
+            navigationMapView.mapView.camera.setCamera(to: cameraOptions,
+                                                       animated: duration > 0.0 ? true : false,
+                                                       duration: duration) { (animatingPosition) in
                 if animatingPosition == .end {
                     completion?(true)
                 }
@@ -560,7 +560,7 @@ extension RouteMapViewController: NavigationViewDelegate {
         }
         
         // Avoid aggressively opting the developer into Mapbox services if they haven’t provided an access token.
-        guard let _ = AccountManager.shared.accessToken else {
+        guard let _ = CredentialsManager.default.accessToken else {
             navigationView.wayNameView.isHidden = true
             return
         }
@@ -637,7 +637,7 @@ extension RouteMapViewController: NavigationViewDelegate {
                 streetLabelLayer.filter = filter
             }
             
-            let firstLayerIdentifier = mapView.__map.getStyleLayers().first?.id
+            let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id
             mapView.style.addLayer(layer: streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
         }
         
@@ -778,7 +778,7 @@ extension RouteMapViewController: NavigationViewDelegate {
      */
     func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
         if sourceType == "vector",
-           let properties = navigationMapView.mapView.__map.getStyleSourceProperties(forSourceId: sourceIdentifier).value as? Dictionary<String, Any>,
+           let properties = navigationMapView.mapView.mapboxMap.__map.getStyleSourceProperties(forSourceId: sourceIdentifier).value as? Dictionary<String, Any>,
            let url = properties["url"] as? String,
            let configurationURL = URL(string: url),
            configurationURL.scheme == "mapbox",
@@ -793,7 +793,7 @@ extension RouteMapViewController: NavigationViewDelegate {
      Method, which returns list of source identifiers, which contain streets tile set.
      */
     func streetsSources() -> [StyleObjectInfo] {
-        let streetsSources = (navigationMapView.mapView.__map.getStyleSources().compactMap {
+        let streetsSources = (navigationMapView.mapView.mapboxMap.__map.getStyleSources().compactMap {
             $0
         }.filter {
             let identifiers = tileSetIdentifiers($0.id, sourceType: $0.type)

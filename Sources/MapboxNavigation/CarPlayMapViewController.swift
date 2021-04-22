@@ -61,9 +61,7 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.stop()
             
-            let cameraOptions = mapView.camera
-            cameraOptions.zoom = mapView.zoom + 1.0
-            mapView.cameraManager.setCamera(to: cameraOptions)
+            mapView.cameraOptions.zoom = mapView.zoom + 1.0
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -81,9 +79,7 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.stop()
             
-            let cameraOptions = mapView.camera
-            cameraOptions.zoom = mapView.zoom - 1.0
-            mapView.cameraManager.setCamera(to: cameraOptions)
+            mapView.cameraOptions.zoom = mapView.zoom - 1.0
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -158,7 +154,7 @@ public class CarPlayMapViewController: UIViewController {
     func setupPassiveLocationManager() {
         let passiveLocationDataSource = PassiveLocationDataSource()
         let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
-        navigationMapView.mapView.locationManager.overrideLocationProvider(with: passiveLocationManager)
+        navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationManager)
     }
     
     /**
@@ -207,9 +203,9 @@ public class CarPlayMapViewController: UIViewController {
         }
         
         if navigationMapView.navigationCamera.state == .idle {
-            let cameraOptions = navigationMapView.mapView.camera
+            var cameraOptions = navigationMapView.mapView.cameraOptions
             cameraOptions.pitch = 0
-            navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions)
+            navigationMapView.mapView.camera.setCamera(to: cameraOptions)
             
             navigationMapView.fitCamera(to: activeRoute)
         }
@@ -219,7 +215,7 @@ public class CarPlayMapViewController: UIViewController {
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
-        return navigationMapView.mostRecentUserCourseViewLocation ?? navigationMapView.mapView.locationManager.latestLocation?.internalLocation ?? coarseLocationManager.location
+        return navigationMapView.mostRecentUserCourseViewLocation ?? navigationMapView.mapView.location.latestLocation?.internalLocation ?? coarseLocationManager.location
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {

@@ -8,7 +8,7 @@ class CustomViewController: UIViewController {
     
     var destinationAnnotation: PointAnnotation! {
         didSet {
-            navigationMapView.mapView.annotationManager.addAnnotation(destinationAnnotation)
+            navigationMapView.mapView.annotations.addAnnotation(destinationAnnotation)
         }
     }
     
@@ -185,7 +185,7 @@ class CustomViewController: UIViewController {
         
         if let bearing = maneuverStep.initialHeading {
             let cameraOptions = CameraOptions(center: maneuverStep.maneuverLocation, bearing: bearing)
-            navigationMapView.mapView.cameraManager.setCamera(to: cameraOptions, animated: true)
+            navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
         }
         
         // add arrow to map for preview instruction

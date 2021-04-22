@@ -12,7 +12,7 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
     override func setUp() {
         super.setUp()
         
-        AccountManager.shared.accessToken = token
+        CredentialsManager.default.accessToken = token
     }
     
     func testControlFirstRoute() {

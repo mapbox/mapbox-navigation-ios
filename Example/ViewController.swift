@@ -390,7 +390,7 @@ class ViewController: UIViewController {
     
     func requestRoute() {
         guard waypoints.count > 0 else { return }
-        guard let currentLocation = navigationMapView.mapView.locationManager.latestLocation?.internalLocation else {
+        guard let currentLocation = navigationMapView.mapView.location.latestLocation?.internalLocation else {
             print("User location is not valid. Make sure to enable Location Services.")
             return
         }

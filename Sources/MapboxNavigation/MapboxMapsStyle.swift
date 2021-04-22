@@ -13,7 +13,7 @@ extension MapboxMaps.Style {
      */
     public class var navigationDayStyleURL: URL {
         get {
-            if AccountManager.hasChinaBaseURL {
+            if CredentialsManager.hasChinaBaseURL {
                 return mapboxChinaDayStyleURL
             }
             
@@ -26,7 +26,7 @@ extension MapboxMaps.Style {
      */
     public class var navigationNightStyleURL: URL {
         get {
-            if AccountManager.hasChinaBaseURL {
+            if CredentialsManager.hasChinaBaseURL {
                 return mapboxChinaNightStyleURL
             }
             
@@ -44,7 +44,7 @@ extension MapboxMaps.Style {
      We only have one version of Mapbox Navigation Day style in China, so if you switch your endpoint to .cn, it will return the default day style.
      */
     public class func navigationDayStyleURL(version: Int) -> URL {
-        if AccountManager.hasChinaBaseURL {
+        if CredentialsManager.hasChinaBaseURL {
             return mapboxChinaDayStyleURL
         }
         
@@ -61,7 +61,7 @@ extension MapboxMaps.Style {
      We only have one version of Mapbox Navigation Night style in China, so if you switch your endpoint to .cn, it will return the default night style.
      */
     public class func navigationNightStyleURL(version: Int) -> URL {
-        if AccountManager.hasChinaBaseURL {
+        if CredentialsManager.hasChinaBaseURL {
             return mapboxChinaNightStyleURL
         }
         
