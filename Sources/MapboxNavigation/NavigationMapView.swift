@@ -825,7 +825,7 @@ open class NavigationMapView: UIView {
      If the route contains any tolled segments then the callout will specify that as well.
      */
     public func showRouteDurations(along routes: [Route]?) {
-        guard let visibleRoutes = self.routes, visibleRoutes.count > 0 else { return }
+        guard let visibleRoutes = routes, visibleRoutes.count > 0 else { return }
         updateAnnotationSymbolImages()
         updateRouteDurations(along: visibleRoutes)
     }
