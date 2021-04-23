@@ -181,7 +181,7 @@ class RouteMapViewController: UIViewController {
 
         navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
         navigationMapView.mapView.update {
-            $0.ornaments.compassVisiblity = .hidden
+            $0.ornaments.compassVisibility = .hidden
         }
 
         navigationMapView.navigationCamera.follow()

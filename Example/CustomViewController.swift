@@ -46,7 +46,7 @@ class CustomViewController: UIViewController {
         navigationService = MapboxNavigationService(route: userIndexedRoute!.0, routeIndex: userIndexedRoute!.1, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
         
         navigationMapView.mapView.update {
-            $0.ornaments.compassVisiblity = .hidden
+            $0.ornaments.compassVisibility = .hidden
         }
         
         instructionsBannerView.delegate = self
