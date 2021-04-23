@@ -385,7 +385,7 @@ open class RouteController: NSObject {
     }
     
     /**
-     Path to the file where history could be stored when `PassiveLocationDataSource.dumpHistory(_:)` is called.
+     Path to the file where history could be stored when `RouteController.dumpHistory(_:)` is called.
      */
     public static var historyFilePath: URL? = nil {
         didSet {
@@ -394,7 +394,7 @@ open class RouteController: NSObject {
     }
     
     /**
-     Store history to the file stored in `PassiveLocationDataSource.historyFilePath` and asynchronously run a callback
+     Store history to the file stored in `RouteController.historyFilePath` and asynchronously run a callback
      when dumping finishes.
      
      - parameter completion: A block object to be executed when history dumping ends.
