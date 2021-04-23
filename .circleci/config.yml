@@ -154,7 +154,7 @@ jobs:
           condition: << parameters.lint >>
           steps:
             - run: find . -path '*.podspec' -exec perl -pi -e 's/.+\.social_media_url.+//' {} \;
-            - run: bundle exec pod lib lint MapboxCoreNavigation.podspec
+            - run: bundle exec pod lib lint MapboxCoreNavigation.podspec --allow-warnings
       - *save-cache-podmaster
       - *save-cache-cocoapods
       - *save-cache-cocoapods-installation
