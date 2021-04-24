@@ -38,6 +38,7 @@
 * Fixed an issue where `RouteController` or `PassiveLocationDataSource` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationManager.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
+* Added the `RouteController.historyDirectoryURL` property and `RouteController.writeHistory(completionHandler:)` method for recording details about a trip for debugging purposes. ([#2930](https://github.com/mapbox/mapbox-navigation-ios/pull/2930))
 
 ### Camera
 

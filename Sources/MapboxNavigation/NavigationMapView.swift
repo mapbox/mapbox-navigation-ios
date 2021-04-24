@@ -244,9 +244,11 @@ open class NavigationMapView: UIView {
             fatalError("Access token was not set.")
         }
         
-        var tileStore = TileStore.getInstance()
+        let tileStore: TileStore
         if let suggestedTilePath = Bundle.mapboxNavigation.suggestedTileURL?.path {
             tileStore = TileStore.getInstanceForPath(suggestedTilePath)
+        } else {
+            tileStore = TileStore.getInstance()
         }
         let resourceOptions = ResourceOptions(accessToken: accessToken,
                                               tileStore: tileStore,

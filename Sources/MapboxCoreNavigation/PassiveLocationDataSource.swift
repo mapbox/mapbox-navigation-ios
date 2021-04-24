@@ -149,22 +149,29 @@ open class PassiveLocationDataSource: NSObject {
     }
     
     /**
-     Path to the file where history could be stored when `PassiveLocationDataSource.dumpHistory(_:)` is called.
+     Path to the directory where history could be stored when `PassiveLocationDataSource.writeHistory(completionHandler:)` is called.
      */
-    public static var historyFilePath: URL? = nil {
+    public static var historyDirectoryURL: URL? = nil {
         didSet {
-            Navigator.historyFilePath = historyFilePath
+            Navigator.historyDirectoryURL = historyDirectoryURL
         }
     }
     
     /**
-     Store history to the file stored in `PassiveLocationDataSource.historyFilePath` and asynchronously run a callback
-     when dumping finishes.
+     A closure to be called when history writing ends.
      
-     - parameter completion: A block object to be executed when history dumping ends.
+     - parameter historyFileURL: A path to file, where history was written to.
      */
-    public static func dumpHistory(_ completion: @escaping (String?) -> Void) {
-        Navigator.shared.dumpHistory(completion)
+    public typealias WriteHistoryCompletionHandler = (_ historyFileURL: URL?) -> Void
+    
+    /**
+     Store history to the directory stored in `PassiveLocationDataSource.historyDirectoryURL` and asynchronously run a callback
+     when writing finishes.
+     
+     - parameter completion: A block object to be executed when history writing ends.
+     */
+    public static func writeHistory(completionHandler: @escaping WriteHistoryCompletionHandler) {
+        Navigator.shared.writeHistory(completionHandler: completionHandler)
     }
 }
 
