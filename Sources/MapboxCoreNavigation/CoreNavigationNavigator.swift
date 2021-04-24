@@ -22,19 +22,23 @@ class Navigator {
     static var tilesURL: URL? = nil
     
     /**
-     Path to the file where history could be stored when `Navigator.dumpHistory(_:)` is called.
+     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
      */
-    static var historyFilePath: URL? = nil
+    static var historyDirectoryURL: URL? = nil
     
     /**
-     Store history to the file stored in `Navigator.historyFilePath` and asynchronously run a callback
-     when dumping finishes.
+     Store history to the directory stored in `Navigator.historyDirectoryURL` and asynchronously run a callback
+     when writing finishes.
      
-     - parameter completion: A block object to be executed when history dumping ends.
+     - parameter completionHandler: A block object to be executed when history dumping ends.
      */
-    func dumpHistory(_ completion: @escaping (String?) -> Void) {
+    func writeHistory(completionHandler: @escaping (URL?) -> Void) {
         historyRecorder.dumpHistory { (path) in
-            completion(path)
+            if let path = path {
+                completionHandler(URL(fileURLWithPath: path))
+            } else {
+                completionHandler(nil)
+            }
         }
     }
     
@@ -107,7 +111,7 @@ class Navigator {
                                                 config: NavigatorConfig(),
                                                 customConfig: customConfig)
         
-        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyFilePath?.absoluteString ?? "", config: configFactory)
+        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyDirectoryURL?.absoluteString ?? "", config: configFactory)
         
         let runloopExecutor = RunLoopExecutorFactory.build()
         cacheHandle = CacheFactory.build(for: tilesConfig,
