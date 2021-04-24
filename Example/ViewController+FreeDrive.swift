@@ -15,7 +15,7 @@ extension ViewController {
 
         let passiveLocationDataSource = PassiveLocationDataSource()
         let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
-        navigationMapView.mapView.locationManager.overrideLocationProvider(with: passiveLocationManager)
+        navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationManager)
         
         subscribeForFreeDriveNotifications()
     }
@@ -125,7 +125,7 @@ extension ViewController {
     }
     
     func edgeNames(identifier: ElectronicHorizon.Edge.Identifier) -> [String] {
-        let passiveLocationDataSource = (navigationMapView.mapView.locationManager.locationProvider as! PassiveLocationManager).dataSource
+        let passiveLocationDataSource = (navigationMapView.mapView.location.locationProvider as! PassiveLocationManager).dataSource
         guard let metadata = passiveLocationDataSource.roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
             return []
         }

@@ -145,7 +145,7 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         navigationMapView.mapView.update {
-            $0.ornaments.compassVisiblity = .hidden
+            $0.ornaments.compassVisibility = .hidden
             $0.location.puckType = .none
         }
         
@@ -465,8 +465,8 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        if navigationMapView?.mapView.style.styleURL.url != style.mapStyleURL {
-            navigationMapView?.mapView.style.styleURL = StyleURL.custom(url: style.mapStyleURL)
+        if navigationMapView?.mapView.style.uri.rawValue != style.mapStyleURL {
+            navigationMapView?.mapView.style.uri = StyleURI.custom(url: style.mapStyleURL)
         }
     }
     

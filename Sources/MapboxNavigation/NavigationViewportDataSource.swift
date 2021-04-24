@@ -104,7 +104,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     func subscribeForNotifications(_ viewportDataSourceType: ViewportDataSourceType = .passive) {
         switch viewportDataSourceType {
         case .raw:
-            self.mapView?.locationManager.addLocationConsumer(newConsumer: self)
+            self.mapView?.location.addLocationConsumer(newConsumer: self)
         case .passive:
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(progressDidChange(_:)),

@@ -165,7 +165,8 @@ public class NavigationPlotter: UIView {
         coordinateBounds = allBoundingCoordinates.bounds
         
         if let coordinateBounds = coordinateBounds {
-            navigationMapView?.mapView.cameraManager.transitionCoordinateBounds(to: coordinateBounds, edgePadding: padding, completion: nil)
+            // FIXME: As of Mapbox Maps `v10.0.0-beta.17` such method is no longer present.
+            // navigationMapView?.mapView.cameraManager.transitionCoordinateBounds(to: coordinateBounds, edgePadding: padding, completion: nil)
         }
     }
     

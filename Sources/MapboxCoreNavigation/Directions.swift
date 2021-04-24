@@ -47,9 +47,9 @@ extension Directions {
     open func calculateOffline(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
         let directionsUri = url(forCalculating: options)
         
-        let nativeRouter = try! MapboxNavigationNative.Router(cache: Navigator.shared.cacheHandle,
-                                                              historyRecorder: Navigator.shared.historyRecorder)
-        try? nativeRouter.getRouteForDirectionsUri(directionsUri.path) { (result) in
+        let nativeRouter = MapboxNavigationNative.Router(cache: Navigator.shared.cacheHandle,
+                                                         historyRecorder: Navigator.shared.historyRecorder)
+        nativeRouter.getRouteForDirectionsUri(directionsUri.path) { (result) in
             let json = result?.value as? String
             let data = json?.data(using: .utf8)
             let decoder = JSONDecoder()

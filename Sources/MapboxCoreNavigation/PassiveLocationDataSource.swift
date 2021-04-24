@@ -96,7 +96,7 @@ open class PassiveLocationDataSource: NSObject {
 
     private func didUpdate(locations: [CLLocation]) {
         for location in locations {
-            _ = try? navigator.updateLocation(for: FixLocation(location))
+            navigator.updateLocation(for: FixLocation(location))
         }
 
         guard let lastRawLocation = locations.last else {
@@ -148,16 +148,23 @@ open class PassiveLocationDataSource: NSObject {
         NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: userInfo)
     }
     
-    public func enableLocationRecording() {
-        try! Navigator.shared.enableHistoryRecorder()
+    /**
+     Path to the file where history could be stored when `PassiveLocationDataSource.dumpHistory(_:)` is called.
+     */
+    public static var historyFilePath: URL? = nil {
+        didSet {
+            Navigator.historyFilePath = historyFilePath
+        }
     }
     
-    public func disableLocationRecording() {
-        try! Navigator.shared.disableHistoryRecorder()
-    }
-    
-    public func locationHistory() throws -> Data {
-        return try Navigator.shared.history()
+    /**
+     Store history to the file stored in `PassiveLocationDataSource.historyFilePath` and asynchronously run a callback
+     when dumping finishes.
+     
+     - parameter completion: A block object to be executed when history dumping ends.
+     */
+    public static func dumpHistory(_ completion: @escaping (String?) -> Void) {
+        Navigator.shared.dumpHistory(completion)
     }
 }
 

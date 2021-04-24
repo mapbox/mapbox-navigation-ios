@@ -373,10 +373,10 @@ class ViewController: UIViewController {
     }
     
     func toggleDayNightStyle() {
-        if navigationMapView.mapView?.style.styleURL.url == MapboxMaps.Style.navigationNightStyleURL {
-            navigationMapView.mapView?.style.styleURL = StyleURL.custom(url: MapboxMaps.Style.navigationDayStyleURL)
+        if navigationMapView.mapView?.style.uri.rawValue == MapboxMaps.Style.navigationNightStyleURL {
+            navigationMapView.mapView?.style.uri = StyleURI.custom(url: MapboxMaps.Style.navigationDayStyleURL)
         } else {
-            navigationMapView.mapView?.style.styleURL = StyleURL.custom(url: MapboxMaps.Style.navigationNightStyleURL)
+            navigationMapView.mapView?.style.uri = StyleURI.custom(url: MapboxMaps.Style.navigationNightStyleURL)
         }
     }
     
@@ -390,7 +390,7 @@ class ViewController: UIViewController {
     
     func requestRoute() {
         guard waypoints.count > 0 else { return }
-        guard let currentLocation = navigationMapView.mapView.locationManager.latestLocation?.internalLocation else {
+        guard let currentLocation = navigationMapView.mapView.location.latestLocation?.internalLocation else {
             print("User location is not valid. Make sure to enable Location Services.")
             return
         }

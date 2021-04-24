@@ -770,8 +770,8 @@ extension NavigationViewController: StyleManagerDelegate {
     }
     
     private func updateMapStyle(_ style: Style) {
-        if navigationMapView?.mapView.style.styleURL.url != style.mapStyleURL {
-            navigationMapView?.mapView.style.styleURL = StyleURL.custom(url: style.mapStyleURL)
+        if navigationMapView?.mapView.style.uri.rawValue != style.mapStyleURL {
+            navigationMapView?.mapView.style.uri = StyleURI.custom(url: style.mapStyleURL)
         }
         
         currentStatusBarStyle = style.statusBarStyle ?? .default

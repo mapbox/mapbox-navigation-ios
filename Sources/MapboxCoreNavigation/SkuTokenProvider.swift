@@ -3,8 +3,7 @@ import MapboxDirections
 import MapboxNavigationNative
 
 class SkuTokenProvider: SkuTokenSource {
-    var peer: MBXPeerWrapper?
-
+    
     private var directionCredentials: DirectionsCredentials
     
     init(with credentials: DirectionsCredentials) {

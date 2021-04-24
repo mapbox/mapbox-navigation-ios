@@ -21,10 +21,10 @@ extension ViewController: InstructionsCardCollectionDelegate {
         // stop tracking user, and move camera to step location
         navigationMapView.navigationCamera.stop()
         
-        let camera = CameraOptions(center: maneuverStep.maneuverLocation,
-                                   zoom: navigationMapView.mapView.zoom,
-                                   bearing: maneuverStep.initialHeading!)
-        navigationMapView.mapView.cameraManager.setCamera(to: camera, animated: true, duration: 1.0, completion: nil)
+        let cameraOptions = CameraOptions(center: maneuverStep.maneuverLocation,
+                                          zoom: navigationMapView.mapView.zoom,
+                                          bearing: maneuverStep.initialHeading!)
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true, duration: 1.0, completion: nil)
         
         // add arrow to map for preview instruction
         navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
