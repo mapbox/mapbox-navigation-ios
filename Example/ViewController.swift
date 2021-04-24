@@ -150,9 +150,9 @@ class ViewController: UIViewController {
         clearMap.isHidden = true
         longPressHintView.isHidden = false
         
-        navigationMapView.unhighlightBuildings()
-        navigationMapView.removeRoutes()
-        navigationMapView.removeWaypoints()
+        navigationMapView?.unhighlightBuildings()
+        navigationMapView?.removeRoutes()
+        navigationMapView?.removeWaypoints()
         waypoints.removeAll()
     }
     
@@ -184,7 +184,7 @@ class ViewController: UIViewController {
 
         guard activeNavigationViewController == nil else { return }
 
-        present(navigationViewController)
+        presentAndRemoveMapview(navigationViewController)
     }
     
     func beginCarPlayNavigation() {
@@ -241,7 +241,7 @@ class ViewController: UIViewController {
         // Example of building highlighting in 2D.
         navigationViewController.waypointStyle = .building
         
-        present(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startBasicNavigation() {
@@ -262,7 +262,7 @@ class ViewController: UIViewController {
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
         
-        present(navigationViewController)
+        presentAndRemoveMapview(navigationViewController)
     }
     
     func startCustomNavigation() {
@@ -291,7 +291,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
-        present(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startGuidanceCardsNavigation() {
@@ -304,7 +304,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
-        present(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     // MARK: - UIGestureRecognizer methods
@@ -450,12 +450,13 @@ class ViewController: UIViewController {
         return navigationViewController
     }
     
-    func present(_ navigationViewController: NavigationViewController, completion: CompletionHandler? = nil) {
+    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
         
         present(navigationViewController, animated: true) {
             completion?()
+            self.navigationMapView = nil
         }
     }
     
