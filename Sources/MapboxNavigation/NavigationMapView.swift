@@ -1055,7 +1055,7 @@ open class NavigationMapView: UIView {
 
         if let expressionData = symbolSortKeyString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
                                                           property: "symbol-sort-key",
                                                           value: expJSONObject)
         }
@@ -1075,10 +1075,10 @@ open class NavigationMapView: UIView {
 
         if let expressionData = expressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
                                                           property: "icon-anchor",
                                                           value: expJSONObject)
-            try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
                                                           property: "text-anchor",
                                                           value: expJSONObject)
         }
@@ -1098,11 +1098,11 @@ open class NavigationMapView: UIView {
 
         if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
                                                           property: "icon-offset",
                                                           value: expJSONObject)
 
-            try! mapView.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
                                                           property: "text-offset",
                                                           value: expJSONObject)
         }
