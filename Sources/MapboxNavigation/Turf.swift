@@ -4,6 +4,6 @@ import Turf
 
 extension Turf.BoundingBox {
     init(coordinateBounds: MGLCoordinateBounds) {
-        self.init(coordinateBounds.sw, coordinateBounds.ne)
+        self.init(southWest: coordinateBounds.sw, northEast: coordinateBounds.ne)
     }
 }
