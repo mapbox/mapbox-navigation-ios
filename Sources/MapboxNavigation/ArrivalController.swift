@@ -7,7 +7,7 @@ import MapboxMobileEvents
 /// A component to encapsulate `EndOfRouteViewController` presenting logic such as enabling/disabling, handling autolayout, keyboard, positioning camera, etc.
 class ArrivalController: NavigationComponentDelegate {
     
-    typealias EndOfRouteDismissHandler = (EndOfRouteFeedback?)->()
+    typealias EndOfRouteDismissalHandler = (EndOfRouteFeedback?)->()
     
     // MARK: - Properties
     
@@ -39,7 +39,7 @@ class ArrivalController: NavigationComponentDelegate {
         self.navigationViewData = navigationViewData
     }
     
-    func showEndOfRouteIfNeeded(_ viewController: UIViewController, advancesToNextLeg: Bool, duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil, onDismiss: EndOfRouteDismissHandler? = nil) {
+    func showEndOfRouteIfNeeded(_ viewController: UIViewController, advancesToNextLeg: Bool, duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil, onDismiss: EndOfRouteDismissalHandler? = nil) {
         
         guard navigationViewData.router.routeProgress.isFinalLeg &&
                 advancesToNextLeg &&
@@ -84,7 +84,7 @@ class ArrivalController: NavigationComponentDelegate {
     
     // MARK: - Private methods
     
-    private func embedEndOfRoute(into viewController: UIViewController, onDismiss: EndOfRouteDismissHandler? = nil) {
+    private func embedEndOfRoute(into viewController: UIViewController, onDismiss: EndOfRouteDismissalHandler? = nil) {
         let endOfRoute = endOfRouteViewController
         viewController.addChild(endOfRoute)
         navigationViewData.navigationView.endOfRouteView = endOfRoute.view

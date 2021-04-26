@@ -106,7 +106,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
+     Shows End of route Feedback UI when the route controller arrives at the final destination.
+     
+     Defaults to `true.`
      */
     public var showsEndOfRouteFeedback: Bool {
         get {
@@ -171,6 +173,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
     /**
      Controls whether or not the FeedbackViewController shows a second level of detail for feedback items.
+     
+     Defaults to `false`.
      */
     public var detailedFeedbackEnabled: Bool {
         get {
@@ -212,8 +216,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     var navigationComponents: [NavigationComponent] {
         var components: [NavigationComponent] = []
         
-        if let navigationViewHelper = routeLineController {
-            components.append(navigationViewHelper)
+        if let routeOverlayController = routeOverlayController {
+            components.append(routeOverlayController)
         }
         
         if let cameraController = cameraController {
@@ -237,13 +241,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
+     
+     Defaults to `false`.
      */
     public var annotatesSpokenInstructions: Bool {
         get {
-            routeLineController?.annotatesSpokenInstructions ?? false
+            routeOverlayController?.annotatesSpokenInstructions ?? false
         }
         set {
-            routeLineController?.annotatesSpokenInstructions = newValue
+            routeOverlayController?.annotatesSpokenInstructions = newValue
         }
     }
     
@@ -274,8 +280,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     var arrivalController: ArrivalController?
     var cameraController: CameraController?
-    var ornamentsController: OrnamentsController?
-    var routeLineController: RouteLineController?
+    var ornamentsController: NavigationMapView.OrnamentsController?
+    var routeOverlayController: NavigationMapView.RouteOverlayController?
     
     var viewObservers: [NavigationComponentDelegate] = []
     
@@ -376,11 +382,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     func setupControllers(_ navigationOptions: NavigationOptions?) {
         arrivalController = ArrivalController(self)
-        routeLineController = RouteLineController(self)
+        routeOverlayController = NavigationMapView.RouteOverlayController(self)
         cameraController = CameraController(self)
-        ornamentsController = OrnamentsController(self, eventsManager: navigationService.eventsManager)
+        ornamentsController = NavigationMapView.OrnamentsController(self, eventsManager: navigationService.eventsManager)
         
-        viewObservers = [routeLineController!, cameraController!, ornamentsController!, arrivalController!]
+        viewObservers = [routeOverlayController!, cameraController!, ornamentsController!, arrivalController!]
         
         let topBanner = addTopBanner(navigationOptions)
         loadViewIfNeeded() // force view initialization between top and bottom banners to maintain correct init sequence
