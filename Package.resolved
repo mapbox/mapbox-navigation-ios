@@ -41,9 +41,9 @@
         "package": "MapboxMaps",
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
-          "branch": null,
-          "revision": "c2d4ab8bf69b5e57a97982bba0af9d6fccf3e036",
-          "version": "10.0.0-beta.18"
+          "branch": "maxim/short-lived-camera-view-2-rebase",
+          "revision": "696bd4065051bc9a1fbf1b24005b530fcaa31837",
+          "version": null
         }
       },
       {

@@ -2,7 +2,9 @@ import UIKit
 import MapboxMaps
 
 /**
- `UIView`, which is drawn on top of `MapView` and shows `CameraOptions` when `NavigationCamera` is in `.following` mode.
+ `UIView`, which is drawn on top of `MapView` and shows `CameraOptions` when `NavigationCamera` is in
+ `NavigationCameraState.following` state.
+ 
  Such `UIView` is useful for debugging purposes (especially when debugging camera behavior on CarPlay).
  */
 class NavigationCameraDebugView: UIView {

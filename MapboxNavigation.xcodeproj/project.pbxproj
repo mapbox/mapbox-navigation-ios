@@ -196,6 +196,11 @@
 		8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
 		8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0E0A51257AD9C300C2E924 /* NightStyle.swift */; };
 		8A17635B25CC89D800737520 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A17635A25CC89D800737520 /* Expression.swift */; };
+		8A1856752631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1856742631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift */; };
+		8A18568726320B5900F8AE38 /* FollowingCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */; };
+		8A18569926320B8F00F8AE38 /* OverviewCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */; };
+		8A2081CB25E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */; };
+		8A2081CC25E07CED00F9B8A6 /* RouteLineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */; };
 		8A2DFA8626168A300034A87E /* NavigationCameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */; };
 		8A30113C25DDCC8A00CE192A /* NavigationCameraConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */; };
 		8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */; };
@@ -724,6 +729,11 @@
 		8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StyledFeature.swift; path = Example/StyledFeature.swift; sourceTree = "<group>"; };
 		8A0E0A51257AD9C300C2E924 /* NightStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightStyle.swift; sourceTree = "<group>"; };
 		8A17635A25CC89D800737520 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
+		8A1856742631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewportDataSourceOptions.swift; sourceTree = "<group>"; };
+		8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingCameraOptions.swift; sourceTree = "<group>"; };
+		8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewCameraOptions.swift; sourceTree = "<group>"; };
+		8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationMapViewIdentifiers.swift; sourceTree = "<group>"; };
+		8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLineType.swift; sourceTree = "<group>"; };
 		8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraDebugView.swift; sourceTree = "<group>"; };
 		8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraConstants.swift; sourceTree = "<group>"; };
 		8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreNavigationNavigator.swift; sourceTree = "<group>"; };
@@ -1494,7 +1504,10 @@
 				8AD866F225CA1BF10019A638 /* CameraStateTransition.swift */,
 				8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */,
 				8AD866EE25CA1BF00019A638 /* ViewportDataSource.swift */,
+				8A1856742631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift */,
 				8AD866F425CA1BF10019A638 /* NavigationViewportDataSource.swift */,
+				8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */,
+				8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */,
 				8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */,
 				8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */,
 				8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */,
@@ -2503,6 +2516,7 @@
 			files = (
 				351BEBF11E5BCC63006FE110 /* MapView.swift in Sources */,
 				DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */,
+				8A18569926320B8F00F8AE38 /* OverviewCameraOptions.swift in Sources */,
 				2B72EC5E241276D10003B370 /* RouteVoiceController.swift in Sources */,
 				2B72EC602412AA800003B370 /* SystemSpeechSynthesizer.swift in Sources */,
 				8D63A7D0227A580A00520167 /* TopBannerViewController.swift in Sources */,
@@ -2536,12 +2550,14 @@
 				16A509D7202BC0CA0011D788 /* ImageDownload.swift in Sources */,
 				8DB63A3A1FBBCA2200928389 /* RatingControl.swift in Sources */,
 				353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */,
+				8A18568726320B5900F8AE38 /* FollowingCameraOptions.swift in Sources */,
 				8AE9081225FAA53300F37077 /* Collection.swift in Sources */,
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */,
 				AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */,
 				358E31D622562698009B3EC2 /* CarPayCompassView.swift in Sources */,
 				AE47A33322B1F6AE0096458C /* Constants+InstructionsCard.swift in Sources */,
+				8A1856752631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift in Sources */,
 				8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */,
 				35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */,
 				AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */,
