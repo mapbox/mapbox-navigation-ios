@@ -116,7 +116,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         }
         
         // Avoid aggressively opting the developer into Mapbox services if they haven’t provided an access token.
-        guard let _ = AccountManager.shared.accessToken else {
+        guard let _ = CredentialsManager.default.accessToken else {
             navigationView.wayNameView.isHidden = true
             return
         }
@@ -225,7 +225,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
                 streetLabelLayer.filter = filter
             }
             
-            let firstLayerIdentifier = try? mapView.__map.getStyleLayers().first?.id
+            let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id
             mapView.style.addLayer(layer: streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
         }
         
@@ -233,18 +233,24 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         let position = mapView.point(for: closestCoordinate)
         mapView.visibleFeatures(at: position, styleLayers: Set([roadLabelStyleLayerIdentifier]), completion: { result in
             switch result {
-            case .success(let features):
+            case .success(let queriedFeatures):
                 var smallestLabelDistance = Double.infinity
-                var latestFeature: Feature?
+                var latestFeature: MBXFeature?
                 let slicedLine = stepShape.sliced(from: closestCoordinate)!
                 
-                for feature in features {
+                for queriedFeature in queriedFeatures {
                     var lineStrings: [LineString] = []
                     
-                    if let line = feature.geometry.value as? LineString {
-                        lineStrings.append(line)
-                    } else if let multiLine = feature.geometry.value as? MultiLineString {
-                        for coordinates in multiLine.coordinates {
+//                    if let line = feature.geometry.value as? LineString {
+//                        lineStrings.append(line)
+//                    } else if let multiLine = feature.geometry.value as? MultiLineString {
+//                        for coordinates in multiLine.coordinates {
+                    if queriedFeature.feature.geometry.geometryType == MBXGeometryType_Line,
+                       let coordinates = queriedFeature.feature.geometry.extractLocationsArray() as? [CLLocationCoordinate2D] {
+                        lineStrings.append(LineString(coordinates))
+                    } else if queriedFeature.feature.geometry.geometryType == MBXGeometryType_MultiLine,
+                              let coordinates = queriedFeature.feature.geometry.extractLocations2DArray() as? [[CLLocationCoordinate2D]] {
+                        for coordinates in coordinates {
                             lineStrings.append(LineString(coordinates))
                         }
                     }
@@ -262,7 +268,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
                         if minDistanceBetweenPoints < smallestLabelDistance {
                             smallestLabelDistance = minDistanceBetweenPoints
                             
-                            latestFeature = feature
+                            latestFeature = queriedFeature.feature
                         }
                     }
                 }

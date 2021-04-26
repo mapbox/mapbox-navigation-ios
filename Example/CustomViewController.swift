@@ -8,7 +8,7 @@ class CustomViewController: UIViewController {
     
     var destinationAnnotation: PointAnnotation! {
         didSet {
-            navigationMapView.mapView.annotationManager.addAnnotation(destinationAnnotation)
+            navigationMapView.mapView.annotations.addAnnotation(destinationAnnotation)
         }
     }
     
@@ -39,14 +39,14 @@ class CustomViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationMapView.mapView.style.styleURL = .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!)
+        navigationMapView.mapView.style.uri = .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!)
         navigationMapView.userCourseView.isHidden = false
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
         navigationService = MapboxNavigationService(route: userIndexedRoute!.0, routeIndex: userIndexedRoute!.1, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
         
         navigationMapView.mapView.update {
-            $0.ornaments.showsCompass = false
+            $0.ornaments.compassVisibility = .hidden
         }
         
         instructionsBannerView.delegate = self
@@ -182,9 +182,11 @@ class CustomViewController: UIViewController {
         
         // stop tracking user, and move camera to step location
         navigationMapView.navigationCamera.stop()
-        navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: maneuverStep.maneuverLocation,
-                                                          bearing: maneuverStep.initialHeading!,
-                                                          animated: true)
+        
+        if let bearing = maneuverStep.initialHeading {
+            let cameraOptions = CameraOptions(center: maneuverStep.maneuverLocation, bearing: bearing)
+            navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
+        }
         
         // add arrow to map for preview instruction
         navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)

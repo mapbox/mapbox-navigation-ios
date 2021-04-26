@@ -75,13 +75,13 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
         navigationMapView.navigationCamera.stop()
         // TODO: Verify that camera is positioned correctly.
-        let camera = CameraOptions(center: step.maneuverLocation,
-                                   zoom: navigationMapView.mapView.zoom,
-                                   bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
+        let cameraOptions = CameraOptions(center: step.maneuverLocation,
+                                          zoom: navigationMapView.mapView.zoom,
+                                          bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
         
-        navigationMapView.mapView.cameraManager.setCamera(to: camera,
-                                                          animated: animated,
-                                                          duration: animated ? 1 : 0) { _ in
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions,
+                                                   animated: animated,
+                                                   duration: animated ? 1 : 0) { _ in
             completion?()
         }
         
@@ -147,7 +147,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         resumeNotifications()
         
         navigationMapView.mapView.update {
-            $0.ornaments.showsCompass = false
+            $0.ornaments.compassVisibility = .hidden
         }
 
         navigationMapView.navigationCamera.follow()

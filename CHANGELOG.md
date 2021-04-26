@@ -6,7 +6,7 @@
 
 * The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * You can now install MapboxNavigation using Swift Package Manager, but you can no longer install it using Carthage. If you previously installed MapboxNavigation using Carthage, use Swift Package Manager instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* MapboxNavigation now depends on [MapboxMaps v10.0.0-beta.16](https://github.com/mapbox/mapbox-maps-ios/), MapboxNavigationNative v47.0.0, and MapboxCommon v10.0.2. ([#2884](https://github.com/mapbox/mapbox-navigation-ios/pull/2884))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0-beta.18](https://github.com/mapbox/mapbox-maps-ios/), MapboxNavigationNative v48.0.4, and MapboxCommon v11.0.2. ([#2884](https://github.com/mapbox/mapbox-navigation-ios/pull/2930))
 * MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.2 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829), [#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
 * MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Xcode 12.4 or above is now required for building this SDK from source.
@@ -38,6 +38,7 @@
 * Fixed an issue where `RouteController` or `PassiveLocationDataSource` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationManager.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
+* Added the `RouteController.historyDirectoryURL` property and `RouteController.writeHistory(completionHandler:)` method for recording details about a trip for debugging purposes. ([#2930](https://github.com/mapbox/mapbox-navigation-ios/pull/2930))
 
 ### Camera
 

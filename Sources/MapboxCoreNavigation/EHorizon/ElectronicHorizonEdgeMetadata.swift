@@ -72,7 +72,8 @@ extension ElectronicHorizon.Edge {
             mapboxStreetsRoadClass = MapboxStreetsRoadClass(native.frc, isRamp: native.isRamp)
             if let speedLimitValue = native.speedLimit as? Double {
                 // TODO: Convert to miles per hour as locally appropriate.
-                speedLimit = Measurement(value: speedLimitValue, unit: UnitSpeed.metersPerSecond).converted(to: .kilometersPerHour)
+                speedLimit = Measurement(value: speedLimitValue == 0.0 ? .infinity : speedLimitValue,
+                                         unit: UnitSpeed.metersPerSecond).converted(to: .kilometersPerHour)
             } else {
                 speedLimit = nil
             }

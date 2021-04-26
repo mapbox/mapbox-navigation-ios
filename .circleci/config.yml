@@ -154,7 +154,7 @@ jobs:
           condition: << parameters.lint >>
           steps:
             - run: find . -path '*.podspec' -exec perl -pi -e 's/.+\.social_media_url.+//' {} \;
-            - run: bundle exec pod lib lint MapboxCoreNavigation.podspec
+            - run: bundle exec pod lib lint MapboxCoreNavigation.podspec --allow-warnings
       - *save-cache-podmaster
       - *save-cache-cocoapods
       - *save-cache-cocoapods-installation
@@ -255,6 +255,25 @@ jobs:
       - *build-Example
       - *save-cache
 
+  spm-integration-test:
+    parameters:
+      iOS:
+        type: string
+        default: "14.4"
+      xcode:
+        type: string
+        default: "12.4.0"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *add-github-to-known-hosts
+      - run: scripts/build_spm_integration_test.sh << parameters.iOS >>
+
   ios-trigger-metrics:
     parameters:
       xcode:
@@ -281,7 +300,7 @@ workflows:
           iOS: "14.4"
           device: "iPhone 8 Plus"
           spm: true
-          codecoverage: true
+          codecoverage: false
       - pod-job:
           name: "Xcode_12.0_iOS_14.0_CP_install"
           update: false
@@ -294,6 +313,7 @@ workflows:
           iOS: "14.0"
           lint: true
       - xcode-12-examples
+      - spm-integration-test
       - ios-trigger-metrics:
           filters:
             branches:

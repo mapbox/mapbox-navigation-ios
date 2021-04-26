@@ -2,6 +2,7 @@
 import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMaps
 
 /**
  `CarPlayManager` is the main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
@@ -369,7 +370,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
 extension CarPlayManager {
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
         guard let rootViewController = carPlayMapViewController,
-              let userLocation = rootViewController.navigationMapView.mapView.locationManager.latestLocation else {
+              let userLocation = rootViewController.navigationMapView.mapView.location.latestLocation else {
             completionHandler()
             return
         }
@@ -597,7 +598,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
 
         let coordinate = self.coordinate(of: offset, in: navigationMapView)
-        navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: coordinate, animated: true)
+        let cameraOptions = CameraOptions(center: coordinate)
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
     }
 
     func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
@@ -630,7 +632,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         let shiftedDirection = (Double(navigationMapView.mapView.bearing) + relativeDirection).wrap(min: 0, max: 360)
         let shiftedCenterCoordinate = navigationMapView.mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
-        navigationMapView.mapView.cameraManager.setCamera(centerCoordinate: shiftedCenterCoordinate, animated: true)
+        let cameraOptions = CameraOptions(center: shiftedCenterCoordinate)
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
     }
 
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {

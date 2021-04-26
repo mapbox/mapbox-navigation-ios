@@ -21,11 +21,11 @@ let package = Package(
             ])
     ],
     dependencies: [
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .exact("2.0.0-beta.2")),
+        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .exact("2.0.0-beta.3")),
         .package(name: "MapboxGeocoder", url: "https://github.com/mapbox/MapboxGeocoder.swift.git", from: "0.14.0"),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "0.10.8"),
-        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "47.0.0"),
-        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", .exact("10.0.0-beta.16")),
+        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "48.0.0"),
+        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", .exact("10.0.0-beta.18")),
         .package(name: "Solar", url: "https://github.com/ceeK/Solar.git", from: "2.2.0"),
         .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0-alpha.1"),
         .package(name: "Quick", url: "https://github.com/Quick/Quick.git", from: "2.0.0"),
@@ -40,7 +40,8 @@ let package = Package(
                 "MapboxMobileEvents",
                 "MapboxNavigationNative",
             ],
-            exclude: ["Info.plist"]),
+            exclude: ["Info.plist"],
+            resources: [.copy("MBXInfo.plist")]),
         .target(name: "CMapboxCoreNavigation"),
         .target(
             name: "MapboxNavigation",
@@ -52,17 +53,25 @@ let package = Package(
                 "MapboxSpeech",
                 "Solar",
             ],
-            exclude: ["Info.plist"]),
-        .testTarget(
-            name: "MapboxCoreNavigationTests",
+            exclude: ["Info.plist"],
+            resources: [.copy("MBXInfo.plist")]),
+        .target(
+            name: "CTestHelper",
+            dependencies: ["MapboxMobileEvents"]),
+        .target(
+            name: "TestHelper",
             dependencies: [
-                "MapboxCoreNavigation",
+                "CTestHelper",
                 "Quick",
                 "Nimble",
+                "MapboxCoreNavigation",
+                "MapboxNavigation",
             ],
             exclude: ["Info.plist"],
-            resources: [
-                .process("Fixtures"),
-            ]),
+            resources: [.process("Fixtures")]),
+        .testTarget(
+            name: "MapboxCoreNavigationTests",
+            dependencies: ["TestHelper"],
+            exclude: ["Info.plist"]),
     ]
 )

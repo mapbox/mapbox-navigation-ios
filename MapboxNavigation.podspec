@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation"
-  s.version = '2.0.0-beta.4'
+  s.version = '2.0.0-beta.6'
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
-  s.dependency "MapboxMaps", "10.0.0-beta.16"
+  s.dependency "MapboxMaps", "10.0.0-beta.18"
   s.dependency "Solar", "~> 2.1"
   s.dependency "MapboxSpeech-pre", "2.0.0-alpha.1"
   s.dependency "MapboxMobileEvents", "~> 0.10.2" # Always specify a patch release if pre-v1.0

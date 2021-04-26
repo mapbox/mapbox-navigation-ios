@@ -96,7 +96,7 @@ open class PassiveLocationDataSource: NSObject {
 
     private func didUpdate(locations: [CLLocation]) {
         for location in locations {
-            _ = try? navigator.updateLocation(for: FixLocation(location))
+            navigator.updateLocation(for: FixLocation(location))
         }
 
         guard let lastRawLocation = locations.last else {
@@ -148,16 +148,30 @@ open class PassiveLocationDataSource: NSObject {
         NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: userInfo)
     }
     
-    public func enableLocationRecording() {
-        try! Navigator.shared.enableHistoryRecorder()
+    /**
+     Path to the directory where history could be stored when `PassiveLocationDataSource.writeHistory(completionHandler:)` is called.
+     */
+    public static var historyDirectoryURL: URL? = nil {
+        didSet {
+            Navigator.historyDirectoryURL = historyDirectoryURL
+        }
     }
     
-    public func disableLocationRecording() {
-        try! Navigator.shared.disableHistoryRecorder()
-    }
+    /**
+     A closure to be called when history writing ends.
+     
+     - parameter historyFileURL: A path to file, where history was written to.
+     */
+    public typealias WriteHistoryCompletionHandler = (_ historyFileURL: URL?) -> Void
     
-    public func locationHistory() throws -> Data {
-        return try Navigator.shared.history()
+    /**
+     Store history to the directory stored in `PassiveLocationDataSource.historyDirectoryURL` and asynchronously run a callback
+     when writing finishes.
+     
+     - parameter completion: A block object to be executed when history writing ends.
+     */
+    public static func writeHistory(completionHandler: @escaping WriteHistoryCompletionHandler) {
+        Navigator.shared.writeHistory(completionHandler: completionHandler)
     }
 }
 

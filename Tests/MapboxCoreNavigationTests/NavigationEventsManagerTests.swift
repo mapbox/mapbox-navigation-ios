@@ -1,6 +1,5 @@
 import XCTest
 import MapboxMobileEvents
-#if !SWIFT_PACKAGE
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -95,4 +94,3 @@ class NavigationEventsManagerTests: XCTestCase {
         let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
     }
 }
-#endif

@@ -67,19 +67,19 @@ open class WayNameView: UIView {
     ///
     /// This method attempts to extract the road name and shield image as well as styling information and tries to display it. Return result shows if it was a success.
     @discardableResult
-    public func setupWith(roadFeature feature: Feature, using style: MapboxMaps.Style?) -> Bool {
+    public func setupWith(roadFeature feature: MBXFeature, using style: MapboxMaps.Style?) -> Bool {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false
         
-        if let ref = feature.properties?["ref"] as? String,
-           let shield = feature.properties?["shield"] as? String,
-           let reflen = feature.properties?["reflen"] as? Int {
+        if let ref = feature.properties["ref"] as? String,
+           let shield = feature.properties["shield"] as? String,
+           let reflen = feature.properties["reflen"] as? Int {
             let textColor = roadShieldTextColor(line: feature) ?? .black
             let imageName = "\(shield)-\(reflen)"
             currentShieldName = roadShieldAttributedText(for: ref, textColor: textColor, style: style, imageName: imageName)
         }
         
-        if let roadName = feature.properties?["name"] as? String {
+        if let roadName = feature.properties["name"] as? String {
             currentRoadName = roadName
             self.text = roadName
             didSetup = true
@@ -95,13 +95,13 @@ open class WayNameView: UIView {
         return didSetup
     }
     
-    private func roadShieldTextColor(line: Feature) -> UIColor? {
-        guard let shield = line.properties?["shield"] as? String else {
+    private func roadShieldTextColor(line: MBXFeature) -> UIColor? {
+        guard let shield = line.properties["shield"] as? String else {
             return nil
         }
         
         // shield_text_color is present in Mapbox Streets source v8 but not v7.
-        guard let shieldTextColor = line.properties?["shield_text_color"] as? String else {
+        guard let shieldTextColor = line.properties["shield_text_color"] as? String else {
             let currentShield = HighwayShield.RoadType(rawValue: shield)
             return currentShield?.textColor
         }

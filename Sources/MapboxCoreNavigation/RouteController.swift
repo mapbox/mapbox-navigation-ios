@@ -222,16 +222,16 @@ open class RouteController: NSObject {
         let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
                                                           geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat),
                                                           waypoints: waypoints)
-        try! navigator.setRouteForRouteResponse(routeJSONString,
-                                                route: 0,
-                                                leg: UInt32(routeProgress.legIndex),
-                                                options: activeGuidanceOptions)
+        navigator.setRouteForRouteResponse(routeJSONString,
+                                           route: 0,
+                                           leg: UInt32(routeProgress.legIndex),
+                                           options: activeGuidanceOptions)
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        if try! navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
+        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
             updateIndexes(status: navigator.status(at: timestamp), progress: routeProgress)
         }
     }
@@ -245,7 +245,7 @@ open class RouteController: NSObject {
         
         rawLocation = location
         
-        locations.forEach { try! navigator.updateLocation(for: FixLocation($0)) }
+        locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
 
         let status = navigator.status(at: location.timestamp)
         
@@ -384,16 +384,30 @@ open class RouteController: NSObject {
         updateRouteLeg(to: routeProgress.legIndex + 1)
     }
     
-    public func enableLocationRecording() {
-        try! Navigator.shared.enableHistoryRecorder()
+    /**
+     Path to the directory where history could be stored when `RouteController.writeHistory(completionHandler:)` is called.
+     */
+    public static var historyDirectoryURL: URL? = nil {
+        didSet {
+            Navigator.historyDirectoryURL = historyDirectoryURL
+        }
     }
     
-    public func disableLocationRecording() {
-        try! Navigator.shared.disableHistoryRecorder()
-    }
+    /**
+     A closure to be called when history writing ends.
+     
+     - parameter historyFileURL: A path to file, where history was written to.
+     */
+    public typealias WriteHistoryCompletionHandler = (_ historyFileURL: URL?) -> Void
     
-    public func locationHistory() throws -> Data {
-        return try Navigator.shared.history()
+    /**
+     Store history to the directory stored in `RouteController.historyDirectoryURL` and asynchronously run a callback
+     when writing finishes.
+     
+     - parameter completionHandler: A block object to be executed when history writing ends.
+     */
+    public static func writeHistory(completionHandler: @escaping WriteHistoryCompletionHandler) {
+        Navigator.shared.writeHistory(completionHandler: completionHandler)
     }
     
     /**

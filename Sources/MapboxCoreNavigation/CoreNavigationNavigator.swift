@@ -21,16 +21,25 @@ class Navigator {
      */
     static var tilesURL: URL? = nil
     
-    func enableHistoryRecorder() throws {
-        try historyRecorder.enable(forEnabled: true)
-    }
+    /**
+     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
+     */
+    static var historyDirectoryURL: URL? = nil
     
-    func disableHistoryRecorder() throws {
-        try historyRecorder.enable(forEnabled: false)
-    }
-    
-    func history() throws -> Data {
-        return try historyRecorder.getHistory()
+    /**
+     Store history to the directory stored in `Navigator.historyDirectoryURL` and asynchronously run a callback
+     when writing finishes.
+     
+     - parameter completionHandler: A block object to be executed when history dumping ends.
+     */
+    func writeHistory(completionHandler: @escaping (URL?) -> Void) {
+        historyRecorder.dumpHistory { (path) in
+            if let path = path {
+                completionHandler(URL(fileURLWithPath: path))
+            } else {
+                completionHandler(nil)
+            }
+        }
     }
     
     var historyRecorder: HistoryRecorderHandle!
@@ -42,7 +51,7 @@ class Navigator {
     var roadGraph: RoadGraph!
     
     lazy var roadObjectsStore: RoadObjectsStore = {
-        return RoadObjectsStore(try! navigator.roadObjectStore())
+        return RoadObjectsStore(navigator.roadObjectStore())
     }()
     
     /**
@@ -86,29 +95,41 @@ class Navigator {
                                       threadsCount: nil,
                                       endpointConfig: endpointConfig)
         
-        let configFactory = try! ConfigFactory.build(for: settingsProfile,
-                                                     config: NavigatorConfig(),
-                                                     customConfig: "")
+        let historyAutorecordingConfig = [
+            "features": [
+                "historyAutorecording": true
+            ]
+        ]
         
-        historyRecorder = try! HistoryRecorderHandle.build(forHistoryFile: "", config: configFactory)
+        var customConfig = ""
+        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: historyAutorecordingConfig, options: []),
+           let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
+            customConfig = encodedConfig
+        }
         
-        let runloopExecutor = try! RunLoopExecutorFactory.build()
-        cacheHandle = try! CacheFactory.build(for: tilesConfig,
-                                              config: configFactory,
-                                              runLoop: runloopExecutor,
-                                              historyRecorder: historyRecorder)
+        let configFactory = ConfigFactory.build(for: settingsProfile,
+                                                config: NavigatorConfig(),
+                                                customConfig: customConfig)
         
-        roadGraph = RoadGraph(try! MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
+        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyDirectoryURL?.absoluteString ?? "", config: configFactory)
         
-        navigator = try! MapboxNavigationNative.Navigator(config: configFactory,
-                                                          runLoopExecutor: runloopExecutor,
-                                                          cache: cacheHandle,
-                                                          historyRecorder: historyRecorder)
-        try! navigator.setElectronicHorizonObserverFor(self)
+        let runloopExecutor = RunLoopExecutorFactory.build()
+        cacheHandle = CacheFactory.build(for: tilesConfig,
+                                         config: configFactory,
+                                         runLoop: runloopExecutor,
+                                         historyRecorder: historyRecorder)
+        
+        roadGraph = RoadGraph(MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
+        
+        navigator = MapboxNavigationNative.Navigator(config: configFactory,
+                                                     runLoopExecutor: runloopExecutor,
+                                                     cache: cacheHandle,
+                                                     historyRecorder: historyRecorder)
+        navigator.setElectronicHorizonObserverFor(self)
     }
     
     deinit {
-        try! navigator.setElectronicHorizonObserverFor(nil)
+        navigator.setElectronicHorizonObserverFor(nil)
     }
     
     var electronicHorizonOptions: ElectronicHorizonOptions? {
@@ -119,19 +140,17 @@ class Navigator {
             } else {
                 nativeOptions = nil
             }
-            try! navigator.setElectronicHorizonOptionsFor(nativeOptions)
+            navigator.setElectronicHorizonOptionsFor(nativeOptions)
         }
     }
-    
-    var peer: MBXPeerWrapper?
 }
 
 extension Navigator: ElectronicHorizonObserver {
     public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
         let userInfo: [ElectronicHorizon.NotificationUserInfoKey: Any] = [
-            .positionKey: RoadGraph.Position(try! position.position()),
-            .treeKey: ElectronicHorizon(try! position.tree()),
-            .updatesMostProbablePathKey: try! position.type() == .UPDATE,
+            .positionKey: RoadGraph.Position(position.position()),
+            .treeKey: ElectronicHorizon(position.tree()),
+            .updatesMostProbablePathKey: position.type() == .UPDATE,
             .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init),
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)

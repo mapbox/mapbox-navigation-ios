@@ -57,18 +57,18 @@ class ArrivalController: NavigationComponentDelegate {
         
         if let height = navigationViewData.navigationView.endOfRouteHeightConstraint?.constant {
             self.navigationViewData.navigationView.floatingStackView.alpha = 0.0
-            let camera = navigationMapView.mapView.camera
+            var cameraOptions = navigationMapView.mapView.cameraOptions
             // Since `padding` is not an animatable property `zoom` is increased to cover up abrupt camera change.
-            if let zoom = camera.zoom {
-                camera.zoom = zoom + 1.0
+            if let zoom = cameraOptions.zoom {
+                cameraOptions.zoom = zoom + 1.0
             }
-            camera.padding = UIEdgeInsets(top: topBannerContainerView.bounds.height,
-                                          left: 20,
-                                          bottom: height + 20,
-                                          right: 20)
-            navigationMapView.mapView.cameraManager.setCamera(to: camera,
-                                                              animated: duration > 0.0 ? true : false,
-                                                              duration: duration) { (animatingPosition) in
+            cameraOptions.padding = UIEdgeInsets(top: topBannerContainerView.bounds.height,
+                                                 left: 20,
+                                                 bottom: height + 20,
+                                                 right: 20)
+            navigationMapView.mapView.camera.setCamera(to: cameraOptions,
+                                                       animated: duration > 0.0 ? true : false,
+                                                       duration: duration) { (animatingPosition) in
                 if animatingPosition == .end {
                     completion?(true)
                 }

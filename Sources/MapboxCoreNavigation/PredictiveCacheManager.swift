@@ -50,11 +50,11 @@ public class PredictiveCacheManager {
                                                             maxAverageDownloadBytesPerSecond: 0)
         let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(options)
         if let tileStore = tileStore {
-            return try! Navigator.shared.navigator.createPredictiveCacheController(for: tileStore,
-                                                                                   cacheOptions: cacheOptions,
-                                                                                   locationTrackerOptions: predictiveLocationTrackerOptions)
+            return Navigator.shared.navigator.createPredictiveCacheController(for: tileStore,
+                                                                              cacheOptions: cacheOptions,
+                                                                              locationTrackerOptions: predictiveLocationTrackerOptions)
         } else {
-            return try! Navigator.shared.navigator.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
+            return Navigator.shared.navigator.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
         }
     }
 }
