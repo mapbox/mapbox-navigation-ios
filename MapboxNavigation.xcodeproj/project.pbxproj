@@ -198,6 +198,8 @@
 		8A2DFA8626168A300034A87E /* NavigationCameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */; };
 		8A30113C25DDCC8A00CE192A /* NavigationCameraConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */; };
 		8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */; };
+		8A2081CB25E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */; };
+		8A2081CC25E07CED00F9B8A6 /* RouteLineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */; };
 		8A41F5B225BF61AE00BD6FCF /* CarPlayActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */; };
 		8A41F5EC25BF624900BD6FCF /* MapOrnamentPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */; };
 		8A41F63C25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */; };
@@ -724,6 +726,8 @@
 		8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraDebugView.swift; sourceTree = "<group>"; };
 		8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraConstants.swift; sourceTree = "<group>"; };
 		8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreNavigationNavigator.swift; sourceTree = "<group>"; };
+		8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationMapViewIdentifiers.swift; sourceTree = "<group>"; };
+		8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLineType.swift; sourceTree = "<group>"; };
 		8A41F5B125BF61AE00BD6FCF /* CarPlayActivity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayActivity.swift; sourceTree = "<group>"; };
 		8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapOrnamentPosition.swift; sourceTree = "<group>"; };
 		8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+VanishingRouteLine.swift"; sourceTree = "<group>"; };
@@ -1435,6 +1439,8 @@
 		8A0E0A66257ADD3D00C2E924 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */,
+				8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */,
 				8DCB4247218A540A00D6FCAD /* NavigationComponent.swift */,
 				8DDBFCA22205016E0064DEBB /* NavigationCustomizable.swift */,
 				C53208AA1E81FFB900910266 /* NavigationMapView.swift */,
@@ -2585,6 +2591,7 @@
 				8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */,
 				8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
+				8A2081CB25E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift in Sources */,
 				35CF34B11F0A733200C2692E /* UIFont.swift in Sources */,
 				8AD866F925CA1BF10019A638 /* ViewportDataSource.swift in Sources */,
 				4316D95C24340555000DD8F8 /* Match.swift in Sources */,
@@ -2592,6 +2599,7 @@
 				359D283C1F9DC14F00FDE9C9 /* UICollectionView.swift in Sources */,
 				8A17635B25CC89D800737520 /* Expression.swift in Sources */,
 				F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */,
+				8A2081CC25E07CED00F9B8A6 /* RouteLineType.swift in Sources */,
 				2B3ED38C2609FA7900861A84 /* ArrivalController.swift in Sources */,
 				8D24A2F820409A890098CBF8 /* CGSize.swift in Sources */,
 				35CB1E131F97DD740011CC44 /* FeedbackItem.swift in Sources */,
