@@ -9,10 +9,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
 
     public weak var mapView: MapView?
     
-    var animatorCenter: CameraAnimator?
-    var animatorZoom: CameraAnimator?
-    var animatorBearing: CameraAnimator?
-    var animatorPitch: CameraAnimator?
+    var animatorCenter: BasicCameraAnimator?
+    var animatorZoom: BasicCameraAnimator?
+    var animatorBearing: BasicCameraAnimator?
+    var animatorPitch: BasicCameraAnimator?
     
     typealias TransitionParameters = (
         cameraOptions: CameraOptions,
@@ -402,7 +402,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             return
         }
 
-        let animations: [(CameraAnimator, TimeInterval)] = [
+        let animations: [(BasicCameraAnimator, TimeInterval)] = [
             (animatorCenter, transitionParameters.centerAnimationDelay),
             (animatorZoom, transitionParameters.zoomAnimationDelay),
             (animatorBearing, transitionParameters.bearingAnimationDelay),
