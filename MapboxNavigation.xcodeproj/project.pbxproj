@@ -546,7 +546,7 @@
 		2B955B1B25EFDDCB00BBFEC6 /* Directions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
 		2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLegProgress.swift; sourceTree = "<group>"; };
 		2BBEEDA62508E1E300C8DA4A /* RouteStepProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStepProgress.swift; sourceTree = "<group>"; };
-		2BDD652A2614B980005B8B55 /* OrnamentsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = OrnamentsController.swift; path = "/Users/viktorkononov/sources/public/mapbox-navigation-ios/Sources/MapboxNavigation/OrnamentsController.swift"; sourceTree = "<absolute>"; };
+		2BDD652A2614B980005B8B55 /* OrnamentsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrnamentsController.swift; sourceTree = "<group>"; };
 		2BDD653C2614BCA1005B8B55 /* WayNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayNameView.swift; sourceTree = "<group>"; };
 		2BDD65462615B93C005B8B55 /* VectorSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VectorSource.swift; sourceTree = "<group>"; };
 		2BDD65502615C0E0005B8B55 /* RouteLineController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLineController.swift; sourceTree = "<group>"; };
