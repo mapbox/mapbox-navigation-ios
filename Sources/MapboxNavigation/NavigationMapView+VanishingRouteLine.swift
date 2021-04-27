@@ -208,28 +208,16 @@ extension NavigationMapView {
             
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
             
-            DispatchQueue.global().async {
-                let congestionSegments = self.congestionSegments
-                if routeProgress.route != self.routes?.first {
-                    self.congestionSegments = routeProgress.route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
-                }
-                
-                let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
-                                                                    fractionTraveled: newFractionTraveled)
-                DispatchQueue.main.async {
-                    self.mapView.style.updateLayer(id: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
-                        lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
-                    }
-                }
+            let congestionSegments = routeProgress.route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
+            let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
+                                                                fractionTraveled: newFractionTraveled)
+            self.mapView.style.updateLayer(id: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+                lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
             }
             
-            DispatchQueue.global().async {
-                let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
-                DispatchQueue.main.async {
-                    self.mapView.style.updateLayer(id: mainRouteCasingLayerIdentifier, type: LineLayer.self) { (lineLayer) in
-                        lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
-                    }
-                }
+            let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
+            self.mapView.style.updateLayer(id: mainRouteCasingLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+                lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
             }
         })
     }
