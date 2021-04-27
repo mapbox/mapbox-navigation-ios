@@ -228,7 +228,7 @@ extension NavigationMapView {
         
         if let congestionFeatures = congestionFeatures {
             let routeDistance = congestionFeatures.compactMap({ ($0.geometry.value as? LineString)?.distance() }).reduce(0, +)
-            var minimumSegment: (CGFloat, UIColor) = (CGFloat.greatestFiniteMagnitude, .clear)
+            var minimumSegment: (Double, UIColor) = (Double.greatestFiniteMagnitude, .clear)
             
             for (index, feature) in congestionFeatures.enumerated() {
                 let congestionLevel = feature.properties?[CongestionAttribute] as? String
@@ -240,19 +240,21 @@ extension NavigationMapView {
                     distanceTraveled = distanceTraveled + distance
                     
                     let segmentEndPercentTraveled = CGFloat(distanceTraveled / routeDistance)
-                    if Double(segmentEndPercentTraveled.nextDown) >= fractionTraveled {
-                        gradientStops[Double(segmentEndPercentTraveled.nextDown)] = associatedCongestionColor
+                    let currentGradientStop = Double(segmentEndPercentTraveled.nextDown)
+                    if currentGradientStop >= fractionTraveled {
+                        gradientStops[currentGradientStop] = associatedCongestionColor
                         
-                        if segmentEndPercentTraveled.nextDown < minimumSegment.0 {
-                            minimumSegment = (segmentEndPercentTraveled.nextDown, associatedCongestionColor)
+                        if currentGradientStop < minimumSegment.0 {
+                            minimumSegment = (currentGradientStop, associatedCongestionColor)
                         }
                         
                         if index + 1 < congestionFeatures.count {
-                            let color = congestionColor(for: congestionFeatures[index + 1].properties?["congestion"] as? String, isMain: isMain)
-                            gradientStops[Double(segmentEndPercentTraveled.nextUp)] = color
+                            let currentGradientStop = Double(segmentEndPercentTraveled.nextUp)
+                            let currentColor = congestionColor(for: congestionFeatures[index + 1].properties?["congestion"] as? String, isMain: isMain)
+                            gradientStops[currentGradientStop] = currentColor
                             
-                            if segmentEndPercentTraveled.nextUp < minimumSegment.0 {
-                                minimumSegment = (segmentEndPercentTraveled.nextUp, color)
+                            if currentGradientStop < minimumSegment.0 {
+                                minimumSegment = (currentGradientStop, currentColor)
                             }
                         }
                     }
@@ -261,8 +263,8 @@ extension NavigationMapView {
                 }
                 
                 if index == congestionFeatures.endIndex - 1 {
-                    let lastGradientStop: CGFloat = 1.0
-                    gradientStops[Double(lastGradientStop)] = associatedCongestionColor
+                    let lastGradientStop: Double = 1.0
+                    gradientStops[lastGradientStop] = associatedCongestionColor
                     
                     if lastGradientStop < minimumSegment.0 {
                         minimumSegment = (lastGradientStop, associatedCongestionColor)
@@ -274,10 +276,11 @@ extension NavigationMapView {
                 let segmentStartPercentTraveled = CGFloat(distanceTraveled / routeDistance)
                 
                 if Double(segmentStartPercentTraveled.nextUp) >= fractionTraveled {
-                    gradientStops[Double(segmentStartPercentTraveled.nextUp)] = associatedCongestionColor
+                    let currentGradientStop = Double(segmentStartPercentTraveled.nextUp)
+                    gradientStops[currentGradientStop] = associatedCongestionColor
                     
-                    if segmentStartPercentTraveled.nextUp < minimumSegment.0 {
-                        minimumSegment = (segmentStartPercentTraveled.nextUp, associatedCongestionColor)
+                    if currentGradientStop < minimumSegment.0 {
+                        minimumSegment = (currentGradientStop, associatedCongestionColor)
                     }
                 }
                 
@@ -285,26 +288,29 @@ extension NavigationMapView {
                 
                 let segmentEndPercentTraveled = CGFloat(distanceTraveled / routeDistance)
                 if Double(segmentEndPercentTraveled.nextDown) >= fractionTraveled {
-                    gradientStops[Double(segmentEndPercentTraveled.nextDown)] = associatedCongestionColor
+                    let currentGradientStop = Double(segmentEndPercentTraveled.nextDown)
+                    gradientStops[currentGradientStop] = associatedCongestionColor
                     
-                    if segmentEndPercentTraveled.nextDown < minimumSegment.0 {
-                        minimumSegment = (segmentEndPercentTraveled.nextDown, associatedCongestionColor)
+                    if currentGradientStop < minimumSegment.0 {
+                        minimumSegment = (currentGradientStop, associatedCongestionColor)
                     }
                 }
                 
                 if index + 1 < congestionFeatures.count && Double(segmentEndPercentTraveled.nextUp) >= fractionTraveled {
-                    let color = congestionColor(for: congestionFeatures[index + 1].properties?["congestion"] as? String, isMain: isMain)
-                    gradientStops[Double(segmentEndPercentTraveled.nextUp)] = color
+                    let currentGradientStop = Double(segmentEndPercentTraveled.nextUp)
+                    let currentColor = congestionColor(for: congestionFeatures[index + 1].properties?["congestion"] as? String, isMain: isMain)
+                    gradientStops[currentGradientStop] = currentColor
                     
-                    if segmentEndPercentTraveled.nextUp < minimumSegment.0 {
-                        minimumSegment = (segmentEndPercentTraveled.nextUp, color)
+                    if currentGradientStop < minimumSegment.0 {
+                        minimumSegment = (currentGradientStop, currentColor)
                     }
                 }
             }
             
             gradientStops[0.0] = traversedRouteColor
-            if Double(CGFloat(fractionTraveled).nextDown) >= 0.0 {
-                gradientStops[Double(CGFloat(fractionTraveled).nextDown)] = traversedRouteColor
+            let currentGradientStop = Double(CGFloat(fractionTraveled).nextDown)
+            if currentGradientStop >= 0.0 {
+                gradientStops[currentGradientStop] = traversedRouteColor
             }
             gradientStops[fractionTraveled] = minimumSegment.1
         } else {
