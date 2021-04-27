@@ -577,6 +577,8 @@ open class NavigationMapView: UIView {
             var destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
             destinationAnnotation.title = "navigation_annotation"
             mapView.annotations.addAnnotation(destinationAnnotation)
+            
+            delegate?.navigationMapView(self, didAdd: destinationAnnotation)
         }
     }
     

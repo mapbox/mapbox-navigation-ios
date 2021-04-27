@@ -194,6 +194,14 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: The road name to display in the label, or nil to hide the label.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
+    
+    /**
+     Tells the receiver that the final destination `PointAnnotation` was added to the `NavigationViewController`.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter finalDestinationAnnotation: `PointAnnotation`, which was added to the `NavigationViewController`.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation)
 }
 
 public extension NavigationViewControllerDelegate {
@@ -323,5 +331,12 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
 }
