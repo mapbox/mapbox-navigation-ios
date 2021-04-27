@@ -13,11 +13,10 @@ class Navigator {
     static var tilesVersion: String = ""
     
     /**
-     A local path to the tiles storage location. If not specified - will be automatically defaulted
-     to the cache subdirectory.
+     A local path to the tiles storage location. If not specified - will be automatically set to a default location.
      
      This property can only be modified before creating `Navigator` shared instance, all
-     further changes to this property will have no effect.
+     further changes to this property will have no effect. After initialisation, use `tileStore` to get correponding instance.
      */
     static var tilesURL: URL? = nil
     
@@ -54,6 +53,8 @@ class Navigator {
         return RoadObjectsStore(navigator.roadObjectStore())
     }()
     
+    var tileStore: TileStore!
+    
     /**
      The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.
      
@@ -71,24 +72,15 @@ class Navigator {
      Restrict direct initializer access.
      */
     private init() {
-        var tilesPath: String! = Self.tilesURL?.path
-        if tilesPath == nil {
-            let bundle = Bundle.mapboxCoreNavigation
-            if bundle.ensureSuggestedTileURLExists() {
-                tilesPath = bundle.suggestedTileURL!.path
-            } else {
-                preconditionFailure("Failed to access cache storage.")
-            }
-        }
-        
         let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
                                               platform: ProfilePlatform.KIOS)
         
         let endpointConfig = TileEndpointConfiguration(credentials:Navigator.credentials ?? Directions.shared.credentials,
                                                        tilesVersion: Self.tilesVersion,
                                                        minimumDaysToPersistVersion: nil)
-        
-        let tilesConfig = TilesConfig(tilesPath: tilesPath,
+        let tileStorePath = Self.tilesURL?.path ?? ""
+        tileStore = TileStore.getInstanceForPath(tileStorePath)
+        let tilesConfig = TilesConfig(tilesPath: tileStorePath,
                                       inMemoryTileCache: nil,
                                       onDiskTileCache: nil,
                                       mapMatchingSpatialCache: nil,

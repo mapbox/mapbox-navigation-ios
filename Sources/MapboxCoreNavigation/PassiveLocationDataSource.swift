@@ -47,6 +47,13 @@ open class PassiveLocationDataSource: NSObject {
     }
     
     /**
+     A `TileStore` instance used by navigator
+     */
+    open var navigatorTileStore: TileStore {
+        return Navigator.shared.tileStore
+    }
+    
+    /**
      The location data source’s delegate.
      */
     public weak var delegate: PassiveLocationDataSourceDelegate?

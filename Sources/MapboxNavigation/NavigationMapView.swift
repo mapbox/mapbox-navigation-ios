@@ -167,6 +167,13 @@ open class NavigationMapView: UIView {
     private(set) var predictiveCacheManager: PredictiveCacheManager?
     
     /**
+     A `TileStore` instance used by map view.
+     */
+    open var mapTileStore: TileStore? {
+        mapView.mapboxMap.__map.getResourceOptions().tileStore
+    }
+    
+    /**
      Initializes a newly allocated `NavigationMapView` object with the specified frame rectangle.
      
      - parameter frame: The frame rectangle for the `NavigationMapView`.
@@ -245,14 +252,8 @@ open class NavigationMapView: UIView {
             fatalError("Access token was not set.")
         }
         
-        let tileStore: TileStore
-        if let suggestedTilePath = Bundle.mapboxNavigation.suggestedTileURL?.path {
-            tileStore = TileStore.getInstanceForPath(suggestedTilePath)
-        } else {
-            tileStore = TileStore.getInstance()
-        }
+        // TODO: allow customising tile store location.
         let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              tileStore: tileStore,
                                               tileStoreEnabled: true,
                                               loadTilePacksFromNetwork: false)
         
@@ -286,11 +287,15 @@ open class NavigationMapView: UIView {
      Setups the Predictive Caching mechanism using provided Options.
      
      This will handle all the required manipulations to enable the feature and maintain it during the navigations. Once enabled, it will be present as long as `NavigationMapView` is retained.
+     If `NavigationMapView` was not configured to maintain a tile storage - this function does nothing.
      
      - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
      */
     public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions) {
-        let mapOptions = PredictiveCacheManager.MapOptions(TileStore.getInstance(),
+        guard let tileStore = mapTileStore else {
+            return
+        }
+        let mapOptions = PredictiveCacheManager.MapOptions(tileStore,
                                                            mapView.styleSourceDatasets(["raster", "vector"]))
         
         predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,

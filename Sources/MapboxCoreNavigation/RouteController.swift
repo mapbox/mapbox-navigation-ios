@@ -25,6 +25,13 @@ open class RouteController: NSObject {
         return Navigator.shared.navigator
     }
     
+    /**
+     A `TileStore` instance used by navigator
+     */
+    open var navigatorTileStore: TileStore {
+        return Navigator.shared.tileStore
+    }
+    
     public var indexedRoute: IndexedRoute {
         get {
             return routeProgress.indexedRoute
