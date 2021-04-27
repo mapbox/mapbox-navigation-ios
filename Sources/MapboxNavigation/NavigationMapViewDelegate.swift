@@ -14,9 +14,9 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      Asks the receiver to return a `LineLayer` for the route line, given a layer identifier and a source identifier.
      This method is invoked when the map view loads and any time routes are added.
      
-     - parameter navigationMapView: The `NavigationMapView`.
-     - parameter identifier: The line layer identifier.
-     - parameter sourceIdentifier: The source identifier containing the route data that this method would style.
+     - parameter navigationMapView: The `NavigationMapView` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied to the route line.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
@@ -25,9 +25,9 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      Asks the receiver to return a `LineLayer` for the casing layer that surrounds route line, given a layer identifier and a source identifier.
      This method is invoked when the map view loads and any time routes are added.
      
-     - parameter navigationMapView: The NavigationMapView.
-     - parameter identifier: The line layer identifier.
-     - parameter sourceIdentifier: The source containing the route data that this method would style.
+     - parameter navigationMapView: The `NavigationMapView` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied as a casing around the route line.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
@@ -56,9 +56,9 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      Asks the receiver to return a `CircleLayer` for waypoints, given an identifier and source.
      This method is invoked any time waypoints are added or shown.
      
-     - parameter navigationMapView: The `NavigationMapView`.
-     - parameter identifier: The style identifier.
-     - parameter sourceIdentifier: The Layer source containing the waypoint data that this method would style.
+     - parameter navigationMapView: The `NavigationMapView` object.
+     - parameter identifier: The `CircleLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
      - returns: A `CircleLayer` that the map applies to all waypoints.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer?
@@ -67,9 +67,9 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      Asks the receiver to return a `SymbolLayer` for waypoint symbols, given an identifier and source.
      This method is invoked any time waypoints are added or shown.
      
-     - parameter navigationMapView: The `NavigationMapView`.
-     - parameter identifier: The style identifier.
-     - parameter sourceIdentifier: The Layer source containing the waypoint data that this method would style.
+     - parameter navigationMapView: The `NavigationMapView` object.
+     - parameter identifier: The `SymbolLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
      - returns: A `SymbolLayer` that the map applies to all waypoint symbols.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer?

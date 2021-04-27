@@ -111,8 +111,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      If this method is not implemented, the navigation view controller’s map view draws the route line using default `LineLayer`.
      
      - parameter navigationViewController: The `NavigationViewController` object, on surface of which route line is drawn.
-     - parameter identifier: The line layer identifier.
-     - parameter sourceIdentifier: The source containing the route data that this method would style.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied to the route line.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
@@ -123,8 +123,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      If this method is not implemented, the navigation view controller’s map view draws the casing for the route line using default `LineLayer`.
      
      - parameter navigationViewController: The `NavigationViewController` object, on surface of which route line is drawn.
-     - parameter identifier: The line layer identifier.
-     - parameter sourceIdentifier: The source containing the route data that this method would style.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied as a casing around the route line.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
@@ -135,8 +135,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      If this method is unimplemented, the navigation view controller’s map view marks each destination waypoint with a circle.
      
      - parameter navigationViewController: The `NavigationViewController` object.
-     - parameter identifier: The style identifier.
-     - parameter sourceIdentifier: The Layer source containing the waypoint data that this method would style.
+     - parameter identifier: The `CircleLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
      - returns: A `CircleLayer` that the map applies to all waypoints.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer?
@@ -147,8 +147,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      If this method is unimplemented, the navigation view controller’s map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
      
      - parameter navigationViewController: The `NavigationViewController` object.
-     - parameter identifier: The style identifier.
-     - parameter sourceIdentifier: The Layer source containing the waypoint data that this method would style.
+     - parameter identifier: The `SymbolLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
      - returns: A `SymbolLayer` that the map applies to all waypoint symbols.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer?
