@@ -1615,20 +1615,27 @@ open class NavigationMapView: UIView {
 
         // take up to 4 intersections to annotate. Limit it to prevent cluttering the map with too many annotations
         intersectionsToAnnotate = Array(intersections.prefix(4))
+
+
+        if let intersectionsToAnnotate = intersectionsToAnnotate {
+            let userInfo: [String: Any] = [
+                "intersectionAnnotations": intersectionsToAnnotate
+            ]
+            NotificationCenter.default.post(name: NSNotification.Name("intersectionAnnotations"), object: self, userInfo: userInfo)
+        }
     }
 
     var previousNameSet: Set<String>?
-    var intersectionsToAnnotate: [EdgeIntersection]?
+    public var intersectionsToAnnotate: [EdgeIntersection]?
 
-    open func updateAnnotations(for routeProgress: RouteProgress) {
+    open func updateAnnotations(for routeProgress: RouteProgress?) {
         var features = [Feature]()
 
         // add an annotation for the next step
 
-        if let upcomingStep = routeProgress.upcomingStep {
+        if let upcomingStep = routeProgress?.upcomingStep, let currentLeg = routeProgress?.currentLeg {
             let maneuverLocation = upcomingStep.maneuverLocation
             var labelText = upcomingStep.names?.first ?? ""
-            let currentLeg = routeProgress.currentLeg
 
             if upcomingStep == currentLeg.steps.last, let destination = currentLeg.destination?.name {
                 labelText = destination
@@ -1910,6 +1917,7 @@ open class NavigationMapView: UIView {
 
         DispatchQueue.main.async {
             self.updateIntersectionAnnotationSet(horizon: horizon, roadGraph: roadGraph)
+            self.updateAnnotations(for: nil)
         }
     }
 

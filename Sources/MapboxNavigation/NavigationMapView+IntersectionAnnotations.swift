@@ -7,7 +7,7 @@ import MapboxMaps
 
 extension NavigationMapView {
     
-    struct EdgeIntersection {
+    public struct EdgeIntersection {
         var root: ElectronicHorizon.Edge
         var branch: ElectronicHorizon.Edge
         var rootMetadata: ElectronicHorizon.Edge.Metadata
@@ -15,7 +15,7 @@ extension NavigationMapView {
         var branchMetadata: ElectronicHorizon.Edge.Metadata
         var branchShape: LineString
 
-        var coordinate: CLLocationCoordinate2D? {
+        public var coordinate: CLLocationCoordinate2D? {
             rootShape.coordinates.first
         }
 
@@ -36,7 +36,7 @@ extension NavigationMapView {
                 return "(\(code))"
             }
         }
-        var intersectingWayName: String? {
+        public var intersectingWayName: String? {
             guard let roadName = branchMetadata.names.first else { return nil }
 
             switch roadName {
@@ -47,7 +47,7 @@ extension NavigationMapView {
             }
         }
 
-        var incidentAngle: CLLocationDegrees {
+        public var incidentAngle: CLLocationDegrees {
             return (branchMetadata.heading - rootMetadata.heading).wrap(min: 0, max: 360)
         }
 
