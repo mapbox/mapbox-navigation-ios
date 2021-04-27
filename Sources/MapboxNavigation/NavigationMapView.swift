@@ -165,10 +165,10 @@ open class NavigationMapView: UIView {
      - parameter frame: The frame rectangle for the `NavigationMapView`.
      - parameter navigationCameraType: Type of `NavigationCamera`, which is used for the current instance of `NavigationMapView`.
      */
-    public init(frame: CGRect, navigationCameraType: NavigationCameraType = .mobile) {
+    public init(frame: CGRect, navigationCameraType: NavigationCameraType = .mobile, tileStore: TileStore? = TileStore.getInstance()) {
         super.init(frame: frame)
         
-        setupMapView(frame, navigationCameraType: navigationCameraType)
+        setupMapView(frame, navigationCameraType: navigationCameraType, tileStore: tileStore)
         commonInit()
     }
     
@@ -221,14 +221,15 @@ open class NavigationMapView: UIView {
         }
     }
     
-    func setupMapView(_ frame: CGRect, navigationCameraType: NavigationCameraType = .mobile) {
+    func setupMapView(_ frame: CGRect, navigationCameraType: NavigationCameraType = .mobile, tileStore: TileStore? = TileStore.getInstance()) {
         guard let accessToken = CredentialsManager.default.accessToken else {
             fatalError("Access token was not set.")
         }
         
         // TODO: allow customising tile store location.
         let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              tileStoreEnabled: true,
+                                              tileStore: tileStore,
+                                              tileStoreEnabled: tileStore != nil,
                                               loadTilePacksFromNetwork: false)
         
         mapView = MapView(frame: frame, mapInitOptions: MapInitOptions(resourceOptions: resourceOptions))

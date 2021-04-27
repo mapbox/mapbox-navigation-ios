@@ -14,6 +14,26 @@ import Turf
  */
 public typealias ContainerViewController = UIViewController & NavigationComponent
 
+extension NavigationOptions.TileStoreLocation {
+    var mapTileStore: TileStore? {
+        switch self {
+        case .default:
+            return TileStore.getInstance()
+        case .custom(let url):
+            return TileStore.getInstanceForPath(url.path)
+        case .isolated(_, let map):
+            switch map {
+            case .default:
+                return TileStore.getInstance()
+            case .noStorage:
+                return nil
+            case .custom(let url):
+                return TileStore.getInstanceForPath(url.path)
+            }
+        }
+    }
+}
+
 /**
  `NavigationViewController` is a fully-featured user interface for turn-by-turn navigation. Do not confuse it with the `NavigationController` class in UIKit.
  
@@ -285,6 +305,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     var viewObservers: [NavigationComponentDelegate] = []
     
+    var mapTileStore: TileStore?
+    
     // MARK: - NavigationViewData implementation
         
     var navigationView: NavigationView! {
@@ -322,9 +344,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
         
+        mapTileStore = navigationOptions?.tileStoreLocation.mapTileStore
         navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route,
                                                                                             routeIndex: routeIndex,
-                                                                                            routeOptions: routeOptions)
+                                                                                            routeOptions: routeOptions,
+                                                                                            tileStoreURL: navigationOptions?.tileStoreLocation.navigatorTileStoreURL)
         navigationService.delegate = self
         
         let credentials = navigationService.directions.credentials
@@ -437,7 +461,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     open override func loadView() {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
-        view = NavigationView(delegate: self, frame: frame)
+        view = NavigationView(delegate: self, frame: frame, tileStore: mapTileStore)
     }
     
     /**

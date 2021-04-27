@@ -18,10 +18,11 @@ open class PassiveLocationDataSource: NSObject {
      
      - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
      */
-    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil) {
+    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil, tileStoreURL: URL? = nil) {
         self.directions = directions
         Navigator.credentials = directions.credentials
-
+        Navigator.tilesURL = tileStoreURL
+        
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
         super.init()

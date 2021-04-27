@@ -1,5 +1,6 @@
 import UIKit
 import MapboxDirections
+import MapboxCommon
 
 /**
  A view that represents the root view of the MapboxNavigation drop-in UI.
@@ -56,8 +57,12 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
+    var tileStore: TileStore?
     lazy var navigationMapView: NavigationMapView = {
-        let navigationMapView: NavigationMapView = .forAutoLayout(frame: self.bounds)
+        let navigationMapView = NavigationMapView(frame: self.bounds, tileStore: tileStore)
+        navigationMapView.isHidden = false
+        navigationMapView.translatesAutoresizingMaskIntoConstraints = false
+        
         navigationMapView.delegate = delegate
         navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                                              viewportDataSourceType: .active)
@@ -124,8 +129,8 @@ open class NavigationView: UIView {
     
     // MARK: - Initialization methods
     
-    convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero) {
-        self.init(frame: frame)
+    convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero, tileStore: TileStore? = TileStore.getInstance()) {
+        self.init(frame: frame, tileStore: tileStore)
         self.delegate = delegate
         updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
     }
@@ -137,8 +142,9 @@ open class NavigationView: UIView {
     }
     
     // TODO: Refine public APIs, which are exposed by `NavigationView`.
-    public override init(frame: CGRect) {
+    public init(frame: CGRect, tileStore: TileStore? = TileStore.getInstance()) {
         super.init(frame: frame)
+        self.tileStore = tileStore
         commonInit()
     }
     

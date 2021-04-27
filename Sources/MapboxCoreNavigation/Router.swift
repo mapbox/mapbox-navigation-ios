@@ -40,8 +40,9 @@ public protocol Router: class, CLLocationManagerDelegate {
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
+     - parameter tileStoreURL: A local path to tile storage location. `nil` value results in default location.
      */
-    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
+    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreURL: URL?)
     
     /**
      Details about the user’s progress along the current route, leg, and step.

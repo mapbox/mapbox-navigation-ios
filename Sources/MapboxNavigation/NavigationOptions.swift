@@ -47,6 +47,48 @@ open class NavigationOptions: NavigationCustomizable {
      */
     open var predictiveCacheOptions: PredictiveCacheOptions?
     
+    
+    /**
+     To add docs for cases
+     */
+    public enum TileStoreLocation {
+        public enum NavigatorStorage {
+            case `default`
+            case custom(URL)
+        }
+        public enum MapStorage {
+            case `default`
+            case custom(URL)
+            case noStorage
+        }
+        
+        case `default`
+        case custom(URL)
+        case isolated(NavigatorStorage, MapStorage)
+        
+        var navigatorTileStoreURL: URL? {
+            switch self {
+            case .default:
+                return nil
+            case .custom(let url):
+                return url
+            case .isolated(let nav, _):
+                switch nav {
+                case .default:
+                    return nil
+                case .custom(let url):
+                    return url
+                }
+            }
+        }
+    }
+    
+    /**
+     TODO: document it
+     */
+    open var tileStoreLocation: TileStoreLocation = .default
+    
+    
     // This makes the compiler happy.
     required public init() {
         // do nothing
@@ -61,8 +103,9 @@ open class NavigationOptions: NavigationCustomizable {
      - parameter topBanner: The container view controller that presents the top banner.
      - parameter bottomBanner: The container view controller that presents the bottom banner.
      - parameter predictiveCacheOptions: Configuration for predictive caching. These options control how the `PredictiveCacheManager` will try to proactively fetch data related to the route. A `nil` value disables the feature.
+     - parameter tileStoreLocation: TODO
      */
-    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil) {
+    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, tileStoreLocation: TileStoreLocation = .default) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
@@ -70,6 +113,7 @@ open class NavigationOptions: NavigationCustomizable {
         self.topBanner = topBanner
         self.bottomBanner = bottomBanner
         self.predictiveCacheOptions = predictiveCacheOptions
+        self.tileStoreLocation = tileStoreLocation
     }
     
     /**

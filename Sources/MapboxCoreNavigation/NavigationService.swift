@@ -234,7 +234,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          simulating simulationMode: SimulationMode = .onPoorGPS,
-                         routerType: Router.Type? = nil) {
+                         routerType: Router.Type? = nil,
+                         tileStoreURL: URL? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
         self.simulationMode = simulationMode
@@ -247,7 +248,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        router = routerType.init(along: route, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self)
+        router = routerType.init(along: route, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self, tileStoreURL: tileStoreURL)
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
