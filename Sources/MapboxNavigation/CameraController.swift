@@ -101,7 +101,9 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         case .transitionToFollowing, .following:
             navigationViewData.navigationView.overviewButton.isHidden = false
             navigationViewData.navigationView.resumeButton.isHidden = true
-            navigationViewData.navigationView.wayNameView.isHidden = false
+            if let roadName = navigationViewData.navigationView.wayNameView.text {
+                navigationViewData.navigationView.wayNameView.isHidden = false
+            }
             break
         case .idle, .transitionToOverview, .overview:
             navigationViewData.navigationView.overviewButton.isHidden = true

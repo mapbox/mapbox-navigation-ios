@@ -110,7 +110,7 @@ extension NavigationMapView {
             guard navigationView.resumeButton.isHidden else { return }
             
             if let roadName = roadName {
-                navigationView.wayNameView.text = roadName
+                navigationView.wayNameView.text = roadName.isEmpty ? nil : roadName
                 navigationView.wayNameView.isHidden = roadName.isEmpty
                 
                 return

@@ -80,9 +80,11 @@ open class WayNameView: UIView {
         }
         
         if let roadName = feature.properties["name"] as? String {
-            currentRoadName = roadName
-            self.text = roadName
-            didSetup = true
+            if !roadName.isEmpty {
+                currentRoadName = roadName
+                self.text = roadName
+                didSetup = true
+            }
         }
         
         if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
