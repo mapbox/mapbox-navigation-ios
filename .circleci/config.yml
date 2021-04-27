@@ -128,6 +128,9 @@ jobs:
       lint:
         type: boolean
         default: false
+      archive:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -150,6 +153,10 @@ jobs:
           steps:
             - run: cd Tests/CocoaPodsTest/PodInstall && bundle exec pod install --repo-update
       - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' clean build | xcpretty
+      - when:
+          condition: << parameters.archive >>
+          steps:
+            - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -sdk iphoneos<< parameters.iOS >> -destination generic/platform=iOS clean archive CODE_SIGNING_ALLOWED="NO" | xcpretty
       - when:
           condition: << parameters.lint >>
           steps:
@@ -306,6 +313,7 @@ workflows:
           update: false
           xcode: "12.0.0"
           iOS: "14.0"
+          archive: true
       - pod-job:
           name: "Xcode_12.0_iOS_14.0_CP_update"
           update: true
