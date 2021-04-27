@@ -15,19 +15,20 @@ public struct FollowingCameraOptions {
     public var defaultPitch: Double = 45.0
     
     /**
-     Maximum zoom, which will be used when producing camera frame in `NavigationCameraState.following`
+     Minimum altitude, which will be used when producing camera frame in `NavigationCameraState.following`
      state.
      
-     Defaults to `16.35`.
+     Defaults to `50000.0` meters, or zoom level `10.50` (approximately).
      */
-    public var maximumZoom: Double = 16.35
+    public var minimumAltitude: CLLocationDistance = 50000.0
     
     /**
-     Altitude that the `NavigationCamera` initally defaults to when active guidance navigation starts.
+     Maximum altitude, which will be used when producing camera frame in `NavigationCameraState.following`
+     state. It will be also used as initial value when active guidance navigation starts.
      
-     Defaults to `1000.0` meters.
+     Defaults to `900.0` meters, or zoom level `16.35` (approximately).
      */
-    public var initialAltitude: CLLocationDistance = 1000.0
+    public var maximumAltitude: CLLocationDistance = 900.0
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.center` property
@@ -80,6 +81,14 @@ public struct FollowingCameraOptions {
     public var paddingUpdatesAllowed = true
     
     /**
+     Options, which allow to modify the framed route geometries based on the intersection density.
+     
+     By default the whole remainder of the step is framed, while `IntersectionDensity` options shrink
+     that geometry to increase the zoom level.
+     */
+    public var intersectionDensity: IntersectionDensity = IntersectionDensity()
+    
+    /**
      Options, which allow to modify `CameraOptions.bearing` property based on information about
      bearing of an upcoming maneuver.
      */
@@ -89,7 +98,42 @@ public struct FollowingCameraOptions {
      Options, which allow to modify framed route geometries by appending additional coordinates after
      maneuver to extend the view.
      */
-    public var frameGeometryAfterManeuver: FrameGeometryAfterManeuver = FrameGeometryAfterManeuver()
+    public var geometryFramingAfterManeuver: GeometryFramingAfterManeuver = GeometryFramingAfterManeuver()
+}
+
+/**
+ Options, which allow to modify the framed route geometries based on the intersection density.
+ 
+ By default the whole remainder of the step is framed, while `IntersectionDensity` options shrink
+ that geometry to increase the zoom level.
+ */
+public struct IntersectionDensity {
+    
+    /**
+     Controls whether additional coordinates after the upcoming maneuver will be framed
+     to provide the view extension.
+     
+     Defaults to `true`.
+     */
+    var enabled: Bool = true
+    
+    /**
+     Multiplier, which will be used to adjust the size of the portion of the remaining step that's
+     going to be selected for framing.
+     
+     Defaults to `7.0`.
+     */
+    var averageDistanceMultiplier: Double = 7.0
+    
+    /**
+     Minimum distance between intersections to count them as two instances.
+     
+     This has an effect of filtering out intersections based on parking lot entrances,
+     driveways and alleys from the average intersection distance.
+     
+     Defaults to `20.0` meters.
+     */
+    var minimumDistanceBetweenIntersections: CLLocationDistance = 20.0
 }
 
 /**
@@ -114,7 +158,7 @@ public struct BearingSmoothing {
  Options, which allow to modify framed route geometries by appending additional coordinates after
  maneuver to extend the view.
  */
-public struct FrameGeometryAfterManeuver {
+public struct GeometryFramingAfterManeuver {
     
     /**
      Controls whether additional coordinates after the upcoming maneuver will be framed

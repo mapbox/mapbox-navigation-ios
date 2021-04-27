@@ -51,10 +51,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     weak var mapView: MapView?
     
-    var currentRoute: Route?
-    
-    var currentAverageIntersectionDistances: [[CLLocationDistance]] = []
-    
     // MARK: - Initializer methods
     
     /**
@@ -193,12 +189,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
         
         if let location = activeLocation, let routeProgress = routeProgress {
             var compoundManeuvers: [[CLLocationCoordinate2D]] = []
-            let frameGeometryAfterManeuver = followingCameraOptions.frameGeometryAfterManeuver
+            let geometryFramingAfterManeuver = followingCameraOptions.geometryFramingAfterManeuver
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
             let pitch = followingCameraOptions.defaultPitch * pitchСoefficient
             let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
             
-            if frameGeometryAfterManeuver.enabled {
+            if geometryFramingAfterManeuver.enabled {
                 let stepIndex = routeProgress.currentLegProgress.stepIndex
                 let nextStepIndex = min(stepIndex + 1, routeProgress.currentLeg.steps.count - 1)
                 let stepCoordinatesAfterCurrentStep = routeProgress.currentLeg.steps[nextStepIndex...]
@@ -208,10 +204,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
                     guard let stepCoordinates = stepCoordinates,
                           let distance = stepCoordinates.distance() else { continue }
                     
-                    if distance > 0.0 && distance < frameGeometryAfterManeuver.distanceToCoalesceCompoundManeuvers {
+                    if distance > 0.0 && distance < geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers {
                         compoundManeuvers.append(stepCoordinates)
                     } else {
-                        compoundManeuvers.append(stepCoordinates.trimmed(distance: frameGeometryAfterManeuver.distanceToFrameAfterManeuver))
+                        compoundManeuvers.append(stepCoordinates.trimmed(distance: geometryFramingAfterManeuver.distanceToFrameAfterManeuver))
                         break
                     }
                 }
@@ -239,39 +235,40 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
             
             if options.followingCameraOptions.zoomUpdatesAllowed {
+                let defaultZoomLevel = 12.0
+                
+                let maxZoomLevel = ZoomLevelForAltitude(followingCameraOptions.maximumAltitude,
+                                                        mapView.pitch,
+                                                        location.coordinate.latitude,
+                                                        mapView.bounds.size)
+                
+                let minZoomLevel = ZoomLevelForAltitude(followingCameraOptions.minimumAltitude,
+                                                        mapView.pitch,
+                                                        location.coordinate.latitude,
+                                                        mapView.bounds.size)
+                
                 followingMobileCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                                                pitch: pitch,
                                                                maxPitch: followingCameraOptions.defaultPitch,
                                                                edgeInsets: viewportPadding,
-                                                               defaultZoomLevel: 2.0,
-                                                               maxZoomLevel: followingCameraOptions.maximumZoom))
+                                                               defaultZoomLevel: defaultZoomLevel,
+                                                               maxZoomLevel: maxZoomLevel,
+                                                               minZoomLevel: minZoomLevel))
                 
                 followingCarPlayCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                                                 pitch: pitch,
                                                                 maxPitch: followingCameraOptions.defaultPitch,
                                                                 edgeInsets: carPlayCameraPadding,
-                                                                defaultZoomLevel: 2.0,
-                                                                maxZoomLevel: followingCameraOptions.maximumZoom))
+                                                                defaultZoomLevel: defaultZoomLevel,
+                                                                maxZoomLevel: maxZoomLevel,
+                                                                minZoomLevel: minZoomLevel))
             }
             
             if options.followingCameraOptions.bearingUpdatesAllowed {
                 var bearing: CLLocationDirection = location.course
-                let currentRouteLegIndex = routeProgress.legIndex
-                let currentRouteStepIndex = routeProgress.currentLegProgress.stepIndex
-                let numberOfIntersections = 10
-                var averageIntersectionDistances: [[CLLocationDistance]]
-                
-                if let currentRoute = currentRoute, currentRoute == routeProgress.route {
-                    averageIntersectionDistances = currentAverageIntersectionDistances
-                } else {
-                    currentRoute = routeProgress.route
-                    currentAverageIntersectionDistances = self.averageIntersectionDistances(routeProgress.route)
-                    averageIntersectionDistances = currentAverageIntersectionDistances
-                }
-                
-                let lookaheadDistance = averageIntersectionDistances[currentRouteLegIndex][currentRouteStepIndex] * Double(numberOfIntersections)
-                let distance = fmax(lookaheadDistance, frameGeometryAfterManeuver.enabled
-                                        ? frameGeometryAfterManeuver.distanceToCoalesceCompoundManeuvers
+                let lookaheadDistance: CLLocationDistance = self.lookaheadDistance(routeProgress)
+                let distance = fmax(lookaheadDistance, geometryFramingAfterManeuver.enabled
+                                        ? geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers
                                         : 0.0)
                 let coordinatesForIntersections = coordinatesToManeuver.sliced(from: nil,
                                                                                to: LineString(coordinatesToManeuver).coordinateFromStart(distance: distance))
@@ -334,15 +331,20 @@ public class NavigationViewportDataSource: ViewportDataSource {
         }
         
         if overviewCameraOptions.zoomUpdatesAllowed {
+            let maxZoomLevel = ZoomLevelForAltitude(overviewCameraOptions.maximumAltitude,
+                                                    mapView.pitch,
+                                                    coordinate.latitude,
+                                                    mapView.bounds.size)
+            
             var zoom = self.zoom(remainingCoordinatesOnRoute,
                                  edgeInsets: viewportPadding,
-                                 maxZoomLevel: overviewCameraOptions.maximumZoom)
+                                 maxZoomLevel: maxZoomLevel)
             
             overviewMobileCamera.zoom = CGFloat(zoom)
             
             zoom = self.zoom(remainingCoordinatesOnRoute,
                              edgeInsets: carPlayCameraPadding,
-                             maxZoomLevel: overviewCameraOptions.maximumZoom)
+                             maxZoomLevel: maxZoomLevel)
             
             overviewCarPlayCamera.zoom = CGFloat(zoom)
         }
@@ -470,8 +472,9 @@ extension NavigationViewportDataSource: LocationConsumer {
         delegate?.viewportDataSource(self, didUpdate: cameraOptions)
     }
     
-    func averageIntersectionDistances(_ route: Route) -> [[CLLocationDistance]] {
-        let averageIntersectionDistances = route.legs.map { (leg) -> [CLLocationDistance] in
+    func lookaheadDistance(_ routeProgress: RouteProgress) -> CLLocationDistance {
+        let intersectionDensity = options.followingCameraOptions.intersectionDensity
+        let averageIntersectionDistances = routeProgress.route.legs.map { (leg) -> [CLLocationDistance] in
             return leg.steps.map { (step) -> CLLocationDistance in
                 if let firstStepCoordinate = step.shape?.coordinates.first,
                    let lastStepCoordinate = step.shape?.coordinates.last {
@@ -479,7 +482,9 @@ extension NavigationViewportDataSource: LocationConsumer {
                     let intersectionDistances = intersectionLocations[1...].enumerated().map({ (index, intersection) -> CLLocationDistance in
                         return intersection.distance(to: intersectionLocations[index])
                     })
-                    let filteredIntersectionDistances = intersectionDistances.filter { $0 > 20 }
+                    let filteredIntersectionDistances = intersectionDensity.enabled
+                        ? intersectionDistances.filter { $0 > intersectionDensity.minimumDistanceBetweenIntersections }
+                        : intersectionDistances
                     let averageIntersectionDistance = filteredIntersectionDistances.reduce(0.0, +) / Double(filteredIntersectionDistances.count)
                     return averageIntersectionDistance
                 }
@@ -488,6 +493,11 @@ extension NavigationViewportDataSource: LocationConsumer {
             }
         }
         
-        return averageIntersectionDistances
+        let averageDistanceMultiplier = intersectionDensity.enabled ? intersectionDensity.averageDistanceMultiplier : 1.0
+        let currentRouteLegIndex = routeProgress.legIndex
+        let currentRouteStepIndex = routeProgress.currentLegProgress.stepIndex
+        let lookaheadDistance = averageIntersectionDistances[currentRouteLegIndex][currentRouteStepIndex] * averageDistanceMultiplier
+        
+        return lookaheadDistance
     }
 }
