@@ -177,8 +177,8 @@ extension NavigationMapView {
      - parameter routeProgress: Current route progress.
      */
     public func updateRoute(_ routeProgress: RouteProgress) {
-        guard let mainRouteLayerIdentifier = identifier(routes?.first, identifierType: .route),
-              let mainRouteCasingLayerIdentifier = identifier(routes?.first, identifierType: .routeCasing) else { return }
+        let mainRouteLayerIdentifier = routeProgress.route.identifier(.route(isMainRoute: true))
+        let mainRouteCasingLayerIdentifier = routeProgress.route.identifier(.routeCasing(isMainRoute: true))
         
         if fractionTraveled >= 1.0 {
             // In case if route was fully travelled - remove main route and its casing.
@@ -205,142 +205,124 @@ extension NavigationMapView {
                 timer.invalidate()
                 return
             }
+            
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
             
-            if let mainRouteLayerGradient = self.routeLineGradient(routeProgress.route, fractionTraveled: newFractionTraveled) {
-                self.mapView.style.updateLayer(id: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
-                    lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
-                }
+            let congestionSegments = routeProgress.route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
+            let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
+                                                                fractionTraveled: newFractionTraveled)
+            self.mapView.style.updateLayer(id: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+                lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
             }
             
+            let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
             self.mapView.style.updateLayer(id: mainRouteCasingLayerIdentifier, type: LineLayer.self) { (lineLayer) in
-                let mainRouteCasingLayerGradient = self.routeCasingGradient(newFractionTraveled)
                 lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
             }
         })
     }
     
-    func routeLineGradient(_ route: Route, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor]? {
-        var gradientStops = [CGFloat: UIColor]()
-        
-        /**
-         We will keep track of this value as we iterate through
-         the various congestion segments.
-         */
+    func routeLineGradient(_ congestionFeatures: [Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {
+        var gradientStops = [Double: UIColor]()
         var distanceTraveled = fractionTraveled
         
-        /**
-         Begin by calculating individual congestion segments associated
-         with a congestion level.
-         */
-        let congestionSegments = addCongestion(to: route, legIndex: 0)
-        
-        /**
-         To create the stops dictionary that represents the route line expressed
-         as gradients, for every congestion segment we need one pair of dictionary
-         entries to represent the color to be displayed between that range. Depending
-         on the index of the congestion segment, the pair's first or second key
-         will have a buffer value added or subtracted to make room for a gradient
-         transition between congestion segments.
-         
-         green       gradient       red
-         transition
-         |-----------|~~~~~~~~~~~~|----------|
-         0         0.499        0.501       1.0
-         */
-        
-        for (index, feature) in congestionSegments.enumerated() {
-            // Get congestion color for the stop.
+        if let congestionFeatures = congestionFeatures {
+            let routeDistance = congestionFeatures.compactMap({ ($0.geometry.value as? LineString)?.distance() }).reduce(0, +)
+            var minimumSegment: (Double, UIColor) = (Double.greatestFiniteMagnitude, .clear)
             
-            let congestionLevel = feature.properties?[CongestionAttribute] as? String
-            let associatedCongestionColor = congestionColor(for: congestionLevel, isMain: isMain)
-            
-            // Measure the line length of the traffic segment.
-            let lineString = feature.geometry.value as? LineString
-            guard let distance = lineString?.distance() else { return nil }
-            
-            /**
-             If this is the first congestion segment, then the starting
-             percentage point will be zero.
-             */
-            if index == congestionSegments.startIndex {
-                distanceTraveled = distanceTraveled + distance
-
-                let segmentEndPercentTraveled = CGFloat(distanceTraveled / route.distance)
-                gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
+            for (index, feature) in congestionFeatures.enumerated() {
+                let congestionLevel = feature.properties?[CongestionAttribute] as? String
+                let associatedCongestionColor = congestionColor(for: congestionLevel, isMain: isMain)
+                let lineString = feature.geometry.value as? LineString
+                guard let distance = lineString?.distance() else { return gradientStops }
                 
-                if index + 1 < congestionSegments.count {
-                    gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String, isMain: isMain)
+                if index == congestionFeatures.startIndex {
+                    distanceTraveled = distanceTraveled + distance
+                    
+                    let segmentEndPercentTraveled = CGFloat(distanceTraveled / routeDistance)
+                    let currentGradientStop = Double(segmentEndPercentTraveled.nextDown)
+                    if currentGradientStop >= fractionTraveled {
+                        gradientStops[currentGradientStop] = associatedCongestionColor
+                        
+                        if currentGradientStop < minimumSegment.0 {
+                            minimumSegment = (currentGradientStop, associatedCongestionColor)
+                        }
+                        
+                        if index + 1 < congestionFeatures.count {
+                            let currentGradientStop = Double(segmentEndPercentTraveled.nextUp)
+                            let currentColor = congestionColor(for: congestionFeatures[index + 1].properties?["congestion"] as? String, isMain: isMain)
+                            gradientStops[currentGradientStop] = currentColor
+                            
+                            if currentGradientStop < minimumSegment.0 {
+                                minimumSegment = (currentGradientStop, currentColor)
+                            }
+                        }
+                    }
+                    
+                    continue
                 }
                 
-                continue
+                if index == congestionFeatures.endIndex - 1 {
+                    let lastGradientStop: Double = 1.0
+                    gradientStops[lastGradientStop] = associatedCongestionColor
+                    
+                    if lastGradientStop < minimumSegment.0 {
+                        minimumSegment = (lastGradientStop, associatedCongestionColor)
+                    }
+                    
+                    continue
+                }
+                
+                let segmentStartPercentTraveled = CGFloat(distanceTraveled / routeDistance)
+                
+                if Double(segmentStartPercentTraveled.nextUp) >= fractionTraveled {
+                    let currentGradientStop = Double(segmentStartPercentTraveled.nextUp)
+                    gradientStops[currentGradientStop] = associatedCongestionColor
+                    
+                    if currentGradientStop < minimumSegment.0 {
+                        minimumSegment = (currentGradientStop, associatedCongestionColor)
+                    }
+                }
+                
+                distanceTraveled = distanceTraveled + distance
+                
+                let segmentEndPercentTraveled = CGFloat(distanceTraveled / routeDistance)
+                if Double(segmentEndPercentTraveled.nextDown) >= fractionTraveled {
+                    let currentGradientStop = Double(segmentEndPercentTraveled.nextDown)
+                    gradientStops[currentGradientStop] = associatedCongestionColor
+                    
+                    if currentGradientStop < minimumSegment.0 {
+                        minimumSegment = (currentGradientStop, associatedCongestionColor)
+                    }
+                }
+                
+                if index + 1 < congestionFeatures.count && Double(segmentEndPercentTraveled.nextUp) >= fractionTraveled {
+                    let currentGradientStop = Double(segmentEndPercentTraveled.nextUp)
+                    let currentColor = congestionColor(for: congestionFeatures[index + 1].properties?["congestion"] as? String, isMain: isMain)
+                    gradientStops[currentGradientStop] = currentColor
+                    
+                    if currentGradientStop < minimumSegment.0 {
+                        minimumSegment = (currentGradientStop, currentColor)
+                    }
+                }
             }
             
-            /**
-             If this is the last congestion segment, then the ending
-             percentage point will be 1.0, to represent 100%.
-             */
-            if index == congestionSegments.endIndex - 1 {
-                let segmentEndPercentTraveled = CGFloat(1.0)
-                gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
-                continue
+            gradientStops[0.0] = traversedRouteColor
+            let currentGradientStop = Double(CGFloat(fractionTraveled).nextDown)
+            if currentGradientStop >= 0.0 {
+                gradientStops[currentGradientStop] = traversedRouteColor
             }
-            
-            /**
-             If this is not the first or last congestion segment, then
-             the starting and ending percent values traveled for this segment
-             will be a fractional amount more/less than the actual values.
-             */
-            let segmentStartPercentTraveled = CGFloat(distanceTraveled / route.distance)
-            gradientStops[segmentStartPercentTraveled.nextUp] = associatedCongestionColor
-            
-            distanceTraveled = distanceTraveled + distance
-            
-            let segmentEndPercentTraveled = CGFloat(distanceTraveled / route.distance)
-            gradientStops[segmentEndPercentTraveled.nextDown] = associatedCongestionColor
-            
-            if index + 1 < congestionSegments.count {
-                gradientStops[segmentEndPercentTraveled.nextUp] = congestionColor(for: congestionSegments[index + 1].properties?["congestion"] as? String, isMain: isMain)
+            gradientStops[fractionTraveled] = minimumSegment.1
+        } else {
+            let percentTraveled = CGFloat(fractionTraveled)
+            gradientStops[0.0] = traversedRouteColor
+            if percentTraveled.nextDown >= 0.0 {
+                gradientStops[Double(percentTraveled.nextDown)] = traversedRouteColor
             }
+            gradientStops[Double(percentTraveled)] = routeCasingColor
         }
         
-        let percentTraveled = CGFloat(fractionTraveled)
-        
-        // Filter out only the stops that are greater than or equal to the percent of the route traveled.
-        var filteredGradientStops = gradientStops.filter { key, value in
-            return key >= percentTraveled
-        }
-        
-        // Then, get the lowest value from the above and fade the range from zero that lowest value,
-        // which represents the % of the route traveled.
-        if let minStop = filteredGradientStops.min(by: { $0.0 < $1.0 }) {
-            filteredGradientStops[0.0] = traversedRouteColor
-            filteredGradientStops[percentTraveled.nextDown] = traversedRouteColor
-            filteredGradientStops[percentTraveled] = minStop.value
-        }
-        
-        var resultGradientStops = [Double: UIColor]()
-
-        filteredGradientStops.filter({ $0.0 >= 0.0 }).forEach {
-            resultGradientStops[Double($0.0)] = $0.1
-        }
-        
-        return resultGradientStops
-    }
-    
-    func routeCasingGradient(_ fractionTraveled: Double) -> [Double: UIColor] {
-        let percentTraveled = CGFloat(fractionTraveled)
-        var gradientStops = [CGFloat: UIColor]()
-        gradientStops[0.0] = traversedRouteColor
-        gradientStops[percentTraveled.nextDown] = traversedRouteColor
-        gradientStops[percentTraveled != 0.0 ? percentTraveled : 1.0] = routeCasingColor
-        
-        var resultGradientStops = [Double: UIColor]()
-        gradientStops.filter({ $0.0 >= 0.0 }).forEach {
-            resultGradientStops[Double($0.0)] = $0.1
-        }
-        
-        return resultGradientStops
+        return gradientStops
     }
     
     /**
@@ -359,100 +341,5 @@ extension NavigationMapView {
         default:
             return isMain ? trafficUnknownColor : alternativeTrafficUnknownColor
         }
-    }
-    
-    func addCongestion(to route: Route, legIndex: Int?) -> [Feature] {
-        guard let coordinates = route.shape?.coordinates, let shape = route.shape else { return [] }
-        
-        var features: [Feature] = []
-        
-        for (index, leg) in route.legs.enumerated() {
-            let legFeatures: [Feature]
-            
-            if let legCongestion = leg.segmentCongestionLevels, legCongestion.count < coordinates.count {
-                // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
-                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
-                    let index = current.offset
-                    let step = current.element
-                    let stepCoordinates = step.shape!.coordinates
-                    
-                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
-                }
-                
-                let mergedCongestionSegments = combine(legCoordinates,
-                                                       with: legCongestion,
-                                                       streetsRoadClasses: leg.streetsRoadClasses,
-                                                       roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-                
-                legFeatures = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> Feature in
-                    var feature = Feature(LineString(congestionSegment.0))
-                    feature.properties = [
-                        CongestionAttribute: String(describing: congestionSegment.1),
-                        "isAlternateRoute": false,
-                        CurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
-                    ]
-                    
-                    return feature
-                }
-            } else {
-                var feature = Feature(LineString(shape.coordinates))
-                feature.properties = [
-                    "isAlternateRoute": false,
-                    CurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
-                ]
-                legFeatures = [feature]
-            }
-            
-            features.append(contentsOf: legFeatures)
-        }
-        
-        return features
-    }
-    
-    /**
-     Returns an array of congestion segments by associating the given congestion levels with the coordinates of the respective line segments that they apply to.
-     
-     This method coalesces consecutive line segments that have the same congestion level.
-     
-     For each item in the`CongestionSegment` collection a `CongestionLevel` substitution will take place that has a streets road class contained in the `roadClassesWithOverriddenCongestionLevels` collection.
-     For each of these items the `CongestionLevel` for `.unknown` traffic congestion will be replaced with the `.low` traffic congestion.
-     
-     - parameter coordinates: The coordinates of a leg.
-     - parameter congestions: The congestion levels along a leg. There should be one fewer congestion levels than coordinates.
-     - parameter streetsRoadClasses: A collection of streets road classes for each geometry index in `Intersection`. There should be the same amount of `streetsRoadClasses` and `congestions`.
-     - parameter roadClassesWithOverriddenCongestionLevels: Streets road classes for which a `CongestionLevel` substitution should occur.
-     - returns: A list of `CongestionSegment` tuples with coordinate and congestion level.
-     */
-    func combine(_ coordinates: [CLLocationCoordinate2D],
-                 with congestions: [CongestionLevel],
-                 streetsRoadClasses: [MapboxStreetsRoadClass?]? = nil,
-                 roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [CongestionSegment] {
-        var segments: [CongestionSegment] = []
-        segments.reserveCapacity(congestions.count)
-        
-        var index = 0
-        for (firstSegment, congestionLevel) in zip(zip(coordinates, coordinates.suffix(from: 1)), congestions) {
-            let coordinates = [firstSegment.0, firstSegment.1]
-            
-            var overriddenCongestionLevel = congestionLevel
-            if let streetsRoadClasses = streetsRoadClasses,
-               let roadClassesWithOverriddenCongestionLevels = roadClassesWithOverriddenCongestionLevels,
-               streetsRoadClasses.indices.contains(index),
-               let streetsRoadClass = streetsRoadClasses[index],
-               congestionLevel == .unknown,
-               roadClassesWithOverriddenCongestionLevels.contains(streetsRoadClass) {
-                overriddenCongestionLevel = .low
-            }
-            
-            if segments.last?.1 == overriddenCongestionLevel {
-                segments[segments.count - 1].0 += coordinates
-            } else {
-                segments.append((coordinates, overriddenCongestionLevel))
-            }
-            
-            index += 1
-        }
-        
-        return segments
     }
 }

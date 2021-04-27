@@ -47,7 +47,7 @@ class NavigationMapViewTests: XCTestCase {
     ]
     
     func testNavigationMapViewCombineWithSimilarCongestions() {
-        let congestionSegments = navigationMapView.combine(coordinates, with: [
+        let congestionSegments = coordinates.combined([
             .low,
             .low,
             .low,
@@ -61,7 +61,7 @@ class NavigationMapViewTests: XCTestCase {
     }
     
     func testNavigationMapViewCombineWithDissimilarCongestions() {
-        let congestionSegmentsSevere = navigationMapView.combine(coordinates, with: [
+        let congestionSegmentsSevere = coordinates.combined([
             .low,
             .low,
             .severe,
@@ -185,20 +185,19 @@ class NavigationMapViewTests: XCTestCase {
     
     func testOverriddenStreetsRouteClassTunnelSingleCongestionLevel() {
         let route = loadRoute(from: "route-with-road-classes-single-congestion")
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        var congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        var congestions = route.congestionFeatures()
         XCTAssertEqual(congestions.count, 1)
         
-        // Since `NavigationMapView.addCongestion(to:legIndex:)` merges congestion levels which are similar
-        // it is expected that only one congestion level is shown for this route.
+        // Since `Route.congestionFeatures(legIndex:isAlternativeRoute:roadClassesWithOverriddenCongestionLevels:)`
+        // merges congestion levels which are similar it is expected that only one congestion
+        // level is shown for this route.
         var expectedCongestionLevel: CongestionLevel = .unknown
         congestions.enumerated().forEach {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevel)
         }
         
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = [.golf]
         expectedCongestionLevel = .low
-        congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        congestions = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: [.golf])
         
         congestions.enumerated().forEach {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevel)
@@ -207,8 +206,7 @@ class NavigationMapViewTests: XCTestCase {
     
     func testOverriddenStreetsRouteClassMotorwayMixedCongestionLevels() {
         let route = loadRoute(from: "route-with-mixed-road-classes")
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        var congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        var congestions = route.congestionFeatures()
         XCTAssertEqual(congestions.count, 5)
         
         var expectedCongestionLevels: [CongestionLevel] = [
@@ -219,13 +217,13 @@ class NavigationMapViewTests: XCTestCase {
             .unknown
         ]
         
-        // Since `NavigationMapView.addCongestion(to:legIndex:)` merges congestion levels which are similar
-        // in such case it is expected that mixed congestion levels remain unmodified.
+        // Since `Route.congestionFeatures(legIndex:isAlternativeRoute:roadClassesWithOverriddenCongestionLevels:)`
+        // merges congestion levels which are similar in such case it is expected that mixed congestion
+        // levels remain unmodified.
         congestions.enumerated().forEach {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
         }
         
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = [.motorway]
         expectedCongestionLevels = [
             .low,
             .severe,
@@ -233,7 +231,7 @@ class NavigationMapViewTests: XCTestCase {
             .severe,
             .low
         ]
-        congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        congestions = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: [.motorway])
         
         congestions.enumerated().forEach {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
@@ -242,10 +240,8 @@ class NavigationMapViewTests: XCTestCase {
     
     func testOverriddenStreetsRouteClassMissing() {
         let route = loadRoute(from: "route-with-missing-road-classes")
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = [.motorway]
         
-        var congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        var congestions = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: [.motorway])
         XCTAssertEqual(congestions.count, 3)
         
         var expectedCongestionLevels: [CongestionLevel] = [
@@ -260,9 +256,8 @@ class NavigationMapViewTests: XCTestCase {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
         }
         
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = []
         expectedCongestionLevels[1] = .unknown
-        congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        congestions = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: [])
         
         // In case if `roadClassesWithOverriddenCongestionLevels` is empty `.unknown` congestion level will not be
         // overwritten.
@@ -282,8 +277,6 @@ class NavigationMapViewTests: XCTestCase {
     
     func testRouteStreetsRoadClassesCountEqualToCongestionLevelsCount() {
         let route = loadRoute(from: "route-with-missing-road-classes")
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = [.motorway]
         
         // Make sure that number of `MapboxStreetsRoadClass` is equal to number of congestion levels.
         route.legs.forEach {
@@ -296,8 +289,7 @@ class NavigationMapViewTests: XCTestCase {
     
     func testRouteStreetsRoadClassesNotPresent() {
         let route = loadRoute(from: "route-with-not-present-road-classes")
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        var congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        var congestions = route.congestionFeatures()
         let expectedCongestionLevels: [CongestionLevel] = [
             .unknown,
             .low,
@@ -310,8 +302,7 @@ class NavigationMapViewTests: XCTestCase {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
         }
         
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = [.motorway, .secondary, .ferry]
-        congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        congestions = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: [.motorway, .secondary, .ferry])
         
         // Since `SreetsRoadClass`es are not present in this route congestion levels should remain unchanged after
         // modifying `roadClassesWithOverriddenCongestionLevels`, `streetsRoadClasses` should be empty as well.
@@ -328,8 +319,7 @@ class NavigationMapViewTests: XCTestCase {
     
     func testRouteStreetsRoadClassesDifferentAndSameCongestion() {
         let route = loadRoute(from: "route-with-same-congestion-different-road-classes")
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        var congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        var congestions = route.congestionFeatures()
         var expectedCongestionLevels: [CongestionLevel] = [
             .unknown
         ]
@@ -344,15 +334,13 @@ class NavigationMapViewTests: XCTestCase {
             .low,
             .unknown
         ]
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = [.street]
-        congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        congestions = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: [.street])
         
         congestions.enumerated().forEach {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
         }
         
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = [.street, .ferry]
-        congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        congestions = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: [.street, .ferry])
         
         congestions.enumerated().forEach {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
@@ -363,8 +351,7 @@ class NavigationMapViewTests: XCTestCase {
         expectedCongestionLevels = [
             .low
         ]
-        navigationMapView.roadClassesWithOverriddenCongestionLevels = [.street, .ferry, .motorway]
-        congestions = navigationMapView.addCongestion(to: route, legIndex: 0)
+        congestions = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: [.street, .ferry, .motorway])
         
         congestions.enumerated().forEach {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
