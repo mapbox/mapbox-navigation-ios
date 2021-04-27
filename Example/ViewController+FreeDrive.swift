@@ -97,7 +97,7 @@ extension ViewController {
     }
     
     @objc func didUpdateElectronicHorizonPosition(_ notification: Notification) {
-        guard let horizon = notification.userInfo?[ElectronicHorizonEdge.NotificationUserInfoKey.treeKey] as? ElectronicHorizonEdge else {
+        guard let horizon = notification.userInfo?[RoadGraph.NotificationUserInfoKey.treeKey] as? RoadGraph.Edge else {
             return
         }
         
@@ -124,8 +124,8 @@ extension ViewController {
         }
     }
     
-    func edgeNames(identifier: ElectronicHorizonEdge.Identifier) -> [String] {
-        let passiveLocationDataSource = (navigationMapView.mapView.locationManager.locationProvider as! PassiveLocationManager).dataSource
+    func edgeNames(identifier: RoadGraph.Edge.Identifier) -> [String] {
+        let passiveLocationDataSource = (navigationMapView.mapView.location.locationProvider as! PassiveLocationManager).dataSource
         guard let metadata = passiveLocationDataSource.roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
             return []
         }

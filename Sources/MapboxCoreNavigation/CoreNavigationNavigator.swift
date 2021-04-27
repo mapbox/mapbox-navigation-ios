@@ -147,7 +147,7 @@ class Navigator {
 
 extension Navigator: ElectronicHorizonObserver {
     public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
-        let userInfo: [ElectronicHorizonEdge.NotificationUserInfoKey: Any] = [
+        let userInfo: [RoadGraph.NotificationUserInfoKey: Any] = [
             .positionKey: RoadGraph.Position(position.position()),
             .treeKey: try! position.tree(),
             .updatesMostProbablePathKey: position.type() == .UPDATE,
@@ -157,7 +157,7 @@ extension Navigator: ElectronicHorizonObserver {
     }
     
     public func onRoadObjectEnter(for info: RoadObjectEnterExitInfo) {
-        let userInfo: [ElectronicHorizonEdge.NotificationUserInfoKey: Any] = [
+        let userInfo: [RoadGraph.NotificationUserInfoKey: Any] = [
             .roadObjectIdentifierKey: info.roadObjectId,
             .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
         ]
@@ -165,7 +165,7 @@ extension Navigator: ElectronicHorizonObserver {
     }
     
     public func onRoadObjectExit(for info: RoadObjectEnterExitInfo) {
-        let userInfo: [ElectronicHorizonEdge.NotificationUserInfoKey: Any] = [
+        let userInfo: [RoadGraph.NotificationUserInfoKey: Any] = [
             .roadObjectIdentifierKey: info.roadObjectId,
             .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
         ]

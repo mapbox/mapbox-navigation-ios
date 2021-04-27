@@ -3,7 +3,7 @@ import CoreLocation
 import MapboxDirections
 import MapboxNavigationNative
 
-extension ElectronicHorizonEdge {
+extension RoadGraph.Edge {
     /**
      Indicates how many directions the user may travel along an edge.
      */

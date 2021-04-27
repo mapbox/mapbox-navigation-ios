@@ -308,28 +308,28 @@ public extension Notification.Name {
     /**
      Posted when the user’s position in the electronic horizon changes. This notification may be posted multiple times after `electronicHorizonDidEnterRoadObject` until the user transitions to a new electronic horizon.
      
-     The user info dictionary contains the keys `ElectronicHorizonEdge.NotificationUserInfoKey.positionKey`, `ElectronicHorizonEdge.NotificationUserInfoKey.treeKey`, `ElectronicHorizonEdge.NotificationUserInfoKey.updatesMostProbablePathKey`, and `ElectronicHorizonEdge.NotificationUserInfoKey.distancesByRoadObjectKey`.
+     The user info dictionary contains the keys `RoadGraph.Edge.NotificationUserInfoKey.positionKey`, `RoadGraph.Edge.NotificationUserInfoKey.treeKey`, `RoadGraph.Edge.NotificationUserInfoKey.updatesMostProbablePathKey`, and `RoadGraph.Edge.NotificationUserInfoKey.distancesByRoadObjectKey`.
     */
     static let electronicHorizonDidUpdatePosition: Notification.Name = .init(rawValue: "ElectronicHorizonDidUpdatePosition")
     
     /**
      Posted when the user enters a linear road object.
      
-     The user info dictionary contains the keys `ElectronicHorizonEdge.NotificationUserInfoKey.roadObjectIdentifierKey` and `ElectronicHorizonEdge.NotificationUserInfoKey.didTransitionAtEndpointKey`.
+     The user info dictionary contains the keys `RoadGraph.Edge.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.Edge.NotificationUserInfoKey.didTransitionAtEndpointKey`.
     */
     static let electronicHorizonDidEnterRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidEnterRoadObject")
     
     /**
      Posted when the user exits a linear road object.
      
-     The user info dictionary contains the keys `ElectronicHorizonEdge.NotificationUserInfoKey.roadObjectIdentifierKey` and `ElectronicHorizonEdge.NotificationUserInfoKey.transitionKey`.
+     The user info dictionary contains the keys `RoadGraph.Edge.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.Edge.NotificationUserInfoKey.transitionKey`.
     */
     static let electronicHorizonDidExitRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidExitRoadObject")
 }
 
-extension ElectronicHorizonEdge {
+extension RoadGraph {
     /**
-     Keys in the user info dictionaries of various notifications posted by instances of `RouteController` or `PassiveLocationDataSource` about `ElectronicHorizonEdge`s.
+     Keys in the user info dictionaries of various notifications posted by instances of `RouteController` or `PassiveLocationDataSource` about `RoadGraph.Edge`s.
      */
     public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
         public typealias RawValue = String
@@ -343,7 +343,7 @@ extension ElectronicHorizonEdge {
         public static let positionKey: NotificationUserInfoKey = .init(rawValue: "position")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an `ElectronicHorizonEdge` at the root of a tree of edges in the routing graph. This graph represents a probable path (or paths) of a vehicle within the routing graph for a certain distance in front of the vehicle, thus extending the user’s perspective beyond the “visible” horizon as the vehicle’s position and trajectory change.
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an `RoadGraph.Edge` at the root of a tree of edges in the routing graph. This graph represents a probable path (or paths) of a vehicle within the routing graph for a certain distance in front of the vehicle, thus extending the user’s perspective beyond the “visible” horizon as the vehicle’s position and trajectory change.
          */
         public static let treeKey: NotificationUserInfoKey = .init(rawValue: "tree")
         

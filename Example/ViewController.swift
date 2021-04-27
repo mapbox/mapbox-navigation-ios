@@ -20,8 +20,8 @@ class ViewController: UIViewController {
     var rawTrackStyledFeature: StyledFeature!
     var speedLimitView: SpeedLimitView!
     
-    var currentEdgeIdentifier: ElectronicHorizonEdge.Identifier?
-    var nextEdgeIdentifier: ElectronicHorizonEdge.Identifier?
+    var currentEdgeIdentifier: RoadGraph.Edge.Identifier?
+    var nextEdgeIdentifier: RoadGraph.Edge.Identifier?
     
     typealias RouteRequestSuccess = ((RouteResponse) -> Void)
     typealias RouteRequestFailure = ((Error) -> Void)

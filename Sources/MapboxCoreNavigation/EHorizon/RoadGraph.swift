@@ -3,7 +3,7 @@ import Turf
 import MapboxNavigationNative
 
 /**
- `RoadGraph` provides methods to get edge shape (e.g. `ElectronicHorizonEdge`) and metadata.
+ `RoadGraph` provides methods to get edge shape (e.g. `RoadGraph.Edge`) and metadata.
  
  You do not create a `RoadGraph` object manually. Instead, observe the `Notification.Name.electronicHorizonDidUpdatePosition` notification to obtain edge identifiers and get more details about the edges using the `RouteController.roadGraph` or `PassiveLocationDataSource.roadGraph` property.
  */
@@ -14,9 +14,9 @@ public final class RoadGraph {
      
      - returns: Metadata about the edge with the given edge identifier, or `nil` if the edge is inaccessible.
      */
-    public func edgeMetadata(edgeIdentifier: ElectronicHorizonEdge.Identifier) -> ElectronicHorizonEdge.Metadata? {
+    public func edgeMetadata(edgeIdentifier: RoadGraph.Edge.Identifier) -> RoadGraph.Edge.Metadata? {
         if let edgeMetadata = native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)) {
-            return ElectronicHorizon.Edge.Metadata(edgeMetadata)
+            return RoadGraph.Edge.Metadata(edgeMetadata)
         }
         return nil
     }
@@ -26,7 +26,7 @@ public final class RoadGraph {
      
      - returns: A line string corresponding to the given edge identifier, or `nil` if the edge is inaccessible.
      */
-    public func edgeShape(edgeIdentifier: ElectronicHorizonEdge.Identifier) -> LineString? {
+    public func edgeShape(edgeIdentifier: RoadGraph.Edge.Identifier) -> LineString? {
         guard let locations = native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier)) else {
             return nil
         }

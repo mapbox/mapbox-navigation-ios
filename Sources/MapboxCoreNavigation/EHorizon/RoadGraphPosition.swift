@@ -7,7 +7,7 @@ extension RoadGraph {
     public struct Position {
 
         /** The edge identifier along which the point object lies. */
-        public let edgeIdentifier: ElectronicHorizonEdge.Identifier
+        public let edgeIdentifier: RoadGraph.Edge.Identifier
 
         /** The distance from the start of an edge to the point object as a fraction of the edge’s length from 0 to 1. */
         public let fractionFromStart: Double
