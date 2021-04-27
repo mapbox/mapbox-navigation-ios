@@ -66,6 +66,7 @@
 * The top banner can now show a wider variety of turn lane configurations, such as combination U-turn/left turn lanes and combination through/slight right turn lanes. ([#2882](https://github.com/mapbox/mapbox-navigation-ios/pull/2882))
 * Exposed `NavigationMapView.mapTileStore`, `PassiveLocationDataSource.navigatorTileStore` and `RouteController.navigatorTileStore` for accessing corresponding `TileStore` instancies ([#2955](https://github.com/mapbox/mapbox-navigation-ios/pull/2955))
 * Removed `ElectronicHorizon` struct, now an electronic horizon notification directly contain pointer to a starting edge. `ElectronicHorizon.Edge` was renamed to `RoadGraph.Edge`. `ElectronicHorizon.NotificationUserInfoKey` was renamed to `RoadGraph.NotificationUserInfoKey`. ([#2949](https://github.com/mapbox/mapbox-navigation-ios/pull/2949))
+* Fixed an issue that the current road name label flashes when camera state changes or travels onto an unamed road. ([#2958](https://github.com/mapbox/mapbox-navigation-ios/pull/2958))
 
 ## v1.3.0
 
