@@ -133,6 +133,11 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     var uuid: UUID? {
         return eventsManager?.recordFeedback()
     }
+
+    /**
+     Current feedback's UUID.
+     */
+    var currentFeedbackUUID: UUID?
     
     /**
      Initialize a new FeedbackViewController from a `NavigationEventsManager`.
@@ -156,6 +161,8 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     func commonInit() {
         self.modalPresentationStyle = .custom
         self.transitioningDelegate = self
+
+        currentFeedbackUUID = eventsManager?.recordFeedback()
     }
     
     override public func viewDidLoad() {
@@ -233,7 +240,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func send(_ item: FeedbackItem) {
-        if let uuid = self.uuid {
+        if let uuid = currentFeedbackUUID {
             delegate?.feedbackViewController(self, didSend: item, uuid: uuid)
             eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
         }
@@ -250,7 +257,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     func dismissFeedbackItem() {
         delegate?.feedbackViewControllerDidCancel(self)
-        if let uuid = self.uuid {
+        if let uuid = currentFeedbackUUID {
             eventsManager?.cancelFeedback(uuid: uuid)
         }
         dismiss(animated: true, completion: nil)
