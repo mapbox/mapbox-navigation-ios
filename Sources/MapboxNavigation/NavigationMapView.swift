@@ -50,6 +50,11 @@ open class NavigationMapView: UIView {
      If `true` and there're multiple routes to choose, the alternative route lines would display the congestion levels at different colors, similar to the main route. To customize the congestion colors that represent different congestion levels, override the `alternativeTrafficUnknownColor`, `alternativeTrafficLowColor`, `alternativeTrafficModerateColor`, `alternativeTrafficHeavyColor`, `alternativeTrafficSevereColor` property for the `NavigationMapView.appearance()`.
      */
     public var showsCongestionForAlternativeRoutes: Bool = false
+    
+    /**
+     Controls whether to show specific route leg index. Defaults to `nil`. If yes, the specific route leg will show congestion colors while other route legs show `routeCasingColor`. If no, all legs in the route would show congestion colors.
+     */
+    public var showSpecificLegIndex: Int?
 
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -397,6 +402,7 @@ open class NavigationMapView: UIView {
         removeRoutes()
         
         self.routes = routes
+        showSpecificLegIndex = legIndex
         
         var parentLayerIdentifier: String? = nil
         for (index, route) in routes.enumerated() {
@@ -457,12 +463,7 @@ open class NavigationMapView: UIView {
             
             // TODO: Verify that `isAlternativeRoute` parameter usage is needed.
             if isMainRoute {
-                var congestionFeatures: [Feature]?
-                if let legIndex = legIndex {
-                    congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-                } else {
-                    congestionFeatures = route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-                }
+                let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                 let gradientStops = routeLineGradient(congestionFeatures,
                                                       fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
