@@ -99,6 +99,14 @@ public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
      - parameter waypoint: The waypoint that was selected.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, didSelect waypoint: Waypoint)
+    
+    /**
+     Tells the receiver that the final destination `PointAnnotation` was added to the `NavigationMapView`.
+     
+     - parameter navigationMapView: The `NavigationMapView` object.
+     - parameter finalDestinationAnnotation: `PointAnnotation`, which was added to the `NavigationMapView`.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation)
 }
 
 public extension NavigationMapViewDelegate {
@@ -170,6 +178,13 @@ public extension NavigationMapViewDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, didSelect waypoint: Waypoint) {
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+    }
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation) {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
 }
