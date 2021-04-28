@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		2B237961251E3C3000CCF9C4 /* diffreport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B23795F251E3C3000CCF9C4 /* diffreport.swift */; };
 		2B237962251E3C3000CCF9C4 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B237960251E3C3000CCF9C4 /* main.swift */; };
+		2B260FC32563E7F90043C171 /* DiffCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B260FC02563E7F90043C171 /* DiffCommand.swift */; };
+		2B260FC42563E7F90043C171 /* LogCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B260FC12563E7F90043C171 /* LogCommand.swift */; };
+		2B260FC52563E7F90043C171 /* DiffReportOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B260FC22563E7F90043C171 /* DiffReportOptions.swift */; };
+		2B260FCB2563E8960043C171 /* SwiftCLI in Frameworks */ = {isa = PBXBuildFile; productRef = 2B260FCA2563E8960043C171 /* SwiftCLI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -28,6 +32,9 @@
 		2B23795F251E3C3000CCF9C4 /* diffreport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = diffreport.swift; sourceTree = "<group>"; };
 		2B237960251E3C3000CCF9C4 /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		2B237963251E3C4000CCF9C4 /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		2B260FC02563E7F90043C171 /* DiffCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiffCommand.swift; sourceTree = "<group>"; };
+		2B260FC12563E7F90043C171 /* LogCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogCommand.swift; sourceTree = "<group>"; };
+		2B260FC22563E7F90043C171 /* DiffReportOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiffReportOptions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +42,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2B260FCB2563E8960043C171 /* SwiftCLI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +77,9 @@
 		2B23795E251E3C3000CCF9C4 /* APIDiffReport */ = {
 			isa = PBXGroup;
 			children = (
+				2B260FC02563E7F90043C171 /* DiffCommand.swift */,
+				2B260FC22563E7F90043C171 /* DiffReportOptions.swift */,
+				2B260FC12563E7F90043C171 /* LogCommand.swift */,
 				2B23795F251E3C3000CCF9C4 /* diffreport.swift */,
 				2B237960251E3C3000CCF9C4 /* main.swift */,
 			);
@@ -91,6 +102,9 @@
 			dependencies = (
 			);
 			name = APIDiffReport;
+			packageProductDependencies = (
+				2B260FCA2563E8960043C171 /* SwiftCLI */,
+			);
 			productName = APIDiffReport;
 			productReference = 2B20711E251E11A200001493 /* APIDiffReport */;
 			productType = "com.apple.product-type.tool";
@@ -119,6 +133,9 @@
 				Base,
 			);
 			mainGroup = 2B207115251E11A200001493;
+			packageReferences = (
+				2B260FC92563E8960043C171 /* XCRemoteSwiftPackageReference "SwiftCLI" */,
+			);
 			productRefGroup = 2B20711F251E11A200001493 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -305,6 +322,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2B260FC92563E8960043C171 /* XCRemoteSwiftPackageReference "SwiftCLI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jakeheis/SwiftCLI";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2B260FCA2563E8960043C171 /* SwiftCLI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2B260FC92563E8960043C171 /* XCRemoteSwiftPackageReference "SwiftCLI" */;
+			productName = SwiftCLI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2B207116251E11A200001493 /* Project object */;
 }
