@@ -373,12 +373,11 @@
 		DA303CA621B7A90100F921DC /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3529FCF521A5C5D900AEA9AA /* UIViewController.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
-		DA5F449A25F07A5C00F573EC /* ElectronicHorizon.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */; };
 		DA5F44AA25F07A6800F573EC /* RoadObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A325F07A6500F573EC /* RoadObjectType.swift */; };
 		DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */; };
 		DA5F44AE25F07A6800F573EC /* RoadObjectDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */; };
-		DA5F44B025F07A6800F573EC /* ElectronicHorizonEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */; };
-		DA5F44BA25F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44B925F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift */; };
+		DA5F44B025F07A6800F573EC /* RoadGraphEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */; };
+		DA5F44BA25F07AA500F573EC /* RoadGraphEdgeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */; };
 		DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C325F07AB500F573EC /* RoadGraph.swift */; };
 		DA5F44C725F07AB700F573EC /* RoadName.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C425F07AB500F573EC /* RoadName.swift */; };
 		DA5F44C825F07AB700F573EC /* MapboxStreetsRoadClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C525F07AB600F573EC /* MapboxStreetsRoadClass.swift */; };
@@ -950,12 +949,11 @@
 		DA545AC41FAA86450090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA5AD03C1FEBA03700FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Main.strings; sourceTree = "<group>"; };
 		DA5AD0401FEBA23200FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Localizable.strings; sourceTree = "<group>"; };
-		DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizon.swift; sourceTree = "<group>"; };
 		DA5F44A325F07A6500F573EC /* RoadObjectType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectType.swift; sourceTree = "<group>"; };
 		DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphPosition.swift; sourceTree = "<group>"; };
 		DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectDistanceInfo.swift; sourceTree = "<group>"; };
-		DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonEdge.swift; sourceTree = "<group>"; };
-		DA5F44B925F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonEdgeMetadata.swift; sourceTree = "<group>"; };
+		DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphEdge.swift; sourceTree = "<group>"; };
+		DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphEdgeMetadata.swift; sourceTree = "<group>"; };
 		DA5F44C325F07AB500F573EC /* RoadGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraph.swift; sourceTree = "<group>"; };
 		DA5F44C425F07AB500F573EC /* RoadName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadName.swift; sourceTree = "<group>"; };
 		DA5F44C525F07AB600F573EC /* MapboxStreetsRoadClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxStreetsRoadClass.swift; sourceTree = "<group>"; };
@@ -1865,11 +1863,10 @@
 		DA5F446325F0744C00F573EC /* EHorizon */ = {
 			isa = PBXGroup;
 			children = (
-				DA5F449925F07A5C00F573EC /* ElectronicHorizon.swift */,
-				DA5F44A925F07A6700F573EC /* ElectronicHorizonEdge.swift */,
-				DA5F44B925F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift */,
 				DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */,
 				DA5F44C325F07AB500F573EC /* RoadGraph.swift */,
+				DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */,
+				DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */,
 				DA2A01EF25F308B100AAB4C6 /* RoadGraphPath.swift */,
 				DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */,
 				DA5F44C425F07AB500F573EC /* RoadName.swift */,
@@ -2776,14 +2773,13 @@
 				DA754E1923AC56E5007E16B5 /* MBXAccountsLoader.m in Sources */,
 				2BE701252535943900F46E4E /* BorderCrossing.swift in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,
-				DA5F449A25F07A5C00F573EC /* ElectronicHorizon.swift in Sources */,
 				8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */,
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
 				352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
 				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
-				DA5F44BA25F07AA500F573EC /* ElectronicHorizonEdgeMetadata.swift in Sources */,
+				DA5F44BA25F07AA500F573EC /* RoadGraphEdgeMetadata.swift in Sources */,
 				DA5F44E825F07D2800F573EC /* RoadObjectLocation.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
@@ -2828,7 +2824,7 @@
 				DA5F44C825F07AB700F573EC /* MapboxStreetsRoadClass.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,
 				DA5F44F625F07D3B00F573EC /* RoadObjectsStore.swift in Sources */,
-				DA5F44B025F07A6800F573EC /* ElectronicHorizonEdge.swift in Sources */,
+				DA5F44B025F07A6800F573EC /* RoadGraphEdge.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

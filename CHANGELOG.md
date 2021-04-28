@@ -63,6 +63,7 @@
 * Added the `Directions.calculateOffline(options:completionHandler:)` and `Directions.calculateWithCache(options:completionHandler:)` methods, which incorporate routing tiles from the predictive cache when possible to avoid relying on a network connection to calculate the route. `RouteController` now also uses the predictive cache when rerouting. ([#2848](https://github.com/mapbox/mapbox-navigation-ios/pull/2848)) 
 * Fixed an issue where `PassiveLocationDataSource` and `RouteController` did not use the access token and host specified by `PassiveLocationDataSource.directions` and `RouteController.directions`, respectively. Added the `PredictiveCacheOptions.credentials` property for specifying the access token and host used for prefetching resources. ([#2876](https://github.com/mapbox/mapbox-navigation-ios/pull/2876))
 * The top banner can now show a wider variety of turn lane configurations, such as combination U-turn/left turn lanes and combination through/slight right turn lanes. ([#2882](https://github.com/mapbox/mapbox-navigation-ios/pull/2882))
+* Removed `ElectronicHorizon` struct, now an electronic horizon notification directly contain pointer to a starting edge. `ElectronicHorizon.Edge` was renamed to `RoadGraph.Edge`. `ElectronicHorizon.NotificationUserInfoKey` was renamed to `RoadGraph.NotificationUserInfoKey`.
 
 ## v1.3.0
 
