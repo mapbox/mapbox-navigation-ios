@@ -299,7 +299,7 @@ extension NavigationMapView {
                         minimumSegment = (currentGradientStop, associatedFeatureColor)
                     }
                 }
-                // here might be the problem
+
                 if index + 1 < congestionFeatures.count && Double(segmentEndPercentTraveled.nextUp) >= fractionTraveled {
                     let currentGradientStop = Double(segmentEndPercentTraveled.nextUp)
                     let nextCongestionLevel = congestionFeatures[index + 1].properties?[CongestionAttribute] as? String
