@@ -27,6 +27,7 @@
 * `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.highlightBuildings(at:in3D:)` was renamed to `NavigationMapView.highlightBuildings(at:in3D:completion:)`. ([#2827](https://github.com/mapbox/mapbox-navigation-ios/pull/2827))
 * Added the `NavigationMapView.showsCongestionForAlternativeRoutes` property to show congestion levels with different colors on alternative route lines. ([#2887](https://github.com/mapbox/mapbox-navigation-ios/pull/2887))
+* Added the `NavigationMapView.navigationMapView(_:didAdd:)` and `NavigationViewController.navigationViewController(_:didAdd:)` delegate methods, which will be called whenever final destination is added to `NavigationMapView` and `NavigationViewController` respectively. ([#2961](https://github.com/mapbox/mapbox-navigation-ios/pull/2961))
 
 ### Location tracking
 
