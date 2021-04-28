@@ -50,11 +50,6 @@ open class NavigationMapView: UIView {
      If `true` and there're multiple routes to choose, the alternative route lines would display the congestion levels at different colors, similar to the main route. To customize the congestion colors that represent different congestion levels, override the `alternativeTrafficUnknownColor`, `alternativeTrafficLowColor`, `alternativeTrafficModerateColor`, `alternativeTrafficHeavyColor`, `alternativeTrafficSevereColor` property for the `NavigationMapView.appearance()`.
      */
     public var showsCongestionForAlternativeRoutes: Bool = false
-    
-    /**
-     Controls whether to show specific route leg index. Defaults to `nil`. If yes, the specific route leg will show congestion colors while other route legs show `routeCasingColor`. If no, all legs in the route would show congestion colors.
-     */
-    public var showSpecificLegIndex: Int?
 
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -109,6 +104,7 @@ open class NavigationMapView: UIView {
     var fractionTraveled: Double = 0.0
     var preFractionTraveled: Double = 0.0
     var vanishingRouteLineUpdateTimer: Timer? = nil
+    var showSpecificLegIndex: Int?
     
     var showsRoute: Bool {
         get {
