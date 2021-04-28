@@ -234,127 +234,129 @@ struct DiffReport {
         }
         return kind
     }
-func prettyString(forModificationKind kind: String) -> String {
-    switch kind {
-    case "key.swift_declaration": return "Swift declaration"
-    case "key.parsed_declaration": return "Declaration"
-    case "key.doc.declaration": return "Declaration"
-    case "key.typename": return "Declaration"
-    case "key.always_deprecated": return "Deprecation"
-    case "key.deprecation_message": return "Deprecation message"
-    default: return kind
-    }
-}
-
-/** Walk the APINode to the root node. */
-func rootName(forApi api: APINode, apis: ApiNameNodeMap) -> String {
-    let name = api["key.name"] as! String
-    if let parentUsr = api["parent.usr"] as? String, let parentApi = apis[parentUsr] {
-        return rootName(forApi: parentApi, apis: apis)
-    }
-    return name
-}
-
-func prettyName(forApi api: APINode, apis: ApiNameNodeMap) -> String {
-    let name = api["key.name"] as! String
-    if let parentUsr = api["parent.usr"] as? String, let parentApi = apis[parentUsr] {
-        return "`\(name)` in \(prettyName(forApi: parentApi, apis: apis))"
-    }
-    return "`\(name)`"
-}
-
-/** Normalize data contained in an API node json dictionary. */
-func apiNode(from sourceKittenNode: SourceKittenNode) -> APINode {
-    var data = sourceKittenNode
-    data.removeValue(forKey: "key.substructure")
-    for (key, value) in data {
-        data[key] = String(describing: value)
-    }
-    return data
-}
-
-/**
- Recursively iterate over each sourcekitten node and extract a flattened map of USR identifier to
- APINode instance.
- */
-func extractAPINodeMap(from sourceKittenNodes: [SourceKittenNode]) -> ApiNameNodeMap {
-    var map: ApiNameNodeMap = [:]
-    for file in sourceKittenNodes {
-        for (_, information) in file {
-            let substructure = (information as! SourceKittenNode)["key.substructure"] as! [SourceKittenNode]
-            for jsonNode in substructure {
-                map += extractAPINodeMap(from: jsonNode)
-            }
+    
+    func prettyString(forModificationKind kind: String) -> String {
+        switch kind {
+        case "key.swift_declaration": return "Swift declaration"
+        case "key.parsed_declaration": return "Declaration"
+        case "key.doc.declaration": return "Declaration"
+        case "key.typename": return "Declaration"
+        case "key.always_deprecated": return "Deprecation"
+        case "key.deprecation_message": return "Deprecation message"
+        default: return kind
         }
     }
-    return map
-}
-
-/**
- Recursively iterate over a sourcekitten node and extract a flattened map of USR identifier to
- APINode instance.
- */
-func extractAPINodeMap(from sourceKittenNode: SourceKittenNode, parentUsr: String? = nil) -> ApiNameNodeMap {
-    var map: ApiNameNodeMap = [:]
-    for (key, value) in sourceKittenNode {
-        switch key {
-        case "key.usr":
-            if let accessibility = sourceKittenNode["key.accessibility"] {
-                if accessibility as! String != "source.lang.swift.accessibility.public" &&
-                    accessibility as! String != "source.lang.swift.accessibility.open" {
+    
+    /** Walk the APINode to the root node. */
+    func rootName(forApi api: APINode, apis: ApiNameNodeMap) -> String {
+        let name = api["key.name"] as! String
+        if let parentUsr = api["parent.usr"] as? String, let parentApi = apis[parentUsr] {
+            return rootName(forApi: parentApi, apis: apis)
+        }
+        return name
+    }
+    
+    func prettyName(forApi api: APINode, apis: ApiNameNodeMap) -> String {
+        let name = api["key.name"] as! String
+        if let parentUsr = api["parent.usr"] as? String, let parentApi = apis[parentUsr] {
+            return "`\(name)` in \(prettyName(forApi: parentApi, apis: apis))"
+        }
+        return "`\(name)`"
+    }
+    
+    /** Normalize data contained in an API node json dictionary. */
+    func apiNode(from sourceKittenNode: SourceKittenNode) -> APINode {
+        var data = sourceKittenNode
+        data.removeValue(forKey: "key.substructure")
+        for (key, value) in data {
+            data[key] = String(describing: value)
+        }
+        return data
+    }
+    
+    /**
+     Recursively iterate over each sourcekitten node and extract a flattened map of USR identifier to
+     APINode instance.
+     */
+    func extractAPINodeMap(from sourceKittenNodes: [SourceKittenNode]) -> ApiNameNodeMap {
+        var map: ApiNameNodeMap = [:]
+        for file in sourceKittenNodes {
+            for (_, information) in file {
+                let substructure = (information as! SourceKittenNode)["key.substructure"] as! [SourceKittenNode]
+                for jsonNode in substructure {
+                    map += extractAPINodeMap(from: jsonNode)
+                }
+            }
+        }
+        return map
+    }
+    
+    /**
+     Recursively iterate over a sourcekitten node and extract a flattened map of USR identifier to
+     APINode instance.
+     */
+    func extractAPINodeMap(from sourceKittenNode: SourceKittenNode, parentUsr: String? = nil) -> ApiNameNodeMap {
+        var map: ApiNameNodeMap = [:]
+        for (key, value) in sourceKittenNode {
+            switch key {
+            case "key.usr":
+                if let accessibility = sourceKittenNode["key.accessibility"] {
+                    if !reportOptions.verifyAccessibility(accessibility as! String) {
+                        continue
+                    }
+                } else if let kind = sourceKittenNode["key.kind"] as? String, kind == "source.lang.swift.decl.extension" {
                     continue
                 }
-            } else if let kind = sourceKittenNode["key.kind"] as? String, kind == "source.lang.swift.decl.extension" {
+                var node = apiNode(from: sourceKittenNode)
+                
+                // Create a reference to the parent node
+                node["parent.usr"] = parentUsr
+                
+                // Store the API node in the map
+                map[value as! String] = node
+                
+            case "key.substructure":
+                let substructure = value as! [SourceKittenNode]
+                for subSourceKittenNode in substructure {
+                    map += extractAPINodeMap(from: subSourceKittenNode, parentUsr: sourceKittenNode["key.usr"] as? String)
+                }
+            default:
                 continue
             }
-            var node = apiNode(from: sourceKittenNode)
-            
-            // Create a reference to the parent node
-            node["parent.usr"] = parentUsr
-            
-            // Store the API node in the map
-            map[value as! String] = node
-            
-        case "key.substructure":
-            let substructure = value as! [SourceKittenNode]
-            for subSourceKittenNode in substructure {
-                map += extractAPINodeMap(from: subSourceKittenNode, parentUsr: sourceKittenNode["key.usr"] as? String)
-            }
-        default:
-            continue
         }
+        return map
     }
-    return map
-}
-
-/**
- Execute sourcekitten with a given umbrella header.
- 
- Only meant to be used in unit test builds.
- 
- @param header Absolute path to an umbrella header.
- */
-func runSourceKitten(withHeader header: String) throws -> JSONObject {
-    let task = Process()
-    task.launchPath = "/usr/bin/env"
-    task.arguments = [
-        "/usr/local/bin/sourcekitten",
-        "doc",
-        "--objc",
-        header,
-        "--",
-        "-x",
-        "objective-c",
-    ]
-    let standardOutput = Pipe()
-    task.standardOutput = standardOutput
-    task.launch()
-    task.waitUntilExit()
-    var data = standardOutput.fileHandleForReading.readDataToEndOfFile()
-    let tmpDir = ProcessInfo.processInfo.environment["TMPDIR"]!.replacingOccurrences(of: "/", with: "\\/")
-    let string = String(data: data, encoding: String.Encoding.utf8)!
-        .replacingOccurrences(of: tmpDir + "old\\/", with: "")
-        .replacingOccurrences(of: tmpDir + "new\\/", with: "")
-    data = string.data(using: String.Encoding.utf8)!
-    return try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
+    
+    /**
+     Execute sourcekitten with a given umbrella header.
+     
+     Only meant to be used in unit test builds.
+     
+     @param header Absolute path to an umbrella header.
+     */
+    func runSourceKitten(withHeader header: String) throws -> JSONObject {
+        let task = Process()
+        task.launchPath = "/usr/bin/env"
+        task.arguments = [
+            "/usr/local/bin/sourcekitten",
+            "doc",
+            "--objc",
+            header,
+            "--",
+            "-x",
+            "objective-c",
+        ]
+        let standardOutput = Pipe()
+        task.standardOutput = standardOutput
+        task.launch()
+        task.waitUntilExit()
+        var data = standardOutput.fileHandleForReading.readDataToEndOfFile()
+        let tmpDir = ProcessInfo.processInfo.environment["TMPDIR"]!.replacingOccurrences(of: "/", with: "\\/")
+        let string = String(data: data, encoding: String.Encoding.utf8)!
+            .replacingOccurrences(of: tmpDir + "old\\/", with: "")
+            .replacingOccurrences(of: tmpDir + "new\\/", with: "")
+        data = string.data(using: String.Encoding.utf8)!
+        return try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
+    }
+    
 }
