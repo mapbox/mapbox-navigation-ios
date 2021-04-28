@@ -99,6 +99,11 @@ public struct FollowingCameraOptions {
      maneuver to extend the view.
      */
     public var geometryFramingAfterManeuver: GeometryFramingAfterManeuver = GeometryFramingAfterManeuver()
+    
+    /**
+     Options, which allow to modify the framed route geometries when approaching a maneuver.
+     */
+    public var pitchNearManeuver: PitchNearManeuver = PitchNearManeuver()
 }
 
 /**
@@ -182,4 +187,24 @@ public struct GeometryFramingAfterManeuver {
      Defaults to `100.0` meters.
      */
     public var distanceToFrameAfterManeuver: CLLocationDistance = 100.0
+}
+
+/**
+ Options, which allow to modify the framed route geometries when approaching a maneuver.
+ */
+public struct PitchNearManeuver {
+    
+    /**
+     Controls whether `CameraOptions.pitch` will be set to `0` near upcoming maneuver.
+     
+     Defaults to `true`.
+     */
+    public var enabled = true
+    
+    /**
+     Threshold distance to the upcoming maneuver.
+     
+     Defaults to `180.0` meters.
+     */
+    public var triggerDistanceToManeuver: CLLocationDistance = 180.0
 }

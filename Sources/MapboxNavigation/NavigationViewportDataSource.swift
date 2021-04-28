@@ -429,28 +429,30 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
     
     func pitchСoefficient(_ routeProgress: RouteProgress, currentCoordinate: CLLocationCoordinate2D) -> Double {
-        var shouldIgnoreManeuver = false
-        if let upcomingStep = routeProgress.currentLeg.steps[safe: routeProgress.currentLegProgress.stepIndex + 1] {
-            if routeProgress.currentLegProgress.stepIndex == routeProgress.currentLegProgress.leg.steps.count - 2 {
-                shouldIgnoreManeuver = true
+        let defaultPitchСoefficient = 1.0
+        let pitchNearManeuver = options.followingCameraOptions.pitchNearManeuver
+        if pitchNearManeuver.enabled {
+            var shouldIgnoreManeuver = false
+            if let upcomingStep = routeProgress.currentLeg.steps[safe: routeProgress.currentLegProgress.stepIndex + 1] {
+                if routeProgress.currentLegProgress.stepIndex == routeProgress.currentLegProgress.leg.steps.count - 2 {
+                    shouldIgnoreManeuver = true
+                }
+                
+                let maneuvers: [ManeuverType] = [.continue, .merge, .takeOnRamp, .takeOffRamp, .reachFork]
+                if maneuvers.contains(upcomingStep.maneuverType) {
+                    shouldIgnoreManeuver = true
+                }
             }
             
-            let maneuvers: [ManeuverType] = [.continue, .merge, .takeOnRamp, .takeOffRamp, .reachFork]
-            if maneuvers.contains(upcomingStep.maneuverType) {
-                shouldIgnoreManeuver = true
+            let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: currentCoordinate) ?? []
+            if let distanceToManeuver = LineString(coordinatesToManeuver).distance(),
+               distanceToManeuver <= pitchNearManeuver.triggerDistanceToManeuver,
+               !shouldIgnoreManeuver {
+                return 0.0
             }
         }
         
-        let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: currentCoordinate) ?? []
-        let defaultPitchСoefficient = 1.0
-        guard let distance = LineString(coordinatesToManeuver).distance() else { return defaultPitchСoefficient }
-        let pitchEffectDistanceStart: CLLocationDistance = 180.0
-        let pitchEffectDistanceEnd: CLLocationDistance = 150.0
-        let pitchСoefficient = shouldIgnoreManeuver
-            ? defaultPitchСoefficient
-            : (max(min(distance, pitchEffectDistanceStart), pitchEffectDistanceEnd) - pitchEffectDistanceEnd) / (pitchEffectDistanceStart - pitchEffectDistanceEnd)
-        
-        return pitchСoefficient
+        return defaultPitchСoefficient
     }
 }
 
