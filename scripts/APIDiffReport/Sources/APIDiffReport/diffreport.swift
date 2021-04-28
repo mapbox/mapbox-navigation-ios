@@ -26,6 +26,17 @@ typealias SourceKittenNode = [String: Any]
 typealias APINode = [String: Any]
 typealias ApiNameNodeMap = [String: APINode]
 
+/** Union two dictionaries, preferring existing values if they possess a parent.usr key. */
+func += (left: inout ApiNameNodeMap, right: ApiNameNodeMap) {
+    for (k, v) in right {
+        if left[k] == nil {
+            left.updateValue(v, forKey: k)
+        } else if let object = left[k], object["parent.usr"] == nil {
+            left.updateValue(v, forKey: k)
+        }
+    }
+}
+
 /** A type of API change. */
 public enum ApiChange {
     case addition(apiType: String, name: String)
