@@ -7,7 +7,7 @@ commands:
         type: string
     steps:
       - save_cache:
-          key: nav-api-diff-cache-v5-{{ .Environment.CIRCLE_JOB }}-{{ << parameters.api_diff_cache >> }}
+          key: nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-{{ << parameters.api_diff_cache >> }}
           paths:
             - << pipeline.parameters.api_log_file >>
 
