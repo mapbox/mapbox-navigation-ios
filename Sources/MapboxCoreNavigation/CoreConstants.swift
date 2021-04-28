@@ -308,28 +308,28 @@ public extension Notification.Name {
     /**
      Posted when the user’s position in the electronic horizon changes. This notification may be posted multiple times after `electronicHorizonDidEnterRoadObject` until the user transitions to a new electronic horizon.
      
-     The user info dictionary contains the keys `RoadGraph.Edge.NotificationUserInfoKey.positionKey`, `RoadGraph.Edge.NotificationUserInfoKey.treeKey`, `RoadGraph.Edge.NotificationUserInfoKey.updatesMostProbablePathKey`, and `RoadGraph.Edge.NotificationUserInfoKey.distancesByRoadObjectKey`.
+     The user info dictionary contains the keys `RoadGraph.NotificationUserInfoKey.positionKey`, `RoadGraph.NotificationUserInfoKey.treeKey`, `RoadGraph.NotificationUserInfoKey.updatesMostProbablePathKey`, and `RoadGraph.NotificationUserInfoKey.distancesByRoadObjectKey`.
     */
     static let electronicHorizonDidUpdatePosition: Notification.Name = .init(rawValue: "ElectronicHorizonDidUpdatePosition")
     
     /**
      Posted when the user enters a linear road object.
      
-     The user info dictionary contains the keys `RoadGraph.Edge.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.Edge.NotificationUserInfoKey.didTransitionAtEndpointKey`.
+     The user info dictionary contains the keys `RoadGraph.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.NotificationUserInfoKey.didTransitionAtEndpointKey`.
     */
     static let electronicHorizonDidEnterRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidEnterRoadObject")
     
     /**
      Posted when the user exits a linear road object.
      
-     The user info dictionary contains the keys `RoadGraph.Edge.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.Edge.NotificationUserInfoKey.transitionKey`.
+     The user info dictionary contains the keys `RoadGraph.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.NotificationUserInfoKey.transitionKey`.
     */
     static let electronicHorizonDidExitRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidExitRoadObject")
 }
 
 extension RoadGraph {
     /**
-     Keys in the user info dictionaries of various notifications posted by instances of `RouteController` or `PassiveLocationDataSource` about `RoadGraph.Edge`s.
+     Keys in the user info dictionaries of various notifications posted by instances of `RouteController` or `PassiveLocationDataSource` about `RoadGraph`s.
      */
     public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
         public typealias RawValue = String

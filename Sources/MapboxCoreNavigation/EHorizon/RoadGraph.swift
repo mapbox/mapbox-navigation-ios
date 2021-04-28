@@ -14,9 +14,9 @@ public final class RoadGraph {
      
      - returns: Metadata about the edge with the given edge identifier, or `nil` if the edge is inaccessible.
      */
-    public func edgeMetadata(edgeIdentifier: RoadGraph.Edge.Identifier) -> RoadGraph.Edge.Metadata? {
+    public func edgeMetadata(edgeIdentifier: Edge.Identifier) -> Edge.Metadata? {
         if let edgeMetadata = native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)) {
-            return RoadGraph.Edge.Metadata(edgeMetadata)
+            return Edge.Metadata(edgeMetadata)
         }
         return nil
     }
@@ -26,7 +26,7 @@ public final class RoadGraph {
      
      - returns: A line string corresponding to the given edge identifier, or `nil` if the edge is inaccessible.
      */
-    public func edgeShape(edgeIdentifier: RoadGraph.Edge.Identifier) -> LineString? {
+    public func edgeShape(edgeIdentifier: Edge.Identifier) -> LineString? {
         guard let locations = native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier)) else {
             return nil
         }
