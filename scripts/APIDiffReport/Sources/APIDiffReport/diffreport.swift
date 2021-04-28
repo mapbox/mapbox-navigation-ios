@@ -99,64 +99,141 @@ extension Dictionary {
     }
 }
 
-/**
- Sorting function for APINode instances.
- 
- Sorts by filename.
- 
- Example usage: sorted(by: apiNodeIsOrderedBefore)
- */
-func apiNodeIsOrderedBefore(prev: APINode, next: APINode) -> Bool {
-    if let prevFile = prev["key.doc.file"] as? String, let nextFile = next["key.doc.file"] as? String {
-        return prevFile < nextFile
-    }
-    return false
-}
-
-/** Union two dictionaries, preferring existing values if they possess a parent.usr key. */
-func += (left: inout ApiNameNodeMap, right: ApiNameNodeMap) {
-    for (k, v) in right {
-        if left[k] == nil {
-            left.updateValue(v, forKey: k)
-        } else if let object = left[k], object["parent.usr"] == nil {
-            left.updateValue(v, forKey: k)
-        }
-    }
-}
-
-func prettyString(forKind kind: String) -> String {
-    if let pretty = [
-        // Objective-C
-        "sourcekitten.source.lang.objc.decl.protocol": "protocol",
-        "sourcekitten.source.lang.objc.decl.typedef": "typedef",
-        "sourcekitten.source.lang.objc.decl.method.instance": "method",
-        "sourcekitten.source.lang.objc.decl.property": "property",
-        "sourcekitten.source.lang.objc.decl.class": "class",
-        "sourcekitten.source.lang.objc.decl.constant": "constant",
-        "sourcekitten.source.lang.objc.decl.enum": "enum",
-        "sourcekitten.source.lang.objc.decl.enumcase": "enum value",
-        "sourcekitten.source.lang.objc.decl.category": "category",
-        "sourcekitten.source.lang.objc.decl.method.class": "class method",
-        "sourcekitten.source.lang.objc.decl.struct": "struct",
-        "sourcekitten.source.lang.objc.decl.field": "field",
+struct DiffReport {
+    
+    var reportOptions: DiffReportOptions
+    
+    /** Generates an API diff report from two SourceKitten JSON outputs. */
+    public func generateReport(oldApi: JSONObject, newApi: JSONObject) throws -> [String: [ApiChange]] {
+        let oldApiNameNodeMap = extractAPINodeMap(from: oldApi as! [SourceKittenNode])
+        let newApiNameNodeMap = extractAPINodeMap(from: newApi as! [SourceKittenNode])
         
-        // Swift
-        "source.lang.swift.decl.function.method.static": "static method",
-        "source.lang.swift.decl.function.method.instance": "method",
-        "source.lang.swift.decl.var.instance": "var",
-        "source.lang.swift.decl.class": "class",
-        "source.lang.swift.decl.var.static": "static var",
-        "source.lang.swift.decl.enum": "enum",
-        "source.lang.swift.decl.function.free": "function",
-        "source.lang.swift.decl.var.global": "global var",
-        "source.lang.swift.decl.protocol": "protocol",
-        "source.lang.swift.decl.enumelement": "enum value"
-        ][kind] {
-        return pretty
+        let oldApiNames = Set(oldApiNameNodeMap.keys)
+        let newApiNames = Set(newApiNameNodeMap.keys)
+        
+        let addedApiNames = newApiNames.subtracting(oldApiNames)
+        let deletedApiNames = oldApiNames.subtracting(newApiNames)
+        let persistedApiNames = oldApiNames.intersection(newApiNames)
+        
+        var changes: [String: [ApiChange]] = [:]
+        
+        // Additions
+        
+        for usr in (addedApiNames.map { usr in newApiNameNodeMap[usr]! }.sorted(by: apiNodeIsOrderedBefore)) {
+            guard verifyDocumentationCheck(apiNode: usr) else {
+                continue
+            }
+            let apiType = prettyString(forKind: usr["key.kind"] as! String)
+            let name = prettyName(forApi: usr, apis: newApiNameNodeMap)
+            let root = rootName(forApi: usr, apis: newApiNameNodeMap)
+            changes[root, withDefault: []].append(.addition(apiType: apiType, name: name))
+        }
+        
+        // Deletions
+        
+        for usr in (deletedApiNames.map { usr in oldApiNameNodeMap[usr]! }.sorted(by: apiNodeIsOrderedBefore)) {
+            guard verifyDocumentationCheck(apiNode: usr) else {
+                continue
+            }
+            let apiType = prettyString(forKind: usr["key.kind"] as! String)
+            let name = prettyName(forApi: usr, apis: oldApiNameNodeMap)
+            let root = rootName(forApi: usr, apis: oldApiNameNodeMap)
+            changes[root, withDefault: []].append(.deletion(apiType: apiType, name: name))
+        }
+        
+        // Modifications
+        
+        for usr in persistedApiNames {
+            let oldApi = oldApiNameNodeMap[usr]!
+            let newApi = newApiNameNodeMap[usr]!
+            let root = rootName(forApi: newApi, apis: newApiNameNodeMap)
+            let allKeys = Set(oldApi.keys).union(Set(newApi.keys))
+            
+            guard verifyDocumentationCheck(apiNode: oldApi) ||
+                    verifyDocumentationCheck(apiNode: newApi) else {
+                continue
+            }
+            
+            for key in allKeys {
+                guard !reportOptions.ignoredKeys.contains(key) else {
+                    continue
+                }
+                if let oldValue = oldApi[key] as? String, let newValue = newApi[key] as? String, oldValue != newValue {
+                    let apiType = prettyString(forKind: newApi["key.kind"] as! String)
+                    let name = prettyName(forApi: newApi, apis: newApiNameNodeMap)
+                    let modificationType = prettyString(forModificationKind: key)
+                    if apiType == "class" && key == "key.parsed_declaration" {
+                        // Ignore declarations for classes because it's a complete representation of the class's
+                        // code, which is not helpful diff information.
+                        continue
+                    }
+                    changes[root, withDefault: []].append(.modification(apiType: apiType,
+                                                                        name: name,
+                                                                        modificationType: modificationType,
+                                                                        from: oldValue,
+                                                                        to: newValue))
+                }
+            }
+        }
+        
+        return changes
     }
-    return kind
-}
-
+    
+    private func verifyDocumentationCheck(apiNode: APINode) -> Bool {
+        if reportOptions.ignoreUndocumented {
+            let nodocValue = ":nodoc:"
+            let comment = apiNode["key.doc.comment"] as? String ?? nodocValue
+            return !comment.starts(with: nodocValue)
+        }
+        return true
+    }
+    
+    /**
+     Sorting function for APINode instances.
+     
+     Sorts by filename.
+     
+     Example usage: sorted(by: apiNodeIsOrderedBefore)
+     */
+    func apiNodeIsOrderedBefore(prev: APINode, next: APINode) -> Bool {
+        if let prevFile = prev["key.doc.file"] as? String, let nextFile = next["key.doc.file"] as? String {
+            return prevFile < nextFile
+        }
+        return false
+    }
+    
+    func prettyString(forKind kind: String) -> String {
+        if let pretty = [
+            // Objective-C
+            "sourcekitten.source.lang.objc.decl.protocol": "protocol",
+            "sourcekitten.source.lang.objc.decl.typedef": "typedef",
+            "sourcekitten.source.lang.objc.decl.method.instance": "method",
+            "sourcekitten.source.lang.objc.decl.property": "property",
+            "sourcekitten.source.lang.objc.decl.class": "class",
+            "sourcekitten.source.lang.objc.decl.constant": "constant",
+            "sourcekitten.source.lang.objc.decl.enum": "enum",
+            "sourcekitten.source.lang.objc.decl.enumcase": "enum value",
+            "sourcekitten.source.lang.objc.decl.category": "category",
+            "sourcekitten.source.lang.objc.decl.method.class": "class method",
+            "sourcekitten.source.lang.objc.decl.struct": "struct",
+            "sourcekitten.source.lang.objc.decl.field": "field",
+            
+            // Swift
+            "source.lang.swift.decl.function.method.static": "static method",
+            "source.lang.swift.decl.function.method.instance": "method",
+            "source.lang.swift.decl.var.instance": "var",
+            "source.lang.swift.decl.class": "class",
+            "source.lang.swift.decl.var.static": "static var",
+            "source.lang.swift.decl.enum": "enum",
+            "source.lang.swift.decl.function.free": "function",
+            "source.lang.swift.decl.var.global": "global var",
+            "source.lang.swift.decl.protocol": "protocol",
+            "source.lang.swift.decl.enumelement": "enum value"
+        ][kind] {
+            return pretty
+        }
+        return kind
+    }
 func prettyString(forModificationKind kind: String) -> String {
     switch kind {
     case "key.swift_declaration": return "Swift declaration"
