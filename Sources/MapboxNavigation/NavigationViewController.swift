@@ -14,26 +14,6 @@ import Turf
  */
 public typealias ContainerViewController = UIViewController & NavigationComponent
 
-extension NavigationOptions.TileStoreLocation {
-    var mapTileStore: TileStore? {
-        switch self {
-        case .default:
-            return TileStore.getInstance()
-        case .custom(let url):
-            return TileStore.getInstanceForPath(url.path)
-        case .isolated(_, let map):
-            switch map {
-            case .default:
-                return TileStore.getInstance()
-            case .noStorage:
-                return nil
-            case .custom(let url):
-                return TileStore.getInstanceForPath(url.path)
-            }
-        }
-    }
-}
-
 /**
  `NavigationViewController` is a fully-featured user interface for turn-by-turn navigation. Do not confuse it with the `NavigationController` class in UIKit.
  
@@ -305,7 +285,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     var viewObservers: [NavigationComponentDelegate] = []
     
-    var mapTileStore: TileStore?
+    var mapTileStore: TileStoreLocation.Optional = .default
     
     // MARK: - NavigationViewData implementation
         
@@ -338,17 +318,20 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
     required public init(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
+        if let mapTileStoreLocation = navigationOptions?.tileStoreLocation.mapTileStoreLocation {
+            mapTileStore = mapTileStoreLocation
+        }
+        
         super.init(nibName: nil, bundle: nil)
         
         if !(routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
         
-        mapTileStore = navigationOptions?.tileStoreLocation.mapTileStore
         navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route,
                                                                                             routeIndex: routeIndex,
                                                                                             routeOptions: routeOptions,
-                                                                                            tileStoreURL: navigationOptions?.tileStoreLocation.navigatorTileStoreURL)
+                                                                                            tileStoreLocation: navigationOptions?.tileStoreLocation.navigatorTileStoreLocation ?? .default)
         navigationService.delegate = self
         
         let credentials = navigationService.directions.credentials
@@ -461,7 +444,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     open override func loadView() {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
-        view = NavigationView(delegate: self, frame: frame, tileStore: mapTileStore)
+        view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore)
     }
     
     /**

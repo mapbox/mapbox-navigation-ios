@@ -42,7 +42,7 @@ public protocol Router: class, CLLocationManagerDelegate {
      - parameter source: The data source for the RouteController.
      - parameter tileStoreURL: A local path to tile storage location. `nil` value results in default location.
      */
-    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreURL: URL?)
+    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreLocation: TileStoreLocation.Strict)
     
     /**
      Details about the user’s progress along the current route, leg, and step.

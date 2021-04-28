@@ -157,10 +157,10 @@ open class RouteController: NSObject {
         return snappedLocation ?? rawLocation
     }
     
-    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreURL: URL? = nil) {
+    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreLocation.Strict = .default) {
         self.directions = directions
         Navigator.credentials = directions.credentials
-        Navigator.tilesURL = tileStoreURL
+        Navigator.tilesURL = tileStoreLocation.tilStoreURL
         self._routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled

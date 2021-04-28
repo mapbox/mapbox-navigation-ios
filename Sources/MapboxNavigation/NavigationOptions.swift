@@ -47,42 +47,6 @@ open class NavigationOptions: NavigationCustomizable {
      */
     open var predictiveCacheOptions: PredictiveCacheOptions?
     
-    
-    /**
-     To add docs for cases
-     */
-    public enum TileStoreLocation {
-        public enum NavigatorStorage {
-            case `default`
-            case custom(URL)
-        }
-        public enum MapStorage {
-            case `default`
-            case custom(URL)
-            case noStorage
-        }
-        
-        case `default`
-        case custom(URL)
-        case isolated(NavigatorStorage, MapStorage)
-        
-        var navigatorTileStoreURL: URL? {
-            switch self {
-            case .default:
-                return nil
-            case .custom(let url):
-                return url
-            case .isolated(let nav, _):
-                switch nav {
-                case .default:
-                    return nil
-                case .custom(let url):
-                    return url
-                }
-            }
-        }
-    }
-    
     /**
      TODO: document it
      */
