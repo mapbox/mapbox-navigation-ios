@@ -15,20 +15,20 @@ public struct FollowingCameraOptions {
     public var defaultPitch: Double = 45.0
     
     /**
-     Minimum altitude, which will be used when producing camera frame in `NavigationCameraState.following`
+     Highest altitude, which will be used when producing camera frame in `NavigationCameraState.following`
      state.
      
      Defaults to `50000.0` meters, or zoom level `10.50` (approximately).
      */
-    public var minimumAltitude: CLLocationDistance = 50000.0
+    public var highestAltitude: CLLocationDistance = 50000.0
     
     /**
-     Maximum altitude, which will be used when producing camera frame in `NavigationCameraState.following`
+     Lowest altitude, which will be used when producing camera frame in `NavigationCameraState.following`
      state. It will be also used as initial value when active guidance navigation starts.
      
      Defaults to `900.0` meters, or zoom level `16.35` (approximately).
      */
-    public var maximumAltitude: CLLocationDistance = 900.0
+    public var lowestAltitude: CLLocationDistance = 900.0
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.center` property
@@ -195,7 +195,7 @@ public struct GeometryFramingAfterManeuver {
 public struct PitchNearManeuver {
     
     /**
-     Controls whether `CameraOptions.pitch` will be set to `0` near upcoming maneuver.
+     Controls whether `CameraOptions.pitch` will be set to `0.0` near upcoming maneuver.
      
      Defaults to `true`.
      */

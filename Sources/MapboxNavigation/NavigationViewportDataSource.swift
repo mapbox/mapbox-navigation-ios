@@ -237,12 +237,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
             if options.followingCameraOptions.zoomUpdatesAllowed {
                 let defaultZoomLevel = 12.0
                 
-                let maxZoomLevel = ZoomLevelForAltitude(followingCameraOptions.maximumAltitude,
+                let maxZoomLevel = ZoomLevelForAltitude(followingCameraOptions.lowestAltitude,
                                                         mapView.pitch,
                                                         location.coordinate.latitude,
                                                         mapView.bounds.size)
                 
-                let minZoomLevel = ZoomLevelForAltitude(followingCameraOptions.minimumAltitude,
+                let minZoomLevel = ZoomLevelForAltitude(followingCameraOptions.highestAltitude,
                                                         mapView.pitch,
                                                         location.coordinate.latitude,
                                                         mapView.bounds.size)

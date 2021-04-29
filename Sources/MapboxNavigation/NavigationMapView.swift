@@ -435,7 +435,7 @@ open class NavigationMapView: UIView {
     func setInitialCamera(_ coordinate: CLLocationCoordinate2D) {
         guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
         
-        let zoom = CGFloat(ZoomLevelForAltitude(navigationViewportDataSource.options.followingCameraOptions.maximumAltitude,
+        let zoom = CGFloat(ZoomLevelForAltitude(navigationViewportDataSource.options.followingCameraOptions.lowestAltitude,
                                                 mapView.pitch,
                                                 coordinate.latitude,
                                                 mapView.bounds.size))
