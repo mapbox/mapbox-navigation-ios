@@ -331,7 +331,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         }
         
         if overviewCameraOptions.zoomUpdatesAllowed {
-            let maxZoomLevel = ZoomLevelForAltitude(overviewCameraOptions.maximumAltitude,
+            let maxZoomLevel = ZoomLevelForAltitude(overviewCameraOptions.lowestAltitude,
                                                     mapView.pitch,
                                                     coordinate.latitude,
                                                     mapView.bounds.size)
