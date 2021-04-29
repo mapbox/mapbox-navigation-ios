@@ -43,6 +43,71 @@ extension Route {
         }
     }
     
+    func congestionFeatures(legIndex: Int? = nil,
+                            isAlternativeRoute: Bool = false,
+                            roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [Feature] {
+        guard let coordinates = shape?.coordinates, let shape = shape else { return [] }
+        var features: [Feature] = []
+        
+        for (index, leg) in legs.enumerated() {
+            let legFeatures: [Feature]
+            
+            if let congestionLevels = leg.segmentCongestionLevels, congestionLevels.count < coordinates.count {
+                // The last coordinate of the preceding step, is shared with the first coordinate of the next step, we don't need both.
+                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
+                    let index = current.offset
+                    let step = current.element
+                    let stepCoordinates = step.shape!.coordinates
+                    
+                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
+                }
+                
+                let mergedCongestionSegments = legCoordinates.combined(congestionLevels,
+                                                                       streetsRoadClasses: leg.streetsRoadClasses,
+                                                                       roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+                
+                legFeatures = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> Feature in
+                    var feature = Feature(LineString(congestionSegment.0))
+                    feature.properties = [
+                        CongestionAttribute: String(describing: congestionSegment.1),
+                        "isAlternativeRoute": isAlternativeRoute,
+                        CurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
+                    ]
+                    
+                    return feature
+                }
+            } else {
+                var feature = Feature(LineString(shape.coordinates))
+                feature.properties = [
+                    "isAlternativeRoute": isAlternativeRoute,
+                    CurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
+                ]
+                legFeatures = [feature]
+            }
+            
+            features.append(contentsOf: legFeatures)
+        }
+        
+        return features
+    }
+    
+    func identifier(_ routeLineType: RouteLineType) -> String {
+        // To have the ability to reliably distinguish `Route` objects their memory addresses are used
+        // as identifiers. `Route.routeIdentifier` is not enough in this case because it'll be the same
+        // for all routes requested via `Directions.calculate(_:completionHandler:)`.
+        let identifier = Unmanaged.passUnretained(self).toOpaque()
+    
+        switch routeLineType {
+        
+        case .source(isMainRoute: let isMainRoute, isSourceCasing: let isSourceCasing):
+            return "\(identifier).\(isMainRoute ? "main" : "alternative").\(isSourceCasing ? "source_casing" : "source")"
+        case .route(isMainRoute: let isMainRoute):
+            return "\(identifier).\(isMainRoute ? "main" : "alternative").route_line"
+        case .routeCasing(isMainRoute: let isMainRoute):
+            return "\(identifier).\(isMainRoute ? "main" : "alternative").route_line_casing"
+        }
+    }
+    
     func leg(containing step: RouteStep) -> RouteLeg? {
         return legs.first { $0.steps.contains(step) }
     }

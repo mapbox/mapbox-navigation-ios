@@ -27,6 +27,7 @@
 * `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.highlightBuildings(at:in3D:)` was renamed to `NavigationMapView.highlightBuildings(at:in3D:completion:)`. ([#2827](https://github.com/mapbox/mapbox-navigation-ios/pull/2827))
 * Added the `NavigationMapView.showsCongestionForAlternativeRoutes` property to show congestion levels with different colors on alternative route lines. ([#2887](https://github.com/mapbox/mapbox-navigation-ios/pull/2887))
+* Added the `NavigationMapView.navigationMapView(_:didAdd:)` and `NavigationViewController.navigationViewController(_:didAdd:)` delegate methods, which will be called whenever final destination `PointAnnotation` is added to `NavigationMapView` or `NavigationViewController` respectively. ([#2961](https://github.com/mapbox/mapbox-navigation-ios/pull/2961))
 
 ### Location tracking
 
@@ -64,6 +65,7 @@
 * Fixed an issue where `PassiveLocationDataSource` and `RouteController` did not use the access token and host specified by `PassiveLocationDataSource.directions` and `RouteController.directions`, respectively. Added the `PredictiveCacheOptions.credentials` property for specifying the access token and host used for prefetching resources. ([#2876](https://github.com/mapbox/mapbox-navigation-ios/pull/2876))
 * The top banner can now show a wider variety of turn lane configurations, such as combination U-turn/left turn lanes and combination through/slight right turn lanes. ([#2882](https://github.com/mapbox/mapbox-navigation-ios/pull/2882))
 * Exposed `NavigationMapView.mapTileStore`, `PassiveLocationDataSource.navigatorTileStore` and `RouteController.navigatorTileStore` for accessing corresponding `TileStore` instancies ([#2955](https://github.com/mapbox/mapbox-navigation-ios/pull/2955))
+* Removed `ElectronicHorizon` struct, now an electronic horizon notification directly contain pointer to a starting edge. `ElectronicHorizon.Edge` was renamed to `RoadGraph.Edge`. `ElectronicHorizon.NotificationUserInfoKey` was renamed to `RoadGraph.NotificationUserInfoKey`. ([#2949](https://github.com/mapbox/mapbox-navigation-ios/pull/2949))
 
 ## v1.3.0
 

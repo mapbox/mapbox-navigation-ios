@@ -338,8 +338,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupControllers(navigationOptions)
         setupStyleManager(navigationOptions)
         
-        if let predictiveCacheOptions = navigationOptions?.predictiveCacheOptions {
-            navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions)
+        subviewInits.append { [weak self] in
+            if let predictiveCacheOptions = navigationOptions?.predictiveCacheOptions {
+                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions)
+            }
         }
     }
     
@@ -388,10 +390,14 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         viewObservers = [routeOverlayController!, cameraController!, ornamentsController!, arrivalController!]
         
-        let topBanner = addTopBanner(navigationOptions)
-        loadViewIfNeeded() // force view initialization between top and bottom banners to maintain correct init sequence
-        ornamentsController?.embedBanners(topBanner: topBanner,
-                                        bottomBanner: addBottomBanner(navigationOptions))
+        subviewInits.append { [weak self] in
+            if let topBanner = self?.addTopBanner(navigationOptions),
+               let bottomBanner = self?.addBottomBanner(navigationOptions) {
+                self?.ornamentsController?.embedBanners(topBanner: topBanner,
+                                                        bottomBanner: bottomBanner)
+            }
+        }
+        
         arrivalController?.destination = route.legs.last?.destination
         ornamentsController?.reportButton.isHidden = !showsReportFeedback
         
@@ -434,8 +440,20 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         view = NavigationView(delegate: self, frame: frame)
     }
     
+    /**
+     Array of initialization hooks to be called at `NavigationViewController.viewDidLoad`.
+     
+     Once main view is loaded, `NavigationService` starts, and each UI component should be ready to accept navigation events and updates. At the same time, various components require embedding, which triggers main view initialization, which triggers service start... To break this cycle, wrap any custom subview configuration here, to avoid triggering main view initialization before it is required.
+     */
+    private var subviewInits: [() -> ()] = []
+    
     override open func viewDidLoad() {
         super.viewDidLoad()
+        
+        subviewInits.forEach {
+            $0()
+        }
+        subviewInits.removeAll()
         
         viewObservers.forEach {
             $0.navigationViewDidLoad(view)
@@ -967,5 +985,14 @@ extension NavigationViewController: CarPlayConnectionObserver {
         navigationComponents.compactMap({$0 as? CarPlayConnectionObserver}).forEach {
             $0.didDisconnectFromCarPlay()
         }
+    }
+}
+
+// MARK: - NavigationMapViewDelegate methods
+
+extension NavigationViewController: NavigationMapViewDelegate {
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation) {
+        delegate?.navigationViewController(self, didAdd: finalDestinationAnnotation)
     }
 }

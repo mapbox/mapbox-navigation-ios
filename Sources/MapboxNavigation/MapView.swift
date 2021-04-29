@@ -27,17 +27,6 @@ extension MapView {
      This array contains multiple entries for a composited source. This property is empty for non-Mapbox-hosted tile sets and sources with type other than `vector`.
      */
     func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
-//        do {
-//            if sourceType == "vector",
-//               let properties = try __map.getStyleSourceProperties(forSourceId: sourceIdentifier).value as? Dictionary<String, Any>,
-//               let url = properties["url"] as? String,
-//               let configurationURL = URL(string: url),
-//               configurationURL.scheme == "mapbox",
-//               let tileSetIdentifiers = configurationURL.host?.components(separatedBy: ",") {
-//                return tileSetIdentifiers
-//            }
-//        } catch {
-//            NSLog("Failed to get source properties with error: \(error.localizedDescription).")
         if sourceType == "vector",
            let properties = mapboxMap.__map.getStyleSourceProperties(forSourceId: sourceIdentifier).value as? Dictionary<String, Any>,
            let url = properties["url"] as? String,
@@ -146,6 +135,34 @@ extension MapView {
         }
         
         return datasets
+    }
+
+    var mainRouteLineParentLayerIdentifier: String? {
+        var parentLayer: String? = nil
+        let identifiers = [
+            NavigationMapView.LayerIdentifier.arrowLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
+            NavigationMapView.LayerIdentifier.arrowStrokeLayer,
+            NavigationMapView.LayerIdentifier.waypointCircleLayer,
+            NavigationMapView.LayerIdentifier.buildingExtrusionLayer
+        ]
+        
+        for layer in mapboxMap.__map.getStyleLayers().reversed() {
+            if !(layer.type == "symbol") && !identifiers.contains(layer.id) {
+                let sourceLayer = mapboxMap.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String
+                
+                if let sourceLayer = sourceLayer,
+                   sourceLayer.isEmpty {
+                    continue
+                }
+                
+                parentLayer = layer.id
+                break
+            }
+        }
+        
+        return parentLayer
     }
     
     /**

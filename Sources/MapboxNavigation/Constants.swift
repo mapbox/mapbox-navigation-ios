@@ -2,12 +2,15 @@ import CoreLocation
 import Foundation
 import MapboxDirections
 
+/**
+ A tuple that pairs an array of coordinates with level of traffic congestion along these coordinates.
+ */
 typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
 
 /**
- A stop dictionary representing the default line widths of the route line by zoom level when `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)` is undefined.
+ A stop dictionary representing the default line widths of the route line by zoom level when `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)` is undefined.
  
- You may use this constant in your implementation of `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)` if you want to keep the default line widths but customize other aspects of the route line.
+ You may use this constant in your implementation of `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)` if you want to keep the default line widths but customize other aspects of the route line.
  */
 public var RouteLineWidthByZoomLevel: [Double: Double] = [
     10.0: 8.0,

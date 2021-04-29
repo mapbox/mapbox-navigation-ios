@@ -104,38 +104,74 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter routeProgress: The updated route progress with the refreshed route.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didRefresh routeProgress: RouteProgress)
-
+    
+    /**
+     Returns an `LineLayer` that determines the appearance of the route line.
+     
+     If this method is not implemented, the navigation view controller’s map view draws the route line using default `LineLayer`.
+     
+     - parameter navigationViewController: The `NavigationViewController` object, on surface of which route line is drawn.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - returns: A `LineLayer` that is applied to the route line.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
+    
+    /**
+     Returns an `LineLayer` that determines the appearance of the casing around the route line.
+     
+     If this method is not implemented, the navigation view controller’s map view draws the casing for the route line using default `LineLayer`.
+     
+     - parameter navigationViewController: The `NavigationViewController` object, on surface of which route line is drawn.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - returns: A `LineLayer` that is applied as a casing around the route line.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
+    
     /**
      Returns an `CircleLayer` that marks the location of each destination along the route when there are multiple destinations. The returned layer is added to the map below the layer returned by `navigationViewController(_:waypointSymbolLayerWithIdentifier:sourceIdentifier:)`.
      
      If this method is unimplemented, the navigation view controller’s map view marks each destination waypoint with a circle.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter identifier: The `CircleLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
+     - returns: A `CircleLayer` that the map applies to all waypoints.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer?
-
+    
     /**
      Returns a `SymbolLayer` that places an identifying symbol on each destination along the route when there are multiple destinations. The returned layer is added to the map above the layer returned by `navigationViewController(_:waypointCircleLayerWithIdentifier:sourceIdentifier:)`.
      
      If this method is unimplemented, the navigation view controller’s map view labels each destination waypoint with a number, starting with 1 at the first destination, 2 at the second destination, and so on.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter identifier: The `SymbolLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the waypoint data that this method would style.
+     - returns: A `SymbolLayer` that the map applies to all waypoint symbols.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer?
     
     /**
      Returns a `FeatureCollection` that represents the destination waypoints along the route (that is, excluding the origin).
      
-     If this method is unimplemented, the navigation view controller's map view draws the waypoints using default 'FeatureCollection`.
+     If this method is unimplemented, the navigation view controller's map view draws the waypoints using default `FeatureCollection`.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter waypoints: The waypoints to be displayed on the map.
+     - parameter legIndex: Index, which determines for which `RouteLeg` `Waypoint` will be shown.
+     - returns: Optionally, a `FeatureCollection` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection?
+    
     /**
      Called when the user taps to select a route on the navigation view controller’s map view.
+     
      - parameter navigationViewController: The navigation view controller presenting the route that the user selected.
      - parameter route: The route on the map that the user selected.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route)
-    
-    /**
-     Returns the center point of the user course view in screen coordinates relative to the map view.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint
     
     /**
      Allows the delegate to decide whether to ignore a location update.
@@ -158,6 +194,14 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: The road name to display in the label, or nil to hide the label.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
+    
+    /**
+     Tells the receiver that the final destination `PointAnnotation` was added to the `NavigationViewController`.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter finalDestinationAnnotation: `PointAnnotation`, which was added to the `NavigationViewController`.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation)
 }
 
 public extension NavigationViewControllerDelegate {
@@ -225,7 +269,23 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didRefresh routeProgress: RouteProgress) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
-
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        return nil
+    }
+    
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
@@ -260,14 +320,6 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, mapViewUserAnchorPoint mapView: NavigationMapView) -> CGPoint {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .info)
-        return .zero
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return RouteController.DefaultBehavior.shouldDiscardLocation
@@ -279,5 +331,12 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
 }
