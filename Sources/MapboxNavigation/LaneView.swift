@@ -401,7 +401,7 @@ open class LaneView: UIView {
         self.init(frame: LaneView.defaultFrame)
         backgroundColor = .clear
         self.indications = indications
-        maneuverDirection = direction
+        maneuverDirection = direction ?? ManeuverDirection(rawValue: indications.description)
         isValid = isUsable
     }
 
