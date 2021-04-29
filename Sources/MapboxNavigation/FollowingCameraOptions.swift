@@ -120,7 +120,7 @@ public struct IntersectionDensity {
      
      Defaults to `true`.
      */
-    var enabled: Bool = true
+    public var enabled: Bool = true
     
     /**
      Multiplier, which will be used to adjust the size of the portion of the remaining step that's
@@ -128,7 +128,7 @@ public struct IntersectionDensity {
      
      Defaults to `7.0`.
      */
-    var averageDistanceMultiplier: Double = 7.0
+    public var averageDistanceMultiplier: Double = 7.0
     
     /**
      Minimum distance between intersections to count them as two instances.
@@ -138,7 +138,7 @@ public struct IntersectionDensity {
      
      Defaults to `20.0` meters.
      */
-    var minimumDistanceBetweenIntersections: CLLocationDistance = 20.0
+    public var minimumDistanceBetweenIntersections: CLLocationDistance = 20.0
 }
 
 /**
