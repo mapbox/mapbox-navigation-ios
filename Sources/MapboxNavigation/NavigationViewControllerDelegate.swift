@@ -166,14 +166,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection?
     
     /**
-     Called when the user taps to select a route on the navigation view controller’s map view.
-     
-     - parameter navigationViewController: The navigation view controller presenting the route that the user selected.
-     - parameter route: The route on the map that the user selected.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, didSelect route: Route)
-    
-    /**
      Allows the delegate to decide whether to ignore a location update.
      
      This method is called on every location update. By default, the navigation view controller ignores certain location updates that appear to be unreliable, as determined by the `CLLocation.isQualified` property.
