@@ -1,4 +1,3 @@
-
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
@@ -242,10 +241,6 @@ extension NavigationMapView {
                     for queriedFeature in queriedFeatures {
                         var lineStrings: [LineString] = []
                         
-                        //                    if let line = feature.geometry.value as? LineString {
-                        //                        lineStrings.append(line)
-                        //                    } else if let multiLine = feature.geometry.value as? MultiLineString {
-                        //                        for coordinates in multiLine.coordinates {
                         if queriedFeature.feature.geometry.geometryType == MBXGeometryType_Line,
                            let coordinates = queriedFeature.feature.geometry.extractLocationsArray() as? [CLLocationCoordinate2D] {
                             lineStrings.append(LineString(coordinates))
