@@ -454,25 +454,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
         
         return defaultPitchСoefficient
     }
-}
-
-// MARK: - LocationConsumer delegate
-
-extension NavigationViewportDataSource: LocationConsumer {
-    
-    public var shouldTrackLocation: Bool {
-        get {
-            return true
-        }
-        set(newValue) {
-            // No-op
-        }
-    }
-    
-    public func locationUpdate(newLocation: Location) {
-        let cameraOptions = self.cameraOptions(newLocation.internalLocation)
-        delegate?.viewportDataSource(self, didUpdate: cameraOptions)
-    }
     
     func lookaheadDistance(_ routeProgress: RouteProgress) -> CLLocationDistance {
         let intersectionDensity = options.followingCameraOptions.intersectionDensity
@@ -501,5 +482,24 @@ extension NavigationViewportDataSource: LocationConsumer {
         let lookaheadDistance = averageIntersectionDistances[currentRouteLegIndex][currentRouteStepIndex] * averageDistanceMultiplier
         
         return lookaheadDistance
+    }
+}
+
+// MARK: - LocationConsumer delegate
+
+extension NavigationViewportDataSource: LocationConsumer {
+    
+    public var shouldTrackLocation: Bool {
+        get {
+            return true
+        }
+        set(newValue) {
+            // No-op
+        }
+    }
+    
+    public func locationUpdate(newLocation: Location) {
+        let cameraOptions = self.cameraOptions(newLocation.internalLocation)
+        delegate?.viewportDataSource(self, didUpdate: cameraOptions)
     }
 }
