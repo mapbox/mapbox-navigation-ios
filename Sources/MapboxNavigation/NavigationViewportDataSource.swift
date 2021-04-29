@@ -409,7 +409,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let mapViewInsetWidth = mapView.bounds.size.width - edgeInsets.left - edgeInsets.right
         let mapViewInsetHeight = mapView.bounds.size.height - edgeInsets.top - edgeInsets.bottom
         let widthDelta = mapViewInsetHeight * 2 - mapViewInsetWidth
-        let widthWithPitchEffect = CGFloat(mapViewInsetWidth + CGFloat(pitch / maxPitch) * widthDelta)
+        let pitchDelta = CGFloat(pitch / maxPitch) * widthDelta
+        let widthWithPitchEffect = CGFloat(mapViewInsetWidth + CGFloat(pitchDelta.isNaN ? 0.0 : pitchDelta))
         let heightWithPitchEffect = CGFloat(mapViewInsetHeight + mapViewInsetHeight * CGFloat(sin(pitch * .pi / 180.0)) * 1.25)
         let zoomLevel = boundingBox.zoomLevel(fitTo: CGSize(width: widthWithPitchEffect, height: heightWithPitchEffect))
         
@@ -428,7 +429,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
         return CGPoint(x: xCenter, y: yOffsetCenter)
     }
     
-    func pitchСoefficient(_ routeProgress: RouteProgress, currentCoordinate: CLLocationCoordinate2D) -> Double {
+    func pitchСoefficient(_ routeProgress: RouteProgress,
+                           currentCoordinate: CLLocationCoordinate2D) -> Double {
         let defaultPitchСoefficient = 1.0
         let pitchNearManeuver = options.followingCameraOptions.pitchNearManeuver
         if pitchNearManeuver.enabled {
