@@ -247,21 +247,21 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                         location.coordinate.latitude,
                                                         mapView.bounds.size)
                 
-                followingMobileCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                               pitch: pitch,
-                                                               maxPitch: followingCameraOptions.defaultPitch,
-                                                               edgeInsets: viewportPadding,
-                                                               defaultZoomLevel: defaultZoomLevel,
-                                                               maxZoomLevel: maxZoomLevel,
-                                                               minZoomLevel: minZoomLevel))
+                followingMobileCamera.zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+                                                       pitch: pitch,
+                                                       maxPitch: followingCameraOptions.defaultPitch,
+                                                       edgeInsets: viewportPadding,
+                                                       defaultZoomLevel: defaultZoomLevel,
+                                                       maxZoomLevel: maxZoomLevel,
+                                                       minZoomLevel: minZoomLevel)
                 
-                followingCarPlayCamera.zoom = CGFloat(self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                                pitch: pitch,
-                                                                maxPitch: followingCameraOptions.defaultPitch,
-                                                                edgeInsets: carPlayCameraPadding,
-                                                                defaultZoomLevel: defaultZoomLevel,
-                                                                maxZoomLevel: maxZoomLevel,
-                                                                minZoomLevel: minZoomLevel))
+                followingCarPlayCamera.zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+                                                        pitch: pitch,
+                                                        maxPitch: followingCameraOptions.defaultPitch,
+                                                        edgeInsets: carPlayCameraPadding,
+                                                        defaultZoomLevel: defaultZoomLevel,
+                                                        maxZoomLevel: maxZoomLevel,
+                                                        minZoomLevel: minZoomLevel)
             }
             
             if options.followingCameraOptions.bearingUpdatesAllowed {
@@ -336,27 +336,19 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                     coordinate.latitude,
                                                     mapView.bounds.size)
             
-            var zoom = self.zoom(remainingCoordinatesOnRoute,
-                                 edgeInsets: viewportPadding,
-                                 maxZoomLevel: maxZoomLevel)
+            overviewMobileCamera.zoom = self.zoom(remainingCoordinatesOnRoute,
+                                                  edgeInsets: viewportPadding,
+                                                  maxZoomLevel: maxZoomLevel)
             
-            overviewMobileCamera.zoom = CGFloat(zoom)
-            
-            zoom = self.zoom(remainingCoordinatesOnRoute,
-                             edgeInsets: carPlayCameraPadding,
-                             maxZoomLevel: maxZoomLevel)
-            
-            overviewCarPlayCamera.zoom = CGFloat(zoom)
+            overviewCarPlayCamera.zoom = self.zoom(remainingCoordinatesOnRoute,
+                                                   edgeInsets: carPlayCameraPadding,
+                                                   maxZoomLevel: maxZoomLevel)
         }
         
-        overviewMobileCamera.anchor = self.anchor(0.0,
-                                                  maxPitch: 0.0,
-                                                  bounds: mapView.bounds,
+        overviewMobileCamera.anchor = self.anchor(bounds: mapView.bounds,
                                                   edgeInsets: viewportPadding)
         
-        overviewCarPlayCamera.anchor = self.anchor(0.0,
-                                                   maxPitch: 0.0,
-                                                   bounds: mapView.bounds,
+        overviewCarPlayCamera.anchor = self.anchor(bounds: mapView.bounds,
                                                    edgeInsets: carPlayCameraPadding)
         
         if overviewCameraOptions.bearingUpdatesAllowed {
@@ -402,9 +394,9 @@ public class NavigationViewportDataSource: ViewportDataSource {
               edgeInsets: UIEdgeInsets = .zero,
               defaultZoomLevel: Double = 12.0,
               maxZoomLevel: Double = 22.0,
-              minZoomLevel: Double = 2.0) -> Double {
+              minZoomLevel: Double = 2.0) -> CGFloat {
         guard let mapView = mapView,
-              let boundingBox = BoundingBox(from: coordinates) else { return defaultZoomLevel }
+              let boundingBox = BoundingBox(from: coordinates) else { return CGFloat(defaultZoomLevel) }
         
         let mapViewInsetWidth = mapView.bounds.size.width - edgeInsets.left - edgeInsets.right
         let mapViewInsetHeight = mapView.bounds.size.height - edgeInsets.top - edgeInsets.bottom
@@ -414,13 +406,13 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let heightWithPitchEffect = CGFloat(mapViewInsetHeight + mapViewInsetHeight * CGFloat(sin(pitch * .pi / 180.0)) * 1.25)
         let zoomLevel = boundingBox.zoomLevel(fitTo: CGSize(width: widthWithPitchEffect, height: heightWithPitchEffect))
         
-        return max(min(zoomLevel, maxZoomLevel), minZoomLevel)
+        return CGFloat(max(min(zoomLevel, maxZoomLevel), minZoomLevel))
     }
     
-    func anchor(_ pitchСoefficient: Double,
-                maxPitch: Double,
-                bounds: CGRect,
-                edgeInsets: UIEdgeInsets) -> CGPoint {
+    func anchor(_ pitchСoefficient: Double = 0.0,
+                maxPitch: Double = 0.0,
+                bounds: CGRect = .zero,
+                edgeInsets: UIEdgeInsets = .zero) -> CGPoint {
         let xCenter = max(((bounds.size.width - edgeInsets.left - edgeInsets.right) / 2.0) + edgeInsets.left, 0.0)
         let height = (bounds.size.height - edgeInsets.top - edgeInsets.bottom)
         let yCenter = max((height / 2.0) + edgeInsets.top, 0.0)
