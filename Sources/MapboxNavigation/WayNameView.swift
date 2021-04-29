@@ -79,7 +79,7 @@ open class WayNameView: UIView {
             currentShieldName = roadShieldAttributedText(for: ref, textColor: textColor, style: style, imageName: imageName)
         }
         
-        if let roadName = feature.properties["name"] as? String {
+        if let roadName = feature.properties["name"] as? String, !roadName.isEmpty {
             currentRoadName = roadName
             self.text = roadName
             didSetup = true
