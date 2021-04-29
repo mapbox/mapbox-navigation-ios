@@ -41,19 +41,19 @@ class Navigator {
         }
     }
     
-    var historyRecorder: HistoryRecorderHandle
+    let historyRecorder: HistoryRecorderHandle
     
-    var navigator: MapboxNavigationNative.Navigator
+    let navigator: MapboxNavigationNative.Navigator
     
-    var cacheHandle: CacheHandle
+    let cacheHandle: CacheHandle
     
-    var roadGraph: RoadGraph
+    let roadGraph: RoadGraph
     
     lazy var roadObjectsStore: RoadObjectsStore = {
         return RoadObjectsStore(navigator.roadObjectStore())
     }()
     
-    var tileStore: TileStore
+    let tileStore: TileStore
     
     /**
      The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.
