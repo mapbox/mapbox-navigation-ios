@@ -104,7 +104,7 @@ open class NavigationMapView: UIView {
     var fractionTraveled: Double = 0.0
     var preFractionTraveled: Double = 0.0
     var vanishingRouteLineUpdateTimer: Timer? = nil
-    var showSpecificLegIndex: Int?
+    var currentLegIndex: Int?
     
     var showsRoute: Bool {
         get {
@@ -398,7 +398,7 @@ open class NavigationMapView: UIView {
         removeRoutes()
         
         self.routes = routes
-        showSpecificLegIndex = legIndex
+        currentLegIndex = legIndex
         
         var parentLayerIdentifier: String? = nil
         for (index, route) in routes.enumerated() {

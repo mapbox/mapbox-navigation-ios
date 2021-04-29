@@ -208,7 +208,7 @@ extension NavigationMapView {
             
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
             
-            let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.showSpecificLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
+            let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
             let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
                                                                 fractionTraveled: newFractionTraveled)
             self.mapView.style.updateLayer(id: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
