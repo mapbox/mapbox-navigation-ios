@@ -71,7 +71,7 @@ extension Route {
                     feature.properties = [
                         CongestionAttribute: String(describing: congestionSegment.1),
                         "isAlternativeRoute": isAlternativeRoute,
-                        CurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
+                        CurrentLegAttribute: (legIndex != nil) ? index == legIndex : true
                     ]
                     
                     return feature
@@ -80,7 +80,7 @@ extension Route {
                 var feature = Feature(LineString(shape.coordinates))
                 feature.properties = [
                     "isAlternativeRoute": isAlternativeRoute,
-                    CurrentLegAttribute: (legIndex != nil) ? index == legIndex : index == 0
+                    CurrentLegAttribute: (legIndex != nil) ? index == legIndex : true
                 ]
                 legFeatures = [feature]
             }

@@ -104,6 +104,7 @@ open class NavigationMapView: UIView {
     var fractionTraveled: Double = 0.0
     var preFractionTraveled: Double = 0.0
     var vanishingRouteLineUpdateTimer: Timer? = nil
+    var currentLegIndex: Int?
     
     var showsRoute: Bool {
         get {
@@ -393,11 +394,11 @@ open class NavigationMapView: UIView {
      - parameter routes: List of `Route` objects, which will be shown on `MapView`.
      - parameter legIndex: Index, which will be used to highlight specific `RouteLeg` on main route.
      */
-    // TODO: Add ability to handle legIndex.
-    public func show(_ routes: [Route], legIndex: Int = 0) {
+    public func show(_ routes: [Route], legIndex: Int? = nil) {
         removeRoutes()
         
         self.routes = routes
+        currentLegIndex = legIndex
         
         var parentLayerIdentifier: String? = nil
         for (index, route) in routes.enumerated() {
@@ -405,7 +406,7 @@ open class NavigationMapView: UIView {
                 initPrimaryRoutePoints(route: route)
             }
             
-            parentLayerIdentifier = addRouteLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0)
+            parentLayerIdentifier = addRouteLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0, legIndex: legIndex)
             parentLayerIdentifier = addRouteCasingLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0)
         }
     }
@@ -436,7 +437,7 @@ open class NavigationMapView: UIView {
         updateUserCourseView(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
 
-    @discardableResult func addRouteLayer(_ route: Route, below parentLayerIndentifier: String? = nil, isMainRoute: Bool = true) -> String? {
+    @discardableResult func addRouteLayer(_ route: Route, below parentLayerIndentifier: String? = nil, isMainRoute: Bool = true, legIndex: Int? = nil) -> String? {
         guard let shape = route.shape else { return nil }
         
         let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, casingShapeFor: route) ?? shape)
@@ -458,7 +459,8 @@ open class NavigationMapView: UIView {
             
             // TODO: Verify that `isAlternativeRoute` parameter usage is needed.
             if isMainRoute {
-                let gradientStops = routeLineGradient(route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
+                let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+                let gradientStops = routeLineGradient(congestionFeatures,
                                                       fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.paint?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
             } else {
