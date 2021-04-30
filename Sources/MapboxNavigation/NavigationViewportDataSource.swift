@@ -442,7 +442,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             if let distanceToManeuver = LineString(coordinatesToManeuver).distance(),
                distanceToManeuver <= pitchNearManeuver.triggerDistanceToManeuver,
                !shouldIgnoreManeuver {
-                return 0.0
+                return min(distanceToManeuver, pitchNearManeuver.triggerDistanceToManeuver) / pitchNearManeuver.triggerDistanceToManeuver
             }
         }
         
