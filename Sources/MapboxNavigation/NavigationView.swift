@@ -58,7 +58,7 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
-    var tileStoreLocation: TileStoreLocation.Optional = .default
+    var tileStoreLocation: TileStoreConfiguration.Location? = .default
     lazy var navigationMapView: NavigationMapView = {
         let navigationMapView = NavigationMapView(frame: self.bounds, tileStoreLocation: tileStoreLocation)
         navigationMapView.isHidden = false
@@ -130,7 +130,7 @@ open class NavigationView: UIView {
     
     // MARK: - Initialization methods
     
-    convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero, tileStoreLocation: TileStoreLocation.Optional = .default) {
+    convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         self.init(frame: frame, tileStoreLocation: tileStoreLocation)
         self.delegate = delegate
         updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
@@ -143,7 +143,7 @@ open class NavigationView: UIView {
     }
     
     // TODO: Refine public APIs, which are exposed by `NavigationView`.
-    public init(frame: CGRect, tileStoreLocation: TileStoreLocation.Optional = .default) {
+    public init(frame: CGRect, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         self.tileStoreLocation = tileStoreLocation
         super.init(frame: frame)
         commonInit()

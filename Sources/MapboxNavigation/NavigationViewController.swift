@@ -285,7 +285,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     var viewObservers: [NavigationComponentDelegate] = []
     
-    var mapTileStore: TileStoreLocation.Optional = .default
+    var mapTileStore: TileStoreConfiguration.Location? = .default
     
     // MARK: - NavigationViewData implementation
         
@@ -318,7 +318,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
     required public init(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
-        if let mapTileStoreLocation = navigationOptions?.tileStoreLocation.mapTileStoreLocation {
+        if let mapTileStoreLocation = navigationOptions?.tileStoreConfiguration.mapLocation {
             mapTileStore = mapTileStoreLocation
         }
         
@@ -331,7 +331,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route,
                                                                                             routeIndex: routeIndex,
                                                                                             routeOptions: routeOptions,
-                                                                                            tileStoreLocation: navigationOptions?.tileStoreLocation.navigatorTileStoreLocation ?? .default)
+                                                                                            tileStoreLocation: navigationOptions?.tileStoreConfiguration.navigatorLocation ?? .default)
         navigationService.delegate = self
         
         let credentials = navigationService.directions.credentials

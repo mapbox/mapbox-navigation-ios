@@ -48,9 +48,9 @@ open class NavigationOptions: NavigationCustomizable {
     open var predictiveCacheOptions: PredictiveCacheOptions?
     
     /**
-     TODO: document it
+     Configuration of `TileStore` location, where Map and Navigation tiles are stored.
      */
-    open var tileStoreLocation: TileStoreLocation = .default
+    open var tileStoreConfiguration: TileStoreConfiguration = .default
     
     
     // This makes the compiler happy.
@@ -67,9 +67,9 @@ open class NavigationOptions: NavigationCustomizable {
      - parameter topBanner: The container view controller that presents the top banner.
      - parameter bottomBanner: The container view controller that presents the bottom banner.
      - parameter predictiveCacheOptions: Configuration for predictive caching. These options control how the `PredictiveCacheManager` will try to proactively fetch data related to the route. A `nil` value disables the feature.
-     - parameter tileStoreLocation: TODO
+     - parameter tileStoreConfiguration: Configuration of `TileStore` location, where Map and Navigation tiles are stored.
      */
-    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, tileStoreLocation: TileStoreLocation = .default) {
+    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, tileStoreConfiguration: TileStoreConfiguration = .default) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
@@ -77,7 +77,7 @@ open class NavigationOptions: NavigationCustomizable {
         self.topBanner = topBanner
         self.bottomBanner = bottomBanner
         self.predictiveCacheOptions = predictiveCacheOptions
-        self.tileStoreLocation = tileStoreLocation
+        self.tileStoreConfiguration = tileStoreConfiguration
     }
     
     /**
