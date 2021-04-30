@@ -279,10 +279,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 followingCarPlayCamera.bearing = bearing
             }
             
-            followingMobileCamera.anchor = self.anchor(pitchСoefficient,
-                                                       maxPitch: followingCameraOptions.defaultPitch,
-                                                       bounds: mapView.bounds,
-                                                       edgeInsets: viewportPadding)
+            let followingMobileCameraAnchor = self.anchor(pitchСoefficient,
+                                                          maxPitch: followingCameraOptions.defaultPitch,
+                                                          bounds: mapView.bounds,
+                                                          edgeInsets: viewportPadding)
+            
+            followingMobileCamera.anchor = followingMobileCameraAnchor
             
             followingCarPlayCamera.anchor = self.anchor(pitchСoefficient,
                                                         maxPitch: followingCameraOptions.defaultPitch,
@@ -295,7 +297,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
             
             if options.followingCameraOptions.paddingUpdatesAllowed {
-                followingMobileCamera.padding = viewportPadding
+                followingMobileCamera.padding = UIEdgeInsets(top: followingMobileCameraAnchor.y,
+                                                             left: viewportPadding.left,
+                                                             bottom: UIScreen.main.bounds.height - followingMobileCameraAnchor.y + 1.0,
+                                                             right: viewportPadding.right)
                 followingCarPlayCamera.padding = carPlayCameraPadding
             }
         }
