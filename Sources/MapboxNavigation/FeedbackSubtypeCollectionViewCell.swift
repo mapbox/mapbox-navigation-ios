@@ -17,7 +17,6 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
     lazy var titleLabel: UILabel = {
         let title: UILabel = .forAutoLayout()
         title.numberOfLines = 2
-        title.textAlignment = .center
         title.font = Constants.titleFont
         return title
     }()
@@ -98,6 +97,7 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
 
         titleLabel.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         titleLabel.leadingAnchor.constraint(equalTo: circleView.trailingAnchor, constant: Constants.padding).isActive = true
+        titleLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -Constants.padding).isActive = true
 
         separatorView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
