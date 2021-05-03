@@ -12,7 +12,7 @@ public struct TileStoreConfiguration {
     /**
      Describes filesystem location for tile storage folder
      */
-    public enum Location: RawRepresentable {
+    public enum Location{
         /**
          Encapsulated default location.
          
@@ -24,16 +24,12 @@ public struct TileStoreConfiguration {
          */
         case custom(URL)
         
-        public init?(rawValue: URL?) {
-            self = rawValue.map { .custom($0) } ?? .default
-        }
-        
         /**
          Corresponding URL path
          
          `default` location is interpreted as `nil`.
          */
-        public var rawValue: URL? {
+        public var tileStoreURL: URL? {
             switch self {
             case .default:
                 return nil

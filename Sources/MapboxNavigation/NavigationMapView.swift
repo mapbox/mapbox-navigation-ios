@@ -267,16 +267,25 @@ open class NavigationMapView: UIView {
      If `NavigationMapView` was not configured to maintain a tile storage - this function does nothing.
      
      - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
+     - parameter tileStoreConfiguration: configuration for tile storage parameters. If `nil` - default settings will be used.
      */
-    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions) {
-        guard let tileStore = mapTileStore else {
-            return
-        }
-        let mapOptions = PredictiveCacheManager.MapOptions(tileStore,
-                                                           mapView.styleSourceDatasets(["raster", "vector"]))
+    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions, tileStoreConfiguration: TileStoreConfiguration?) {
+        let styleSourcePaths = mapView.styleSourceDatasets(["raster", "vector"])
         
-        predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
-                                                        mapOptions: mapOptions)
+        if let tileStoreConfiguration = tileStoreConfiguration {
+            let tileStoreMapOptions = PredictiveCacheManager.TileStoreMapOptions(tileStoreConfiguration,
+                                                                                 styleSourcePaths)
+                                                                                 
+            
+            predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                            tileStoreMapOptions: tileStoreMapOptions)
+        } else if let tileStore = mapTileStore {
+            let mapOptions = PredictiveCacheManager.MapOptions(tileStore,
+                                                               styleSourcePaths)
+            
+            predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                            mapOptions: mapOptions)
+        }
     }
     
     // MARK: - Overridden methods

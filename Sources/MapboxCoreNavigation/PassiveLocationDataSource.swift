@@ -22,7 +22,7 @@ open class PassiveLocationDataSource: NSObject {
     public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil, tileStoreLocation: TileStoreConfiguration.Location = .default) {
         self.directions = directions
         Navigator.credentials = directions.credentials
-        Navigator.tilesURL = tileStoreLocation.rawValue
+        Navigator.tilesURL = tileStoreLocation.tileStoreURL
         
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         

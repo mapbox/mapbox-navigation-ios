@@ -318,8 +318,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
     required public init(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
-        if let mapTileStoreLocation = navigationOptions?.tileStoreConfiguration.mapLocation {
-            mapTileStore = mapTileStoreLocation
+        if let options = navigationOptions {
+            mapTileStore = options.tileStoreConfiguration.mapLocation
         }
         
         super.init(nibName: nil, bundle: nil)
@@ -347,7 +347,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         subviewInits.append { [weak self] in
             if let predictiveCacheOptions = navigationOptions?.predictiveCacheOptions {
-                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions)
+                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions,
+                                                                 tileStoreConfiguration: navigationOptions?.tileStoreConfiguration)
             }
         }
     }
