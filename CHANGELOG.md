@@ -16,7 +16,7 @@
 * To gain access to Mapbox server APIs, set `MBXAccessToken` in your Info.plist. `MGLMapboxAccessToken` is still supported but is now deprecated. ([#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
 * Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.navigationMapViewDelegate` was renamed to `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* `NavigationMapViewController.mapView` was renamed to `NavigationMapViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Removed `NavigationAnnotation`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.updateCourseTracking(location:camera:animated:)` no longer accepts `MGLMapCamera` as parameter, and uses `CameraOptions` instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * `NavigationMapView.showsUserLocation` was removed, because `NavigationMapView` is no longer inherited from `MGLMapView`. `NavigationMapView.mapView` is now exposed as public property instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
