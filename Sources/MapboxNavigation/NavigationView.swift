@@ -1,6 +1,5 @@
 import UIKit
 import MapboxDirections
-import MapboxCommon
 import MapboxCoreNavigation
 
 /**

@@ -12,7 +12,7 @@ public struct TileStoreConfiguration {
     /**
      Describes filesystem location for tile storage folder
      */
-    public enum Location{
+    public enum Location {
         /**
          Encapsulated default location.
          
