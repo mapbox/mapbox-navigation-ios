@@ -16,7 +16,7 @@ extension NavigationMapView {
         var branchShape: LineString
 
         public var coordinate: CLLocationCoordinate2D? {
-            rootShape.coordinates.first
+            branchShape.coordinates.first
         }
 
         public var annotationPoint: CLLocationCoordinate2D? {
