@@ -738,12 +738,20 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         arrivalController?.showEndOfRouteIfNeeded(self,
                                                   advancesToNextLeg: advancesToNextLeg,
-                                                  completion: nil,
+                                                  completion: { [ weak self] _ in
+                                                    self?.frameDestinationArrival(for: service.router.location)
+                                                  },
                                                   onDismiss: { [weak self] in
                                                     self?.navigationService.endNavigation(feedback: $0)
                                                     self?.handleCancelAction()
                                                   })
         return advancesToNextLeg
+    }
+    
+    func frameDestinationArrival(for location: CLLocation?) {
+        if waypointStyle == .annotation { return }
+        guard let location = location else { return }
+        navigationMapView?.updateUserCourseView(location, animated: false)
     }
 
     public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {

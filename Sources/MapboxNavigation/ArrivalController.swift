@@ -66,6 +66,8 @@ class ArrivalController: NavigationComponentDelegate {
                                                  left: 20,
                                                  bottom: height + 20,
                                                  right: 20)
+            cameraOptions.center = destination?.coordinate
+            cameraOptions.pitch = 0
             navigationMapView.mapView.camera.setCamera(to: cameraOptions,
                                                        animated: duration > 0.0 ? true : false,
                                                        duration: duration) { (animatingPosition) in
