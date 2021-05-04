@@ -313,7 +313,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
+     Initializes a `NavigationViewController` that presents the user interface for following a predefined route based on the given options.
 
      The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
      
@@ -329,6 +329,35 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         super.init(nibName: nil, bundle: nil)
         
+        initialize(for: route, routeIndex: routeIndex, routeOptions: routeOptions, navigationOptions: navigationOptions)
+    }
+    
+    /**
+     Initializes a `NavigationViewController` with the given route and navigation service.
+     
+     - parameter route: The route to navigate along.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: the options object used to generate the route.
+     - parameter navigationService: The navigation service that manages navigation along the route.
+     */
+    convenience init(route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationService service: NavigationService) {
+        let options = NavigationOptions(navigationService: service)
+        self.init(for: route, routeIndex: routeIndex, routeOptions: routeOptions, navigationOptions: options)
+    }
+    
+    /**
+     Initializes a `NavigationViewController` that presents the user interface for following a predefined route based on the given options.
+     
+     The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
+     
+     This variation of `NavigationViewController` initializer is meant to be used right after its instantiation via Storyboard and calling `NavigationViewController.init(coder:)`.
+     
+     - parameter route: The route to navigate along.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter navigationOptions: The navigation options to use for the navigation session.
+     */
+    public func initialize(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
         if !(routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
@@ -356,19 +385,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                                                                  tileStoreConfiguration: navigationOptions?.tileStoreConfiguration)
             }
         }
-    }
-    
-    /**
-     Initializes a navigation view controller with the given route and navigation service.
-     
-     - parameter route: The route to navigate along.
-     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
-     - parameter routeOptions: the options object used to generate the route.
-     - parameter navigationService: The navigation service that manages navigation along the route.
-     */
-    convenience init(route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationService service: NavigationService) {
-        let options = NavigationOptions(navigationService: service)
-        self.init(for: route, routeIndex: routeIndex, routeOptions: routeOptions, navigationOptions: options)
     }
     
     deinit {
