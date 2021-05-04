@@ -19,14 +19,14 @@ extension NavigationMapView {
             rootShape.coordinates.first
         }
 
-        var annotationPoint: CLLocationCoordinate2D? {
+        public var annotationPoint: CLLocationCoordinate2D? {
             guard let length = branchShape.distance() else { return nil }
             let targetDistance = min(length / 2, Double.random(in: 15...30))
             guard let annotationPoint = branchShape.coordinateFromStart(distance: targetDistance) else { return nil }
             return annotationPoint
         }
 
-        var wayName: String? {
+        public var wayName: String? {
             guard let roadName = rootMetadata.names.first else { return nil }
 
             switch roadName {
