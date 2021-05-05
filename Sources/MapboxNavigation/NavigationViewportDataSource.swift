@@ -366,7 +366,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
            let lastCoordinate = coordinates.last {
             let directionToManeuver = firstCoordinate.direction(to: lastCoordinate)
             let directionDiff = directionToManeuver.shortestRotation(angle: initialBearing)
-            let bearingMaxDiff = options.followingCameraOptions.bearingSmoothing.maximumBearingSmoothingAngle ?? 0.0
+            let bearingSmoothing = options.followingCameraOptions.bearingSmoothing
+            let bearingMaxDiff = bearingSmoothing.enabled ? bearingSmoothing.maximumBearingSmoothingAngle : 0.0
             if fabs(directionDiff) > bearingMaxDiff {
                 bearing += bearingMaxDiff * (directionDiff < 0.0 ? -1.0 : 1.0)
             } else {

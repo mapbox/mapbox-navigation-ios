@@ -148,6 +148,13 @@ public struct IntersectionDensity {
 public struct BearingSmoothing {
     
     /**
+     Controls whether bearing smoothing will be performed or not.
+     
+     Defaults to `true`.
+     */
+    public var enabled = true
+    
+    /**
      Controls how much the bearing can deviate from the location's bearing, in degrees.
      
      In case if set, the `bearing` property of `CameraOptions` during active guidance navigation
@@ -156,7 +163,7 @@ public struct BearingSmoothing {
      
      Defaults to `45.0` degrees.
      */
-    public var maximumBearingSmoothingAngle: CLLocationDirection? = 45.0
+    public var maximumBearingSmoothingAngle: CLLocationDirection = 45.0
 }
 
 /**
