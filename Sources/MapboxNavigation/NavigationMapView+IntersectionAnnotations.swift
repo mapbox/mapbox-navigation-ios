@@ -51,6 +51,10 @@ extension NavigationMapView {
             return (branchMetadata.heading - rootMetadata.heading).wrap(min: 0, max: 360)
         }
 
+        public var angle: CLLocationDegrees {
+            return (branchMetadata.heading).wrap(min: 0, max: 360)
+        }
+
         var description: String {
             return "EdgeIntersection: root: \(wayName ?? "") intersection: \(intersectingWayName ?? "") coordinate: \(String(describing: coordinate))"
         }
