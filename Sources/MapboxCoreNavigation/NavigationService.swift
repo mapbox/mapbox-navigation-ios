@@ -226,6 +226,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
+     - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      */
     required public init(route: Route,
                          routeIndex: Int,
@@ -234,7 +235,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          simulating simulationMode: SimulationMode = .onPoorGPS,
-                         routerType: Router.Type? = nil) {
+                         routerType: Router.Type? = nil,
+                         tileStoreLocation: TileStoreConfiguration.Location = .default) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? Directions.shared
         self.simulationMode = simulationMode
@@ -247,7 +249,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        router = routerType.init(along: route, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self)
+        router = routerType.init(along: route, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self, tileStoreLocation: tileStoreLocation)
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self

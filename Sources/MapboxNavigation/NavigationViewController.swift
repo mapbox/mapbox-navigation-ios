@@ -285,6 +285,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     var viewObservers: [NavigationComponentDelegate] = []
     
+    var mapTileStore: TileStoreConfiguration.Location? = .default
+    
     // MARK: - NavigationViewData implementation
         
     var navigationView: NavigationView! {
@@ -316,6 +318,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
     required public init(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
+        if let options = navigationOptions {
+            mapTileStore = options.tileStoreConfiguration.mapLocation
+        }
+        
         super.init(nibName: nil, bundle: nil)
         
         if !(routeOptions is NavigationRouteOptions) {
@@ -324,7 +330,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route,
                                                                                             routeIndex: routeIndex,
-                                                                                            routeOptions: routeOptions)
+                                                                                            routeOptions: routeOptions,
+                                                                                            tileStoreLocation: navigationOptions?.tileStoreConfiguration.navigatorLocation ?? .default)
         navigationService.delegate = self
         
         let credentials = navigationService.directions.credentials
@@ -340,7 +347,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         subviewInits.append { [weak self] in
             if let predictiveCacheOptions = navigationOptions?.predictiveCacheOptions {
-                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions)
+                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions,
+                                                                 tileStoreConfiguration: navigationOptions?.tileStoreConfiguration)
             }
         }
     }
@@ -437,7 +445,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     open override func loadView() {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
-        view = NavigationView(delegate: self, frame: frame)
+        view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore)
     }
     
     /**

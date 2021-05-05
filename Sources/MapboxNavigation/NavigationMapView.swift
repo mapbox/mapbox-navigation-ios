@@ -164,11 +164,12 @@ open class NavigationMapView: UIView {
      
      - parameter frame: The frame rectangle for the `NavigationMapView`.
      - parameter navigationCameraType: Type of `NavigationCamera`, which is used for the current instance of `NavigationMapView`.
+     - parameter tileStoreLocation: Configuration of `TileStore` location, where Map tiles are stored. Use `nil` to disable onboard tile storage.
      */
-    public init(frame: CGRect, navigationCameraType: NavigationCameraType = .mobile) {
+    public init(frame: CGRect, navigationCameraType: NavigationCameraType = .mobile, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         super.init(frame: frame)
         
-        setupMapView(frame, navigationCameraType: navigationCameraType)
+        setupMapView(frame, navigationCameraType: navigationCameraType, tileStoreLocation: tileStoreLocation)
         commonInit()
     }
     
@@ -221,14 +222,16 @@ open class NavigationMapView: UIView {
         }
     }
     
-    func setupMapView(_ frame: CGRect, navigationCameraType: NavigationCameraType = .mobile) {
+    func setupMapView(_ frame: CGRect, navigationCameraType: NavigationCameraType = .mobile, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         guard let accessToken = CredentialsManager.default.accessToken else {
             fatalError("Access token was not set.")
         }
         
+        let tileStore = tileStoreLocation?.tileStore
         // TODO: allow customising tile store location.
         let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              tileStoreEnabled: true,
+                                              tileStore: tileStore,
+                                              tileStoreEnabled: tileStore != nil,
                                               loadTilePacksFromNetwork: false)
         
         mapView = MapView(frame: frame, mapInitOptions: MapInitOptions(resourceOptions: resourceOptions))
@@ -264,16 +267,25 @@ open class NavigationMapView: UIView {
      If `NavigationMapView` was not configured to maintain a tile storage - this function does nothing.
      
      - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
+     - parameter tileStoreConfiguration: configuration for tile storage parameters. If `nil` - default settings will be used.
      */
-    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions) {
-        guard let tileStore = mapTileStore else {
-            return
-        }
-        let mapOptions = PredictiveCacheManager.MapOptions(tileStore,
-                                                           mapView.styleSourceDatasets(["raster", "vector"]))
+    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions, tileStoreConfiguration: TileStoreConfiguration?) {
+        let styleSourcePaths = mapView.styleSourceDatasets(["raster", "vector"])
         
-        predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
-                                                        mapOptions: mapOptions)
+        if let tileStoreConfiguration = tileStoreConfiguration {
+            let tileStoreMapOptions = PredictiveCacheManager.TileStoreMapOptions(tileStoreConfiguration,
+                                                                                 styleSourcePaths)
+                                                                                 
+            
+            predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                            tileStoreMapOptions: tileStoreMapOptions)
+        } else if let tileStore = mapTileStore {
+            let mapOptions = PredictiveCacheManager.MapOptions(tileStore,
+                                                               styleSourcePaths)
+            
+            predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                            mapOptions: mapOptions)
+        }
     }
     
     // MARK: - Overridden methods

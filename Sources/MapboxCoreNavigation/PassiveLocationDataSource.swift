@@ -15,13 +15,15 @@ open class PassiveLocationDataSource: NSObject {
      
      - parameter directions: The directions service that allows the location data source to access road network data. If this argument is omitted, the shared `Directions` object is used.
      - parameter systemLocationManager: The location manager that provides raw locations for the receiver to match against the road network.
+     - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      
      - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
      */
-    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil) {
+    public required init(directions: Directions = Directions.shared, systemLocationManager: NavigationLocationManager? = nil, tileStoreLocation: TileStoreConfiguration.Location = .default) {
         self.directions = directions
         Navigator.credentials = directions.credentials
-
+        Navigator.tilesURL = tileStoreLocation.tileStoreURL
+        
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
         
         super.init()
