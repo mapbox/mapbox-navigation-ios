@@ -15,20 +15,20 @@ public struct FollowingCameraOptions {
     public var defaultPitch: Double = 45.0
     
     /**
-     Highest altitude, which will be used when producing camera frame in `NavigationCameraState.following`
+     Minimum zoom, which will be used when producing camera frame in `NavigationCameraState.following`
      state.
      
-     Defaults to `50000.0` meters, or zoom level `10.50` (approximately).
+     Defaults to `10.50`.
      */
-    public var highestAltitude: CLLocationDistance = 50000.0
+    public var minimumZoomLevel: Double = 10.50
     
     /**
-     Lowest altitude, which will be used when producing camera frame in `NavigationCameraState.following`
+     Maximum zoom, which will be used when producing camera frame in `NavigationCameraState.following`
      state. It will be also used as initial value when active guidance navigation starts.
      
-     Defaults to `900.0` meters, or zoom level `16.35` (approximately).
+     Defaults to `16.35`.
      */
-    public var lowestAltitude: CLLocationDistance = 900.0
+    public var maximumZoomLevel: Double = 16.35
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.center` property

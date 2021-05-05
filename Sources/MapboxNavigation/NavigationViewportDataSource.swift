@@ -237,31 +237,21 @@ public class NavigationViewportDataSource: ViewportDataSource {
             if options.followingCameraOptions.zoomUpdatesAllowed {
                 let defaultZoomLevel = 12.0
                 
-                let maxZoomLevel = ZoomLevelForAltitude(followingCameraOptions.lowestAltitude,
-                                                        mapView.pitch,
-                                                        location.coordinate.latitude,
-                                                        mapView.bounds.size)
-                
-                let minZoomLevel = ZoomLevelForAltitude(followingCameraOptions.highestAltitude,
-                                                        mapView.pitch,
-                                                        location.coordinate.latitude,
-                                                        mapView.bounds.size)
-                
                 followingMobileCamera.zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                                        pitch: pitch,
                                                        maxPitch: followingCameraOptions.defaultPitch,
                                                        edgeInsets: viewportPadding,
                                                        defaultZoomLevel: defaultZoomLevel,
-                                                       maxZoomLevel: maxZoomLevel,
-                                                       minZoomLevel: minZoomLevel)
+                                                       maxZoomLevel: followingCameraOptions.maximumZoomLevel,
+                                                       minZoomLevel: followingCameraOptions.minimumZoomLevel)
                 
                 followingCarPlayCamera.zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                                         pitch: pitch,
                                                         maxPitch: followingCameraOptions.defaultPitch,
                                                         edgeInsets: carPlayCameraPadding,
                                                         defaultZoomLevel: defaultZoomLevel,
-                                                        maxZoomLevel: maxZoomLevel,
-                                                        minZoomLevel: minZoomLevel)
+                                                        maxZoomLevel: followingCameraOptions.maximumZoomLevel,
+                                                        minZoomLevel: followingCameraOptions.minimumZoomLevel)
             }
             
             if options.followingCameraOptions.bearingUpdatesAllowed {
@@ -336,18 +326,13 @@ public class NavigationViewportDataSource: ViewportDataSource {
         }
         
         if overviewCameraOptions.zoomUpdatesAllowed {
-            let maxZoomLevel = ZoomLevelForAltitude(overviewCameraOptions.lowestAltitude,
-                                                    mapView.pitch,
-                                                    coordinate.latitude,
-                                                    mapView.bounds.size)
-            
             overviewMobileCamera.zoom = self.zoom(remainingCoordinatesOnRoute,
                                                   edgeInsets: viewportPadding,
-                                                  maxZoomLevel: maxZoomLevel)
+                                                  maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
             
             overviewCarPlayCamera.zoom = self.zoom(remainingCoordinatesOnRoute,
                                                    edgeInsets: carPlayCameraPadding,
-                                                   maxZoomLevel: maxZoomLevel)
+                                                   maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
         }
         
         overviewMobileCamera.anchor = self.anchor(bounds: mapView.bounds,

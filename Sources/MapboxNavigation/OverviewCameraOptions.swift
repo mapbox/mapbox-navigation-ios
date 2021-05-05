@@ -7,12 +7,12 @@ import Foundation
 public struct OverviewCameraOptions {
     
     /**
-     Lowest altitude, which will be used when producing camera frame in `NavigationCameraState.overview`
+     Maximum zoom level, which will be used when producing camera frame in `NavigationCameraState.overview`
      state.
      
-     Defaults to `900.0` meters, or zoom level `16.35` (approximately).
+     Defaults to `16.35`.
      */
-    public var lowestAltitude = 900.0
+    public var maximumZoomLevel: Double = 16.35
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.center` property
