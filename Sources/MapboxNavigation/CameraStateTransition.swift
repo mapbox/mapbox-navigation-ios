@@ -7,7 +7,7 @@ import MapboxMaps
  By default Navigation SDK for iOS provides default implementation of `CameraStateTransition`
  in `NavigationCameraStateTransition`.
  */
-public protocol CameraStateTransition: class {
+public protocol CameraStateTransition: AnyObject {
     
     var mapView: MapView? { get }
     
