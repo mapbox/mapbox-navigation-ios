@@ -3,7 +3,7 @@ import Foundation
 import MapboxCommon
 
 /**
- Describes `TileStore` setup.
+ Options for configuring how map and navigation tiles are stored on the device.
  
  This struct encapsulates logic for handling `default` and `custom` paths as well as providing corresponding `TileStore`s.
  It also covers differences between tile storages for Map and Navigation data. Tupically, you won't need to configure these and rely on defaults, unless you provide pre-downloaded data withing your app in which case you'll need `custom()` path to point to your data.
