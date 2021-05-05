@@ -75,7 +75,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
         navigationMapView.navigationCamera.stop()
 
-        let edgeInsets = navigationMapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+        let edgeInsets = navigationMapView.safeArea + UIEdgeInsets.centerEdgeInsets
         let cameraOptions = CameraOptions(center: step.maneuverLocation,
                                           padding: edgeInsets,
                                           zoom: navigationMapView.mapView.zoom,
