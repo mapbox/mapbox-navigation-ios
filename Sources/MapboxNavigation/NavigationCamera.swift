@@ -74,8 +74,8 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         
         // Uncomment to be able to see `NavigationCameraDebugView`.
         // setupDebugView(mapView,
-        //               navigationCameraType: navigationCameraType,
-        //               navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
+        //                navigationCameraType: navigationCameraType,
+        //                navigationViewportDataSource: self.viewportDataSource as? NavigationViewportDataSource)
     }
     
     // MARK: - Setting-up methods

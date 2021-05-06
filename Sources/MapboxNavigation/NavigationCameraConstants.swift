@@ -5,25 +5,29 @@ extension CameraOptions {
     
     /**
      Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
-     so that it can be consumed by `NavigationCamera` in `.transitionToFollowing` or `.following` states on iOS.
+     so that it can be consumed by `NavigationCamera` in `NavigationCameraState.transitionToFollowing`
+     or `NavigationCameraState.following` states on iOS.
      */
     public static let followingMobileCamera = "FollowingMobileCamera"
     
     /**
      Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
-     so that it can be consumed by `NavigationCamera` in `.transitionToOverview` or `.overview` states on iOS.
+     so that it can be consumed by `NavigationCamera` in `NavigationCameraState.transitionToOverview`
+     or `NavigationCameraState.overview` states on iOS.
      */
     public static let overviewMobileCamera = "OverviewMobileCamera"
     
     /**
      Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
-     so that it can be consumed by `NavigationCamera` in `.transitionToFollowing` or `.following` states on CarPlay.
+     so that it can be consumed by `NavigationCamera` in `NavigationCameraState.transitionToFollowing`
+     or `NavigationCameraState.following` states on CarPlay.
      */
     public static let followingCarPlayCamera = "FollowingCarPlayCamera"
     
     /**
      Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
-     so that it can be consumed by `NavigationCamera` in `.transitionToOverview` or `.overview` states on CarPlay.
+     so that it can be consumed by `NavigationCamera` in `NavigationCameraState.transitionToOverview`
+     or `NavigationCameraState.overview` states on CarPlay.
      */
     public static let overviewCarPlayCamera = "OverviewCarPlayCamera"
 }

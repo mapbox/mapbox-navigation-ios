@@ -61,7 +61,9 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.stop()
             
-            mapView.cameraOptions.zoom = mapView.zoom + 1.0
+            var cameraOptions = mapView.cameraOptions
+            cameraOptions.zoom = mapView.zoom + 1.0
+            mapView.camera.setCamera(to: cameraOptions)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -79,7 +81,9 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.stop()
             
-            mapView.cameraOptions.zoom = mapView.zoom - 1.0
+            var cameraOptions = mapView.cameraOptions
+            cameraOptions.zoom = mapView.zoom - 1.0
+            mapView.camera.setCamera(to: cameraOptions)
         }
         
         let bundle = Bundle.mapboxNavigation

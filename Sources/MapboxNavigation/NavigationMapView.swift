@@ -312,7 +312,7 @@ open class NavigationMapView: UIView {
      Updates the map view’s preferred frames per second to the appropriate value for the current route progress.
      
      This method accounts for the proximity to a maneuver and the current power source.
-     It has no effect if `NavigationCameraState` is in `.following` mode.
+     It has no effect if `NavigationCamera` is in `NavigationCameraState.following` state.
      
      - parameter routeProgress: Object, which stores current progress along specific route.
      */
@@ -370,12 +370,7 @@ open class NavigationMapView: UIView {
                               navigationCameraState: navigationCamera.state)
     }
     
-//    func forceCourseCoordinate(_ centerCoordinate: CLLocationCoordinate2D) {
-//        mapView.cameraManager.setCamera(to: CameraOptions(center: centerCoordinate, zoom: 14.0))
-//        updateUserCourseView(CLLocation(latitude: centerCoordinate.latitude, longitude: centerCoordinate.longitude))
-//    }
-    
-    // MARK: Feature addition/removal properties and methods
+    // MARK: Feature addition/removal methods
     
     /**
      Showcases route array. Adds routes and waypoints to map, and sets camera to point encompassing the route.
@@ -440,12 +435,8 @@ open class NavigationMapView: UIView {
     func setInitialCamera(_ coordinate: CLLocationCoordinate2D) {
         guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
         
-        let zoom = CGFloat(ZoomLevelForAltitude(navigationViewportDataSource.defaultAltitude,
-                                                mapView.pitch,
-                                                coordinate.latitude,
-                                                mapView.bounds.size))
-        
-        mapView.cameraOptions = CameraOptions(center: coordinate, zoom: zoom)
+        mapView.camera.setCamera(to: CameraOptions(center: coordinate,
+                                                   zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)), animated: false)
         updateUserCourseView(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
 
@@ -700,7 +691,7 @@ open class NavigationMapView: UIView {
               route.legs[legIndex].steps.indices.contains(stepIndex),
               let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
-        mapView.style.setStyleImage(image: triangleImage, with: NavigationMapView.ImageIdentifier.arrowImage, scale: 1.0)
+        mapView.style.setStyleImage(image: triangleImage, with: NavigationMapView.ImageIdentifier.arrowImage)
         let step = route.legs[legIndex].steps[stepIndex]
         let maneuverCoordinate = step.maneuverLocation
         guard step.maneuverType != .arrive else { return }

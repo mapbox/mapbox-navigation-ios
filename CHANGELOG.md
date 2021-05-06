@@ -6,7 +6,8 @@
 
 * The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * You can now install MapboxNavigation using Swift Package Manager, but you can no longer install it using Carthage. If you previously installed MapboxNavigation using Carthage, use Swift Package Manager instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* MapboxNavigation now depends on [MapboxMaps v10.0.0-beta.18](https://github.com/mapbox/mapbox-maps-ios/), MapboxNavigationNative v48.0.4, and MapboxCommon v11.0.2. ([#2884](https://github.com/mapbox/mapbox-navigation-ios/pull/2930))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0-beta.18.1](https://github.com/mapbox/mapbox-maps-ios/), MapboxNavigationNative v48.0.5. ([#2944](https://github.com/mapbox/mapbox-navigation-ios/pull/2944))
+* MapboxNavigation depends on MapboxCommon v11.0.2. ([#2930](https://github.com/mapbox/mapbox-navigation-ios/pull/2930))
 * MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.2 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829), [#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
 * MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Xcode 12.4 or above is now required for building this SDK from source.
@@ -49,6 +50,7 @@
 * Replaced `CourseUpdatable.update(location:pitch:direction:animated:tracksUserCourse:)` with `CourseUpdatable.update(location:pitch:direction:animated:navigationCameraState:)` to provide more agile way of handling `NavigationCameraState`. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
 * Added `NavigationMapView.init(frame:navigationCameraType:)` to be able to provide type of `NavigationCamera`, which should be used for that specific instance of `NavigationMapView` (either iOS or CarPlay). ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
 * Added `NavigationCamera`, `ViewportDataSourceType`, `ViewportDataSourceDelegate`, `NavigationCameraState` Navigation Viewport Camera APIs. By default Navigation SDK for iOS provides default camera behavior via `NavigationViewportDataSource` and `NavigationCameraStateTransition` classes. If you'd like to override current behavior use `ViewportDataSource` and `CameraStateTransition` protocols for custom behavior. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Added `NavigationViewportDataSourceOptions`, which provides the ability to change specific `CameraOptions` of `NavigationViewportDataSource`. ([#2944](https://github.com/mapbox/mapbox-navigation-ios/pull/2944))
 
 ### CarPlay
 

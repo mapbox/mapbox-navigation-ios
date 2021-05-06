@@ -124,7 +124,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         var insets = navigationMapView.mapView.safeArea
         insets += courseViewMinimumInsets
         insets.top += topBannerContainerView.bounds.height
-        insets.bottom += bottomBannerContainerView.bounds.height
+        insets.bottom += bottomBannerContainerView.bounds.height + 10.0
     
         return insets
     }
