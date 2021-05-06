@@ -72,18 +72,14 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
                                    stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
     }
     
-    func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
+    func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int) {
         navigationMapView.navigationCamera.stop()
         // TODO: Verify that camera is positioned correctly.
         let cameraOptions = CameraOptions(center: step.maneuverLocation,
-                                          zoom: navigationMapView.mapView.zoom,
-                                          bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
+                                          zoom: navigationMapView.mapView.cameraState.zoom,
+                                          bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.cameraState.bearing))
         
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions,
-                                                   animated: animated,
-                                                   duration: animated ? 1 : 0) { _ in
-            completion?()
-        }
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions)
         
         navigationMapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
     }
@@ -148,10 +144,8 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     func navigationViewWillAppear(_: Bool) {
         resumeNotifications()
         
-        navigationMapView.mapView.update {
-            $0.ornaments.compassVisibility = .hidden
-        }
-
+        navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
+        
         navigationMapView.navigationCamera.follow()
     }
     

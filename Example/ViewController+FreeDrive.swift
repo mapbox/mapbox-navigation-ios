@@ -86,14 +86,14 @@ extension ViewController {
     func addStyledFeature(_ styledFeature: StyledFeature) {
         var source = GeoJSONSource()
         source.data = .geometry(.lineString(styledFeature.lineString))
-        _ = navigationMapView.mapView.style.addSource(source: source,
-                                                      identifier: styledFeature.sourceIdentifier)
+        try? navigationMapView.mapView.style.addSource(source,
+                                                       id: styledFeature.sourceIdentifier)
         
         var layer = LineLayer(id: styledFeature.layerIdentifier)
         layer.source = styledFeature.sourceIdentifier
         layer.paint?.lineWidth = .constant(styledFeature.lineWidth)
         layer.paint?.lineColor = .constant(.init(color: styledFeature.color))
-        _ = navigationMapView.mapView.style.addLayer(layer: layer)
+        try? navigationMapView.mapView.style.addLayer(layer)
     }
     
     @objc func didUpdateElectronicHorizonPosition(_ notification: Notification) {

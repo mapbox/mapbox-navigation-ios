@@ -738,7 +738,6 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         arrivalController?.showEndOfRouteIfNeeded(self,
                                                   advancesToNextLeg: advancesToNextLeg,
-                                                  completion: nil,
                                                   onDismiss: { [weak self] in
                                                     self?.navigationService.endNavigation(feedback: $0)
                                                     self?.handleCancelAction()
@@ -933,33 +932,29 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         }
     }
     
-    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route, animated: Bool = true) {
+    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route) {
         guard let leg = route.leg(containing: step) else { return }
         guard let legIndex = route.legs.firstIndex(of: leg) else { return }
         guard let stepIndex = leg.steps.firstIndex(of: step) else { return }
         let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
         guard let upcomingStep = legProgress.upcomingStep else { return }
         
-        let previewBanner: CompletionHandler = {
-            banner.preview(step: legProgress.currentStep,
-                           maneuverStep: upcomingStep,
-                           distance: legProgress.currentStep.distance,
-                           steps: remaining)
-        }
-        
         cameraController?.center(on: upcomingStep,
                                  route: route,
                                  legIndex: legIndex,
-                                 stepIndex: stepIndex + 1,
-                                 animated: animated,
-                                 completion: previewBanner)
+                                 stepIndex: stepIndex + 1)
+        
+        banner.preview(step: legProgress.currentStep,
+                       maneuverStep: upcomingStep,
+                       distance: legProgress.currentStep.distance,
+                       steps: remaining)
     }
     
     public func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         let progress = navigationService.routeProgress
         let legProgress = RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
-        self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
+        self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route)
         banner.dismissStepsTable()
     }
     

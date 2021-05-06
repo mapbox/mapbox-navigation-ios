@@ -320,8 +320,7 @@ class ViewController: UIViewController {
     @objc func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
         guard gesture.state == .began else { return }
         let gestureLocation = gesture.location(in: navigationMapView)
-        let destinationCoordinate = navigationMapView.mapView.coordinate(for: gestureLocation,
-                                                                         in: navigationMapView)
+        let destinationCoordinate = navigationMapView.mapView.mapboxMap.coordinate(for: gestureLocation)
         
         if waypoints.count > 1 {
             waypoints = Array(waypoints.dropFirst())

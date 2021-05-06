@@ -45,9 +45,7 @@ class CustomViewController: UIViewController {
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
         navigationService = MapboxNavigationService(route: userIndexedRoute!.0, routeIndex: userIndexedRoute!.1, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
         
-        navigationMapView.mapView.update {
-            $0.ornaments.compassVisibility = .hidden
-        }
+        navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         
         instructionsBannerView.delegate = self
         instructionsBannerView.swipeable = true
@@ -185,7 +183,7 @@ class CustomViewController: UIViewController {
         
         if let bearing = maneuverStep.initialHeading {
             let cameraOptions = CameraOptions(center: maneuverStep.maneuverLocation, bearing: bearing)
-            navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
+            navigationMapView.mapView.camera.setCamera(to: cameraOptions)
         }
         
         // add arrow to map for preview instruction

@@ -158,7 +158,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             if followingCameraOptions.zoomUpdatesAllowed {
                 let altitude = 4000.0
                 let zoom = CGFloat(ZoomLevelForAltitude(altitude,
-                                                        mapView.pitch,
+                                                        mapView.cameraState.pitch,
                                                         location.coordinate.latitude,
                                                         mapView.bounds.size))
                 
@@ -221,8 +221,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 let centerLineString = LineString([
                     location.coordinate,
                     (coordinatesToManeuver + coordinatesForManeuverFraming)
-                        .map({ mapView.point(for: $0) }).boundingBoxPoints
-                        .map({ mapView.coordinate(for: $0) }).centerCoordinate
+                        .map({ mapView.mapboxMap.point(for: $0) }).boundingBoxPoints
+                        .map({ mapView.mapboxMap.coordinate(for: $0) }).centerCoordinate
                 ])
                 let centerLineStringTotalDistance = centerLineString.distance() ?? 0.0
                 let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchСoefficient)
@@ -318,8 +318,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
         
         if overviewCameraOptions.centerUpdatesAllowed {
             let center = remainingCoordinatesOnRoute
-                .map({ mapView.point(for: $0) }).boundingBoxPoints
-                .map({ mapView.coordinate(for: $0) }).centerCoordinate
+                .map({ mapView.mapboxMap.point(for: $0) }).boundingBoxPoints
+                .map({ mapView.mapboxMap.coordinate(for: $0) }).centerCoordinate
             
             overviewMobileCamera.center = center
             overviewCarPlayCamera.center = center
@@ -344,8 +344,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         if overviewCameraOptions.bearingUpdatesAllowed {
             // In case if `NavigationCamera` is already in `NavigationCameraState.overview` value
             // of bearing will be ignored.
-            let bearing = CLLocationDirection(mapView.bearing) +
-                heading.shortestRotation(angle: CLLocationDirection(mapView.bearing))
+            let bearing = mapView.cameraState.bearing + heading.shortestRotation(angle: mapView.cameraState.bearing)
             
             overviewMobileCamera.bearing = bearing
             overviewCarPlayCamera.bearing = bearing
@@ -375,7 +374,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
         }
         
-        let mapViewBearing = Double(mapView?.bearing ?? 0.0)
+        let mapViewBearing = Double(mapView?.cameraState.bearing ?? 0.0)
         return mapViewBearing + bearing.shortestRotation(angle: mapViewBearing)
     }
     

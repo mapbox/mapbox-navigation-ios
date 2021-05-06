@@ -183,8 +183,8 @@ extension NavigationMapView {
         if fractionTraveled >= 1.0 {
             // In case if route was fully travelled - remove main route and its casing.
             
-            let _ = mapView.style.removeStyleLayer(forLayerId: mainRouteLayerIdentifier)
-            let _ = mapView.style.removeStyleLayer(forLayerId: mainRouteCasingLayerIdentifier)
+            try? mapView.style.removeLayer(withId: mainRouteLayerIdentifier)
+            try? mapView.style.removeLayer(withId: mainRouteCasingLayerIdentifier)
 
             fractionTraveled = 0.0
             preFractionTraveled = 0.0

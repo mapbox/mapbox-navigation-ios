@@ -599,7 +599,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let coordinate = self.coordinate(of: offset, in: navigationMapView)
         let cameraOptions = CameraOptions(center: coordinate)
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions)
     }
 
     func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
@@ -607,7 +607,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let centerPoint = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
         let endCameraPoint = CGPoint(x: centerPoint.x - offset.x, y: centerPoint.y - offset.y)
 
-        return navigationMapView.mapView.coordinate(for: endCameraPoint)
+        return navigationMapView.mapView.mapboxMap.coordinate(for: endCameraPoint)
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
@@ -623,17 +623,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         // Calculate the distance in physical units from the visual center to where it would be after panning downwards.
         let downshiftedCenter = CGPoint(x: contentFrame.midX, y: contentFrame.midY + increment)
-        let downshiftedCenterCoordinate = navigationMapView.mapView.coordinate(for: downshiftedCenter)
-        let distance = navigationMapView.mapView.centerCoordinate.distance(to: downshiftedCenterCoordinate)
+        let downshiftedCenterCoordinate = navigationMapView.mapView.mapboxMap.coordinate(for: downshiftedCenter)
+        let distance = navigationMapView.mapView.cameraState.center.distance(to: downshiftedCenterCoordinate)
         
         // Shift the center coordinate by that distance in the specified direction.
         guard let relativeDirection = CLLocationDirection(panDirection: direction) else {
             return
         }
-        let shiftedDirection = (Double(navigationMapView.mapView.bearing) + relativeDirection).wrap(min: 0, max: 360)
-        let shiftedCenterCoordinate = navigationMapView.mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
+        let shiftedDirection = (Double(navigationMapView.mapView.cameraState.bearing) + relativeDirection).wrap(min: 0, max: 360)
+        let shiftedCenterCoordinate = navigationMapView.mapView.cameraState.center.coordinate(at: distance, facing: shiftedDirection)
         let cameraOptions = CameraOptions(center: shiftedCenterCoordinate)
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions, animated: true)
+        navigationMapView.mapView.camera.setCamera(to: cameraOptions)
     }
 
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {

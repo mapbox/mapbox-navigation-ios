@@ -230,15 +230,16 @@ open class NavigationMapView: UIView {
         let tileStore = tileStoreLocation?.tileStore
         // TODO: allow customising tile store location.
         let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              baseUrl: nil,
+                                              cachePath: nil,
+                                              assetPath: nil,
+                                              cacheSize: 10 * 1024 * 1024,
                                               tileStore: tileStore,
-                                              tileStoreEnabled: tileStore != nil,
-                                              loadTilePacksFromNetwork: false)
+                                              tileStoreUsageMode: .readAndUpdate)
         
         mapView = MapView(frame: frame, mapInitOptions: MapInitOptions(resourceOptions: resourceOptions))
         mapView.translatesAutoresizingMaskIntoConstraints = false
-        mapView.update {
-            $0.ornaments.scaleBarVisibility = .hidden
-        }
+        mapView.ornaments.options.scaleBar.visibility = .hidden
         
         mapView.on(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
@@ -364,8 +365,8 @@ open class NavigationMapView: UIView {
         }
         
         userCourseView.update(location: location,
-                              pitch: mapView.pitch,
-                              direction: mapView.bearing,
+                              pitch: mapView.cameraState.pitch,
+                              direction: mapView.cameraState.bearing,
                               animated: animated,
                               navigationCameraState: navigationCamera.state)
     }
@@ -421,9 +422,11 @@ open class NavigationMapView: UIView {
     func fitCamera(to route: Route, animated: Bool = false) {
         guard let routeShape = route.shape, !routeShape.coordinates.isEmpty else { return }
         let edgeInsets = safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
-        if let cameraOptions = mapView?.camera.camera(fitting: .lineString(routeShape),
-                                                      edgePadding: edgeInsets) {
-            mapView?.camera.setCamera(to: cameraOptions, animated: animated)
+        if let cameraOptions = mapView?.mapboxMap.camera(for: .lineString(routeShape),
+                                                         padding: edgeInsets,
+                                                         bearing: nil,
+                                                         pitch: nil) {
+            mapView?.camera.setCamera(to: cameraOptions)
         }
     }
 
@@ -436,7 +439,7 @@ open class NavigationMapView: UIView {
         guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
         
         mapView.camera.setCamera(to: CameraOptions(center: coordinate,
-                                                   zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)), animated: false)
+                                                   zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)))
         updateUserCourseView(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
 
@@ -445,7 +448,7 @@ open class NavigationMapView: UIView {
         
         let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, casingShapeFor: route) ?? shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: true))
-        mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
+        try? mapView.style.addSource(geoJSONSource, id: sourceIdentifier)
         
         let layerIdentifier = route.identifier(.route(isMainRoute: isMainRoute))
         var lineLayer = delegate?.navigationMapView(self,
@@ -479,10 +482,10 @@ open class NavigationMapView: UIView {
         }
         
         if let lineLayer = lineLayer {
-            mapView.style.addLayer(layer: lineLayer,
-                                   layerPosition: isMainRoute ?
-                                    LayerPosition(above: mapView.mainRouteLineParentLayerIdentifier) :
-                                    LayerPosition(below: parentLayerIndentifier))
+            try? mapView.style.addLayer(lineLayer,
+                                        layerPosition: isMainRoute ?
+                                            LayerPosition(above: mapView.mainRouteLineParentLayerIdentifier) :
+                                            LayerPosition(below: parentLayerIndentifier))
         }
         
         return layerIdentifier
@@ -493,7 +496,7 @@ open class NavigationMapView: UIView {
         
         let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, shapeFor: route) ?? shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: isMainRoute))
-        mapView.style.addSource(source: geoJSONSource, identifier: sourceIdentifier)
+        try? mapView.style.addSource(geoJSONSource, id: sourceIdentifier)
         
         let layerIdentifier = route.identifier(.routeCasing(isMainRoute: isMainRoute))
         var lineLayer = delegate?.navigationMapView(self,
@@ -517,7 +520,7 @@ open class NavigationMapView: UIView {
         }
         
         if let lineLayer = lineLayer {
-            mapView.style.addLayer(layer: lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
+            try? mapView.style.addLayer(lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
         }
         
         return layerIdentifier
@@ -555,29 +558,29 @@ open class NavigationMapView: UIView {
         if route.legs.count > 1 {
             routes = [route]
 
-            if let _ = try? mapView.style.getSource(identifier: NavigationMapView.SourceIdentifier.waypointSource, type: GeoJSONSource.self).get() {
+            if let _ = try? mapView.style.getSource(id: NavigationMapView.SourceIdentifier.waypointSource, type: GeoJSONSource.self).get() {
                 let _ = mapView.style.updateGeoJSON(for: NavigationMapView.SourceIdentifier.waypointSource, with: shape)
             } else {
                 var waypointSource = GeoJSONSource()
                 waypointSource.data = .featureCollection(shape)
-                mapView.style.addSource(source: waypointSource, identifier: NavigationMapView.SourceIdentifier.waypointSource)
+                try? mapView.style.addSource(waypointSource, id: NavigationMapView.SourceIdentifier.waypointSource)
 
                 let circles = delegate?.navigationMapView(self,
                                                           waypointCircleLayerWithIdentifier: NavigationMapView.LayerIdentifier.waypointCircleLayer,
                                                           sourceIdentifier: NavigationMapView.SourceIdentifier.waypointSource) ?? defaultWaypointCircleLayer()
 
                 if let arrows = try? mapView.style.getLayer(with: NavigationMapView.LayerIdentifier.arrowSymbolLayer, type: LineLayer.self).get() {
-                    mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: arrows.id))
+                    try? mapView.style.addLayer(circles, layerPosition: LayerPosition(above: arrows.id))
                 } else {
                     let layerIdentifier = route.identifier(.route(isMainRoute: true))
-                    mapView.style.addLayer(layer: circles, layerPosition: LayerPosition(above: layerIdentifier))
+                    try? mapView.style.addLayer(circles, layerPosition: LayerPosition(above: layerIdentifier))
                 }
                 
                 let symbols = delegate?.navigationMapView(self,
                                                           waypointSymbolLayerWithIdentifier: NavigationMapView.LayerIdentifier.waypointSymbolLayer,
                                                           sourceIdentifier: NavigationMapView.SourceIdentifier.waypointSource) ?? defaultWaypointSymbolLayer()
                 
-                mapView.style.addLayer(layer: symbols, layerPosition: LayerPosition(above: circles.id))
+                try? mapView.style.addLayer(symbols, layerPosition: LayerPosition(above: circles.id))
             }
         }
 
@@ -691,7 +694,7 @@ open class NavigationMapView: UIView {
               route.legs[legIndex].steps.indices.contains(stepIndex),
               let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
-        mapView.style.setStyleImage(image: triangleImage, with: NavigationMapView.ImageIdentifier.arrowImage)
+        try? mapView.style.addImage(triangleImage, id: NavigationMapView.ImageIdentifier.arrowImage)
         let step = route.legs[legIndex].steps[stepIndex]
         let maneuverCoordinate = step.maneuverLocation
         guard step.maneuverType != .arrive else { return }
@@ -709,7 +712,7 @@ open class NavigationMapView: UIView {
             var arrowSource = GeoJSONSource()
             arrowSource.data = .feature(Feature(shaftPolyline))
             var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
-            if let _ = try? mapView.style.getSource(identifier: NavigationMapView.SourceIdentifier.arrowSource, type: GeoJSONSource.self).get() {
+            if let _ = try? mapView.style.getSource(id: NavigationMapView.SourceIdentifier.arrowSource, type: GeoJSONSource.self).get() {
                 let geoJSON = Feature(shaftPolyline)
                 let _ = mapView.style.updateGeoJSON(for: NavigationMapView.SourceIdentifier.arrowSource, with: geoJSON)
             } else {
@@ -719,20 +722,20 @@ open class NavigationMapView: UIView {
                 arrowLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.70))
                 arrowLayer.paint?.lineColor = .constant(.init(color: maneuverArrowColor))
                 
-                mapView.style.addSource(source: arrowSource, identifier: NavigationMapView.SourceIdentifier.arrowSource)
+                try? mapView.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                 arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                 
                 if let _ = try? mapView.style.getLayer(with: NavigationMapView.LayerIdentifier.waypointCircleLayer, type: LineLayer.self).get() {
-                    mapView.style.addLayer(layer: arrowLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.waypointCircleLayer))
+                    try? mapView.style.addLayer(arrowLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.waypointCircleLayer))
                 } else {
-                    mapView.style.addLayer(layer: arrowLayer)
+                    try? mapView.style.addLayer(arrowLayer)
                 }
             }
             
             var arrowStrokeSource = GeoJSONSource()
             arrowStrokeSource.data = .feature(Feature(shaftPolyline))
             var arrowStrokeLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
-            if let _ = try? mapView.style.getSource(identifier: NavigationMapView.SourceIdentifier.arrowStrokeSource, type: GeoJSONSource.self).get() {
+            if let _ = try? mapView.style.getSource(id: NavigationMapView.SourceIdentifier.arrowStrokeSource, type: GeoJSONSource.self).get() {
                 let geoJSON = Feature(shaftPolyline)
                 let _ = mapView.style.updateGeoJSON(for: NavigationMapView.SourceIdentifier.arrowStrokeSource, with: geoJSON)
             } else {
@@ -742,15 +745,15 @@ open class NavigationMapView: UIView {
                 arrowStrokeLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.80))
                 arrowStrokeLayer.paint?.lineColor = .constant(.init(color: maneuverArrowStrokeColor))
                 
-                mapView.style.addSource(source: arrowStrokeSource, identifier: NavigationMapView.SourceIdentifier.arrowStrokeSource)
+                try? mapView.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                 arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
-                mapView.style.addLayer(layer: arrowStrokeLayer, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
+                try? mapView.style.addLayer(arrowStrokeLayer, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
             }
             
             let point = Point(shaftStrokeCoordinates.last!)
             var arrowSymbolSource = GeoJSONSource()
             arrowSymbolSource.data = .feature(Feature(point))
-            if let _ = try? mapView.style.getSource(identifier: NavigationMapView.SourceIdentifier.arrowSymbolSource, type: GeoJSONSource.self).get() {
+            if let _ = try? mapView.style.getSource(id: NavigationMapView.SourceIdentifier.arrowSymbolSource, type: GeoJSONSource.self).get() {
                 let geoJSON = Feature.init(geometry: Geometry.point(point))
                 let _ = mapView.style.updateGeoJSON(for: NavigationMapView.SourceIdentifier.arrowSymbolSource, with: geoJSON)
                 mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.LayerIdentifier.arrowSymbolLayer, property: "icon-rotate", value: shaftDirection)
@@ -776,12 +779,12 @@ open class NavigationMapView: UIView {
                 arrowSymbolCasingLayer.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.14))
                 arrowSymbolCasingLayer.layout?.iconAllowOverlap = arrowSymbolLayer.layout?.iconAllowOverlap
                 
-                mapView.style.addSource(source: arrowSymbolSource, identifier: NavigationMapView.SourceIdentifier.arrowSymbolSource)
+                try? mapView.style.addSource(arrowSymbolSource, id: NavigationMapView.SourceIdentifier.arrowSymbolSource)
                 arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                 arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                 
-                mapView.style.addLayer(layer: arrowSymbolLayer)
-                mapView.style.addLayer(layer: arrowSymbolCasingLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.arrowSymbolLayer))
+                try? mapView.style.addLayer(arrowSymbolLayer)
+                try? mapView.style.addLayer(arrowSymbolCasingLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.arrowSymbolLayer))
             }
         }
     }
@@ -834,12 +837,12 @@ open class NavigationMapView: UIView {
             }
         }
 
-        if let _ = try? mapView.style.getSource(identifier: NavigationMapView.SourceIdentifier.voiceInstructionSource, type: GeoJSONSource.self).get() {
+        if let _ = try? mapView.style.getSource(id: NavigationMapView.SourceIdentifier.voiceInstructionSource, type: GeoJSONSource.self).get() {
             _ = mapView.style.updateGeoJSON(for: NavigationMapView.SourceIdentifier.voiceInstructionSource, with: featureCollection)
         } else {
             var source = GeoJSONSource()
             source.data = .featureCollection(featureCollection)
-            mapView.style.addSource(source: source, identifier: NavigationMapView.SourceIdentifier.voiceInstructionSource)
+            try? mapView.style.addSource(source, id: NavigationMapView.SourceIdentifier.voiceInstructionSource)
             
             var symbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
             symbolLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
@@ -857,14 +860,14 @@ open class NavigationMapView: UIView {
             symbolLayer.paint?.textOpacity = .constant(0.75)
             symbolLayer.layout?.textAnchor = .constant(.bottom)
             symbolLayer.layout?.textJustify = .constant(.left)
-            mapView.style.addLayer(layer: symbolLayer)
+            try? mapView.style.addLayer(symbolLayer)
             
             var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer)
             circleLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
             circleLayer.paint?.circleRadius = .constant(5)
             circleLayer.paint?.circleOpacity = .constant(0.75)
             circleLayer.paint?.circleColor = .constant(.init(color: .white))
-            mapView.style.addLayer(layer: circleLayer)
+            try? mapView.style.addLayer(circleLayer)
         }
     }
     
@@ -887,7 +890,7 @@ open class NavigationMapView: UIView {
     }
     
     private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
-        let tapCoordinate = mapView.coordinate(for: point)
+        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
         let multipointRoutes = routes.filter { $0.legs.count > 1}
         guard multipointRoutes.count > 0 else { return nil }
         let waypoints = multipointRoutes.compactMap { route in
@@ -903,7 +906,7 @@ open class NavigationMapView: UIView {
         
         // Filter to see which ones are under threshold.
         let candidates = closest.filter({
-            let coordinatePoint = mapView.point(for: $0.coordinate)
+            let coordinatePoint = mapView.mapboxMap.point(for: $0.coordinate)
             
             return coordinatePoint.distance(to: point) < tapGestureDistanceThreshold
         })
@@ -912,7 +915,7 @@ open class NavigationMapView: UIView {
     }
     
     private func routes(closeTo point: CGPoint) -> [Route]? {
-        let tapCoordinate = mapView.coordinate(for: point)
+        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
         
         // Filter routes with at least 2 coordinates.
         guard let routes = routes?.filter({ $0.shape?.coordinates.count ?? 0 > 1 }) else { return nil }
@@ -931,7 +934,7 @@ open class NavigationMapView: UIView {
         // Filter closest coordinates by which ones are under threshold.
         let candidates = closest.filter {
             let closestCoordinate = $0.shape!.closestCoordinate(to: tapCoordinate)!.coordinate
-            let closestPoint = mapView.point(for: closestCoordinate)
+            let closestPoint = mapView.mapboxMap.point(for: closestCoordinate)
             
             return closestPoint.distance(to: point) < tapGestureDistanceThreshold
         }

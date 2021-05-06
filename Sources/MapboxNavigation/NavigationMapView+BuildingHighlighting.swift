@@ -22,7 +22,7 @@ extension NavigationMapView {
         
         coordinates.forEach {
             group.enter()
-            let screenCoordinate = mapView.point(for: $0, in: self)
+            let screenCoordinate = mapView.mapboxMap.point(for: $0)
             mapView.visibleFeatures(at: screenCoordinate,
                                     styleLayers: Set(identifiers),
                                     completion: { [weak self] result in
@@ -47,11 +47,11 @@ extension NavigationMapView {
      */
     public func unhighlightBuildings() {
         guard let _ = try? mapView.style.getLayer(with: NavigationMapView.LayerIdentifier.buildingExtrusionLayer, type: FillExtrusionLayer.self).get() else { return }
-        let _ = mapView.style.removeStyleLayer(forLayerId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
+        try? mapView.style.removeLayer(withId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
     }
 
     private func addBuildingsLayer(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
-        let _ = mapView.style.removeStyleLayer(forLayerId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
+        try? mapView.style.removeLayer(withId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
         if identifiers.isEmpty { return }
         var highlightedBuildingsLayer = FillExtrusionLayer(id: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
         highlightedBuildingsLayer.source = "composite"
@@ -98,7 +98,6 @@ extension NavigationMapView {
         highlightedBuildingsLayer.paint?.fillExtrusionColor = .constant(.init(color: buildingHighlightColor))
         highlightedBuildingsLayer.paint?.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
         highlightedBuildingsLayer.paint?.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
-        mapView.style.addLayer(layer: highlightedBuildingsLayer)
+        try? mapView.style.addLayer(highlightedBuildingsLayer)
     }
-
 }

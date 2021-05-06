@@ -143,8 +143,9 @@ public class CarPlayNavigationViewController: UIViewController {
             self?.navigationMapView?.mapView.showsTraffic = false
         }
         
+        navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
+        
         navigationMapView.mapView.update {
-            $0.ornaments.compassVisibility = .hidden
             $0.location.puckType = .none
         }
         

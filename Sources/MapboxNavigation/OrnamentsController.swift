@@ -171,7 +171,7 @@ extension NavigationMapView {
             if mapView.streetsSources().isEmpty {
                 var streetsSource = VectorSource()
                 streetsSource.url = "mapbox://mapbox.mapbox-streets-v8"
-                mapView.style.addSource(source: streetsSource, identifier: "com.mapbox.MapboxStreets")
+                try? mapView.style.addSource(streetsSource, id: "com.mapbox.MapboxStreets")
             }
             
             guard let mapboxStreetsSource = mapView.streetsSources().first else { return }
@@ -226,11 +226,11 @@ extension NavigationMapView {
                 }
                 
                 let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id
-                mapView.style.addLayer(layer: streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
+                try? mapView.style.addLayer(streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
             }
             
             let closestCoordinate = location.coordinate
-            let position = mapView.point(for: closestCoordinate)
+            let position = mapView.mapboxMap.point(for: closestCoordinate)
             mapView.visibleFeatures(at: position, styleLayers: Set([roadLabelStyleLayerIdentifier]), completion: { result in
                 switch result {
                 case .success(let queriedFeatures):
@@ -293,18 +293,16 @@ extension NavigationMapView {
             let x: CGFloat = defaultOffset
             let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
             
-            navigationMapView.mapView.update {
-                if #available(iOS 11.0, *) {
-                    $0.ornaments.logoViewMargins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
-                } else {
-                    $0.ornaments.logoViewMargins = CGPoint(x: x, y: y)
-                }
-                
-                if #available(iOS 11.0, *) {
-                    $0.ornaments.attributionButtonMargins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
-                } else {
-                    $0.ornaments.attributionButtonMargins = CGPoint(x: x, y: y)
-                }
+            if #available(iOS 11.0, *) {
+                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
+            } else {
+                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y)
+            }
+            
+            if #available(iOS 11.0, *) {
+                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
+            } else {
+                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y)
             }
         }
         
