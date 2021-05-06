@@ -7,7 +7,7 @@ import MapboxMaps
  By default Navigation SDK for iOS provides default implementation of `ViewportDataSource`
  in `NavigationViewportDataSource`.
  */
-public protocol ViewportDataSource: class {
+public protocol ViewportDataSource: AnyObject {
     
     /**
      Delegate, which is used to notify `NavigationCamera` regarding upcoming `CameraOptions`
