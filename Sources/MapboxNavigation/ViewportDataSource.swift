@@ -44,7 +44,7 @@ public protocol ViewportDataSource: AnyObject {
  Delegate, which is used to notify `NavigationCamera` regarding upcoming `CameraOptions`
  related changes.
  */
-public protocol ViewportDataSourceDelegate: class {
+public protocol ViewportDataSourceDelegate: AnyObject {
     
     /**
      Notifies `NavigationCamera` that the camera options have changed in response to a location update.
