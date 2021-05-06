@@ -420,7 +420,7 @@ open class NavigationMapView: UIView {
     
     func fitCamera(to route: Route, animated: Bool = false) {
         guard let routeShape = route.shape, !routeShape.coordinates.isEmpty else { return }
-        let edgeInsets = safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+        let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
         if let cameraOptions = mapView?.camera.camera(fitting: .lineString(routeShape),
                                                       edgePadding: edgeInsets) {
             mapView?.camera.setCamera(to: cameraOptions, animated: animated)
