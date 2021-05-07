@@ -22,6 +22,10 @@ extension UIEdgeInsets {
                       width: rect.size.width - self.left - self.right,
                       height: rect.size.height - self.top - self.bottom)
     }
+    
+    static var centerEdgeInsets: UIEdgeInsets {
+        return UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+    }
 }
 
 extension UIEdgeInsets: ExpressibleByFloatLiteral {

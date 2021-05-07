@@ -74,10 +74,12 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     
     func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int) {
         navigationMapView.navigationCamera.stop()
-        // TODO: Verify that camera is positioned correctly.
+        
+        let edgeInsets = navigationMapView.safeArea + UIEdgeInsets.centerEdgeInsets
         let cameraOptions = CameraOptions(center: step.maneuverLocation,
+                                          padding: edgeInsets,
                                           zoom: navigationMapView.mapView.cameraState.zoom,
-                                          bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.cameraState.bearing))
+                                          bearing: step.initialHeading ?? navigationMapView.mapView.cameraState.bearing)
         
         navigationMapView.mapView.camera.setCamera(to: cameraOptions)
         

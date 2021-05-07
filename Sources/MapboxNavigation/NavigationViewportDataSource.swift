@@ -192,7 +192,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let geometryFramingAfterManeuver = followingCameraOptions.geometryFramingAfterManeuver
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
             let pitch = followingCameraOptions.defaultPitch * pitchСoefficient
-            let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+            let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
             
             if geometryFramingAfterManeuver.enabled {
                 let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -308,7 +308,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             .map({ $0.shape?.coordinates })
         let untraveledCoordinatesOnCurrentStep = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: coordinate) ?? []
         let remainingCoordinatesOnRoute = coordinatesAfterCurrentStep.flatten() + untraveledCoordinatesOnCurrentStep
-        let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets(top: 10.0, left: 20.0, bottom: 10.0, right: 20.0)
+        let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
         let overviewCameraOptions = options.overviewCameraOptions
         
         if overviewCameraOptions.pitchUpdatesAllowed {
