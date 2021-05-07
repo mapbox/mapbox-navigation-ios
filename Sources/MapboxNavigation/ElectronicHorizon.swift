@@ -16,9 +16,9 @@ extension ElectronicHorizon.Edge {
         return mostProbablePath
     }
     
-    func edgeNames(roadGraph: RoadGraph) -> [String] {
+    func edgeNames(roadGraph: RoadGraph) -> [String]? {
         guard let metadata = roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
-            return []
+            return nil
         }
         let names = metadata.names.map { name -> String in
             switch name {

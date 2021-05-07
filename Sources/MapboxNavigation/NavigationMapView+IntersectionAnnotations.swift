@@ -21,7 +21,7 @@ extension NavigationMapView {
 
         public var annotationPoint: CLLocationCoordinate2D? {
             guard let length = branchShape.distance() else { return nil }
-            let targetDistance = min(length / 2, Double.random(in: 15...30))
+            let targetDistance = min(length / 2, Double(30))
             guard let annotationPoint = branchShape.coordinateFromStart(distance: targetDistance) else { return nil }
             return annotationPoint
         }
@@ -55,8 +55,21 @@ extension NavigationMapView {
             return (branchMetadata.heading).wrap(min: 0, max: 360)
         }
 
-        var description: String {
+        public var description: String {
             return "EdgeIntersection: root: \(wayName ?? "") intersection: \(intersectingWayName ?? "") coordinate: \(String(describing: coordinate))"
+        }
+
+        public var feature: Feature? {
+            guard let coordinate = annotationPoint else { return nil }
+            var featurePoint = Feature(Point(coordinate))
+            let tailPosition = incidentAngle < 180 ? AnnotationTailPosition.left : AnnotationTailPosition.right
+
+            let imageName = tailPosition == .left ? "AnnotationLeftHanded" : "AnnotationRightHanded"
+
+            // set the feature attributes which will be used in styling the symbol style layer
+            featurePoint.properties = ["highlighted": false, "tailPosition": tailPosition.rawValue, "text": intersectingWayName, "imageName": imageName]
+
+            return featurePoint
         }
     }
 
@@ -65,73 +78,36 @@ extension NavigationMapView {
         case right
         case center
     }
+}
 
-    class AnnotationCacheEntry: Equatable, Hashable {
-        var wayname: String
-        var coordinate: CLLocationCoordinate2D
-        var intersection: EdgeIntersection?
-        var feature: Feature
-        var lastAccessTime: Date
+extension RouteStep {
+    var annotationLabel: String {
+        var label = names?.first ?? ""
 
-        init(coordinate: CLLocationCoordinate2D, wayname: String, intersection: EdgeIntersection? = nil, feature: Feature) {
-            self.wayname = wayname
-            self.coordinate = coordinate
-            self.intersection = intersection
-            self.feature = feature
-            self.lastAccessTime = Date()
+        if label.count == 0, let destinationCodes = destinationCodes, destinationCodes.count > 0 {
+            label = destinationCodes[0]
+
+            destinationCodes.dropFirst().forEach { destination in
+                label += " / " + destination
+            }
+        } else if label.count == 0, let exitCodes = exitCodes, let code = exitCodes.first {
+            label = "Exit \(code)"
+        } else if label.count == 0, let destination = destinations?.first {
+            label = destination
+        } else if label.count == 0, let exitName = exitNames?.first {
+            label = exitName
         }
 
-        static func == (lhs: AnnotationCacheEntry, rhs: AnnotationCacheEntry) -> Bool {
-            return lhs.wayname == rhs.wayname
-        }
-
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(wayname.hashValue)
-        }
+        return label
     }
 
-    class AnnotationCache {
-        private let maxEntryAge = TimeInterval(30)
-        var entries = Set<AnnotationCacheEntry>()
-        var cachePruningTimer: Timer?
+    var annotationFeature: Feature {
+        var featurePoint = Feature(Point(maneuverLocation))
 
-        init() {
-            // periodically prune the cache to remove entries that have been passed already
-            cachePruningTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true, block: { [weak self] _ in
-                self?.prune()
-            })
-        }
+        let tailPosition = NavigationMapView.AnnotationTailPosition.center
 
-        deinit {
-            cachePruningTimer?.invalidate()
-            cachePruningTimer = nil
-        }
+        featurePoint.properties = ["highlighted": true, "tailPosition": tailPosition.rawValue, "text": self.annotationLabel, "imageName": "AnnotationCentered-Highlighted", "sortOrder": 0]
 
-        func setValue(feature: Feature, coordinate: CLLocationCoordinate2D, intersection: EdgeIntersection?, for wayname: String) {
-            entries.insert(AnnotationCacheEntry(coordinate: coordinate, wayname: wayname, intersection: intersection, feature: feature))
-        }
-
-        func value(for wayname: String) -> AnnotationCacheEntry? {
-            let matchingEntry = entries.first { entry -> Bool in
-                entry.wayname == wayname
-            }
-
-            if let matchingEntry = matchingEntry {
-                // update the timestamp used for pruning the cache
-                matchingEntry.lastAccessTime = Date()
-            }
-
-            return matchingEntry
-        }
-
-        private func prune() {
-            let now = Date()
-
-            entries.filter { now.timeIntervalSince($0.lastAccessTime) > maxEntryAge }.forEach { remove($0) }
-        }
-
-        public func remove(_ entry: AnnotationCacheEntry) {
-            entries.remove(entry)
-        }
+        return featurePoint
     }
 }
