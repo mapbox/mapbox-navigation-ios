@@ -46,7 +46,7 @@ extension NavigationMapView {
      Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:)`.
      */
     public func unhighlightBuildings() {
-        guard let _ = try? mapView.style.getLayer(with: NavigationMapView.LayerIdentifier.buildingExtrusionLayer, type: FillExtrusionLayer.self).get() else { return }
+        guard let _ = try? mapView.style.layer(withId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer, type: FillExtrusionLayer.self) else { return }
         try? mapView.style.removeLayer(withId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
     }
 

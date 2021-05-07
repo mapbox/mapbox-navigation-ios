@@ -211,12 +211,12 @@ extension NavigationMapView {
             let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
             let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
                                                                 fractionTraveled: newFractionTraveled)
-            self.mapView.style.updateLayer(id: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+            try? self.mapView.style.updateLayer(withId: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
                 lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
             }
             
             let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
-            self.mapView.style.updateLayer(id: mainRouteCasingLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+            try? self.mapView.style.updateLayer(withId: mainRouteCasingLayerIdentifier, type: LineLayer.self) { (lineLayer) in
                 lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
             }
         })

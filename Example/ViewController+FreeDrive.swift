@@ -76,11 +76,11 @@ extension ViewController {
     }
     
     func updateFreeDriveStyledFeatures() {
-        _ = navigationMapView.mapView.style.updateGeoJSON(for: trackStyledFeature.sourceIdentifier,
-                                                          with: Feature(geometry: .lineString(trackStyledFeature.lineString)))
+        try? navigationMapView.mapView.style.updateGeoJSONSource(withId: trackStyledFeature.sourceIdentifier,
+                                                                 geoJSON: Feature(geometry: .lineString(trackStyledFeature.lineString)))
         
-        _ = navigationMapView.mapView.style.updateGeoJSON(for: rawTrackStyledFeature.sourceIdentifier,
-                                                          with: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
+        try? navigationMapView.mapView.style.updateGeoJSONSource(withId: rawTrackStyledFeature.sourceIdentifier,
+                                                                 geoJSON: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
     }
     
     func addStyledFeature(_ styledFeature: StyledFeature) {
