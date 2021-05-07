@@ -76,11 +76,20 @@ extension ViewController {
     }
     
     func updateFreeDriveStyledFeatures() {
-        try? navigationMapView.mapView.style.updateGeoJSONSource(withId: trackStyledFeature.sourceIdentifier,
-                                                                 geoJSON: Feature(geometry: .lineString(trackStyledFeature.lineString)))
-        
-        try? navigationMapView.mapView.style.updateGeoJSONSource(withId: rawTrackStyledFeature.sourceIdentifier,
-                                                                 geoJSON: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
+        do {
+            let style = navigationMapView.mapView.style
+            if let _ = try style?.source(withId: trackStyledFeature.sourceIdentifier, type: GeoJSONSource.self) {
+                try style?.updateGeoJSONSource(withId: trackStyledFeature.sourceIdentifier,
+                                               geoJSON: Feature(geometry: .lineString(trackStyledFeature.lineString)))
+            }
+            
+            if let _ = try style?.source(withId: rawTrackStyledFeature.sourceIdentifier, type: GeoJSONSource.self) {
+                try style?.updateGeoJSONSource(withId: rawTrackStyledFeature.sourceIdentifier,
+                                               geoJSON: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
+            }
+        } catch {
+            NSLog("Error occured while performing operation with source: \(error.localizedDescription).")
+        }
     }
     
     func addStyledFeature(_ styledFeature: StyledFeature) {
