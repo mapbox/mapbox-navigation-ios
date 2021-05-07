@@ -103,7 +103,7 @@ class Navigator {
                                                 config: NavigatorConfig(),
                                                 customConfig: customConfig)
         
-        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyDirectoryURL?.absoluteString ?? "", config: configFactory)
+        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyDirectoryURL?.path ?? "", config: configFactory)
         
         let runloopExecutor = RunLoopExecutorFactory.build()
         cacheHandle = CacheFactory.build(for: tilesConfig,
