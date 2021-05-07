@@ -231,9 +231,11 @@ extension NavigationMapView {
             
             let closestCoordinate = location.coordinate
             let position = mapView.point(for: closestCoordinate)
-            mapView.visibleFeatures(at: position, styleLayers: Set([roadLabelStyleLayerIdentifier]), completion: { result in
+            mapView.visibleFeatures(at: position, styleLayers: Set([roadLabelStyleLayerIdentifier]), completion: { [weak self] result in
                 switch result {
                 case .success(let queriedFeatures):
+                    guard let self = self else { return }
+                    
                     var smallestLabelDistance = Double.infinity
                     var latestFeature: MBXFeature?
                     let slicedLine = stepShape.sliced(from: closestCoordinate)!
