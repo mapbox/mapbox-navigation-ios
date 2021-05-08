@@ -488,14 +488,15 @@ extension CarPlayManager: CPMapTemplateDelegate {
         navigationViewController.startNavigationSession(for: trip)
         navigationViewController.carPlayNavigationDelegate = self
         currentNavigator = navigationViewController
-
-        carPlayMapViewController.present(navigationViewController, animated: true)
-
+        
+        carPlayMapViewController.present(navigationViewController, animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.carPlayManager(self, didBeginNavigationWith: service)
+        }
+        
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.removeRoutes()
         navigationMapView.removeWaypoints()
-
-        delegate?.carPlayManager(self, didBeginNavigationWith: service)
     }
 
     func mapTemplate(forNavigating trip: CPTrip) -> CPMapTemplate {
