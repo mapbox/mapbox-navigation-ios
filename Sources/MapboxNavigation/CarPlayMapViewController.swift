@@ -129,24 +129,31 @@ public class CarPlayMapViewController: UIViewController {
     }
     
     override public func loadView() {
-        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
-        navigationMapView.mapView.on(.styleLoaded) { _ in
-            navigationMapView.localizeLabels()
-        }
-        
-        self.view = navigationMapView
-        
+        setupNavigationMapView()
         setupPassiveLocationManager()
     }
-
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
         setupStyleManager()
         navigationMapView.navigationCamera.follow()
+    }
+    
+    func setupNavigationMapView() {
+        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
+        navigationMapView.mapView.on(.styleLoaded) { _ in
+            navigationMapView.localizeLabels()
+        }
+        
         navigationMapView.mapView.update {
             $0.location.puckType = .puck2D()
         }
+        
+        navigationMapView.mapView.ornaments.options.logo._isVisible = false
+        navigationMapView.mapView.ornaments.options.attributionButton._isVisible = false
+        
+        self.view = navigationMapView
     }
     
     func setupStyleManager() {
