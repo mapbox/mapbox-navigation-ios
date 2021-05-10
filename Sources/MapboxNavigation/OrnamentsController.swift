@@ -300,9 +300,9 @@ extension NavigationMapView {
             }
             
             if #available(iOS 11.0, *) {
-                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
+                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
             } else {
-                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y)
+                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x, y: y)
             }
         }
         
