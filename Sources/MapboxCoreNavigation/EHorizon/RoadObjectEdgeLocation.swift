@@ -22,6 +22,11 @@ public struct RoadObjectEdgeLocation {
      */
     public let fractionToEnd: Double
 
+    public init(fractionFromStart: Double, fractionToEnd: Double) {
+        self.fractionFromStart = fractionFromStart
+        self.fractionToEnd = fractionToEnd
+    }
+
     init(_ native: MapboxNavigationNative.RoadObjectEdgeLocation) {
         self.fractionFromStart = native.percentAlongBegin
         self.fractionToEnd = native.percentAlongEnd

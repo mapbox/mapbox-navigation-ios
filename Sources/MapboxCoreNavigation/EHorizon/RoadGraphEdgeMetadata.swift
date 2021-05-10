@@ -23,20 +23,16 @@ extension RoadGraph.Edge {
         /** The edge’s length in meters. */
         public let length: CLLocationDistance
         
-        /// The edge’s general road classes.
+        /** The edge’s general road classes. */
         public let roadClasses: RoadClasses
         
-        /**
-         The edge’s functional road class, according to the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#road), version 8.
-         */
+        /** The edge’s functional road class, according to the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#road), version 8. */
         public let mapboxStreetsRoadClass: MapboxStreetsRoadClass
 
         /** The edge’s maximum speed limit. */
         public let speedLimit: Measurement<UnitSpeed>?
 
-        /**
-         The user’s expected average speed along the edge, measured in meters per second.
-         */
+        /** The user’s expected average speed along the edge, measured in meters per second. */
         public let speed: CLLocationSpeed
 
         /** Is the edge a bridge? */
@@ -60,11 +56,43 @@ extension RoadGraph.Edge {
         /** The ISO 3166-2 code of the country subdivision where this edge is located. */
         public let regionCode: String?
         
-        /** Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the rule of the road.. */
+        /** Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the rule of the road. */
         public let drivingSide: DrivingSide
         
         /** Indicates how many directions the user may travel along the edge. */
         public let directionality: Directionality
+
+        public init(heading: CLLocationDegrees,
+                    length: CLLocationDistance,
+                    roadClasses: RoadClasses,
+                    mapboxStreetsRoadClass: MapboxStreetsRoadClass,
+                    speedLimit: Measurement<UnitSpeed>?,
+                    speed: CLLocationSpeed,
+                    isBridge: Bool,
+                    names: [RoadName],
+                    laneCount: UInt?,
+                    altitude: CLLocationDistance?,
+                    curvature: UInt,
+                    countryCode: String?,
+                    regionCode: String?,
+                    drivingSide: DrivingSide,
+                    directionality: Directionality) {
+            self.heading = heading
+            self.length = length
+            self.roadClasses = roadClasses
+            self.mapboxStreetsRoadClass = mapboxStreetsRoadClass
+            self.speedLimit = speedLimit
+            self.speed = speed
+            self.isBridge = isBridge
+            self.names = names
+            self.laneCount = laneCount
+            self.altitude = altitude
+            self.curvature = curvature
+            self.countryCode = countryCode
+            self.regionCode = regionCode
+            self.drivingSide = drivingSide
+            self.directionality = directionality
+        }
 
         init(_ native: EdgeMetadata) {
             heading = native.heading
