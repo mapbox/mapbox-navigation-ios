@@ -325,6 +325,13 @@ public extension Notification.Name {
      The user info dictionary contains the keys `RoadGraph.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.NotificationUserInfoKey.transitionKey`.
     */
     static let electronicHorizonDidExitRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidExitRoadObject")
+
+    /**
+     Posted when user has passed point-like object.
+
+     The user info dictionary contains the keys `ElectronicHorizon.NotificationUserInfoKey.roadObjectIdentifierKey`.
+    */
+    static let electronicHorizonDidPassRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidPassRoadObject")
 }
 
 extension RoadGraph {

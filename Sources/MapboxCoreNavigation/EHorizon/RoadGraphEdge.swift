@@ -42,6 +42,13 @@ extension RoadGraph {
          */
         public let outletEdges: [Edge]
 
+        public init(identifier: Identifier, level: UInt, probability: Double, outletEdges: [Edge]) {
+            self.identifier = identifier
+            self.level = level
+            self.probability = probability
+            self.outletEdges = outletEdges
+        }
+
         init(_ native: ElectronicHorizonEdge) {
             self.identifier = UInt(native.id)
             self.level = UInt(native.level)

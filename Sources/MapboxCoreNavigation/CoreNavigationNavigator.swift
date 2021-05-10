@@ -52,7 +52,7 @@ class Navigator {
     lazy var roadObjectsStore: RoadObjectsStore = {
         return RoadObjectsStore(navigator.roadObjectStore())
     }()
-    
+
     let tileStore: TileStore
     
     /**
@@ -78,9 +78,11 @@ class Navigator {
         let endpointConfig = TileEndpointConfiguration(credentials:Navigator.credentials ?? Directions.shared.credentials,
                                                        tilesVersion: Self.tilesVersion,
                                                        minimumDaysToPersistVersion: nil)
+
         let tileStorePath = Self.tilesURL?.path ?? ""
         tileStore = TileStore.getInstanceForPath(tileStorePath)
         let tilesConfig = TilesConfig(tilesPath: tileStorePath,
+                                      tileStore: nil,
                                       inMemoryTileCache: nil,
                                       onDiskTileCache: nil,
                                       mapMatchingSpatialCache: nil,
@@ -138,12 +140,12 @@ class Navigator {
 }
 
 extension Navigator: ElectronicHorizonObserver {
-    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [String : MapboxNavigationNative.RoadObjectDistanceInfo]) {
+    public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [MapboxNavigationNative.RoadObjectDistance]) {
         let userInfo: [RoadGraph.NotificationUserInfoKey: Any] = [
             .positionKey: RoadGraph.Position(position.position()),
             .treeKey: RoadGraph.Edge(position.tree().start),
             .updatesMostProbablePathKey: position.type() == .UPDATE,
-            .distancesByRoadObjectKey: distances.mapValues(RoadObjectDistanceInfo.init),
+            .distancesByRoadObjectKey: distances.map(RoadObjectDistance.init),
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
     }
@@ -162,5 +164,12 @@ extension Navigator: ElectronicHorizonObserver {
             .didTransitionAtEndpointKey: info.isEnterFromStartOrExitFromEnd,
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidExitRoadObject, object: nil, userInfo: userInfo)
+    }
+
+    public func onRoadObjectPassed(for info: RoadObjectPassInfo) {
+        let userInfo: [RoadGraph.NotificationUserInfoKey: Any] = [
+            .roadObjectIdentifierKey: info.roadObjectId,
+        ]
+        NotificationCenter.default.post(name: .electronicHorizonDidPassRoadObject, object: nil, userInfo: userInfo)
     }
 }
