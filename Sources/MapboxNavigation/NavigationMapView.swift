@@ -702,7 +702,7 @@ open class NavigationMapView: UIView {
         
         if shaftPolyline.coordinates.count > 1 {
             let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
-            let minimumZoomLevel: Double = 8.0
+            let minimumZoomLevel: Double = 14.5
             let shaftStrokeCoordinates = shaftPolyline.coordinates
             let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
             
