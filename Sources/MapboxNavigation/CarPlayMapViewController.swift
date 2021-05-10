@@ -150,8 +150,8 @@ public class CarPlayMapViewController: UIViewController {
             $0.location.puckType = .puck2D()
         }
         
-        navigationMapView.mapView.ornaments.options.logo._isVisible = false
-        navigationMapView.mapView.ornaments.options.attributionButton._isVisible = false
+        navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
+        navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
         
         self.view = navigationMapView
     }

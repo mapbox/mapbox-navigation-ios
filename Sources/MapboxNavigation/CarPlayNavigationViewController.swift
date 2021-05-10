@@ -144,8 +144,8 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
-        navigationMapView.mapView.ornaments.options.logo._isVisible = false
-        navigationMapView.mapView.ornaments.options.attributionButton._isVisible = false
+        navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
+        navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
         
         navigationMapView.mapView.update {
             $0.location.puckType = .none
