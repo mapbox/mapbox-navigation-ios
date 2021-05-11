@@ -107,6 +107,12 @@ open class NavigationMapView: UIView {
     @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
     @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
     @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
+
+    /**
+     List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
+     These are used for features such as Route Duration Annotations that are optionally added during route preview.
+     See https://docs.mapbox.com/ios/maps/api/6.3.0/customizing-fonts.html for more information about server-side fonts.
+     */
     @objc dynamic public var routeDurationAnnotationFontNames: [String] = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
 
     var routes: [Route]?

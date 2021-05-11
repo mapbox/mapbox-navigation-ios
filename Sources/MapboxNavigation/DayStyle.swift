@@ -56,13 +56,7 @@ extension UIFont {
     // General styling
     fileprivate class var defaultPrimaryText: UIFont { get { return UIFont.systemFont(ofSize: 26) } }
     fileprivate class var defaultSecondaryText: UIFont { get { return UIFont.systemFont(ofSize: 16) } }
-
-    /**
-     List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
-     These are used for features such as Route Duration Annotations that are optionally added during route preview.
-     See https://docs.mapbox.com/ios/maps/api/6.3.0/customizing-fonts.html for more information about server-side fonts.
-     */
-    fileprivate class var defaultNavigationSymbolLayerFontList: [String] { return ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"] }
+    fileprivate class var defaultNavigationSymbolLayerFontNames: [String] { return ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"] }
 }
 
 /**
@@ -181,7 +175,7 @@ open class DayStyle: Style {
         NavigationMapView.appearance().buildingHighlightColor = .defaultBuildingHighlightColor
         NavigationMapView.appearance().routeDurationAnnotationColor = .routeDurationAnnotationColor
         NavigationMapView.appearance().routeDurationAnnotationSelectedColor = .selectedRouteDurationAnnotationColor
-        NavigationMapView.appearance().routeDurationAnnotationFontNames = UIFont.defaultNavigationSymbolLayerFontList
+        NavigationMapView.appearance().routeDurationAnnotationFontNames = UIFont.defaultNavigationSymbolLayerFontNames
         NavigationMapView.appearance().routeDurationAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         NavigationMapView.appearance().routeDurationAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         NavigationView.appearance().backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)
