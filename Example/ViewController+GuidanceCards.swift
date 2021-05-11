@@ -25,7 +25,7 @@ extension ViewController: InstructionsCardCollectionDelegate {
         let cameraOptions = CameraOptions(center: maneuverStep.maneuverLocation,
                                           zoom: navigationMapView.mapView.cameraState.zoom,
                                           bearing: maneuverStep.initialHeading)
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions)
+        navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 1.0)
         
         // add arrow to map for preview instruction
         navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)

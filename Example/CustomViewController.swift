@@ -183,7 +183,7 @@ class CustomViewController: UIViewController {
         
         if let bearing = maneuverStep.initialHeading {
             let cameraOptions = CameraOptions(center: maneuverStep.maneuverLocation, bearing: bearing)
-            navigationMapView.mapView.camera.setCamera(to: cameraOptions)
+            navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 1.0)
         }
         
         // add arrow to map for preview instruction

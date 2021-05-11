@@ -60,7 +60,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         recenter(sender, completion: nil)
     }
     
-    func recenter(_ sender: AnyObject, completion: ((CameraController, CLLocation)->())?) {
+    func recenter(_ sender: AnyObject, completion: ((CameraController, CLLocation) -> ())?) {
         guard let location = navigationMapView.mostRecentUserCourseViewLocation else { return }
         
         navigationMapView.updateUserCourseView(location)
@@ -72,7 +72,12 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
                                    stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
     }
     
-    func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int) {
+    func center(on step: RouteStep,
+                route: Route,
+                legIndex: Int,
+                stepIndex: Int,
+                animated: Bool = true,
+                completion: CompletionHandler? = nil) {
         navigationMapView.navigationCamera.stop()
         
         let edgeInsets = navigationMapView.safeArea + UIEdgeInsets.centerEdgeInsets
@@ -81,7 +86,10 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
                                           zoom: navigationMapView.mapView.cameraState.zoom,
                                           bearing: step.initialHeading ?? navigationMapView.mapView.cameraState.bearing)
         
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions)
+        navigationMapView.mapView.camera.ease(to: cameraOptions,
+                                              duration: animated ? 1.0 : 0.0) { (animatingPosition) in
+            completion?()
+        }
         
         navigationMapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
     }

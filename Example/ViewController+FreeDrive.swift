@@ -93,16 +93,20 @@ extension ViewController {
     }
     
     func addStyledFeature(_ styledFeature: StyledFeature) {
-        var source = GeoJSONSource()
-        source.data = .geometry(.lineString(styledFeature.lineString))
-        try? navigationMapView.mapView.style.addSource(source,
-                                                       id: styledFeature.sourceIdentifier)
-        
-        var layer = LineLayer(id: styledFeature.layerIdentifier)
-        layer.source = styledFeature.sourceIdentifier
-        layer.paint?.lineWidth = .constant(styledFeature.lineWidth)
-        layer.paint?.lineColor = .constant(.init(color: styledFeature.color))
-        try? navigationMapView.mapView.style.addLayer(layer)
+        do {
+            var source = GeoJSONSource()
+            source.data = .geometry(.lineString(styledFeature.lineString))
+            try navigationMapView.mapView.style.addSource(source,
+                                                          id: styledFeature.sourceIdentifier)
+            
+            var layer = LineLayer(id: styledFeature.layerIdentifier)
+            layer.source = styledFeature.sourceIdentifier
+            layer.paint?.lineWidth = .constant(styledFeature.lineWidth)
+            layer.paint?.lineColor = .constant(.init(color: styledFeature.color))
+            try navigationMapView.mapView.style.addLayer(layer)
+        } catch {
+            NSLog("Failed to perform operation with error: \(error.localizedDescription).")
+        }
     }
     
     @objc func didUpdateElectronicHorizonPosition(_ notification: Notification) {

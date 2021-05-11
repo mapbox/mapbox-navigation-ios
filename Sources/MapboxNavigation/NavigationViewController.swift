@@ -932,17 +932,31 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         }
     }
     
-    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route) {
-        guard let leg = route.leg(containing: step) else { return }
-        guard let legIndex = route.legs.firstIndex(of: leg) else { return }
-        guard let stepIndex = leg.steps.firstIndex(of: step) else { return }
+    public func preview(step: RouteStep,
+                        in banner: TopBannerViewController,
+                        remaining: [RouteStep],
+                        route: Route,
+                        animated: Bool = true) {
+        guard let leg = route.leg(containing: step),
+              let legIndex = route.legs.firstIndex(of: leg),
+              let stepIndex = leg.steps.firstIndex(of: step) else { return }
+
         let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
         guard let upcomingStep = legProgress.upcomingStep else { return }
+        
+        let previewBanner: CompletionHandler = {
+            banner.preview(step: legProgress.currentStep,
+                           maneuverStep: upcomingStep,
+                           distance: legProgress.currentStep.distance,
+                           steps: remaining)
+        }
         
         cameraController?.center(on: upcomingStep,
                                  route: route,
                                  legIndex: legIndex,
-                                 stepIndex: stepIndex + 1)
+                                 stepIndex: stepIndex + 1,
+                                 animated: animated,
+                                 completion: previewBanner)
         
         banner.preview(step: legProgress.currentStep,
                        maneuverStep: upcomingStep,
@@ -963,29 +977,28 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     }
 }
 
-// MARK: - BottomBannerViewControllerDelegate
-
-// Handling cancel action in new Bottom Banner container.
+// MARK: - BottomBannerViewControllerDelegate methods
 
 extension NavigationViewController: BottomBannerViewControllerDelegate {
     
+    // Handle cancel action in new Bottom Banner container.
     public func didTapCancel(_ sender: Any) {
         handleCancelAction()
     }
 }
 
-// MARK: - CarPlayConnectionObserver
+// MARK: - CarPlayConnectionObserver methods
 
 extension NavigationViewController: CarPlayConnectionObserver {
     
     public func didConnectToCarPlay() {
-        navigationComponents.compactMap({$0 as? CarPlayConnectionObserver}).forEach {
+        navigationComponents.compactMap({ $0 as? CarPlayConnectionObserver }).forEach {
             $0.didConnectToCarPlay()
         }
     }
     
     public func didDisconnectFromCarPlay() {
-        navigationComponents.compactMap({$0 as? CarPlayConnectionObserver}).forEach {
+        navigationComponents.compactMap({ $0 as? CarPlayConnectionObserver }).forEach {
             $0.didDisconnectFromCarPlay()
         }
     }
