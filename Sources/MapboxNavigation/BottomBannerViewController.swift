@@ -91,15 +91,6 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
             }
         }
     }
-    /**
-     Initializes a `BottomBannerViewController` that provides estimated arrival time, distance to arrival, and time to arrival.
-     
-     - parameter delegate: A delegate to recieve BottomBannerViewControllerDelegate messages.
-     */
-    @available(swift, obsoleted: 0.1, message: "Set the delegate property separately after initializing this object.")
-    public convenience init(delegate: BottomBannerViewControllerDelegate?) {
-        fatalError()
-    }
     
     /**
      Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.

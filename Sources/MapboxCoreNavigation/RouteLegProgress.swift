@@ -102,16 +102,6 @@ open class RouteLegProgress: Codable {
     public var currentStep: RouteStep {
         return leg.steps[stepIndex]
     }
-
-    /**
-     Returns the upcoming `RouteStep`.
-
-     If there is no `upcomingStep`, nil is returned.
-     */
-    @available(swift, obsoleted: 0.1, renamed: "upcomingStep")
-    public var upComingStep: RouteStep? {
-        fatalError()
-    }
     
     public var upcomingStep: RouteStep? {
         guard stepIndex + 1 < leg.steps.endIndex else {
