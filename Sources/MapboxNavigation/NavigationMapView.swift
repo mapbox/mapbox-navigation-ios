@@ -107,6 +107,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
     @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
     @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
+    static let routeDurationAnnotationsLayerIdentifier: String = "routeDurationAnnotationsLayerIdentifier"
 
     /**
      List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
@@ -855,7 +856,6 @@ open class NavigationMapView: UIView {
                                 with: "RouteInfoAnnotationRightHanded",
                                 stretchX: stretchX,
                                 stretchY: stretchY,
-                                scale: 2.0,
                                 imageContent: imageContent)
 
             let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
@@ -863,7 +863,6 @@ open class NavigationMapView: UIView {
                                 with: "RouteInfoAnnotationRightHanded-Selected",
                                 stretchX: stretchX,
                                 stretchY: stretchY,
-                                scale: 2.0,
                                 imageContent: imageContent)
         }
 
@@ -880,7 +879,6 @@ open class NavigationMapView: UIView {
                                 with: "RouteInfoAnnotationLeftHanded",
                                 stretchX: stretchX,
                                 stretchY: stretchY,
-                                scale: 2.0,
                                 imageContent: imageContent)
 
             let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
@@ -888,7 +886,6 @@ open class NavigationMapView: UIView {
                                 with: "RouteInfoAnnotationLeftHanded-Selected",
                                 stretchX: stretchX,
                                 stretchY: stretchY,
-                                scale: 2.0,
                                 imageContent: imageContent)
         }
     }
@@ -1007,24 +1004,24 @@ open class NavigationMapView: UIView {
      */
     private func addRouteAnnotationSymbolLayer(features: FeatureCollection) {
         guard let style = mapView.style else { return }
-        if let _ = try? mapView.style.getSource(identifier: IdentifierString.routeDurationAnnotations, type: GeoJSONSource.self).get() {
-            let _ = mapView.style.updateGeoJSON(for: IdentifierString.routeDurationAnnotations, with: features)
+        if let _ = try? mapView.style.getSource(identifier: NavigationMapView.routeDurationAnnotationsLayerIdentifier, type: GeoJSONSource.self).get() {
+            let _ = mapView.style.updateGeoJSON(for: NavigationMapView.routeDurationAnnotationsLayerIdentifier, with: features)
         } else {
 
             var dataSource = GeoJSONSource()
             dataSource.data = .featureCollection(features)
-            mapView.style.addSource(source: dataSource, identifier: IdentifierString.routeDurationAnnotations)
+            mapView.style.addSource(source: dataSource, identifier: NavigationMapView.routeDurationAnnotationsLayerIdentifier)
         }
 
         var shapeLayer: SymbolLayer
 
-        if let layer = try? mapView.style.getLayer(with: IdentifierString.routeDurationAnnotations, type: SymbolLayer.self).get() {
+        if let layer = try? mapView.style.getLayer(with: NavigationMapView.routeDurationAnnotationsLayerIdentifier, type: SymbolLayer.self).get() {
             shapeLayer = layer
         } else {
-            shapeLayer = SymbolLayer(id: IdentifierString.routeDurationAnnotations)
+            shapeLayer = SymbolLayer(id: NavigationMapView.routeDurationAnnotationsLayerIdentifier)
         }
 
-        shapeLayer.source = IdentifierString.routeDurationAnnotations
+        shapeLayer.source = NavigationMapView.routeDurationAnnotationsLayerIdentifier
 
         shapeLayer.layout?.textField = .expression(Exp(.get) {
             "text"
@@ -1061,7 +1058,7 @@ open class NavigationMapView: UIView {
 
         if let expressionData = symbolSortKeyString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
                                                           property: "symbol-sort-key",
                                                           value: expJSONObject)
         }
@@ -1081,10 +1078,10 @@ open class NavigationMapView: UIView {
 
         if let expressionData = expressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
                                                           property: "icon-anchor",
                                                           value: expJSONObject)
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
                                                           property: "text-anchor",
                                                           value: expJSONObject)
         }
@@ -1104,11 +1101,11 @@ open class NavigationMapView: UIView {
 
         if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
                                                           property: "icon-offset",
                                                           value: expJSONObject)
 
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(IdentifierString.routeDurationAnnotations,
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
                                                           property: "text-offset",
                                                           value: expJSONObject)
         }
@@ -1126,8 +1123,8 @@ open class NavigationMapView: UIView {
      Remove the underlying style layers and data sources for the route duration annotations.
      */
     private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MapboxMaps.Style) {
-        style.removeLayers([IdentifierString.routeDurationAnnotations])
-        style.removeSources([IdentifierString.routeDurationAnnotations])
+        style.removeLayers([NavigationMapView.routeDurationAnnotationsLayerIdentifier])
+        style.removeSources([NavigationMapView.routeDurationAnnotationsLayerIdentifier])
     }
 
     // This function generates the text for the label to be shown on screen. It will include estimated duration and info on Tolls, if applicable
