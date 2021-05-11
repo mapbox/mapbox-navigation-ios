@@ -443,12 +443,20 @@ open class NavigationMapView: UIView {
         updateUserCourseView(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
 
-    @discardableResult func addRouteLayer(_ route: Route, below parentLayerIndentifier: String? = nil, isMainRoute: Bool = true, legIndex: Int? = nil) -> String? {
+    @discardableResult func addRouteLayer(_ route: Route,
+                                          below parentLayerIndentifier: String? = nil,
+                                          isMainRoute: Bool = true,
+                                          legIndex: Int? = nil) -> String? {
         guard let shape = route.shape else { return nil }
         
         let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, casingShapeFor: route) ?? shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: true))
-        try? mapView.style.addSource(geoJSONSource, id: sourceIdentifier)
+        
+        do {
+            try mapView.style.addSource(geoJSONSource, id: sourceIdentifier)
+        } catch {
+            NSLog("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).")
+        }
         
         let layerIdentifier = route.identifier(.route(isMainRoute: isMainRoute))
         var lineLayer = delegate?.navigationMapView(self,
@@ -482,10 +490,14 @@ open class NavigationMapView: UIView {
         }
         
         if let lineLayer = lineLayer {
-            try? mapView.style.addLayer(lineLayer,
-                                        layerPosition: isMainRoute ?
+            do {
+                try mapView.style.addLayer(lineLayer,
+                                           layerPosition: isMainRoute ?
                                             LayerPosition(above: mapView.mainRouteLineParentLayerIdentifier) :
                                             LayerPosition(below: parentLayerIndentifier))
+            } catch {
+                NSLog("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).")
+            }
         }
         
         return layerIdentifier
@@ -496,7 +508,11 @@ open class NavigationMapView: UIView {
         
         let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, shapeFor: route) ?? shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: isMainRoute))
-        try? mapView.style.addSource(geoJSONSource, id: sourceIdentifier)
+        do {
+            try mapView.style.addSource(geoJSONSource, id: sourceIdentifier)
+        } catch {
+            NSLog("Failed to add route casing source \(sourceIdentifier) with error: \(error.localizedDescription).")
+        }
         
         let layerIdentifier = route.identifier(.routeCasing(isMainRoute: isMainRoute))
         var lineLayer = delegate?.navigationMapView(self,
@@ -520,7 +536,11 @@ open class NavigationMapView: UIView {
         }
         
         if let lineLayer = lineLayer {
-            try? mapView.style.addLayer(lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
+            do {
+                try mapView.style.addLayer(lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
+            } catch {
+                NSLog("Failed to add route casing layer \(layerIdentifier) with error: \(error.localizedDescription).")
+            }
         }
         
         return layerIdentifier
@@ -554,33 +574,41 @@ open class NavigationMapView: UIView {
         }
         
         let shape = delegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex) ?? FeatureCollection(features: features)
-
+        
         if route.legs.count > 1 {
             routes = [route]
-
-            if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.waypointSource, type: GeoJSONSource.self) {
-                try? mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.waypointSource, geoJSON: shape)
-            } else {
-                var waypointSource = GeoJSONSource()
-                waypointSource.data = .featureCollection(shape)
-                try? mapView.style.addSource(waypointSource, id: NavigationMapView.SourceIdentifier.waypointSource)
-
-                let circles = delegate?.navigationMapView(self,
-                                                          waypointCircleLayerWithIdentifier: NavigationMapView.LayerIdentifier.waypointCircleLayer,
-                                                          sourceIdentifier: NavigationMapView.SourceIdentifier.waypointSource) ?? defaultWaypointCircleLayer()
-
-                if let arrows = try? mapView.style.layer(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer, type: LineLayer.self) {
-                    try? mapView.style.addLayer(circles, layerPosition: LayerPosition(above: arrows.id))
+            
+            do {
+                let waypointSourceIdentifier = NavigationMapView.SourceIdentifier.waypointSource
+                
+                if let _ = try? mapView.style.source(withId: waypointSourceIdentifier, type: GeoJSONSource.self) {
+                    try mapView.style.updateGeoJSONSource(withId: waypointSourceIdentifier, geoJSON: shape)
                 } else {
-                    let layerIdentifier = route.identifier(.route(isMainRoute: true))
-                    try? mapView.style.addLayer(circles, layerPosition: LayerPosition(above: layerIdentifier))
+                    var waypointSource = GeoJSONSource()
+                    waypointSource.data = .featureCollection(shape)
+                    try mapView.style.addSource(waypointSource, id: waypointSourceIdentifier)
+                    
+                    let waypointCircleLayerIdentifier = NavigationMapView.LayerIdentifier.waypointCircleLayer
+                    let circlesLayer = delegate?.navigationMapView(self,
+                                                                   waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
+                                                                   sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
+                    
+                    if let arrows = try? mapView.style.layer(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer, type: LineLayer.self) {
+                        try mapView.style.addLayer(circlesLayer, layerPosition: LayerPosition(above: arrows.id))
+                    } else {
+                        let layerIdentifier = route.identifier(.route(isMainRoute: true))
+                        try mapView.style.addLayer(circlesLayer, layerPosition: LayerPosition(above: layerIdentifier))
+                    }
+                    
+                    let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
+                    let symbolsLayer = delegate?.navigationMapView(self,
+                                                                   waypointSymbolLayerWithIdentifier: waypointSymbolLayerIdentifier,
+                                                                   sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointSymbolLayer()
+                    
+                    try mapView.style.addLayer(symbolsLayer, layerPosition: LayerPosition(above: circlesLayer.id))
                 }
-                
-                let symbols = delegate?.navigationMapView(self,
-                                                          waypointSymbolLayerWithIdentifier: NavigationMapView.LayerIdentifier.waypointSymbolLayer,
-                                                          sourceIdentifier: NavigationMapView.SourceIdentifier.waypointSource) ?? defaultWaypointSymbolLayer()
-                
-                try? mapView.style.addLayer(symbols, layerPosition: LayerPosition(above: circles.id))
+            } catch {
+                NSLog("Failed to perform operation while adding waypoint with error: \(error.localizedDescription).")
             }
         }
 
@@ -588,7 +616,8 @@ open class NavigationMapView: UIView {
             mapView.annotations.removeAnnotations(annotationsToRemove())
             
             var destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
-            destinationAnnotation.title = "navigation_annotation"
+            let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+            destinationAnnotation.title = title
             mapView.annotations.addAnnotation(destinationAnnotation)
             
             delegate?.navigationMapView(self, didAdd: destinationAnnotation)
@@ -678,8 +707,8 @@ open class NavigationMapView: UIView {
     }
     
     func annotationsToRemove() -> [Annotation] {
-        // TODO: Improve annotations filtering functionality.
-        return mapView.annotations.annotations.values.filter({ $0.title == "navigation_annotation" })
+        let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+        return mapView.annotations.annotations.values.filter({ $0.title == title })
     }
     
     /**
@@ -694,98 +723,102 @@ open class NavigationMapView: UIView {
               route.legs[legIndex].steps.indices.contains(stepIndex),
               let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
-        try? mapView.style.addImage(triangleImage, id: NavigationMapView.ImageIdentifier.arrowImage)
-        let step = route.legs[legIndex].steps[stepIndex]
-        let maneuverCoordinate = step.maneuverLocation
-        guard step.maneuverType != .arrive else { return }
-        
-        // TODO: Implement ability to change `shaftLength` depending on zoom level.
-        let shaftLength = max(min(30 * mapView.metersPerPointAtLatitude(latitude: maneuverCoordinate.latitude), 30), 10)
-        let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
-        
-        if shaftPolyline.coordinates.count > 1 {
-            let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
-            let minimumZoomLevel: Double = 8.0
-            let shaftStrokeCoordinates = shaftPolyline.coordinates
-            let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
+        do {
+            try mapView.style.addImage(triangleImage, id: NavigationMapView.ImageIdentifier.arrowImage)
+            let step = route.legs[legIndex].steps[stepIndex]
+            let maneuverCoordinate = step.maneuverLocation
+            guard step.maneuverType != .arrive else { return }
             
-            var arrowSource = GeoJSONSource()
-            arrowSource.data = .feature(Feature(shaftPolyline))
-            var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
-            if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.arrowSource, type: GeoJSONSource.self) {
-                let geoJSON = Feature(shaftPolyline)
-                try? mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSource, geoJSON: geoJSON)
-            } else {
-                arrowLayer.minZoom = Double(minimumZoomLevel)
-                arrowLayer.layout?.lineCap = .constant(.butt)
-                arrowLayer.layout?.lineJoin = .constant(.round)
-                arrowLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.70))
-                arrowLayer.paint?.lineColor = .constant(.init(color: maneuverArrowColor))
+            // TODO: Implement ability to change `shaftLength` depending on zoom level.
+            let shaftLength = max(min(30 * mapView.metersPerPointAtLatitude(latitude: maneuverCoordinate.latitude), 30), 10)
+            let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
+            
+            if shaftPolyline.coordinates.count > 1 {
+                let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
+                let minimumZoomLevel: Double = 8.0
+                let shaftStrokeCoordinates = shaftPolyline.coordinates
+                let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
                 
-                try? mapView.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
-                arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
-                
-                if let _ = try? mapView.style.layer(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer, type: LineLayer.self) {
-                    try? mapView.style.addLayer(arrowLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.waypointCircleLayer))
+                var arrowSource = GeoJSONSource()
+                arrowSource.data = .feature(Feature(shaftPolyline))
+                var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
+                if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.arrowSource, type: GeoJSONSource.self) {
+                    let geoJSON = Feature(shaftPolyline)
+                    try mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSource, geoJSON: geoJSON)
                 } else {
-                    try? mapView.style.addLayer(arrowLayer)
+                    arrowLayer.minZoom = Double(minimumZoomLevel)
+                    arrowLayer.layout?.lineCap = .constant(.butt)
+                    arrowLayer.layout?.lineJoin = .constant(.round)
+                    arrowLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.70))
+                    arrowLayer.paint?.lineColor = .constant(.init(color: maneuverArrowColor))
+                    
+                    try mapView.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
+                    arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
+                    
+                    if let _ = try? mapView.style.layer(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer, type: LineLayer.self) {
+                        try mapView.style.addLayer(arrowLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.waypointCircleLayer))
+                    } else {
+                        try mapView.style.addLayer(arrowLayer)
+                    }
+                }
+                
+                var arrowStrokeSource = GeoJSONSource()
+                arrowStrokeSource.data = .feature(Feature(shaftPolyline))
+                var arrowStrokeLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
+                if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource, type: GeoJSONSource.self) {
+                    let geoJSON = Feature(shaftPolyline)
+                    try mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource, geoJSON: geoJSON)
+                } else {
+                    arrowStrokeLayer.minZoom = arrowLayer.minZoom
+                    arrowStrokeLayer.layout?.lineCap = arrowLayer.layout?.lineCap
+                    arrowStrokeLayer.layout?.lineJoin = arrowLayer.layout?.lineJoin
+                    arrowStrokeLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.80))
+                    arrowStrokeLayer.paint?.lineColor = .constant(.init(color: maneuverArrowStrokeColor))
+                    
+                    try mapView.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
+                    arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
+                    try mapView.style.addLayer(arrowStrokeLayer, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
+                }
+                
+                let point = Point(shaftStrokeCoordinates.last!)
+                var arrowSymbolSource = GeoJSONSource()
+                arrowSymbolSource.data = .feature(Feature(point))
+                if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource, type: GeoJSONSource.self) {
+                    let geoJSON = Feature.init(geometry: Geometry.point(point))
+                    try mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource, geoJSON: geoJSON)
+                    mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.LayerIdentifier.arrowSymbolLayer, property: "icon-rotate", value: shaftDirection)
+                    mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, property: "icon-rotate", value: shaftDirection)
+                } else {
+                    var arrowSymbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.arrowSymbolLayer)
+                    arrowSymbolLayer.minZoom = Double(minimumZoomLevel)
+                    arrowSymbolLayer.layout?.iconImage = .constant(.name(NavigationMapView.ImageIdentifier.arrowImage))
+                    // FIXME: `iconColor` has no effect.
+                    arrowSymbolLayer.paint?.iconColor = .constant(.init(color: maneuverArrowColor))
+                    arrowSymbolLayer.layout?.iconRotationAlignment = .constant(.map)
+                    arrowSymbolLayer.layout?.iconRotate = .constant(.init(shaftDirection))
+                    arrowSymbolLayer.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.12))
+                    arrowSymbolLayer.layout?.iconAllowOverlap = .constant(true)
+                    
+                    var arrowSymbolCasingLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer)
+                    arrowSymbolCasingLayer.minZoom = arrowSymbolLayer.minZoom
+                    arrowSymbolCasingLayer.layout?.iconImage = arrowSymbolLayer.layout?.iconImage
+                    // FIXME: `iconColor` has no effect.
+                    arrowSymbolCasingLayer.paint?.iconColor = .constant(.init(color: maneuverArrowStrokeColor))
+                    arrowSymbolCasingLayer.layout?.iconRotationAlignment = arrowSymbolLayer.layout?.iconRotationAlignment
+                    arrowSymbolCasingLayer.layout?.iconRotate = arrowSymbolLayer.layout?.iconRotate
+                    arrowSymbolCasingLayer.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.14))
+                    arrowSymbolCasingLayer.layout?.iconAllowOverlap = arrowSymbolLayer.layout?.iconAllowOverlap
+                    
+                    try mapView.style.addSource(arrowSymbolSource, id: NavigationMapView.SourceIdentifier.arrowSymbolSource)
+                    arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
+                    arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
+                    
+                    try mapView.style.addLayer(arrowSymbolLayer)
+                    try mapView.style.addLayer(arrowSymbolCasingLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
             }
-            
-            var arrowStrokeSource = GeoJSONSource()
-            arrowStrokeSource.data = .feature(Feature(shaftPolyline))
-            var arrowStrokeLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
-            if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource, type: GeoJSONSource.self) {
-                let geoJSON = Feature(shaftPolyline)
-                try? mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource, geoJSON: geoJSON)
-            } else {
-                arrowStrokeLayer.minZoom = arrowLayer.minZoom
-                arrowStrokeLayer.layout?.lineCap = arrowLayer.layout?.lineCap
-                arrowStrokeLayer.layout?.lineJoin = arrowLayer.layout?.lineJoin
-                arrowStrokeLayer.paint?.lineWidth = .expression(Expression.routeLineWidthExpression(0.80))
-                arrowStrokeLayer.paint?.lineColor = .constant(.init(color: maneuverArrowStrokeColor))
-                
-                try? mapView.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
-                arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
-                try? mapView.style.addLayer(arrowStrokeLayer, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
-            }
-            
-            let point = Point(shaftStrokeCoordinates.last!)
-            var arrowSymbolSource = GeoJSONSource()
-            arrowSymbolSource.data = .feature(Feature(point))
-            if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource, type: GeoJSONSource.self) {
-                let geoJSON = Feature.init(geometry: Geometry.point(point))
-                try? mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource, geoJSON: geoJSON)
-                mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.LayerIdentifier.arrowSymbolLayer, property: "icon-rotate", value: shaftDirection)
-                mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer, property: "icon-rotate", value: shaftDirection)
-            } else {
-                var arrowSymbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.arrowSymbolLayer)
-                arrowSymbolLayer.minZoom = Double(minimumZoomLevel)
-                arrowSymbolLayer.layout?.iconImage = .constant(.name(NavigationMapView.ImageIdentifier.arrowImage))
-                // FIXME: `iconColor` has no effect.
-                arrowSymbolLayer.paint?.iconColor = .constant(.init(color: maneuverArrowColor))
-                arrowSymbolLayer.layout?.iconRotationAlignment = .constant(.map)
-                arrowSymbolLayer.layout?.iconRotate = .constant(.init(shaftDirection))
-                arrowSymbolLayer.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.12))
-                arrowSymbolLayer.layout?.iconAllowOverlap = .constant(true)
-                
-                var arrowSymbolCasingLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer)
-                arrowSymbolCasingLayer.minZoom = arrowSymbolLayer.minZoom
-                arrowSymbolCasingLayer.layout?.iconImage = arrowSymbolLayer.layout?.iconImage
-                // FIXME: `iconColor` has no effect.
-                arrowSymbolCasingLayer.paint?.iconColor = .constant(.init(color: maneuverArrowStrokeColor))
-                arrowSymbolCasingLayer.layout?.iconRotationAlignment = arrowSymbolLayer.layout?.iconRotationAlignment
-                arrowSymbolCasingLayer.layout?.iconRotate = arrowSymbolLayer.layout?.iconRotate
-                arrowSymbolCasingLayer.layout?.iconSize = .expression(Expression.routeLineWidthExpression(0.14))
-                arrowSymbolCasingLayer.layout?.iconAllowOverlap = arrowSymbolLayer.layout?.iconAllowOverlap
-                
-                try? mapView.style.addSource(arrowSymbolSource, id: NavigationMapView.SourceIdentifier.arrowSymbolSource)
-                arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
-                arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
-                
-                try? mapView.style.addLayer(arrowSymbolLayer)
-                try? mapView.style.addLayer(arrowSymbolCasingLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.arrowSymbolLayer))
-            }
+        } catch {
+            NSLog("Failed to perform operation while adding maneuver arrow with error: \(error.localizedDescription).")
         }
     }
     
@@ -836,38 +869,42 @@ open class NavigationMapView: UIView {
                 }
             }
         }
-
-        if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource, type: GeoJSONSource.self) {
-            try? mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource, geoJSON: featureCollection)
-        } else {
-            var source = GeoJSONSource()
-            source.data = .featureCollection(featureCollection)
-            try? mapView.style.addSource(source, id: NavigationMapView.SourceIdentifier.voiceInstructionSource)
-            
-            var symbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
-            symbolLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
-            
-            let instruction = Exp(.toString) {
-                Exp(.get) {
-                    "instruction"
+        
+        do {
+            if let _ = try? mapView.style.source(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource, type: GeoJSONSource.self) {
+                try mapView.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource, geoJSON: featureCollection)
+            } else {
+                var source = GeoJSONSource()
+                source.data = .featureCollection(featureCollection)
+                try mapView.style.addSource(source, id: NavigationMapView.SourceIdentifier.voiceInstructionSource)
+                
+                var symbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
+                symbolLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
+                
+                let instruction = Exp(.toString) {
+                    Exp(.get) {
+                        "instruction"
+                    }
                 }
+                
+                symbolLayer.layout?.textField = .expression(instruction)
+                symbolLayer.layout?.textSize = .constant(14)
+                symbolLayer.paint?.textHaloWidth = .constant(1)
+                symbolLayer.paint?.textHaloColor = .constant(.init(color: .white))
+                symbolLayer.paint?.textOpacity = .constant(0.75)
+                symbolLayer.layout?.textAnchor = .constant(.bottom)
+                symbolLayer.layout?.textJustify = .constant(.left)
+                try mapView.style.addLayer(symbolLayer)
+                
+                var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer)
+                circleLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
+                circleLayer.paint?.circleRadius = .constant(5)
+                circleLayer.paint?.circleOpacity = .constant(0.75)
+                circleLayer.paint?.circleColor = .constant(.init(color: .white))
+                try mapView.style.addLayer(circleLayer)
             }
-            
-            symbolLayer.layout?.textField = .expression(instruction)
-            symbolLayer.layout?.textSize = .constant(14)
-            symbolLayer.paint?.textHaloWidth = .constant(1)
-            symbolLayer.paint?.textHaloColor = .constant(.init(color: .white))
-            symbolLayer.paint?.textOpacity = .constant(0.75)
-            symbolLayer.layout?.textAnchor = .constant(.bottom)
-            symbolLayer.layout?.textJustify = .constant(.left)
-            try? mapView.style.addLayer(symbolLayer)
-            
-            var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer)
-            circleLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
-            circleLayer.paint?.circleRadius = .constant(5)
-            circleLayer.paint?.circleOpacity = .constant(0.75)
-            circleLayer.paint?.circleColor = .constant(.init(color: .white))
-            try? mapView.style.addLayer(circleLayer)
+        } catch {
+            NSLog("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).")
         }
     }
     

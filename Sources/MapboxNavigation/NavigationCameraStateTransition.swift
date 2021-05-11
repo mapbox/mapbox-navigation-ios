@@ -195,20 +195,20 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             return
         }
         
-        let centerTranslationDistance = mapView.cameraState.center.distance(to: location)
+        let centerTranslationDistance: CLLocationDistance = mapView.cameraState.center.distance(to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1500.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.6), 0.6)
         let centerAnimationDelay: TimeInterval = 0.0
         
-        let zoomLevelDistance = CLLocationDistance(abs(mapView.cameraState.zoom - zoom))
+        let zoomLevelDistance: CLLocationDistance = CLLocationDistance(abs(mapView.cameraState.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 3.0
         let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 1.6), 0.6)
         let zoomAnimationDelay: TimeInterval = centerAnimationDuration * 0.5
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
-        let currentBearing = mapView.cameraState.bearing
-        let newBearing = mapView.cameraState.bearing + bearing.shortestRotation(angle: mapView.cameraState.bearing)
-        let bearingDegreesChange = fabs(newBearing - currentBearing)
+        let currentBearing: CLLocationDirection = mapView.cameraState.bearing
+        let newBearing: CLLocationDirection = mapView.cameraState.bearing + bearing.shortestRotation(angle: mapView.cameraState.bearing)
+        let bearingDegreesChange: CLLocationDirection = fabs(newBearing - currentBearing)
         let degreesPerSecondMaxBearingAnimation: Double = 60.0
         let bearingAnimationDuration: TimeInterval = max(min(bearingDegreesChange / degreesPerSecondMaxBearingAnimation, 1.2), 0.6)
         let bearingAnimationDelay: TimeInterval = max(endZoomAnimation - bearingAnimationDuration - 0.2, 0.0)
@@ -242,13 +242,13 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             return
         }
         
-        let zoomLevelDistance = CLLocationDistance(abs(mapView.cameraState.zoom - zoom))
+        let zoomLevelDistance: CLLocationDistance = CLLocationDistance(abs(mapView.cameraState.zoom - zoom))
         let levelsPerSecondMaxZoomAnimation: Double = 0.6
         let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 0.8), 0.2)
         let zoomAnimationDelay: TimeInterval = 0.0
         let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
         
-        let centerTranslationDistance = mapView.cameraState.center.distance(to: location)
+        let centerTranslationDistance: CLLocationDistance = mapView.cameraState.center.distance(to: location)
         let metersPerSecondMaxCenterAnimation: Double = 1000.0
         let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.4), 0.6)
         let centerAnimationDelay: TimeInterval = max(endZoomAnimation - centerAnimationDuration, 0.0)

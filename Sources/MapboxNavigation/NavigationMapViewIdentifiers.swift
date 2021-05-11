@@ -27,4 +27,8 @@ extension NavigationMapView {
     struct ImageIdentifier {
         static let arrowImage = "triangle-tip-navigation"
     }
+    
+    struct AnnotationIdentifier {
+        static let finalDestinationAnnotation = "\(identifier)_finalDestinationAnnotation"
+    }
 }

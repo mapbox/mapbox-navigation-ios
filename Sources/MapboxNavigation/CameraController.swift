@@ -88,7 +88,9 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         
         navigationMapView.mapView.camera.ease(to: cameraOptions,
                                               duration: animated ? 1.0 : 0.0) { (animatingPosition) in
-            completion?()
+            if animatingPosition == .end {
+                completion?()
+            }
         }
         
         navigationMapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)

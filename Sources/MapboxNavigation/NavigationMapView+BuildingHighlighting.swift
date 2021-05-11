@@ -43,61 +43,73 @@ extension NavigationMapView {
     }
     
     /**
-     Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:)`.
+     Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:completion:)`.
      */
     public func unhighlightBuildings() {
-        guard let _ = try? mapView.style.layer(withId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer, type: FillExtrusionLayer.self) else { return }
-        try? mapView.style.removeLayer(withId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
+        let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
+        
+        do {
+            guard let _ = try? mapView.style.layer(withId: identifier, type: FillExtrusionLayer.self) else { return }
+            try mapView.style.removeLayer(withId: identifier)
+        } catch {
+            NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
+        }
     }
 
     private func addBuildingsLayer(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
-        try? mapView.style.removeLayer(withId: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
-        if identifiers.isEmpty { return }
-        var highlightedBuildingsLayer = FillExtrusionLayer(id: NavigationMapView.LayerIdentifier.buildingExtrusionLayer)
-        highlightedBuildingsLayer.source = "composite"
-        highlightedBuildingsLayer.sourceLayer = "building"
-
-        let extrudeExpression: Expression = Exp(.eq) {
-            Exp(.get) {
-                "extrude"
+        let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
+        
+        do {
+            try mapView.style.removeLayer(withId: identifier)
+            if identifiers.isEmpty { return }
+            var highlightedBuildingsLayer = FillExtrusionLayer(id: identifier)
+            highlightedBuildingsLayer.source = "composite"
+            highlightedBuildingsLayer.sourceLayer = "building"
+            
+            let extrudeExpression: Expression = Exp(.eq) {
+                Exp(.get) {
+                    "extrude"
+                }
+                "true"
             }
-            "true"
-        }
-
-        if extrudeAll {
-            highlightedBuildingsLayer.filter = extrudeExpression
-        } else {
-            highlightedBuildingsLayer.filter = Exp(.all) {
-                extrudeExpression
-                Exp(.inExpression) {
-                    Exp(.id)
-                    Exp(.literal) {
-                        identifiers.map({ Double($0) })
+            
+            if extrudeAll {
+                highlightedBuildingsLayer.filter = extrudeExpression
+            } else {
+                highlightedBuildingsLayer.filter = Exp(.all) {
+                    extrudeExpression
+                    Exp(.inExpression) {
+                        Exp(.id)
+                        Exp(.literal) {
+                            identifiers.map({ Double($0) })
+                        }
                     }
                 }
             }
-        }
-
-        if in3D {
-            highlightedBuildingsLayer.paint?.fillExtrusionHeight = .expression(Expression.buildingExtrusionHeightExpression("height"))
-        } else {
-            highlightedBuildingsLayer.paint?.fillExtrusionHeight = .constant(0.0)
-        }
-
-        highlightedBuildingsLayer.paint?.fillExtrusionBase = .expression(Expression.buildingExtrusionHeightExpression("min_height"))
-
-        highlightedBuildingsLayer.paint?.fillExtrusionOpacity = .expression(
-            Exp(.interpolate) {
-                Exp(.linear)
-                Exp(.zoom)
-                13; 0.5
-                17; 0.8
+            
+            if in3D {
+                highlightedBuildingsLayer.paint?.fillExtrusionHeight = .expression(Expression.buildingExtrusionHeightExpression("height"))
+            } else {
+                highlightedBuildingsLayer.paint?.fillExtrusionHeight = .constant(0.0)
             }
-        )
-
-        highlightedBuildingsLayer.paint?.fillExtrusionColor = .constant(.init(color: buildingHighlightColor))
-        highlightedBuildingsLayer.paint?.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
-        highlightedBuildingsLayer.paint?.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
-        try? mapView.style.addLayer(highlightedBuildingsLayer)
+            
+            highlightedBuildingsLayer.paint?.fillExtrusionBase = .expression(Expression.buildingExtrusionHeightExpression("min_height"))
+            
+            highlightedBuildingsLayer.paint?.fillExtrusionOpacity = .expression(
+                Exp(.interpolate) {
+                    Exp(.linear)
+                    Exp(.zoom)
+                    13; 0.5
+                    17; 0.8
+                }
+            )
+            
+            highlightedBuildingsLayer.paint?.fillExtrusionColor = .constant(.init(color: buildingHighlightColor))
+            highlightedBuildingsLayer.paint?.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
+            highlightedBuildingsLayer.paint?.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
+            try mapView.style.addLayer(highlightedBuildingsLayer)
+        } catch {
+            NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
+        }
     }
 }

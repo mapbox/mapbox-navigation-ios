@@ -600,7 +600,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         let coordinate = self.coordinate(of: offset, in: navigationMapView)
         let cameraOptions = CameraOptions(center: coordinate)
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions)
+        navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 1.0)
     }
 
     func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
