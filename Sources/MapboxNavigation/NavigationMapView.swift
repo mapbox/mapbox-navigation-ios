@@ -107,7 +107,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
     @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
     @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
-    @objc dynamic public var routeDurationAnnotationFontName: [String] = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
+    @objc dynamic public var routeDurationAnnotationFontNames: [String] = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
 
     var routes: [Route]?
     var routePoints: RoutePoints?
@@ -824,8 +824,8 @@ open class NavigationMapView: UIView {
      Useful as a way to give the user more information when picking between multiple route alternatives.
      If the route contains any tolled segments then the callout will specify that as well.
      */
-    public func showRouteDurations(along routes: [Route]?) {
-        guard let visibleRoutes = routes, visibleRoutes.count > 0 else { return }
+    public func showRouteDurations(along: [Route]?) {
+        guard let visibleRoutes = along, visibleRoutes.count > 0 else { return }
         updateAnnotationSymbolImages()
         updateRouteDurations(along: visibleRoutes)
     }
@@ -1044,7 +1044,7 @@ open class NavigationMapView: UIView {
         shapeLayer.layout?.textAllowOverlap = .constant(true)
         shapeLayer.layout?.textJustify = .constant(TextJustify.left)
         shapeLayer.layout?.symbolZOrder = .constant(SymbolZOrder.auto)
-        shapeLayer.layout?.textFont = .constant(self.routeDurationAnnotationFontName)
+        shapeLayer.layout?.textFont = .constant(self.routeDurationAnnotationFontNames)
 
         style.addLayer(layer: shapeLayer, layerPosition: nil)
 
