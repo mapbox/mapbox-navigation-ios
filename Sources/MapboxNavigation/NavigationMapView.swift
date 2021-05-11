@@ -824,8 +824,8 @@ open class NavigationMapView: UIView {
      Useful as a way to give the user more information when picking between multiple route alternatives.
      If the route contains any tolled segments then the callout will specify that as well.
      */
-    public func showRouteDurations(along: [Route]?) {
-        guard let visibleRoutes = along, visibleRoutes.count > 0 else { return }
+    public func showRouteDurations(along routes: [Route]?) {
+        guard let visibleRoutes = routes, visibleRoutes.count > 0 else { return }
         updateAnnotationSymbolImages()
         updateRouteDurations(along: visibleRoutes)
     }
