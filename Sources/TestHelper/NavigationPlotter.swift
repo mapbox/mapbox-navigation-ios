@@ -113,7 +113,7 @@ extension CoordinatePlotter {
         guard let mapView = plotter.navigationMapView?.mapView else { return }
         
         for (i, coordinate) in coordinates.enumerated() {
-            let position = mapView.mapboxMap.point(for: coordinate, in: plotter)
+            let position = mapView.mapboxMap.point(for: coordinate)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
             plotter.drawDot(at: centeredPosition, color: color)
@@ -130,7 +130,7 @@ extension LocationPlotter {
         guard let mapView = plotter.navigationMapView?.mapView else { return }
         
         for (i, location) in locations.enumerated() {
-            let position = mapView.mapboxMap.point(for: location.coordinate, in: plotter)
+            let position = mapView.mapboxMap.point(for: location.coordinate)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
             plotter.drawDot(at: centeredPosition, color: color)
