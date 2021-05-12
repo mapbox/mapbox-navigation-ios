@@ -14,9 +14,6 @@ public protocol EventsManagerDataSource: class {
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
-@available(swift, obsoleted: 0.1, renamed: "NavigationEventsManager")
-public typealias EventsManager = NSObject
-
 /**
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */

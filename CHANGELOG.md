@@ -73,6 +73,7 @@
 * Added the `NavigationOptions.tileStoreConfiguration` property and arguments to `PassiveLocationDataSource(directions:systemLocationManager:tileStoreLocation:)`, `NavigationMapView(frame:navigationCameraType:tileStoreLocation:)`, and `PredictiveCacheManager(predictiveCacheOptions:tileStoreMapOptions:)` for customizing the locations where navigation and map tiles are stored. ([#2956](https://github.com/mapbox/mapbox-navigation-ios/pull/2956))
 * Fixed an issue where lane guidance icons would sometimes highlight the wrong arrow.([#2942](https://github.com/mapbox/mapbox-navigation-ios/pull/2942))
 * The duration annotations added by the `NavigationMapView.showRouteDurations(along:)` method are now set in the fonts you specify using the `NavigationMapView.routeDurationAnnotationFontNames` property. Use this property to specify a list of fallback fonts for better language support. ([#2873](https://github.com/mapbox/mapbox-navigation-ios/pull/2873))
+* Removed deprecated and obsoleted `EventsManager` typealias, `StatusView.delegate`, `StatusView.canChangeValue`, `RouteLegProgress.upComingStep`, `StatusViewDelegate`, `DeprecatedStatusViewDelegate` and `BottomBannerViewController.init(delegate:)`. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
 
 ## v1.3.0
 
