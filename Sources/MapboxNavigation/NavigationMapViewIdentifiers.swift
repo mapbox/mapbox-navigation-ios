@@ -14,6 +14,7 @@ extension NavigationMapView {
         static let waypointCircleLayer = "\(identifier)_waypointCircleLayer"
         static let waypointSymbolLayer = "\(identifier)_waypointSymbolLayer"
         static let buildingExtrusionLayer = "\(identifier)buildingExtrusionLayer"
+        static let routeDurationAnnotationsLayer: String = "\(identifier)_routeDurationAnnotationsLayer"
     }
     
     struct SourceIdentifier {
@@ -22,6 +23,7 @@ extension NavigationMapView {
         static let arrowSymbolSource = "\(identifier)_arrowSymbolSource"
         static let voiceInstructionSource = "\(identifier)_instructionSource"
         static let waypointSource = "\(identifier)_waypointSource"
+        static let routeDurationAnnotationsSource: String = "\(identifier)_routeDurationAnnotationsSource"
     }
     
     struct ImageIdentifier {

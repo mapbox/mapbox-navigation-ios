@@ -5,7 +5,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 import Turf
 
-
 private enum RouteDurationAnnotationTailPosition: Int {
     case left
     case right
@@ -107,7 +106,6 @@ open class NavigationMapView: UIView {
     @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
     @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
     @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
-    static let routeDurationAnnotationsLayerIdentifier: String = "routeDurationAnnotationsLayerIdentifier"
 
     /**
      List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
@@ -861,6 +859,8 @@ open class NavigationMapView: UIView {
         ]
         mapView.style.removeSources(sources)
     }
+    
+    // MARK: - Route duration annotations methods
 
     /**
      Shows a callout containing the duration of each route.
@@ -877,52 +877,60 @@ open class NavigationMapView: UIView {
      Updates the image assets in the map style for the route duration annotations. Useful when the desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
      */
     private func updateAnnotationSymbolImages() {
-        guard let style = mapView.style, style.getStyleImage(with: "RouteInfoAnnotationLeftHanded") == nil, style.getStyleImage(with: "RouteInfoAnnotationRightHanded") == nil else { return }
-
+        guard let style = mapView.style,
+              style.image(withId: "RouteInfoAnnotationLeftHanded") == nil,
+              style.image(withId: "RouteInfoAnnotationRightHanded") == nil else { return }
+        
         // Right-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
-            let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
-
-            // define the "stretchable" areas in the image that will be fitted to the text label
-            let stretchX = [ImageStretches(first: Float(24), second: Float(40))]
-            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
-            let imageContent = ImageContent(left: 24, top: 25, right: 40, bottom: 35)
-
-            style.setStyleImage(image: regularAnnotationImage,
-                                with: "RouteInfoAnnotationRightHanded",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                imageContent: imageContent)
-
-            let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
-            style.setStyleImage(image: selectedAnnotationImage,
-                                with: "RouteInfoAnnotationRightHanded-Selected",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                imageContent: imageContent)
+            do {
+                // define the "stretchable" areas in the image that will be fitted to the text label
+                let stretchX = [ImageStretches(first: Float(24), second: Float(40))]
+                let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
+                let imageContent = ImageContent(left: 24, top: 25, right: 40, bottom: 35)
+                
+                let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
+                try style.addImage(regularAnnotationImage,
+                                   id: "RouteInfoAnnotationRightHanded",
+                                   stretchX: stretchX,
+                                   stretchY: stretchY,
+                                   content: imageContent)
+                
+                let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
+                try style.addImage(selectedAnnotationImage,
+                                   id: "RouteInfoAnnotationRightHanded-Selected",
+                                   stretchX: stretchX,
+                                   stretchY: stretchY,
+                                   content: imageContent)
+            } catch {
+                NSLog("Failed to add image to style with error: \(error.localizedDescription).")
+            }
         }
-
+        
         // Left-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
-            let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
-
-            // define the "stretchable" areas in the image that will be fitted to the text label
-            let stretchX = [ImageStretches(first: Float(34), second: Float(50))]
-            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
-            let imageContent = ImageContent(left: 34, top: 25, right: 50, bottom: 35)
-
-            style.setStyleImage(image: regularAnnotationImage,
-                                with: "RouteInfoAnnotationLeftHanded",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                imageContent: imageContent)
-
-            let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
-            style.setStyleImage(image: selectedAnnotationImage,
-                                with: "RouteInfoAnnotationLeftHanded-Selected",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                imageContent: imageContent)
+            do {
+                // define the "stretchable" areas in the image that will be fitted to the text label
+                let stretchX = [ImageStretches(first: Float(34), second: Float(50))]
+                let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
+                let imageContent = ImageContent(left: 34, top: 25, right: 50, bottom: 35)
+                
+                let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
+                try style.addImage(regularAnnotationImage,
+                                   id: "RouteInfoAnnotationLeftHanded",
+                                   stretchX: stretchX,
+                                   stretchY: stretchY,
+                                   content: imageContent)
+                
+                let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
+                try style.addImage(selectedAnnotationImage,
+                                   id: "RouteInfoAnnotationLeftHanded-Selected",
+                                   stretchX: stretchX,
+                                   stretchY: stretchY,
+                                   content: imageContent)
+            } catch {
+                NSLog("Failed to add image to style with error: \(error.localizedDescription).")
+            }
         }
     }
 
@@ -937,7 +945,7 @@ open class NavigationMapView: UIView {
 
         guard let routes = routes else { return }
 
-        let coordinateBounds = mapView.coordinateBounds(for: mapView)
+        let coordinateBounds = mapView.mapboxMap.coordinateBounds(for: mapView.frame)
         let visibleBoundingBox = BoundingBox(southWest: coordinateBounds.southwest, northEast: coordinateBounds.northeast)
 
         let tollRoutes = routes.filter { route -> Bool in
@@ -1009,7 +1017,7 @@ open class NavigationMapView: UIView {
             var tailPosition = randomTailPosition
 
             // convert our coordinate to screen space so we can make a choice on which side of the coordinate the label ends up on
-            let unprojectedCoordinate = mapView.point(for: annotationCoordinate, in: nil)
+            let unprojectedCoordinate = mapView.mapboxMap.point(for: annotationCoordinate)
 
             // pick the orientation of the bubble "stem" based on how close to the edge of the screen it is
             if tailPosition == .left && unprojectedCoordinate.x > bounds.width * 0.75 {
@@ -1040,24 +1048,29 @@ open class NavigationMapView: UIView {
      */
     private func addRouteAnnotationSymbolLayer(features: FeatureCollection) {
         guard let style = mapView.style else { return }
-        if let _ = try? mapView.style.getSource(identifier: NavigationMapView.routeDurationAnnotationsLayerIdentifier, type: GeoJSONSource.self).get() {
-            let _ = mapView.style.updateGeoJSON(for: NavigationMapView.routeDurationAnnotationsLayerIdentifier, with: features)
-        } else {
 
-            var dataSource = GeoJSONSource()
-            dataSource.data = .featureCollection(features)
-            mapView.style.addSource(source: dataSource, identifier: NavigationMapView.routeDurationAnnotationsLayerIdentifier)
+        let routeDurationAnnotationsSourceIdentifier = NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource
+        do {
+            if let _ = try? mapView.style.source(withId: routeDurationAnnotationsSourceIdentifier, type: GeoJSONSource.self) {
+                try mapView.style.updateGeoJSONSource(withId: routeDurationAnnotationsSourceIdentifier, geoJSON: features)
+            } else {
+                var dataSource = GeoJSONSource()
+                dataSource.data = .featureCollection(features)
+                try mapView.style.addSource(dataSource, id: routeDurationAnnotationsSourceIdentifier)
+            }
+        } catch {
+            NSLog("Failed to perform operation on \(routeDurationAnnotationsSourceIdentifier) with error: \(error.localizedDescription).")
         }
 
+        let routeDurationAnnotationsLayerIdentifier = NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer
         var shapeLayer: SymbolLayer
-
-        if let layer = try? mapView.style.getLayer(with: NavigationMapView.routeDurationAnnotationsLayerIdentifier, type: SymbolLayer.self).get() {
+        if let layer = try? mapView.style.layer(withId: routeDurationAnnotationsLayerIdentifier, type: SymbolLayer.self) {
             shapeLayer = layer
         } else {
-            shapeLayer = SymbolLayer(id: NavigationMapView.routeDurationAnnotationsLayerIdentifier)
+            shapeLayer = SymbolLayer(id: routeDurationAnnotationsLayerIdentifier)
         }
 
-        shapeLayer.source = NavigationMapView.routeDurationAnnotationsLayerIdentifier
+        shapeLayer.source = routeDurationAnnotationsSourceIdentifier
 
         shapeLayer.layout?.textField = .expression(Exp(.get) {
             "text"
@@ -1085,18 +1098,22 @@ open class NavigationMapView: UIView {
         shapeLayer.layout?.symbolZOrder = .constant(SymbolZOrder.auto)
         shapeLayer.layout?.textFont = .constant(self.routeDurationAnnotationFontNames)
 
-        style.addLayer(layer: shapeLayer, layerPosition: nil)
+        do {
+            try style.addLayer(shapeLayer)
+        } catch {
+            NSLog("Failed to add \(routeDurationAnnotationsLayerIdentifier) with error: \(error.localizedDescription).")
+        }
 
         let symbolSortKeyString =
         """
         ["get", "sortOrder"]
         """
 
-        if let expressionData = symbolSortKeyString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
-                                                          property: "symbol-sort-key",
-                                                          value: expJSONObject)
+        if let expressionData = symbolSortKeyString.data(using: .utf8),
+           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(routeDurationAnnotationsLayerIdentifier,
+                                                                    property: "symbol-sort-key",
+                                                                    value: expJSONObject)
         }
 
         let expressionString =
@@ -1112,17 +1129,15 @@ open class NavigationMapView: UIView {
         ]
         """
 
-        if let expressionData = expressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
-                                                          property: "icon-anchor",
-                                                          value: expJSONObject)
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
-                                                          property: "text-anchor",
-                                                          value: expJSONObject)
+        if let expressionData = expressionString.data(using: .utf8),
+           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(routeDurationAnnotationsLayerIdentifier,
+                                                                    property: "icon-anchor",
+                                                                    value: expJSONObject)
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(routeDurationAnnotationsLayerIdentifier,
+                                                                    property: "text-anchor",
+                                                                    value: expJSONObject)
         }
-
-
 
         let offsetExpressionString =
         """
@@ -1135,15 +1150,15 @@ open class NavigationMapView: UIView {
         ]
         """
 
-        if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
-                                                          property: "icon-offset",
-                                                          value: expJSONObject)
-
-            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(NavigationMapView.routeDurationAnnotationsLayerIdentifier,
-                                                          property: "text-offset",
-                                                          value: expJSONObject)
+        if let expressionData = offsetExpressionString.data(using: .utf8),
+           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(routeDurationAnnotationsLayerIdentifier,
+                                                                    property: "icon-offset",
+                                                                    value: expJSONObject)
+            
+            mapView.mapboxMap.__map.setStyleLayerPropertyForLayerId(routeDurationAnnotationsLayerIdentifier,
+                                                                    property: "text-offset",
+                                                                    value: expJSONObject)
         }
     }
 
@@ -1159,11 +1174,14 @@ open class NavigationMapView: UIView {
      Remove the underlying style layers and data sources for the route duration annotations.
      */
     private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MapboxMaps.Style) {
-        style.removeLayers([NavigationMapView.routeDurationAnnotationsLayerIdentifier])
-        style.removeSources([NavigationMapView.routeDurationAnnotationsLayerIdentifier])
+        style.removeLayers([NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer])
+        style.removeSources([NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource])
     }
 
-    // This function generates the text for the label to be shown on screen. It will include estimated duration and info on Tolls, if applicable
+    /**
+     Generate the text for the label to be shown on screen. It will include estimated duration
+     and info on Tolls, if applicable.
+     */
     private func annotationLabelForRoute(_ route: Route, tolls: Bool) -> String {
         var eta = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
 
@@ -1182,9 +1200,13 @@ open class NavigationMapView: UIView {
         return eta
     }
     
+    // MARK: - Road labels localization methods
+    
     public func localizeLabels() {
         // TODO: Implement ability to localize road labels.
     }
+    
+    // MARK: - Route voice instructions methods
     
     /**
      Shows voice instructions for specific `Route` object.
