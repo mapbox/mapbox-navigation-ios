@@ -20,7 +20,7 @@ public enum RoadObjectDistanceInfo {
     /**
      The information about distance to the road object represented as a polygon.
      */
-    case polygon(PolygonDistanceInfo)
+    case polygone(PolygonDistanceInfo)
     
     /**
      The information about distance to the road object represented as a subgraph.
