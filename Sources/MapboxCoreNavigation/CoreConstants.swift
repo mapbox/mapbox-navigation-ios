@@ -329,7 +329,7 @@ public extension Notification.Name {
     /**
      Posted when user has passed point-like object.
 
-     The user info dictionary contains the keys `ElectronicHorizon.NotificationUserInfoKey.roadObjectIdentifierKey`.
+     The user info dictionary contains the key `ElectronicHorizon.NotificationUserInfoKey.roadObjectIdentifierKey`.
     */
     static let electronicHorizonDidPassRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidPassRoadObject")
 }

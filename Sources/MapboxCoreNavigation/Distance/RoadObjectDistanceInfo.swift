@@ -7,10 +7,29 @@ import MapboxNavigationNative
  * type/shape (gantry, polygon, line, point etc.).
  */
 public enum RoadObjectDistanceInfo {
+    /**
+     The information about distance to the road object represented as a point.
+     */
     case point(PointDistanceInfo)
+    
+    /**
+     The information about distance to the road object represented as a gantry.
+     */
     case gantry(GantryDistanceInfo)
+    
+    /**
+     The information about distance to the road object represented as a polygon.
+     */
     case polygone(PolygonDistanceInfo)
+    
+    /**
+     The information about distance to the road object represented as a subgraph.
+     */
     case subgraph(SubgraphDistanceInfo)
+    
+    /**
+     The information about distance to the road object represented as a line.
+     */
     case line(LineDistanceInfo)
 
     init(_ native: MapboxNavigationNative.MBNNRoadObjectDistanceInfo) {

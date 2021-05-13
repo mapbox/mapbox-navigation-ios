@@ -7,10 +7,21 @@ import MapboxNavigationNative
  * that direction, both directions, or the direction of the road object might be unknown.
  */
 public enum OpenLROrientation {
-    
+    /**
+     The relationship between the road object and the direction of the referenced line is unknown.
+     */
     case unknown
+    /**
+     The road object is directed in the same direction as the referenced line.
+     */
     case alongLine
+    /**
+     The road object is directed against the direction of the referenced line.
+     */
     case againstLine
+    /**
+     The road object is directed in both directions.
+     */
     case both
 
     init(_ native: MapboxNavigationNative.OpenLROrientation) {

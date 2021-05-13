@@ -17,6 +17,9 @@ public struct PolygonLocation {
     /** Shape of a polygon */
     public let shape: Geometry
 
+    /**
+     Initializes a new `PolygonLocation` object with given positions of polygon entries and exits, and a given shape.
+     */
     public init(entries: [RoadObjectPosition], exits: [RoadObjectPosition], shape: Geometry) {
         self.entries = entries
         self.exits = exits

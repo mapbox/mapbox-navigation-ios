@@ -12,6 +12,9 @@ public struct RouteAlertLocation {
     /** Shape of an object */
     public let shape: Geometry
 
+    /**
+     Initializes a `RouteAlertLocation` with a given shape.
+     */
     public init(shape: Geometry) {
         self.shape = shape
     }

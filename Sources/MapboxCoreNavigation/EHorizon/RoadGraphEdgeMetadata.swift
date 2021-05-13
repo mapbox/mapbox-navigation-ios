@@ -62,6 +62,9 @@ extension RoadGraph.Edge {
         /** Indicates how many directions the user may travel along the edge. */
         public let directionality: Directionality
 
+        /**
+         Initializes a new edge `Metadata` object.
+         */
         public init(heading: CLLocationDegrees,
                     length: CLLocationDistance,
                     roadClasses: RoadClasses,

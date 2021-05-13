@@ -18,6 +18,14 @@ extension RoadGraph {
         /** Length of a path, measured in meters. */
         public let length: CLLocationDistance
 
+        /**
+         Initializes a new `RoadGraph` object.
+         
+         - parameter edgeIdentifiers: An `Array` of edge identifiers that fully or partially coincide with the linear object.
+         - parameter fractionFromStart: The distance from the start of an edge to the start of the linear object as a fraction of the edge's length from 0 to 1.
+         - parameter fractionToEnd: The distance from the end of the linear object to the edge of the edge as a fraction of the edge's length from 0 to 1.
+         - parameter length: Length of a `Path` measured in meters.
+         */
         public init(edgeIdentifiers: [RoadGraph.Edge.Identifier], fractionFromStart: Double, fractionToEnd: Double, length: CLLocationDistance) {
             self.edgeIdentifiers = edgeIdentifiers
             self.fractionFromStart = fractionFromStart

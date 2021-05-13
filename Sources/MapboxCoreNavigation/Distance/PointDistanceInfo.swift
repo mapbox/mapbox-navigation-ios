@@ -6,9 +6,12 @@ import MapboxNavigationNative
  */
 public struct PointDistanceInfo {
 
-    /** Distance distance to the point object */
+    /** Distance to the point object, measured in meters. */
     public let distance: CLLocationDistance
 
+    /**
+     Initializes a new `PointDistanceInfo` object with a given distance to the object.
+     */
     public init(distance: CLLocationDistance) {
         self.distance = distance
     }

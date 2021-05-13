@@ -9,7 +9,7 @@ import MapboxNavigationNative
 public struct RoadObject {
 
     /**
-     * Id of the road object. If we get the same objects (e.g. `RoadObjectType.tunel`) from the
+     * Identifier of the road object. If we get the same objects (e.g. `RoadObjectType.tunnel`) from the
      * electronic horizon and the active route, they will not have the same IDs.
      */
     public let identifier: RoadObjectIdentifier
@@ -26,6 +26,9 @@ public struct RoadObject {
     /** `true` if an object is added by user, `false` if it comes from Mapbox service. */
     public let isCustom: Bool
 
+    /**
+     Initializes a new `RoadObject` object.
+     */
     public init(identifier: RoadObjectIdentifier, length: CLLocationDistance?, location: RoadObjectLocation, type: RoadObjectType) {
         self.identifier = identifier
         self.length = length

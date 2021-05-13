@@ -14,6 +14,9 @@ public struct RoadObjectPosition {
     /** Geo-position of the object */
     public let coordinate: CLLocationCoordinate2D
 
+    /**
+     Initializes a new `RoadObjectPosition` object with a given position on the graph and coordinate of the object.
+     */
     public init(position: RoadGraph.Position, coordinate: CLLocationCoordinate2D) {
         self.position = position
         self.coordinate = coordinate
