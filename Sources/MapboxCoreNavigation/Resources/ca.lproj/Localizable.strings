@@ -1,5 +1,6 @@
-/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
-"CONTINUE" = "Continueu per %@";
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "S'ha trobat una ruta no vàlida mentre fora de línia.";
 
-/* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
-"CONTINUE_ON_ROAD" = "Continueu a %1$@ per %2$@";
+/* Inform developer an update is available */
+"UPDATE_AVAILABLE" = "Disponible la versió %@ de Mapbox Navigation SDK per iOS";
+

@@ -76,15 +76,28 @@
 * The duration annotations added by the `NavigationMapView.showRouteDurations(along:)` method are now set in the fonts you specify using the `NavigationMapView.routeDurationAnnotationFontNames` property. Use this property to specify a list of fallback fonts for better language support. ([#2873](https://github.com/mapbox/mapbox-navigation-ios/pull/2873))
 * Removed deprecated and obsoleted `EventsManager` typealias, `StatusView.delegate`, `StatusView.canChangeValue`, `RouteLegProgress.upComingStep`, `StatusViewDelegate`, `DeprecatedStatusViewDelegate` and `BottomBannerViewController.init(delegate:)`. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
 
+## v1.4.0
+
+* Increased the minimum version of `MapboxNavigationNative` to v32.0.0. ([#2910](https://github.com/mapbox/mapbox-navigation-ios/pull/2910))
+* Fixed an issue when feedback UI was always appearing for short routes. ([#2871](https://github.com/mapbox/mapbox-navigation-ios/pull/2871))
+* Fixed automatic day/night switching. ([#2881](https://github.com/mapbox/mapbox-navigation-ios/pull/2881))
+* Fixed an issue where presenting `NavigationViewController` could sometimes interfere with view presentation in other windows. ([#2897](https://github.com/mapbox/mapbox-navigation-ios/pull/2897))
+* Added an optional `StyleManagerDelegate.styleManager(_:viewForApplying:)` method to determine which part of the view hierarchy is affected by a change to a different `Style`. ([#2897](https://github.com/mapbox/mapbox-navigation-ios/pull/2897))
+* Added the `NavigationViewController.styleManager`, `StyleManager.currentStyleType`, and `StyleManager.currentStyle` properties and the `StyleManager.applyStyle(type:)` method to manually change the UI style at any time. ([#2888](https://github.com/mapbox/mapbox-navigation-ios/pull/2888))
+* Fixed crash when switching between day / night modes. ([#2896](https://github.com/mapbox/mapbox-navigation-ios/pull/2896))
+* Added support for iOS 13's UIScene based CarPlay API. ([#2832](https://github.com/mapbox/mapbox-navigation-ios/pull/2832))
+* Added an optional `CarPlayManagerDelegate.carPlayManager(_:didPresent:)` method that is called when `CarPlayManager` presents a new navigation session. ([#2832](https://github.com/mapbox/mapbox-navigation-ios/pull/2832))
+
 ## v1.3.0
 
 * MapboxCoreNavigation can now be installed using Swift Package Manager. ([#2771](https://github.com/mapbox/mapbox-navigation-ios/pull/2771))
-* The CarPlay guidance panel now shows lane guidance. ([#2798](https://github.com/mapbox/mapbox-navigation-ios/pull/2798))
+* The CarPlay guidance panel now shows lane guidance. ([#1885](https://github.com/mapbox/mapbox-navigation-ios/pull/1885))
 * Old versions of routing tiles are automatically deleted from the cache to save storage space. ([#2807](https://github.com/mapbox/mapbox-navigation-ios/pull/2807))
 * Fixed an issue where lane guidance icons would indicate the wrong arrow for certain maneuvers. ([#2796](https://github.com/mapbox/mapbox-navigation-ios/pull/2796), [#2809](https://github.com/mapbox/mapbox-navigation-ios/pull/2809))
 * Fixed a crash showing a junction view. ([#2805](https://github.com/mapbox/mapbox-navigation-ios/pull/2805))
 * Fixed an issue with CarPlay visual instructions where U-Turn maneuver icons were not being flipped properly based on regional driving side ([#2803](https://github.com/mapbox/mapbox-navigation-ios/pull/2803)) 
 * Fixed swiping for right-to-left languages for the Guidance Card UI to be more intuitive. ([#2724](https://github.com/mapbox/mapbox-navigation-ios/pull/2724))
+* `NavigationViewController` can now manage multiple status banners one after another. Renamed the `NavigationViewController.showStatus(title:spinner:duration:animated:interactive:)` method to `NavigationViewController.show(_:)` and added a corresponding `NavigationViewController.hide(_:)` method. Renamed the `NavigationStatusPresenter.showStatus(title:spinner:duration:animated:interactive:)` method to `NavigationStatusPresenter.show(_:)` and added a `NavigationStatusPresenter.hide(_:)` method. ([#2747](https://github.com/mapbox/mapbox-navigation-ios/pull/2747))
 
 ## v1.2.1
 

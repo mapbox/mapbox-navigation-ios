@@ -37,7 +37,12 @@ public protocol CarPlayConnectionObserver: class {
  */
 public protocol NavigationStatusPresenter: class {
     /**
-     Shows the status view for a specified amount of time.
+     Shows a Status for a specified amount of time.
      */
-    func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool)
+    func show(_: StatusView.Status)
+    
+    /**
+     Hides a given Status without hiding the status view.
+     */
+    func hide(_: StatusView.Status)
 }
