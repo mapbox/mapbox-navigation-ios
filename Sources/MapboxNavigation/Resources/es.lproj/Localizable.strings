@@ -70,6 +70,9 @@
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Cerrar";
 
+/* Label indicating precise location is off and needs to be turned on to navigate */
+"ENABLE_PRECISE_LOCATION" = "Activar la ubicación precisa para navigar";
+
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Ha llegado";
 
@@ -90,6 +93,9 @@
 
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Ajustar el volumen para escuchar las instrucciones";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"INCORRECT_SPEED_LIMIT" = "Límite de velocidad incorrecto";
 
 /* Specific route feedback that an exit was incorrect. */
 "INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Detalles de la salida incorrectos";
@@ -159,6 +165,12 @@
 
 /* Specific route feedback that a road closure type was encountered but not listed as a choice. */
 "ROAD_CLOSURE_OTHER_FEEDBACK" = "Otro";
+
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "No Tolls";
+
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Tolls";
 
 /* Specific route feedback that user was offered an alternative that was unexpected. */
 "ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Ruta alternativa inesperada";

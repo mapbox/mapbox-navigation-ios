@@ -253,7 +253,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
-    var styleManager: StyleManager!
+    /**
+     Controls the styling of NavigationViewController and its components.
+     
+     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`. 
+     */
+    public private(set) var styleManager: StyleManager!
     
     var currentStatusBarStyle: UIStatusBarStyle = .default
     
@@ -545,7 +550,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         guard AVAudioSession.sharedInstance().outputVolume <= NavigationViewMinimumVolumeForWarning else { return }
         
         let title = NSLocalizedString("INAUDIBLE_INSTRUCTIONS_CTA", bundle: .mapboxNavigation, value: "Adjust Volume to Hear Instructions", comment: "Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased")
-        showStatus(title: title, spinner: false, duration: 3, animated: true, interactive: false)
+        
+        // create low volume notification status and append to array of statuses
+        let lowVolumeStatus = StatusView.Status(identifier: "INAUDIBLE_INSTRUCTIONS_CTA", title: title, duration: 3, animated: true, priority: 3)
+        show(lowVolumeStatus)
     }
     
     // MARK: - Containerization methods
@@ -618,9 +626,21 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         UNUserNotificationCenter.current().add(notificationRequest, withCompletionHandler: nil)
     }
     
-    public func showStatus(title: String, spinner: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
+    /**
+     Shows a Status for a specified amount of time.
+     */
+    public func show(_ status: StatusView.Status) {
         navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.showStatus(title: title, spinner: spinner, duration: duration, animated: animated, interactive: interactive)
+            $0.show(status)
+        }
+    }
+    
+    /**
+     Hides a given Status without hiding the status view.
+     */
+    public func hide(_ status: StatusView.Status) {
+        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
+            $0.hide(status)
         }
     }
 }
@@ -796,7 +816,13 @@ extension NavigationViewController: NavigationServiceDelegate {
     public func navigationServiceDidChangeAuthorization(_ service: NavigationService, didChangeAuthorizationFor locationManager: CLLocationManager) {
         if #available(iOS 14.0, *), locationManager.accuracyAuthorization == .reducedAccuracy {
             let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-            showStatus(title: title, spinner: false, duration: 20, animated: true, interactive: false)
+            show(StatusView.Status(identifier: "ENABLE_PRECISE_LOCATION",
+                                   title: title,
+                                   spinner: false,
+                                   duration: 20,
+                                   animated: true,
+                                   interactive: false,
+                                   priority: 1))
             navigationMapView?.reducedAccuracyActivatedMode = true
         } else {
             // Fallback on earlier versions

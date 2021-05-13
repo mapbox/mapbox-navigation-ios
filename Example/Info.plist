@@ -32,6 +32,38 @@
 	<string>Get user location</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Get user location</string>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>CPSupportsDashboardNavigationScene</key>
+		<false/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>CPTemplateApplicationSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>CPTemplateApplicationScene</string>
+					<key>UISceneConfigurationName</key>
+					<string>ExampleCarPlayApplicationConfiguration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>Example.CarPlaySceneDelegate</string>
+				</dict>
+			</array>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneClassName</key>
+					<string>UIWindowScene</string>
+					<key>UISceneConfigurationName</key>
+					<string>ExampleAppConfiguration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(EXECUTABLE_NAME).AppDelegate</string>
+					<key>UISceneStoryboardFile</key>
+					<string>Main</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>

@@ -386,7 +386,8 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
-        statusView.show(title, showSpinner: true)
+        let reroutingStatus = StatusView.Status(identifier: "REROUTING", title: title, duration: 20, priority: 0)
+        show(reroutingStatus)
     }
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
@@ -401,7 +402,10 @@ extension TopBannerViewController: NavigationComponent {
         
         if (proactive) {
             let title = NSLocalizedString("FASTER_ROUTE_FOUND", bundle: .mapboxNavigation, value: "Faster Route Found", comment: "Indicates a faster route was found")
-            statusView.showStatus(title: title, spinner: true, duration: 3)
+            
+            // create faster route status and append to array of statuses
+            let fasterRouteStatus = StatusView.Status(identifier: "FASTER_ROUTE_FOUND", title: title, duration: 3, priority: 0)
+            statusView.show(fasterRouteStatus)
         }
     }
     
@@ -463,8 +467,12 @@ extension TopBannerViewController: CarPlayConnectionObserver {
 }
 
 extension TopBannerViewController: NavigationStatusPresenter {
-    public func showStatus(title: String, spinner spin: Bool, duration time: TimeInterval, animated: Bool, interactive: Bool) {
-        statusView.showStatus(title: title, spinner: spin, duration: time, animated: animated, interactive: interactive)
+    public func show(_ status: StatusView.Status) {
+        statusView.show(status)
+    }
+    
+    public func hide(_ status: StatusView.Status) {
+        statusView.hide(status)
     }
 }
 

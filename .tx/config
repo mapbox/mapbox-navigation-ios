@@ -5,19 +5,19 @@ minimum_perc = 80
 type = STRINGS
 
 [mapbox-navigation-ios.LocalizableStrings]
-file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
-source_file = MapboxNavigation/Resources/Base.lproj/Localizable.strings
+file_filter = Sources/MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
+source_file = Sources/MapboxNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
 
 [mapbox-navigation-ios.localizablestringsdict]
-file_filter = MapboxNavigation/Resources/<lang>.lproj/Localizable.stringsdict
-source_file = MapboxNavigation/Resources/en.lproj/Localizable.stringsdict
+file_filter = Sources/MapboxNavigation/Resources/<lang>.lproj/Localizable.stringsdict
+source_file = Sources/MapboxNavigation/Resources/en.lproj/Localizable.stringsdict
 source_lang = en
 type = STRINGSDICT
 
 [mapbox-navigation-ios.LocalizableCoreStrings]
-file_filter = MapboxCoreNavigation/Resources/<lang>.lproj/Localizable.strings
-source_file = MapboxCoreNavigation/Resources/Base.lproj/Localizable.strings
+file_filter = Sources/MapboxCoreNavigation/Resources/<lang>.lproj/Localizable.strings
+source_file = Sources/MapboxCoreNavigation/Resources/Base.lproj/Localizable.strings
 source_lang = en
 
 [mapbox-navigation-ios.ExampleMainStrings]
@@ -26,6 +26,6 @@ source_file = Example/en.lproj/Main.strings
 source_lang = en
 
 [mapbox-navigation-ios.navigationstrings]
-file_filter = MapboxNavigation/Resources/<lang>.lproj/Navigation.strings
-source_file = MapboxNavigation/Resources/Base.lproj/Navigation.strings
+file_filter = Sources/MapboxNavigation/Resources/<lang>.lproj/Navigation.strings
+source_file = Sources/MapboxNavigation/Resources/Base.lproj/Navigation.strings
 source_lang = en
