@@ -41,11 +41,13 @@ open class NavigationEventsManager {
     }
     
     /**
-     Metadata that can be used to associate app state, specifically app name and version, with feedback events in the telemetry pipeline.
+     Optional app metadata that can be used to associate app state, specifically app name and version, with feedback events in the telemetry pipeline.
     */
     var appMetadata: [String: String?]? = [
         "name": Bundle.main.bundleIdentifier,
-        "version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+        "version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
+        "userId": UIDevice.current.identifierForVendor?.uuidString,
+        "sessionId": sessionState?.identifier
     ]
     
     /**
@@ -173,8 +175,9 @@ open class NavigationEventsManager {
     
     func navigationFeedbackEvent(type: FeedbackType, description: String?) -> NavigationEventDetails? {
         guard let dataSource = dataSource, var sessionState = sessionState else { return nil }
-        sessionState.name = appMetadata?["name"]
-        sessionState.version = appMetadata?["version"]
+        sessionState.name = appMetadata?["name"] ?? nil
+        sessionState.version = appMetadata?["version"] ?? nil
+        sessionState.userId = appMetadata?["userId"] ?? nil
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: appMetadata? = nil)
         event.event = MMEEventTypeNavigationFeedback
         

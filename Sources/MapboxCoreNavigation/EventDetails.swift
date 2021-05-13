@@ -112,6 +112,7 @@ struct NavigationEventDetails: EventDetails {
     var arrivalTimestamp: Date?
     var rating: Int?
     var comment: String?
+    var appMetadata: AppMetadata?
     var userId: String?
     var name: String?
     var version: String?
