@@ -13,7 +13,7 @@ extension NavigationMapView {
         static let voiceInstructionCircleLayer = "\(identifier)_voiceInstructionCircleLayer"
         static let waypointCircleLayer = "\(identifier)_waypointCircleLayer"
         static let waypointSymbolLayer = "\(identifier)_waypointSymbolLayer"
-        static let buildingExtrusionLayer = "\(identifier)buildingExtrusionLayer"
+        static let buildingExtrusionLayer = "\(identifier)_buildingExtrusionLayer"
         static let routeDurationAnnotationsLayer: String = "\(identifier)_routeDurationAnnotationsLayer"
     }
     

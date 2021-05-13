@@ -171,7 +171,14 @@ extension NavigationMapView {
             if mapView.streetsSources().isEmpty {
                 var streetsSource = VectorSource()
                 streetsSource.url = "mapbox://mapbox.mapbox-streets-v8"
-                try? mapView.style.addSource(streetsSource, id: "com.mapbox.MapboxStreets")
+                
+                let sourceIdentifier = "com.mapbox.MapboxStreets"
+                
+                do {
+                    try mapView.style.addSource(streetsSource, id: sourceIdentifier)
+                } catch {
+                    NSLog("Failed to add \(sourceIdentifier) with error: \(error.localizedDescription).")
+                }
             }
             
             guard let mapboxStreetsSource = mapView.streetsSources().first else { return }
@@ -226,7 +233,12 @@ extension NavigationMapView {
                 }
                 
                 let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id
-                try? mapView.style.addLayer(streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
+                
+                do {
+                    try mapView.style.addLayer(streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
+                } catch {
+                    NSLog("Failed to add \(roadLabelStyleLayerIdentifier) with error: \(error.localizedDescription).")
+                }
             }
             
             let closestCoordinate = location.coordinate

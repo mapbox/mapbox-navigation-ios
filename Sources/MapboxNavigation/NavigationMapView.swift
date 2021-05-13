@@ -247,14 +247,7 @@ open class NavigationMapView: UIView {
         
         let tileStore = tileStoreLocation?.tileStore
         // TODO: allow customising tile store location.
-        let resourceOptions = ResourceOptions(accessToken: accessToken,
-                                              baseUrl: nil,
-                                              cachePath: nil,
-                                              assetPath: nil,
-                                              cacheSize: 10 * 1024 * 1024,
-                                              tileStore: tileStore,
-                                              tileStoreUsageMode: .readAndUpdate)
-        
+        let resourceOptions = ResourceOptions(accessToken: accessToken, tileStore: tileStore)
         mapView = MapView(frame: frame, mapInitOptions: MapInitOptions(resourceOptions: resourceOptions))
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.ornaments.options.scaleBar.visibility = .hidden
