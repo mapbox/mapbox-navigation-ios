@@ -12,18 +12,27 @@ public struct LineDistanceInfo {
      */
     public let distanceToEntry: CLLocationDistance
 
-    /** Distance along the road graph from current position to exit point of object in meters. */
+    /** Distance along the road graph from current position to the most likely exit point in meters. */
     public let distanceToExit: CLLocationDistance
 
-    /** Distance along the road graph from current position to end of road object */
+    /** Distance along the road graph from current position to end of the most distant exit */
     public let distanceToEnd: CLLocationDistance
 
-    /** If we enter road object from it's start, if already "within" object - always false */
+    /** If we enter road object from its start, if already "within" object - always false */
     public let isEntryFromStart: Bool
 
-    /** Length of "long" objects */
+    /** Length of objects, measured in meters. */
     public let length: Double
 
+    /**
+     Initializes a new `LineDistanceInfo` object.
+     
+     - parameter distanceToEntry: Distance from the current position to entry point measured in meters along the road graph. This value is 0 if already "within" the object.
+     - parameter distanceToExit" Distance from the current position to the most likely exit point measured in meters along the road graph.
+     - parameter distanceToEnd: Distance from the current position to the most distance exit point measured in meters along the road graph.
+     - parameter isEntryFromStart: Boolean that indicates whether we enter the road object from its start. This value is `false` if already "within" the object.
+     - parameter length: Length of objects measured in meters.
+     */
     public init(distanceToEntry: CLLocationDistance, distanceToExit: CLLocationDistance, distanceToEnd: CLLocationDistance, isEntryFromStart: Bool, length: Double) {
         self.distanceToEntry = distanceToEntry
         self.distanceToExit = distanceToExit

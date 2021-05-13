@@ -15,6 +15,13 @@ public struct SubgraphDistanceInfo {
     /** `true` if we're currently inside the object */
     public let isInside: Bool
 
+    /**
+     Initializes a new `SubgraphDistanceInfo` object.
+     
+     - parameter distanceToNearestEntry: Distance measured in meters to the nearest entry.
+     - parameter distanceToNearestExit: Distance measured in meters to the nearest exit.
+     - parameter isInside: Boolean that indicates whether we're currently "inside" the object.
+     */
     public init(distanceToNearestEntry: CLLocationDistance, distanceToNearestExit: CLLocationDistance, isInside: Bool) {
         self.distanceToNearestEntry = distanceToNearestEntry
         self.distanceToNearestExit = distanceToNearestExit

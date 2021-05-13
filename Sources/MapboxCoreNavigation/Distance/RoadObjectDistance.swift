@@ -15,6 +15,13 @@ public struct RoadObjectDistance {
     /** Type of distance with its metadata */
     public let distanceInfo: RoadObjectDistanceInfo
 
+    /**
+     Initializes a new `RoadObjectDistance` object.
+     
+     - parameter roadObjectIdentifier: Identifier for the road object.
+     - parameter roadObjectType: The type of the road object such as a bridge or tunnel.
+     - parameter distanceInfo: The type of distance with its metadata.
+     */
     public init(roadObjectIdentifier: RoadObjectIdentifier, roadObjectType: RoadObjectType, distanceInfo:   RoadObjectDistanceInfo) {
         self.roadObjectIdentifier = roadObjectIdentifier
         self.roadObjectType = roadObjectType

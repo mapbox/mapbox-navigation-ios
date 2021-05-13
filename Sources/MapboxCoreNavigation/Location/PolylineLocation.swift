@@ -14,6 +14,9 @@ public struct PolylineLocation {
     /** Shape of a polyline */
     public let shape: Geometry
 
+    /**
+     Initializes a new `PolylineLocation` object with a given path and shape.
+     */
     public init(path: RoadGraph.Path, shape: Geometry) {
         self.path = path
         self.shape = shape

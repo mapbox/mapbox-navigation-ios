@@ -10,6 +10,9 @@ public struct PointLocation {
     /** Position of the object on the road graph */
     public let position: RoadObjectPosition
 
+    /**
+     Initializes a new `PointLocation` object.
+     */
     public init(position: RoadObjectPosition) {
         self.position = position
     }

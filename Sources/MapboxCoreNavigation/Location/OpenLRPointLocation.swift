@@ -20,6 +20,9 @@ public struct OpenLRPointLocation {
     /** Map coordinate of the point */
     public let coordinate: CLLocationCoordinate2D
 
+    /**
+     Initializes a new `OpenLRPointLocation` object with a given position, side of the rode, orientation, and map coordinate.
+     */
     public init(position: RoadGraph.Position, sideOfRoad: OpenLRSideOfRoad, orientation: OpenLROrientation, coordinate: CLLocationCoordinate2D) {
         self.position = position
         self.sideOfRoad = sideOfRoad

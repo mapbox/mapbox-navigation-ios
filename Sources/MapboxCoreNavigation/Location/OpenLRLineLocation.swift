@@ -14,6 +14,9 @@ public struct OpenLRLineLocation {
     /** Shape of a line */
     public let shape: Geometry
 
+    /**
+     Initializes a new `OpenLRLineLocation` object with a given path and shape.
+     */
     public init(path: RoadGraph.Path, shape: Geometry) {
         self.path = path
         self.shape = shape

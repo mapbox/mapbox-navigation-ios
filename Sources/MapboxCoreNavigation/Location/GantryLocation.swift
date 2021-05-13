@@ -13,7 +13,10 @@ public struct GantryLocation {
 
     /** Shape of a gantry */
     public let shape: Geometry
-
+    
+    /**
+     Initializes a new `GantryLocation` object with given positions and shape.
+     */
     public init(positions: [RoadObjectPosition], shape: Geometry) {
         self.positions = positions
         self.shape = shape
