@@ -113,7 +113,7 @@ extension CoordinatePlotter {
         guard let mapView = plotter.navigationMapView?.mapView else { return }
         
         for (i, coordinate) in coordinates.enumerated() {
-            let position = mapView.point(for: coordinate, in: plotter)
+            let position = mapView.mapboxMap.point(for: coordinate)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
             plotter.drawDot(at: centeredPosition, color: color)
@@ -130,7 +130,7 @@ extension LocationPlotter {
         guard let mapView = plotter.navigationMapView?.mapView else { return }
         
         for (i, location) in locations.enumerated() {
-            let position = mapView.point(for: location.coordinate, in: plotter)
+            let position = mapView.mapboxMap.point(for: location.coordinate)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
             plotter.drawDot(at: centeredPosition, color: color)
@@ -219,9 +219,9 @@ public class NavigationPlotter: UIView {
         guard let coordinates = coordinates, let navigationMapView = navigationMapView else { return }
         let path = UIBezierPath()
         for coordinate in coordinates {
-            let position = navigationMapView.mapView.point(for: coordinate)
+            let position = navigationMapView.mapView.mapboxMap.point(for: coordinate)
             if coordinate == coordinates.first {
-                path.move(to: navigationMapView.mapView.point(for: coordinates.first!))
+                path.move(to: navigationMapView.mapView.mapboxMap.point(for: coordinates.first!))
             } else {
                 path.addLine(to: position)
             }
@@ -232,7 +232,7 @@ public class NavigationPlotter: UIView {
         path.stroke()
         
         for (i, coordinate) in coordinates.enumerated() {
-            let position = navigationMapView.mapView.point(for: coordinate)
+            let position = navigationMapView.mapView.mapboxMap.point(for: coordinate)
             let centeredPosition = CGPoint(x: position.x - Constants.dotSize.width / 2,
                                            y: position.y - Constants.dotSize.height / 2)
             if drawDotIndicator {

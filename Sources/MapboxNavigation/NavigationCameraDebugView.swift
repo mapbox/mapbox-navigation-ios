@@ -181,7 +181,7 @@ class NavigationCameraDebugView: UIView {
         }
         
         if let centerCoordinate = camera?.center {
-            centerLayer.position = mapView.point(for: centerCoordinate)
+            centerLayer.position = mapView.mapboxMap.point(for: centerCoordinate)
             centerTextLayer.frame = .init(x: centerLayer.frame.origin.x + 5.0,
                                           y: centerLayer.frame.origin.y + 5.0,
                                           width: 80.0,

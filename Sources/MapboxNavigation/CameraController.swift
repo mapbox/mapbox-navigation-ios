@@ -60,7 +60,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         recenter(sender, completion: nil)
     }
     
-    func recenter(_ sender: AnyObject, completion: ((CameraController, CLLocation)->())?) {
+    func recenter(_ sender: AnyObject, completion: ((CameraController, CLLocation) -> ())?) {
         guard let location = navigationMapView.mostRecentUserCourseViewLocation else { return }
         
         navigationMapView.updateUserCourseView(location)
@@ -72,19 +72,25 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
                                    stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
     }
     
-    func center(on step: RouteStep, route: Route, legIndex: Int, stepIndex: Int, animated: Bool = true, completion: CompletionHandler? = nil) {
+    func center(on step: RouteStep,
+                route: Route,
+                legIndex: Int,
+                stepIndex: Int,
+                animated: Bool = true,
+                completion: CompletionHandler? = nil) {
         navigationMapView.navigationCamera.stop()
-
+        
         let edgeInsets = navigationMapView.safeArea + UIEdgeInsets.centerEdgeInsets
         let cameraOptions = CameraOptions(center: step.maneuverLocation,
                                           padding: edgeInsets,
-                                          zoom: navigationMapView.mapView.zoom,
-                                          bearing: step.initialHeading ?? CLLocationDirection(navigationMapView.mapView.bearing))
+                                          zoom: navigationMapView.mapView.cameraState.zoom,
+                                          bearing: step.initialHeading ?? navigationMapView.mapView.cameraState.bearing)
         
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions,
-                                                   animated: animated,
-                                                   duration: animated ? 1 : 0) { _ in
-            completion?()
+        navigationMapView.mapView.camera.ease(to: cameraOptions,
+                                              duration: animated ? 1.0 : 0.0) { (animatingPosition) in
+            if animatingPosition == .end {
+                completion?()
+            }
         }
         
         navigationMapView.addArrow(route: router.routeProgress.route, legIndex: legIndex, stepIndex: stepIndex)
@@ -150,10 +156,8 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     func navigationViewWillAppear(_: Bool) {
         resumeNotifications()
         
-        navigationMapView.mapView.update {
-            $0.ornaments.compassVisibility = .hidden
-        }
-
+        navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
+        
         navigationMapView.navigationCamera.follow()
     }
     

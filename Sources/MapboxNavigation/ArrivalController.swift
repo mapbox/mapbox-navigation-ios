@@ -1,13 +1,13 @@
-
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
 import MapboxMobileEvents
+import MapboxMaps
 
 /// A component to encapsulate `EndOfRouteViewController` presenting logic such as enabling/disabling, handling autolayout, keyboard, positioning camera, etc.
 class ArrivalController: NavigationComponentDelegate {
     
-    typealias EndOfRouteDismissalHandler = (EndOfRouteFeedback?)->()
+    typealias EndOfRouteDismissalHandler = (EndOfRouteFeedback?) -> ()
     
     // MARK: - Properties
     
@@ -39,13 +39,17 @@ class ArrivalController: NavigationComponentDelegate {
         self.navigationViewData = navigationViewData
     }
     
-    func showEndOfRouteIfNeeded(_ viewController: UIViewController, advancesToNextLeg: Bool, duration: TimeInterval = 1.0, completion: ((Bool) -> Void)? = nil, onDismiss: EndOfRouteDismissalHandler? = nil) {
-        
+    func showEndOfRouteIfNeeded(_ viewController: UIViewController,
+                                advancesToNextLeg: Bool,
+                                duration: TimeInterval = 1.0,
+                                completion: ((Bool) -> Void)? = nil,
+                                onDismiss: EndOfRouteDismissalHandler? = nil) {
         guard navigationViewData.router.routeProgress.isFinalLeg &&
                 advancesToNextLeg &&
                 showsEndOfRoute else {
             return
         }
+        
         embedEndOfRoute(into: viewController, onDismiss: onDismiss)
         endOfRouteViewController.destination = destination
         navigationViewData.navigationView.endOfRouteView?.isHidden = false
@@ -57,7 +61,7 @@ class ArrivalController: NavigationComponentDelegate {
         
         if let height = navigationViewData.navigationView.endOfRouteHeightConstraint?.constant {
             self.navigationViewData.navigationView.floatingStackView.alpha = 0.0
-            var cameraOptions = navigationMapView.mapView.cameraOptions
+            var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
             // Since `padding` is not an animatable property `zoom` is increased to cover up abrupt camera change.
             if let zoom = cameraOptions.zoom {
                 cameraOptions.zoom = zoom + 1.0
@@ -68,9 +72,7 @@ class ArrivalController: NavigationComponentDelegate {
                                                  right: 20)
             cameraOptions.center = destination?.coordinate
             cameraOptions.pitch = 0
-            navigationMapView.mapView.camera.setCamera(to: cameraOptions,
-                                                       animated: duration > 0.0 ? true : false,
-                                                       duration: duration) { (animatingPosition) in
+            navigationMapView.mapView.camera.ease(to: cameraOptions, duration: duration) { (animatingPosition) in
                 if animatingPosition == .end {
                     completion?(true)
                 }

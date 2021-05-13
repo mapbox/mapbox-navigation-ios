@@ -61,8 +61,8 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.stop()
             
-            var cameraOptions = mapView.cameraOptions
-            cameraOptions.zoom = mapView.zoom + 1.0
+            var cameraOptions = CameraOptions(cameraState: mapView.cameraState)
+            cameraOptions.zoom = mapView.cameraState.zoom + 1.0
             mapView.camera.setCamera(to: cameraOptions)
         }
         
@@ -81,8 +81,8 @@ public class CarPlayMapViewController: UIViewController {
             
             self.navigationMapView.navigationCamera.stop()
             
-            var cameraOptions = mapView.cameraOptions
-            cameraOptions.zoom = mapView.zoom - 1.0
+            var cameraOptions = CameraOptions(cameraState: mapView.cameraState)
+            cameraOptions.zoom = mapView.cameraState.zoom - 1.0
             mapView.camera.setCamera(to: cameraOptions)
         }
         
@@ -129,24 +129,31 @@ public class CarPlayMapViewController: UIViewController {
     }
     
     override public func loadView() {
-        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
-        navigationMapView.mapView.on(.styleLoaded) { _ in
-            navigationMapView.localizeLabels()
-        }
-        
-        self.view = navigationMapView
-        
+        setupNavigationMapView()
         setupPassiveLocationManager()
     }
-
+    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
         setupStyleManager()
         navigationMapView.navigationCamera.follow()
+    }
+    
+    func setupNavigationMapView() {
+        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
+        navigationMapView.mapView.on(.styleLoaded) { _ in
+            navigationMapView.localizeLabels()
+        }
+        
         navigationMapView.mapView.update {
             $0.location.puckType = .puck2D()
         }
+        
+        navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
+        navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
+        
+        self.view = navigationMapView
     }
     
     func setupStyleManager() {
@@ -207,7 +214,7 @@ public class CarPlayMapViewController: UIViewController {
         }
         
         if navigationMapView.navigationCamera.state == .idle {
-            var cameraOptions = navigationMapView.mapView.cameraOptions
+            var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
             cameraOptions.pitch = 0
             navigationMapView.mapView.camera.setCamera(to: cameraOptions)
             

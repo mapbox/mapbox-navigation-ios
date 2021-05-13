@@ -73,7 +73,11 @@ extension MapboxMaps.Style {
      */
     func removeLayers(_ identifiers: Set<String>) {
         identifiers.forEach {
-            let _ = removeStyleLayer(forLayerId: $0)
+            do {
+                try removeLayer(withId: $0)
+            } catch {
+                NSLog("Failed to remove layer \($0) with error: \(error.localizedDescription).")
+            }
         }
     }
     
@@ -84,7 +88,11 @@ extension MapboxMaps.Style {
      */
     func removeSources(_ identifiers: Set<String>) {
         identifiers.forEach {
-            let _ = removeSource(for: $0)
+            do {
+                try removeSource(withId: $0)
+            } catch {
+                NSLog("Failed to remove source \($0) with error: \(error.localizedDescription).")
+            }
         }
     }
 }

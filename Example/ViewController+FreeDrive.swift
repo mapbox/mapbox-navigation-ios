@@ -76,24 +76,37 @@ extension ViewController {
     }
     
     func updateFreeDriveStyledFeatures() {
-        _ = navigationMapView.mapView.style.updateGeoJSON(for: trackStyledFeature.sourceIdentifier,
-                                                          with: Feature(geometry: .lineString(trackStyledFeature.lineString)))
-        
-        _ = navigationMapView.mapView.style.updateGeoJSON(for: rawTrackStyledFeature.sourceIdentifier,
-                                                          with: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
+        do {
+            let style = navigationMapView.mapView.style
+            if let _ = try style?.source(withId: trackStyledFeature.sourceIdentifier, type: GeoJSONSource.self) {
+                try style?.updateGeoJSONSource(withId: trackStyledFeature.sourceIdentifier,
+                                               geoJSON: Feature(geometry: .lineString(trackStyledFeature.lineString)))
+            }
+            
+            if let _ = try style?.source(withId: rawTrackStyledFeature.sourceIdentifier, type: GeoJSONSource.self) {
+                try style?.updateGeoJSONSource(withId: rawTrackStyledFeature.sourceIdentifier,
+                                               geoJSON: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
+            }
+        } catch {
+            NSLog("Error occured while performing operation with source: \(error.localizedDescription).")
+        }
     }
     
     func addStyledFeature(_ styledFeature: StyledFeature) {
-        var source = GeoJSONSource()
-        source.data = .geometry(.lineString(styledFeature.lineString))
-        _ = navigationMapView.mapView.style.addSource(source: source,
-                                                      identifier: styledFeature.sourceIdentifier)
-        
-        var layer = LineLayer(id: styledFeature.layerIdentifier)
-        layer.source = styledFeature.sourceIdentifier
-        layer.paint?.lineWidth = .constant(styledFeature.lineWidth)
-        layer.paint?.lineColor = .constant(.init(color: styledFeature.color))
-        _ = navigationMapView.mapView.style.addLayer(layer: layer)
+        do {
+            var source = GeoJSONSource()
+            source.data = .geometry(.lineString(styledFeature.lineString))
+            try navigationMapView.mapView.style.addSource(source,
+                                                          id: styledFeature.sourceIdentifier)
+            
+            var layer = LineLayer(id: styledFeature.layerIdentifier)
+            layer.source = styledFeature.sourceIdentifier
+            layer.paint?.lineWidth = .constant(styledFeature.lineWidth)
+            layer.paint?.lineColor = .constant(.init(color: styledFeature.color))
+            try navigationMapView.mapView.style.addLayer(layer)
+        } catch {
+            NSLog("Failed to perform operation with error: \(error.localizedDescription).")
+        }
     }
     
     @objc func didUpdateElectronicHorizonPosition(_ notification: Notification) {
