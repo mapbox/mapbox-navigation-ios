@@ -10,7 +10,7 @@ public struct GantryDistanceInfo {
     public let distance: CLLocationDistance
 
     /**
-     Initializes a new `GantryDistanceInfo` object with a given distance to the object.
+     Initializes a new `GantryDistanceInfo` object with a given distance to the gantry object.
      */
     public init(distance: CLLocationDistance) {
         self.distance = distance
