@@ -10,6 +10,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     
     var event: String?
     var userIdentifier: String?
+    var appMetadata: AppMetadata?
     var name: String?
     var version: String?
     var feedbackType: FeedbackType?

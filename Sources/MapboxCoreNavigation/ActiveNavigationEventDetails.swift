@@ -42,6 +42,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var rating: Int?
     var comment: String?
     var userIdentifier: String?
+    var appMetadata: AppMetadata?
     var name: String?
     var version: String?
     var feedbackType: FeedbackType?

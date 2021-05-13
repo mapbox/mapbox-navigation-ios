@@ -10,6 +10,7 @@ struct SessionState {
     let identifier = UUID()
     var name: String?
     var version: String?
+    var userId: String?
     var departureTimestamp: Date?
     var arrivalTimestamp: Date?
     
