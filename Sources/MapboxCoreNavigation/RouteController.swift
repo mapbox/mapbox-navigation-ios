@@ -96,11 +96,9 @@ open class RouteController: NSObject {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        guard let locationUpdateDate = lastLocationUpdateDate else {
+        guard lastLocationUpdateDate != nil, let status = navigator.getStatus() else {
             return nil
         }
-
-        let status = navigator.status(at: locationUpdateDate)
         
         guard status.routeState == .tracking || status.routeState == .complete else {
             return nil
@@ -168,6 +166,7 @@ open class RouteController: NSObject {
         
         super.init()
         
+        navigator.addObserver(for: self)
         updateNavigator(with: _routeProgress)
         updateObservation(for: _routeProgress)
     }
@@ -239,8 +238,8 @@ open class RouteController: NSObject {
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
-            updateIndexes(status: navigator.status(at: timestamp), progress: routeProgress)
+        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let status = navigator.getStatus() {
+            updateIndexes(status: status, progress: routeProgress)
         }
     }
     
@@ -254,9 +253,10 @@ open class RouteController: NSObject {
         rawLocation = location
         
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
+    }
 
-        let status = navigator.status(at: location.timestamp)
-        
+    func handleNavigationStatusUpdate(_ status: NavigationStatus) {
+        guard let location = rawLocation else { return }
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
         
@@ -448,6 +448,14 @@ open class RouteController: NSObject {
     }
 }
 
+extension RouteController: NavigatorObserver {
+    public func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
+        DispatchQueue.main.async { [weak self] in
+            self?.handleNavigationStatusUpdate(status)
+        }
+    }
+}
+
 extension RouteController: Router {
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
         return userIsOnRoute(location, status: nil)
@@ -466,7 +474,7 @@ extension RouteController: Router {
             return true
         }
         
-        let status = status ?? navigator.status(at: location.timestamp)
+        guard let status = status ?? navigator.getStatus() else { return false }
         let offRoute = status.routeState == .offRoute || status.routeState == .invalid
         return !offRoute
     }
