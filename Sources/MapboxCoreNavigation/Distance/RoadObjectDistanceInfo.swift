@@ -20,7 +20,7 @@ public enum RoadObjectDistanceInfo {
     /**
      The information about distance to the road object represented as a polygon.
      */
-    case polygone(PolygonDistanceInfo)
+    case polygon(PolygonDistanceInfo)
     
     /**
      The information about distance to the road object represented as a subgraph.
@@ -38,7 +38,7 @@ public enum RoadObjectDistanceInfo {
         } else if native.isMBNNGantryDistanceInfo() {
             self = .gantry(GantryDistanceInfo(native.getMBNNGantryDistanceInfo()))
         } else if native.isMBNNPolygonDistanceInfo() {
-            self = .polygone(PolygonDistanceInfo(native.getMBNNPolygonDistanceInfo()))
+            self = .polygon(PolygonDistanceInfo(native.getMBNNPolygonDistanceInfo()))
         } else if native.isMBNNSubGraphDistanceInfo() {
             self = .subgraph(SubgraphDistanceInfo(native.getMBNNSubGraphDistanceInfo()))
         } else if native.isMBNNLineDistanceInfo() {
