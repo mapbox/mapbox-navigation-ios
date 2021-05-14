@@ -83,6 +83,9 @@
 * Added `RoadObjectLocation` enum that represents the location of a road object in the road graph of a concrete type/shape. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `OpenLROrientation` struct which describes the relationship between the road object and the referenced line. Used for `OpenLRLineLocation` struct. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `OpenLRSideOfRoad` struct which describes the relationship between the road object and the road. Used for `OpenLRPointLocation` struct. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added `RoadObjectMatcher` class that creates custom road objects by matching location primitives to the road graph. Accessible through `RouteController.roadObjectMatcher` and `PassiveLocationDataSource.roadObjectMatcher`. Matched road object or matching error `RoadObjectMatcherError` is delivered via `RoadObjectMatcherDelegate`. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
+* Added `OpenLRStandard` enum which specifies OpenLR standard of encoded OpenLR location. Used for road object matching via `RoadObjectMatcher`. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
+* Added `RoadObjectsStore.addCustomRoadObject(_:)`, `RoadObjectsStore.removeCustomRoadObject(identifier:)`, and `RoadObjectsStore.removeAllCustomRoadObjects()` for adding/removing custom road objects to the electronic horizon. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
 * Fixed an issue where `MultiplexedSpeechSynthesizer` could cause circular reference([#3005](https://github.com/mapbox/mapbox-navigation-ios/pull/3005))
 * Fixed the color mismatches of attributed strings in banner instructions when switching between light and dark mode. ([#2977](https://github.com/mapbox/mapbox-navigation-ios/pull/2977))
 
