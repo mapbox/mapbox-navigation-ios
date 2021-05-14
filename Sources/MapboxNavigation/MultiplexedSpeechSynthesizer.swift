@@ -9,7 +9,7 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
     
     // MARK: - Properties
     
-    public var delegate: SpeechSynthesizingDelegate?
+    public weak var delegate: SpeechSynthesizingDelegate?
     
     public var muted: Bool = false {
         didSet {
