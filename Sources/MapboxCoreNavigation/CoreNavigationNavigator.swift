@@ -82,7 +82,7 @@ class Navigator {
         let tileStorePath = Self.tilesURL?.path ?? ""
         tileStore = TileStore.getInstanceForPath(tileStorePath)
         let tilesConfig = TilesConfig(tilesPath: tileStorePath,
-                                      tileStore: nil,
+                                      tileStore: tileStore,
                                       inMemoryTileCache: nil,
                                       onDiskTileCache: nil,
                                       mapMatchingSpatialCache: nil,
