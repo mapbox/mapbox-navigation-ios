@@ -90,6 +90,11 @@ open class PassiveLocationDataSource: NSObject {
     public var roadObjectsStore: RoadObjectsStore {
         return Navigator.shared.roadObjectsStore
     }
+
+    /// The road object matcher that allows to match custom road objects.
+    public var roadObjectMatcher: RoadObjectMatcher {
+        return Navigator.shared.roadObjectMathcher
+    }
     
     /**
      Manually sets the current location.
