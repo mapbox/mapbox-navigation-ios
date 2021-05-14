@@ -80,23 +80,11 @@
 * Added public initializers for `RoadGraphEdge`, `RoadGraphEdgeMetadata`, `RoadGraphPath`, `RoadGraphPosition`, and `RouteObjectEdgeLocation`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Removed `Alert` enum, and `alert`, `distance`, `length`, `beginCoordinate`, `endCoordinate`, `beginSegmentIndex`, and `endSegmentIndex` properties from `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `RoadObject` a property to `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `RouteAlertLocation` struct which contains information about the location of the route alert and is produced only for objects that are on the current route that the user is actively navigating on. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `RoadObject` struct which describes the object on the road. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `RoadObjectDistance` struct which contains information about distances related to the road object. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * `RoadObjectDistanceInfo` is now an enum which contains information about distance to the road object of a concrete type/shape (gantry, polygon, line, point, subgraph). ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `RoadObjectPosition` struct which contains information about the position of the object on the graph and its geo-position. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `GantryDistanceInfo` struct for information about distance to the road object presented as a gantry with a given `distance` to the gantry object. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `LineDistanceInfo` struct for information about distance to the road object presented as a line. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `PointDistanceInfo` struct for information about distance to the road object presented as a point with a given `distance` to the point object. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `PolygonDistanceInfo` struct information about distance to the road object presented as a polygon. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `SubgraphDistanceInfo` struct for information about distance to the road object presented as a subgraph. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * `RoadObjectLocation` is now an enum that represents the location of a road object in the road graph of a concrete type/shape. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `GantryLocation` struct which contains information about the location of the road object represented as a gantry on the road graph. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `PolylineLocation` struct which contains information about the location of the road object represented as a polyline on the road graph. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `PointLocation` struct which contains information about the location of the road object represented as a point on the road graph. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `PolygonLocation` struct which contains information about the location of the road object represented as a polygon on the road graph. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `OpenLRLineLocation` struct which contains information about the location of the road object represented as an OpenLR line on the road graph. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `OpenLRPointLocation` struct which contains information about the location of the road object represented as an OpenLR point on the road graph. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `OpenLROrientation` struct which describes the relationship between the road object and the referenced line. Used for `OpenLRLineLocation` struct. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `OpenLRSideOfRoad` struct which describes the relationship between the road object and the road. Used for `OpenLRPointLocation` struct. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Removed `RoadObjectsStore.roadObjectLocation(identifier:)` and `RoadObjectsStore.roadObjectLocation(identifier:)`.  ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
@@ -105,9 +93,6 @@
 * Replaced `RoadObjectType.restrictedAreaEntrance` and `RoadObjectType.restrictedAreaExit` in favor of `RoadObjectType.restrictedArea`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Replaced `RoadObjectType.bridgeEntrance` and `RoadObjectType.bridgeExit` in favor of `RoadObjectType.bridge`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Removed `RoadObjectMetadata`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-
-
-
 
 ## v1.4.0
 
