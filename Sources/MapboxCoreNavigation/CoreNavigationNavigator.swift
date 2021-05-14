@@ -145,7 +145,7 @@ extension Navigator: ElectronicHorizonObserver {
             .positionKey: RoadGraph.Position(position.position()),
             .treeKey: RoadGraph.Edge(position.tree().start),
             .updatesMostProbablePathKey: position.type() == .UPDATE,
-            .distancesByRoadObjectKey: distances.map(RoadObjectDistance.init),
+            .distancesByRoadObjectKey: distances.map(RoadObjectDistanceInfo.init),
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
     }

@@ -52,13 +52,7 @@
 		2BE7016925371E3400F46E4E /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7016825371E3400F46E4E /* Incident.swift */; };
 		2BE70189253734A000F46E4E /* TollCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7012C2535946300F46E4E /* TollCollection.swift */; };
 		2EBF20AE25D6F89000DB7BF2 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBF20AD25D6F89000DB7BF2 /* Utils.swift */; };
-		2EFADFF6264C1F9200B618C4 /* GantryDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE3264C1F9200B618C4 /* GantryDistanceInfo.swift */; };
-		2EFADFF7264C1F9200B618C4 /* PointDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE4264C1F9200B618C4 /* PointDistanceInfo.swift */; };
-		2EFADFF8264C1F9200B618C4 /* PolygonDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE5264C1F9200B618C4 /* PolygonDistanceInfo.swift */; };
-		2EFADFF9264C1F9200B618C4 /* SubgraphDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE6264C1F9200B618C4 /* SubgraphDistanceInfo.swift */; };
-		2EFADFFA264C1F9200B618C4 /* RoadObjectDistance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE7264C1F9200B618C4 /* RoadObjectDistance.swift */; };
 		2EFADFFB264C1F9200B618C4 /* RoadObjectDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE8264C1F9200B618C4 /* RoadObjectDistanceInfo.swift */; };
-		2EFADFFC264C1F9200B618C4 /* LineDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE9264C1F9200B618C4 /* LineDistanceInfo.swift */; };
 		2EFADFFD264C1F9200B618C4 /* OpenLROrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */; };
 		2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */; };
 		2EFAE000264C1F9200B618C4 /* RoadObjectPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */; };
@@ -571,13 +565,7 @@
 		2BE7013C25359C7B00F46E4E /* RouteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAlert.swift; sourceTree = "<group>"; };
 		2BE7016825371E3400F46E4E /* Incident.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Incident.swift; sourceTree = "<group>"; };
 		2EBF20AD25D6F89000DB7BF2 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		2EFADFE3264C1F9200B618C4 /* GantryDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GantryDistanceInfo.swift; sourceTree = "<group>"; };
-		2EFADFE4264C1F9200B618C4 /* PointDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointDistanceInfo.swift; sourceTree = "<group>"; };
-		2EFADFE5264C1F9200B618C4 /* PolygonDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolygonDistanceInfo.swift; sourceTree = "<group>"; };
-		2EFADFE6264C1F9200B618C4 /* SubgraphDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubgraphDistanceInfo.swift; sourceTree = "<group>"; };
-		2EFADFE7264C1F9200B618C4 /* RoadObjectDistance.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectDistance.swift; sourceTree = "<group>"; };
 		2EFADFE8264C1F9200B618C4 /* RoadObjectDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectDistanceInfo.swift; sourceTree = "<group>"; };
-		2EFADFE9264C1F9200B618C4 /* LineDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineDistanceInfo.swift; sourceTree = "<group>"; };
 		2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLROrientation.swift; sourceTree = "<group>"; };
 		2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLRSideOfRoad.swift; sourceTree = "<group>"; };
 		2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectPosition.swift; sourceTree = "<group>"; };
@@ -1201,20 +1189,6 @@
 			name = RouteAlerts;
 			sourceTree = "<group>";
 		};
-		2EFADFE2264C1F9200B618C4 /* Distance */ = {
-			isa = PBXGroup;
-			children = (
-				2EFADFE3264C1F9200B618C4 /* GantryDistanceInfo.swift */,
-				2EFADFE9264C1F9200B618C4 /* LineDistanceInfo.swift */,
-				2EFADFE4264C1F9200B618C4 /* PointDistanceInfo.swift */,
-				2EFADFE5264C1F9200B618C4 /* PolygonDistanceInfo.swift */,
-				2EFADFE7264C1F9200B618C4 /* RoadObjectDistance.swift */,
-				2EFADFE8264C1F9200B618C4 /* RoadObjectDistanceInfo.swift */,
-				2EFADFE6264C1F9200B618C4 /* SubgraphDistanceInfo.swift */,
-			);
-			path = Distance;
-			sourceTree = "<group>";
-		};
 		35002D721E5F6C830090E733 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1829,7 +1803,6 @@
 			isa = PBXGroup;
 			children = (
 				2BE701A4253760B300F46E4E /* RouteAlerts */,
-				2EFADFE2264C1F9200B618C4 /* Distance */,
 				DA5F446325F0744C00F573EC /* EHorizon */,
 				354A9BC920EA9BC100F03325 /* Events */,
 				C56173591F182103005954F6 /* Extensions */,
@@ -1919,6 +1892,7 @@
 				DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */,
 				DA5F44C425F07AB500F573EC /* RoadName.swift */,
 				DAF27251264E02D800C0AC37 /* RoadObject.swift */,
+				2EFADFE8264C1F9200B618C4 /* RoadObjectDistanceInfo.swift */,
 				DA5F44DB25F07D1400F573EC /* RoadObjectEdgeLocation.swift */,
 				2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */,
 				2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */,
@@ -2807,7 +2781,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2EFADFF9264C1F9200B618C4 /* SubgraphDistanceInfo.swift in Sources */,
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
 				DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */,
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
@@ -2820,16 +2793,13 @@
 				DA5F44DC25F07D1500F573EC /* RoadObjectEdgeLocation.swift in Sources */,
 				3582A25220EFA9680029C5DE /* RouterDelegate.swift in Sources */,
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
-				2EFADFFA264C1F9200B618C4 /* RoadObjectDistance.swift in Sources */,
 				2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
 				2EFAE005264C1F9200B618C4 /* RoadObjectLocation.swift in Sources */,
 				2BE70189253734A000F46E4E /* TollCollection.swift in Sources */,
 				DA754E1923AC56E5007E16B5 /* MBXAccountsLoader.m in Sources */,
-				2EFADFF8264C1F9200B618C4 /* PolygonDistanceInfo.swift in Sources */,
 				2BE701252535943900F46E4E /* BorderCrossing.swift in Sources */,
-				2EFADFFC264C1F9200B618C4 /* LineDistanceInfo.swift in Sources */,
 				3582A25020EEC46B0029C5DE /* Router.swift in Sources */,
 				8D75F991212B5C7F00F99CF3 /* TunnelAuthority.swift in Sources */,
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
@@ -2853,7 +2823,6 @@
 				2BBEEDA72508E1E300C8DA4A /* RouteStepProgress.swift in Sources */,
 				35F3387C2232AEBF0071DB5C /* MinimumEditDistance.swift in Sources */,
 				2EFAE000264C1F9200B618C4 /* RoadObjectPosition.swift in Sources */,
-				2EFADFF7264C1F9200B618C4 /* PointDistanceInfo.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
 				2BBEEDA52508DB1700C8DA4A /* RouteLegProgress.swift in Sources */,
 				35A43F77223BD632000CB367 /* RouteLeg.swift in Sources */,
@@ -2861,7 +2830,6 @@
 				3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */,
 				DA5F44AA25F07A6800F573EC /* RoadObjectType.swift in Sources */,
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,
-				2EFADFF6264C1F9200B618C4 /* GantryDistanceInfo.swift in Sources */,
 				2B7ACA9C25E3F84700B0ACFD /* PredictiveCacheOptions.swift in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
 				DA5F44F525F07D3B00F573EC /* RoadObjectsStoreDelegate.swift in Sources */,
