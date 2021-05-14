@@ -10,9 +10,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     
     var event: String?
     var userIdentifier: String?
-    var appMetadata: AppMetadata?
-    var name: String?
-    var version: String?
+    var appMetadata: [String: String?]? = nil
     var feedbackType: FeedbackType?
     var description: String?
     var screenshot: String?
@@ -22,17 +20,26 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     var totalTimeInForeground: TimeInterval = 0
     var totalTimeInBackground: TimeInterval = 0
     
-    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState) {
+    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, withAppMetadata: Bool = false) {
         coordinate = dataSource.rawLocation?.coordinate
         sessionIdentifier = sessionState.identifier.uuidString
         startTimestamp = sessionState.departureTimestamp
         updateTimeState(session: sessionState)
+        
+        if withAppMetadata {
+            appMetadata = [String: String?]()
+            appMetadata?["name"] = Bundle.main.bundleIdentifier
+            appMetadata?["version"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+            appMetadata?["userId"] = UIDevice.current.identifierForVendor?.uuidString
+            appMetadata?["sessionId"] = session.identifier.uuidString
+        }
     }
     
     private enum CodingKeys: String, CodingKey {
         case latitude = "lat"
         case longitude = "lng"
         case userIdentifier = "userId"
+        case appMetadata
         case feedbackType
         case description
         case screenshot
@@ -56,6 +63,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(coordinate?.latitude, forKey: .latitude)
         try container.encodeIfPresent(coordinate?.longitude, forKey: .longitude)
         try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
+        try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)

@@ -42,7 +42,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var rating: Int?
     var comment: String?
     var userIdentifier: String?
-    var appMetadata: AppMetadata?
+    var appMetadata: [String: String?]? = nil
     var name: String?
     var version: String?
     var feedbackType: FeedbackType?
@@ -68,6 +68,14 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         originalRequestIdentifier = session.originalRoute?.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
+        if withAppMetadata {
+            appMetadata = [String: String?]()
+            appMetadata?["name"] = Bundle.main.bundleIdentifier
+            appMetadata?["version"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+            appMetadata?["userId"] = UIDevice.current.identifierForVendor?.uuidString
+            appMetadata?["sessionId"] = session.identifier.uuidString
+        }
+        
         if let location = dataSource.router.rawLocation,
             let coordinates = dataSource.routeProgress.route.shape?.coordinates,
             let lastCoord = coordinates.last {
@@ -161,6 +169,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         case rating
         case comment
         case userIdentifier = "userId"
+        case appMetadata
         case feedbackType
         case description
         case screenshot
@@ -220,6 +229,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(arrivalTimestamp?.ISO8601, forKey: .arrivalTimestamp)
         try container.encodeIfPresent(comment, forKey: .comment)
         try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
+        try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
