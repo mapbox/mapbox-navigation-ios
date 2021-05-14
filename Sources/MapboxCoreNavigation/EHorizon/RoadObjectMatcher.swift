@@ -99,18 +99,15 @@ final public class RoadObjectMatcher {
 
 extension RoadObjectMatcher: RoadObjectMatcherListener {
     public func onRoadObjectMatched(forRoadObject roadObject: MBXExpected<AnyObject, AnyObject>) {
-        if roadObject.isValue(), let value = roadObject.value {
-            guard let roadObject = value as? MapboxNavigationNative.RoadObject else {
-                preconditionFailure("Road object value can't be constructed. Unknown value type.")
-            }
+        let result = Result<MapboxNavigationNative.RoadObject,
+                            MapboxNavigationNative.RoadObjectMatcherError>(expected: roadObject)
+        switch result {
+        case .success(let roadObject):
             delegate?.didMatchRoadObject(result: .success(RoadObject(roadObject)))
-        } else if roadObject.isError(), let error = roadObject.error {
-            guard let error = error as? MapboxNavigationNative.RoadObjectMatcherError else {
-                preconditionFailure("Road object matcher error can't be constructed. Unknown error type.")
-            }
+        case .failure(let error):
             delegate?.didMatchRoadObject(result: .failure(RoadObjectMatcherError(error)))
-        } else {
-            preconditionFailure("Expected type is neither a value nor an error.")
         }
     }
 }
+
+extension MapboxNavigationNative.RoadObjectMatcherError: Error {}
