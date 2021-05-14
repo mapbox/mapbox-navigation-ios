@@ -43,12 +43,7 @@ open class NavigationEventsManager {
     /**
      Optional app metadata that can be used to associate app state, specifically app name and version, with feedback events in the telemetry pipeline.
     */
-    var appMetadata: [String: String?]? = [
-        "name": Bundle.main.bundleIdentifier,
-        "version": Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
-        "userId": UIDevice.current.identifierForVendor?.uuidString,
-        "sessionId": sessionState?.identifier
-    ]
+    var appMetadata: [String: String?]? = nil
     
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
@@ -173,15 +168,20 @@ open class NavigationEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> NavigationEventDetails? {
-        guard let dataSource = dataSource, var sessionState = sessionState else { return nil }
-        sessionState.name = appMetadata?["name"] ?? nil
-        sessionState.version = appMetadata?["version"] ?? nil
-        sessionState.userId = appMetadata?["userId"] ?? nil
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: appMetadata? = nil)
+    func navigationFeedbackEvent(type: FeedbackType, description: String?, withAppMetadata: Bool = false) -> NavigationEventDetails? {
+        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        if withAppMetadata {
+            appMetadata?["name"] = sessionState.name
+            appMetadata?["version"] = sessionState.version
+            appMetadata?["userId"] = sessionState.userId
+            appMetadata?["sessionId"] = sessionState.identifier.uuidString
+        }
+        
+        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, withAppMetadata: withAppMetadata)
         event.event = MMEEventTypeNavigationFeedback
         
         event.userId = UIDevice.current.identifierForVendor?.uuidString
+        event.appMetadata = appMetadata
         event.feedbackType = type.description
         event.description = description
         
@@ -265,8 +265,8 @@ open class NavigationEventsManager {
         mobileEventsManager.flush()
     }
     
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID? {
-        guard let eventDictionary = (try? navigationFeedbackEvent(type: type, description: description)?.asDictionary()) as [String: Any]?? else { return nil }
+    func enqueueFeedbackEvent(type: FeedbackType, description: String?, withAppMetadata: Bool = false) -> UUID? {
+        guard let eventDictionary = (try? navigationFeedbackEvent(type: type, description: description, withAppMetadata: withAppMetadata)?.asDictionary()) as [String: Any]?? else { return nil }
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
         outstandingFeedbackEvents.append(event)
         return event.id
@@ -334,8 +334,8 @@ open class NavigationEventsManager {
      
      You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
      */
-    public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID? {
-        return enqueueFeedbackEvent(type: type, description: description)
+    public func recordFeedback(type: FeedbackType = .general, description: String? = nil, withAppMetadata: Bool = false) -> UUID? {
+        return enqueueFeedbackEvent(type: type, description: description, withAppMetadata: withAppMetadata)
     }
     
     /**

@@ -8,9 +8,9 @@ import UIKit.UIDevice
  */
 struct SessionState {
     let identifier = UUID()
-    var name: String?
-    var version: String?
-    var userId: String?
+    var name: String? = Bundle.main.bundleIdentifier
+    var version: String? = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+    var userId: String? = UIDevice.current.identifierForVendor?.uuidString
     var departureTimestamp: Date?
     var arrivalTimestamp: Date?
     
