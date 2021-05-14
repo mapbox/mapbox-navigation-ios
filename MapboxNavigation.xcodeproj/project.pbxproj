@@ -61,15 +61,8 @@
 		2EFADFFC264C1F9200B618C4 /* LineDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE9264C1F9200B618C4 /* LineDistanceInfo.swift */; };
 		2EFADFFD264C1F9200B618C4 /* OpenLROrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */; };
 		2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */; };
-		2EFADFFF264C1F9200B618C4 /* PolygonLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFED264C1F9200B618C4 /* PolygonLocation.swift */; };
 		2EFAE000264C1F9200B618C4 /* RoadObjectPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */; };
-		2EFAE001264C1F9200B618C4 /* PolylineLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEF264C1F9200B618C4 /* PolylineLocation.swift */; };
-		2EFAE002264C1F9200B618C4 /* RouteAlertLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFF0264C1F9200B618C4 /* RouteAlertLocation.swift */; };
-		2EFAE003264C1F9200B618C4 /* PointLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFF1264C1F9200B618C4 /* PointLocation.swift */; };
-		2EFAE004264C1F9200B618C4 /* OpenLRLineLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFF2264C1F9200B618C4 /* OpenLRLineLocation.swift */; };
 		2EFAE005264C1F9200B618C4 /* RoadObjectLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */; };
-		2EFAE006264C1F9200B618C4 /* OpenLRPointLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFF4264C1F9200B618C4 /* OpenLRPointLocation.swift */; };
-		2EFAE007264C1F9200B618C4 /* GantryLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFF5264C1F9200B618C4 /* GantryLocation.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
@@ -587,15 +580,8 @@
 		2EFADFE9264C1F9200B618C4 /* LineDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LineDistanceInfo.swift; sourceTree = "<group>"; };
 		2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLROrientation.swift; sourceTree = "<group>"; };
 		2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLRSideOfRoad.swift; sourceTree = "<group>"; };
-		2EFADFED264C1F9200B618C4 /* PolygonLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolygonLocation.swift; sourceTree = "<group>"; };
 		2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectPosition.swift; sourceTree = "<group>"; };
-		2EFADFEF264C1F9200B618C4 /* PolylineLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PolylineLocation.swift; sourceTree = "<group>"; };
-		2EFADFF0264C1F9200B618C4 /* RouteAlertLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteAlertLocation.swift; sourceTree = "<group>"; };
-		2EFADFF1264C1F9200B618C4 /* PointLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PointLocation.swift; sourceTree = "<group>"; };
-		2EFADFF2264C1F9200B618C4 /* OpenLRLineLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLRLineLocation.swift; sourceTree = "<group>"; };
 		2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectLocation.swift; sourceTree = "<group>"; };
-		2EFADFF4264C1F9200B618C4 /* OpenLRPointLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLRPointLocation.swift; sourceTree = "<group>"; };
-		2EFADFF5264C1F9200B618C4 /* GantryLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GantryLocation.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -1229,24 +1215,6 @@
 			path = Distance;
 			sourceTree = "<group>";
 		};
-		2EFADFEA264C1F9200B618C4 /* Location */ = {
-			isa = PBXGroup;
-			children = (
-				2EFADFF5264C1F9200B618C4 /* GantryLocation.swift */,
-				2EFADFF2264C1F9200B618C4 /* OpenLRLineLocation.swift */,
-				2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */,
-				2EFADFF4264C1F9200B618C4 /* OpenLRPointLocation.swift */,
-				2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */,
-				2EFADFF1264C1F9200B618C4 /* PointLocation.swift */,
-				2EFADFED264C1F9200B618C4 /* PolygonLocation.swift */,
-				2EFADFEF264C1F9200B618C4 /* PolylineLocation.swift */,
-				2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */,
-				2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */,
-				2EFADFF0264C1F9200B618C4 /* RouteAlertLocation.swift */,
-			);
-			path = Location;
-			sourceTree = "<group>";
-		};
 		35002D721E5F6C830090E733 /* Supporting files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1862,7 +1830,6 @@
 			children = (
 				2BE701A4253760B300F46E4E /* RouteAlerts */,
 				2EFADFE2264C1F9200B618C4 /* Distance */,
-				2EFADFEA264C1F9200B618C4 /* Location */,
 				DA5F446325F0744C00F573EC /* EHorizon */,
 				354A9BC920EA9BC100F03325 /* Events */,
 				C56173591F182103005954F6 /* Extensions */,
@@ -1943,6 +1910,8 @@
 			isa = PBXGroup;
 			children = (
 				DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */,
+				2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */,
+				2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */,
 				DA5F44C325F07AB500F573EC /* RoadGraph.swift */,
 				DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */,
 				DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */,
@@ -1951,9 +1920,11 @@
 				DA5F44C425F07AB500F573EC /* RoadName.swift */,
 				DAF27251264E02D800C0AC37 /* RoadObject.swift */,
 				DA5F44DB25F07D1400F573EC /* RoadObjectEdgeLocation.swift */,
-				DA5F44A325F07A6500F573EC /* RoadObjectType.swift */,
+				2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */,
+				2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */,
 				DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */,
 				DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */,
+				DA5F44A325F07A6500F573EC /* RoadObjectType.swift */,
 			);
 			path = EHorizon;
 			sourceTree = "<group>";
@@ -2843,7 +2814,6 @@
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */,
 				2EFADFFB264C1F9200B618C4 /* RoadObjectDistanceInfo.swift in Sources */,
-				2EFAE007264C1F9200B618C4 /* GantryLocation.swift in Sources */,
 				354A9BC620EA991900F03325 /* SessionState.swift in Sources */,
 				35C98733212E037900808B82 /* RouteState.swift in Sources */,
 				C582FD5F203626E900A9086E /* CLLocationDirection.swift in Sources */,
@@ -2868,12 +2838,10 @@
 				2EFADFFD264C1F9200B618C4 /* OpenLROrientation.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
-				2EFAE001264C1F9200B618C4 /* PolylineLocation.swift in Sources */,
 				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
 				DA5F44BA25F07AA500F573EC /* RoadGraphEdgeMetadata.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
-				2EFAE002264C1F9200B618C4 /* RouteAlertLocation.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
 				DA2A01F025F308B100AAB4C6 /* RoadGraphPath.swift in Sources */,
@@ -2885,7 +2853,6 @@
 				2BBEEDA72508E1E300C8DA4A /* RouteStepProgress.swift in Sources */,
 				35F3387C2232AEBF0071DB5C /* MinimumEditDistance.swift in Sources */,
 				2EFAE000264C1F9200B618C4 /* RoadObjectPosition.swift in Sources */,
-				2EFAE004264C1F9200B618C4 /* OpenLRLineLocation.swift in Sources */,
 				2EFADFF7264C1F9200B618C4 /* PointDistanceInfo.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
 				2BBEEDA52508DB1700C8DA4A /* RouteLegProgress.swift in Sources */,
@@ -2904,7 +2871,6 @@
 				DA5F450025F07DE200F573EC /* ElectronicHorizonOptions.swift in Sources */,
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				2B955B1C25EFDDCB00BBFEC6 /* Directions.swift in Sources */,
-				2EFAE003264C1F9200B618C4 /* PointLocation.swift in Sources */,
 				DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */,
 				5A39B9282498F9890026DFD1 /* PassiveLocationDataSource.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
@@ -2918,9 +2884,7 @@
 				2B7ACA9B25E3F84700B0ACFD /* PredictiveCacheManager.swift in Sources */,
 				35C77F621FE8219900338416 /* NavigationSettings.swift in Sources */,
 				DA5F44C825F07AB700F573EC /* MapboxStreetsRoadClass.swift in Sources */,
-				2EFAE006264C1F9200B618C4 /* OpenLRPointLocation.swift in Sources */,
 				C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */,
-				2EFADFFF264C1F9200B618C4 /* PolygonLocation.swift in Sources */,
 				DA5F44F625F07D3B00F573EC /* RoadObjectsStore.swift in Sources */,
 				DA5F44B025F07A6800F573EC /* RoadGraphEdge.swift in Sources */,
 			);
