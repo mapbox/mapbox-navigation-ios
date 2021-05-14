@@ -417,6 +417,8 @@
 		DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */; };
 		DAD903AF23E3DCC80057CF1F /* DateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD903AE23E3DCC80057CF1F /* DateTests.swift */; };
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
+		DAF27248264E028B00C0AC37 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF27247264E028B00C0AC37 /* Geometry.swift */; };
+		DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF27251264E02D800C0AC37 /* RoadObject.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 		F46FF187260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
@@ -1068,6 +1070,8 @@
 		DAE7114C1F22E94E009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE7114E1F22E977009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAF257122017C1E800367EF5 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = sv; path = Resources/sv.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		DAF27247264E028B00C0AC37 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		DAF27251264E02D800C0AC37 /* RoadObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObject.swift; sourceTree = "<group>"; };
 		DAFEB36A2093A0D800A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAFEB36D2093A11F00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36E2093A3E000A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1359,7 +1363,6 @@
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
-				C3D225502587F411007DBCDF /* StatusViewTests.swift */,
 				16E11B53212B3D4700027CD3 /* Extensions and Categories */,
 				355DB5731EFA73410091BFB7 /* Fixtures */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
@@ -1804,6 +1807,7 @@
 				C5D9800E1EFBCDAD006DBF2E /* Date.swift */,
 				2B955B1B25EFDDCB00BBFEC6 /* Directions.swift */,
 				3A163AE2249901D000D66A0D /* FixLocation.swift */,
+				DAF27247264E028B00C0AC37 /* Geometry.swift */,
 				C51DF8651F38C31C006C6A15 /* Locale.swift */,
 				DA5F44C525F07AB600F573EC /* MapboxStreetsRoadClass.swift */,
 				35F3387B2232AEBF0071DB5C /* MinimumEditDistance.swift */,
@@ -1948,6 +1952,7 @@
 				DA2A01EF25F308B100AAB4C6 /* RoadGraphPath.swift */,
 				DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */,
 				DA5F44C425F07AB500F573EC /* RoadName.swift */,
+				DAF27251264E02D800C0AC37 /* RoadObject.swift */,
 				DA5F44DB25F07D1400F573EC /* RoadObjectEdgeLocation.swift */,
 				DA5F44A325F07A6500F573EC /* RoadObjectType.swift */,
 				DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */,
@@ -2734,7 +2739,6 @@
 				8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */,
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
 				3502231A205BC94E00E1449A /* Constants.swift in Sources */,
-				C3D225512587F411007DBCDF /* StatusViewTests.swift in Sources */,
 				DA0557252155040700A1F2AA /* RouteTests.swift in Sources */,
 				C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */,
 				4341758423061666004264A9 /* SnapshotTest+Mapbox.swift in Sources */,
@@ -2876,6 +2880,7 @@
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
 				DA2A01F025F308B100AAB4C6 /* RoadGraphPath.swift in Sources */,
+				DAF27248264E028B00C0AC37 /* Geometry.swift in Sources */,
 				8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */,
 				35C98731212E02B500808B82 /* RouteController.swift in Sources */,
 				DA0A4B8124D1C9B200D6B4F8 /* Navigator.swift in Sources */,
@@ -2903,6 +2908,7 @@
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				2B955B1C25EFDDCB00BBFEC6 /* Directions.swift in Sources */,
 				2EFAE003264C1F9200B618C4 /* PointLocation.swift in Sources */,
+				DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */,
 				5A39B9282498F9890026DFD1 /* PassiveLocationDataSource.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				2BE701352535948100F46E4E /* RestStop.swift in Sources */,
