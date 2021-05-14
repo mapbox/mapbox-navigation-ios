@@ -72,11 +72,11 @@ public enum RoadObjectDistanceInfo {
     /** Road object identifier */
     public var roadObjectIdentifier: RoadObjectIdentifier {
         switch self {
-        case .point(let identifier, _, _): fallthrough
-        case .gantry(let identifier, _, _): fallthrough
-        case .polygon(let identifier, _, _, _, _): fallthrough
-        case .subgraph(let identifier, _, _, _, _): fallthrough
-        case .line(let identifier, _, _, _, _, _, _):
+        case .point(let identifier, _, _),
+             .gantry(let identifier, _, _),
+             .polygon(let identifier, _, _, _, _),
+             .subgraph(let identifier, _, _, _, _),
+             .line(let identifier, _, _, _, _, _, _):
             return identifier
         }
     }
@@ -84,11 +84,11 @@ public enum RoadObjectDistanceInfo {
     /** Road object type */
     public var roadObjectType: RoadObjectType {
         switch self {
-        case .point(_, let type, _): fallthrough
-        case .gantry(_, let type, _): fallthrough
-        case .polygon(_, let type, _, _, _): fallthrough
-        case .subgraph(_, let type, _, _, _): fallthrough
-        case .line(_, let type, _, _, _, _, _):
+        case .point(_, let type, _),
+             .gantry(_, let type, _),
+             .polygon(_, let type, _, _, _),
+             .subgraph(_, let type, _, _, _),
+             .line(_, let type, _, _, _, _, _):
             return type
         }
     }
