@@ -1,0 +1,116 @@
+import Foundation
+import MapboxNavigationNative
+
+/**
+ Provides methods for road object matching.
+
+ Matching results are delivered asynchronously via a delegate.
+ In case of error (if there are no tiles in the cache, decoding failed, etc.) the object won't be matched.
+ */
+final public class RoadObjectMatcher {
+
+    /// Road object matcher delegate.
+    public weak var delegate: RoadObjectMatcherDelegate? {
+        didSet {
+            if delegate != nil {
+                native.setListenerFor(self)
+            } else {
+                native.setListenerFor(nil)
+            }
+        }
+    }
+
+    /**
+     Matches given OpenLR object to the graph.
+
+     - parameter location: OpenLR location of the road object, encoded in a base64 string.
+     - parameter standard: Standard used to encode OpenLR location.
+     - parameter identifier: Unique identifier of the object.
+     */
+    public func matchOpenLR(location: String, standard: OpenLRStandard, identifier: RoadObjectIdentifier) {
+        native.matchOpenLR(forBase64Encoded: location, standard: standard.native, id: identifier)
+    }
+
+    /**
+     Matches given polyline to the graph.
+     Polyline should define a valid path on the graph,
+     i.e. it should be possible to drive this path according to traffic rules.
+
+     - parameter polyline: Polyline representing the object.
+     - parameter identifier: Unique identifier of the object.
+     */
+    public func matchPolyline(_ polyline: [CLLocation], identifier: RoadObjectIdentifier) {
+        native.matchPolyline(forPolyline: polyline, id: identifier)
+    }
+
+    /**
+     Matches a given polygon to the graph.
+     "Matching" here means we try to find all intersections of the polygon with the road graph
+     and track distances to those intersections as distance to the polygon.
+
+     - parameter polygon: Polygon representing the object.
+     - parameter identifier: Unique identifier of the object.
+     */
+    public func matchPolygon(_ polygon: [CLLocation], identifier: RoadObjectIdentifier) {
+        native.matchPolygon(forPolygon: polygon, id: identifier)
+    }
+
+    /**
+     Matches given gantry (i.e. polyline orthogonal to the road) to the graph.
+     "Matching" here means we try to find all intersections of the gantry with the road graph
+     and track distances to those intersections as distance to the gantry.
+
+     - parameter gantry: Gantry representing the object.
+     - parameter identifier: Unique identifier of the object.
+     */
+    public func matchGantry(_ gantry: [CLLocation], identifier: RoadObjectIdentifier) {
+        native.matchGantry(forGantry: gantry, id: identifier)
+    }
+
+    /**
+     Matches given point to road graph.
+
+     - parameter point: Point representing the object.
+     - parameter identifier: Unique identifier of the object.
+     */
+    public func matchPoint(_ point: CLLocationCoordinate2D, identifier: RoadObjectIdentifier) {
+        native.matchPoint(forPoint: point, id: identifier)
+    }
+
+    /**
+     Cancel road object matching.
+
+     - parameter identifier: Identifier for which matching should be canceled.
+     */
+    public func cancel(identifier: RoadObjectIdentifier) {
+        native.cancel(forId: identifier)
+    }
+
+    init(_ native: MapboxNavigationNative.RoadObjectMatcher) {
+        self.native = native
+    }
+
+    deinit {
+        native.setListenerFor(nil)
+    }
+
+    private let native: MapboxNavigationNative.RoadObjectMatcher
+}
+
+extension RoadObjectMatcher: RoadObjectMatcherListener {
+    public func onRoadObjectMatched(forRoadObject roadObject: MBXExpected<AnyObject, AnyObject>) {
+        if roadObject.isValue(), let value = roadObject.value {
+            guard let roadObject = value as? MapboxNavigationNative.RoadObject else {
+                preconditionFailure("Road object value can't be constructed. Unknown value type.")
+            }
+            delegate?.didMatchRoadObject(result: .success(RoadObject(roadObject)))
+        } else if roadObject.isError(), let error = roadObject.error {
+            guard let error = error as? MapboxNavigationNative.RoadObjectMatcherError else {
+                preconditionFailure("Road object matcher error can't be constructed. Unknown error type.")
+            }
+            delegate?.didMatchRoadObject(result: .failure(RoadObjectMatcherError(error)))
+        } else {
+            preconditionFailure("Expected type is neither a value nor an error.")
+        }
+    }
+}

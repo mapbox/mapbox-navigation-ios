@@ -26,6 +26,8 @@ public struct RoadObject {
     /** `true` if an object is added by user, `false` if it comes from Mapbox service. */
     public let isCustom: Bool
 
+    let native: MapboxNavigationNative.RoadObject?
+
     /**
      Initializes a new `RoadObject` object.
      */
@@ -35,6 +37,7 @@ public struct RoadObject {
         self.location = location
         self.type = type
         isCustom = true
+        native = nil
     }
 
     init(_ native: MapboxNavigationNative.RoadObject) {
@@ -43,5 +46,6 @@ public struct RoadObject {
         location = RoadObjectLocation(native.location)
         type = RoadObjectType(type: native.type, metadata: native.metadata)
         isCustom = native.provider == .custom
+        self.native = native
     }
 }
