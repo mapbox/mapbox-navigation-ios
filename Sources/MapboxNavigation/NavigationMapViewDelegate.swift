@@ -8,7 +8,7 @@ import Turf
 /**
  The `NavigationMapViewDelegate` provides methods for configuring the `NavigationMapView`, as well as responding to events triggered by the `NavigationMapView`.
  */
-public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
+public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     
     /**
      Asks the receiver to return a `LineLayer` for the route line, given a layer identifier and a source identifier.

@@ -466,7 +466,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
  The `CarPlayNavigationDelegate` protocol provides methods for reacting to significant events during turn-by-turn navigation with `CarPlayNavigationViewController`.
  */
 @available(iOS 12.0, *)
-public protocol CarPlayNavigationDelegate: class, UnimplementedLogging {
+public protocol CarPlayNavigationDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the CarPlay navigation view controller is dismissed, such as when the user ends a trip.
      

@@ -191,7 +191,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 /**
  The `RouteVoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to route vocalization
  */
-public protocol RouteVoiceControllerDelegate: class, UnimplementedLogging {
+public protocol RouteVoiceControllerDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the route voice controller reports an error
      

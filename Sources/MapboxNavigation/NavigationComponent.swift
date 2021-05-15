@@ -10,7 +10,7 @@ public protocol NavigationComponent: NavigationServiceDelegate {}
 /**
  The NavigationInteractionDelegate protocol is used to define interaction events that the top banner may need to know about.
  */
-public protocol NavigationMapInteractionObserver: class {
+public protocol NavigationMapInteractionObserver: AnyObject {
     /**
      Called when the NavigationMapView centers on a location.
      */
@@ -20,7 +20,7 @@ public protocol NavigationMapInteractionObserver: class {
 /**
  The CarPlayConnectionObserver protocol provides notification of a carplay unit connecting two the NavigationViewController.
  */
-public protocol CarPlayConnectionObserver: class {
+public protocol CarPlayConnectionObserver: AnyObject {
     /**
      Called when the NavigationViewController detects that a CarPlay device has been connected.
      */
@@ -35,7 +35,7 @@ public protocol CarPlayConnectionObserver: class {
 /**
  This protocol defines a UI Component that is capable of presenting a status message.
  */
-public protocol NavigationStatusPresenter: class {
+public protocol NavigationStatusPresenter: AnyObject {
     /**
      Shows a Status for a specified amount of time.
      */

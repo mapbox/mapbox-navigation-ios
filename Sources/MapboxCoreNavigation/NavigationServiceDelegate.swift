@@ -15,7 +15,7 @@ import os.log
  - seealso: NavigationViewControllerDelegate
  - seealso: RouterDelegate
  */
-public protocol NavigationServiceDelegate: class, UnimplementedLogging {
+public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Returns whether the navigation service should be allowed to calculate a new route.
      

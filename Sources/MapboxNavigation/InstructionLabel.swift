@@ -39,7 +39,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
 /**
  The `VisualInstructionDelegate` protocol defines a method that allows an object to customize presented visual instructions.
  */
-public protocol VisualInstructionDelegate: class, UnimplementedLogging {
+public protocol VisualInstructionDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when an InstructionLabel will present a visual instruction.
      
