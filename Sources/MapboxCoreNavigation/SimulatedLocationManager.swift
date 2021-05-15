@@ -58,7 +58,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
     }
 
-    public override var isSimulatedLocationSource: Bool {
+    open override var isSimulatedLocationSource: Bool {
         return true
     }
     

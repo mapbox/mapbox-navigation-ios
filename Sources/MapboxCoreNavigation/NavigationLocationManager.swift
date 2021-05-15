@@ -24,7 +24,7 @@ open class NavigationLocationManager: CLLocationManager {
      */
     public var simulatesLocation: Bool = false
 
-    public var isSimulatedLocationSource: Bool {
+    open var isSimulatedLocationSource: Bool {
         return false
     }
 }
