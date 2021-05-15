@@ -5,7 +5,7 @@ import MapboxCoreNavigation
 /**
  The `NavigationMapViewDelegate` provides methods for configuring the NavigationMapView, as well as responding to events triggered by the NavigationMapView.
  */
-public protocol NavigationMapViewDelegate: class, UnimplementedLogging {
+public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
 
     /**
      Asks the receiver to return an MGLStyleLayer for the main route line, given an identifier and source.
@@ -221,7 +221,7 @@ public extension NavigationMapViewDelegate {
 /**
  The `NavigationMapViewCourseTrackingDelegate` provides methods for responding to the `NavigationMapView` starting or stopping course tracking.
  */
-public protocol NavigationMapViewCourseTrackingDelegate: class, UnimplementedLogging {
+public protocol NavigationMapViewCourseTrackingDelegate: AnyObject, UnimplementedLogging {
     /**
      Tells the receiver that the map is now tracking the user course.
      - seealso: NavigationMapView.tracksUserCourse

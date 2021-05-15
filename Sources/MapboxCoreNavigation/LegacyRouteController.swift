@@ -5,7 +5,7 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
-protocol RouteControllerDataSource: class {
+protocol RouteControllerDataSource: AnyObject {
     var location: CLLocation? { get }
     var locationProvider: NavigationLocationManager.Type { get }
 }

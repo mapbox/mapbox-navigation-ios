@@ -2,7 +2,7 @@ import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
 
-public protocol TopBannerViewControllerDelegate: class, UnimplementedLogging {
+public protocol TopBannerViewControllerDelegate: AnyObject, UnimplementedLogging {
     func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
     
     func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)

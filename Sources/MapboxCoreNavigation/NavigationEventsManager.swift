@@ -7,7 +7,7 @@ let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
 /**
  The `EventsManagerDataSource` protocol declares values required for recording route following events.
  */
-public protocol EventsManagerDataSource: class {
+public protocol EventsManagerDataSource: AnyObject {
     var routeProgress: RouteProgress { get }
     var router: Router! { get }
     var desiredAccuracy: CLLocationAccuracy { get }
