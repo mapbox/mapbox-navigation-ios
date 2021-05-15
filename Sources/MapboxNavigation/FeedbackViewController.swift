@@ -18,7 +18,7 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
 /**
  The `FeedbackViewControllerDelegate` protocol provides methods for responding to feedback events.
  */
-public protocol FeedbackViewControllerDelegate: class, UnimplementedLogging {
+public protocol FeedbackViewControllerDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the user opens the feedback form.
      */

@@ -1,7 +1,7 @@
 import UIKit
 import MapboxDirections
 
-protocol InstructionPresenterDataSource: class {
+protocol InstructionPresenterDataSource: AnyObject {
     var availableBounds: (() -> CGRect)! { get }
     var font: UIFont! { get }
     var textColor: UIColor! { get }

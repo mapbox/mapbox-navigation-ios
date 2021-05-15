@@ -5,7 +5,7 @@ import MapboxCoreNavigation
 /**
  Protocol for implementing speech synthesizer to be used in `RouteVoiceController`.
  */
-public protocol SpeechSynthesizing: class {
+public protocol SpeechSynthesizing: AnyObject {
     
     /// A delegate that will be notified about significant events related to spoken instructions.
     var delegate: SpeechSynthesizingDelegate? { get set }
@@ -44,7 +44,7 @@ public protocol SpeechSynthesizing: class {
 /**
  The `SpeechSynthesizingDelegate` protocol defines methods that allow an object to respond to significant events related to spoken instructions.
  */
-public protocol SpeechSynthesizingDelegate: class, UnimplementedLogging {
+public protocol SpeechSynthesizingDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the speech synthesizer encountered an error during processing, but may still be able to speak the instruction.
      - parameter speechSynthesizer: The voice controller that experienced the failure.
