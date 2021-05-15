@@ -57,6 +57,10 @@ open class SimulatedLocationManager: NavigationLocationManager {
             reset()
         }
     }
+
+    public override var isSimulatedLocationSource: Bool {
+        return true
+    }
     
     open override func copy() -> Any {
         let copy = SimulatedLocationManager(route: route!)

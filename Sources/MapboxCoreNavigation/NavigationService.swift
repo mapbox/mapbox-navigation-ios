@@ -292,11 +292,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
         guard !isSimulating else { return }
         let progress = router.routeProgress
         delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
-        simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
-        simulatedLocationSource?.delegate = self
-        simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
-        simulatedLocationSource?.startUpdatingLocation()
-        simulatedLocationSource?.startUpdatingHeading()
+        if !locationManager.isSimulatedLocationSource {
+            simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
+            simulatedLocationSource?.delegate = self
+            simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
+            simulatedLocationSource?.startUpdatingLocation()
+            simulatedLocationSource?.startUpdatingHeading()
+        }
         delegate?.navigationService(self, didBeginSimulating: progress, becauseOf: intent)
     }
     

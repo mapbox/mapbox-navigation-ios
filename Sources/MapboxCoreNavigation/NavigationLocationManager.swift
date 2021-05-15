@@ -23,6 +23,10 @@ open class NavigationLocationManager: CLLocationManager {
      - seealso: `NavigationMapView.simulatesLocation`
      */
     public var simulatesLocation: Bool = false
+
+    public var isSimulatedLocationSource: Bool {
+        return false
+    }
 }
 
 extension NavigationLocationManager: RouterDataSource {
