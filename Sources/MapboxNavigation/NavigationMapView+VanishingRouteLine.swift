@@ -212,16 +212,18 @@ extension NavigationMapView {
             
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
             
-            let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
-            let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
-                                                                fractionTraveled: newFractionTraveled)
             do {
-                try self.mapView.style.updateLayer(withId: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+                try self.mapView.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                    let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
+                    let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
+                                                                        fractionTraveled: newFractionTraveled)
+                    
                     lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
                 }
                 
-                let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
-                try self.mapView.style.updateLayer(withId: mainRouteCasingLayerIdentifier, type: LineLayer.self) { (lineLayer) in
+                try self.mapView.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                    let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
+                    
                     lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
                 }
             } catch {

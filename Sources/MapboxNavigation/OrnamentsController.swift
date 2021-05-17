@@ -185,7 +185,7 @@ extension NavigationMapView {
             
             let identifierNamespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
             let roadLabelStyleLayerIdentifier = "\(identifierNamespace).roadLabels"
-            let roadLabelLayer = try? mapView.style.layer(withId: roadLabelStyleLayerIdentifier, type: LineLayer.self)
+            let roadLabelLayer = try? mapView.style.layer(withId: roadLabelStyleLayerIdentifier) as LineLayer
             
             if roadLabelLayer == nil {
                 var streetLabelLayer = LineLayer(id: roadLabelStyleLayerIdentifier)

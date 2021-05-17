@@ -129,7 +129,7 @@ extension NavigationMapView {
         // MARK: - NavigationComponentDelegate implementation
         
         func navigationViewDidLoad(_ view: UIView) {
-            navigationMapView.mapView.on(.styleLoaded) { [self] _ in
+            navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [self] _ in
                 showRouteIfNeeded()
                 navigationMapView.localizeLabels()
                 navigationMapView.mapView.showsTraffic = false

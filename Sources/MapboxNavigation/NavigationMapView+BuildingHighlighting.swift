@@ -49,7 +49,7 @@ extension NavigationMapView {
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
-            guard let _ = try? mapView.style.layer(withId: identifier, type: FillExtrusionLayer.self) else { return }
+            if !mapView.style.layerExists(withId: identifier) { return }
             try mapView.style.removeLayer(withId: identifier)
         } catch {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
