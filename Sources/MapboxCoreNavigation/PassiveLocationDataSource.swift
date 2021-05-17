@@ -29,7 +29,14 @@ open class PassiveLocationDataSource: NSObject {
         super.init()
         
         self.systemLocationManager.delegate = self
-        navigator.addObserver(for: self)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(handleNavigationStatusNotification),
+                                               name: .navigationStatusDidChange,
+                                               object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     /**
@@ -119,7 +126,15 @@ open class PassiveLocationDataSource: NSObject {
         lastRawLocation = locations.last
     }
     
-    func handleNavigationStatusUpdate(_ status: NavigationStatus) {
+    @objc private func handleNavigationStatusNotification(_ notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.handleNavigationStatusUpdate(status)
+        }
+    }
+    
+    private func handleNavigationStatusUpdate(_ status: NavigationStatus) {
         guard let lastRawLocation = lastRawLocation else { return }
         
         let lastLocation = CLLocation(status.location)
@@ -209,14 +224,6 @@ extension PassiveLocationDataSource: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if #available(iOS 14.0, *) {
             delegate?.passiveLocationDataSourceDidChangeAuthorization(self)
-        }
-    }
-}
-
-extension PassiveLocationDataSource: NavigatorObserver {
-    public func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
-        DispatchQueue.main.async { [weak self] in
-            self?.handleNavigationStatusUpdate(status)
         }
     }
 }

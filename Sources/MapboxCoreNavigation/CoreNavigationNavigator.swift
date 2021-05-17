@@ -127,6 +127,7 @@ class Navigator {
                                                      cache: cacheHandle,
                                                      historyRecorder: historyRecorder)
         navigator.setElectronicHorizonObserverFor(self)
+        navigator.addObserver(for: self)
     }
     
     deinit {
@@ -180,3 +181,40 @@ extension Navigator: ElectronicHorizonObserver {
         NotificationCenter.default.post(name: .electronicHorizonDidPassRoadObject, object: nil, userInfo: userInfo)
     }
 }
+
+extension Navigator: NavigatorObserver {
+    func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .originKey: origin,
+            .statusKey: status,
+        ]
+        NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
+    }
+}
+extension Notification.Name {
+    /**
+     Posted when NavNative sends updated navigation status.
+     
+     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
+    */
+    static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
+}
+
+extension Navigator {
+    
+    struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        
+        typealias RawValue = String
+        
+        var rawValue: String
+        
+        init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        static let originKey: NotificationUserInfoKey = .init(rawValue: "origin")
+        
+        static let statusKey: NotificationUserInfoKey = .init(rawValue: "status")
+    }
+}
+

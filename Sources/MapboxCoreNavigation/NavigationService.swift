@@ -257,7 +257,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
         locationManager.activityType = routeOptions.activityType
         bootstrapEvents()
         
-        router.delegate = self
         nativeLocationSource.delegate = self
         
         checkForUpdates()
@@ -335,6 +334,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         eventsManager.sendRouteRetrievalEvent()
+        router.delegate = self
     }
     
     public func stop() {
@@ -347,6 +347,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         poorGPSTimer.disarm()
+        router.delegate = nil
     }
     
     public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
