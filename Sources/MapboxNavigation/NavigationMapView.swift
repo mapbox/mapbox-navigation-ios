@@ -263,7 +263,7 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onNext(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
-            self.updateUserCourseView(location, animated: false)
+            self.updateUserCourseView(location)
         }
         
         addSubview(mapView)
