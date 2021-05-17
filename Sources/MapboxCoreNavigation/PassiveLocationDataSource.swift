@@ -235,15 +235,14 @@ extension TileEndpointConfiguration {
         guard let accessToken = credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")
         }
-        let skuTokenProvider = SkuTokenProvider(with: credentials)
-        
+
         self.init(host: host,
                   dataset: "mapbox/driving",
                   version: tilesVersion,
                   token: accessToken,
                   userAgent: URLSession.userAgent,
                   navigatorVersion: "",
-                  skuTokenSource: skuTokenProvider,
+                  isFallback: false,
                   minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
     }
 }

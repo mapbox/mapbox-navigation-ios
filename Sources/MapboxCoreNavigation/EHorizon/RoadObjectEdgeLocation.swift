@@ -22,6 +22,14 @@ public struct RoadObjectEdgeLocation {
      */
     public let fractionToEnd: Double
 
+    /**
+     Initializes a new `RoadObjectEdgeLocation` object with a fraction from the start and a fraction from the end of the road object.
+     */
+    public init(fractionFromStart: Double, fractionToEnd: Double) {
+        self.fractionFromStart = fractionFromStart
+        self.fractionToEnd = fractionToEnd
+    }
+
     init(_ native: MapboxNavigationNative.RoadObjectEdgeLocation) {
         self.fractionFromStart = native.percentAlongBegin
         self.fractionToEnd = native.percentAlongEnd

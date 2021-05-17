@@ -42,6 +42,21 @@ extension RoadGraph {
          */
         public let outletEdges: [Edge]
 
+        /**
+         Initializes a new `Edge` object.
+         
+         - parameter identifier: The unique identifier of a directed edge.
+         - parameter level: The level of the edge.
+         - parameter probability: The probability that the user will transition onto this edge.
+         - parameter outletEdges: The edges to which the user could transition from this edge.
+         */
+        public init(identifier: Identifier, level: UInt, probability: Double, outletEdges: [Edge]) {
+            self.identifier = identifier
+            self.level = level
+            self.probability = probability
+            self.outletEdges = outletEdges
+        }
+
         init(_ native: ElectronicHorizonEdge) {
             self.identifier = UInt(native.id)
             self.level = UInt(native.level)

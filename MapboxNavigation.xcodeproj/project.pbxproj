@@ -52,6 +52,11 @@
 		2BE7016925371E3400F46E4E /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7016825371E3400F46E4E /* Incident.swift */; };
 		2BE70189253734A000F46E4E /* TollCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7012C2535946300F46E4E /* TollCollection.swift */; };
 		2EBF20AE25D6F89000DB7BF2 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBF20AD25D6F89000DB7BF2 /* Utils.swift */; };
+		2EFADFFB264C1F9200B618C4 /* DistancedRoadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE8264C1F9200B618C4 /* DistancedRoadObject.swift */; };
+		2EFADFFD264C1F9200B618C4 /* OpenLROrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */; };
+		2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */; };
+		2EFAE000264C1F9200B618C4 /* RoadObjectPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */; };
+		2EFAE005264C1F9200B618C4 /* RoadObjectLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */; };
 		35002D611E5F6ADB0090E733 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35002D5F1E5F6ADB0090E733 /* Assets.xcassets */; };
 		35002D691E5F6B2F0090E733 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35002D661E5F6B1B0090E733 /* Main.storyboard */; };
 		3502231A205BC94E00E1449A /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35022319205BC94E00E1449A /* Constants.swift */; };
@@ -174,9 +179,7 @@
 		43FB386923A202420064481E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0557202154EF4700A1F2AA /* Route.swift */; };
 		5A1C075824BDEB44000A6330 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationManager.swift */; };
 		5A39B9282498F9890026DFD1 /* PassiveLocationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationDataSource.swift */; };
-		5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */; };
 		5A43FC8B24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift */; };
-		5A8DB89624DE16A10041F863 /* SkuTokenProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */; };
 		6441B16A1EFC64E50076499F /* WaypointConfirmationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
 		8A07D31825CA0B50005E1790 /* MapboxMaps.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8A07D31325CA0B50005E1790 /* MapboxMaps.xcframework */; };
@@ -379,15 +382,12 @@
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
 		DA5F44AA25F07A6800F573EC /* RoadObjectType.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A325F07A6500F573EC /* RoadObjectType.swift */; };
 		DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */; };
-		DA5F44AE25F07A6800F573EC /* RoadObjectDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */; };
 		DA5F44B025F07A6800F573EC /* RoadGraphEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */; };
 		DA5F44BA25F07AA500F573EC /* RoadGraphEdgeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */; };
 		DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C325F07AB500F573EC /* RoadGraph.swift */; };
 		DA5F44C725F07AB700F573EC /* RoadName.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C425F07AB500F573EC /* RoadName.swift */; };
 		DA5F44C825F07AB700F573EC /* MapboxStreetsRoadClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44C525F07AB600F573EC /* MapboxStreetsRoadClass.swift */; };
 		DA5F44DC25F07D1500F573EC /* RoadObjectEdgeLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44DB25F07D1400F573EC /* RoadObjectEdgeLocation.swift */; };
-		DA5F44E825F07D2800F573EC /* RoadObjectLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44E525F07D2600F573EC /* RoadObjectLocation.swift */; };
-		DA5F44E925F07D2800F573EC /* RoadObjectMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44E625F07D2700F573EC /* RoadObjectMetadata.swift */; };
 		DA5F44F525F07D3B00F573EC /* RoadObjectsStoreDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */; };
 		DA5F44F625F07D3B00F573EC /* RoadObjectsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */; };
 		DA5F450025F07DE200F573EC /* ElectronicHorizonOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */; };
@@ -403,6 +403,8 @@
 		DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */; };
 		DAD903AF23E3DCC80057CF1F /* DateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD903AE23E3DCC80057CF1F /* DateTests.swift */; };
 		DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */; };
+		DAF27248264E028B00C0AC37 /* Geometry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF27247264E028B00C0AC37 /* Geometry.swift */; };
+		DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF27251264E02D800C0AC37 /* RoadObject.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 		F46FF187260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
@@ -563,6 +565,11 @@
 		2BE7013C25359C7B00F46E4E /* RouteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAlert.swift; sourceTree = "<group>"; };
 		2BE7016825371E3400F46E4E /* Incident.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Incident.swift; sourceTree = "<group>"; };
 		2EBF20AD25D6F89000DB7BF2 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		2EFADFE8264C1F9200B618C4 /* DistancedRoadObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistancedRoadObject.swift; sourceTree = "<group>"; };
+		2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLROrientation.swift; sourceTree = "<group>"; };
+		2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLRSideOfRoad.swift; sourceTree = "<group>"; };
+		2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectPosition.swift; sourceTree = "<group>"; };
+		2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectLocation.swift; sourceTree = "<group>"; };
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35002D671E5F6B1B0090E733 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -713,9 +720,7 @@
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
 		5A1C075724BDEB44000A6330 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* PassiveLocationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationDataSource.swift; sourceTree = "<group>"; };
-		5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProvider.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationDataSourceTests.swift; sourceTree = "<group>"; };
-		5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SkuTokenProviderTests.swift; sourceTree = "<group>"; };
 		6441B1691EFC64E50076499F /* WaypointConfirmationViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WaypointConfirmationViewController.swift; path = Example/WaypointConfirmationViewController.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
 		8A07D31325CA0B50005E1790 /* MapboxMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMaps.xcframework; path = Sources/MapboxNavigation/MapboxMaps/MapboxMaps.xcframework; sourceTree = "<group>"; };
@@ -961,15 +966,12 @@
 		DA5AD0401FEBA23200FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA5F44A325F07A6500F573EC /* RoadObjectType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectType.swift; sourceTree = "<group>"; };
 		DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphPosition.swift; sourceTree = "<group>"; };
-		DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectDistanceInfo.swift; sourceTree = "<group>"; };
 		DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphEdge.swift; sourceTree = "<group>"; };
 		DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraphEdgeMetadata.swift; sourceTree = "<group>"; };
 		DA5F44C325F07AB500F573EC /* RoadGraph.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadGraph.swift; sourceTree = "<group>"; };
 		DA5F44C425F07AB500F573EC /* RoadName.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadName.swift; sourceTree = "<group>"; };
 		DA5F44C525F07AB600F573EC /* MapboxStreetsRoadClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapboxStreetsRoadClass.swift; sourceTree = "<group>"; };
 		DA5F44DB25F07D1400F573EC /* RoadObjectEdgeLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectEdgeLocation.swift; sourceTree = "<group>"; };
-		DA5F44E525F07D2600F573EC /* RoadObjectLocation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectLocation.swift; sourceTree = "<group>"; };
-		DA5F44E625F07D2700F573EC /* RoadObjectMetadata.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectMetadata.swift; sourceTree = "<group>"; };
 		DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectsStoreDelegate.swift; sourceTree = "<group>"; };
 		DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectsStore.swift; sourceTree = "<group>"; };
 		DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElectronicHorizonOptions.swift; sourceTree = "<group>"; };
@@ -1040,6 +1042,8 @@
 		DAE7114C1F22E94E009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE7114E1F22E977009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAF257122017C1E800367EF5 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = sv; path = Resources/sv.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		DAF27247264E028B00C0AC37 /* Geometry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Geometry.swift; sourceTree = "<group>"; };
+		DAF27251264E02D800C0AC37 /* RoadObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObject.swift; sourceTree = "<group>"; };
 		DAFEB36A2093A0D800A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAFEB36D2093A11F00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DAFEB36E2093A3E000A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1299,7 +1303,6 @@
 		35B711D01E5E7AD2001EDA8D /* MapboxNavigationTests */ = {
 			isa = PBXGroup;
 			children = (
-				C3D225502587F411007DBCDF /* StatusViewTests.swift */,
 				16E11B53212B3D4700027CD3 /* Extensions and Categories */,
 				355DB5731EFA73410091BFB7 /* Fixtures */,
 				3527D2B61EC45FBD00C07FC9 /* Fixtures.xcassets */,
@@ -1744,6 +1747,7 @@
 				C5D9800E1EFBCDAD006DBF2E /* Date.swift */,
 				2B955B1B25EFDDCB00BBFEC6 /* Directions.swift */,
 				3A163AE2249901D000D66A0D /* FixLocation.swift */,
+				DAF27247264E028B00C0AC37 /* Geometry.swift */,
 				C51DF8651F38C31C006C6A15 /* Locale.swift */,
 				DA5F44C525F07AB600F573EC /* MapboxStreetsRoadClass.swift */,
 				35F3387B2232AEBF0071DB5C /* MinimumEditDistance.swift */,
@@ -1832,7 +1836,6 @@
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				35C98730212E02B500808B82 /* RouteController.swift */,
 				5A39B9272498F9890026DFD1 /* PassiveLocationDataSource.swift */,
-				5A3D212D24DADF9F00EA652A /* SkuTokenProvider.swift */,
 				8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */,
 			);
 			name = MapboxCoreNavigation;
@@ -1843,7 +1846,6 @@
 			isa = PBXGroup;
 			children = (
 				3A163AE1249901D000D66A0D /* Extensions */,
-				5A8DB89524DE16A10041F863 /* SkuTokenProviderTests.swift */,
 				DAD903AE23E3DCC80057CF1F /* DateTests.swift */,
 				359A8AEC1FA78D3000BDB486 /* DistanceFormatterTests.swift */,
 				C5ADFBD91DDCC7840011824B /* Info.plist */,
@@ -1880,20 +1882,23 @@
 		DA5F446325F0744C00F573EC /* EHorizon */ = {
 			isa = PBXGroup;
 			children = (
+				2EFADFE8264C1F9200B618C4 /* DistancedRoadObject.swift */,
 				DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */,
+				2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */,
+				2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */,
 				DA5F44C325F07AB500F573EC /* RoadGraph.swift */,
 				DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */,
 				DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */,
 				DA2A01EF25F308B100AAB4C6 /* RoadGraphPath.swift */,
 				DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */,
 				DA5F44C425F07AB500F573EC /* RoadName.swift */,
-				DA5F44A725F07A6500F573EC /* RoadObjectDistanceInfo.swift */,
+				DAF27251264E02D800C0AC37 /* RoadObject.swift */,
 				DA5F44DB25F07D1400F573EC /* RoadObjectEdgeLocation.swift */,
-				DA5F44E525F07D2600F573EC /* RoadObjectLocation.swift */,
-				DA5F44E625F07D2700F573EC /* RoadObjectMetadata.swift */,
-				DA5F44A325F07A6500F573EC /* RoadObjectType.swift */,
+				2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */,
+				2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */,
 				DA5F44F425F07D3B00F573EC /* RoadObjectsStore.swift */,
 				DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */,
+				DA5F44A325F07A6500F573EC /* RoadObjectType.swift */,
 			);
 			path = EHorizon;
 			sourceTree = "<group>";
@@ -2676,7 +2681,6 @@
 				8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */,
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
 				3502231A205BC94E00E1449A /* Constants.swift in Sources */,
-				C3D225512587F411007DBCDF /* StatusViewTests.swift in Sources */,
 				DA0557252155040700A1F2AA /* RouteTests.swift in Sources */,
 				C55C299920D2E2F600B0406C /* NavigationMapViewTests.swift in Sources */,
 				4341758423061666004264A9 /* SnapshotTest+Mapbox.swift in Sources */,
@@ -2780,8 +2784,9 @@
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
 				DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */,
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
-				DA5F44AE25F07A6800F573EC /* RoadObjectDistanceInfo.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
+				2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */,
+				2EFADFFB264C1F9200B618C4 /* DistancedRoadObject.swift in Sources */,
 				354A9BC620EA991900F03325 /* SessionState.swift in Sources */,
 				35C98733212E037900808B82 /* RouteState.swift in Sources */,
 				C582FD5F203626E900A9086E /* CLLocationDirection.swift in Sources */,
@@ -2791,6 +2796,7 @@
 				2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
+				2EFAE005264C1F9200B618C4 /* RoadObjectLocation.swift in Sources */,
 				2BE70189253734A000F46E4E /* TollCollection.swift in Sources */,
 				DA754E1923AC56E5007E16B5 /* MBXAccountsLoader.m in Sources */,
 				2BE701252535943900F46E4E /* BorderCrossing.swift in Sources */,
@@ -2799,23 +2805,24 @@
 				C5E7A31C1F4F6828001CB015 /* NavigationRouteOptions.swift in Sources */,
 				352F464D20EB74C200147886 /* NavigationEventsManager.swift in Sources */,
 				2B871272263966F0001082A9 /* TileStoreConfiguration.swift in Sources */,
+				2EFADFFD264C1F9200B618C4 /* OpenLROrientation.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
 				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
 				DA5F44BA25F07AA500F573EC /* RoadGraphEdgeMetadata.swift in Sources */,
-				DA5F44E825F07D2800F573EC /* RoadObjectLocation.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
 				DA2A01F025F308B100AAB4C6 /* RoadGraphPath.swift in Sources */,
+				DAF27248264E028B00C0AC37 /* Geometry.swift in Sources */,
 				8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */,
 				35C98731212E02B500808B82 /* RouteController.swift in Sources */,
 				DA0A4B8124D1C9B200D6B4F8 /* Navigator.swift in Sources */,
-				5A3D212E24DADFA000EA652A /* SkuTokenProvider.swift in Sources */,
 				351927361F0FA072003A702D /* ScreenCapture.swift in Sources */,
 				2BBEEDA72508E1E300C8DA4A /* RouteStepProgress.swift in Sources */,
 				35F3387C2232AEBF0071DB5C /* MinimumEditDistance.swift in Sources */,
+				2EFAE000264C1F9200B618C4 /* RoadObjectPosition.swift in Sources */,
 				C5D9800F1EFBCDAD006DBF2E /* Date.swift in Sources */,
 				2BBEEDA52508DB1700C8DA4A /* RouteLegProgress.swift in Sources */,
 				35A43F77223BD632000CB367 /* RouteLeg.swift in Sources */,
@@ -2832,6 +2839,7 @@
 				DA5F450025F07DE200F573EC /* ElectronicHorizonOptions.swift in Sources */,
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				2B955B1C25EFDDCB00BBFEC6 /* Directions.swift in Sources */,
+				DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */,
 				5A39B9282498F9890026DFD1 /* PassiveLocationDataSource.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				2BE701352535948100F46E4E /* RestStop.swift in Sources */,
@@ -2839,7 +2847,6 @@
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
 				C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */,
 				64847A041F04629D003F3A69 /* Feedback.swift in Sources */,
-				DA5F44E925F07D2800F573EC /* RoadObjectMetadata.swift in Sources */,
 				2BE7016925371E3400F46E4E /* Incident.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* CoreConstants.swift in Sources */,
 				2B7ACA9B25E3F84700B0ACFD /* PredictiveCacheManager.swift in Sources */,
@@ -2869,7 +2876,6 @@
 				352762A4225B751A0015B632 /* OptionsTests.swift in Sources */,
 				8DB7EF6A2176674800DA83A3 /* MapboxNavigationServiceSpec.swift in Sources */,
 				B426FF0525FFD679001884C8 /* SimulatedLocationManagerTests.swift in Sources */,
-				5A8DB89624DE16A10041F863 /* SkuTokenProviderTests.swift in Sources */,
 				35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */,
 				3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */,
 				C5ABB50E20408D2C00AFA92C /* NavigationServiceTests.swift in Sources */,

@@ -1,38 +1,30 @@
 import Foundation
+import MapboxDirections
 import MapboxNavigationNative
 
 /** Type of the road object */
 public enum RoadObjectType {
 
     /** Road object represents some road incident */
-    case incident
+    case incident(Incident?)
 
     /** Road object represents some toll collection point */
-    case tollCollection
+    case tollCollection(TollCollection?)
 
     /** Road object represents some border crossing */
-    case borderCrossing
+    case borderCrossing(BorderCrossing?)
 
-    /** Road object represents some tunnel entrance */
-    case tunnelEntrance
-
-    /** Road object represents some tunnel exit */
-    case tunnelExit
-
-    /** Road object represents some restricted area entrance */
-    case restrictedAreaEntrance
-
-    /** Road object represents some restricted area exit */
-    case restrictedAreaExit
+    /** Road object represents some tunnel */
+    case tunnel(Tunnel?)
 
     /** Road object represents some service area */
-    case serviceArea
+    case serviceArea(RestStop?)
 
-    /** Road object represents some bridge entrance */
-    case bridgeEntrance
+    /** Road object represents some restricted area */
+    case restrictedArea
 
-    /** Road object represents some bridge exit */
-    case bridgeExit
+    /** Road object represents some bridge */
+    case bridge
 
     /** Reserved for future use. */
     case userDefined
@@ -40,25 +32,40 @@ public enum RoadObjectType {
     init(_ native: MapboxNavigationNative.RoadObjectType) {
         switch native {
         case .incident:
-            self = .incident
+            self = .incident(nil)
         case .tollCollectionPoint:
-            self = .tollCollection
+            self = .tollCollection(nil)
         case .borderCrossing:
-            self = .borderCrossing
-        case .tunnelEntrance:
-            self = .tunnelEntrance
-        case .tunnelExit:
-            self = .tunnelExit
-        case .restrictedAreaEntrance:
-            self = .restrictedAreaEntrance
-        case .restrictedAreaExit:
-            self = .restrictedAreaExit
+            self = .borderCrossing(nil)
+        case .tunnel:
+            self = .tunnel(nil)
         case .serviceArea:
-            self = .serviceArea
-        case .bridgeEntrance:
-            self = .bridgeEntrance
-        case .bridgeExit:
-            self = .bridgeExit
+            self = .serviceArea(nil)
+        case .restrictedArea:
+            self = .restrictedArea
+        case .bridge:
+            self = .bridge
+        case .custom:
+            self = .userDefined
+        }
+    }
+
+    init(type: MapboxNavigationNative.RoadObjectType, metadata: MapboxNavigationNative.MBNNRoadObjectMetadata) {
+        switch type {
+        case .incident:
+            self = .incident(metadata.isMBNNIncidentInfo() ? Incident(metadata.getMBNNIncidentInfo()) : nil)
+        case .tollCollectionPoint:
+            self = .tollCollection(metadata.isMBNNTollCollectionInfo() ? TollCollection(metadata.getMBNNTollCollectionInfo()) : nil)
+        case .borderCrossing:
+            self = .borderCrossing(metadata.isMBNNBorderCrossingInfo() ? BorderCrossing(metadata.getMBNNBorderCrossingInfo()) : nil)
+        case .tunnel:
+            self = .tunnel(metadata.isMBNNTunnelInfo() ? Tunnel(metadata.getMBNNTunnelInfo()) : nil)
+        case .serviceArea:
+            self = .serviceArea(metadata.isMBNNServiceAreaInfo() ? RestStop(metadata.getMBNNServiceAreaInfo()) : nil)
+        case .restrictedArea:
+            self = .restrictedArea
+        case .bridge:
+            self = .bridge
         case .custom:
             self = .userDefined
         }

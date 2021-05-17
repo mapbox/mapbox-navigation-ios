@@ -1,5 +1,5 @@
 binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon-ios.json" "11.0.2"
-binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.json" "48.0.5"
+binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.json" "49.0.1"
 github "Quick/Nimble" "v9.2.0"
 github "Quick/Quick" "v3.1.2"
 github "Udumft/SwiftCLI" "da19d2a16cd5aa838d8fb7256e28c171bc67dd82"
