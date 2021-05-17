@@ -52,7 +52,7 @@
 		2BE7016925371E3400F46E4E /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7016825371E3400F46E4E /* Incident.swift */; };
 		2BE70189253734A000F46E4E /* TollCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7012C2535946300F46E4E /* TollCollection.swift */; };
 		2EBF20AE25D6F89000DB7BF2 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EBF20AD25D6F89000DB7BF2 /* Utils.swift */; };
-		2EFADFFB264C1F9200B618C4 /* RoadObjectDistanceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE8264C1F9200B618C4 /* RoadObjectDistanceInfo.swift */; };
+		2EFADFFB264C1F9200B618C4 /* DistancedRoadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFE8264C1F9200B618C4 /* DistancedRoadObject.swift */; };
 		2EFADFFD264C1F9200B618C4 /* OpenLROrientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */; };
 		2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */; };
 		2EFAE000264C1F9200B618C4 /* RoadObjectPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */; };
@@ -565,7 +565,7 @@
 		2BE7013C25359C7B00F46E4E /* RouteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAlert.swift; sourceTree = "<group>"; };
 		2BE7016825371E3400F46E4E /* Incident.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Incident.swift; sourceTree = "<group>"; };
 		2EBF20AD25D6F89000DB7BF2 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
-		2EFADFE8264C1F9200B618C4 /* RoadObjectDistanceInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectDistanceInfo.swift; sourceTree = "<group>"; };
+		2EFADFE8264C1F9200B618C4 /* DistancedRoadObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistancedRoadObject.swift; sourceTree = "<group>"; };
 		2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLROrientation.swift; sourceTree = "<group>"; };
 		2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OpenLRSideOfRoad.swift; sourceTree = "<group>"; };
 		2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadObjectPosition.swift; sourceTree = "<group>"; };
@@ -1882,6 +1882,7 @@
 		DA5F446325F0744C00F573EC /* EHorizon */ = {
 			isa = PBXGroup;
 			children = (
+				2EFADFE8264C1F9200B618C4 /* DistancedRoadObject.swift */,
 				DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */,
 				2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */,
 				2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */,
@@ -1892,7 +1893,6 @@
 				DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */,
 				DA5F44C425F07AB500F573EC /* RoadName.swift */,
 				DAF27251264E02D800C0AC37 /* RoadObject.swift */,
-				2EFADFE8264C1F9200B618C4 /* RoadObjectDistanceInfo.swift */,
 				DA5F44DB25F07D1400F573EC /* RoadObjectEdgeLocation.swift */,
 				2EFADFF3264C1F9200B618C4 /* RoadObjectLocation.swift */,
 				2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */,
@@ -2786,7 +2786,7 @@
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */,
-				2EFADFFB264C1F9200B618C4 /* RoadObjectDistanceInfo.swift in Sources */,
+				2EFADFFB264C1F9200B618C4 /* DistancedRoadObject.swift in Sources */,
 				354A9BC620EA991900F03325 /* SessionState.swift in Sources */,
 				35C98733212E037900808B82 /* RouteState.swift in Sources */,
 				C582FD5F203626E900A9086E /* CLLocationDirection.swift in Sources */,

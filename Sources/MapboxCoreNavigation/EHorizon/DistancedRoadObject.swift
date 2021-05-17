@@ -6,7 +6,7 @@ import MapboxNavigationNative
  * Contains information about distance to the road object of a concrete
  * type/shape (gantry, polygon, line, point etc.).
  */
-public enum RoadObjectDistanceInfo {
+public enum DistancedRoadObject {
     /**
      The information about distance to the road object represented as a point.
      - parameter identifier: Road object identifier.
@@ -70,7 +70,7 @@ public enum RoadObjectDistanceInfo {
               length: CLLocationDistance)
 
     /** Road object identifier */
-    public var roadObjectIdentifier: RoadObjectIdentifier {
+    public var identifier: RoadObjectIdentifier {
         switch self {
         case .point(let identifier, _, _),
              .gantry(let identifier, _, _),
@@ -82,7 +82,7 @@ public enum RoadObjectDistanceInfo {
     }
 
     /** Road object type */
-    public var roadObjectType: RoadObjectType {
+    public var type: RoadObjectType {
         switch self {
         case .point(_, let type, _),
              .gantry(_, let type, _),
