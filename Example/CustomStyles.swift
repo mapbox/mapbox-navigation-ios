@@ -12,7 +12,7 @@ class CustomDayStyle: DayStyle {
     required init() {
         super.init()
         
-        mapStyleURL = StyleURI.satelliteStreets.rawValue
+        mapStyleURL = URL(string: StyleURI.satelliteStreets.rawValue)!
         previewMapStyleURL = mapStyleURL
         styleType = .day
     }
@@ -31,7 +31,7 @@ class CustomNightStyle: NightStyle {
     required init() {
         super.init()
         
-        mapStyleURL = StyleURI.satelliteStreets.rawValue
+        mapStyleURL = URL(string: StyleURI.satelliteStreets.rawValue)!
         previewMapStyleURL = mapStyleURL
         styleType = .night
     }

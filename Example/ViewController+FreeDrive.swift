@@ -68,7 +68,7 @@ extension ViewController {
                                               lineWidth: 3.0,
                                               lineString: LineString([]))
         
-        navigationMapView.mapView.on(.styleLoaded, handler: { [weak self] _ in
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
             guard let self = self else { return }
             self.addStyledFeature(self.trackStyledFeature)
             self.addStyledFeature(self.rawTrackStyledFeature)
@@ -77,15 +77,15 @@ extension ViewController {
     
     func updateFreeDriveStyledFeatures() {
         do {
-            let style = navigationMapView.mapView.style
-            if let _ = try style?.source(withId: trackStyledFeature.sourceIdentifier, type: GeoJSONSource.self) {
-                try style?.updateGeoJSONSource(withId: trackStyledFeature.sourceIdentifier,
-                                               geoJSON: Feature(geometry: .lineString(trackStyledFeature.lineString)))
+            guard let style = navigationMapView.mapView.style else { return }
+            if style.sourceExists(withId: trackStyledFeature.sourceIdentifier) {
+                try style.updateGeoJSONSource(withId: trackStyledFeature.sourceIdentifier,
+                                              geoJSON: Feature(geometry: .lineString(trackStyledFeature.lineString)))
             }
             
-            if let _ = try style?.source(withId: rawTrackStyledFeature.sourceIdentifier, type: GeoJSONSource.self) {
-                try style?.updateGeoJSONSource(withId: rawTrackStyledFeature.sourceIdentifier,
-                                               geoJSON: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
+            if style.sourceExists(withId: rawTrackStyledFeature.sourceIdentifier) {
+                try style.updateGeoJSONSource(withId: rawTrackStyledFeature.sourceIdentifier,
+                                              geoJSON: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
             }
         } catch {
             NSLog("Error occured while performing operation with source: \(error.localizedDescription).")

@@ -39,7 +39,7 @@ class CustomViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationMapView.mapView.style.uri = .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!)
+        navigationMapView.mapView.style.uri = StyleURI.init(rawValue: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")
         navigationMapView.userCourseView.isHidden = false
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
@@ -56,7 +56,7 @@ class CustomViewController: UIViewController {
         // Start navigation
         navigationService.start()
         
-        navigationMapView.mapView.on(.styleLoaded, handler: { [weak self] _ in
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
             self?.navigationMapView.show([route])
         })

@@ -25,7 +25,7 @@ class NavigationMapViewTests: XCTestCase {
         
         navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         styleLoadingExpectation = expectation(description: "Style Loaded Expectation")
-        navigationMapView.mapView.on(.styleLoadingFinished) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             XCTAssertNotNil(self.navigationMapView.mapView.style)
             self.styleLoadingExpectation.fulfill()
         }
