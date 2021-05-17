@@ -55,7 +55,7 @@ class Navigator {
 
     let tileStore: TileStore
 
-    lazy var roadObjectMathcher: RoadObjectMatcher = {
+    lazy var roadObjectMatcher: RoadObjectMatcher = {
         return RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
     }()
     

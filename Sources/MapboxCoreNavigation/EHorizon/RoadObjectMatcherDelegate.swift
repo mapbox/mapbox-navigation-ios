@@ -4,7 +4,7 @@ import MapboxNavigationNative
 /**
  `RoadObjectMatcher` delegate.
  */
-public protocol RoadObjectMatcherDelegate: class {
+public protocol RoadObjectMatcherDelegate: AnyObject {
     /**
      This method is called when the matching is finished.
      - parameter result: Result of road object matching,

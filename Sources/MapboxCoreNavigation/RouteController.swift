@@ -444,7 +444,7 @@ open class RouteController: NSObject {
 
     /// The road object matcher that allows to match custom road objects.
     public var roadObjectMatcher: RoadObjectMatcher {
-        return Navigator.shared.roadObjectMathcher
+        return Navigator.shared.roadObjectMatcher
     }
 }
 
