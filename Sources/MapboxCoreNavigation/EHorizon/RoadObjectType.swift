@@ -14,26 +14,17 @@ public enum RoadObjectType {
     /** Road object represents some border crossing */
     case borderCrossing(BorderCrossing?)
 
-    /** Road object represents some tunnel entrance */
-    case tunnelEntrance(Tunnel?)
-
-    /** Road object represents some tunnel exit */
-    case tunnelExit(Tunnel?)
+    /** Road object represents some tunnel */
+    case tunnel(Tunnel?)
 
     /** Road object represents some service area */
     case serviceArea(RestStop?)
 
-    /** Road object represents some restricted area entrance */
-    case restrictedAreaEntrance
+    /** Road object represents some restricted area */
+    case restrictedArea
 
-    /** Road object represents some restricted area exit */
-    case restrictedAreaExit
-
-    /** Road object represents some bridge entrance */
-    case bridgeEntrance
-
-    /** Road object represents some bridge exit */
-    case bridgeExit
+    /** Road object represents some bridge */
+    case bridge
 
     /** Reserved for future use. */
     case userDefined
@@ -46,47 +37,35 @@ public enum RoadObjectType {
             self = .tollCollection(nil)
         case .borderCrossing:
             self = .borderCrossing(nil)
-        case .tunnelEntrance:
-            self = .tunnelEntrance(nil)
-        case .tunnelExit:
-            self = .tunnelExit(nil)
+        case .tunnel:
+            self = .tunnel(nil)
         case .serviceArea:
             self = .serviceArea(nil)
-        case .restrictedAreaEntrance:
-            self = .restrictedAreaEntrance
-        case .restrictedAreaExit:
-            self = .restrictedAreaExit
-        case .bridgeEntrance:
-            self = .bridgeEntrance
-        case .bridgeExit:
-            self = .bridgeExit
+        case .restrictedArea:
+            self = .restrictedArea
+        case .bridge:
+            self = .bridge
         case .custom:
             self = .userDefined
         }
     }
 
-    init(_ native: MapboxNavigationNative.RoadObjectMetadata) {
-        switch native.type {
+    init(type: MapboxNavigationNative.RoadObjectType, metadata: MapboxNavigationNative.MBNNRoadObjectMetadata) {
+        switch type {
         case .incident:
-            self = .incident(native.incident != nil ? Incident(native.incident!) : nil)
-        case .tunnelEntrance:
-            self = .tunnelEntrance(native.tunnelInfo != nil ? Tunnel(native.tunnelInfo!) : nil)
-        case .tunnelExit:
-            self = .tunnelExit(native.tunnelInfo != nil ? Tunnel(native.tunnelInfo!) : nil)
-        case .borderCrossing:
-            self = .borderCrossing(native.borderCrossingInfo != nil ? BorderCrossing(native.borderCrossingInfo!) : nil)
+            self = .incident(metadata.isMBNNIncidentInfo() ? Incident(metadata.getMBNNIncidentInfo()) : nil)
         case .tollCollectionPoint:
-            self = .tollCollection(native.tollCollectionInfo != nil ? TollCollection(native.tollCollectionInfo!) : nil)
+            self = .tollCollection(metadata.isMBNNTollCollectionInfo() ? TollCollection(metadata.getMBNNTollCollectionInfo()) : nil)
+        case .borderCrossing:
+            self = .borderCrossing(metadata.isMBNNBorderCrossingInfo() ? BorderCrossing(metadata.getMBNNBorderCrossingInfo()) : nil)
+        case .tunnel:
+            self = .tunnel(metadata.isMBNNTunnelInfo() ? Tunnel(metadata.getMBNNTunnelInfo()) : nil)
         case .serviceArea:
-            self = .serviceArea(native.serviceAreaInfo != nil ? RestStop(native.serviceAreaInfo!) : nil)
-        case .restrictedAreaEntrance:
-            self = .restrictedAreaEntrance
-        case .restrictedAreaExit:
-            self = .restrictedAreaExit
-        case .bridgeEntrance:
-            self = .bridgeEntrance
-        case .bridgeExit:
-            self = .bridgeExit
+            self = .serviceArea(metadata.isMBNNServiceAreaInfo() ? RestStop(metadata.getMBNNServiceAreaInfo()) : nil)
+        case .restrictedArea:
+            self = .restrictedArea
+        case .bridge:
+            self = .bridge
         case .custom:
             self = .userDefined
         }

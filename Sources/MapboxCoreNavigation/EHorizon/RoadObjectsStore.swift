@@ -36,27 +36,14 @@ public final class RoadObjectsStore {
     }
 
     /**
-     Returns type of object with given identifier, if such object cannot be found returns null.
+     Returns road object with given identifier, if such object cannot be found returns null.
      NB: since road objects can be removed/added in background we should always check return value for null,
      even if we know that we have object with such identifier based on previous calls.
      - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
-    public func roadObjectMetadata(identifier roadObjectIdentifier: RoadObjectIdentifier) -> RoadObjectMetadata? {
-        if let metadata = native.getRoadObjectMetadata(forRoadObjectId: roadObjectIdentifier) {
-            return RoadObjectType(metadata)
-        }
-        return nil
-    }
-
-    /**
-     Returns location of object with given identifier, if such object cannot be found returns null.
-     NB: since road objects can be removed/added in background we should always check return value for null,
-     even if we know that we have object with such identifier based on previous calls.
-     - parameter roadObjectIdentifier: The identifier of the road object to query.
-     */
-    public func roadObjectLocation(identifier roadObjectIdentifier: RoadObjectIdentifier) -> RoadObjectLocation? {
-        if let location = native.getRoadObjectLocation(forRoadObjectId: roadObjectIdentifier) {
-            return RoadObjectLocation(location)
+    public func roadObject(identifier roadObjectIdentifier: RoadObjectIdentifier) -> RoadObject? {
+        if let roadObject = native.getRoadObject(forId: roadObjectIdentifier) {
+            return RoadObject(roadObject)
         }
         return nil
     }

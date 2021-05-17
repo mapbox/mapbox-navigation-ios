@@ -18,6 +18,13 @@ extension RoadGraph {
         /** Length of a path, measured in meters. */
         public let length: CLLocationDistance
 
+        public init(edgeIdentifiers: [RoadGraph.Edge.Identifier], fractionFromStart: Double, fractionToEnd: Double, length: CLLocationDistance) {
+            self.edgeIdentifiers = edgeIdentifiers
+            self.fractionFromStart = fractionFromStart
+            self.fractionToEnd = fractionToEnd
+            self.length = length
+        }
+
         init(_ native: GraphPath) {
             self.edgeIdentifiers = native.edges.map { $0.uintValue }
             self.fractionFromStart = native.percentAlongBegin
