@@ -60,7 +60,10 @@ extension NavigationMapView {
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
-            try mapView.style.removeLayer(withId: identifier)
+            if mapView.style.layerExists(withId: identifier) {
+                try mapView.style.removeLayer(withId: identifier)
+            }
+            
             if identifiers.isEmpty { return }
             var highlightedBuildingsLayer = FillExtrusionLayer(id: identifier)
             highlightedBuildingsLayer.source = "composite"

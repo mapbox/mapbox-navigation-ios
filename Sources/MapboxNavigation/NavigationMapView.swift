@@ -473,7 +473,7 @@ open class NavigationMapView: UIView {
             NSLog("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).")
         }
         
-        let layerIdentifier = route.identifier(.route(isMainRoute: isMainRoute))
+        var layerIdentifier = route.identifier(.route(isMainRoute: isMainRoute))
         var lineLayer = delegate?.navigationMapView(self,
                                                     routeLineLayerWithIdentifier: layerIdentifier,
                                                     sourceIdentifier: sourceIdentifier)
@@ -506,10 +506,19 @@ open class NavigationMapView: UIView {
         
         if let lineLayer = lineLayer {
             do {
-                try mapView.style.addLayer(lineLayer,
-                                           layerPosition: isMainRoute ?
-                                            LayerPosition(above: mapView.mainRouteLineParentLayerIdentifier) :
-                                            LayerPosition(below: parentLayerIndentifier))
+                var layerPosition: MapboxMaps.LayerPosition? = nil
+                
+                if isMainRoute {
+                    if let aboveLayerIdentifier = mapView.mainRouteLineParentLayerIdentifier {
+                        layerPosition = .above(aboveLayerIdentifier)
+                    }
+                } else {
+                    if let belowLayerIdentifier = parentLayerIndentifier {
+                        layerPosition = .below(belowLayerIdentifier)
+                    }
+                }
+                
+                try mapView.style.addLayer(lineLayer, layerPosition: layerPosition)
             } catch {
                 NSLog("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).")
             }
@@ -552,7 +561,11 @@ open class NavigationMapView: UIView {
         
         if let lineLayer = lineLayer {
             do {
-                try mapView.style.addLayer(lineLayer, layerPosition: LayerPosition(below: parentLayerIndentifier))
+                var layerPosition: MapboxMaps.LayerPosition? = nil
+                if let parentLayerIndentifier = parentLayerIndentifier {
+                    layerPosition = .below(parentLayerIndentifier)
+                }
+                try mapView.style.addLayer(lineLayer, layerPosition: layerPosition)
             } catch {
                 NSLog("Failed to add route casing layer \(layerIdentifier) with error: \(error.localizedDescription).")
             }
@@ -609,10 +622,10 @@ open class NavigationMapView: UIView {
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
                     
                     if mapView.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
-                        try mapView.style.addLayer(circlesLayer, layerPosition: LayerPosition(above: NavigationMapView.LayerIdentifier.arrowSymbolLayer))
+                        try mapView.style.addLayer(circlesLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                     } else {
                         let layerIdentifier = route.identifier(.route(isMainRoute: true))
-                        try mapView.style.addLayer(circlesLayer, layerPosition: LayerPosition(above: layerIdentifier))
+                        try mapView.style.addLayer(circlesLayer, layerPosition: .above(layerIdentifier))
                     }
                     
                     let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
@@ -620,7 +633,7 @@ open class NavigationMapView: UIView {
                                                                    waypointSymbolLayerWithIdentifier: waypointSymbolLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointSymbolLayer()
                     
-                    try mapView.style.addLayer(symbolsLayer, layerPosition: LayerPosition(above: circlesLayer.id))
+                    try mapView.style.addLayer(symbolsLayer, layerPosition: .above(circlesLayer.id))
                 }
             } catch {
                 NSLog("Failed to perform operation while adding waypoint with error: \(error.localizedDescription).")
@@ -771,7 +784,7 @@ open class NavigationMapView: UIView {
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
                     if mapView.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
-                        try mapView.style.addLayer(arrowLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.waypointCircleLayer))
+                        try mapView.style.addLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
                     } else {
                         try mapView.style.addLayer(arrowLayer)
                     }
@@ -792,7 +805,7 @@ open class NavigationMapView: UIView {
                     
                     try mapView.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
-                    try mapView.style.addLayer(arrowStrokeLayer, layerPosition: LayerPosition(above: mainRouteLayerIdentifier))
+                    try mapView.style.addLayer(arrowStrokeLayer, layerPosition: .above(mainRouteLayerIdentifier))
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
@@ -829,7 +842,7 @@ open class NavigationMapView: UIView {
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
                     try mapView.style.addLayer(arrowSymbolLayer)
-                    try mapView.style.addLayer(arrowSymbolCasingLayer, layerPosition: LayerPosition(below: NavigationMapView.LayerIdentifier.arrowSymbolLayer))
+                    try mapView.style.addLayer(arrowSymbolCasingLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
             }
         } catch {

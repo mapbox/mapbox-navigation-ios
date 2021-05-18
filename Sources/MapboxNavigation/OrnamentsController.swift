@@ -232,10 +232,13 @@ extension NavigationMapView {
                     streetLabelLayer.filter = filter
                 }
                 
-                let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id
-                
                 do {
-                    try mapView.style.addLayer(streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
+                    var layerPosition: MapboxMaps.LayerPosition? = nil
+                    if let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id {
+                        layerPosition = .below(firstLayerIdentifier)
+                    }
+                    
+                    try mapView.style.addLayer(streetLabelLayer, layerPosition: layerPosition)
                 } catch {
                     NSLog("Failed to add \(roadLabelStyleLayerIdentifier) with error: \(error.localizedDescription).")
                 }
