@@ -40,6 +40,11 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
         instruction = previousInstruction
     }
     
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        update()
+    }
+    
     private var instructionPresenter: InstructionPresenter?
 }
 
