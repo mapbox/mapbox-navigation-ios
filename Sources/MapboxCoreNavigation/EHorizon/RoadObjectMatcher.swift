@@ -28,7 +28,7 @@ final public class RoadObjectMatcher {
      - parameter identifier: Unique identifier of the object.
      */
     public func matchOpenLR(location: String, standard: OpenLRStandard, identifier: RoadObjectIdentifier) {
-        native.matchOpenLR(forBase64Encoded: location, standard: standard.native, id: identifier)
+        native.matchOpenLR(forBase64Encoded: location, standard: MapboxNavigationNative.OpenLRStandard(standard), id: identifier)
     }
 
     /**
@@ -103,9 +103,9 @@ extension RoadObjectMatcher: RoadObjectMatcherListener {
                             MapboxNavigationNative.RoadObjectMatcherError>(expected: roadObject)
         switch result {
         case .success(let roadObject):
-            delegate?.didMatchRoadObject(result: .success(RoadObject(roadObject)))
+            delegate?.roadObjectMatcher(self, didMatch: RoadObject(roadObject))
         case .failure(let error):
-            delegate?.didMatchRoadObject(result: .failure(RoadObjectMatcherError(error)))
+            delegate?.roadObjectMatcher(self, didFailToMatchWith: RoadObjectMatcherError(error))
         }
     }
 }

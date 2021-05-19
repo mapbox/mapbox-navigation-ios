@@ -365,7 +365,7 @@ extension RoadGraph {
         public static let updatesMostProbablePathKey: NotificationUserInfoKey = .init(rawValue: "updatesMostProbablePath")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an array of upcoming road object distances from the user’s current location as `RoadObjectDistanceInfo` values. */
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an array of upcoming road object distances from the user’s current location as `DistancedRoadObject` values. */
         public static let distancesByRoadObjectKey: NotificationUserInfoKey = .init(rawValue: "distancesByRoadObject")
         
         /**

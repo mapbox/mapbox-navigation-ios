@@ -6,10 +6,12 @@ import MapboxNavigationNative
  */
 public protocol RoadObjectMatcherDelegate: AnyObject {
     /**
-     This method is called when the matching is finished.
-     - parameter result: Result of road object matching,
-     which is represented as an instance of `RoadObject` if the matching was successful,
-     and as an instance of `RoadObjectMatcherError` otherwise.
+     This method is called with a road object when the matching is successfully finished.
      */
-    func didMatchRoadObject(result: Result<RoadObject, RoadObjectMatcherError>)
+    func roadObjectMatcher(_ matcher: RoadObjectMatcher, didMatch roadObject: RoadObject)
+
+    /**
+     This method is called when the matching is finished with error.
+     */
+    func roadObjectMatcher(_ matcher: RoadObjectMatcher, didFailToMatchWith error: RoadObjectMatcherError)
 }

@@ -17,13 +17,15 @@ public enum OpenLRStandard {
      Only line locations are supported.
      */
     case tpeg
+}
 
-    var native: MapboxNavigationNative.OpenLRStandard {
-        switch self {
+extension MapboxNavigationNative.OpenLRStandard {
+    init(_ standard: OpenLRStandard) {
+        switch standard {
         case .tomTom:
-            return .tomTom
+            self = .tomTom
         case .tpeg:
-            return .TPEG
+            self = .TPEG
         }
     }
 }

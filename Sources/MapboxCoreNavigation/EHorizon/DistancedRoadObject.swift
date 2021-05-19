@@ -128,7 +128,7 @@ public enum DistancedRoadObject {
                          isEntryFromStart: info.isEntryFromStart,
                          length: info.length)
         } else {
-            preconditionFailure("RoadObjectDistanceInfo can't be constructed. Unknown type.")
+            preconditionFailure("DistancedRoadObject can't be constructed. Unknown type.")
         }
     }
 }
