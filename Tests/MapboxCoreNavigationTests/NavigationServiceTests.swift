@@ -55,7 +55,7 @@ class NavigationServiceTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
-        try? Navigator.shared.navigator.resetRideSession()
+        Navigator.shared.navigator.resetRideSession()
     }
 
     func testDefaultUserInterfaceUsage() {
