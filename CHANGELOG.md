@@ -55,6 +55,8 @@
 * Added `RoadObjectMatcher` class that creates user-defined road objects by matching location primitives to the road graph. Accessible through `RouteController.roadObjectMatcher` and `PassiveLocationDataSource.roadObjectMatcher`. Matched road object or matching error `RoadObjectMatcherError` is delivered via `RoadObjectMatcherDelegate`. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
 * Added `OpenLRStandard` enum which specifies OpenLR standard of encoded OpenLR location. Used for road object matching via `RoadObjectMatcher`. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
 * Added `RoadObjectsStore.addUserDefinedRoadObject(_:)`, `RoadObjectsStore.removeUserDefinedRoadObject(identifier:)`, and `RoadObjectsStore.removeAllUserDefinedRoadObjects()` for adding/removing user-defined road objects to the electronic horizon. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
+* Removed `Alert` enum, and `alert`, `distance`, `length`, `beginCoordinate`, `endCoordinate`, `beginSegmentIndex`, and `endSegmentIndex` properties from `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added the `RouteAlerts.roadObject` property. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 
 ### Camera
 
@@ -86,10 +88,8 @@
 * Fixed an issue where lane guidance icons would sometimes highlight the wrong arrow.([#2942](https://github.com/mapbox/mapbox-navigation-ios/pull/2942))
 * The duration annotations added by the `NavigationMapView.showRouteDurations(along:)` method are now set in the fonts you specify using the `NavigationMapView.routeDurationAnnotationFontNames` property. Use this property to specify a list of fallback fonts for better language support. ([#2873](https://github.com/mapbox/mapbox-navigation-ios/pull/2873))
 * Removed deprecated and obsoleted `EventsManager` typealias, `StatusView.delegate`, `StatusView.canChangeValue`, `RouteLegProgress.upComingStep`, `StatusViewDelegate`, `DeprecatedStatusViewDelegate` and `BottomBannerViewController.init(delegate:)`. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
-* Removed `Alert` enum, and `alert`, `distance`, `length`, `beginCoordinate`, `endCoordinate`, `beginSegmentIndex`, and `endSegmentIndex` properties from `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Added `RoadObject` a property to `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
-* Fixed an issue where `MultiplexedSpeechSynthesizer` could cause circular reference([#3005](https://github.com/mapbox/mapbox-navigation-ios/pull/3005))
-* Fixed the color mismatches of attributed strings in banner instructions when switching between light and dark mode. ([#2977](https://github.com/mapbox/mapbox-navigation-ios/pull/2977))
+* Fixed a potential memory leak when using `MultiplexedSpeechSynthesizer`. ([#3005](https://github.com/mapbox/mapbox-navigation-ios/pull/3005))
+* Fixed an issue where instruction banners could appear in the wrong color after switching between `Style`s. ([#2977](https://github.com/mapbox/mapbox-navigation-ios/pull/2977))
 
 ## v1.4.0
 
