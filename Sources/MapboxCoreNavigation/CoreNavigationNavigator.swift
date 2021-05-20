@@ -105,7 +105,7 @@ class Navigator {
                                                        minimumDaysToPersistVersion: nil)
 
         let tileStorePath = Self.tilesURL?.path ?? ""
-        tileStore = TileStore.getInstanceForPath(tileStorePath)
+        tileStore = TileStore.__getInstanceForPath(tileStorePath)
         let tilesConfig = TilesConfig(tilesPath: tileStorePath,
                                       tileStore: tileStore,
                                       inMemoryTileCache: nil,
