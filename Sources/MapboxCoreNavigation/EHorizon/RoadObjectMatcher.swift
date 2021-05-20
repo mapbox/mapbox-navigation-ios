@@ -1,5 +1,6 @@
 import Foundation
 import MapboxNavigationNative
+import Turf
 
 /**
  Provides methods for road object matching.
@@ -39,8 +40,8 @@ final public class RoadObjectMatcher {
      - parameter polyline: Polyline representing the object.
      - parameter identifier: Unique identifier of the object.
      */
-    public func matchPolyline(_ polyline: [CLLocation], identifier: RoadObjectIdentifier) {
-        native.matchPolyline(forPolyline: polyline, id: identifier)
+    public func match(polyline: LineString, identifier: RoadObjectIdentifier) {
+        native.matchPolyline(forPolyline: polyline.coordinates.map(CLLocation.init), id: identifier)
     }
 
     /**
@@ -51,8 +52,8 @@ final public class RoadObjectMatcher {
      - parameter polygon: Polygon representing the object.
      - parameter identifier: Unique identifier of the object.
      */
-    public func matchPolygon(_ polygon: [CLLocation], identifier: RoadObjectIdentifier) {
-        native.matchPolygon(forPolygon: polygon, id: identifier)
+    public func match(polygon: Polygon, identifier: RoadObjectIdentifier) {
+        native.matchPolygon(forPolygon: polygon.outerRing.coordinates.map(CLLocation.init), id: identifier)
     }
 
     /**
@@ -63,8 +64,8 @@ final public class RoadObjectMatcher {
      - parameter gantry: Gantry representing the object.
      - parameter identifier: Unique identifier of the object.
      */
-    public func matchGantry(_ gantry: [CLLocation], identifier: RoadObjectIdentifier) {
-        native.matchGantry(forGantry: gantry, id: identifier)
+    public func match(gantry: MultiPoint, identifier: RoadObjectIdentifier) {
+        native.matchGantry(forGantry: gantry.coordinates.map(CLLocation.init), id: identifier)
     }
 
     /**
@@ -73,7 +74,7 @@ final public class RoadObjectMatcher {
      - parameter point: Point representing the object.
      - parameter identifier: Unique identifier of the object.
      */
-    public func matchPoint(_ point: CLLocationCoordinate2D, identifier: RoadObjectIdentifier) {
+    public func match(point: CLLocationCoordinate2D, identifier: RoadObjectIdentifier) {
         native.matchPoint(forPoint: point, id: identifier)
     }
 
@@ -111,3 +112,9 @@ extension RoadObjectMatcher: RoadObjectMatcherListener {
 }
 
 extension MapboxNavigationNative.RoadObjectMatcherError: Error {}
+
+extension CLLocation {
+    convenience init(coordinate: CLLocationCoordinate2D) {
+        self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+}
