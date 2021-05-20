@@ -64,8 +64,7 @@ public final class RoadObjectsStore {
      */
     public func addUserDefinedRoadObject(_ roadObject: RoadObject) {
         guard let nativeObject = roadObject.native else {
-            assertionFailure("You can only add matched custom road objects, acquired from RoadObjectMatcher.")
-            return
+            preconditionFailure("You can only add matched custom road objects, acquired from RoadObjectMatcher.")
         }
         native.addCustomRoadObject(for: nativeObject)
     }
