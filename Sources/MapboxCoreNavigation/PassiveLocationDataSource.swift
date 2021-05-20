@@ -118,7 +118,7 @@ open class PassiveLocationDataSource: NSObject {
         var signStandard: SignStandard?
 
         delegate?.passiveLocationDataSource(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
-        let matches = status.map_matcher_output.matches.map {
+        let matches = status.mapMatcherOutput.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
         }
 

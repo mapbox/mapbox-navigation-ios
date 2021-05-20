@@ -192,26 +192,26 @@ open class RouteController: NSObject {
     func geometryEncoding(_ routeShapeFormat: RouteShapeFormat) -> ActiveGuidanceGeometryEncoding {
         switch routeShapeFormat {
         case .geoJSON:
-            return .kGeoJSON
+            return .geoJSON
         case .polyline:
-            return .kPolyline5
+            return .polyline5
         case .polyline6:
-            return .kPolyline6
+            return .polyline6
         }
     }
     
     func mode(_ profileIdentifier: DirectionsProfileIdentifier) -> ActiveGuidanceMode {
         switch profileIdentifier {
         case .automobile:
-            return .kDriving
+            return .driving
         case .automobileAvoidingTraffic:
-            return .kDriving
+            return .driving
         case .cycling:
-            return .kCycling
+            return .cycling
         case .walking:
-            return .kWalking
+            return .walking
         default:
-            return .kDriving
+            return .driving
         }
     }
     
