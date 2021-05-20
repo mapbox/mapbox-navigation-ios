@@ -101,8 +101,6 @@
 		355B469B22B902C9009CE634 /* SKUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469A22B902C9009CE634 /* SKUTests.swift */; };
 		355B469D22B9031E009CE634 /* SKUTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355B469C22B9031E009CE634 /* SKUTestable.swift */; };
 		355B469F22B904D3009CE634 /* OHHTTPStubs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 355B469E22B904D2009CE634 /* OHHTTPStubs.framework */; };
-		355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */; };
-		355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = 355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */; };
 		355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */; };
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
 		3577B878214FF35800094294 /* FavoritesList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3577B877214FF35800094294 /* FavoritesList.swift */; };
@@ -156,7 +154,6 @@
 		35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35DC9D901F4323AA001ECD64 /* LanesView.swift */; };
 		35E407681F5625FF00EFC814 /* StyleKitMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E407671F5625FF00EFC814 /* StyleKitMarker.swift */; };
 		35E5B963227B4B620033A124 /* CarPlayCompassViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35E5B962227B4B620033A124 /* CarPlayCompassViewSnapshotTests.swift */; };
-		35EB9A6A20A1AB7C00CB1225 /* turn_left.data in Resources */ = {isa = PBXBuildFile; fileRef = 35EB9A6920A1A89500CB1225 /* turn_left.data */; };
 		35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35ECAF2C2092275100DC3BC3 /* UIImage.swift */; };
 		35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */; };
 		35EFD009207CA5E800BF3873 /* ManeuverViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3540514E1F73F3F300ED572D /* ManeuverViewTests.swift */; };
@@ -287,12 +284,9 @@
 		B47C1B59261FD3B70078546C /* DummyLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1AD3261FD0A30078546C /* DummyLocationManager.swift */; };
 		B47C1B62261FD3BD0078546C /* DummyURLSessionDataTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1AD2261FD0A30078546C /* DummyURLSessionDataTask.swift */; };
 		B47C1B6B261FD3C30078546C /* Fixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1B00261FD0A30078546C /* Fixture.swift */; };
-		B47C1B74261FD3CF0078546C /* li.tar in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AD4261FD0A30078546C /* li.tar */; };
 		B47C1B7D261FD3D50078546C /* NavigationEventsManagerTestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1AD0261FD0A30078546C /* NavigationEventsManagerTestDoubles.swift */; };
 		B47C1B86261FD3E00078546C /* NavigationPlotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1B01261FD0A30078546C /* NavigationPlotter.swift */; };
 		B47C1B8F261FD3E70078546C /* NavigationServiceTestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1AE2261FD0A30078546C /* NavigationServiceTestDoubles.swift */; };
-		B47C1B98261FD3F30078546C /* turn_left.data in Resources */ = {isa = PBXBuildFile; fileRef = B47C1B04261FD0A30078546C /* turn_left.data */; };
-		B47C1BA1261FD3FB0078546C /* UnionSquare-to-GGPark.route in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AD5261FD0A30078546C /* UnionSquare-to-GGPark.route */; };
 		B48CEFC125796FD300696BB3 /* route-for-vanishing-route-line.json in Resources */ = {isa = PBXBuildFile; fileRef = B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */; };
 		B4A78D19261FD47700FDF212 /* route-with-banner-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AE5261FD0A30078546C /* route-with-banner-instructions.json */; };
 		B4A78D1A261FD47700FDF212 /* route-with-missing-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AE6261FD0A30078546C /* route-with-missing-road-classes.json */; };
@@ -633,8 +627,6 @@
 		355B469A22B902C9009CE634 /* SKUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKUTests.swift; sourceTree = "<group>"; };
 		355B469C22B9031E009CE634 /* SKUTestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKUTestable.swift; sourceTree = "<group>"; };
 		355B469E22B904D2009CE634 /* OHHTTPStubs.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OHHTTPStubs.framework; path = Carthage/Build/iOS/OHHTTPStubs.framework; sourceTree = "<group>"; };
-		355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "GGPark-to-BernalHeights.route"; sourceTree = "<group>"; };
-		355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "UnionSquare-to-GGPark.route"; sourceTree = "<group>"; };
 		355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBannerViewLayout.swift; sourceTree = "<group>"; };
 		35726EE71F0856E900AFA1B6 /* DayStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayStyle.swift; sourceTree = "<group>"; };
 		3573EA70215A5A9F009899D7 /* RouteControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteControllerTests.swift; sourceTree = "<group>"; };
@@ -698,7 +690,6 @@
 		35DC9D901F4323AA001ECD64 /* LanesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanesView.swift; sourceTree = "<group>"; };
 		35E407671F5625FF00EFC814 /* StyleKitMarker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleKitMarker.swift; sourceTree = "<group>"; };
 		35E5B962227B4B620033A124 /* CarPlayCompassViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayCompassViewSnapshotTests.swift; sourceTree = "<group>"; };
-		35EB9A6920A1A89500CB1225 /* turn_left.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = turn_left.data; sourceTree = "<group>"; };
 		35ECAF2C2092275100DC3BC3 /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StyleManagerTests.swift; sourceTree = "<group>"; };
 		35F3387B2232AEBF0071DB5C /* MinimumEditDistance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MinimumEditDistance.swift; sourceTree = "<group>"; };
@@ -840,8 +831,6 @@
 		B47C1AD0261FD0A30078546C /* NavigationEventsManagerTestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEventsManagerTestDoubles.swift; sourceTree = "<group>"; };
 		B47C1AD2261FD0A30078546C /* DummyURLSessionDataTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyURLSessionDataTask.swift; sourceTree = "<group>"; };
 		B47C1AD3261FD0A30078546C /* DummyLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummyLocationManager.swift; sourceTree = "<group>"; };
-		B47C1AD4261FD0A30078546C /* li.tar */ = {isa = PBXFileReference; lastKnownFileType = archive.tar; path = li.tar; sourceTree = "<group>"; };
-		B47C1AD5261FD0A30078546C /* UnionSquare-to-GGPark.route */ = {isa = PBXFileReference; lastKnownFileType = file.bplist; path = "UnionSquare-to-GGPark.route"; sourceTree = "<group>"; };
 		B47C1AE2261FD0A30078546C /* NavigationServiceTestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationServiceTestDoubles.swift; sourceTree = "<group>"; };
 		B47C1AE3261FD0A30078546C /* CoreLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreLocation.swift; sourceTree = "<group>"; };
 		B47C1AE5261FD0A30078546C /* route-with-banner-instructions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-banner-instructions.json"; sourceTree = "<group>"; };
@@ -875,7 +864,6 @@
 		B47C1B01261FD0A30078546C /* NavigationPlotter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPlotter.swift; sourceTree = "<group>"; };
 		B47C1B02261FD0A30078546C /* DirectionsSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSpy.swift; sourceTree = "<group>"; };
 		B47C1B03261FD0A30078546C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		B47C1B04261FD0A30078546C /* turn_left.data */ = {isa = PBXFileReference; lastKnownFileType = file; path = turn_left.data; sourceTree = "<group>"; };
 		B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-vanishing-route-line.json"; sourceTree = "<group>"; };
 		B4D4291826260D5900EE92A8 /* MBXInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
@@ -1283,10 +1271,7 @@
 			isa = PBXGroup;
 			children = (
 				B48CEFAB25796F5A00696BB3 /* route-for-vanishing-route-line.json */,
-				35EB9A6920A1A89500CB1225 /* turn_left.data */,
 				8D07C5A720B612310093D779 /* EmptyStyle.json */,
-				355DB5741EFA78070091BFB7 /* GGPark-to-BernalHeights.route */,
-				355DB5761EFA780E0091BFB7 /* UnionSquare-to-GGPark.route */,
 				351030101F54B72000E3B7E7 /* route-for-lane-testing.json */,
 				35DC9D8E1F4321CC001ECD64 /* route-with-lanes.json */,
 				3540514C1F73F3BB00ED572D /* route-with-straight-roundabout.json */,
@@ -1619,13 +1604,10 @@
 				B47C1AD2261FD0A30078546C /* DummyURLSessionDataTask.swift */,
 				B47C1B00261FD0A30078546C /* Fixture.swift */,
 				B47C1B03261FD0A30078546C /* Info.plist */,
-				B47C1AD4261FD0A30078546C /* li.tar */,
 				B47C1AD0261FD0A30078546C /* NavigationEventsManagerTestDoubles.swift */,
 				B47C1B01261FD0A30078546C /* NavigationPlotter.swift */,
 				B47C1AE2261FD0A30078546C /* NavigationServiceTestDoubles.swift */,
 				B47C1AFF261FD0A30078546C /* TestHelper.h */,
-				B47C1B04261FD0A30078546C /* turn_left.data */,
-				B47C1AD5261FD0A30078546C /* UnionSquare-to-GGPark.route */,
 			);
 			name = TestHelper;
 			path = Sources/TestHelper;
@@ -2283,10 +2265,7 @@
 				DA1755F92357B7A100B06C1D /* md5_crazy_strings.txt in Resources */,
 				351030111F54B72000E3B7E7 /* route-for-lane-testing.json in Resources */,
 				3527D2B91EC4619400C07FC9 /* Fixtures.xcassets in Resources */,
-				355DB5771EFA780E0091BFB7 /* UnionSquare-to-GGPark.route in Resources */,
 				3597ABD421553F6800C12785 /* sthlm-double-back.json in Resources */,
-				355DB5751EFA78070091BFB7 /* GGPark-to-BernalHeights.route in Resources */,
-				35EB9A6A20A1AB7C00CB1225 /* turn_left.data in Resources */,
 				3540514D1F73F3BB00ED572D /* route-with-straight-roundabout.json in Resources */,
 				8D07C5A820B612310093D779 /* EmptyStyle.json in Resources */,
 				35C11359215BADF900CC2929 /* sthlm-double-back-replay.json in Resources */,
@@ -2343,10 +2322,7 @@
 				B4A78D30261FD47700FDF212 /* route-with-road-classes-single-congestion.json in Resources */,
 				B4A78D31261FD47700FDF212 /* route-with-lanes.json in Resources */,
 				B4A78D32261FD47700FDF212 /* sthlm-double-back.json in Resources */,
-				B47C1B74261FD3CF0078546C /* li.tar in Resources */,
-				B47C1B98261FD3F30078546C /* turn_left.data in Resources */,
 				B48CEFC125796FD300696BB3 /* route-for-vanishing-route-line.json in Resources */,
-				B47C1BA1261FD3FB0078546C /* UnionSquare-to-GGPark.route in Resources */,
 				8D86AE8C21C31F210064A304 /* waypoint-after-turn.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

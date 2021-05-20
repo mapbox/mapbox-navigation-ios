@@ -68,10 +68,18 @@ let package = Package(
                 "MapboxNavigation",
             ],
             exclude: ["Info.plist"],
-            resources: [.process("Fixtures")]),
+            resources: [
+                .process("Fixtures"),
+                .process("tiles"),
+            ]
+        ),
         .testTarget(
             name: "MapboxCoreNavigationTests",
             dependencies: ["TestHelper"],
-            exclude: ["Info.plist"]),
+            exclude: ["Info.plist"],
+            resources: [
+                .process("Fixtures"),
+            ]
+        ),
     ]
 )
