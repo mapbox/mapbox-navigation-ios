@@ -76,8 +76,29 @@ class Navigator {
      Restrict direct initializer access.
      */
     private init() {
-        let settingsProfile = SettingsProfile(application: ProfileApplication.kMobile,
-                                              platform: ProfilePlatform.KIOS)
+        let settingsProfile = SettingsProfile(application: .mobile, platform: .IOS)
+        
+        let navigatorConfig = NavigatorConfig(voiceInstructionThreshold: nil,
+                                              electronicHorizonOptions: nil,
+                                              polling: nil,
+                                              incidentsOptions: nil,
+                                              noSignalSimulationEnabled: nil)
+        
+        let historyAutorecordingConfig = [
+            "features": [
+                "historyAutorecording": true
+            ]
+        ]
+        
+        var customConfig = ""
+        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: historyAutorecordingConfig, options: []),
+           let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
+            customConfig = encodedConfig
+        }
+        
+        let configFactory = ConfigFactory.build(for: settingsProfile, config: navigatorConfig, customConfig: customConfig)
+        
+        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyDirectoryURL?.path ?? "", config: configFactory)
         
         let endpointConfig = TileEndpointConfiguration(credentials:Navigator.credentials ?? Directions.shared.credentials,
                                                        tilesVersion: Self.tilesVersion,
@@ -92,24 +113,6 @@ class Navigator {
                                       mapMatchingSpatialCache: nil,
                                       threadsCount: nil,
                                       endpointConfig: endpointConfig)
-        
-        let historyAutorecordingConfig = [
-            "features": [
-                "historyAutorecording": true
-            ]
-        ]
-        
-        var customConfig = ""
-        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: historyAutorecordingConfig, options: []),
-           let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
-            customConfig = encodedConfig
-        }
-        
-        let configFactory = ConfigFactory.build(for: settingsProfile,
-                                                config: NavigatorConfig(),
-                                                customConfig: customConfig)
-        
-        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyDirectoryURL?.path ?? "", config: configFactory)
         
         let runloopExecutor = RunLoopExecutorFactory.build()
         cacheHandle = CacheFactory.build(for: tilesConfig,
@@ -148,7 +151,7 @@ extension Navigator: ElectronicHorizonObserver {
         let userInfo: [RoadGraph.NotificationUserInfoKey: Any] = [
             .positionKey: RoadGraph.Position(position.position()),
             .treeKey: RoadGraph.Edge(position.tree().start),
-            .updatesMostProbablePathKey: position.type() == .UPDATE,
+            .updatesMostProbablePathKey: position.type() == .update,
             .distancesByRoadObjectKey: distances.map(DistancedRoadObject.init),
         ]
         NotificationCenter.default.post(name: .electronicHorizonDidUpdatePosition, object: nil, userInfo: userInfo)
