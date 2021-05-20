@@ -91,7 +91,7 @@ open class PassiveLocationDataSource: NSObject {
         return Navigator.shared.roadObjectsStore
     }
 
-    /// The road object matcher that allows to match custom road objects.
+    /// The road object matcher that allows to match user-defined road objects.
     public var roadObjectMatcher: RoadObjectMatcher {
         return Navigator.shared.roadObjectMatcher
     }

@@ -60,9 +60,9 @@ public final class RoadObjectsStore {
      Adds a road object to be tracked in the electronic horizon. In case if an object with such identifier already exists, updates it.
      NB: road objects obtained from route alerts cannot be added via this API.
 
-     - parameter roadObject: Custom road object, acquired from `RoadObjectMathcer`.
+     - parameter roadObject: Custom road object, acquired from `RoadObjectMatcher`.
      */
-    public func addCustomRoadObject(_ roadObject: RoadObject) {
+    public func addUserDefinedRoadObject(_ roadObject: RoadObject) {
         guard let nativeObject = roadObject.native else {
             assertionFailure("You can only add matched custom road objects, acquired from RoadObjectMatcher.")
             return
@@ -75,14 +75,14 @@ public final class RoadObjectsStore {
 
      - parameter identifier: Identifier of the road object that should be removed.
      */
-    public func removeCustomRoadObject(identifier: RoadObjectIdentifier) {
+    public func removeUserDefinedRoadObject(identifier: RoadObjectIdentifier) {
         native.removeCustomRoadObject(forId: identifier)
     }
 
     /**
-     Removes all custom road objects from the store and stops tracking them in the electronic horizon.
+     Removes all user-defined road objects from the store and stops tracking them in the electronic horizon.
      */
-    public func removeAllCustomRoadObjects() {
+    public func removeAllUserDefinedRoadObjects() {
         native.removeAllCustomRoadObjects()
     }
 
