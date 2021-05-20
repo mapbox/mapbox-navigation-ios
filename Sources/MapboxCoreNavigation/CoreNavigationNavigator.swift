@@ -54,6 +54,10 @@ class Navigator {
     }()
 
     let tileStore: TileStore
+
+    lazy var roadObjectMatcher: RoadObjectMatcher = {
+        return RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
+    }()
     
     /**
      The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.

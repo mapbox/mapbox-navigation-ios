@@ -56,6 +56,35 @@ public final class RoadObjectsStore {
         return native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))
     }
 
+    /**
+     Adds a road object to be tracked in the electronic horizon. In case if an object with such identifier already exists, updates it.
+     NB: road objects obtained from route alerts cannot be added via this API.
+
+     - parameter roadObject: Custom road object, acquired from `RoadObjectMatcher`.
+     */
+    public func addUserDefinedRoadObject(_ roadObject: RoadObject) {
+        guard let nativeObject = roadObject.native else {
+            preconditionFailure("You can only add matched custom road objects, acquired from RoadObjectMatcher.")
+        }
+        native.addCustomRoadObject(for: nativeObject)
+    }
+
+    /**
+     Removes road object and stops tracking it in the electronic horizon.
+
+     - parameter identifier: Identifier of the road object that should be removed.
+     */
+    public func removeUserDefinedRoadObject(identifier: RoadObjectIdentifier) {
+        native.removeCustomRoadObject(forId: identifier)
+    }
+
+    /**
+     Removes all user-defined road objects from the store and stops tracking them in the electronic horizon.
+     */
+    public func removeAllUserDefinedRoadObjects() {
+        native.removeAllCustomRoadObjects()
+    }
+
     init(_ native: MapboxNavigationNative.RoadObjectsStore) {
         self.native = native
     }

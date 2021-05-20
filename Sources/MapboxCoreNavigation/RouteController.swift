@@ -441,6 +441,11 @@ open class RouteController: NSObject {
     public var roadObjectsStore: RoadObjectsStore {
         return Navigator.shared.roadObjectsStore
     }
+
+    /// The road object matcher that allows to match user-defined road objects.
+    public var roadObjectMatcher: RoadObjectMatcher {
+        return Navigator.shared.roadObjectMatcher
+    }
 }
 
 extension RouteController: Router {
