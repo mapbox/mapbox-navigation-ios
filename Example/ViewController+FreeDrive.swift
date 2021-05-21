@@ -77,7 +77,7 @@ extension ViewController {
     
     func updateFreeDriveStyledFeatures() {
         do {
-            guard let style = navigationMapView.mapView.style else { return }
+            let style = navigationMapView.mapView.mapboxMap.style
             if style.sourceExists(withId: trackStyledFeature.sourceIdentifier) {
                 try style.updateGeoJSONSource(withId: trackStyledFeature.sourceIdentifier,
                                               geoJSON: Feature(geometry: .lineString(trackStyledFeature.lineString)))
@@ -94,16 +94,16 @@ extension ViewController {
     
     func addStyledFeature(_ styledFeature: StyledFeature) {
         do {
+            let style = navigationMapView.mapView.mapboxMap.style
             var source = GeoJSONSource()
             source.data = .geometry(.lineString(styledFeature.lineString))
-            try navigationMapView.mapView.style.addSource(source,
-                                                          id: styledFeature.sourceIdentifier)
+            try style.addSource(source, id: styledFeature.sourceIdentifier)
             
             var layer = LineLayer(id: styledFeature.layerIdentifier)
             layer.source = styledFeature.sourceIdentifier
-            layer.paint?.lineWidth = .constant(styledFeature.lineWidth)
-            layer.paint?.lineColor = .constant(.init(color: styledFeature.color))
-            try navigationMapView.mapView.style.addLayer(layer)
+            layer.lineWidth = .constant(styledFeature.lineWidth)
+            layer.lineColor = .constant(.init(color: styledFeature.color))
+            try style.addLayer(layer)
         } catch {
             NSLog("Failed to perform operation with error: \(error.localizedDescription).")
         }

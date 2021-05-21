@@ -229,8 +229,8 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let styleURL = style.previewMapStyleURL
-        if navigationMapView.mapView.style.uri?.rawValue != style.mapStyleURL.absoluteString {
-            navigationMapView.mapView.style.uri = StyleURI(url: styleURL)
+        if navigationMapView.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
+            navigationMapView.mapView.mapboxMap.style.uri = StyleURI(url: styleURL)
         }
     }
     

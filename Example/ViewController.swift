@@ -368,10 +368,11 @@ class ViewController: UIViewController {
     }
     
     func toggleDayNightStyle() {
-        if navigationMapView.mapView?.style.uri?.rawValue == MapboxMaps.Style.navigationNightStyleURL.absoluteString {
-            navigationMapView.mapView?.style.uri = StyleURI(url: MapboxMaps.Style.navigationDayStyleURL)
+        let style = navigationMapView.mapView?.mapboxMap.style
+        if style?.uri?.rawValue == MapboxMaps.Style.navigationNightStyleURL.absoluteString {
+            style?.uri = StyleURI(url: MapboxMaps.Style.navigationDayStyleURL)
         } else {
-            navigationMapView.mapView?.style.uri = StyleURI(url: MapboxMaps.Style.navigationNightStyleURL)
+            style?.uri = StyleURI(url: MapboxMaps.Style.navigationNightStyleURL)
         }
     }
     
