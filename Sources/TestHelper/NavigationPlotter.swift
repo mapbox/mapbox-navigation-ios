@@ -159,14 +159,15 @@ public class NavigationPlotter: UIView {
     public var linePlotters: [LinePlotter]? { didSet { setNeedsDisplay() } }
     
     func updateCoordinateBounds() {
-        navigationMapView = NavigationMapView(frame: bounds)
+        let navigationMapView = NavigationMapView(frame: bounds)
+        self.navigationMapView = navigationMapView
         let padding = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
         
         coordinateBounds = allBoundingCoordinates.bounds
         
         if let coordinateBounds = coordinateBounds {
-            // FIXME: As of Mapbox Maps `v10.0.0-beta.17` such method is no longer present.
-            // navigationMapView?.mapView.cameraManager.transitionCoordinateBounds(to: coordinateBounds, edgePadding: padding, completion: nil)
+            let cameraOptions = navigationMapView.mapView.mapboxMap.camera(for: coordinateBounds, padding: padding, bearing: nil, pitch: nil)
+            navigationMapView.mapView.camera.setCamera(to: cameraOptions)
         }
     }
     

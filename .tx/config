@@ -6,7 +6,7 @@ type = STRINGS
 
 [mapbox-navigation-ios.LocalizableStrings]
 file_filter = Sources/MapboxNavigation/Resources/<lang>.lproj/Localizable.strings
-source_file = Sources/MapboxNavigation/Resources/Base.lproj/Localizable.strings
+source_file = Sources/MapboxNavigation/Resources/en.lproj/Localizable.strings
 source_lang = en
 
 [mapbox-navigation-ios.localizablestringsdict]
@@ -17,7 +17,7 @@ type = STRINGSDICT
 
 [mapbox-navigation-ios.LocalizableCoreStrings]
 file_filter = Sources/MapboxCoreNavigation/Resources/<lang>.lproj/Localizable.strings
-source_file = Sources/MapboxCoreNavigation/Resources/Base.lproj/Localizable.strings
+source_file = Sources/MapboxCoreNavigation/Resources/en.lproj/Localizable.strings
 source_lang = en
 
 [mapbox-navigation-ios.ExampleMainStrings]
@@ -27,5 +27,5 @@ source_lang = en
 
 [mapbox-navigation-ios.navigationstrings]
 file_filter = Sources/MapboxNavigation/Resources/<lang>.lproj/Navigation.strings
-source_file = Sources/MapboxNavigation/Resources/Base.lproj/Navigation.strings
+source_file = Sources/MapboxNavigation/Resources/en.lproj/Navigation.strings
 source_lang = en

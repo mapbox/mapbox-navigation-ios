@@ -3,10 +3,10 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 EXAMPLE="${DIR}/../Example"
-NAVIGATION="${DIR}/../MapboxNavigation"
-CORE="${DIR}/../MapboxCoreNavigation"
+NAVIGATION="${DIR}/../Sources/MapboxNavigation"
+CORE="${DIR}/../Sources/MapboxCoreNavigation"
 
-LANGUAGES=( "Base" )
+LANGUAGES=( "en" )
 
 source "${DIR}/file_conversion.sh"
 
@@ -30,7 +30,7 @@ do
     convertIfNeeded ${STRINGS_FILE}
 
     # Extract localizable strings from storyboard
-    ibtool ${NAVIGATION}/Resources/${lang}.lproj/Navigation.storyboard --generate-strings-file ${NAVIGATION}/Resources/${lang}.lproj/Navigation.strings
+    ibtool ${NAVIGATION}/Resources/Base.lproj/Navigation.storyboard --generate-strings-file ${NAVIGATION}/Resources/${lang}.lproj/Navigation.strings
 
     # Remove strings that should not be translated
     convertIfNeeded "${NAVIGATION}/Resources/${lang}.lproj/Navigation.strings"

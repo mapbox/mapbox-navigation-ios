@@ -76,7 +76,7 @@ class PassiveLocationDataSourceTests: XCTestCase {
     
     func testManualLocations() {
         let locationManager = PassiveLocationDataSource(directions: directions)
-        try? Navigator.shared.navigator.resetRideSession()
+        Navigator.shared.navigator.resetRideSession()
         let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
         locationUpdateExpectation.expectedFulfillmentCount = 1
         
@@ -86,7 +86,7 @@ class PassiveLocationDataSourceTests: XCTestCase {
         locationManager.updateLocation(CLLocation(latitude: 47.208674, longitude: 9.524650, timestamp: date.addingTimeInterval(-5)))
         locationManager.delegate = delegate
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-            try? Navigator.shared.navigator.resetRideSession()
+            Navigator.shared.navigator.resetRideSession()
             locationManager.updateLocation(CLLocation(latitude: 47.208943, longitude: 9.524707, timestamp: date.addingTimeInterval(-4)))
             locationManager.updateLocation(CLLocation(latitude: 47.209082, longitude: 9.524319, timestamp: date.addingTimeInterval(-3)))
             locationManager.updateLocation(CLLocation(latitude: 47.209229, longitude: 9.523838, timestamp: date.addingTimeInterval(-2)))

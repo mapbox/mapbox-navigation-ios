@@ -1,4 +1,4 @@
-﻿/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
+/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
 "CONTINUE" = "Continue for %@";
 
 /* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
@@ -18,3 +18,10 @@
 
 /* Format for speech string; 1 = formatted distance; 2 = instruction */
 "WITH_DISTANCE_UTTERANCE_FORMAT" = "In %1$@, %2$@";
+
+/* Error message when an offline route request returns a response that can’t be deserialized */
+"OFFLINE_CORRUPT_DATA" = "Found an invalid route while offline.";
+
+/* Inform developer an update is available */
+"UPDATE_AVAILABLE" = "Mapbox Navigation SDK for iOS version %@ is now available.";
+
