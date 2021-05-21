@@ -1,6 +1,7 @@
 import Foundation
 import MapboxNavigationNative
 import Turf
+import MapboxCommon
 @_implementationOnly import MapboxCommon_Private
 
 /**
