@@ -473,7 +473,7 @@ open class NavigationMapView: UIView {
             NSLog("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).")
         }
         
-        var layerIdentifier = route.identifier(.route(isMainRoute: isMainRoute))
+        let layerIdentifier = route.identifier(.route(isMainRoute: isMainRoute))
         var lineLayer = delegate?.navigationMapView(self,
                                                     routeLineLayerWithIdentifier: layerIdentifier,
                                                     sourceIdentifier: sourceIdentifier)
