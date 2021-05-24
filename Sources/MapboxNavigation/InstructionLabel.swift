@@ -28,7 +28,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             let presenter = InstructionPresenter(instruction, dataSource: self, imageRepository: imageRepository, downloadCompletion: update)
             
             let attributed = presenter.attributedText()
-            attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
+            text = instructionDelegate?.label(self, willPresent: instruction, as: attributed)?.string ?? attributed.string
             instructionPresenter = presenter
         }
     }
