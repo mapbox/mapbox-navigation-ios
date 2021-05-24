@@ -24,13 +24,13 @@ To install the MapboxNavigation framework in an application using [Swift Package
 
 1. Enter `https://github.com/mapbox/mapbox-navigation-ios.git` as the package repository and click Next.
 
-1. Set Rules to Version, Up to Next Major, and enter `${MINOR_VERSION}` as the minimum version requirement. Click Next.
+1. Set Rules to Version, Up to Next Major, and enter `${SHORT_VERSION}` as the minimum version requirement. Click Next.
 
 To install the MapboxCoreNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
 
 ```swift
 // Latest prerelease
-.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "${MINOR_VERSION}")
+.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "${SHORT_VERSION}")
 ```
 
 ### Using CocoaPods
@@ -50,8 +50,8 @@ To install the MapboxNavigation framework using [CocoaPods](https://cocoapods.or
    # Latest stable release
    pod 'MapboxNavigation', '~> ${MINOR_VERSION}'
    # Latest prerelease
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v${MINOR_VERSION}'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v${MINOR_VERSION}'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v${SHORT_VERSION}'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v${SHORT_VERSION}'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
