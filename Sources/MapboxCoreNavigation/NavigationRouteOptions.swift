@@ -114,7 +114,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
     }
 }
 
-protocol OptimizedForNavigation: class {
+protocol OptimizedForNavigation: AnyObject {
     var includesSteps: Bool { get set }
     var routeShapeResolution: RouteShapeResolution { get set }
     var shapeFormat: RouteShapeFormat { get set }

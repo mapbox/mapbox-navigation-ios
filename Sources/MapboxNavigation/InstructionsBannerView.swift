@@ -5,7 +5,7 @@ import MapboxDirections
 /**
  `InstructionsBannerViewDelegate` provides methods for reacting to user interactions in `InstructionsBannerView`.
  */
-public protocol InstructionsBannerViewDelegate: class, UnimplementedLogging {
+public protocol InstructionsBannerViewDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the user taps the `InstructionsBannerView`.
      */

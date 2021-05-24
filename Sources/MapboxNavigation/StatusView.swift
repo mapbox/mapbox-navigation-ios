@@ -1,7 +1,7 @@
 import UIKit
 
 /// :nodoc:
-public protocol DeprecatedStatusViewDelegate: class {}
+public protocol DeprecatedStatusViewDelegate: AnyObject {}
 
 /**
  A protocol for listening in on changes made to a `StatusView`.

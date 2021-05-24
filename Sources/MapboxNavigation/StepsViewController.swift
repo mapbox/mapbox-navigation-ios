@@ -9,7 +9,7 @@ open class StepsBackgroundView: UIView { }
 /**
  `StepsViewControllerDelegate` provides methods for user interactions in a `StepsViewController`.
  */
-public protocol StepsViewControllerDelegate: class {
+public protocol StepsViewControllerDelegate: AnyObject {
     /**
      Called when the user selects a step in a `StepsViewController`.
      */
