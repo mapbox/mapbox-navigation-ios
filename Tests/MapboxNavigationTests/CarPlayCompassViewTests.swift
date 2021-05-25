@@ -1,9 +1,9 @@
 import XCTest
+import CoreLocation
 @testable import MapboxNavigation
 
 class CarPlayCompassViewTests: XCTestCase {
-    
-    func disabled_testCarPlayCompassViewDirections() {
+    func testCarPlayCompassViewDirections() {
         let compassView = CarPlayCompassView()
         let min: CLLocationDirection = -720
         let max: CLLocationDirection = 720

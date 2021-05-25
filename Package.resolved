@@ -20,6 +20,15 @@
         }
       },
       {
+        "package": "FBSnapshotTestCase",
+        "repositoryURL": "https://github.com/alanzeino/ios-snapshot-test-case.git",
+        "state": {
+          "branch": "master",
+          "revision": "c3189948974569421d867af5bedd8addf44330b0",
+          "version": null
+        }
+      },
+      {
         "package": "MapboxCommon",
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
@@ -98,6 +107,15 @@
           "branch": null,
           "revision": "af1730dde4e6c0d45bf01b99f8a41713ce536790",
           "version": "9.2.0"
+        }
+      },
+      {
+        "package": "OHHTTPStubs",
+        "repositoryURL": "https://github.com/AliSoftware/OHHTTPStubs.git",
+        "state": {
+          "branch": null,
+          "revision": "12f19662426d0434d6c330c6974d53e2eb10ecd9",
+          "version": "9.1.0"
         }
       },
       {

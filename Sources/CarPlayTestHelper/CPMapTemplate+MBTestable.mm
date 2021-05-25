@@ -1,8 +1,5 @@
 #import "CPMapTemplate+MBTestable.h"
-#import <Cedar/Cedar.h>
 #import <objc/runtime.h>
-
-using namespace Cedar::Doubles;
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 120000
 
@@ -18,7 +15,8 @@ using namespace Cedar::Doubles;
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
 - (CPNavigationSession *)startNavigationSessionForTrip:(CPTrip *)trip {
-    return nice_fake_for(CPNavigationSession.class);
+    NSAssert(FALSE, @"Reimplement without Cedar");
+    return nil;
 }
 
 #pragma clang diagnostic pop

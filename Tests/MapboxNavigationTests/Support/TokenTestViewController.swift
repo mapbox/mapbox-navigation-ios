@@ -21,14 +21,14 @@ class TokenTestViewController: UIViewController {
     override func loadView() {
         super.loadView()
         
-        OHHTTPStubs.stubRequests(passingTest: { (request) -> Bool in
+        HTTPStubs.stubRequests(passingTest: { (request) -> Bool in
             let isMapboxStyleURL = request.url?.isMapboxAPIURL ?? false
             guard isMapboxStyleURL else { return true }
             self.mapViewToken = request.url?.queryItem("sku")?.value
             self.semaphore.signal()
             return true
-        }) { (_) -> OHHTTPStubsResponse in
-            return OHHTTPStubsResponse(data: "".data(using: .utf8)!, statusCode: 200, headers: [:])
+        }) { (_) -> HTTPStubsResponse in
+            return HTTPStubsResponse(data: "".data(using: .utf8)!, statusCode: 200, headers: [:])
         }
         
         // Force cache-cleaning
@@ -50,7 +50,7 @@ class TokenTestViewController: UIViewController {
             self.speechSynthesizerToken = SpeechSynthesizer.skuToken
             
             DispatchQueue.main.async {
-                OHHTTPStubs.removeAllStubs()
+                HTTPStubs.removeAllStubs()
                 if self.mapViewToken != nil {
                     self.tokenExpectation?.fulfill()
                 }
