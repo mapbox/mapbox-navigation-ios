@@ -28,16 +28,16 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             let presenter = InstructionPresenter(instruction, dataSource: self, imageRepository: imageRepository, downloadCompletion: update)
             
             let attributed = presenter.attributedText()
-            text = instructionDelegate?.label(self, willPresent: instruction, as: attributed)?.string ?? attributed.string
+            attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
             instructionPresenter = presenter
         }
     }
 
     open override func update() {
-        super.update()
         imageRepository.resetImageCache(nil)
         let previousInstruction = instruction
         instruction = previousInstruction
+        super.update()
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
