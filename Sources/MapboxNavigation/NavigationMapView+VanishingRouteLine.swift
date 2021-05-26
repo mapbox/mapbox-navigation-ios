@@ -202,34 +202,54 @@ extension NavigationMapView {
         if traveledDifference == 0.0 {
             return
         }
-        let startDate = Date()
-        vanishingRouteLineUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
-            let timePassedInMilliseconds = Date().timeIntervalSince(startDate) * 1000
-            if timePassedInMilliseconds >= 980 {
-                timer.invalidate()
-                return
-            }
-            
-            let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
-            
+        switch puckType {
+        case .default:
+            let startDate = Date()
+            vanishingRouteLineUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
+                let timePassedInMilliseconds = Date().timeIntervalSince(startDate) * 1000
+                if timePassedInMilliseconds >= 980 {
+                    timer.invalidate()
+                    return
+                }
+                
+                let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
+                
+                do {
+                    try self.mapView.mapboxMap.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                        let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
+                        let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
+                                                                            fractionTraveled: newFractionTraveled)
+                        
+                        lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
+                    }
+                    
+                    try self.mapView.mapboxMap.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                        let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
+                        
+                        lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
+                    }
+                } catch {
+                    NSLog("Failed to update main route line layer.")
+                }
+            })
+        default:
             do {
                 try self.mapView.mapboxMap.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
                     let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
                     let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
-                                                                        fractionTraveled: newFractionTraveled)
-                    
+                                                                        fractionTraveled: fractionTraveled)
                     lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
                 }
                 
                 try self.mapView.mapboxMap.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
-                    let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
+                    let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: fractionTraveled)
                     
                     lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
                 }
             } catch {
                 NSLog("Failed to update main route line layer.")
             }
-        })
+        }
     }
     
     func routeLineGradient(_ congestionFeatures: [Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {

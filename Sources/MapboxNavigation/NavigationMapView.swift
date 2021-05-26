@@ -161,6 +161,34 @@ open class NavigationMapView: UIView {
         }
     }
     
+    var simulation: Bool = true {
+        didSet {
+            if !simulation, let locationProvider = mapView.location.locationProvider as? PassiveLocationManager {
+                mapView.location.overrideLocationProvider(with: AppleLocationProvider())
+                locationProvider.startUpdatingLocation()
+            }
+        }
+    }
+    
+    /**
+     The `puckType` is used to provide  customized options for the user location puck during turn-by-turn navigation. Defaults to `UserCourseView`. Developers could switch to map SDK location layer by providing configuration to `.puck2D` or `.puck3D`.
+     */
+    public var puckType: PuckType = .default {
+        didSet {
+            switch puckType {
+            case .default:
+                mapView.location.options.puckType = nil
+                userCourseView.isHidden = false
+            case .puck2D(configuration: let configuration):
+                userCourseView.isHidden = true
+                mapView.location.options.puckType = .puck2D(configuration)
+            case .puck3D(configuration: let configuration):
+                userCourseView.isHidden = true
+                mapView.location.options.puckType = .puck3D(configuration)
+            }
+        }
+    }
+    
     /**
      A manager object, used to init and maintain predictive caching.
      */
@@ -374,18 +402,51 @@ open class NavigationMapView: UIView {
         
         mostRecentUserCourseViewLocation = location
         
-        // While animating to overview mode, don't animate the puck.
-        let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-            guard let screenCoordinate = self?.mapView.screenCoordinate(for: location.coordinate) else { return }
-            self?.userCourseView.center = CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+        switch puckType {
+        case .default:
+            // While animating to overview mode, don't animate the puck.
+            let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
+                guard let screenCoordinate = self?.mapView.screenCoordinate(for: location.coordinate) else { return }
+                self?.userCourseView.center = CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+            }
+            
+            let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
+            userCourseView.update(location: location,
+                                  pitch: cameraOptions.pitch!,
+                                  direction: cameraOptions.bearing!,
+                                  animated: animated,
+                                  navigationCameraState: navigationCamera.state)
+        case .puck2D(configuration: _):
+            if simulation {
+                let locationProvider = mapView.location.locationProvider
+                mapView.location.locationProvider(locationProvider!, didUpdateLocations: [location])
+                mapView.location.locationProvider.stopUpdatingLocation()
+                if mapView.mapboxMap.style.layerExists(withId: "puck") {
+                    do {
+                        try mapView.mapboxMap.style.setLayerProperty(for: "puck", property: "bearing", value: location.course)
+                    } catch {
+                        NSLog("Failed to perform operation while updating puck bearing arrow with error: \(error.localizedDescription).")
+                    }
+                }
+            }
+        case .puck3D(configuration: var configuration):
+            if simulation {
+                let locationProvider = mapView.location.locationProvider
+                mapView.location.locationProvider(locationProvider!, didUpdateLocations: [location])
+                mapView.location.locationProvider.stopUpdatingLocation()
+                if var orientation = configuration.model.orientation,
+                   orientation.count == 3 {
+                    let validDirection = location.course
+                    if let initialPuckOrientation = configuration.modelRotation as? [Double]? {
+                        orientation[2] = initialPuckOrientation![2] + validDirection
+                    } else {
+                        orientation[2] = validDirection
+                    }
+                    configuration.model.orientation = orientation
+                }
+            }
         }
-        
-        userCourseView.update(location: location,
-                              pitch: mapView.cameraState.pitch,
-                              direction: mapView.cameraState.bearing,
-                              animated: animated,
-                              navigationCameraState: navigationCamera.state)
     }
     
     // MARK: Feature addition/removal methods
