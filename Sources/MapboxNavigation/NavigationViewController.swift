@@ -385,7 +385,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     func setupNavigationService() {
         guard let route = _route,
               let routeIndex = routeIndex,
-              let routeOptions = _routeOptions else { return }
+              let routeOptions = _routeOptions else {
+            fatalError("`route`, `routeIndex` and `routeOptions` must be valid to create an instance of `NavigationViewController`.")
+        }
         
         if !(routeOptions is NavigationRouteOptions) {
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
