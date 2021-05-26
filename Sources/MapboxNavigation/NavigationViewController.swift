@@ -42,24 +42,51 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
+    var _route: Route?
+    
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
      */
-    public var route: Route {
-        return indexedRoute.0
+    public var route: Route? {
+        get {
+            return navigationService.indexedRoute.0
+        }
+        
+        set {
+            _route = newValue
+        }
     }
     
-    public var routeOptions: RouteOptions {
+    var _routeOptions: RouteOptions?
+    
+    /**
+     The route options used to get the route.
+     */
+    public var routeOptions: RouteOptions? {
         get {
             return navigationService.routeProgress.routeOptions
         }
+        
+        set {
+            _routeOptions = newValue
+        }
     }
+    
+    /**
+     The index of the route within the original `RouteResponse` object.
+     */
+    public var routeIndex: Int?
+    
+    /**
+     The `NavigationOptions` object, which is used for the navigation session.
+     */
+    public var navigationOptions: NavigationOptions?
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://docs.mapbox.com/ios/api/directions/) for further information.
      */
     public var directions: Directions {
-        return navigationService!.directions
+        return navigationService.directions
     }
     
     /**
@@ -273,7 +300,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     private(set) public var navigationService: NavigationService! {
         didSet {
-            arrivalController?.destination = route.legs.last?.destination
+            arrivalController?.destination = route?.legs.last?.destination
         }
     }
     
@@ -289,10 +316,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     var routeOverlayController: NavigationMapView.RouteOverlayController?
     var viewObservers: [NavigationComponentDelegate?] = []
     var mapTileStore: TileStoreConfiguration.Location? = .default
-    var _route: Route?
-    var _routeIndex: Int?
-    var _routeOptions: RouteOptions?
-    var navigationOptions: NavigationOptions?
     
     // MARK: - NavigationViewData implementation
         
@@ -329,12 +352,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             mapTileStore = options.tileStoreConfiguration.mapLocation
         }
         
-        _route = route
-        _routeIndex = routeIndex
-        _routeOptions = routeOptions
-        self.navigationOptions = navigationOptions
-        
         super.init(nibName: nil, bundle: nil)
+        
+        self.route = route
+        self.routeIndex = routeIndex
+        self.routeOptions = routeOptions
+        self.navigationOptions = navigationOptions
     }
     
     /**
@@ -361,7 +384,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     func setupNavigationService() {
         guard let route = _route,
-              let routeIndex = _routeIndex,
+              let routeIndex = routeIndex,
               let routeOptions = _routeOptions else { return }
         
         if !(routeOptions is NavigationRouteOptions) {
@@ -451,7 +474,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         subviewInits.removeAll()
         
-        arrivalController?.destination = route.legs.last?.destination
+        arrivalController?.destination = route?.legs.last?.destination
         ornamentsController?.reportButton.isHidden = !showsReportFeedback
     }
     
@@ -908,7 +931,7 @@ extension NavigationViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
-        } else if let firstCoord = route.shape?.coordinates.first {
+        } else if let firstCoord = route?.shape?.coordinates.first {
             return CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         } else {
             return nil
