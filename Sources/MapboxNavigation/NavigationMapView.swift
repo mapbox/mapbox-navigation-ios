@@ -422,28 +422,33 @@ open class NavigationMapView: UIView {
                 let locationProvider = mapView.location.locationProvider
                 mapView.location.locationProvider(locationProvider!, didUpdateLocations: [location])
                 mapView.location.locationProvider.stopUpdatingLocation()
-                if mapView.mapboxMap.style.layerExists(withId: "puck") {
+                if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
                     do {
-                        try mapView.mapboxMap.style.setLayerProperty(for: "puck", property: "bearing", value: location.course)
+                        try mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.puck2DLayer,
+                                                                     property: "bearing",
+                                                                     value: location.course)
                     } catch {
-                        NSLog("Failed to perform operation while updating puck bearing arrow with error: \(error.localizedDescription).")
+                        NSLog("Failed to perform operation while updating 2D puck bearing arrow with error: \(error.localizedDescription).")
                     }
                 }
             }
-        case .puck3D(configuration: var configuration):
+        case .puck3D(configuration: let configuration):
             if simulation {
-                let locationProvider = mapView.location.locationProvider
-                mapView.location.locationProvider(locationProvider!, didUpdateLocations: [location])
                 mapView.location.locationProvider.stopUpdatingLocation()
-                if var orientation = configuration.model.orientation,
-                   orientation.count == 3 {
-                    let validDirection = location.course
-                    if let initialPuckOrientation = configuration.modelRotation as? [Double]? {
-                        orientation[2] = initialPuckOrientation![2] + validDirection
-                    } else {
-                        orientation[2] = validDirection
+                if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.puck3DSource) {
+                    var model = configuration.model
+                    model.position = [location.coordinate.longitude, location.coordinate.latitude]
+                    if var orientation = model.orientation,
+                       orientation.count > 2 {
+                        orientation[2] = orientation[2] + location.course
+                        model.orientation = orientation
                     }
-                    configuration.model.orientation = orientation
+                    
+                    let modelSourceCode = [NavigationMapView.ModelKeyIdentifier.modelSouce: model]
+                    if let data = try? JSONEncoder().encode(modelSourceCode),
+                       let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        try? mapView.mapboxMap.style.setSourceProperty(for: NavigationMapView.SourceIdentifier.puck3DSource, property: "models", value: jsonDictionary)
+                    }
                 }
             }
         }
