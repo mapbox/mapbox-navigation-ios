@@ -144,6 +144,15 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
     
     /**
+     Called when the CarPlayManager detects the user arrives at the destination waypoint for a route leg.
+     
+     - parameter carPlayManager: The CarPlay manager instance that has arrived at a waypoint.
+     - parameter waypoint: The waypoint that the user has arrived at.
+     - returns: A boolean value indicating whether to show an arrival UI.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool
+    
+    /**
      Called when the carplay manager will disable the idle timer.
      
      Implementing this method will allow developers to change whether idle timer is disabled when carplay is connected and the vice-versa when disconnected.
