@@ -175,16 +175,18 @@ open class NavigationMapView: UIView {
      */
     public var puckType: PuckType = .default {
         didSet {
-            switch puckType {
-            case .default:
-                mapView.location.options.puckType = nil
-                userCourseView.isHidden = false
-            case .puck2D(configuration: let configuration):
-                userCourseView.isHidden = true
-                mapView.location.options.puckType = .puck2D(configuration)
-            case .puck3D(configuration: let configuration):
-                userCourseView.isHidden = true
-                mapView.location.options.puckType = .puck3D(configuration)
+            mapView.mapboxMap.onNext(.styleLoaded) { _ in
+                switch self.puckType {
+                case .default:
+                    self.mapView.location.options.puckType = nil
+                    self.userCourseView.isHidden = false
+                case .puck2D(configuration: let configuration):
+                    self.userCourseView.isHidden = true
+                    self.mapView.location.options.puckType = .puck2D(configuration)
+                case .puck3D(configuration: let configuration):
+                    self.userCourseView.isHidden = true
+                    self.mapView.location.options.puckType = .puck3D(configuration)
+                }
             }
         }
     }
