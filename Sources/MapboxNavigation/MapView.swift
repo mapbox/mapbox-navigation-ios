@@ -28,7 +28,7 @@ extension MapView {
      */
     func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
         if sourceType == "vector",
-           let properties = mapboxMap.__map.getStyleSourceProperties(forSourceId: sourceIdentifier).value as? Dictionary<String, Any>,
+           let properties = try? mapboxMap.style.sourceProperties(for: sourceIdentifier),
            let url = properties["url"] as? String,
            let configurationURL = URL(string: url),
            configurationURL.scheme == "mapbox",
@@ -73,13 +73,14 @@ extension MapView {
         let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
         
         for layer in mapboxMap.__map.getStyleLayers() {
-            guard let sourceIdentifier = mapboxMap.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source").value as? String,
-                  let sourceLayerIdentifier = mapboxMap.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String else { return }
+            guard let sourceIdentifier = mapboxMap.style.layerProperty(for: layer.id, property: "source") as? String,
+                  let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: layer.id, property: "source-layer") as? String else { return }
             
             if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
-                mapboxMap.__map.setStyleLayerPropertiesForLayerId(layer.id, properties: [
+                let properties = [
                     "visibility": isVisible ? "visible" : "none"
-                ])
+                ]
+                try? mapboxMap.style.setLayerProperties(for: layer.id, properties: properties)
             }
         }
     }
@@ -121,12 +122,10 @@ extension MapView {
         
         var datasets = [String]()
         for source in sources {
-            let properties = mapboxMap.__map.getStyleSourceProperties(forSourceId: source.id)
-            
             // Ignore composite (https://docs.mapbox.com/studio-manual/reference/styles/#source-compositing)
             // and non-mapbox sources.
-            if let contents = properties.value as? [String: AnyObject],
-               let urlContent = contents["url"] as? String,
+            if let properties = try? mapboxMap.style.sourceProperties(for: source.id),
+               let urlContent = properties["url"] as? String,
                let url = URL(string: urlContent),
                url.scheme == "mapbox",
                let dataset = url.host {

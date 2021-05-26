@@ -18,22 +18,27 @@ extension NavigationMapView {
                                    completion: ((_ foundAllBuildings: Bool) -> Void)? = nil) {
         var foundBuildingIds = Set<Int64>()
         let group = DispatchGroup()
-        let identifiers = mapView.mapboxMap.__map.getStyleLayers().compactMap({ $0.id }).filter({ $0.contains("building") })
+        let identifiers = mapView.mapboxMap.__map.getStyleLayers()
+            .compactMap({ $0.id })
+            .filter({ $0.contains("building") })
         
         coordinates.forEach {
             group.enter()
+            
             let screenCoordinate = mapView.mapboxMap.point(for: $0)
-            mapView.visibleFeatures(at: screenCoordinate,
-                                    styleLayers: Set(identifiers),
-                                    completion: { [weak self] result in
-                                        guard let _ = self else { return }
-                                        if case .success(let queriedFeatures) = result {
-                                            if let identifier = queriedFeatures.first?.feature.identifier as? Int64 {
-                                                foundBuildingIds.insert(identifier)
-                                            }
-                                            group.leave()
-                                        }
-                                    })
+            let options = RenderedQueryOptions(layerIds: identifiers, filter: nil)
+            
+            mapView.mapboxMap.queryRenderedFeatures(at: screenCoordinate,
+                                                    options: options,
+                                                    completion: { [weak self] result in
+                                                        guard let _ = self else { return }
+                                                        if case .success(let queriedFeatures) = result {
+                                                            if let identifier = queriedFeatures.first?.feature.identifier as? Int64 {
+                                                                foundBuildingIds.insert(identifier)
+                                                            }
+                                                            group.leave()
+                                                        }
+                                                    })
         }
 
         group.notify(queue: DispatchQueue.main) {
@@ -49,8 +54,9 @@ extension NavigationMapView {
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
-            guard let _ = try? mapView.style.layer(withId: identifier, type: FillExtrusionLayer.self) else { return }
-            try mapView.style.removeLayer(withId: identifier)
+            if mapView.mapboxMap.style.layerExists(withId: identifier) {
+                try mapView.mapboxMap.style.removeLayer(withId: identifier)
+            }
         } catch {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
         }
@@ -60,7 +66,10 @@ extension NavigationMapView {
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
-            try mapView.style.removeLayer(withId: identifier)
+            if mapView.mapboxMap.style.layerExists(withId: identifier) {
+                try mapView.mapboxMap.style.removeLayer(withId: identifier)
+            }
+            
             if identifiers.isEmpty { return }
             var highlightedBuildingsLayer = FillExtrusionLayer(id: identifier)
             highlightedBuildingsLayer.source = "composite"
@@ -88,14 +97,14 @@ extension NavigationMapView {
             }
             
             if in3D {
-                highlightedBuildingsLayer.paint?.fillExtrusionHeight = .expression(Expression.buildingExtrusionHeightExpression("height"))
+                highlightedBuildingsLayer.fillExtrusionHeight = .expression(Expression.buildingExtrusionHeightExpression("height"))
             } else {
-                highlightedBuildingsLayer.paint?.fillExtrusionHeight = .constant(0.0)
+                highlightedBuildingsLayer.fillExtrusionHeight = .constant(0.0)
             }
             
-            highlightedBuildingsLayer.paint?.fillExtrusionBase = .expression(Expression.buildingExtrusionHeightExpression("min_height"))
+            highlightedBuildingsLayer.fillExtrusionBase = .expression(Expression.buildingExtrusionHeightExpression("min_height"))
             
-            highlightedBuildingsLayer.paint?.fillExtrusionOpacity = .expression(
+            highlightedBuildingsLayer.fillExtrusionOpacity = .expression(
                 Exp(.interpolate) {
                     Exp(.linear)
                     Exp(.zoom)
@@ -104,10 +113,10 @@ extension NavigationMapView {
                 }
             )
             
-            highlightedBuildingsLayer.paint?.fillExtrusionColor = .constant(.init(color: buildingHighlightColor))
-            highlightedBuildingsLayer.paint?.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
-            highlightedBuildingsLayer.paint?.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
-            try mapView.style.addLayer(highlightedBuildingsLayer)
+            highlightedBuildingsLayer.fillExtrusionColor = .constant(.init(color: buildingHighlightColor))
+            highlightedBuildingsLayer.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
+            highlightedBuildingsLayer.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
+            try mapView.mapboxMap.style.addLayer(highlightedBuildingsLayer)
         } catch {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
         }

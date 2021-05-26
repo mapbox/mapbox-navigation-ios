@@ -128,9 +128,7 @@ class ViewController: UIViewController {
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         navigationMapView.delegate = self
-        navigationMapView.mapView.update {
-            $0.location.puckType = .puck2D()
-        }
+        navigationMapView.mapView.location.options.puckType = .puck2D()
         
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()
@@ -370,10 +368,11 @@ class ViewController: UIViewController {
     }
     
     func toggleDayNightStyle() {
-        if navigationMapView.mapView?.style.uri.rawValue == MapboxMaps.Style.navigationNightStyleURL {
-            navigationMapView.mapView?.style.uri = StyleURI.custom(url: MapboxMaps.Style.navigationDayStyleURL)
+        let style = navigationMapView.mapView?.mapboxMap.style
+        if style?.uri?.rawValue == MapboxMaps.Style.navigationNightStyleURL.absoluteString {
+            style?.uri = StyleURI(url: MapboxMaps.Style.navigationDayStyleURL)
         } else {
-            navigationMapView.mapView?.style.uri = StyleURI.custom(url: MapboxMaps.Style.navigationNightStyleURL)
+            style?.uri = StyleURI(url: MapboxMaps.Style.navigationNightStyleURL)
         }
     }
     

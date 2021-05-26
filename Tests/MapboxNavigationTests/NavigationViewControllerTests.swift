@@ -208,9 +208,9 @@ class NavigationViewControllerTests: XCTestCase {
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         let styleLoadedExpectation = XCTestExpectation(description: "MapView style loading expectation.")
-        navigationViewController.navigationMapView?.mapView.on(.styleLoadingFinished, handler: { _ in
+        navigationViewController.navigationMapView?.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
-        })
+        }
         
         // Wait for the style to load - routes won't show without it.
         wait(for: [styleLoadedExpectation], timeout: 5)

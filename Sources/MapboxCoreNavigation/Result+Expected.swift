@@ -1,5 +1,5 @@
 import Foundation
-import MapboxCommon
+@_implementationOnly import MapboxCommon_Private
 
 extension Result {
     init(expected: MBXExpected<AnyObject, AnyObject>) {

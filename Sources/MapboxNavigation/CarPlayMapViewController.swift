@@ -142,13 +142,11 @@ public class CarPlayMapViewController: UIViewController {
     
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
-        navigationMapView.mapView.on(.styleLoaded) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
         }
         
-        navigationMapView.mapView.update {
-            $0.location.puckType = .puck2D()
-        }
+        navigationMapView.mapView.location.options.puckType = .puck2D()
         
         navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
@@ -231,8 +229,8 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let styleURL = style.previewMapStyleURL
-        if navigationMapView.mapView.style.uri.rawValue != style.mapStyleURL {
-            navigationMapView.mapView.style.uri = StyleURI.custom(url: styleURL)
+        if navigationMapView.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
+            navigationMapView.mapView.mapboxMap.style.uri = StyleURI(url: styleURL)
         }
     }
     

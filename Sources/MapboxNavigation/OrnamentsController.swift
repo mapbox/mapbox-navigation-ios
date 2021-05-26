@@ -175,7 +175,7 @@ extension NavigationMapView {
                 let sourceIdentifier = "com.mapbox.MapboxStreets"
                 
                 do {
-                    try mapView.style.addSource(streetsSource, id: sourceIdentifier)
+                    try mapView.mapboxMap.style.addSource(streetsSource, id: sourceIdentifier)
                 } catch {
                     NSLog("Failed to add \(sourceIdentifier) with error: \(error.localizedDescription).")
                 }
@@ -185,7 +185,7 @@ extension NavigationMapView {
             
             let identifierNamespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
             let roadLabelStyleLayerIdentifier = "\(identifierNamespace).roadLabels"
-            let roadLabelLayer = try? mapView.style.layer(withId: roadLabelStyleLayerIdentifier, type: LineLayer.self)
+            let roadLabelLayer = try? mapView.mapboxMap.style.layer(withId: roadLabelStyleLayerIdentifier) as LineLayer
             
             if roadLabelLayer == nil {
                 var streetLabelLayer = LineLayer(id: roadLabelStyleLayerIdentifier)
@@ -206,9 +206,9 @@ extension NavigationMapView {
                 }
                 
                 streetLabelLayer.sourceLayer = sourceLayerIdentifier
-                streetLabelLayer.paint?.lineOpacity = .constant(1.0)
-                streetLabelLayer.paint?.lineWidth = .constant(20.0)
-                streetLabelLayer.paint?.lineColor = .constant(.init(color: .white))
+                streetLabelLayer.lineOpacity = .constant(1.0)
+                streetLabelLayer.lineWidth = .constant(20.0)
+                streetLabelLayer.lineColor = .constant(.init(color: .white))
                 
                 if ![DirectionsProfileIdentifier.walking, DirectionsProfileIdentifier.cycling].contains(router.routeProgress.routeOptions.profileIdentifier) {
                     // Filter out to road classes valid only for motor transport.
@@ -232,10 +232,13 @@ extension NavigationMapView {
                     streetLabelLayer.filter = filter
                 }
                 
-                let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id
-                
                 do {
-                    try mapView.style.addLayer(streetLabelLayer, layerPosition: .init(below: firstLayerIdentifier))
+                    var layerPosition: MapboxMaps.LayerPosition? = nil
+                    if let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id {
+                        layerPosition = .below(firstLayerIdentifier)
+                    }
+                    
+                    try mapView.mapboxMap.style.addLayer(streetLabelLayer, layerPosition: layerPosition)
                 } catch {
                     NSLog("Failed to add \(roadLabelStyleLayerIdentifier) with error: \(error.localizedDescription).")
                 }
@@ -243,14 +246,15 @@ extension NavigationMapView {
             
             let closestCoordinate = location.coordinate
             let position = mapView.mapboxMap.point(for: closestCoordinate)
-            mapView.visibleFeatures(at: position, styleLayers: Set([roadLabelStyleLayerIdentifier]), completion: { [weak self] result in
+            
+            mapView.mapboxMap.queryRenderedFeatures(at: position,
+                                                    options: RenderedQueryOptions(layerIds: [roadLabelStyleLayerIdentifier], filter: nil)) { [weak self] result in
                 switch result {
                 case .success(let queriedFeatures):
                     guard let self = self else { return }
                     
                     var smallestLabelDistance = Double.infinity
                     var latestFeature: MBXFeature?
-                    let slicedLine = stepShape.sliced(from: closestCoordinate)!
                     
                     for queriedFeature in queriedFeatures {
                         var lineStrings: [LineString] = []
@@ -267,9 +271,10 @@ extension NavigationMapView {
                         
                         for lineString in lineStrings {
                             let lookAheadDistance: CLLocationDistance = 10
-                            guard let pointAheadFeature = lineString.sliced(from: closestCoordinate)!.coordinateFromStart(distance: lookAheadDistance) else { continue }
-                            guard let pointAheadUser = slicedLine.coordinateFromStart(distance: lookAheadDistance) else { continue }
-                            guard let reversedPoint = LineString(lineString.coordinates.reversed()).sliced(from: closestCoordinate)!.coordinateFromStart(distance: lookAheadDistance) else { continue }
+                            guard let pointAheadFeature = lineString.sliced(from: closestCoordinate)?.coordinateFromStart(distance: lookAheadDistance) else { continue }
+                            guard let slicedLine = stepShape.sliced(from: closestCoordinate),
+                                  let pointAheadUser = slicedLine.coordinateFromStart(distance: lookAheadDistance) else { continue }
+                            guard let reversedPoint = LineString(lineString.coordinates.reversed()).sliced(from: closestCoordinate)?.coordinateFromStart(distance: lookAheadDistance) else { continue }
                             
                             let distanceBetweenPointsAhead = pointAheadFeature.distance(to: pointAheadUser)
                             let distanceBetweenReversedPoint = reversedPoint.distance(to: pointAheadUser)
@@ -285,7 +290,10 @@ extension NavigationMapView {
                     
                     var hideWayName = true
                     if smallestLabelDistance < 5 {
-                        if self.navigationView.wayNameView.setupWith(roadFeature: latestFeature!, using: self.navigationMapView.mapView.style) {
+                        let style = self.navigationMapView.mapView.mapboxMap.style
+                        if let latestFeature = latestFeature,
+                           self.navigationView.wayNameView.setupWith(roadFeature: latestFeature,
+                                                                     using: style) {
                             hideWayName = false
                         }
                     }
@@ -293,7 +301,7 @@ extension NavigationMapView {
                 case .failure:
                     NSLog("Failed to find visible features.")
                 }
-            })
+            }
         }
         
         /**
