@@ -262,26 +262,7 @@ jobs:
       - *build-Example
       - *save-cache
 
-  spm-integration-test:
-    parameters:
-      iOS:
-        type: string
-        default: "14.4"
-      xcode:
-        type: string
-        default: "12.4.0"
-    macos:
-      xcode: << parameters.xcode >>
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-    steps:
-      - checkout
-      - *prepare-mapbox-file
-      - *prepare-netrc-file
-      - *add-github-to-known-hosts
-      - run: scripts/build_spm_integration_test.sh << parameters.iOS >>
-
-  ios-trigger-metrics:    
+  ios-trigger-metrics:
     parameters:
       xcode:
         type: string
@@ -348,7 +329,6 @@ workflows:
           iOS: "14.0"
           lint: true
       - xcode-12-examples
-      - spm-integration-test
       - spm-test-job:
           name: "swift test; Xcode 12.4; iOS 13.7"
           xcode: "12.4.0"
