@@ -248,7 +248,9 @@ open class NavigationMapView: UIView {
         }
     }
     
-    func setupMapView(_ frame: CGRect, navigationCameraType: NavigationCameraType = .mobile, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+    func setupMapView(_ frame: CGRect,
+                      navigationCameraType: NavigationCameraType = .mobile,
+                      tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         guard let accessToken = CredentialsManager.default.accessToken else {
             fatalError("Access token was not set.")
         }
@@ -260,7 +262,7 @@ open class NavigationMapView: UIView {
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.ornaments.options.scaleBar.visibility = .hidden
         
-        mapView.mapboxMap.onNext(.renderFrameFinished) { [weak self] _ in
+        mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
             self.updateUserCourseView(location)
