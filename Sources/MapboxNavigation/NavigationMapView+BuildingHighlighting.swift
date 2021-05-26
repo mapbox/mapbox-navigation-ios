@@ -54,8 +54,9 @@ extension NavigationMapView {
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
-            if !mapView.mapboxMap.style.layerExists(withId: identifier) { return }
-            try mapView.mapboxMap.style.removeLayer(withId: identifier)
+            if mapView.mapboxMap.style.layerExists(withId: identifier) {
+                try mapView.mapboxMap.style.removeLayer(withId: identifier)
+            }
         } catch {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
         }
