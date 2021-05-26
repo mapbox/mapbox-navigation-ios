@@ -90,6 +90,7 @@
 * Removed deprecated and obsoleted `EventsManager` typealias, `StatusView.delegate`, `StatusView.canChangeValue`, `RouteLegProgress.upComingStep`, `StatusViewDelegate`, `DeprecatedStatusViewDelegate` and `BottomBannerViewController.init(delegate:)`. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
 * Fixed a potential memory leak when using `MultiplexedSpeechSynthesizer`. ([#3005](https://github.com/mapbox/mapbox-navigation-ios/pull/3005))
 * Fixed an issue where instruction banners could appear in the wrong color after switching between `Style`s. ([#2977](https://github.com/mapbox/mapbox-navigation-ios/pull/2977))
+* Developers can create an instance of `NavigationViewController` from `UIStoryboardSegue`, which is located in `Navigation.storyboard`. To successfully create `NavigationViewController` instance developer has to pre-define `route`, `routeIndex`, `routeOptions` and `navigationOptions` properties of `NavigationViewController` in `UIViewController.prepare(for:sender:)`.
 
 ## v1.4.0
 
