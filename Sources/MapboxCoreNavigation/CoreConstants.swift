@@ -377,3 +377,52 @@ extension RoadGraph {
         public static let didTransitionAtEndpointKey: NotificationUserInfoKey = .init(rawValue: "didTransitionAtEndpoint")
     }
 }
+
+public extension Notification.Name {
+    /**
+     Posted when Navigator has not enough tiles for map matching on current tiles version, but there are suitable older versions inside underlying Offline Regions. Navigator will restart after this notification is issued.
+     
+     Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
+     
+     The user info dictionary contains the key `Navigator.NotificationUserInfoKey.versionsKey`
+    */
+    static let navigatorWantsFallbackToOfflineVersion: Notification.Name = .init(rawValue: "NavigatorWantsFallbackToOfflineVersion")
+    
+    /**
+     Posted when Navigator was switched to a fallback offline tiles version, but latest tiles became available again. Navigator will restart after this notification is issued.
+     
+     Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
+     */
+    static let navigatorWantsRestoreToOnlineVersion: Notification.Name = .init(rawValue: "NavigatorWantsRestoreToOnlineVersion")
+    
+    /**
+     Posted when NavNative sends updated navigation status.
+     
+     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
+    */
+    static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
+}
+
+extension Navigator {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances of `Navigator`.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
+        public var rawValue: String
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.navigatorWantsFallbackToOfflineVersion` notification. The corresponding value is an array of suitable tiles versions, sorted ascending (newest versions to the end).
+         
+         For internal use only.
+         */
+        public static let versionsKey: NotificationUserInfoKey = .init(rawValue: "versions")
+        
+        static let originKey: NotificationUserInfoKey = .init(rawValue: "origin")
+        
+        static let statusKey: NotificationUserInfoKey = .init(rawValue: "status")
+    }
+}

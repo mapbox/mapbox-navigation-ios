@@ -10,7 +10,9 @@ public class PredictiveCacheManager {
     public typealias MapOptions = (tileStore: TileStore, styleSourcePaths: [String])
     public typealias TileStoreMapOptions = (tileStoreConfiguration: TileStoreConfiguration, styleSourcePaths: [String])
     
-    private(set) var controllers: [PredictiveCacheController] = []
+    private var controllers: [PredictiveCacheController] = []
+    private var predictiveCacheOptions: PredictiveCacheOptions
+    private var mapOptions: MapOptions?
     
     /**
      Initializes a predictive cache.
@@ -44,23 +46,44 @@ public class PredictiveCacheManager {
      */
     public init(predictiveCacheOptions: PredictiveCacheOptions, mapOptions: MapOptions?) {
         Navigator.credentials = predictiveCacheOptions.credentials
-        self.controllers.append(initNavigatorController(options: predictiveCacheOptions))
+        self.predictiveCacheOptions = predictiveCacheOptions
+        self.mapOptions = mapOptions
+        
+        self.controllers = createControllers()
+        
+        subscribeNotifications()
+    }
+    
+    deinit {
+        unsubscribeNotifications()
+    }
+    
+    private func subscribeNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(restoreToOnline),
+                                               name: .navigatorWantsRestoreToOnlineVersion,
+                                               object: nil)
+    }
+    
+    private func unsubscribeNotifications() {
+        NotificationCenter.default.removeObserver(self, name: .navigatorWantsRestoreToOnlineVersion, object: nil)
+    }
+    
+    @objc func restoreToOnline(_ notification: Notification) {
+        self.controllers = createControllers()
+    }
+    
+    private func createControllers() -> [PredictiveCacheController] {
+        var controllers = [createPredictiveCacheController(options: predictiveCacheOptions)!]
+        
         if let mapOptions = mapOptions {
-            self.controllers.append(contentsOf: initMapControllers(options: predictiveCacheOptions, mapOptions: mapOptions))
+            controllers.append(contentsOf: mapOptions.styleSourcePaths.compactMap {
+                createPredictiveCacheController(options: predictiveCacheOptions,
+                                                tileStore: mapOptions.tileStore,
+                                                dataset: $0)
+            })
         }
-    }
-    
-    private func initMapControllers(options: PredictiveCacheOptions,
-                                    mapOptions: MapOptions) -> [PredictiveCacheController] {
-        return mapOptions.styleSourcePaths.compactMap {
-            createPredictiveCacheController(options: options,
-                                            tileStore: mapOptions.tileStore,
-                                            dataset: $0)
-        }
-    }
-    
-    private func initNavigatorController(options: PredictiveCacheOptions) -> PredictiveCacheController {
-        return createPredictiveCacheController(options: options)!
+        return controllers
     }
     
     private func createPredictiveCacheController(options: PredictiveCacheOptions,

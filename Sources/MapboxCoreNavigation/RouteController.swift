@@ -166,14 +166,14 @@ open class RouteController: NSObject {
         
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(navigationStatusDidChange), name: .navigationStatusDidChange, object: nil)
+        subscribeNotifications()
         updateNavigator(with: _routeProgress)
         updateObservation(for: _routeProgress)
     }
     
     deinit {
         resetObservation(for: _routeProgress)
-        NotificationCenter.default.removeObserver(self)
+        unsubscribeNotifications()
     }
     
     func resetObservation(for progress: RouteProgress) {
@@ -282,6 +282,42 @@ open class RouteController: NSObject {
         }
         // Check for faster route proactively (if reroutesProactively is enabled)
         refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
+    }
+    
+    private func subscribeNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(fallbackToOffline),
+                                               name: .navigatorWantsFallbackToOfflineVersion,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(restoreToOnline),
+                                               name: .navigatorWantsRestoreToOnlineVersion,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationStatusDidChange),
+                                               name: .navigationStatusDidChange,
+                                               object: nil)
+    }
+    
+    private func unsubscribeNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func fallbackToOffline(_ notification: Notification) {
+        guard let version = (notification.userInfo?[Navigator.NotificationUserInfoKey.versionsKey] as? [String])?.last else
+        {
+            return
+        }
+        
+        Navigator.shared.restartNavigator(forcing: version)
+        self.updateNavigator(with: self._routeProgress)
+        self.updateRouteLeg(to: self._routeProgress.legIndex)
+    }
+    
+    @objc func restoreToOnline(_ notification: Notification) {
+        Navigator.shared.restartNavigator(forcing: nil)
+        self.updateNavigator(with: self._routeProgress)
+        self.updateRouteLeg(to: self._routeProgress.legIndex)
     }
     
     func updateIndexes(status: NavigationStatus, progress: RouteProgress) {
