@@ -246,6 +246,19 @@ open class NavigationMapView: UIView {
         setupGestureRecognizers()
         installUserCourseView()
         subscribeForNotifications()
+        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            switch self.puckType {
+            case .default:
+                self.mapView.location.options.puckType = nil
+                self.userCourseView.isHidden = false
+            case .puck2D(configuration: let configuration):
+                self.userCourseView.isHidden = true
+                self.mapView.location.options.puckType = .puck2D(configuration)
+            case .puck3D(configuration: let configuration):
+                self.userCourseView.isHidden = true
+                self.mapView.location.options.puckType = .puck3D(configuration)
+            }
+        }
     }
     
     deinit {
