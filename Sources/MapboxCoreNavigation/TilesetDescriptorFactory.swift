@@ -8,7 +8,7 @@ extension TilesetDescriptorFactory {
      - parameter cacheLocation: A `Location` where cache data is stored.
      - parameter version: TilesetDescriptor version.
      */
-    open class func getSpecificVersion(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default, version: String) -> TilesetDescriptor {
+    public class func getSpecificVersion(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default, version: String) -> TilesetDescriptor {
         let cacheHandle = NativeHandlersFactory(tileStorePath: cacheLocation.tileStoreURL?.path ?? "").cacheHandle
         return getSpecificVersion(forCache: cacheHandle, version: version)
     }
@@ -20,7 +20,7 @@ extension TilesetDescriptorFactory {
      
      - parameter location: A `Location` where cache data is stored.
      */
-    open class func getLatest(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default) -> TilesetDescriptor {
+    public class func getLatest(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default) -> TilesetDescriptor {
         let cacheHandle = NativeHandlersFactory(tileStorePath: cacheLocation.tileStoreURL?.path ?? "").cacheHandle
         return getLatestForCache(cacheHandle)
     }
