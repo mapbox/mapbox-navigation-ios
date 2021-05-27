@@ -70,7 +70,14 @@ class Navigator {
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `tilesURL`).
      */
-    static let shared: Navigator = Navigator()
+    static var shared: Navigator {
+        return _navigator
+    }
+    
+    // Used in tests to recreate the navigator
+    static var _navigator: Navigator = .init()
+    
+    static func _recreateNavigator() { _navigator = .init() }
     
     /**
      Restrict direct initializer access.
@@ -184,6 +191,7 @@ extension Navigator: ElectronicHorizonObserver {
 
 extension Navigator: NavigatorObserver {
     func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
+        guard origin == .locationUpdate else { return }
         let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
             .originKey: origin,
             .statusKey: status,

@@ -270,9 +270,9 @@ open class RouteController: NSObject {
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
         
         // nil here means that we still wait for the first status from NavNative, no need to reroute in this case
-        let isOnRoute = !(userIsOnRoute(location, status: status) ?? true)
+        let isOnRoute = userIsOnRoute(location, status: status) ?? true
         
-        let willReroute = isOnRoute && delegate?.router(self, shouldRerouteFrom: location)
+        let willReroute = !isOnRoute && delegate?.router(self, shouldRerouteFrom: location)
             ?? DefaultBehavior.shouldRerouteFromLocation
         
         updateIndexes(status: status, progress: routeProgress)

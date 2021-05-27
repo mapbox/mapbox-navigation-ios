@@ -21,7 +21,9 @@ class NavigationServiceTests: XCTestCase {
 
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
 
-    lazy var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations) = {
+    var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations)!
+    
+    func createDependencies() -> (navigationService: NavigationService, routeLocations: RouteLocations) {
         let navigationService = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .never)
         navigationService.delegate = delegate
 
@@ -30,7 +32,6 @@ class NavigationServiceTests: XCTestCase {
         let firstCoord = navigationService.router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
-        let remainingSteps = legProgress.remainingSteps
         let penultimateCoord = legProgress.remainingSteps[4].shape!.coordinates.first!
         let penultimateLocation = CLLocation(coordinate: penultimateCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
 
@@ -40,7 +41,7 @@ class NavigationServiceTests: XCTestCase {
         let routeLocations = RouteLocations(firstLocation, penultimateLocation, lastLocation)
 
         return (navigationService: navigationService, routeLocations: routeLocations)
-    }()
+    }
 
     let initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
 
@@ -51,11 +52,14 @@ class NavigationServiceTests: XCTestCase {
 
         directionsClientSpy.reset()
         delegate.reset()
+        dependencies = createDependencies()
     }
     
     override func tearDown() {
         super.tearDown()
         Navigator.shared.navigator.resetRideSession()
+        Navigator._recreateNavigator()
+        dependencies = nil
     }
 
     func testDefaultUserInterfaceUsage() {
@@ -67,7 +71,10 @@ class NavigationServiceTests: XCTestCase {
         let firstLocation = dependencies.routeLocations.firstLocation
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        XCTAssertTrue(navigation.router.userIsOnRoute(firstLocation), "User should be on route")
+        
+        waitForNavNativeCallbacks()
+        
+        XCTAssertTrue(navigation.router.userIsOnRoute(firstLocation)!, "User should be on route")
     }
 
     func testUserIsOffRoute() {
@@ -91,8 +98,10 @@ class NavigationServiceTests: XCTestCase {
         locationsOnRoute.forEach {
             navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
             
+            waitForNavNativeCallbacks()
+            
             // Verify whether current location is located on the route
-            XCTAssertTrue(navigation.router.userIsOnRoute($0), "User should be on the route")
+            XCTAssertTrue(navigation.router.userIsOnRoute($0)!, "User should be on the route")
         }
         
         // Create list of 3 coordinates: all coordinates have distance component slightly changed, which means that they're off the route
@@ -113,10 +122,12 @@ class NavigationServiceTests: XCTestCase {
         locationsOffRoute.enumerated().forEach {
             navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0.element])
             
+            waitForNavNativeCallbacks()
+            
             if ($0.offset == 0) {
-                XCTAssertTrue(navigation.router.userIsOnRoute($0.element), "For the first coordinate user is still on the route")
+                XCTAssertTrue(navigation.router.userIsOnRoute($0.element)!, "For the first coordinate user is still on the route")
             } else {
-                XCTAssertFalse(navigation.router.userIsOnRoute($0.element), "User should be off route")
+                XCTAssertFalse(navigation.router.userIsOnRoute($0.element)!, "User should be off route")
             }
         }
     }
@@ -140,7 +151,9 @@ class NavigationServiceTests: XCTestCase {
             
             stepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
             
-            XCTAssertTrue(navigation.router.userIsOnRoute(stepLocations.last!), "User should be on route")
+            waitForNavNativeCallbacks()
+            
+            XCTAssertTrue(navigation.router.userIsOnRoute(stepLocations.last!)!, "User should be on route")
         }
     }
 
@@ -169,6 +182,8 @@ class NavigationServiceTests: XCTestCase {
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithNoSpeed])
         
+        waitForNavNativeCallbacks()
+        
         // When user is not moving (location is changed to first one in upcoming step, but neither speed nor timestamp were changed)
         // navigation native will snap to current location in current step
         XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstLocation.coordinate.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
@@ -184,6 +199,8 @@ class NavigationServiceTests: XCTestCase {
                                                           speed: 5,
                                                           timestamp: Date() + 5)
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithSpeed])
+        
+        waitForNavNativeCallbacks()
 
         // User is snapped to upcoming step when moving
         XCTAssertEqual(navigation.router.location!.coordinate.latitude, firstCoordinateOnUpcomingStep.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
@@ -220,6 +237,8 @@ class NavigationServiceTests: XCTestCase {
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocationOnNextStepWithDifferentCourse])
 
         let lastCoordinateOnCurrentStep = navigation.router.routeProgress.currentLegProgress.currentStep.shape!.coordinates.last!
+        
+        waitForNavNativeCallbacks()
 
         // When user's course is dissimilar from the finalHeading, they should not snap to upcoming step
         XCTAssertEqual(navigation.router.location!.coordinate.latitude, lastCoordinateOnCurrentStep.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
@@ -266,6 +285,8 @@ class NavigationServiceTests: XCTestCase {
                                                   timestamp: Date() + 5)
         
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [futureInaccurateLocation])
+        
+        waitForNavNativeCallbacks()
 
         // Inaccurate location should still be snapped
         XCTAssertEqual(navigation.router.location!.coordinate.latitude, futureInaccurateLocation.coordinate.latitude, accuracy: coordinateThreshold, "Latitudes should be almost equal")
@@ -301,6 +322,8 @@ class NavigationServiceTests: XCTestCase {
                                                     timestamp: Date())
         
         navigationService.locationManager(navigationService.locationManager, didUpdateLocations: [facingTowardsStartLocation])
+        
+        waitForNavNativeCallbacks()
         
         // Instead of raw course navigator will return interpolated course (course of the road).
         let interpolatedCourse = facingTowardsStartLocation.interpolatedCourse(along: router.routeProgress.nearbyShape)!
@@ -381,9 +404,13 @@ class NavigationServiceTests: XCTestCase {
 
             return true
         }
+        
+        dependencies.navigationService.start()
 
         // MARK: When told to re-route from location -- `reroute(from:)`
         router.reroute(from: testLocation, along: router.routeProgress)
+        
+        waitForNavNativeCallbacks()
 
         // MARK: it tells the delegate & posts a willReroute notification
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willRerouteFrom:)"))
@@ -422,6 +449,8 @@ class NavigationServiceTests: XCTestCase {
         // TODO: Verify why we need a second location update when routeState == .complete to trigger `MMEEventTypeNavigationArrive`
         navigation.router!.locationManager!(navigation.locationManager,
                                             didUpdateLocations: [trace.last!.shifted(to: now + (trace.count + 1))])
+        
+        waitForNavNativeCallbacks(timeout: 0.5)
 
         // MARK: It queues and flushes a Depart event
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
@@ -447,6 +476,8 @@ class NavigationServiceTests: XCTestCase {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
 
         trace.forEach { navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+        
+        waitForNavNativeCallbacks(timeout: 0.5)
 
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
@@ -461,6 +492,8 @@ class NavigationServiceTests: XCTestCase {
         }
 
         offRouteLocations.forEach { navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+        
+        waitForNavNativeCallbacks()
 
         // Make sure configurable delegate is called
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:shouldPreventReroutesWhenArrivingAt:)"))
@@ -534,6 +567,8 @@ class NavigationServiceTests: XCTestCase {
         
         for (index, location) in trace.enumerated() {
             navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [location])
+            
+            waitForNavNativeCallbacks()
 
             if index < 32 {
                 XCTAssert(routeController.routeProgress.legIndex == 0)
@@ -541,6 +576,8 @@ class NavigationServiceTests: XCTestCase {
                 XCTAssert(routeController.routeProgress.legIndex == 1)
             }
         }
+        
+        waitForNavNativeCallbacks()
 
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
     }
@@ -565,7 +602,7 @@ class NavigationServiceTests: XCTestCase {
         let router = service.router!
         let locationManager = NavigationLocationManager()
 
-        let _ = expectation(forNotification: .routeControllerDidReroute, object: router) { (notification) -> Bool in
+        let didRerouteExpectation = expectation(forNotification: .routeControllerDidReroute, object: router) { (notification) -> Bool in
             let isProactive = notification.userInfo![RouteController.NotificationUserInfoKey.isProactiveKey] as? Bool
             return isProactive == true
         }
@@ -573,6 +610,8 @@ class NavigationServiceTests: XCTestCase {
 
         for location in trace {
             service.router!.locationManager!(locationManager, didUpdateLocations: [location])
+            
+            waitForNavNativeCallbacks()
 
             let router = service.router! as! RouterComposition
 
@@ -590,10 +629,12 @@ class NavigationServiceTests: XCTestCase {
         let fasterRoute = Fixture.route(from: fasterRouteName, options: fasterOptions)
         let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName, options: fasterOptions)
         directions.fireLastCalculateCompletion(with: waypointsForFasterRoute, routes: [fasterRoute], error: nil)
+        
+        waitForNavNativeCallbacks()
 
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
 
-        waitForExpectations(timeout: 10)
+        wait(for: [rerouteExpectation, didRerouteExpectation], timeout: 10)
     }
 
     func testUnimplementedLogging() {
@@ -617,6 +658,9 @@ class NavigationServiceTests: XCTestCase {
         for location in trace {
             service.locationManager(locationManager, didUpdateLocations: [location])
         }
+        
+        let waitExpectation = expectation(description: "Waiting for NavNative callbacks")
+        _ = XCTWaiter.wait(for: [waitExpectation], timeout: 1) // also triggers navigationServiceDidChangeAuthorization callback
 
         guard let logs = unimplementedTestLogs else {
             XCTFail("Unable to fetch logs")
@@ -625,8 +669,13 @@ class NavigationServiceTests: XCTestCase {
 
         let ourLogs = logs.filter { $0.0 == "EmptyNavigationServiceDelegate" }
 
-        XCTAssertEqual(ourLogs.count, 7, "Expected logs to be populated and expected number of messages sent")
+        XCTAssertEqual(ourLogs.count, 8, "Expected logs to be populated and expected number of messages sent")
         unimplementedTestLogs = nil
+    }
+    
+    func waitForNavNativeCallbacks(timeout: TimeInterval = 0.1) {
+        let waitExpectation = expectation(description: "Waiting for the NatNative callback")
+        _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
     }
 }
 
