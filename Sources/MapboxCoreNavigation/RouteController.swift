@@ -287,11 +287,11 @@ open class RouteController: NSObject {
     private func subscribeNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(fallbackToOffline),
-                                               name: .navigatorWantsFallbackToOfflineVersion,
+                                               name: .navigationDidSwitchToFallbackVersion,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(restoreToOnline),
-                                               name: .navigatorWantsRestoreToOnlineVersion,
+                                               name: .navigationDidSwitchToTargetVersion,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigationStatusDidChange),
@@ -304,18 +304,11 @@ open class RouteController: NSObject {
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
-        guard let version = (notification.userInfo?[Navigator.NotificationUserInfoKey.versionsKey] as? [String])?.last else
-        {
-            return
-        }
-        
-        Navigator.shared.restartNavigator(forcing: version)
         self.updateNavigator(with: self._routeProgress)
         self.updateRouteLeg(to: self._routeProgress.legIndex)
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
-        Navigator.shared.restartNavigator(forcing: nil)
         self.updateNavigator(with: self._routeProgress)
         self.updateRouteLeg(to: self._routeProgress.legIndex)
     }

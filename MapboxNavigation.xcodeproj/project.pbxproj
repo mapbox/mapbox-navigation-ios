@@ -1244,13 +1244,6 @@
 			path = Support;
 			sourceTree = "<group>";
 		};
-		2BBED92D265CFBAB00F90032 /* Recovered References */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "Recovered References";
-			sourceTree = "<group>";
-		};
 		2BE701A4253760B300F46E4E /* RouteAlerts */ = {
 			isa = PBXGroup;
 			children = (
@@ -1824,7 +1817,6 @@
 				35CDA81C21908F320072B675 /* BenchTests */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
-				2BBED92D265CFBAB00F90032 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};

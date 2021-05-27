@@ -181,14 +181,6 @@ open class PassiveLocationDataSource: NSObject {
     
     private func subscribeNotifications() {
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fallbackToOffline),
-                                               name: .navigatorWantsFallbackToOfflineVersion,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(restoreToOnline),
-                                               name: .navigatorWantsRestoreToOnlineVersion,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigationStatusDidChange),
                                                name: .navigationStatusDidChange,
                                                object: nil)
@@ -196,19 +188,6 @@ open class PassiveLocationDataSource: NSObject {
     
     private func unsubscribeNotifications() {
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc func fallbackToOffline(_ notification: Notification) {
-        guard let version = (notification.userInfo?[Navigator.NotificationUserInfoKey.versionsKey] as? [String])?.last else
-        {
-            return
-        }
-        
-        Navigator.shared.restartNavigator(forcing: version)
-    }
-    
-    @objc func restoreToOnline(_ notification: Notification) {
-        Navigator.shared.restartNavigator(forcing: nil)
     }
     
     /**

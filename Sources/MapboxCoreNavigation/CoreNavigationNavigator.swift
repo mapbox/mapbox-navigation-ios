@@ -146,12 +146,8 @@ class Navigator {
     }
      
     private func setupElectronicHorizonOptions() {
-        let nativeOptions: MapboxNavigationNative.ElectronicHorizonOptions?
-        if let electronicHorizonOptions = electronicHorizonOptions {
-            nativeOptions = MapboxNavigationNative.ElectronicHorizonOptions(electronicHorizonOptions)
-        } else {
-            nativeOptions = nil
-        }
+        let nativeOptions = electronicHorizonOptions.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
+        
         navigator.setElectronicHorizonOptionsFor(nativeOptions)
     }
     
@@ -182,11 +178,15 @@ extension Navigator: FallbackVersionsObserver {
         case .nominal, .shouldReturnToLatest:
             tileVersionState = .shouldFallback(versions)
             
+            guard let fallbackVersion = versions.last else { return }
+            
+            Navigator.shared.restartNavigator(forcing: fallbackVersion)
+            
             let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
-                .versionsKey: versions // internal use only
+                .tilesVersionKey: fallbackVersion // internal use only
             ]
             
-            NotificationCenter.default.post(name: .navigatorWantsFallbackToOfflineVersion,
+            NotificationCenter.default.post(name: .navigationDidSwitchToFallbackVersion,
                                             object: nil,
                                             userInfo: userInfo)
         case .shouldFallback:
@@ -198,7 +198,8 @@ extension Navigator: FallbackVersionsObserver {
         switch tileVersionState {
         case .nominal, .shouldFallback:
             tileVersionState = .shouldReturnToLatest
-            NotificationCenter.default.post(name: .navigatorWantsRestoreToOnlineVersion,
+            Navigator.shared.restartNavigator(forcing: nil)
+            NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion,
                                             object: nil,
                                             userInfo: nil)
         case .shouldReturnToLatest:

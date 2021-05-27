@@ -61,12 +61,12 @@ public class PredictiveCacheManager {
     private func subscribeNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(restoreToOnline),
-                                               name: .navigatorWantsRestoreToOnlineVersion,
+                                               name: .navigationDidSwitchToTargetVersion,
                                                object: nil)
     }
     
     private func unsubscribeNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .navigatorWantsRestoreToOnlineVersion, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .navigationDidSwitchToTargetVersion, object: nil)
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
