@@ -61,7 +61,7 @@ open class PassiveLocationDataSource: NSObject {
     public weak var delegate: PassiveLocationDataSourceDelegate?
     
     /**
-     Starts the generation of location updates with an optional completion handler that gets called when the location data source is ready to receive snapped location updates.
+     Starts the generation of location updates. 
      */
     public func startUpdatingLocation() {
         systemLocationManager.startUpdatingLocation()
