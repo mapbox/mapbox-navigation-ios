@@ -68,6 +68,15 @@ class CustomViewController: UIViewController {
         // By default `NavigationViewportDataSource` tracks location changes from `PassiveLocationDataSource`, to consume
         // locations in active guidance navigation `ViewportDataSourceType` should be set to `.active`.
         let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView, viewportDataSourceType: .active)
+        
+        // Disable any updates to `CameraOptions.padding` in `NavigationCameraState.following` state
+        // to prevent overlapping.
+        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
+        navigationViewportDataSource.followingMobileCamera.padding = UIEdgeInsets(top: 200.0,
+                                                                                  left: 10.0,
+                                                                                  bottom: 100.0,
+                                                                                  right: 10.0)
+        
         navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
     }
     

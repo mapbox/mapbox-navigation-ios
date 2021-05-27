@@ -42,24 +42,51 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
+    var _route: Route?
+    
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
      */
-    public var route: Route {
-        return indexedRoute.0
+    public var route: Route? {
+        get {
+            return navigationService.indexedRoute.0
+        }
+        
+        set {
+            _route = newValue
+        }
     }
     
-    public var routeOptions: RouteOptions {
+    var _routeOptions: RouteOptions?
+    
+    /**
+     The route options used to get the route.
+     */
+    public var routeOptions: RouteOptions? {
         get {
             return navigationService.routeProgress.routeOptions
         }
+        
+        set {
+            _routeOptions = newValue
+        }
     }
+    
+    /**
+     The index of the route within the original `RouteResponse` object.
+     */
+    public var routeIndex: Int?
+    
+    /**
+     The `NavigationOptions` object, which is used for the navigation session.
+     */
+    public var navigationOptions: NavigationOptions?
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://docs.mapbox.com/ios/api/directions/) for further information.
      */
     public var directions: Directions {
-        return navigationService!.directions
+        return navigationService.directions
     }
     
     /**
@@ -273,7 +300,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     private(set) public var navigationService: NavigationService! {
         didSet {
-            arrivalController?.destination = route.legs.last?.destination
+            arrivalController?.destination = route?.legs.last?.destination
         }
     }
     
@@ -287,9 +314,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     var cameraController: CameraController?
     var ornamentsController: NavigationMapView.OrnamentsController?
     var routeOverlayController: NavigationMapView.RouteOverlayController?
-    
-    var viewObservers: [NavigationComponentDelegate] = []
-    
+    var viewObservers: [NavigationComponentDelegate?] = []
     var mapTileStore: TileStoreConfiguration.Location? = .default
     
     // MARK: - NavigationViewData implementation
@@ -313,7 +338,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
+     Initializes a `NavigationViewController` that presents the user interface for following a predefined route based on the given options.
 
      The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
      
@@ -329,37 +354,14 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         super.init(nibName: nil, bundle: nil)
         
-        if !(routeOptions is NavigationRouteOptions) {
-            print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
-        }
-        
-        navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route,
-                                                                                            routeIndex: routeIndex,
-                                                                                            routeOptions: routeOptions,
-                                                                                            tileStoreLocation: navigationOptions?.tileStoreConfiguration.navigatorLocation ?? .default)
-        navigationService.delegate = self
-        
-        let credentials = navigationService.directions.credentials
-        
-        voiceController = navigationOptions?.voiceController ?? RouteVoiceController(navigationService: navigationService,
-                                                                                     accessToken: credentials.accessToken,
-                                                                                     host: credentials.host.absoluteString)
-        
-        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
-        
-        setupControllers(navigationOptions)
-        setupStyleManager(navigationOptions)
-        
-        subviewInits.append { [weak self] in
-            if let predictiveCacheOptions = navigationOptions?.predictiveCacheOptions {
-                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions,
-                                                                 tileStoreConfiguration: navigationOptions?.tileStoreConfiguration)
-            }
-        }
+        self.route = route
+        self.routeIndex = routeIndex
+        self.routeOptions = routeOptions
+        self.navigationOptions = navigationOptions
     }
     
     /**
-     Initializes a navigation view controller with the given route and navigation service.
+     Initializes a `NavigationViewController` with the given route and navigation service.
      
      - parameter route: The route to navigate along.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
@@ -367,23 +369,69 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationService: The navigation service that manages navigation along the route.
      */
     convenience init(route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationService service: NavigationService) {
-        let options = NavigationOptions(navigationService: service)
-        self.init(for: route, routeIndex: routeIndex, routeOptions: routeOptions, navigationOptions: options)
+        let navigationOptions = NavigationOptions(navigationService: service)
+        self.init(for: route,
+                  routeIndex: routeIndex,
+                  routeOptions: routeOptions,
+                  navigationOptions: navigationOptions)
     }
     
     deinit {
         navigationService.stop()
     }
     
-    fileprivate func handleCancelAction() {
-        if delegate?.navigationViewControllerDidDismiss(self, byCanceling: true) != nil {
-            // The receiver should handle dismissal of the NavigationViewController
-        } else {
-            dismiss(animated: true, completion: nil)
+    // MARK: - Setting-up methods
+    
+    func setupNavigationService() {
+        guard let route = _route,
+              let routeIndex = routeIndex,
+              let routeOptions = _routeOptions else {
+            fatalError("`route`, `routeIndex` and `routeOptions` must be valid to create an instance of `NavigationViewController`.")
+        }
+        
+        if !(routeOptions is NavigationRouteOptions) {
+            print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
+        }
+        
+        let tileStoreLocation = navigationOptions?.tileStoreConfiguration.navigatorLocation ?? .default
+        let defaultNavigationService = MapboxNavigationService(route: route,
+                                                               routeIndex: routeIndex,
+                                                               routeOptions: routeOptions,
+                                                               tileStoreLocation: tileStoreLocation)
+        navigationService = navigationOptions?.navigationService ?? defaultNavigationService
+        navigationService.delegate = self
+        
+        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
+        
+        setupControllers(navigationOptions)
+        setupStyleManager(navigationOptions)
+        
+        viewObservers.forEach {
+            $0?.navigationViewDidLoad(view)
+        }
+        
+        // Start the navigation service on presentation.
+        navigationService.start()
+        
+        if let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction {
+            navigationService(navigationService,
+                              didPassVisualInstructionPoint: firstInstruction,
+                              routeProgress: navigationService.routeProgress)
         }
     }
     
-    // MARK: - Setting-up methods
+    func setupVoiceController() {
+        let credentials = navigationService.directions.credentials
+        let defaultVoiceController = RouteVoiceController(navigationService: navigationService,
+                                                          accessToken: credentials.accessToken,
+                                                          host: credentials.host.absoluteString)
+        
+        voiceController = navigationOptions?.voiceController ?? defaultVoiceController
+        
+        // Initialize voice controller if it hasn't been overridden.
+        // This is optional and lazy so it can be mutated by the developer after init.
+        _ = voiceController
+    }
     
     func setupStyleManager(_ navigationOptions: NavigationOptions?) {
         styleManager = StyleManager()
@@ -401,7 +449,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         cameraController = CameraController(self)
         ornamentsController = NavigationMapView.OrnamentsController(self, eventsManager: navigationService.eventsManager)
         
-        viewObservers = [routeOverlayController!, cameraController!, ornamentsController!, arrivalController!]
+        viewObservers = [
+            routeOverlayController,
+            cameraController,
+            ornamentsController,
+            arrivalController
+        ]
         
         subviewInits.append { [weak self] in
             if let topBanner = self?.addTopBanner(navigationOptions),
@@ -411,12 +464,29 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             }
         }
         
-        arrivalController?.destination = route.legs.last?.destination
-        ornamentsController?.reportButton.isHidden = !showsReportFeedback
+        subviewInits.append { [weak self] in
+            if let predictiveCacheOptions = self?.navigationOptions?.predictiveCacheOptions {
+                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions,
+                                                                 tileStoreConfiguration: self?.navigationOptions?.tileStoreConfiguration)
+            }
+        }
         
+        subviewInits.forEach {
+            $0()
+        }
+        subviewInits.removeAll()
+        
+        arrivalController?.destination = route?.legs.last?.destination
+        ornamentsController?.reportButton.isHidden = !showsReportFeedback
+    }
+    
+    func setupNavigationCamera() {
         if let centerCoordinate = navigationService.routeProgress.route.shape?.coordinates.first {
             navigationMapView?.setInitialCamera(centerCoordinate)
         }
+        
+        // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
+        navigationMapView?.navigationCamera.follow()
     }
     
     func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {
@@ -446,6 +516,14 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         return bottomBanner
     }
     
+    fileprivate func handleCancelAction() {
+        if delegate?.navigationViewControllerDidDismiss(self, byCanceling: true) != nil {
+            // The receiver should handle dismissal of the NavigationViewController
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
     // MARK: - UIViewController lifecycle methods
     
     open override func loadView() {
@@ -463,38 +541,18 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     override open func viewDidLoad() {
         super.viewDidLoad()
         
-        subviewInits.forEach {
-            $0()
-        }
-        subviewInits.removeAll()
-        
-        viewObservers.forEach {
-            $0.navigationViewDidLoad(view)
-        }
-        
-        // Initialize voice controller if it hasn't been overridden.
-        // This is optional and lazy so it can be mutated by the developer after init.
-        _ = voiceController
-        
-        // Start the navigation service on presentation.
-        self.navigationService.start()
-        
         view.clipsToBounds = true
         
-        guard let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else {
-            return
-        }
-        navigationService(navigationService, didPassVisualInstructionPoint: firstInstruction, routeProgress: navigationService.routeProgress)
-        
-        // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
-        navigationMapView?.navigationCamera.follow()
+        setupNavigationService()
+        setupVoiceController()
+        setupNavigationCamera()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         viewObservers.forEach {
-            $0.navigationViewWillAppear(animated)
+            $0?.navigationViewWillAppear(animated)
         }
         
         if shouldManageApplicationIdleTimer {
@@ -508,7 +566,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         super.viewDidAppear(animated)
         
         viewObservers.forEach {
-            $0.navigationViewDidAppear(animated)
+            $0?.navigationViewDidAppear(animated)
         }
     }
     
@@ -516,7 +574,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         super.viewWillDisappear(animated)
 
         viewObservers.forEach {
-            $0.navigationViewWillDisappear(animated)
+            $0?.navigationViewWillDisappear(animated)
         }
         
         if shouldManageApplicationIdleTimer {
@@ -528,7 +586,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         super.viewDidDisappear(animated)
         
         viewObservers.forEach {
-            $0.navigationViewDidDisappear(animated)
+            $0?.navigationViewDidDisappear(animated)
         }
     }
     
@@ -536,7 +594,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         super.viewDidLayoutSubviews()
         
         viewObservers.forEach {
-            $0.navigationViewDidLayoutSubviews()
+            $0?.navigationViewDidLayoutSubviews()
         }
     }
     
@@ -850,10 +908,13 @@ extension NavigationViewController: NavigationServiceDelegate {
             passedApproachingDestinationThreshold = true
         }
         
-        if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
-            navigationMapView?.highlightBuildings(at: [currentLegWaypoint], in3D: waypointStyle == .extrudedBuilding ? true : false, completion: { (found) in
-                self.foundAllBuildings = found
-            })
+        if !foundAllBuildings, passedApproachingDestinationThreshold,
+           let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
+            navigationMapView?.highlightBuildings(at: [currentLegWaypoint],
+                                                  in3D: waypointStyle == .extrudedBuilding ? true : false,
+                                                  completion: { (found) in
+                                                    self.foundAllBuildings = found
+                                                  })
         }
     }
 }
@@ -872,7 +933,7 @@ extension NavigationViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
-        } else if let firstCoord = route.shape?.coordinates.first {
+        } else if let firstCoord = route?.shape?.coordinates.first {
             return CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         } else {
             return nil
