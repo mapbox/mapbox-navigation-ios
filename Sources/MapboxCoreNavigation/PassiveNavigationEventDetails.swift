@@ -20,18 +20,14 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     var totalTimeInForeground: TimeInterval = 0
     var totalTimeInBackground: TimeInterval = 0
     
-    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, withAppMetadata: Bool = false) {
+    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, withAppMetadata: [String: String?]? = nil) {
         coordinate = dataSource.rawLocation?.coordinate
         sessionIdentifier = sessionState.identifier.uuidString
         startTimestamp = sessionState.departureTimestamp
         updateTimeState(session: sessionState)
         
-        if withAppMetadata {
-            appMetadata = [String: String?]()
-            appMetadata?["name"] = Bundle.main.bundleIdentifier
-            appMetadata?["version"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-            appMetadata?["userId"] = UIDevice.current.identifierForVendor?.uuidString
-            appMetadata?["sessionId"] = session.identifier.uuidString
+        if (withAppMetadata != nil) {
+            appMetadata = withAppMetadata
         }
     }
     

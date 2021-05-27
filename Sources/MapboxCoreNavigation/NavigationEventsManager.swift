@@ -57,7 +57,8 @@ open class NavigationEventsManager {
     }
     
     /**
-     Optional app metadata that can be used to associate app state, specifically app name and version, with feedback events in the telemetry pipeline.
+     Optional app metadata that can be used to associate app state, specifically app name and version, with events in the telemetry pipeline.
+     Specifically, developers can provide application name and version, user identifier, and session identifier.
     */
     var appMetadata: [String: String?]? = nil
     
@@ -186,15 +187,11 @@ open class NavigationEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEventDetails(type: FeedbackType, description: String?, withAppMetadata: Bool = false) -> NavigationEventDetails? {
+    func navigationFeedbackEventDetails(type: FeedbackType, description: String?, withAppMetadata: [String:String?]? = nil) -> NavigationEventDetails? {
         var event: NavigationEventDetails
-        guard let sessionState = sessionState else { return nil }
-        
-        if withAppMetadata {
-            appMetadata?["name"] = sessionState.name
-            appMetadata?["version"] = sessionState.version
-            appMetadata?["userId"] = sessionState.userId
-            appMetadata?["sessionId"] = sessionState.identifier.uuidString
+
+        if (withAppMetadata != nil) {
+            appMetadata = withAppMetadata
         }
     
         if let activeNavigationDataSource = activeNavigationDataSource {
@@ -292,7 +289,7 @@ open class NavigationEventsManager {
         mobileEventsManager.flush()
     }
     
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?, withAppMetadata: Bool = false) -> UUID? {
+    func enqueueFeedbackEvent(type: FeedbackType, description: String?, withAppMetadata: [String: String?]? = nil) -> UUID? {
         guard let eventDetails = navigationFeedbackEventDetails(type: type, description: description, withAppMetadata: withAppMetadata) else {
             return nil
         }
@@ -357,13 +354,14 @@ open class NavigationEventsManager {
      
      @param type A `FeedbackType` used to specify the type of feedback
      @param description A custom string used to describe the problem in detail.
+     @param withAppMetadata An optional dictionary used to include application metadata
      @return Returns a UUID used to identify the feedback event
      
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
      
      You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
      */
-    public func recordFeedback(type: FeedbackType = .general, description: String? = nil, withAppMetadata: Bool = false) -> UUID? {
+    public func recordFeedback(type: FeedbackType = .general, description: String? = nil, withAppMetadata: [String: String?]? = nil) -> UUID? {
         return enqueueFeedbackEvent(type: type, description: description, withAppMetadata: withAppMetadata)
     }
     

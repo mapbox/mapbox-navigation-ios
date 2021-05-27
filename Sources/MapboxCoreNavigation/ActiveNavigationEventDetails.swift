@@ -57,7 +57,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var percentTimeInForeground: Int = 0
     var percentTimeInPortrait: Int = 0
     
-    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
+    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool, withAppMetadata: [String: String?]? = nil) {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
@@ -68,12 +68,8 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         originalRequestIdentifier = session.originalRoute?.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
-        if withAppMetadata {
-            appMetadata = [String: String?]()
-            appMetadata?["name"] = Bundle.main.bundleIdentifier
-            appMetadata?["version"] = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-            appMetadata?["userId"] = UIDevice.current.identifierForVendor?.uuidString
-            appMetadata?["sessionId"] = session.identifier.uuidString
+        if (withAppMetadata != nil) {
+            appMetadata = withAppMetadata
         }
         
         if let location = dataSource.router.rawLocation,
