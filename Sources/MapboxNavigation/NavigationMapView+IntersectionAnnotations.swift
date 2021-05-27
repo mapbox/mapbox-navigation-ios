@@ -4,15 +4,16 @@ import MapboxDirections
 import MapboxCoreNavigation
 import Turf
 import MapboxMaps
+import MapboxNavigationNative
 
 extension NavigationMapView {
     
     public struct EdgeIntersection {
-        var root: ElectronicHorizon.Edge
-        var branch: ElectronicHorizon.Edge
-        var rootMetadata: ElectronicHorizon.Edge.Metadata
+        var root: RoadGraph.Edge
+        var branch: RoadGraph.Edge
+        var rootMetadata: RoadGraph.Edge.Metadata
         var rootShape: LineString
-        var branchMetadata: ElectronicHorizon.Edge.Metadata
+        var branchMetadata: RoadGraph.Edge.Metadata
         var branchShape: LineString
 
         public var coordinate: CLLocationCoordinate2D? {
@@ -104,9 +105,9 @@ extension RouteStep {
     var annotationFeature: Feature {
         var featurePoint = Feature(Point(maneuverLocation))
 
-        let tailPosition = NavigationMapView.AnnotationTailPosition.center
+        let tailPosition = NavigationMapView.AnnotationTailPosition.left
 
-        featurePoint.properties = ["highlighted": true, "tailPosition": tailPosition.rawValue, "text": self.annotationLabel, "imageName": "AnnotationCentered-Highlighted", "sortOrder": 0]
+        featurePoint.properties = ["highlighted": true, "tailPosition": tailPosition.rawValue, "text": self.annotationLabel, "imageName": "AnnotationRightHanded", "sortOrder": 0]
 
         return featurePoint
     }

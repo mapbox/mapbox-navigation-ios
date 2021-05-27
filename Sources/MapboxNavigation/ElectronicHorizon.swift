@@ -1,7 +1,8 @@
 import MapboxCoreNavigation
+import MapboxNavigationNative
 
-extension ElectronicHorizon.Edge {
-    var mpp: [ElectronicHorizon.Edge]? {
+extension RoadGraph.Edge {
+    var mpp: [RoadGraph.Edge]? {
 
         guard level == 0 else { return nil }
 

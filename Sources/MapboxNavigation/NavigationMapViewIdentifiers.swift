@@ -17,6 +17,7 @@ extension NavigationMapView {
         static let routeDurationAnnotationsLayer: String = "\(identifier)_routeDurationAnnotationsLayer"
         static let puck2DLayer: String = "puck"
         static let puck3DLayer: String = "puck-model-layer"
+        static let intersectionAnnotationsLayer: String = "\(identifier)_intersectionAnnotationsLayer"
     }
     
     struct SourceIdentifier {

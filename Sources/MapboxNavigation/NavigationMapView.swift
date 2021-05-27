@@ -3,6 +3,7 @@ import MapboxMaps
 import MapboxCoreMaps
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxNavigationNative
 import Turf
 
 private enum RouteDurationAnnotationTailPosition: Int {
@@ -356,9 +357,9 @@ open class NavigationMapView: UIView {
             self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
         }
 
-        mapView.on(.mapLoaded)  { [weak self] _ in
+        mapView.mapboxMap.onNext(.mapLoaded, handler: { [weak self] _ in
             self?.addAnnotationSymbolImages()
-        }
+        })
         
         addSubview(mapView)
         
@@ -690,7 +691,7 @@ open class NavigationMapView: UIView {
      - parameter legIndex: Index, which determines for which `RouteLeg` `Waypoint` will be shown.
      */
     public func showWaypoints(on route: Route, legIndex: Int = 0) {
-        let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap({ $0.destination }))
+        let waypoints: [MapboxDirections.Waypoint] = Array(route.legs.dropLast().compactMap({ $0.destination }))
 
         var features = [Turf.Feature]()
         for (waypointIndex, waypoint) in waypoints.enumerated() {
@@ -1029,9 +1030,9 @@ open class NavigationMapView: UIView {
         // Right-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
-            let stretchX = [ImageStretches(first: Float(24), second: Float(40))]
-            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
-            let imageContent = ImageContent(left: 24, top: 25, right: 40, bottom: 35)
+            let stretchX = [ImageStretches(first: Float(12), second: Float(20))]
+            let stretchY = [ImageStretches(first: Float(12), second: Float(18))]
+            let imageContent = ImageContent(left: 12, top: 12, right: 20, bottom: 18)
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
             try style.addImage(regularAnnotationImage,
@@ -1051,9 +1052,9 @@ open class NavigationMapView: UIView {
         // Left-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
-            let stretchX = [ImageStretches(first: Float(34), second: Float(50))]
-            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
-            let imageContent = ImageContent(left: 34, top: 25, right: 50, bottom: 35)
+            let stretchX = [ImageStretches(first: Float(17), second: Float(25))]
+            let stretchY = [ImageStretches(first: Float(12), second: Float(18))]
+            let imageContent = ImageContent(left: 17, top: 12, right: 25, bottom: 18)
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
             try style.addImage(regularAnnotationImage,
@@ -1422,7 +1423,7 @@ open class NavigationMapView: UIView {
         }
     }
     
-    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
+    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [MapboxDirections.Waypoint]? {
         let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
         let multipointRoutes = routes.filter { $0.legs.count > 1}
         guard multipointRoutes.count > 0 else { return nil }
@@ -1497,7 +1498,7 @@ open class NavigationMapView: UIView {
         }
     }
 
-    private func edgeIsCandidate(_ edge: ElectronicHorizon.Edge, roadGraph: RoadGraph) -> Bool {
+    private func edgeIsCandidate(_ edge: RoadGraph.Edge, roadGraph: RoadGraph) -> Bool {
         // Criteria for accepting an edge as a candidate intersecting road
         //  • Is of a large enough road class
         //  • Is of a non-trivial length in meters
@@ -1527,7 +1528,7 @@ open class NavigationMapView: UIView {
             return false
         }
 
-        let onscreenPoint = self.mapView.point(for: annotationPoint, in: nil)
+        let onscreenPoint = self.mapView.mapboxMap.point(for: annotationPoint)
 
         guard mapView.bounds.insetBy(dx: 20, dy: 20).contains(onscreenPoint) else {
             // intersection coordinate is not visible on screen
@@ -1536,11 +1537,11 @@ open class NavigationMapView: UIView {
         return true
     }
 
-    private func updateIntersectionAnnotationSet(horizon: ElectronicHorizon, roadGraph: RoadGraph) {
-        guard let currentWayname = horizon.start.edgeNames(roadGraph: roadGraph)?.first else { return }
+    private func updateIntersectionAnnotationSet(startingEdge: RoadGraph.Edge, roadGraph: RoadGraph) {
+        guard let currentWayname = startingEdge.edgeNames(roadGraph: roadGraph)?.first else { return }
 
         // grab the MPP from the Electronic Horizon
-        guard let edges = horizon.start.mpp else { return }
+        guard let edges = startingEdge.mpp else { return }
 
         var intersections = [EdgeIntersection]()
         var addedIntersections = [String]()
@@ -1625,110 +1626,79 @@ open class NavigationMapView: UIView {
     }
 
     private func addAnnotationSymbolImages() {
-        guard let style = mapView.style, style.getStyleImage(with: "AnnotationLeftHanded") == nil, style.getStyleImage(with: "AnnotationRightHanded") == nil else { return }
+        let style = mapView.mapboxMap.style
+        guard style.image(withId: "AnnotationLeftHanded") == nil, style.image(withId: "AnnotationRightHanded") == nil else { return }
 
         // Centered pin
         if let image = UIImage(named: "AnnotationCentered", in: .mapboxNavigation, compatibleWith: nil) {
-            let stretchX = [ImageStretches(first: Float(20), second: Float(30)), ImageStretches(first: Float(90), second: Float(100))]
-            let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
-            let imageContent = ImageContent(left: 20, top: 26, right: 100, bottom: 33)
+            let stretchX = [ImageStretches(first: Float(10), second: Float(15)), ImageStretches(first: Float(45), second: Float(50))]
+            let stretchY = [ImageStretches(first: Float(13), second: Float(16))]
+            let imageContent = ImageContent(left: 10, top: 13, right: 50, bottom: 16)
 
             let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
-
-            style.setStyleImage(image: regularAnnotationImage,
-                                with: "AnnotationCentered",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                scale: 2.0,
-                                imageContent: imageContent)
+            try? style.addImage(regularAnnotationImage, id: "AnnotationCentered", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
 
             let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
-            style.setStyleImage(image: highlightedAnnotationImage,
-                                with: "AnnotationCentered-Highlighted",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                scale: 2.0,
-                                imageContent: imageContent)
+            try? style.addImage(highlightedAnnotationImage, id: "AnnotationCentered-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
         }
 
-        let stretchX = [ImageStretches(first: Float(32), second: Float(42))]
-        let stretchY = [ImageStretches(first: Float(26), second: Float(32))]
-        let imageContent = ImageContent(left: 32, top: 26, right: 47, bottom: 33)
+        let stretchX = [ImageStretches(first: Float(16), second: Float(21))]
+        let stretchY = [ImageStretches(first: Float(13), second: Float(16))]
+        let imageContent = ImageContent(left: 16, top: 13, right: 23, bottom: 16)
 
         // Right-hand pin
         if let image =  UIImage(named: "AnnotationRightHanded", in: .mapboxNavigation, compatibleWith: nil) {
             let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
 
-            style.setStyleImage(image: regularAnnotationImage,
-                                with: "AnnotationRightHanded",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                scale: 2.0,
-                                imageContent: imageContent)
+            try? style.addImage(regularAnnotationImage, id: "AnnotationRightHanded", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
 
             let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
-            style.setStyleImage(image: highlightedAnnotationImage,
-                                with: "AnnotationRightHanded-Highlighted",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                scale: 2.0,
-                                imageContent: imageContent)
+            try? style.addImage(highlightedAnnotationImage, id: "AnnotationRightHanded-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
         }
 
         // Left-hand pin
-        if let image =  UIImage(named: "AnnotationLeftHanded", in: .mapboxNavigation, compatibleWith: nil) {
+        if let image = UIImage(named: "AnnotationLeftHanded", in: .mapboxNavigation, compatibleWith: nil) {
             let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
 
-            style.setStyleImage(image: regularAnnotationImage,
-                                with: "AnnotationLeftHanded",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                scale: 2.0,
-                                imageContent: imageContent)
+            try? style.addImage(regularAnnotationImage, id: "AnnotationLeftHanded", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
 
             let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
-            style.setStyleImage(image: highlightedAnnotationImage,
-                                with: "AnnotationLeftHanded-Highlighted",
-                                stretchX: stretchX,
-                                stretchY: stretchY,
-                                scale: 2.0,
-                                imageContent: imageContent)
+            try? style.addImage(highlightedAnnotationImage, id: "AnnotationLeftHanded-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
         }
     }
 
     private func removeRouteAnnotationsLayerFromStyle() {
-        mapView.style.removeLayers([NavigationMapView.intersectionAnnotations])
-        _ = mapView.style.removeSource(for: NavigationMapView.intersectionAnnotations)
+        mapView.mapboxMap.style.removeLayers([NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer])
+        try? mapView.mapboxMap.style.removeSource(withId: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer)
     }
 
     static let intersectionAnnotations = "intersectionAnnotations"
 
     private func updateAnnotationLayer(with features: FeatureCollection) {
-        guard let style = mapView.style else { return }
-        let existingDataSource = try? mapView.style.getSource(identifier: NavigationMapView.intersectionAnnotations, type: GeoJSONSource.self).get()
+        let existingDataSource = try? mapView.mapboxMap.style.source(withId: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer) as GeoJSONSource
         if existingDataSource != nil {
-            _ = mapView.style.updateGeoJSON(for: NavigationMapView.intersectionAnnotations, with: features)
+            try! mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer, geoJSON: features)
             return
         } else {
             var dataSource = GeoJSONSource()
             dataSource.data = .featureCollection(features)
-            mapView.style.addSource(source: dataSource, identifier: NavigationMapView.intersectionAnnotations)
+            try! mapView.mapboxMap.style.addSource(dataSource, id: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer)
         }
 
-        _ = mapView.style.removeStyleLayer(forLayerId: NavigationMapView.intersectionAnnotations)
+        _ = try? mapView.mapboxMap.style.removeLayer(withId: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer)
 
-        var shapeLayer = SymbolLayer(id: NavigationMapView.intersectionAnnotations)
-        shapeLayer.source = NavigationMapView.intersectionAnnotations
+        var shapeLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer)
+        shapeLayer.source = NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer
 
-        shapeLayer.layout?.textField = .expression(Exp(.get) {
+        shapeLayer.textField = .expression(Exp(.get) {
             "text"
         })
 
-        shapeLayer.layout?.iconImage = .expression(Exp(.get) {
+        shapeLayer.iconImage = .expression(Exp(.get) {
             "imageName"
         })
 
-        shapeLayer.paint?.textColor = .expression(Exp(.switchCase) {
+        shapeLayer.textColor = .expression(Exp(.switchCase) {
             Exp(.any) {
                 Exp(.get) {
                     "highlighted"
@@ -1738,16 +1708,16 @@ open class NavigationMapView: UIView {
             self.intersectionAnnotationDefaultLabelColor
         })
 
-        shapeLayer.layout?.textSize = .constant(16)
-        shapeLayer.layout?.iconTextFit = .constant(.both)
-        shapeLayer.layout?.iconAllowOverlap = .constant(true)
-        shapeLayer.layout?.textAllowOverlap = .constant(true)
-        shapeLayer.layout?.textJustify = .constant(.center)
-        shapeLayer.layout?.symbolZOrder = .constant(.auto)
-        shapeLayer.layout?.textFont = .constant(self.intersectionAnnotationFontNames)
-        shapeLayer.layout?.iconTextFitPadding = .constant([-4, 0, -3, 0])
+        shapeLayer.textSize = .constant(16)
+        shapeLayer.iconTextFit = .constant(.both)
+        shapeLayer.iconAllowOverlap = .constant(true)
+        shapeLayer.textAllowOverlap = .constant(true)
+        shapeLayer.textJustify = .constant(.center)
+        shapeLayer.symbolZOrder = .constant(.auto)
+        shapeLayer.textFont = .constant(self.intersectionAnnotationFontNames)
+        shapeLayer.iconTextFitPadding = .constant([-4, 0, -3, 0])
 
-        style.addLayer(layer: shapeLayer, layerPosition: nil)
+        try? mapView.mapboxMap.style.addLayer(shapeLayer, layerPosition: nil)
 
         let symbolSortKeyString =
         """
@@ -1756,9 +1726,7 @@ open class NavigationMapView: UIView {
 
         if let expressionData = symbolSortKeyString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
-                                                          property: "symbol-sort-key",
-                                                          value: expJSONObject)
+            try! mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer, property: "symbol-sort-key", value: expJSONObject)
         }
 
         let expressionString =
@@ -1778,12 +1746,9 @@ open class NavigationMapView: UIView {
 
         if let expressionData = expressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
-                                                          property: "icon-anchor",
-                                                          value: expJSONObject)
-            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
-                                                          property: "text-anchor",
-                                                          value: expJSONObject)
+            try! mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer, property: "icon-anchor", value: expJSONObject)
+
+            try! mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer, property: "text-anchor", value: expJSONObject)
         }
 
         let offsetExpressionString =
@@ -1803,44 +1768,22 @@ open class NavigationMapView: UIView {
 
         if let expressionData = offsetExpressionString.data(using: .utf8), let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
 
-            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
-                                                          property: "icon-offset",
-                                                          value: expJSONObject)
+            try! mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer, property: "icon-offset", value: expJSONObject)
 
-            try! mapView.__map.setStyleLayerPropertyForLayerId(NavigationMapView.intersectionAnnotations,
-                                                          property: "text-offset",
-                                                          value: expJSONObject)
+            try! mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.intersectionAnnotationsLayer, property: "text-offset", value: expJSONObject)
         }
     }
 
     @objc func didUpdateElectronicHorizonPosition(_ notification: Notification) {
-        guard let horizon = notification.userInfo?[ElectronicHorizon.NotificationUserInfoKey.treeKey] as? ElectronicHorizon, let roadGraph = notification.userInfo?[ElectronicHorizon.NotificationUserInfoKey.roadGraphIdentifierKey] as? RoadGraph else {
+        guard let startingEdge = notification.userInfo?[RoadGraph.NotificationUserInfoKey.treeKey] as? RoadGraph.Edge, let roadGraph = notification.userInfo?[RoadGraph.NotificationUserInfoKey.roadGraphIdentifierKey] as? RoadGraph else {
             return
         }
 
         DispatchQueue.main.async {
-            self.updateIntersectionAnnotationSet(horizon: horizon, roadGraph: roadGraph)
-        }
-    }
-
-    func edgeNames(identifier: ElectronicHorizon.Edge.Identifier, roadGraph: RoadGraph) -> [String] {
-        guard let metadata = roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
-            return []
-        }
-        let names = metadata.names.map { name -> String in
-            switch name {
-            case .name(let name):
-                return name
-            case .code(let code):
-                return "(\(code))"
-            }
+            self.updateIntersectionAnnotationSet(startingEdge: startingEdge, roadGraph: roadGraph)
+            self.updateAnnotations(for: nil)
         }
 
-        // If the road is unnamed, fall back to the road class.
-        if names.isEmpty {
-            return ["\(metadata.mapboxStreetsRoadClass.rawValue)"]
-        }
-        return names
     }
 }
 
