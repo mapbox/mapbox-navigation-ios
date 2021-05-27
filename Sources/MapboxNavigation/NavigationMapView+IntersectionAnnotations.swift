@@ -97,6 +97,8 @@ extension RouteStep {
             label = destination
         } else if label.count == 0, let exitName = exitNames?.first {
             label = exitName
+        } else if label.count == 0 {
+            label = instructions.description
         }
 
         return label
@@ -105,9 +107,9 @@ extension RouteStep {
     var annotationFeature: Feature {
         var featurePoint = Feature(Point(maneuverLocation))
 
-        let tailPosition = NavigationMapView.AnnotationTailPosition.left
+        let tailPosition = NavigationMapView.AnnotationTailPosition.center
 
-        featurePoint.properties = ["highlighted": true, "tailPosition": tailPosition.rawValue, "text": self.annotationLabel, "imageName": "AnnotationRightHanded", "sortOrder": 0]
+        featurePoint.properties = ["highlighted": true, "tailPosition": tailPosition.rawValue, "text": self.annotationLabel, "imageName": "AnnotationCentered-Highlighted", "sortOrder": 0]
 
         return featurePoint
     }
