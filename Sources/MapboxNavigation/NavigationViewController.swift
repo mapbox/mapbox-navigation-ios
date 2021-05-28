@@ -358,7 +358,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         self.routeIndex = routeIndex
         self.routeOptions = routeOptions
         self.navigationOptions = navigationOptions
-        navigationMapView?.simulation = (navigationService.locationManager is SimulatedLocationManager)
     }
     
     /**
@@ -419,6 +418,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                               didPassVisualInstructionPoint: firstInstruction,
                               routeProgress: navigationService.routeProgress)
         }
+        navigationMapView?.simulation = (navigationService.locationManager is SimulatedLocationManager)
     }
     
     func setupVoiceController() {
