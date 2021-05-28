@@ -18,29 +18,62 @@ public protocol UnimplementedLogging {
 
 public extension UnimplementedLogging {
     func logUnimplemented(protocolType: Any, level: OSLogType, function: String = #function) {
-        
         let protocolDescription = String(describing: protocolType)
         let selfDescription = String(describing: type(of: self))
         
-        let description = (selfDescription, function)
+        let description = UnimplementedLoggingState.Description(typeDescription: selfDescription, function: function)
 
-        let alreadyWarned = warned.contains { elem -> Bool in
-            elem == description
-        }
-        
-        guard !alreadyWarned else {
+        guard _unimplementedLoggingState.markWarned(description) == .marked else {
             return
         }
         
         let log = OSLog(subsystem: "com.mapbox.navigation", category: "delegation.\(selfDescription)")
         let formatted: StaticString = "Unimplemented delegate method in %@: %@.%@. This message will only be logged once."
         os_log(formatted, log: log, type: level, selfDescription, protocolDescription, function)
-        unimplementedTestLogs?.append((selfDescription, function))
-        warned.append(description)
     }
 }
 
-fileprivate var warned: [(String, String)] = []
+/// Contains a list of unimplemented log descriptions so that we won't log the same warnings twice.
+/// Because this state is a global object and part of the public API it has synchronization primitive using a lock.
+/// - note: The type is safe to use from multiple threads.
+final class UnimplementedLoggingState {
+    struct Description: Equatable {
+        let typeDescription: String
+        let function: String
+    }
 
+    enum MarkingResult {
+        case alreadyMarked
+        case marked
+    }
 
-var unimplementedTestLogs: [(String, String)]? = nil
+    private let lock: NSLock = .init()
+    private var warned: [Description] = []
+
+    func markWarned(_ description: Description) -> MarkingResult {
+        lock.lock(); defer {
+            lock.unlock()
+        }
+        guard !warned.contains(description) else {
+            return .alreadyMarked
+        }
+        warned.append(description)
+        return .marked
+    }
+
+    func clear() {
+        lock.lock(); defer {
+            lock.unlock()
+        }
+        warned.removeAll()
+    }
+
+    func countWarned(forTypeDescription typeDescription: String) -> Int {
+        return warned
+            .filter { $0.typeDescription == typeDescription }
+            .count
+    }
+}
+
+/// - note: Exposed as internal to verify the behaviour in tests.
+let _unimplementedLoggingState: UnimplementedLoggingState = .init()

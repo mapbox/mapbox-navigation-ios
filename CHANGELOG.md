@@ -92,6 +92,7 @@
 * Fixed an issue where instruction banners could appear in the wrong color after switching between `Style`s. ([#2977](https://github.com/mapbox/mapbox-navigation-ios/pull/2977))
 * Developers can create an instance of `NavigationViewController` from `UIStoryboardSegue`, which is located in `Navigation.storyboard`. To successfully create `NavigationViewController` instance developer has to pre-define `route`, `routeIndex`, `routeOptions` and `navigationOptions` properties of `NavigationViewController` in `UIViewController.prepare(for:sender:)`. ([#2974](https://github.com/mapbox/mapbox-navigation-ios/pull/2974))
 * Added methods for convenience checking Navigation tiles in a `TileStore`: `containsLatestNavigationTiles(forCacheLocation:, completion:)`, `tileRegionContainsLatestNavigationTiles(forId:, cacheLocation:, completion:)` and methods for getting Navigation tiles from `TilesetDescriptorFactory`: `getLatest(forCacheLocation:)`, `getSpecificVersion(forCacheLocation:, version:)`. ([#3015](https://github.com/mapbox/mapbox-navigation-ios/pull/3015))
+* Fixed a thread-safety issue in `UnimplementedLogging` protocol implementation. ([#3024](https://github.com/mapbox/mapbox-navigation-ios/pull/3024))
 
 ## v1.4.0
 
