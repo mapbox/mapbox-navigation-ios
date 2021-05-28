@@ -58,6 +58,8 @@ extension NavigationMapView {
         
         var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
         
+        var electronicHorizonRoadNames = [String]()
+        
         // MARK: - Lifecycle
         
         init(_ navigationViewData: NavigationViewData, eventsManager: NavigationEventsManager) {
@@ -70,12 +72,41 @@ extension NavigationMapView {
                                                    selector: #selector(orientationDidChange(_:)),
                                                    name: UIDevice.orientationDidChangeNotification,
                                                    object: nil)
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(didUpdateEHorizonRoadName),
+                                                   name: .electronicHorizonDidUpdatePosition,
+                                                   object: nil)
+
         }
         
         private func suspendNotifications() {
             NotificationCenter.default.removeObserver(self,
                                                       name: UIDevice.orientationDidChangeNotification,
                                                       object: nil)
+            NotificationCenter.default.removeObserver(self,
+                                                      name: .electronicHorizonDidUpdatePosition,
+                                                      object: nil)
+        }
+        
+        @objc func didUpdateEHorizonRoadName(_ notification: Notification) {
+            guard let startingEdge = notification.userInfo?[RoadGraph.NotificationUserInfoKey.treeKey] as? RoadGraph.Edge else { return }
+            let edgeIdentifier = startingEdge.identifier
+            
+            guard let routeController = navigationViewData.router as? RouteController,
+                  let metadata = routeController.roadGraph.edgeMetadata(edgeIdentifier: edgeIdentifier) else { return }
+            
+            electronicHorizonRoadNames = metadata.names.map { name -> String in
+                switch name {
+                case .name(let name):
+                    return name
+                case .code(let code):
+                    return "(\(code))"
+                }
+            }
+            
+            if electronicHorizonRoadNames.isEmpty {
+                electronicHorizonRoadNames = ["\(metadata.mapboxStreetsRoadClass.rawValue)"]
+            }
         }
         
         @objc func orientationDidChange(_ notification: Notification) {
@@ -256,7 +287,21 @@ extension NavigationMapView {
                     var smallestLabelDistance = Double.infinity
                     var latestFeature: MBXFeature?
                     
+                    var minimumEditDistance = Int.max
+                    var similarFeature: MBXFeature?
+
                     for queriedFeature in queriedFeatures {
+                        // Calculate the Levenshtein–Damerau edit distance between the EHorizon road name and the feature property road name, and then use the smallest one for the road label.
+                        if let roadName = queriedFeature.feature.properties["name"] as? String,
+                           !roadName.isEmpty,
+                           !self.electronicHorizonRoadNames.isEmpty {
+                            let stringEditDistance = self.electronicHorizonRoadNames.first!.minimumEditDistance(to: roadName)
+                            if stringEditDistance < minimumEditDistance {
+                                minimumEditDistance = stringEditDistance
+                                similarFeature = queriedFeature.feature
+                            }
+                        }
+                        
                         var lineStrings: [LineString] = []
                         
                         if queriedFeature.feature.geometry.geometryType == MBXGeometryType_Line,
@@ -289,7 +334,14 @@ extension NavigationMapView {
                     }
                     
                     var hideWayName = true
-                    if smallestLabelDistance < 5 {
+                    if latestFeature != similarFeature {
+                        let style = self.navigationMapView.mapView.mapboxMap.style
+                        if let similarFeature = similarFeature,
+                           self.navigationView.wayNameView.setupWith(roadFeature: similarFeature,
+                                                                     using: style) {
+                            hideWayName = false
+                        }
+                    } else if smallestLabelDistance < 5 {
                         let style = self.navigationMapView.mapView.mapboxMap.style
                         if let latestFeature = latestFeature,
                            self.navigationView.wayNameView.setupWith(roadFeature: latestFeature,
