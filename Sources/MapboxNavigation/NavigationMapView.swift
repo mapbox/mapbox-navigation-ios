@@ -169,20 +169,7 @@ open class NavigationMapView: UIView {
      */
     public var puckType: PuckType = .default {
         didSet {
-            mapView.mapboxMap.onNext(.styleLoaded) { [weak self]_ in
-                guard let self = self else { return }
-                switch self.puckType {
-                case .default:
-                    self.mapView.location.options.puckType = nil
-                    self.userCourseView.isHidden = false
-                case .puck2D(configuration: let configuration):
-                    self.userCourseView.isHidden = true
-                    self.mapView.location.options.puckType = .puck2D(configuration)
-                case .puck3D(configuration: let configuration):
-                    self.userCourseView.isHidden = true
-                    self.mapView.location.options.puckType = .puck3D(configuration)
-                }
-            }
+            setupMapPuck()
         }
     }
     
@@ -241,6 +228,10 @@ open class NavigationMapView: UIView {
         setupGestureRecognizers()
         installUserCourseView()
         subscribeForNotifications()
+        setupMapPuck()
+    }
+    
+    func setupMapPuck() {
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             switch self.puckType {
