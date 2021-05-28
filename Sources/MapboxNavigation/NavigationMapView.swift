@@ -593,7 +593,7 @@ open class NavigationMapView: UIView {
     public func showWaypoints(on route: Route, legIndex: Int = 0) {
         let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap({ $0.destination }))
 
-        var features = [Feature]()
+        var features = [Turf.Feature]()
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             var feature = Feature(Point(waypoint.coordinate))
             feature.properties = [
@@ -975,7 +975,7 @@ open class NavigationMapView: UIView {
         // pick a random tail direction to keep things varied
         guard let randomTailPosition = [RouteDurationAnnotationTailPosition.left, RouteDurationAnnotationTailPosition.right].randomElement() else { return }
 
-        var features = [Feature]()
+        var features = [Turf.Feature]()
 
         // Run through our heuristic algorithm looking for a good coordinate along each route line to place it's route annotation
         // First, we will look for a set of RouteSteps unique to each route

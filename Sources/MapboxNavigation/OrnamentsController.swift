@@ -281,7 +281,7 @@ extension NavigationMapView {
                     guard let self = self else { return }
                     
                     var smallestLabelDistance = Double.infinity
-                    var latestFeature: MBXFeature?
+                    var latestFeature: MapboxCommon.Feature?
                     
                     var minimumEditDistance = Int.max
                     var similarFeature: MBXFeature?
@@ -300,10 +300,10 @@ extension NavigationMapView {
                         
                         var lineStrings: [LineString] = []
                         
-                        if queriedFeature.feature.geometry.geometryType == MBXGeometryType_Line,
+                        if queriedFeature.feature.geometry.geometryType == GeometryType_Line,
                            let coordinates = queriedFeature.feature.geometry.extractLocationsArray() as? [CLLocationCoordinate2D] {
                             lineStrings.append(LineString(coordinates))
-                        } else if queriedFeature.feature.geometry.geometryType == MBXGeometryType_MultiLine,
+                        } else if queriedFeature.feature.geometry.geometryType == GeometryType_MultiLine,
                                   let coordinates = queriedFeature.feature.geometry.extractLocations2DArray() as? [[CLLocationCoordinate2D]] {
                             for coordinates in coordinates {
                                 lineStrings.append(LineString(coordinates))

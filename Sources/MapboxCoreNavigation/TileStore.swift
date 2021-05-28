@@ -17,16 +17,11 @@ extension TileStore {
      worker thread; it is the responsibility of the user to dispatch to a
      user-controlled thread.
      */
-    public func containsLatestNavigationTiles(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default, completion: @escaping ContainsCompletion) {
+    public func containsLatestNavigationTiles(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default,
+                                              completion: @escaping ContainsCompletion) {
         let descriptors = [TilesetDescriptorFactory.getLatest(forCacheLocation: cacheLocation)]
         
         __getAllTileRegions { expected in
-            guard let expected = expected else {
-                assertionFailure("Invalid MBXExpected.")
-                completion(nil)
-                return
-            }
-            
             if expected.isValue(), let regions = expected.value as? Array<TileRegion> {
                 let lock = NSLock()
                 var count = regions.count
@@ -38,7 +33,8 @@ extension TileStore {
                                                          callback: { expected in
                                                             lock.lock()
                                                             
-                                                            if let expected = expected, expected.isValue(), let contains = expected.value as? NSNumber {
+                                                            if expected.isValue(),
+                                                               let contains = expected.value as? NSNumber {
                                                                 result = result.map { $0 && contains.boolValue }
                                                             } else if let expected = expected, expected.isError() {
                                                                 result = nil
@@ -75,19 +71,16 @@ extension TileStore {
      worker thread; it is the responsibility of the user to dispatch to a
      user-controlled thread.
      */
-    public func tileRegionContainsLatestNavigationTiles(forId regionId: String, cacheLocation: TileStoreConfiguration.Location = .default, completion: @escaping ContainsCompletion) {
+    public func tileRegionContainsLatestNavigationTiles(forId regionId: String,
+                                                        cacheLocation: TileStoreConfiguration.Location = .default,
+                                                        completion: @escaping ContainsCompletion) {
         let descriptors = [TilesetDescriptorFactory.getLatest(forCacheLocation: cacheLocation)]
         
         __tileRegionContainsDescriptors(forId: regionId,
                                         descriptors: descriptors,
                                         callback: { expected in
-                                            guard let expected = expected else {
-                                                assertionFailure("Invalid MBXExpected.")
-                                                completion(nil)
-                                                return
-                                            }
-                                            
-                                            if expected.isValue(), let value = expected.value as? NSNumber {
+                                            if expected.isValue(),
+                                               let value = expected.value as? NSNumber {
                                                 completion(value.boolValue)
                                             } else if expected.isError() {
                                                 completion(nil)

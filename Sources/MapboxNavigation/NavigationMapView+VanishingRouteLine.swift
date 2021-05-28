@@ -232,7 +232,7 @@ extension NavigationMapView {
         })
     }
     
-    func routeLineGradient(_ congestionFeatures: [Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {
+    func routeLineGradient(_ congestionFeatures: [Turf.Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {
         var gradientStops = [Double: UIColor]()
         var distanceTraveled = fractionTraveled
         

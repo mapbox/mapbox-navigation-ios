@@ -12,7 +12,7 @@ public enum RoadObjectLocation {
      - parameter positions: Positions of gantry entries.
      - parameter shape: Shape of a gantry.
      */
-    case gantry(positions: [RoadObjectPosition], shape: Geometry)
+    case gantry(positions: [RoadObjectPosition], shape: Turf.Geometry)
 
     /**
      Location of an object represented as a point.
@@ -26,21 +26,21 @@ public enum RoadObjectLocation {
      - parameter exits: Positions of polygon exits.
      - parameter shape: Shape of a polygon.
      */
-    case polygon(entries: [RoadObjectPosition], exits: [RoadObjectPosition], shape: Geometry)
+    case polygon(entries: [RoadObjectPosition], exits: [RoadObjectPosition], shape: Turf.Geometry)
 
     /**
      Location of an object represented as a polyline.
      - parameter path: Position of a polyline on a road graph.
      - parameter shape: Shape of a polyline.
      */
-    case polyline(path: RoadGraph.Path, shape: Geometry)
+    case polyline(path: RoadGraph.Path, shape: Turf.Geometry)
 
     /**
      Location of an object represented as an OpenLR line.
      - parameter path: Position of a line on a road graph.
      - parameter shape: Shape of a line.
      */
-    case openLRLine(path: RoadGraph.Path, shape: Geometry)
+    case openLRLine(path: RoadGraph.Path, shape: Turf.Geometry)
 
     /**
      Location of an object represented as an OpenLR point.
@@ -55,7 +55,7 @@ public enum RoadObjectLocation {
      Location of a route alert.
      - parameter shape: Shape of an object.
      */
-    case routeAlert(shape: Geometry)
+    case routeAlert(shape: Turf.Geometry)
 
     init(_ native: MapboxNavigationNative.MBNNMatchedRoadObjectLocation) {
         if native.isMBNNOpenLRLineLocation() {
