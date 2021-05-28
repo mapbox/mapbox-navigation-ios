@@ -100,12 +100,8 @@ extension NavigationMapView {
                 case .name(let name):
                     return name
                 case .code(let code):
-                    return "(\(code))"
+                    return code
                 }
-            }
-            
-            if electronicHorizonRoadNames.isEmpty {
-                electronicHorizonRoadNames = ["\(metadata.mapboxStreetsRoadClass.rawValue)"]
             }
         }
         
@@ -295,7 +291,7 @@ extension NavigationMapView {
                         if let roadName = queriedFeature.feature.properties["name"] as? String,
                            !roadName.isEmpty,
                            !self.electronicHorizonRoadNames.isEmpty {
-                            let stringEditDistance = self.electronicHorizonRoadNames.first!.minimumEditDistance(to: roadName)
+                            let stringEditDistance = self.electronicHorizonRoadNames.map{ $0.minimumEditDistance(to: roadName) }.reduce(0, +)
                             if stringEditDistance < minimumEditDistance {
                                 minimumEditDistance = stringEditDistance
                                 similarFeature = queriedFeature.feature
