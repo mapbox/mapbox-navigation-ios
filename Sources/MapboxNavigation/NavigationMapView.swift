@@ -161,21 +161,16 @@ open class NavigationMapView: UIView {
         }
     }
     
-    var simulation: Bool = true {
-        didSet {
-            if !simulation, let locationProvider = mapView.location.locationProvider as? PassiveLocationManager {
-                mapView.location.overrideLocationProvider(with: AppleLocationProvider())
-                locationProvider.startUpdatingLocation()
-            }
-        }
-    }
+    var simulation: Bool = true
+    var passiveLocationUsed: Bool = false
     
     /**
      The `puckType` is used to provide  customized options for the user location puck during turn-by-turn navigation. Defaults to `UserCourseView`. Developers could switch to map SDK location layer by providing configuration to `.puck2D` or `.puck3D`.
      */
     public var puckType: PuckType = .default {
         didSet {
-            mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            mapView.mapboxMap.onNext(.styleLoaded) { [weak self]_ in
+                guard let self = self else { return }
                 switch self.puckType {
                 case .default:
                     self.mapView.location.options.puckType = nil
@@ -246,7 +241,8 @@ open class NavigationMapView: UIView {
         setupGestureRecognizers()
         installUserCourseView()
         subscribeForNotifications()
-        mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
             switch self.puckType {
             case .default:
                 self.mapView.location.options.puckType = nil
@@ -309,6 +305,11 @@ open class NavigationMapView: UIView {
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
             self.updateUserCourseView(location)
+        }
+        
+        mapView.mapboxMap.onNext(.cameraChanged) { [weak self] _ in
+            guard let self = self else { return }
+            self.passiveLocationUsed = (self.mapView.location.locationProvider is PassiveLocationManager)
         }
         
         addSubview(mapView)
@@ -434,9 +435,11 @@ open class NavigationMapView: UIView {
                                   navigationCameraState: navigationCamera.state)
         case .puck2D(configuration: _):
             if simulation {
-                let locationProvider = mapView.location.locationProvider
-                mapView.location.locationProvider(locationProvider!, didUpdateLocations: [location])
-                mapView.location.locationProvider.stopUpdatingLocation()
+                if !passiveLocationUsed {
+                    let locationProvider = mapView.location.locationProvider
+                    mapView.location.locationProvider(locationProvider!, didUpdateLocations: [location])
+                    mapView.location.locationProvider.stopUpdatingLocation()
+                }
                 if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
                     do {
                         try mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.puck2DLayer,
@@ -449,7 +452,9 @@ open class NavigationMapView: UIView {
             }
         case .puck3D(configuration: let configuration):
             if simulation {
-                mapView.location.locationProvider.stopUpdatingLocation()
+                if !passiveLocationUsed {
+                    mapView.location.locationProvider.stopUpdatingLocation()
+                }
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.puck3DSource) {
                     var model = configuration.model
                     model.position = [location.coordinate.longitude, location.coordinate.latitude]

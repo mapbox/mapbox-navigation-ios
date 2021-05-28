@@ -358,6 +358,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         self.routeIndex = routeIndex
         self.routeOptions = routeOptions
         self.navigationOptions = navigationOptions
+        navigationMapView?.simulation = (navigationService.locationManager is SimulatedLocationManager)
     }
     
     /**
