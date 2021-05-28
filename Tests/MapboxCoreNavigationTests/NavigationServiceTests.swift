@@ -74,7 +74,7 @@ class NavigationServiceTests: XCTestCase {
         
         waitForNavNativeCallbacks()
         
-        XCTAssertTrue(navigation.router.userIsOnRoute(firstLocation)!, "User should be on route")
+        XCTAssertTrue(navigation.router.userIsOnRoute(firstLocation), "User should be on route")
     }
 
     func testUserIsOffRoute() {
@@ -101,7 +101,7 @@ class NavigationServiceTests: XCTestCase {
             waitForNavNativeCallbacks()
             
             // Verify whether current location is located on the route
-            XCTAssertTrue(navigation.router.userIsOnRoute($0)!, "User should be on the route")
+            XCTAssertTrue(navigation.router.userIsOnRoute($0), "User should be on the route")
         }
         
         // Create list of 3 coordinates: all coordinates have distance component slightly changed, which means that they're off the route
@@ -125,9 +125,9 @@ class NavigationServiceTests: XCTestCase {
             waitForNavNativeCallbacks()
             
             if ($0.offset == 0) {
-                XCTAssertTrue(navigation.router.userIsOnRoute($0.element)!, "For the first coordinate user is still on the route")
+                XCTAssertTrue(navigation.router.userIsOnRoute($0.element), "For the first coordinate user is still on the route")
             } else {
-                XCTAssertFalse(navigation.router.userIsOnRoute($0.element)!, "User should be off route")
+                XCTAssertFalse(navigation.router.userIsOnRoute($0.element), "User should be off route")
             }
         }
     }
@@ -153,7 +153,7 @@ class NavigationServiceTests: XCTestCase {
             
             waitForNavNativeCallbacks()
             
-            XCTAssertTrue(navigation.router.userIsOnRoute(stepLocations.last!)!, "User should be on route")
+            XCTAssertTrue(navigation.router.userIsOnRoute(stepLocations.last!), "User should be on route")
         }
     }
 

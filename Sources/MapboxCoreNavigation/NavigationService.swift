@@ -257,8 +257,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
         locationManager.activityType = routeOptions.activityType
         bootstrapEvents()
         
-        nativeLocationSource.delegate = self
         router.delegate = self
+        nativeLocationSource.delegate = self
         
         checkForUpdates()
         checkForLocationUsageDescription()

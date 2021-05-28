@@ -58,7 +58,7 @@ public protocol Router: CLLocationManagerDelegate {
      
      If the user is not on the route, they should be rerouted.
      */
-    func userIsOnRoute(_ location: CLLocation) -> Bool?
+    func userIsOnRoute(_ location: CLLocation) -> Bool
     func reroute(from: CLLocation, along: RouteProgress)
     
     /**

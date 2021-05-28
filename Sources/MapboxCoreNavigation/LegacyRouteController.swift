@@ -184,7 +184,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return true
     }
     
-    public func userIsOnRoute(_ location: CLLocation) -> Bool? {
+    public func userIsOnRoute(_ location: CLLocation) -> Bool {
         
         guard let destination = routeProgress.currentLeg.destination else {
             preconditionFailure("Route legs used for navigation must have destinations")
@@ -277,11 +277,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         updateRouteStepProgress(for: location)
         updateRouteLegProgress(for: location)
         updateVisualInstructionProgress()
-        
-        
-        let isOnRoute = !(userIsOnRoute(location) ?? true) // Cannot return nil here, only in the RouteController that uses NavNative
 
-        if isOnRoute && delegate?.router(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
+        if !userIsOnRoute(location) && delegate?.router(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
             reroute(from: location, along: routeProgress)
             return
         }

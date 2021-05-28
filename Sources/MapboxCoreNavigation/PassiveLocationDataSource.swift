@@ -30,7 +30,7 @@ open class PassiveLocationDataSource: NSObject {
         
         self.systemLocationManager.delegate = self
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(handleNavigationStatusNotification),
+                                               selector: #selector(navigationStatusDidChange),
                                                name: .navigationStatusDidChange,
                                                object: nil)
     }
@@ -126,15 +126,15 @@ open class PassiveLocationDataSource: NSObject {
         lastRawLocation = locations.last
     }
     
-    @objc private func handleNavigationStatusNotification(_ notification: NSNotification) {
+    @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
         DispatchQueue.main.async { [weak self] in
-            self?.handleNavigationStatusUpdate(status)
+            self?.update(to: status)
         }
     }
     
-    private func handleNavigationStatusUpdate(_ status: NavigationStatus) {
+    private func update(to status: NavigationStatus) {
         guard let lastRawLocation = lastRawLocation else { return }
         
         let lastLocation = CLLocation(status.location)

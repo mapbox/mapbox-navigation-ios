@@ -166,7 +166,7 @@ open class RouteController: NSObject {
         
         super.init()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(handleNavigationStatusNotification), name: .navigationStatusDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(navigationStatusDidChange), name: .navigationStatusDidChange, object: nil)
         updateNavigator(with: _routeProgress)
         updateObservation(for: _routeProgress)
     }
@@ -256,23 +256,20 @@ open class RouteController: NSObject {
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
     }
     
-    @objc private func handleNavigationStatusNotification(_ notification: NSNotification) {
+    @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
         DispatchQueue.main.async { [weak self] in
-            self?.handleNavigationStatusUpdate(status)
+            self?.update(to: status)
         }
     }
 
-    private func handleNavigationStatusUpdate(_ status: NavigationStatus) {
+    private func update(to status: NavigationStatus) {
         guard let location = rawLocation else { return }
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
         
-        // nil here means that we still wait for the first status from NavNative, no need to reroute in this case
-        let isOnRoute = userIsOnRoute(location, status: status) ?? true
-        
-        let willReroute = !isOnRoute && delegate?.router(self, shouldRerouteFrom: location)
+        let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
             ?? DefaultBehavior.shouldRerouteFromLocation
         
         updateIndexes(status: status, progress: routeProgress)
@@ -461,11 +458,11 @@ open class RouteController: NSObject {
 }
 
 extension RouteController: Router {
-    public func userIsOnRoute(_ location: CLLocation) -> Bool? {
+    public func userIsOnRoute(_ location: CLLocation) -> Bool {
         return userIsOnRoute(location, status: nil)
     }
     
-    public func userIsOnRoute(_ location: CLLocation, status: NavigationStatus?) -> Bool? {
+    public func userIsOnRoute(_ location: CLLocation, status: NavigationStatus?) -> Bool {
         
         guard let destination = routeProgress.currentLeg.destination else {
             preconditionFailure("Route legs used for navigation must have destinations")
@@ -478,7 +475,8 @@ extension RouteController: Router {
             return true
         }
         
-        guard let status = status ?? navigator.getStatus() else { return nil }
+        // If we still wait for the first status from NavNative, there is no need to reroute
+        guard let status = status ?? navigator.getStatus() else { return true }
         let offRoute = status.routeState == .offRoute || status.routeState == .invalid
         return !offRoute
     }
