@@ -56,6 +56,11 @@ class Navigator {
     lazy var roadObjectMatcher: RoadObjectMatcher = {
         return RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
     }()
+    
+    lazy var router: MapboxNavigationNative.Router = {
+        return MapboxNavigationNative.Router(cache: cacheHandle,
+                                             historyRecorder: historyRecorder)
+    }()
 
 
     private(set) var tileStore: TileStore
