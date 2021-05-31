@@ -1,4 +1,3 @@
-
 import Foundation
 import MapboxCommon
 
@@ -43,9 +42,9 @@ public struct TileStoreConfiguration {
         public var tileStore: TileStore {
             switch self {
             case .default:
-                return TileStore.getInstance()
+                return TileStore.__getInstance()
             case .custom(let url):
-                return TileStore.getInstanceForPath(url.path)
+                return TileStore.__getInstanceForPath(url.path)
             }
         }
     }

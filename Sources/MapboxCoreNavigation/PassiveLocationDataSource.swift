@@ -61,7 +61,7 @@ open class PassiveLocationDataSource: NSObject {
     public weak var delegate: PassiveLocationDataSourceDelegate?
     
     /**
-     Starts the generation of location updates with an optional completion handler that gets called when the location data source is ready to receive snapped location updates.
+     Starts the generation of location updates. 
      */
     public func startUpdatingLocation() {
         systemLocationManager.startUpdatingLocation()
@@ -123,7 +123,7 @@ open class PassiveLocationDataSource: NSObject {
         var signStandard: SignStandard?
 
         delegate?.passiveLocationDataSource(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
-        let matches = status.map_matcher_output.matches.map {
+        let matches = status.mapMatcherOutput.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
         }
 

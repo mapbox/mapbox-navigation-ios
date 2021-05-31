@@ -39,11 +39,15 @@ class CustomViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationMapView.mapView.style.uri = .custom(url: URL(string: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")!)
+        navigationMapView.mapView.mapboxMap.style.uri = StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")
         navigationMapView.userCourseView.isHidden = false
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(route: userIndexedRoute!.0, routeIndex: userIndexedRoute!.1, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
+        navigationService = MapboxNavigationService(route: userIndexedRoute!.0,
+                                                    routeIndex: userIndexedRoute!.1,
+                                                    routeOptions: userRouteOptions!,
+                                                    locationSource: locationManager,
+                                                    simulating: simulateLocation ? .always : .onPoorGPS)
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         
@@ -56,7 +60,7 @@ class CustomViewController: UIViewController {
         // Start navigation
         navigationService.start()
         
-        navigationMapView.mapView.on(.styleLoaded, handler: { [weak self] _ in
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
             self?.navigationMapView.show([route])
         })
@@ -64,6 +68,15 @@ class CustomViewController: UIViewController {
         // By default `NavigationViewportDataSource` tracks location changes from `PassiveLocationDataSource`, to consume
         // locations in active guidance navigation `ViewportDataSourceType` should be set to `.active`.
         let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView, viewportDataSourceType: .active)
+        
+        // Disable any updates to `CameraOptions.padding` in `NavigationCameraState.following` state
+        // to prevent overlapping.
+        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
+        navigationViewportDataSource.followingMobileCamera.padding = UIEdgeInsets(top: 200.0,
+                                                                                  left: 10.0,
+                                                                                  bottom: 100.0,
+                                                                                  right: 10.0)
+        
         navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
     }
     

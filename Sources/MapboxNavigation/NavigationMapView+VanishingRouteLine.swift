@@ -184,8 +184,8 @@ extension NavigationMapView {
             // In case if route was fully travelled - remove main route and its casing.
             
             do {
-                try mapView.style.removeLayer(withId: mainRouteLayerIdentifier)
-                try mapView.style.removeLayer(withId: mainRouteCasingLayerIdentifier)
+                try mapView.mapboxMap.style.removeLayer(withId: mainRouteLayerIdentifier)
+                try mapView.mapboxMap.style.removeLayer(withId: mainRouteCasingLayerIdentifier)
             } catch {
                 NSLog("Failed to remove main route line layer.")
             }
@@ -212,17 +212,19 @@ extension NavigationMapView {
             
             let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
             
-            let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
-            let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
-                                                                fractionTraveled: newFractionTraveled)
             do {
-                try self.mapView.style.updateLayer(withId: mainRouteLayerIdentifier, type: LineLayer.self) { (lineLayer) in
-                    lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
+                try self.mapView.mapboxMap.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                    let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
+                    let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
+                                                                        fractionTraveled: newFractionTraveled)
+                    
+                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
                 }
                 
-                let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
-                try self.mapView.style.updateLayer(withId: mainRouteCasingLayerIdentifier, type: LineLayer.self) { (lineLayer) in
-                    lineLayer.paint?.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
+                try self.mapView.mapboxMap.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                    let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
+                    
+                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
                 }
             } catch {
                 NSLog("Failed to update main route line layer.")

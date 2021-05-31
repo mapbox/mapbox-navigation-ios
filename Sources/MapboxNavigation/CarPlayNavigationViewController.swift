@@ -137,7 +137,7 @@ public class CarPlayNavigationViewController: UIViewController {
                                                                                              viewportDataSourceType: .active)
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
         
-        navigationMapView.mapView.on(.styleLoaded) { [weak self] _ in
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             self?.navigationMapView?.localizeLabels()
             self?.updateRouteOnMap()
             self?.navigationMapView?.mapView.showsTraffic = false
@@ -147,9 +147,7 @@ public class CarPlayNavigationViewController: UIViewController {
         navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
         
-        navigationMapView.mapView.update {
-            $0.location.puckType = .none
-        }
+        navigationMapView.mapView.location.options.puckType = .none
         
         navigationMapView.userCourseView.isHidden = false
         navigationMapView.navigationCamera.follow()
@@ -452,8 +450,8 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        if navigationMapView?.mapView.style.uri.rawValue != style.mapStyleURL {
-            navigationMapView?.mapView.style.uri = StyleURI.custom(url: style.mapStyleURL)
+        if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
+            navigationMapView?.mapView.mapboxMap.style.uri = StyleURI(url: style.mapStyleURL)
         }
     }
     

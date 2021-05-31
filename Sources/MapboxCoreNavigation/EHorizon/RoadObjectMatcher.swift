@@ -1,6 +1,7 @@
 import Foundation
 import MapboxNavigationNative
 import Turf
+@_implementationOnly import MapboxCommon_Private
 
 /**
  Provides methods for road object matching.
@@ -14,12 +15,20 @@ final public class RoadObjectMatcher {
     public weak var delegate: RoadObjectMatcherDelegate? {
         didSet {
             if delegate != nil {
-                native.setListenerFor(self)
+                internalRoadObjectMatcherListener.delegate = delegate
+                native.setListenerFor(internalRoadObjectMatcherListener)
             } else {
+                internalRoadObjectMatcherListener.delegate = nil
                 native.setListenerFor(nil)
             }
         }
     }
+    
+    /**
+     Object, which subscribes to events being sent from the `RoadObjectMatcherListener`, and passes them
+     to the `RoadObjectMatcherDelegate`.
+     */
+    var internalRoadObjectMatcherListener: InternalRoadObjectMatcherListener!
 
     /**
      Matches given OpenLR object to the graph.
@@ -89,26 +98,16 @@ final public class RoadObjectMatcher {
 
     init(_ native: MapboxNavigationNative.RoadObjectMatcher) {
         self.native = native
+        
+        internalRoadObjectMatcherListener = InternalRoadObjectMatcherListener(roadObjectMatcher: self)
     }
 
     deinit {
+        internalRoadObjectMatcherListener.delegate = nil
         native.setListenerFor(nil)
     }
 
     private let native: MapboxNavigationNative.RoadObjectMatcher
-}
-
-extension RoadObjectMatcher: RoadObjectMatcherListener {
-    public func onRoadObjectMatched(forRoadObject roadObject: MBXExpected<AnyObject, AnyObject>) {
-        let result = Result<MapboxNavigationNative.RoadObject,
-                            MapboxNavigationNative.RoadObjectMatcherError>(expected: roadObject)
-        switch result {
-        case .success(let roadObject):
-            delegate?.roadObjectMatcher(self, didMatch: RoadObject(roadObject))
-        case .failure(let error):
-            delegate?.roadObjectMatcher(self, didFailToMatchWith: RoadObjectMatcherError(error))
-        }
-    }
 }
 
 extension MapboxNavigationNative.RoadObjectMatcherError: Error {}
@@ -116,5 +115,32 @@ extension MapboxNavigationNative.RoadObjectMatcherError: Error {}
 extension CLLocation {
     convenience init(coordinate: CLLocationCoordinate2D) {
         self.init(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    }
+}
+
+// Since `MBXExpected` cannot be exposed publicly `InternalRoadObjectMatcherListener` works as an
+// intermediary by subscribing to the events from the `RoadObjectMatcherListener`, and passing them
+// to the `RoadObjectMatcherDelegate`.
+class InternalRoadObjectMatcherListener: RoadObjectMatcherListener {
+    
+    weak var roadObjectMatcher: RoadObjectMatcher?
+    
+    weak var delegate: RoadObjectMatcherDelegate?
+    
+    init(roadObjectMatcher: RoadObjectMatcher) {
+        self.roadObjectMatcher = roadObjectMatcher
+    }
+    
+    public func onRoadObjectMatched(forRoadObject roadObject: MBXExpected<AnyObject, AnyObject>) {
+        guard let roadObjectMatcher = roadObjectMatcher else { return }
+        
+        let result = Result<MapboxNavigationNative.RoadObject,
+                            MapboxNavigationNative.RoadObjectMatcherError>(expected: roadObject)
+        switch result {
+        case .success(let roadObject):
+            delegate?.roadObjectMatcher(roadObjectMatcher, didMatch: RoadObject(roadObject))
+        case .failure(let error):
+            delegate?.roadObjectMatcher(roadObjectMatcher, didFailToMatchWith: RoadObjectMatcherError(error))
+        }
     }
 }

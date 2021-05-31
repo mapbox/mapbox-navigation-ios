@@ -34,10 +34,10 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     }
 
     open override func update() {
-        super.update()
         imageRepository.resetImageCache(nil)
         let previousInstruction = instruction
         instruction = previousInstruction
+        super.update()
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
