@@ -49,8 +49,8 @@ class Navigator {
     
     private(set) var roadGraph: RoadGraph
     
-    lazy var roadObjectsStore: RoadObjectsStore = {
-        return RoadObjectsStore(navigator.roadObjectStore())
+    lazy var roadObjectStore: RoadObjectStore = {
+        return RoadObjectStore(navigator.roadObjectStore())
     }()
     
     lazy var roadObjectMatcher: RoadObjectMatcher = {
