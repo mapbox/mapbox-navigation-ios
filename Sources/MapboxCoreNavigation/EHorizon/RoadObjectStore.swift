@@ -9,7 +9,7 @@ import MapboxNavigationNative
 public typealias RoadObjectIdentifier = String
 
 /**
- Stores and provides access to metadata about road object.
+ Stores and provides access to metadata about road objects.
  
  You do not create a `RoadObjectStore` object manually. Instead, use the `RouteController.roadObjectStore` or `PassiveLocationDataSource.roadObjectStore` to access the currently active road object store.
  */
@@ -37,7 +37,7 @@ public final class RoadObjectStore {
 
     /**
      Returns road object with given identifier, if such object cannot be found returns null.
-     NB: since road object can be removed/added in background we should always check return value for null,
+     NB: since road objects can be removed/added in background we should always check return value for null,
      even if we know that we have object with such identifier based on previous calls.
      - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
@@ -58,13 +58,13 @@ public final class RoadObjectStore {
 
     /**
      Adds a road object to be tracked in the electronic horizon. In case if an object with such identifier already exists, updates it.
-     NB: road object obtained from route alerts cannot be added via this API.
+     NB: a road object obtained from route alerts cannot be added via this API.
 
      - parameter roadObject: Custom road object, acquired from `RoadObjectMatcher`.
      */
     public func addUserDefinedRoadObject(_ roadObject: RoadObject) {
         guard let nativeObject = roadObject.native else {
-            preconditionFailure("You can only add matched custom road object, acquired from RoadObjectMatcher.")
+            preconditionFailure("You can only add matched a custom road object, acquired from RoadObjectMatcher.")
         }
         native.addCustomRoadObject(for: nativeObject)
     }
