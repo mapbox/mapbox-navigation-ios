@@ -437,9 +437,9 @@ open class RouteController: NSObject {
         return Navigator.shared.roadGraph
     }
 
-    /// The road objects store that is updated as the route controller tracks the user’s location.
-    public var roadObjectsStore: RoadObjectsStore {
-        return Navigator.shared.roadObjectsStore
+    /// The road object store that is updated as the route controller tracks the user’s location.
+    public var roadObjectStore: RoadObjectStore {
+        return Navigator.shared.roadObjectStore
     }
 
     /// The road object matcher that allows to match user-defined road objects.

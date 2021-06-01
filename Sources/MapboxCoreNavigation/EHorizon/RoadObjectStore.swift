@@ -4,18 +4,18 @@ import MapboxNavigationNative
 /**
  Identifies a road object in an electronic horizon. A road object represents a notable transition point along a road, such as a toll booth or tunnel entrance. A road object is similar to a `RouteAlert` but is more closely associated with the routing graph managed by the `RoadGraph` class.
  
- Use a `RoadObjectsStore` object to get more information about a road object with a given identifier or get the locations of road objects along `RoadGraph.Edge`s.
+ Use a `RoadObjectStore` object to get more information about a road object with a given identifier or get the locations of road objects along `RoadGraph.Edge`s.
  */
 public typealias RoadObjectIdentifier = String
 
 /**
  Stores and provides access to metadata about road objects.
  
- You do not create a `RoadObjectsStore` object manually. Instead, use the `RouteController.roadObjectsStore` or `PassiveLocationDataSource.roadObjectsStore` to access the currently active road objects store.
+ You do not create a `RoadObjectStore` object manually. Instead, use the `RouteController.roadObjectStore` or `PassiveLocationDataSource.roadObjectStore` to access the currently active road object store.
  */
-public final class RoadObjectsStore {
-    /// The road objects store’s delegate.
-    public weak var delegate: RoadObjectsStoreDelegate? {
+public final class RoadObjectStore {
+    /// The road object store’s delegate.
+    public weak var delegate: RoadObjectStoreDelegate? {
         didSet {
             if delegate != nil {
                 native.setObserverForOptions(self)
@@ -58,13 +58,13 @@ public final class RoadObjectsStore {
 
     /**
      Adds a road object to be tracked in the electronic horizon. In case if an object with such identifier already exists, updates it.
-     NB: road objects obtained from route alerts cannot be added via this API.
+     NB: a road object obtained from route alerts cannot be added via this API.
 
      - parameter roadObject: Custom road object, acquired from `RoadObjectMatcher`.
      */
     public func addUserDefinedRoadObject(_ roadObject: RoadObject) {
         guard let nativeObject = roadObject.native else {
-            preconditionFailure("You can only add matched custom road objects, acquired from RoadObjectMatcher.")
+            preconditionFailure("You can only add matched a custom road object, acquired from RoadObjectMatcher.")
         }
         native.addCustomRoadObject(for: nativeObject)
     }
@@ -96,7 +96,7 @@ public final class RoadObjectsStore {
     private let native: MapboxNavigationNative.RoadObjectsStore
 }
 
-extension RoadObjectsStore: RoadObjectsStoreObserver {
+extension RoadObjectStore: RoadObjectsStoreObserver {
     public func onRoadObjectAdded(forId id: String) {
         delegate?.didAddRoadObject(identifier: id)
     }
