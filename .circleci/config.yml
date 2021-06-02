@@ -314,7 +314,7 @@ jobs:
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - run:
-          name: Remove xcodeproj so that we can use xcodebuild to build Package.swift
+          name: Move Xcode project aside
           command: rm -rf *.xcodeproj
       - run:
           name: Run xcodebuild for Package.swift
