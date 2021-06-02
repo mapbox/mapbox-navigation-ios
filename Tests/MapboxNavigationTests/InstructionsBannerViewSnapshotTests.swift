@@ -12,7 +12,7 @@ class InstructionsBannerViewSnapshotTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         recordMode = false
-        agnosticOptions = [.OS, .device]
+        fileNameOptions = [.OS, .device]
 
         let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
         let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))

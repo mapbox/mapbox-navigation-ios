@@ -1,4 +1,5 @@
 import XCTest
+import TestHelper
 
 extension CGSize {
     static let iPhone5      : CGSize    = CGSize(width: 320, height: 568)
@@ -13,8 +14,8 @@ struct ShieldImage {
 }
 
 extension ShieldImage {
-    static let i280 = ShieldImage(image: UIImage(named: "i-280", in: Bundle(for: InstructionsBannerViewIntegrationTests.self), compatibleWith: nil)!,
+    static let i280 = ShieldImage(image: Fixture.image(named: "i-280"),
                                   baseURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280")!)
-    static let us101 = ShieldImage(image: UIImage(named: "us-101", in: Bundle(for: InstructionsBannerViewIntegrationTests.self), compatibleWith: nil)!,
+    static let us101 = ShieldImage(image: Fixture.image(named: "us-101"),
                                    baseURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-101")!)
 }

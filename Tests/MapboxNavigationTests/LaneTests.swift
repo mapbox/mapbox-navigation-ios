@@ -9,7 +9,7 @@ class LaneTests: FBSnapshotTestCase {
     override func setUp() {
         super.setUp()
         recordMode = false
-        agnosticOptions = [.OS, .device]
+        fileNameOptions = [.OS, .device]
     }
     
     func testAllLanes30x30() {

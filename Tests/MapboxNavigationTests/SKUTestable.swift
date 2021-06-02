@@ -10,20 +10,20 @@ extension MapView {
         let sema = DispatchSemaphore(value: 0)
         var token: String?
         
-        OHHTTPStubs.stubRequests(passingTest: { (request) -> Bool in
+        HTTPStubs.stubRequests(passingTest: { (request) -> Bool in
             let isMapboxStyleURL = request.url?.isMapboxStyleURL ?? false
             guard isMapboxStyleURL else { return true }
             token = request.url?.queryItem("sku")?.value
             sema.signal()
             return true
-        }) { (_) -> OHHTTPStubsResponse in
-            return OHHTTPStubsResponse(data: "".data(using: .utf8)!, statusCode: 200, headers: [:])
+        }) { (_) -> HTTPStubsResponse in
+            return HTTPStubsResponse(data: "".data(using: .utf8)!, statusCode: 200, headers: [:])
         }
-        _ = MapView(with: CGRect(origin: .zero, size: CGSize(width: 64, height: 64)), resourceOptions: ResourceOptions())
+        _ = MapView(frame: CGRect(origin: .zero, size: CGSize(width: 64, height: 64)))
         
         _ = sema.wait(timeout: .now() + 2)
         
-        OHHTTPStubs.removeAllStubs()
+        HTTPStubs.removeAllStubs()
         
         return token
     }

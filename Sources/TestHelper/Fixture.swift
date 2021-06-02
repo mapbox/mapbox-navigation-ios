@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import UIKit.UIImage
 @testable import MapboxCoreNavigation
 
 public class Fixture: NSObject {
@@ -35,6 +36,13 @@ public class Fixture: NSObject {
             preconditionFailure("No data found at \(path).")
         }
         return data
+    }
+
+    public static func image(named imageName: String) -> UIImage {
+        guard let image = UIImage(named: imageName, in: bundle, compatibleWith: nil) else {
+            preconditionFailure("Fixture image \(imageName) not found.")
+        }
+        return image
     }
     
     public class func downloadRouteFixture(coordinates: [CLLocationCoordinate2D], fileName: String, completion: @escaping () -> Void) {

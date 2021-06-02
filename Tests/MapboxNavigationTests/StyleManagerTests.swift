@@ -1,5 +1,6 @@
 import XCTest
 import Solar
+import CoreLocation
 @testable import MapboxNavigation
 
 struct Location {
