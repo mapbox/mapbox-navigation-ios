@@ -14,5 +14,5 @@ extension DirectionsCredentials {
 }
 
 extension String {
-    static var mockedAccessToken: String { "any" }
+    static var mockedAccessToken: String { "pk.feedCafeDadeDeadBeef-BadeBede.FadeCafeDadeDeed-BadeBede" }
 }
