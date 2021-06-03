@@ -326,8 +326,8 @@ open class NavigationEventsManager {
      
      @param type A `FeedbackType` used to specify the type of feedback
      @param description A custom string used to describe the problem in detail.
-     @param withAppMetadata An optional dictionary used to include application metadata
-     @return Returns a UUID used to identify the feedback event
+     @param withAppMetadata An optional dictionary used to include application metadata.
+     @return Returns a UUID used to identify the feedback event.
      
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
      

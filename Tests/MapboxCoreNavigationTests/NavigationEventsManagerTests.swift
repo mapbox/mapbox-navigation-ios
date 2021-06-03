@@ -93,4 +93,28 @@ class NavigationEventsManagerTests: XCTestCase {
         // Sanity check to verify that no issues occur when creating NavigationEventDetails from main queue.
         let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
     }
+    
+    func testAppMetadataCoding(){
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+        let eventTimeout = 0.3
+        let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
+        let dataSource = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .onPoorGPS)
+        let sessionState = SessionState(currentRoute: route, originalRoute: route)
+        let appMetadata: [String: String?] = [
+            "name" = Bundle.main.bundleIdentifier,
+            "version" = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String,
+            "userId" = UIDevice.current.identifierForVendor?.uuidString,
+            "sessionId" = sessionState.identifier
+        ]
+        
+        let navEventDetails = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false, withAppMetadata: appMetadata)
+        
+        let encoder = JSONEncoder()
+        var encodedData = Data?
+        let encodedNavEventDetails = navEventDetails.encode()
+        print(encodedNavEventDetails)
+    }
 }
