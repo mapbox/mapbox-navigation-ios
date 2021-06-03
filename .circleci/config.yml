@@ -5,7 +5,6 @@ step-library:
       restore_cache:
         keys:
           - nav-cache-v5-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-          - nav-cache-v5-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
 
   - &save-cache
       save_cache:
