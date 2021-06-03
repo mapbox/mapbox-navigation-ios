@@ -165,9 +165,11 @@ open class NavigationMapView: UIView {
     var passiveLocationUsed: Bool = false
     
     /**
-     The `puckType` is used to provide  customized options for the user location puck during turn-by-turn navigation. Defaults to `UserCourseView`. Developers could switch to map SDK location layer by providing configuration to `.puck2D` or `.puck3D`.
+     Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
+     
+     By default, this property is set to `UserLocationStyle.default`.
      */
-    public var puckType: PuckType = .default {
+    public var puckType: UserLocationStyle = .default {
         didSet {
             setupMapPuck()
         }
