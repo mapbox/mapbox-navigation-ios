@@ -22,7 +22,23 @@ open class NavigationEventsManager {
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    weak var dataSource: EventsManagerDataSource?
+    func withBackupDataSource(_ forcedDataSource: EventsManagerDataSource, action: () -> Swift.Void) {
+        backupDataSource = forcedDataSource
+        action()
+        backupDataSource = nil
+    }
+    
+    private var backupDataSource: EventsManagerDataSource?
+    private weak var _dataSource: EventsManagerDataSource?
+    var dataSource: EventsManagerDataSource?
+    {
+        get {
+            return _dataSource ?? backupDataSource
+        }
+        set {
+            _dataSource = newValue
+        }
+    }
     
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.

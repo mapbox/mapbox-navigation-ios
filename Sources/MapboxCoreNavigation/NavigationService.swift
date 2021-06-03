@@ -266,7 +266,9 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     deinit {
         suspendNotifications()
-        endNavigation()
+        eventsManager.withBackupDataSource(self) {
+            endNavigation()
+        }
         nativeLocationSource.delegate = nil
         simulatedLocationSource?.delegate = nil
     }
