@@ -187,7 +187,7 @@ extension NavigationMapView {
                 try mapView.mapboxMap.style.removeLayer(withId: mainRouteLayerIdentifier)
                 try mapView.mapboxMap.style.removeLayer(withId: mainRouteCasingLayerIdentifier)
             } catch {
-                NSLog("Failed to remove main route line layer.")
+                print("Failed to remove main route line layer.")
             }
             
             fractionTraveled = 0.0
@@ -207,6 +207,7 @@ extension NavigationMapView {
             let startDate = Date()
             vanishingRouteLineUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
                 let timePassedInMilliseconds = Date().timeIntervalSince(startDate) * 1000
+                // In case if the time was already in the last interval - invalidate the timer and wait for the next routeProgress update.
                 if timePassedInMilliseconds >= 980 {
                     timer.invalidate()
                     return
@@ -229,7 +230,7 @@ extension NavigationMapView {
                         lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
                     }
                 } catch {
-                    NSLog("Failed to update main route line layer.")
+                    print("Failed to update main route line layer.")
                 }
             })
         default:
@@ -247,7 +248,7 @@ extension NavigationMapView {
                     lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
                 }
             } catch {
-                NSLog("Failed to update main route line layer.")
+                print("Failed to update main route line layer.")
             }
         }
     }
