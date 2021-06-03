@@ -130,10 +130,6 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
      */
     public weak var eventsManager: NavigationEventsManager?
     
-    var uuid: UUID? {
-        return eventsManager?.recordFeedback()
-    }
-
     /**
      Current feedback's UUID.
      */
