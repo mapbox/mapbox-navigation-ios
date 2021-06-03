@@ -27,7 +27,7 @@ To contribute code changes to this project, use either Carthage or Swift Package
 
 ### Using Carthage
 
-To build this SDK, you need Xcode 12.4 and [Carthage](https://github.com/Carthage/Carthage/) v0.35:
+To build this SDK, you need Xcode 12.4 and [Carthage](https://github.com/Carthage/Carthage/) v0.38:
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
@@ -42,7 +42,7 @@ To build this SDK, you need Xcode 12.4 and [Carthage](https://github.com/Carthag
    rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
    ```
 
-1. Run `./scripts/wcarthage.sh bootstrap --platform iOS --cache-builds --use-netrc`. (wcarthage.sh is a temporary workaround for [a linker error in Xcode 12](https://github.com/Carthage/Carthage/issues/3019).)
+1. Run `carthage bootstrap --platform iOS --cache-builds --use-xcframeworks --use-netrc`.
 
 1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme.
 
