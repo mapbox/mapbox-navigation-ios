@@ -203,7 +203,7 @@ extension NavigationMapView {
             return
         }
         switch puckType {
-        case .default:
+        case .courseView(configuration: _):
             let startDate = Date()
             vanishingRouteLineUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
                 let timePassedInMilliseconds = Date().timeIntervalSince(startDate) * 1000

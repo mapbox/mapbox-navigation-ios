@@ -79,10 +79,16 @@ open class NavigationMapView: UIView {
         didSet {
             let frame = CGRect(origin: .zero, size: 75.0)
             let isHidden = userCourseView.isHidden
-            userCourseView = reducedAccuracyActivatedMode
+            switch puckType {
+            case .courseView(configuration: let configuration):
+                userCourseView = reducedAccuracyActivatedMode
+                    ? UserHaloCourseView(frame: frame)
+                    : configuration
+            default:
+                userCourseView = reducedAccuracyActivatedMode
                 ? UserHaloCourseView(frame: frame)
                 : UserPuckCourseView(frame: frame)
-            
+            }
             userCourseView.isHidden = isHidden
         }
     }
@@ -145,11 +151,6 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     A type that represents a `UIView` that is `CourseUpdatable`.
-     */
-    public typealias UserCourseView = UIView & CourseUpdatable
-    
-    /**
      A `UserCourseView` used to indicate the user’s location and course on the map.
      
      The `UserCourseView`'s `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
@@ -167,9 +168,9 @@ open class NavigationMapView: UIView {
     /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
      
-     By default, this property is set to `UserLocationStyle.default`.
+     By default, this property is set to `UserLocationStyle.courseView`.
      */
-    public var puckType: UserLocationStyle = .default {
+    public var puckType: UserLocationStyle = .courseView(configuration: UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
         didSet {
             setupMapPuck()
         }
@@ -237,8 +238,9 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             switch self.puckType {
-            case .default:
+            case .courseView(configuration: let configuration):
                 self.mapView.location.options.puckType = nil
+                self.userCourseView = configuration
                 self.userCourseView.isHidden = false
             case .puck2D(configuration: let configuration):
                 self.userCourseView.isHidden = true
@@ -412,7 +414,7 @@ open class NavigationMapView: UIView {
         mostRecentUserCourseViewLocation = location
         
         switch puckType {
-        case .default:
+        case .courseView(configuration: _):
             // While animating to overview mode, don't animate the puck.
             let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
