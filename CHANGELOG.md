@@ -123,6 +123,7 @@
 * Fixed a retain cycle in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
 * The `EventsManagerDataSource.router`, `NavigationService.router`, `NavigationService.eventsManager`, `MapboxNavigationService.router`, `MapboxNavigationService.eventsManager` properties are no longer force unwrapped. ([#3055](https://github.com/mapbox/mapbox-navigation-ios/pull/3055))
 * Fixed an issue where traffic congestion segments along the route line blurred into each other when the map was zoomed in far enough. ([#3153](https://github.com/mapbox/mapbox-navigation-ios/pull/3153))
+* `NavigationEventsManager` now allows the application to include application metadata `NavigationEventsManager.userInfo` such as the application name and version in feedback events by including `userInfo` parameter of  `NavigationEventsManager.recordFeedback()`. ([#3007](https://github.com/mapbox/mapbox-navigation-ios/pull/3007)).
 
 ## v1.4.1
 
