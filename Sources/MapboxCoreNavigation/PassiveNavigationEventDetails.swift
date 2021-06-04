@@ -20,13 +20,13 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     var totalTimeInForeground: TimeInterval = 0
     var totalTimeInBackground: TimeInterval = 0
     
-    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, withAppMetadata: [String: String?]? = nil) {
+    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, userInfo: [String: String?]? = nil) {
         coordinate = dataSource.rawLocation?.coordinate
         sessionIdentifier = sessionState.identifier.uuidString
         startTimestamp = sessionState.departureTimestamp
         updateTimeState(session: sessionState)
         
-        if (withAppMetadata != nil) {
+        if (userInfo != nil) {
             appMetadata = withAppMetadata
         }
     }
