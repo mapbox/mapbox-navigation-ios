@@ -124,7 +124,7 @@ struct NavigationEventDetails: EventDetails {
     var totalTimeInForeground: TimeInterval
     var totalTimeInBackground: TimeInterval
     
-    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool, withAppMetadata: [String: String?]? = nil) {
+    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool, userInfo: [String: String?]? = nil) {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
@@ -135,8 +135,8 @@ struct NavigationEventDetails: EventDetails {
         originalRequestIdentifier = session.originalRoute.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
         
-        if (withAppMetadata != nil) {
-            appMetadata = withAppMetadata
+        if (userInfo != nil) {
+            appMetadata = userInfo
         }
                 
         if let location = dataSource.router.rawLocation,

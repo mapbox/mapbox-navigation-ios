@@ -41,10 +41,10 @@ open class NavigationEventsManager {
     }
     
     /**
-     Optional app metadata that can be used to associate app state, specifically app name and version, with events in the telemetry pipeline.
-     Specifically, developers can provide application name and version, user identifier, and session identifier.
+     Optional application metadata that that can help Mapbox more reliably diagnose problems that occur in the SDK.
+     For example, you can provide your application’s name and version, a unique identifier for the end user, and a session identifier.
     */
-    var appMetadata: [String: String?]? = nil
+    var userInfo: [String: String?]? = nil
     
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
@@ -169,17 +169,13 @@ open class NavigationEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent(type: FeedbackType, description: String?, withAppMetadata: [String:String?]? = nil) -> NavigationEventDetails? {
+    func navigationFeedbackEvent(type: FeedbackType, description: String?, userInfo: [String:String?]? = nil) -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
-        if (withAppMetadata != nil) {
-            appMetadata = withAppMetadata
-        }
-        
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, withAppMetadata: withAppMetadata)
+        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
         event.event = MMEEventTypeNavigationFeedback
         
         event.userId = UIDevice.current.identifierForVendor?.uuidString
-        event.appMetadata = appMetadata
+        event.appMetadata = userInfo
         event.feedbackType = type.description
         event.description = description
         
@@ -263,8 +259,8 @@ open class NavigationEventsManager {
         mobileEventsManager.flush()
     }
     
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?, withAppMetadata: [String: String?]? = nil) -> UUID? {
-        guard let eventDictionary = (try? navigationFeedbackEvent(type: type, description: description, withAppMetadata: withAppMetadata)?.asDictionary()) as [String: Any]?? else { return nil }
+    func enqueueFeedbackEvent(type: FeedbackType, description: String?, userInfo: [String: String?]? = nil) -> UUID? {
+        guard let eventDictionary = (try? navigationFeedbackEvent(type: type, description: description, userInfo: userInfo)?.asDictionary()) as [String: Any]?? else { return nil }
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
         outstandingFeedbackEvents.append(event)
         return event.id
@@ -326,15 +322,18 @@ open class NavigationEventsManager {
      
      @param type A `FeedbackType` used to specify the type of feedback
      @param description A custom string used to describe the problem in detail.
-     @param withAppMetadata An optional dictionary used to include application metadata.
+     @param userInfo An optional dictionary used to include application metadata.
      @return Returns a UUID used to identify the feedback event.
      
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
      
      You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
      */
-    public func recordFeedback(type: FeedbackType = .general, description: String? = nil, withAppMetadata: [String: String?]? = nil) -> UUID? {
-        return enqueueFeedbackEvent(type: type, description: description, withAppMetadata: withAppMetadata)
+    public func recordFeedback(type: FeedbackType = .general, description: String? = nil, userInfo: [String: String?]? = nil) -> UUID? {
+        if (userInfo != nil) {
+            self.userInfo = userInfo
+        }
+        return enqueueFeedbackEvent(type: type, description: description, userInfo: userInfo)
     }
     
     /**
