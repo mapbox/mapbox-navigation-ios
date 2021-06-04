@@ -660,10 +660,17 @@ class NavigationServiceTests: XCTestCase {
         }
         
         let waitExpectation = expectation(description: "Waiting for NavNative callbacks")
-        _ = XCTWaiter.wait(for: [waitExpectation], timeout: 1) // also triggers navigationServiceDidChangeAuthorization callback
+        _ = XCTWaiter.wait(for: [waitExpectation], timeout: 1)
         
-        print(_unimplementedLoggingState.warned)
-        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "EmptyNavigationServiceDelegate"), 8, "Expected logs to be populated and expected number of messages sent")
+        let numberOfCallbacks = _unimplementedLoggingState.countWarned(forTypeDescription: "EmptyNavigationServiceDelegate")
+        var expectedNumberOfCallback = 7
+        
+        if #available(iOS 14.0, *) {
+            // On iOS 14+ there is a new callback navigationServiceDidChangeAuthorization, bc we run tests on iOS 13 too
+            expectedNumberOfCallback += 1
+        }
+        
+        XCTAssertEqual(numberOfCallbacks, expectedNumberOfCallback, "Expected logs to be populated and expected number of messages sent")
     }    
     
     func waitForNavNativeCallbacks(timeout: TimeInterval = 0.1) {
