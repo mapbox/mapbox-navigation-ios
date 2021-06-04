@@ -125,25 +125,6 @@ class InstructionsCardCollectionTests: XCTestCase {
         XCTAssertTrue(subject.isInPreview)
         XCTAssertNotNil(instructionsCardCollectionSpy.step)
     }
-    
-    func constrain(_ child: UIView, to parent: UIView) {
-        let constraints = [
-            child.leadingAnchor.constraint(equalTo: parent.leadingAnchor),
-            child.trailingAnchor.constraint(equalTo: parent.trailingAnchor),
-            child.topAnchor.constraint(equalTo: parent.topAnchor, constant: 30.0)
-        ]
-        NSLayoutConstraint.activate(constraints)
-    }
-    
-    func embed(parent:UIViewController, child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])?) {
-        child.willMove(toParent: parent)
-        parent.addChild(child)
-        container.addSubview(child.view)
-        if let childConstraints: [NSLayoutConstraint] = constraints?(parent, child) {
-            parent.view.addConstraints(childConstraints)
-        }
-        child.didMove(toParent: parent)
-    }
 }
 
 /// :nodoc:
