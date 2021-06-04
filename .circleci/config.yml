@@ -196,14 +196,6 @@ jobs:
       - checkout
       - *prepare-mapbox-file
       - *prepare-netrc-file
-      - *update-carthage-version
-      - *restore-cache
-      - when:
-          condition: << parameters.delete_private_deps >>
-          steps:
-            - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
-      - *install-dependencies
-      - *save-cache
       - run:
           name: Install prerequisites
           command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
@@ -216,6 +208,14 @@ jobs:
           condition:
             not: << parameters.spm >>
           steps:
+            - *update-carthage-version
+            - *restore-cache
+            - when:
+                condition: << parameters.delete_private_deps >>
+                steps:
+                  - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
+            - *install-dependencies
+            - *save-cache
             - run:
                 name: MapboxCoreNavigation
                 command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
