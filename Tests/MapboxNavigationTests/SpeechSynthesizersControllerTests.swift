@@ -1,6 +1,6 @@
 import XCTest
 import MapboxDirections
-import MapboxCoreNavigation
+@testable import MapboxCoreNavigation
 import TestHelper
 import CoreLocation
 @testable import MapboxNavigation
@@ -70,6 +70,7 @@ class SpeechSynthesizersControllerTests: XCTestCase {
     override func tearDown() {
         synthesizers = []
         delegateErrorBlock = nil
+        Navigator.shared.navigator.resetRideSession()
     }
 
     func testNoFallback() {
