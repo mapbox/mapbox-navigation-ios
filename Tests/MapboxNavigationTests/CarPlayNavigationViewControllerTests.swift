@@ -4,6 +4,8 @@ import MapboxDirections
 import XCTest
 import Foundation
 import TestHelper
+import CarPlay
+import CarPlayTestHelper
 
 @available(iOS 12.0, *)
 fileprivate class CarPlayNavigationDelegateSpy: NSObject, CarPlayNavigationDelegate {
@@ -26,25 +28,7 @@ fileprivate class CPManeuverFake: CPManeuver {
 }
 
 @available(iOS 12.0, *)
-fileprivate class CPNavigationSessionFake: CPNavigationSession {
-    init(maneuvers: [CPManeuver]) {
-        fakeManeuvers = maneuvers
-    }
-    
-    override var upcomingManeuvers: [CPManeuver] {
-        get {
-            return fakeManeuvers
-        }
-        set {
-            fatalError()
-        }
-    }
-    
-    private(set) var fakeManeuvers: [CPManeuver]
-}
-
-@available(iOS 12.0, *)
-fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
+class CarPlayNavigationViewControllerTests: XCTestCase {
     func testCarplayDisplaysCorrectEstimates() {
         //set up the litany of dependancies
         let directions = Directions(credentials: Fixture.credentials)
@@ -55,8 +39,8 @@ fileprivate class CarPlayNavigationViewControllerTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
         ])
         let route = Fixture.route(from: "multileg-route", options: options)
-        let navService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options)
-        let interface = FakeCPInterfaceController("test estimates display")
+        let navService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: .mocked)
+        let interface = FakeCPInterfaceController(context: "test estimates display")
         let mapSpy = MapTemplateSpy()
         let trip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
         let fakeManeuver = CPManeuverFake()

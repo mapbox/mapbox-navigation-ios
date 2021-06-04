@@ -25,15 +25,7 @@ class DataCacheTests: XCTestCase {
     let dataKey = "dataKey"
 
     var exampleData: Data? {
-        get {
-            let bundle = Bundle(for: Fixture.self)
-            do {
-                return try NSData.init(contentsOf: bundle.url(forResource: "route", withExtension: ".json")!) as Data
-            } catch {
-                XCTFail("Failed to create data")
-                return nil
-            }
-        }
+        return Fixture.JSONFromFileNamed(name: "route")
     }
 
     private func storeDataInMemory() {

@@ -51,8 +51,7 @@ To install the MapboxNavigation framework in an application using [Swift Package
 To install the MapboxNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
 
 ```swift
-// Latest prerelease
-.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.0.0-beta.10"))
+.package(name: "MapboxNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.0.0-beta.11"))
 ```
 
 ### Using CocoaPods
@@ -69,18 +68,15 @@ To install the MapboxNavigation framework using [CocoaPods](https://cocoapods.or
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   # Latest stable release
-   pod 'MapboxNavigation', '~> 1.4'
-   # Latest prerelease
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.10'
-   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.10'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.11'
+   pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.11'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
 
 ### Using Carthage
 
-To install the MapboxNavigation framework using [Carthage](https://github.com/Carthage/Carthage/) v0.35 or above:
+To install the MapboxNavigation framework using [Carthage](https://github.com/Carthage/Carthage/) v0.38 or above:
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
@@ -97,13 +93,12 @@ To install the MapboxNavigation framework using [Carthage](https://github.com/Ca
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
-   # Latest stable release
-   github "mapbox/mapbox-navigation-ios" ~> 1.4
+   github "mapbox/mapbox-navigation-ios" ~> v2.0.0-beta.11
    ```
 
-1. Run `./Carthage/Checkouts/mapbox-navigation-ios/scripts/wcarthage.sh bootstrap --platform iOS --cache-builds --use-netrc`. (wcarthage.sh is a temporary replacement for `carthage` to work around [a linker error in Xcode 12](https://github.com/Carthage/Carthage/issues/3019).)
+1. Run `carthage bootstrap --platform iOS --use-xcframeworks --cache-builds --use-netrc`.
 
-1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embed Frameworks build phase should include `MapboxNavigation.framework`, `MapboxCoreNavigation.framework`, `MapboxNavigationNative.framework`, and `MapboxCommon.framework`.
+1. Follow the rest of [Carthage’s iOS integration instructions](https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos). Your application target’s Embed Frameworks build phase should include `MapboxCoreNavigation.xcframework`, `MapboxNavigationNative.xcframework`, and `MapboxCommon.xcframework`.
 
 MapboxNavigation no longer supports Carthage as of v2.0.0-alpha.1. However, if you are building a user interface from scratch, you can [install just the MapboxCoreNavigation framework using Carthage](./custom-navigation.md#using-carthage).
 

@@ -1,6 +1,7 @@
 import XCTest
 import FBSnapshotTestCase
 import MapboxDirections
+import CoreLocation
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -11,7 +12,7 @@ class ManeuverViewTests: FBSnapshotTestCase {
         super.setUp()
         maneuverView.backgroundColor = .white
         recordMode = false
-        agnosticOptions = [.OS, .device]
+        fileNameOptions = [.OS, .device]
         usesDrawViewHierarchyInRect = true
 
         let window = UIWindow(frame: maneuverView.bounds)
@@ -47,17 +48,17 @@ class ManeuverViewTests: FBSnapshotTestCase {
         maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, CLLocationDegrees(270))
         verify(maneuverView.layer)
     }
-    
+
     func testArrive() {
         maneuverView.visualInstruction = maneuverInstruction(.arrive, .right)
         verify(maneuverView.layer)
     }
-    
+
     func testArriveNone() {
         maneuverView.visualInstruction = maneuverInstruction(.arrive, nil)
         verify(maneuverView.layer)
     }
-    
+
     func testLeftUTurn() {
         maneuverView.drivingSide = .right
         maneuverView.visualInstruction = maneuverInstruction(.turn, .uTurn)

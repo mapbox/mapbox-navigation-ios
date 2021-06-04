@@ -638,7 +638,7 @@ class NavigationServiceTests: XCTestCase {
     }
 
     func testUnimplementedLogging() {
-        unimplementedTestLogs = []
+        _unimplementedLoggingState.clear()
 
         let options =  NavigationRouteOptions(coordinates: [
                    CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
@@ -662,16 +662,8 @@ class NavigationServiceTests: XCTestCase {
         let waitExpectation = expectation(description: "Waiting for NavNative callbacks")
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: 1) // also triggers navigationServiceDidChangeAuthorization callback
 
-        guard let logs = unimplementedTestLogs else {
-            XCTFail("Unable to fetch logs")
-            return
-        }
-
-        let ourLogs = logs.filter { $0.0 == "EmptyNavigationServiceDelegate" }
-
-        XCTAssertEqual(ourLogs.count, 8, "Expected logs to be populated and expected number of messages sent")
-        unimplementedTestLogs = nil
-    }
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "EmptyNavigationServiceDelegate"), 8, "Expected logs to be populated and expected number of messages sent")
+    }    
     
     func waitForNavNativeCallbacks(timeout: TimeInterval = 0.1) {
         let waitExpectation = expectation(description: "Waiting for the NatNative callback")

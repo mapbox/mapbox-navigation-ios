@@ -1,4 +1,5 @@
 import XCTest
+import TestHelper
 @testable import MapboxNavigation
 
 class StringTests: XCTestCase {
@@ -48,7 +49,7 @@ class StringTests: XCTestCase {
     }
     
     func testNaughtyStrings() {
-        let path = Bundle(for: StringTests.self).path(forResource: "md5_crazy_strings", ofType: "txt")!
+        let path = Fixture.bundle.path(forResource: "md5_crazy_strings", ofType: "txt")!
         let content = try! String(contentsOfFile: path, encoding: .utf8)
         let lines = content.components(separatedBy: .newlines)
         

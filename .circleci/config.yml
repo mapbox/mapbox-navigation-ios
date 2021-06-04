@@ -4,12 +4,11 @@ step-library:
   - &restore-cache
       restore_cache:
         keys:
-          - nav-cache-v5-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-          - nav-cache-v5-{{ .Environment.CIRCLE_JOB }} # used if checksum fails
+          - nav-cache-v{{ .Environment.CARTHAGE_CACHE_VERSION }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
 
   - &save-cache
       save_cache:
-        key: nav-cache-v5-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
+        key: nav-cache-v{{ .Environment.CARTHAGE_CACHE_VERSION }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
         paths:
           - Carthage
 
@@ -71,7 +70,7 @@ step-library:
       run:
         name: Update Carthage version
         command: |
-          curl -OL "https://github.com/Carthage/Carthage/releases/download/0.36.0/Carthage.pkg"
+          curl -OL "https://github.com/Carthage/Carthage/releases/download/0.38.0/Carthage.pkg"
           sudo installer -pkg Carthage.pkg -target /
 
   - &verify-missing-localizable-strings
@@ -95,7 +94,7 @@ step-library:
           run:
             name: Install Dependencies
             command: |
-              ./scripts/wcarthage.sh bootstrap --platform ios --cache-builds --configuration Debug --no-use-binaries --use-netrc
+              carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
 
   - &build-Example
       run:
@@ -197,14 +196,6 @@ jobs:
       - checkout
       - *prepare-mapbox-file
       - *prepare-netrc-file
-      - *update-carthage-version
-      - *restore-cache
-      - when:
-          condition: << parameters.delete_private_deps >>
-          steps:
-            - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
-      - *install-dependencies
-      - *save-cache
       - run:
           name: Install prerequisites
           command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
@@ -217,6 +208,14 @@ jobs:
           condition:
             not: << parameters.spm >>
           steps:
+            - *update-carthage-version
+            - *restore-cache
+            - when:
+                condition: << parameters.delete_private_deps >>
+                steps:
+                  - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
+            - *install-dependencies
+            - *save-cache
             - run:
                 name: MapboxCoreNavigation
                 command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
@@ -255,31 +254,8 @@ jobs:
       - checkout
       - *prepare-mapbox-file
       - *prepare-netrc-file
-      - *update-carthage-version
-      - *restore-cache
-      - *install-dependencies
       - *add-github-to-known-hosts
       - *build-Example
-      - *save-cache
-
-  spm-integration-test:
-    parameters:
-      iOS:
-        type: string
-        default: "14.4"
-      xcode:
-        type: string
-        default: "12.4.0"
-    macos:
-      xcode: << parameters.xcode >>
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-    steps:
-      - checkout
-      - *prepare-mapbox-file
-      - *prepare-netrc-file
-      - *add-github-to-known-hosts
-      - run: scripts/build_spm_integration_test.sh << parameters.iOS >>
 
   ios-trigger-metrics:
     parameters:
@@ -292,6 +268,33 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - *trigger-metrics
+  
+  spm-test-job:
+    parameters:
+      xcode:
+        type: string
+        default: "12.4.0"
+      device:
+        type: string
+        default: "iPhone 8"
+      iOS:
+        type: string
+        default: "14.4"        
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *add-github-to-known-hosts
+      - run:
+          name: Move Xcode project aside
+          command: rm -rf *.xcodeproj
+      - run:
+          name: Run xcodebuild for Package.swift
+          command: xcodebuild -scheme MapboxNavigation-Package test -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" | xcpretty
 
 workflows:
   workflow:
@@ -321,7 +324,14 @@ workflows:
           iOS: "14.0"
           lint: true
       - xcode-12-examples
-      - spm-integration-test
+      - spm-test-job:
+          name: "swift test; Xcode 12.4; iOS 13.7"
+          xcode: "12.4.0"
+          iOS: "13.7"          
+      - spm-test-job:
+          name: "swift test; Xcode 12.4; iOS 14.4"
+          xcode: "12.4.0"
+          iOS: "14.4"          
       - ios-trigger-metrics:
           filters:
             branches:

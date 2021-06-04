@@ -1,7 +1,7 @@
 import Foundation
 
-/** `RoadObjectsStore` delegate */
-public protocol RoadObjectsStoreDelegate: AnyObject {
+/** `RoadObjectStore` delegate */
+public protocol RoadObjectStoreDelegate: AnyObject {
     /// This method is called when a road object with the given identifier has been added to the road objects store.
     func didAddRoadObject(identifier: RoadObjectIdentifier)
     

@@ -41,23 +41,29 @@ class Navigator {
         }
     }
     
-    let historyRecorder: HistoryRecorderHandle
+    private(set) var historyRecorder: HistoryRecorderHandle
     
-    let navigator: MapboxNavigationNative.Navigator
+    private(set) var navigator: MapboxNavigationNative.Navigator
     
-    let cacheHandle: CacheHandle
+    private(set) var cacheHandle: CacheHandle
     
-    let roadGraph: RoadGraph
+    private(set) var roadGraph: RoadGraph
     
-    lazy var roadObjectsStore: RoadObjectsStore = {
-        return RoadObjectsStore(navigator.roadObjectStore())
+    lazy var roadObjectStore: RoadObjectStore = {
+        return RoadObjectStore(navigator.roadObjectStore())
     }()
-
-    let tileStore: TileStore
-
+    
     lazy var roadObjectMatcher: RoadObjectMatcher = {
         return RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
     }()
+    
+    lazy var router: MapboxNavigationNative.Router = {
+        return MapboxNavigationNative.Router(cache: cacheHandle,
+                                             historyRecorder: historyRecorder)
+    }()
+
+
+    private(set) var tileStore: TileStore
     
     /**
      The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.
@@ -83,62 +89,30 @@ class Navigator {
      Restrict direct initializer access.
      */
     private init() {
-        let settingsProfile = SettingsProfile(application: .mobile, platform: .IOS)
+        let factory = NativeHandlersFactory(tileStorePath: Self.tilesURL?.path ?? "",
+                                            credentials: Self.credentials ?? Directions.shared.credentials,
+                                            tilesVersion: Self.tilesVersion,
+                                            historyDirectoryURL: Self.historyDirectoryURL)
+        tileStore = factory.tileStore
+        historyRecorder = factory.historyRecorder
+        cacheHandle = factory.cacheHandle
+        roadGraph = factory.roadGraph
+        navigator = factory.navigator
         
-        let navigatorConfig = NavigatorConfig(voiceInstructionThreshold: nil,
-                                              electronicHorizonOptions: nil,
-                                              polling: nil,
-                                              incidentsOptions: nil,
-                                              noSignalSimulationEnabled: nil)
-        
-        let historyAutorecordingConfig = [
-            "features": [
-                "historyAutorecording": true
-            ]
-        ]
-        
-        var customConfig = ""
-        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: historyAutorecordingConfig, options: []),
-           let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
-            customConfig = encodedConfig
-        }
-        
-        let configFactory = ConfigFactory.build(for: settingsProfile, config: navigatorConfig, customConfig: customConfig)
-        
-        historyRecorder = HistoryRecorderHandle.build(forHistoryFile: Navigator.historyDirectoryURL?.path ?? "", config: configFactory)
-        
-        let endpointConfig = TileEndpointConfiguration(credentials:Navigator.credentials ?? Directions.shared.credentials,
-                                                       tilesVersion: Self.tilesVersion,
-                                                       minimumDaysToPersistVersion: nil)
-
-        let tileStorePath = Self.tilesURL?.path ?? ""
-        tileStore = TileStore.__getInstanceForPath(tileStorePath)
-        let tilesConfig = TilesConfig(tilesPath: tileStorePath,
-                                      tileStore: tileStore,
-                                      inMemoryTileCache: nil,
-                                      onDiskTileCache: nil,
-                                      mapMatchingSpatialCache: nil,
-                                      threadsCount: nil,
-                                      endpointConfig: endpointConfig)
-        
-        let runloopExecutor = RunLoopExecutorFactory.build()
-        cacheHandle = CacheFactory.build(for: tilesConfig,
-                                         config: configFactory,
-                                         runLoop: runloopExecutor,
-                                         historyRecorder: historyRecorder)
-        
-        roadGraph = RoadGraph(MapboxNavigationNative.GraphAccessor(cache: cacheHandle))
-        
-        navigator = MapboxNavigationNative.Navigator(config: configFactory,
-                                                     runLoopExecutor: runloopExecutor,
-                                                     cache: cacheHandle,
-                                                     historyRecorder: historyRecorder)
+        subscribeNavigator()
+    }
+    
+    private func subscribeNavigator() {
         navigator.setElectronicHorizonObserverFor(self)
         navigator.addObserver(for: self)
     }
     
-    deinit {
+    private func unsubscribeNavigator() {
         navigator.setElectronicHorizonObserverFor(nil)
+    }
+    
+    deinit {
+        unsubscribeNavigator()
     }
     
     var electronicHorizonOptions: ElectronicHorizonOptions? {

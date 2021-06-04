@@ -9,9 +9,11 @@
 * MapboxNavigation now depends on [MapboxMaps v10.0.0-beta.20](https://github.com/mapbox/mapbox-maps-ios/). ([#3010](https://github.com/mapbox/mapbox-navigation-ios/pull/3010))
 * MapboxNavigation now depends on MapboxNavigationNative v50.0.0. ([#3010](https://github.com/mapbox/mapbox-navigation-ios/pull/3010))
 * MapboxNavigation now depends on MapboxCommon v12.0.0. ([#3010](https://github.com/mapbox/mapbox-navigation-ios/pull/3010))
-* MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.2 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829), [#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
+* MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.3 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829), [#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
 * MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Xcode 12.4 or above is now required for building this SDK from source.
+* Carthage v0.38 or above is now required for installing this SDK if you use Carthage. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
+* You can fully build this SDK on Macs with Apple Silicon. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
 
 ### Map
 
@@ -54,7 +56,7 @@
 * Added `OpenLRSideOfRoad` struct which describes the relationship between the road object and the road. Used for `OpenLRPointLocation` struct. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added `RoadObjectMatcher` class that creates user-defined road objects by matching location primitives to the road graph. Accessible through `RouteController.roadObjectMatcher` and `PassiveLocationDataSource.roadObjectMatcher`. Matched road object or matching error `RoadObjectMatcherError` is delivered via `RoadObjectMatcherDelegate`. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
 * Added `OpenLRStandard` enum which specifies OpenLR standard of encoded OpenLR location. Used for road object matching via `RoadObjectMatcher`. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
-* Added `RoadObjectsStore.addUserDefinedRoadObject(_:)`, `RoadObjectsStore.removeUserDefinedRoadObject(identifier:)`, and `RoadObjectsStore.removeAllUserDefinedRoadObjects()` for adding/removing user-defined road objects to the electronic horizon. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
+* Added `RoadObjectStore.addUserDefinedRoadObject(_:)`, `RoadObjectStore.removeUserDefinedRoadObject(identifier:)`, and `RoadObjectStore.removeAllUserDefinedRoadObjects()` for adding/removing user-defined road objects to the electronic horizon. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
 * Removed `Alert` enum, and `alert`, `distance`, `length`, `beginCoordinate`, `endCoordinate`, `beginSegmentIndex`, and `endSegmentIndex` properties from `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added the `RouteAlerts.roadObject` property. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 
@@ -91,6 +93,11 @@
 * Fixed a potential memory leak when using `MultiplexedSpeechSynthesizer`. ([#3005](https://github.com/mapbox/mapbox-navigation-ios/pull/3005))
 * Fixed an issue where instruction banners could appear in the wrong color after switching between `Style`s. ([#2977](https://github.com/mapbox/mapbox-navigation-ios/pull/2977))
 * Developers can create an instance of `NavigationViewController` from `UIStoryboardSegue`, which is located in `Navigation.storyboard`. To successfully create `NavigationViewController` instance developer has to pre-define `route`, `routeIndex`, `routeOptions` and `navigationOptions` properties of `NavigationViewController` in `UIViewController.prepare(for:sender:)`. ([#2974](https://github.com/mapbox/mapbox-navigation-ios/pull/2974))
+* Added methods for convenience checking Navigation tiles in a `TileStore`: `containsLatestNavigationTiles(forCacheLocation:, completion:)`, `tileRegionContainsLatestNavigationTiles(forId:, cacheLocation:, completion:)` and methods for getting Navigation tiles from `TilesetDescriptorFactory`: `getLatest(forCacheLocation:)`, `getSpecificVersion(forCacheLocation:, version:)`. ([#3015](https://github.com/mapbox/mapbox-navigation-ios/pull/3015))
+* Fixed a thread-safety issue in `UnimplementedLogging` protocol implementation. ([#3024](https://github.com/mapbox/mapbox-navigation-ios/pull/3024))
+* Fixed an issue where the current road name label sometimes displayed the name of an intersecting road instead of the current road or blinked in and out. ([#3019](https://github.com/mapbox/mapbox-navigation-ios/pull/3019))
+* Fixed an issue where offline route calculation might hang up. ([#3040](https://github.com/mapbox/mapbox-navigation-ios/pull/3040))
+* Fixed the moment of custom feedback event creation. ([#3049](https://github.com/mapbox/mapbox-navigation-ios/pull/3049))
 
 ## v1.4.0
 

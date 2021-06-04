@@ -6,13 +6,6 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
-let jsonFileName = "routeWithInstructions"
-var routeOptions: NavigationRouteOptions {
-    let from = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-    let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-    return NavigationRouteOptions(waypoints: [from, to])
-}
-let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
 let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")
 
 class NavigationViewControllerTests: XCTestCase {
