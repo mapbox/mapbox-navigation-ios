@@ -661,7 +661,8 @@ class NavigationServiceTests: XCTestCase {
         
         let waitExpectation = expectation(description: "Waiting for NavNative callbacks")
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: 1) // also triggers navigationServiceDidChangeAuthorization callback
-
+        
+        print(_unimplementedLoggingState.warned)
         XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "EmptyNavigationServiceDelegate"), 8, "Expected logs to be populated and expected number of messages sent")
     }    
     
