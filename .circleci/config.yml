@@ -254,12 +254,8 @@ jobs:
       - checkout
       - *prepare-mapbox-file
       - *prepare-netrc-file
-      - *update-carthage-version
-      - *restore-cache
-      - *install-dependencies
       - *add-github-to-known-hosts
       - *build-Example
-      - *save-cache
 
   ios-trigger-metrics:
     parameters:
