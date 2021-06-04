@@ -27,7 +27,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         updateTimeState(session: sessionState)
         
         if (userInfo != nil) {
-            appMetadata = withAppMetadata
+            appMetadata = userInfo
         }
     }
     

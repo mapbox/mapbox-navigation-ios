@@ -69,7 +69,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
         if (userInfo != nil) {
-            appMetadata = withAppMetadata
+            appMetadata = userInfo
         }
         
         if let location = dataSource.router.rawLocation,

@@ -192,9 +192,9 @@ open class NavigationEventsManager {
     
         if let activeNavigationDataSource = activeNavigationDataSource {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
-                                                 session: sessionState, defaultInterface: usesDefaultUserInterface)
+    session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
-            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState)
+            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState, userInfo)
         } else {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
             return nil
