@@ -171,6 +171,7 @@ open class NavigationEventsManager {
     
     func navigationFeedbackEvent(type: FeedbackType, description: String?, userInfo: [String:String?]? = nil) -> NavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        
         var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
         event.event = MMEEventTypeNavigationFeedback
         
