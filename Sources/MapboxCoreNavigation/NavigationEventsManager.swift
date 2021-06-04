@@ -22,7 +22,7 @@ open class NavigationEventsManager {
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    func withBackupDataSource(_ forcedDataSource: EventsManagerDataSource, action: () -> Swift.Void) {
+    func withBackupDataSource(_ forcedDataSource: EventsManagerDataSource, action: () -> Void) {
         backupDataSource = forcedDataSource
         action()
         backupDataSource = nil
