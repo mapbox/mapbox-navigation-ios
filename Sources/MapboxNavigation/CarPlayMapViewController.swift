@@ -63,7 +63,7 @@ public class CarPlayMapViewController: UIViewController {
             
             var cameraOptions = CameraOptions(cameraState: mapView.cameraState)
             cameraOptions.zoom = mapView.cameraState.zoom + 1.0
-            mapView.camera.setCamera(to: cameraOptions)
+            mapView.mapboxMap.setCamera(to: cameraOptions)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -83,7 +83,7 @@ public class CarPlayMapViewController: UIViewController {
             
             var cameraOptions = CameraOptions(cameraState: mapView.cameraState)
             cameraOptions.zoom = mapView.cameraState.zoom - 1.0
-            mapView.camera.setCamera(to: cameraOptions)
+            mapView.mapboxMap.setCamera(to: cameraOptions)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -214,7 +214,7 @@ public class CarPlayMapViewController: UIViewController {
         if navigationMapView.navigationCamera.state == .idle {
             var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
             cameraOptions.pitch = 0
-            navigationMapView.mapView.camera.setCamera(to: cameraOptions)
+            navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
             
             navigationMapView.fitCamera(to: activeRoute)
         }

@@ -170,7 +170,7 @@ open class NavigationMapView: UIView {
      A `TileStore` instance used by map view.
      */
     open var mapTileStore: TileStore? {
-        mapView.mapboxMap.__map.getResourceOptions().tileStore
+        mapView.mapboxMap.resourceOptions.tileStore
     }
     
     /**
@@ -251,10 +251,7 @@ open class NavigationMapView: UIView {
     func setupMapView(_ frame: CGRect,
                       navigationCameraType: NavigationCameraType = .mobile,
                       tileStoreLocation: TileStoreConfiguration.Location? = .default) {
-        guard let accessToken = CredentialsManager.default.accessToken else {
-            fatalError("Access token was not set.")
-        }
-        
+        let accessToken = ResourceOptionsManager.default.resourceOptions.accessToken
         let tileStore = tileStoreLocation?.tileStore
         // TODO: allow customising tile store location.
         let resourceOptions = ResourceOptions(accessToken: accessToken, tileStore: tileStore)
@@ -325,7 +322,7 @@ open class NavigationMapView: UIView {
     }
     
     @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {
-        mapView.options.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+//        mapView.options.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
     /**
@@ -353,7 +350,7 @@ open class NavigationMapView: UIView {
             preferredFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         }
 
-        mapView.options.preferredFramesPerSecond = preferredFramesPerSecond
+//        mapView.options.preferredFramesPerSecond = preferredFramesPerSecond
     }
     
     // MARK: - User tracking methods
@@ -377,8 +374,8 @@ open class NavigationMapView: UIView {
         // While animating to overview mode, don't animate the puck.
         let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-            guard let screenCoordinate = self?.mapView.screenCoordinate(for: location.coordinate) else { return }
-            self?.userCourseView.center = CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+//            guard let screenCoordinate = self?.mapView.screenCoordinate(for: location.coordinate) else { return }
+//            self?.userCourseView.center = CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
         }
         
         userCourseView.update(location: location,
@@ -443,7 +440,7 @@ open class NavigationMapView: UIView {
                                                          padding: edgeInsets,
                                                          bearing: nil,
                                                          pitch: nil) {
-            mapView?.camera.setCamera(to: cameraOptions)
+            mapView?.mapboxMap.setCamera(to: cameraOptions)
         }
     }
 
@@ -455,7 +452,7 @@ open class NavigationMapView: UIView {
     func setInitialCamera(_ coordinate: CLLocationCoordinate2D) {
         guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
         
-        mapView.camera.setCamera(to: CameraOptions(center: coordinate,
+        mapView.mapboxMap.setCamera(to: CameraOptions(center: coordinate,
                                                    zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)))
         updateUserCourseView(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
@@ -643,12 +640,12 @@ open class NavigationMapView: UIView {
         }
 
         if let lastLeg = route.legs.last, let destinationCoordinate = lastLeg.destination?.coordinate {
-            mapView.annotations.removeAnnotations(annotationsToRemove())
+//            mapView.annotations.removeAnnotations(annotationsToRemove())
             
             var destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
             let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-            destinationAnnotation.title = title
-            mapView.annotations.addAnnotation(destinationAnnotation)
+//            destinationAnnotation.title = title
+//            mapView.annotations.addAnnotation(destinationAnnotation)
             
             delegate?.navigationMapView(self, didAdd: destinationAnnotation)
         }
@@ -725,7 +722,7 @@ open class NavigationMapView: UIView {
      Removes all existing `Waypoint` objects from `MapView`, which were added by `NavigationMapView`.
      */
     public func removeWaypoints() {
-        mapView.annotations.removeAnnotations(annotationsToRemove())
+//        pointAnnotationManager.syncAnnotations(<#T##annotations: [PointAnnotation]##[PointAnnotation]#>)
         
         let layers: Set = [
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
@@ -737,8 +734,9 @@ open class NavigationMapView: UIView {
     }
     
     func annotationsToRemove() -> [Annotation] {
-        let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-        return mapView.annotations.annotations.values.filter({ $0.title == title })
+        return []
+//        let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+//        return mapView.annotations.annotations.values.filter({ $0.title == title })
     }
     
     /**

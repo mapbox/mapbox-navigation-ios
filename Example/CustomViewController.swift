@@ -8,7 +8,7 @@ class CustomViewController: UIViewController {
     
     var destinationAnnotation: PointAnnotation! {
         didSet {
-            navigationMapView.mapView.annotations.addAnnotation(destinationAnnotation)
+//            navigationMapView.mapView.annotations.addAnnotation(destinationAnnotation)
         }
     }
     

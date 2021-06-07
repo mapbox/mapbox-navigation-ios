@@ -634,7 +634,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let shiftedDirection = (Double(navigationMapView.mapView.cameraState.bearing) + relativeDirection).wrap(min: 0, max: 360)
         let shiftedCenterCoordinate = navigationMapView.mapView.cameraState.center.coordinate(at: distance, facing: shiftedDirection)
         let cameraOptions = CameraOptions(center: shiftedCenterCoordinate)
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions)
+        navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
     }
 
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {

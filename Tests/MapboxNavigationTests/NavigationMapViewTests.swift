@@ -22,7 +22,7 @@ class NavigationMapViewTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        CredentialsManager.default.accessToken = .mockedAccessToken
+        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
         styleLoadingExpectation = expectation(description: "Style Loaded Expectation")
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in

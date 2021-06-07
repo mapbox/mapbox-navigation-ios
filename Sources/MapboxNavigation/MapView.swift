@@ -12,10 +12,8 @@ extension MapView {
      Returns a set of source identifiers for tilesets that are or include the Mapbox Incidents source.
      */
     func sourceIdentifiers(_ tileSetIdentifier: String) -> Set<String> {
-        return Set(mapboxMap.__map.getStyleSources().compactMap {
-            $0
-        }.filter {
-            $0.type == "vector"
+        return Set(mapboxMap.style.allSourceIdentifiers.filter {
+            $0.type.rawValue == "vector"
         }.map {
             $0.id
         })
@@ -48,12 +46,14 @@ extension MapView {
     func showsTileSet(withIdentifier tileSetIdentifier: String, layerIdentifier: String) -> Bool {
         let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
         
-        for layer in mapboxMap.__map.getStyleLayers() {
-            guard let sourceIdentifier = mapboxMap.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source").value as? String,
-                  let sourceLayerIdentifier = mapboxMap.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String else { return false }
+        for layerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
+            guard let sourceIdentifier = mapboxMap.style.layerProperty(for: layerIdentifier,
+                                                                       property: "source") as? String,
+                  let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: layerIdentifier,
+                                                                            property: "source-layer") as? String else { return false }
             
             if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
-                let visibility = mapboxMap.__map.getStyleLayerProperty(forLayerId: layer.id, property: "visibility").value as? String
+                let visibility = mapboxMap.style.layerProperty(for: layerIdentifier, property: "visibility") as? String
                 
                 return visibility == "visible"
             }
@@ -72,15 +72,17 @@ extension MapView {
     func setShowsTileSet(_ isVisible: Bool, withIdentifier tileSetIdentifier: String, layerIdentifier: String) {
         let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
         
-        for layer in mapboxMap.__map.getStyleLayers() {
-            guard let sourceIdentifier = mapboxMap.style.layerProperty(for: layer.id, property: "source") as? String,
-                  let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: layer.id, property: "source-layer") as? String else { return }
+        for layerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
+            guard let sourceIdentifier = mapboxMap.style.layerProperty(for: layerIdentifier,
+                                                                       property: "source") as? String,
+                  let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: layerIdentifier,
+                                                                            property: "source-layer") as? String else { return }
             
             if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
                 let properties = [
                     "visibility": isVisible ? "visible" : "none"
                 ]
-                try? mapboxMap.style.setLayerProperties(for: layer.id, properties: properties)
+                try? mapboxMap.style.setLayerProperties(for: layerIdentifier, properties: properties)
             }
         }
     }
@@ -116,8 +118,8 @@ extension MapView {
      - parameter sourceTypes: List of `MapView` source types (e.g. `vector`).
      */
     func styleSourceDatasets(_ sourceTypes: [String]) -> [String] {
-        let sources = mapboxMap.__map.getStyleSources().filter {
-            return sourceTypes.contains($0.type)
+        let sources = mapboxMap.style.allSourceIdentifiers.filter {
+            return sourceTypes.contains($0.type.rawValue)
         }
         
         var datasets = [String]()
@@ -147,9 +149,9 @@ extension MapView {
             NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         ]
         
-        for layer in mapboxMap.__map.getStyleLayers().reversed() {
-            if !(layer.type == "symbol") && !identifiers.contains(layer.id) {
-                let sourceLayer = mapboxMap.__map.getStyleLayerProperty(forLayerId: layer.id, property: "source-layer").value as? String
+        for layer in mapboxMap.style.allLayerIdentifiers.reversed() {
+            if !(layer.type.rawValue == "symbol") && !identifiers.contains(layer.id) {
+                let sourceLayer = mapboxMap.style.layerProperty(for: layer.id, property: "source-layer") as? String
                 
                 if let sourceLayer = sourceLayer,
                    sourceLayer.isEmpty {
@@ -167,11 +169,9 @@ extension MapView {
     /**
      Method, which returns list of source identifiers, which contain streets tile set.
      */
-    func streetsSources() -> [StyleObjectInfo] {
-        return mapboxMap.__map.getStyleSources().compactMap {
-            $0
-        }.filter {
-            let identifiers = tileSetIdentifiers($0.id, sourceType: $0.type)
+    func streetsSources() -> [SourceInfo] {
+        return mapboxMap.style.allSourceIdentifiers.filter {
+            let identifiers = tileSetIdentifiers($0.id, sourceType: $0.type.rawValue)
             return VectorSource.isMapboxStreets(identifiers)
         }
     }

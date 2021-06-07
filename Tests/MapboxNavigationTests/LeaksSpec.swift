@@ -40,7 +40,7 @@ class LeaksSpec: QuickSpec {
         
         describe("NavigationViewController") {
             let route = initialRoute
-            CredentialsManager.default.accessToken = .mockedAccessToken
+            ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
 
             let navigationViewController = LeakTest {
                 let directions = DirectionsSpy(credentials: Fixture.credentials)
