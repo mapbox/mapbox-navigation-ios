@@ -68,6 +68,10 @@ extension AppDelegate: CarPlayManagerDelegate {
         currentAppRootViewController?.dismissActiveNavigationViewController()
     }
     
+    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        return true
+    }
+    
     func favoritesListTemplate() -> CPListTemplate {
         let mapboxSFItem = CPListItem(text: FavoritesList.POI.mapboxSF.rawValue,
                                       detailText: FavoritesList.POI.mapboxSF.subTitle)

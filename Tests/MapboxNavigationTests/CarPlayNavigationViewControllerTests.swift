@@ -14,6 +14,10 @@ fileprivate class CarPlayNavigationDelegateSpy: NSObject, CarPlayNavigationDeleg
     init(_ didArriveExpectation: XCTestExpectation) {
         self.didArriveExpectation = didArriveExpectation
     }
+    
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        return true
+    }
 }
 
 @available(iOS 12.0, *)

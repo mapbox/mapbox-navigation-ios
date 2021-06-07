@@ -258,7 +258,7 @@ class ViewController: UIViewController {
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
         
-        presentAndRemoveMapview(navigationViewController)
+        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startCustomNavigation() {
@@ -531,6 +531,11 @@ extension ViewController: RouteVoiceControllerDelegate {
 extension ViewController: NavigationViewControllerDelegate {
 
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
+        if #available(iOS 12.0, *),
+           let delegate = UIApplication.shared.delegate as? AppDelegate,
+           let carPlayNavigationViewController = delegate.carPlayManager.currentNavigator {
+            return carPlayNavigationViewController.navigationService(navigationViewController.navigationService, didArriveAt: waypoint)
+        }
         return true
     }
     

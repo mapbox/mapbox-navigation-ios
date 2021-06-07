@@ -657,11 +657,17 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationDelegate {
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        return delegate?.carPlayManager(self, shouldPresentArrivalUIFor: waypoint) ?? true
+    }
+    
     public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
         guard let interfaceController = interfaceController else {
             return
         }
         
+        // Dismiss the template for previous arrival UI when exit the navigation.
+        interfaceController.dismissTemplate(animated: true)
         // Unset existing main map template (fixes an issue with the buttons)
         mainMapTemplate = nil
         

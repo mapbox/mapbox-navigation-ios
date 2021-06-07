@@ -419,7 +419,6 @@ public class CarPlayNavigationViewController: UIViewController {
         return CPGridTemplate(title: gridTitle, gridButtons: buttons)
     }
     
-    // TODO: Arrival UI is not currently presented anywhere.
     func presentArrivalUI() {
         let exitTitle = NSLocalizedString("CARPLAY_EXIT_NAVIGATION", bundle: .mapboxNavigation, value: "Exit navigation", comment: "Title on the exit button in the arrival form")
         let exitAction = CPAlertAction(title: exitTitle, style: .cancel) { (action) in
@@ -433,7 +432,26 @@ public class CarPlayNavigationViewController: UIViewController {
         let arrivalTitle = NSLocalizedString("CARPLAY_ARRIVED", bundle: .mapboxNavigation, value: "You have arrived", comment: "Title on arrival action sheet")
         let arrivalMessage = NSLocalizedString("CARPLAY_ARRIVED_MESSAGE", bundle: .mapboxNavigation, value: "What would you like to do?", comment: "Message on arrival action sheet")
         let alert = CPActionSheetTemplate(title: arrivalTitle, message: arrivalMessage, actions: [rateAction, exitAction])
+        carInterfaceController.dismissTemplate(animated: true)
         carInterfaceController.presentTemplate(alert, animated: true)
+    }
+    
+    func presentWaypointArrivalUI(for waypoint: Waypoint) {
+        var title = NSLocalizedString("CARPLAY_ARRIVED", bundle: .mapboxNavigation, value: "You have arrived", comment: "Title on arrival action sheet")
+        if let name = waypoint.name {
+            title = name
+        }
+        
+        let continueTitle = NSLocalizedString("CARPLAY_CONTINUE", bundle: .mapboxNavigation, value: "Continue", comment: "Title on continue button in CarPlay")
+        let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
+            self.navigationService.router?.advanceLegIndex()
+            self.carInterfaceController.dismissTemplate(animated: true)
+            self.updateRouteOnMap()
+        }
+        
+        let waypointArrival = CPAlertTemplate(titleVariants: [title], actions: [continueAlert])
+        carInterfaceController.dismissTemplate(animated: true)
+        carInterfaceController.presentTemplate(waypointArrival, animated: true)
     }
 }
 
@@ -460,6 +478,20 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
 }
 
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: NavigationServiceDelegate {
+    public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
+        let shouldPresentArrivalUI = carPlayNavigationDelegate?.carPlayNavigationViewController(self, shouldPresentArrivalUIFor: waypoint) ?? true
+        
+        if service.routeProgress.isFinalLeg && shouldPresentArrivalUI {
+            presentArrivalUI()
+        } else if shouldPresentArrivalUI {
+            presentWaypointArrivalUI(for: waypoint)
+        }
+        return true
+    }
+}
+
 /**
  The `CarPlayNavigationDelegate` protocol provides methods for reacting to significant events during turn-by-turn navigation with `CarPlayNavigationViewController`.
  */
@@ -472,6 +504,15 @@ public protocol CarPlayNavigationDelegate: AnyObject, UnimplementedLogging {
      - parameter canceled: True if the user dismissed the CarPlay navigation view controller by tapping the Cancel button; false if the navigation view controller dismissed by some other means.
      */
     func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool)
+    
+    /**
+     Called when the CarPlay navigation view controller detects an arrival.
+     
+     - parameter carPlayNavigationViewController: The CarPlay navigation view controller that has arrived at a waypoint.
+     - parameter waypoint: The waypoint that the user has arrived at.
+     - returns: A boolean value indicating whether to show an arrival UI.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool
 }
 
 @available(iOS 12.0, *)
