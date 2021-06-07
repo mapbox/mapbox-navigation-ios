@@ -302,7 +302,7 @@ open class NavigationMapView: UIView {
             self.updateUserCourseView(location)
         }
         
-        mapView.mapboxMap.onNext(.cameraChanged) { [weak self] _ in
+        mapView.mapboxMap.onEvery(.cameraChanged) { [weak self] _ in
             guard let self = self else { return }
             self.passiveLocationUsed = (self.mapView.location.locationProvider is PassiveLocationManager)
         }
@@ -431,15 +431,20 @@ open class NavigationMapView: UIView {
         case .puck2D(configuration: _):
             if simulation {
                 if !passiveLocationUsed {
-                    let locationProvider = mapView.location.locationProvider
-                    mapView.location.locationProvider(locationProvider!, didUpdateLocations: [location])
                     mapView.location.locationProvider.stopUpdatingLocation()
                 }
                 if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
+                    let newLocation: [Double] = [
+                        location.coordinate.latitude,
+                        location.coordinate.longitude,
+                        location.altitude
+                    ]
                     do {
-                        try mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.puck2DLayer,
-                                                                     property: "bearing",
-                                                                     value: location.course)
+                        try mapView.mapboxMap.style.setLayerProperties(for: NavigationMapView.LayerIdentifier.puck2DLayer,
+                                                                       properties: [
+                                                                        "location": newLocation,
+                                                                        "bearing": location.course
+                                                                       ])
                     } catch {
                         NSLog("Failed to perform operation while updating 2D puck bearing arrow with error: \(error.localizedDescription).")
                     }

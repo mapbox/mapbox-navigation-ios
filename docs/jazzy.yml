@@ -137,6 +137,7 @@ custom_categories:
       - RouteSnappingMinimumHorizontalAccuracy
       - RouteSnappingMinimumSpeed
       - NavigationSettings
+      - UserLocationStyle
   - name: User Feedback
     children:
       - FeedbackViewController
