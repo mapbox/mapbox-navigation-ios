@@ -14,7 +14,7 @@ extension NavigationMapView {
         weak var navigationViewData: NavigationViewData!
         weak var eventsManager: NavigationEventsManager!
         
-        fileprivate var navigationView: NavigationView! {
+        fileprivate var navigationView: NavigationView {
             return navigationViewData.navigationView
         }
         
@@ -36,7 +36,7 @@ extension NavigationMapView {
             }
             set {
                 if let newPosition = newValue {
-                    navigationView?.floatingButtonsPosition = newPosition
+                    navigationView.floatingButtonsPosition = newPosition
                 }
             }
         }

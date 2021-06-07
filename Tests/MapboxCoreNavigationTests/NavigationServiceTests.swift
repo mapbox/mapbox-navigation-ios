@@ -1,4 +1,4 @@
-fimport XCTest
+import XCTest
 import MapboxDirections
 import Turf
 import MapboxMobileEvents
