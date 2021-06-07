@@ -144,7 +144,6 @@ class ViewController: UIViewController {
         clearMap.isHidden = true
         longPressHintView.isHidden = false
         
-        // TODO: adjust camera to location after cancle
         navigationMapView?.unhighlightBuildings()
         navigationMapView?.removeRoutes()
         navigationMapView?.removeRouteDurations()
