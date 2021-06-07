@@ -96,6 +96,7 @@
 * Added methods for convenience checking Navigation tiles in a `TileStore`: `containsLatestNavigationTiles(forCacheLocation:, completion:)`, `tileRegionContainsLatestNavigationTiles(forId:, cacheLocation:, completion:)` and methods for getting Navigation tiles from `TilesetDescriptorFactory`: `getLatest(forCacheLocation:)`, `getSpecificVersion(forCacheLocation:, version:)`. ([#3015](https://github.com/mapbox/mapbox-navigation-ios/pull/3015))
 * Fixed a thread-safety issue in `UnimplementedLogging` protocol implementation. ([#3024](https://github.com/mapbox/mapbox-navigation-ios/pull/3024))
 * Fixed an issue where the current road name label sometimes displayed the name of an intersecting road instead of the current road or blinked in and out. ([#3019](https://github.com/mapbox/mapbox-navigation-ios/pull/3019))
+* Fixed an issue where 'Navigation cancel' event might be not logged. ([#3050](https://github.com/mapbox/mapbox-navigation-ios/pull/3050))
 * Fixed an issue where offline route calculation might hang up. ([#3040](https://github.com/mapbox/mapbox-navigation-ios/pull/3040))
 * Fixed the moment of custom feedback event creation. ([#3049](https://github.com/mapbox/mapbox-navigation-ios/pull/3049))
 
