@@ -119,7 +119,7 @@ extension NavigationMapView {
         }
         
         @objc func feedback(_ sender: Any) {
-            guard let parent = navigationViewData.containerViewController else { return }
+            let parent = navigationViewData.containerViewController
             let feedbackViewController = FeedbackViewController(eventsManager: eventsManager)
             feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
             parent.present(feedbackViewController, animated: true)
@@ -181,7 +181,8 @@ extension NavigationMapView {
         }
         
         private func labelCurrentRoadFeature(at location: CLLocation) {
-            guard let router = navigationViewData.router,
+            let router = navigationViewData.router
+            guard
                   let stepShape = router.routeProgress.currentLegProgress.currentStep.shape,
                   !stepShape.coordinates.isEmpty,
                   let mapView = navigationMapView.mapView else {

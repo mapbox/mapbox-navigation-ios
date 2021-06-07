@@ -320,15 +320,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     // MARK: - NavigationViewData implementation
         
-    var navigationView: NavigationView! {
+    var navigationView: NavigationView {
         return (view as! NavigationView)
     }
     
-    var router: Router! {
+    var router: Router {
         navigationService.router
     }
     
-    var containerViewController: UIViewController! {
+    var containerViewController: UIViewController {
         return self
     }
     
