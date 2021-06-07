@@ -158,7 +158,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         // Iterate overal locations in first step with delay of one second.
         for location in locations {
-            navigationService.router?.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
+            navigationService.router.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
             RunLoop.current.run(until: Date().addingTimeInterval(0.01))
         }
         
@@ -255,7 +255,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         navigation.start()
         
         (locations + offRouteLocations).forEach {
-            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+            navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
         }
         
         waitForExpectations(timeout: waitForInterval) { (error) in

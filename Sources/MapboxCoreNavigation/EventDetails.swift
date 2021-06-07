@@ -55,16 +55,13 @@ struct PerformanceEventDetails: EventDetails {
 struct NavigationEventDetails: EventDetails {
     let audioType: String = AVAudioSession.sharedInstance().audioType
     let applicationState: UIApplication.State = {
-        var state: UIApplication.State!
         if Thread.isMainThread {
-            state = UIApplication.shared.applicationState
+            return UIApplication.shared.applicationState
         } else {
-            DispatchQueue.main.sync {
-                state = UIApplication.shared.applicationState
+            return DispatchQueue.main.sync {
+                UIApplication.shared.applicationState
             }
         }
-        
-        return state
     }()
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
