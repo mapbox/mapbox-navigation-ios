@@ -30,7 +30,7 @@ extension TileStore {
             if expected.isValue(), let regions = expected.value as? Array<TileRegion> {
                 let lock = NSLock()
                 var count = regions.count
-                var result: Bool? = nil
+                var result: Bool? = true
 
                 for region in regions {
                     self.__tileRegionContainsDescriptors(forId: region.id,
