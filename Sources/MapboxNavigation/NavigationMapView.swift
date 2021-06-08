@@ -374,8 +374,8 @@ open class NavigationMapView: UIView {
         // While animating to overview mode, don't animate the puck.
         let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-//            guard let screenCoordinate = self?.mapView.screenCoordinate(for: location.coordinate) else { return }
-//            self?.userCourseView.center = CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+            guard let point = self?.mapView.point(for: location.coordinate) else { return }
+            self?.userCourseView.center = point
         }
         
         userCourseView.update(location: location,
