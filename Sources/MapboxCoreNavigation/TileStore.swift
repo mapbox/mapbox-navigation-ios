@@ -30,21 +30,26 @@ extension TileStore {
             if expected.isValue(), let regions = expected.value as? Array<TileRegion> {
                 let lock = NSLock()
                 var count = regions.count
-                var results = Array(repeating: false, count: count)
+                var result: Bool? = true
 
-                for (index, region) in regions.enumerated() {
+                for region in regions {
                     self.__tileRegionContainsDescriptors(forId: region.id,
                                                          descriptors: descriptors,
                                                          callback: { expected in
+                                                            lock.lock()
+                                                            
                                                             if let expected = expected, expected.isValue(), let contains = expected.value as? NSNumber {
-                                                                results[index] = contains.boolValue
+                                                                result = result.map { $0 && contains.boolValue }
+                                                            } else if let expected = expected, expected.isError() {
+                                                                result = nil
+                                                            } else {
+                                                                assertionFailure("Unexpected value or error: \(String(describing: expected)), expected: \(NSNumber.self)")
+                                                                result = nil
                                                             }
                                                             
-                                                            lock.lock()
                                                             count -= 1
-                                                            
                                                             if count == 0 {
-                                                                completion(results.allSatisfy { $0 })
+                                                                completion(result)
                                                             }
                                                             lock.unlock()
                                                          })
