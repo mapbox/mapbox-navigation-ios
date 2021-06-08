@@ -252,10 +252,32 @@ open class NavigationMapView: UIView {
                       navigationCameraType: NavigationCameraType = .mobile,
                       tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         let accessToken = ResourceOptionsManager.default.resourceOptions.accessToken
-        let tileStore = tileStoreLocation?.tileStore
+        
         // TODO: allow customising tile store location.
-        let resourceOptions = ResourceOptions(accessToken: accessToken, tileStore: tileStore)
-        mapView = MapView(frame: frame, mapInitOptions: MapInitOptions(resourceOptions: resourceOptions))
+        let tileStore = tileStoreLocation?.tileStore
+        
+        // In case of CarPlay, use `pixelRatio` value, which is used on second `UIScreen`.
+        var pixelRatio = UIScreen.main.scale
+        if navigationCameraType == .carPlay, UIScreen.screens.indices.contains(1) {
+            pixelRatio = UIScreen.screens[1].scale
+        }
+        
+        let mapOptions = MapOptions(constrainMode: .widthAndHeight,
+                                    viewportMode: .default,
+                                    orientation: .upwards,
+                                    crossSourceCollisions: false,
+                                    optimizeForTerrain: false,
+                                    size: nil,
+                                    pixelRatio: pixelRatio,
+                                    glyphsRasterizationOptions: .init())
+        
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              tileStore: tileStore)
+        
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
+                                            mapOptions: mapOptions)
+        
+        mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.ornaments.options.scaleBar.visibility = .hidden
         
