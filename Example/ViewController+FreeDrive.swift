@@ -138,10 +138,9 @@ extension ViewController {
     }
     
     func edgeNames(identifier: RoadGraph.Edge.Identifier) -> [String] {
-        let passiveLocationDataSource = (navigationMapView.mapView.location.locationProvider as! PassiveLocationManager).dataSource
-        guard let metadata = passiveLocationDataSource.roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
-            return []
-        }
+        guard let passiveLocationManager = navigationMapView.mapView.location.locationProvider as? PassiveLocationManager,
+              let metadata = passiveLocationManager.dataSource.roadGraph.edgeMetadata(edgeIdentifier: identifier) else { return [] }
+
         let names = metadata.names.map { name -> String in
             switch name {
             case .name(let name):
