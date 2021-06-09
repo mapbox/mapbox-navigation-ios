@@ -1,5 +1,67 @@
 version: 2.1
 
+commands:
+  save-api-diff-cache:
+    parameters:
+      api_diff_cache:
+        type: string
+    steps:
+      - save_cache:
+          key: nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-{{ << parameters.api_diff_cache >> }}
+          paths:
+            - api_logs
+
+  save-api-diff-cache-by-tag:
+    parameters:
+      api_diff_cache:
+        type: string
+    steps:
+      - save_cache:
+          key: nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-<< parameters.api_diff_cache >>
+          paths:
+            - api_logs
+
+  restore-api-diff-cache:
+    parameters:
+        api_diff_cache:
+          type: string
+    steps:
+      - restore_cache:
+          keys:
+            - nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-{{ << parameters.api_diff_cache >> }}
+
+  restore-api-diff-cache-by-tag:
+    parameters:
+        api_diff_cache:
+          type: string
+    steps:
+      - restore_cache:
+          keys:
+            - nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-<< parameters.api_diff_cache >>
+
+  build-api-diff-report:
+    steps:
+      - run:
+          name: Install Sourcekitten
+          command: brew update && brew install sourcekitten
+      - run:
+          name: Building API Diff Report
+          command: cd scripts/APIDiffReport && swift build 
+
+  run_api_log:
+    parameters:
+      iOS:
+        type: string
+      device:
+        type: string
+    steps:
+      - run:
+          name: Generating MapboxCoreNavigation API Log
+          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
+      - run:
+          name: Generating MapboxNavigation API Log
+          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
+
 step-library:
   - &restore-cache
       restore_cache:
@@ -188,6 +250,9 @@ jobs:
       delete_private_deps:
         type: boolean
         default: false
+      generate_api_log:
+        type: boolean
+        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -237,6 +302,15 @@ jobs:
             - run:
                 name: Send code coverage
                 command: bash <(curl -s https://codecov.io/bash)
+      - when:
+          condition: << parameters.generate_api_log >>
+          steps:
+            - build-api-diff-report
+            - run_api_log:
+                iOS: << parameters.iOS >>
+                device: << parameters.device >>
+            - save-api-diff-cache:
+                api_diff_cache: .Environment.CIRCLE_SHA1
 
   xcode-12-examples:
     parameters:
@@ -296,6 +370,67 @@ jobs:
           name: Run xcodebuild for Package.swift
           command: xcodebuild -scheme MapboxNavigation-Package test -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" | xcpretty
 
+  api-diff-job:
+    parameters:
+      xcode:
+        type: string
+        default: "11.4.1"
+      device:
+        type: string
+        default: "iPhone 8 Plus"
+      iOS:
+        type: string
+        default: "13.4.1"
+      base_api_tag:
+        type: string
+        default: "v0.40.0"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - build-api-diff-report
+      - run:
+          name: Store latest APIDiffReport
+          command: cp -R scripts/APIDiffReport ~/.
+      - run:
+          name: Checking out Base API
+          command: git checkout << parameters.base_api_tag >>
+      - restore-api-diff-cache:
+          api_diff_cache: .Environment.CIRCLE_SHA1
+      - run:
+          name: Move Api Diff
+          command: |
+            mv api_logs original_api
+      - restore-api-diff-cache-by-tag:
+          api_diff_cache: << parameters.base_api_tag >>
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
+      - *restore-cache
+      - *install-dependencies
+      - run:
+          name: Install prerequisites
+          command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
+      - *save-cache
+      - save-api-diff-cache-by-tag:
+          api_diff_cache: << parameters.base_api_tag >>
+      - run:
+          name: Restore latest APIDiffReport
+          command: |
+            rm -rf scripts/APIDiffReport
+            cp -R ~/APIDiffReport scripts/.
+      - run_api_log:
+          iOS: << parameters.iOS >>
+          device: << parameters.device >>
+      - run:
+          name: Generating MapboxCoreNavigation API Diff
+          command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/original_api/core_navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json
+      - run:
+          name: Generating MapboxNavigation API Diff
+          command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/original_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json
+
 workflows:
   workflow:
     jobs:
@@ -304,6 +439,7 @@ workflows:
           xcode: "12.4.0"
           iOS: "14.4"
           device: "iPhone 8 Plus"
+          generate_api_log: true
       - build-job:
           name: "Xcode_12.4_iOS_14.4_SPM"
           xcode: "12.4.0"
@@ -336,3 +472,9 @@ workflows:
           filters:
             branches:
               only: release-v2.0
+      - api-diff-job-approval:
+          type: approval
+      - api-diff-job:
+          requires:
+            - "Xcode_12.0_iOS_14.0"
+            - api-diff-job-approval
