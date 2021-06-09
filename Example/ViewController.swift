@@ -128,7 +128,7 @@ class ViewController: UIViewController {
         navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
         navigationMapView.delegate = self
-        navigationMapView.puckType = .puck2D(configuration: Puck2DConfiguration())
+        navigationMapView.userLocationStyle = .puck2D()
         
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()

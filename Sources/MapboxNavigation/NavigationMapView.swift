@@ -79,7 +79,7 @@ open class NavigationMapView: UIView {
         didSet {
             let frame = CGRect(origin: .zero, size: 75.0)
             let isHidden = userCourseView.isHidden
-            switch puckType {
+            switch userLocationStyle {
             case .courseView(configuration: let configuration):
                 userCourseView = reducedAccuracyActivatedMode
                     ? UserHaloCourseView(frame: frame)
@@ -162,16 +162,16 @@ open class NavigationMapView: UIView {
         }
     }
     
-    var simulation: Bool = true
+    var simulatesLocation: Bool = true
     
     /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
      
      By default, this property is set to `UserLocationStyle.courseView`.
      */
-    public var puckType: UserLocationStyle = .courseView(configuration: UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
+    public var userLocationStyle: UserLocationStyle = .courseView(configuration: UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
         didSet {
-            setupMapPuck()
+            setupUserLocation()
         }
     }
     
@@ -230,13 +230,13 @@ open class NavigationMapView: UIView {
         setupGestureRecognizers()
         installUserCourseView()
         subscribeForNotifications()
-        setupMapPuck()
+        setupUserLocation()
     }
     
-    func setupMapPuck() {
+    func setupUserLocation() {
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
-            switch self.puckType {
+            switch self.userLocationStyle {
             case .courseView(configuration: let configuration):
                 self.mapView.location.options.puckType = nil
                 self.userCourseView = configuration
@@ -298,7 +298,7 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
-            switch self.puckType {
+            switch self.userLocationStyle {
             case .courseView(configuration: _): self.updateUserCourseView(location)
             default: break
             }
@@ -410,7 +410,7 @@ open class NavigationMapView: UIView {
         
         mostRecentUserCourseViewLocation = location
         
-        switch puckType {
+        switch userLocationStyle {
         case .courseView(configuration: _):
             // While animating to overview mode, don't animate the puck.
             let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
@@ -426,7 +426,7 @@ open class NavigationMapView: UIView {
                                   animated: animated,
                                   navigationCameraState: navigationCamera.state)
         case .puck2D(configuration: _):
-            if simulation {
+            if simulatesLocation {
                 if !(mapView.location.locationProvider is PassiveLocationManager) {
                     mapView.location.locationProvider.stopUpdatingLocation()
                 }
@@ -443,12 +443,12 @@ open class NavigationMapView: UIView {
                                                                         "bearing": location.course
                                                                        ])
                     } catch {
-                        NSLog("Failed to perform operation while updating 2D puck bearing arrow with error: \(error.localizedDescription).")
+                        print("Failed to perform operation while updating 2D puck bearing arrow with error: \(error.localizedDescription).")
                     }
                 }
             }
         case .puck3D(configuration: let configuration):
-            if simulation {
+            if simulatesLocation {
                 if !(mapView.location.locationProvider is PassiveLocationManager) {
                     mapView.location.locationProvider.stopUpdatingLocation()
                 }

@@ -7,7 +7,7 @@ import MapboxMaps
 public typealias UserCourseView = UIView & CourseUpdatable
 
 /**
- The style of user location indicator in a navigation map view.
+ The style of the user location indicator in a `NavigationMapView`.
  */
 public enum UserLocationStyle {
     /**
@@ -18,7 +18,7 @@ public enum UserLocationStyle {
     /**
      A 2-dimensional puck from `MapboxMaps`. Optionally provide `Puck2DConfiguration` to configure the puck's appearance.
      */
-    case puck2D(configuration: Puck2DConfiguration)
+    case puck2D(configuration: Puck2DConfiguration = Puck2DConfiguration())
     
     /**
      A 3-dimensional puck from `MapboxMaps`. It's required to provide a `Puck3DConfiguration` to configure the puck's appearance.

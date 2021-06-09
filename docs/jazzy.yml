@@ -67,6 +67,7 @@ custom_categories:
       - Style
       - PassiveLocationManager
       - WaypointStyle
+      - UserLocationStyle
   - name: Styling
     children:
       - Style
@@ -137,7 +138,6 @@ custom_categories:
       - RouteSnappingMinimumHorizontalAccuracy
       - RouteSnappingMinimumSpeed
       - NavigationSettings
-      - UserLocationStyle
   - name: User Feedback
     children:
       - FeedbackViewController

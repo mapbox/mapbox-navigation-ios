@@ -205,7 +205,7 @@ extension NavigationMapView {
         
         let congestionSegments = routeProgress.route.congestionFeatures(legIndex: currentLegIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
         
-        switch puckType {
+        switch userLocationStyle {
         
         case .courseView(configuration: _):
             let startDate = Date()
