@@ -34,9 +34,9 @@ extension TileStore {
                                                             lock.lock()
                                                             
                                                             if expected.isValue(),
-                                                               let contains = expected.value as? NSNumber {
-                                                                result = result.map { $0 && contains.boolValue }
-                                                            } else if let expected = expected, expected.isError() {
+                                                               let value = expected.value as? NSNumber {
+                                                                result = result.map { $0 && value.boolValue }
+                                                            } else if expected.isError() {
                                                                 result = nil
                                                             } else {
                                                                 assertionFailure("Unexpected value or error: \(String(describing: expected)), expected: \(NSNumber.self)")
