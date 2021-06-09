@@ -328,14 +328,14 @@ extension NavigationMapView {
                     if latestFeature != similarFeature {
                         let style = self.navigationMapView.mapView.mapboxMap.style
                         if let similarFeature = similarFeature,
-                           self.navigationView.wayNameView.setupWith(roadFeature: similarFeature,
+                           self.navigationView.wayNameView.setupWith(feature: similarFeature,
                                                                      using: style) {
                             hideWayName = false
                         }
                     } else if smallestLabelDistance < 5 {
                         let style = self.navigationMapView.mapView.mapboxMap.style
                         if let latestFeature = latestFeature,
-                           self.navigationView.wayNameView.setupWith(roadFeature: latestFeature,
+                           self.navigationView.wayNameView.setupWith(feature: latestFeature,
                                                                      using: style) {
                             hideWayName = false
                         }
