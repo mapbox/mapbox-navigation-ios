@@ -75,12 +75,8 @@ extension NavigationMapView {
             navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
             if routeLineTracksTraversal {
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-                navigationMapView.mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
-                    guard let self = self,
-                          let location = self.navigationMapView.mostRecentUserCourseViewLocation else { return }
-                    self.navigationMapView.updateTraveledRouteLine(location.coordinate)
-                    self.navigationMapView.updateRoute(routeProgress)
-                }
+                navigationMapView.updateTraveledRouteLine(router.location?.coordinate)
+                navigationMapView.updateRoute(routeProgress)
             }
         }
         
@@ -125,12 +121,8 @@ extension NavigationMapView {
             
             if routeLineTracksTraversal {
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: progress)
-                navigationMapView.mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
-                    guard let self = self,
-                          let location = self.navigationMapView.mostRecentUserCourseViewLocation else { return }
-                    self.navigationMapView.updateTraveledRouteLine(location.coordinate)
-                    self.navigationMapView.updateRoute(progress)
-                }
+                navigationMapView.updateTraveledRouteLine(location.coordinate)
+                navigationMapView.updateRoute(progress)
             }
         }
         
