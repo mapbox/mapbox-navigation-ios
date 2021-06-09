@@ -48,11 +48,14 @@ class RouteControllerTests: XCTestCase {
         
         while testCoordinates.count < locationManager.locations.count {
             locationManager.tick()
-            testCoordinates.append(routeController.location!.coordinate)
+            guard let location = routeController.location else {
+                XCTFail("Empty location"); return
+            }
+            testCoordinates.append(location.coordinate)
         }
         
         let expectedCoordinates = locations.map{$0.coordinate}
-        XCTAssert(expectedCoordinates == testCoordinates)
+        XCTAssertEqual(expectedCoordinates, testCoordinates)
     }
 }
 

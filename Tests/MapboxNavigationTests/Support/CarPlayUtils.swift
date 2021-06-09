@@ -35,6 +35,10 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
         fatalError("This is an empty stub.")
     }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        fatalError("This is an empty stub.")
+    }
 
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         fatalError("This is an empty stub.")
@@ -83,6 +87,10 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         XCTAssertFalse(navigationInitiated)
         navigationInitiated = true
         currentService = service
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        return true
     }
 
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {

@@ -377,7 +377,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     deinit {
-        navigationService.stop()
+        navigationService?.stop()
     }
     
     // MARK: - Setting-up methods
