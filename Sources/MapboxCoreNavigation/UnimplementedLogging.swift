@@ -48,7 +48,7 @@ final class UnimplementedLoggingState {
     }
 
     private let lock: NSLock = .init()
-    var warned: [Description] = []
+    private var warned: [Description] = []
 
     func markWarned(_ description: Description) -> MarkingResult {
         lock.lock(); defer {
