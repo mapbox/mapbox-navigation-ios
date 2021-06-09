@@ -100,9 +100,12 @@
 * Fixed an issue where offline route calculation might hang up. ([#3040](https://github.com/mapbox/mapbox-navigation-ios/pull/3040))
 * Fixed the moment of custom feedback event creation. ([#3049](https://github.com/mapbox/mapbox-navigation-ios/pull/3049))
 
-## v1.4.0
+## main
 
 * Fixed the moment of custom feedback event creation. ([#2495](https://github.com/mapbox/mapbox-navigation-ios/pull/2495))
+
+## v1.4.0
+
 * Increased the minimum version of `MapboxNavigationNative` to v32.0.0. ([#2910](https://github.com/mapbox/mapbox-navigation-ios/pull/2910))
 * Fixed an issue when feedback UI was always appearing for short routes. ([#2871](https://github.com/mapbox/mapbox-navigation-ios/pull/2871))
 * Fixed automatic day/night switching. ([#2881](https://github.com/mapbox/mapbox-navigation-ios/pull/2881))
