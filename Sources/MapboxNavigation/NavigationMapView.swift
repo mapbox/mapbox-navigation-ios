@@ -163,7 +163,6 @@ open class NavigationMapView: UIView {
     }
     
     var simulation: Bool = true
-    var passiveLocationUsed: Bool = false
     
     /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
@@ -299,12 +298,10 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
-            self.updateUserCourseView(location)
-        }
-        
-        mapView.mapboxMap.onEvery(.cameraChanged) { [weak self] _ in
-            guard let self = self else { return }
-            self.passiveLocationUsed = (self.mapView.location.locationProvider is PassiveLocationManager)
+            switch self.puckType {
+            case .courseView(configuration: _): self.updateUserCourseView(location)
+            default: break
+            }
         }
         
         addSubview(mapView)
@@ -430,7 +427,7 @@ open class NavigationMapView: UIView {
                                   navigationCameraState: navigationCamera.state)
         case .puck2D(configuration: _):
             if simulation {
-                if !passiveLocationUsed {
+                if !(mapView.location.locationProvider is PassiveLocationManager) {
                     mapView.location.locationProvider.stopUpdatingLocation()
                 }
                 if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
@@ -452,7 +449,7 @@ open class NavigationMapView: UIView {
             }
         case .puck3D(configuration: let configuration):
             if simulation {
-                if !passiveLocationUsed {
+                if !(mapView.location.locationProvider is PassiveLocationManager) {
                     mapView.location.locationProvider.stopUpdatingLocation()
                 }
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.puck3DSource) {
