@@ -76,7 +76,14 @@ class Navigator {
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `tilesURL`).
      */
-    static let shared: Navigator = Navigator()
+    static var shared: Navigator {
+        return _navigator
+    }
+    
+    // Used in tests to recreate the navigator
+    static var _navigator: Navigator = .init()
+    
+    static func _recreateNavigator() { _navigator = .init() }
     
     /**
      Restrict direct initializer access.
@@ -97,6 +104,7 @@ class Navigator {
     
     private func subscribeNavigator() {
         navigator.setElectronicHorizonObserverFor(self)
+        navigator.addObserver(for: self)
     }
     
     private func unsubscribeNavigator() {
@@ -154,3 +162,41 @@ extension Navigator: ElectronicHorizonObserver {
         NotificationCenter.default.post(name: .electronicHorizonDidPassRoadObject, object: nil, userInfo: userInfo)
     }
 }
+
+extension Navigator: NavigatorObserver {
+    func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
+        guard origin == .locationUpdate else { return }
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .originKey: origin,
+            .statusKey: status,
+        ]
+        NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
+    }
+}
+extension Notification.Name {
+    /**
+     Posted when NavNative sends updated navigation status.
+     
+     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
+    */
+    static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
+}
+
+extension Navigator {
+    
+    struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        
+        typealias RawValue = String
+        
+        var rawValue: String
+        
+        init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        static let originKey: NotificationUserInfoKey = .init(rawValue: "origin")
+        
+        static let statusKey: NotificationUserInfoKey = .init(rawValue: "status")
+    }
+}
+

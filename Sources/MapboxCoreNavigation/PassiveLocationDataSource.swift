@@ -29,6 +29,14 @@ open class PassiveLocationDataSource: NSObject {
         super.init()
         
         self.systemLocationManager.delegate = self
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationStatusDidChange),
+                                               name: .navigationStatusDidChange,
+                                               object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     /**
@@ -96,6 +104,8 @@ open class PassiveLocationDataSource: NSObject {
         return Navigator.shared.roadObjectMatcher
     }
     
+    var lastRawLocation: CLLocation?
+    
     /**
      Manually sets the current location.
      
@@ -113,11 +123,20 @@ open class PassiveLocationDataSource: NSObject {
             navigator.updateLocation(for: FixLocation(location))
         }
 
-        guard let lastRawLocation = locations.last else {
-            return
+        lastRawLocation = locations.last
+    }
+    
+    @objc private func navigationStatusDidChange(_ notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.update(to: status)
         }
-
-        let status = navigator.status(at: lastRawLocation.timestamp)
+    }
+    
+    private func update(to status: NavigationStatus) {
+        guard let lastRawLocation = lastRawLocation else { return }
+        
         let lastLocation = CLLocation(status.location)
         var speedLimit: Measurement<UnitSpeed>?
         var signStandard: SignStandard?
