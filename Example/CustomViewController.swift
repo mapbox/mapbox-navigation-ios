@@ -8,7 +8,7 @@ class CustomViewController: UIViewController {
     
     var destinationAnnotation: PointAnnotation! {
         didSet {
-//            navigationMapView.mapView.annotations.addAnnotation(destinationAnnotation)
+            pointAnnotationManager?.syncAnnotations([destinationAnnotation])
         }
     }
     
@@ -35,6 +35,8 @@ class CustomViewController: UIViewController {
     lazy var feedbackViewController: FeedbackViewController = {
         return FeedbackViewController(eventsManager: navigationService.eventsManager)
     }()
+    
+    var pointAnnotationManager: PointAnnotationManager?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +80,11 @@ class CustomViewController: UIViewController {
                                                                                   right: 10.0)
         
         navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            self.pointAnnotationManager = self.navigationMapView.mapView.annotations.makePointAnnotationManager()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

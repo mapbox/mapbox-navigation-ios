@@ -87,6 +87,22 @@ open class NavigationMapView: UIView {
         }
     }
     
+    @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .selectedRouteDurationAnnotationColor
+    @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
+    @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
+    @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
+
+    /**
+     List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
+     These are used for features such as Route Duration Annotations that are optionally added during route preview.
+     See https://docs.mapbox.com/ios/maps/api/6.3.0/customizing-fonts.html for more information about server-side fonts.
+     */
+    @objc dynamic public var routeDurationAnnotationFontNames: [String] = [
+        "DIN Pro Medium",
+        "Noto Sans CJK JP Medium",
+        "Arial Unicode MS Regular"
+    ]
+    
     /**
      `MapView`, which is added on top of `NavigationMapView` and allows to render navigation related components.
      */
@@ -101,19 +117,12 @@ open class NavigationMapView: UIView {
      Most recent user location, which is used to place `UserCourseView`.
      */
     var mostRecentUserCourseViewLocation: CLLocation?
-
-    @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .selectedRouteDurationAnnotationColor
-    @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
-    @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
-    @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
-
+    
     /**
-     List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
-     These are used for features such as Route Duration Annotations that are optionally added during route preview.
-     See https://docs.mapbox.com/ios/maps/api/6.3.0/customizing-fonts.html for more information about server-side fonts.
+     `PointAnnotationManager`, which is used to manage addition and removal of final destination annotation.
      */
-    @objc dynamic public var routeDurationAnnotationFontNames: [String] = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
-
+    var pointAnnotationManager: PointAnnotationManager?
+    
     var routes: [Route]?
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
@@ -192,7 +201,9 @@ open class NavigationMapView: UIView {
      - parameter navigationCameraType: Type of `NavigationCamera`, which is used for the current instance of `NavigationMapView`.
      - parameter tileStoreLocation: Configuration of `TileStore` location, where Map tiles are stored. Use `nil` to disable onboard tile storage.
      */
-    public init(frame: CGRect, navigationCameraType: NavigationCameraType = .mobile, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+    public init(frame: CGRect,
+                navigationCameraType: NavigationCameraType = .mobile,
+                tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         super.init(frame: frame)
         
         setupMapView(frame, navigationCameraType: navigationCameraType, tileStoreLocation: tileStoreLocation)
@@ -285,6 +296,11 @@ open class NavigationMapView: UIView {
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
             self.updateUserCourseView(location)
+        }
+        
+        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
         }
         
         addSubview(mapView)
@@ -664,12 +680,10 @@ open class NavigationMapView: UIView {
         }
 
         if let lastLeg = route.legs.last, let destinationCoordinate = lastLeg.destination?.coordinate {
-//            mapView.annotations.removeAnnotations(annotationsToRemove())
-            
-            var destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
-            let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-//            destinationAnnotation.title = title
-//            mapView.annotations.addAnnotation(destinationAnnotation)
+            let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+            var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
+            destinationAnnotation.image = .default
+            pointAnnotationManager?.syncAnnotations([destinationAnnotation])
             
             delegate?.navigationMapView(self, didAdd: destinationAnnotation)
         }
@@ -746,7 +760,7 @@ open class NavigationMapView: UIView {
      Removes all existing `Waypoint` objects from `MapView`, which were added by `NavigationMapView`.
      */
     public func removeWaypoints() {
-//        pointAnnotationManager.syncAnnotations(<#T##annotations: [PointAnnotation]##[PointAnnotation]#>)
+        pointAnnotationManager?.syncAnnotations([])
         
         let layers: Set = [
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
@@ -758,9 +772,8 @@ open class NavigationMapView: UIView {
     }
     
     func annotationsToRemove() -> [Annotation] {
-        return []
-//        let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-//        return mapView.annotations.annotations.values.filter({ $0.title == title })
+        let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+        return pointAnnotationManager?.annotations.filter({ $0.id == identifier }) ?? []
     }
     
     /**
