@@ -335,7 +335,7 @@ class NavigationServiceTests: XCTestCase {
                                                     verticalAccuracy: 0,
                                                     course: directionToStart,
                                                     speed: 0,
-                                                    timestamp: Date())
+                                                    timestamp: Date() + 1.0)
         
         navigationService.locationManager(navigationService.locationManager, didUpdateLocations: [facingTowardsStartLocation])
         
