@@ -135,7 +135,7 @@ class MapboxCoreNavigationTests: XCTestCase {
                                              directions: directions,
                                              simulating: .never)
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+            let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
             return routeProgress?.currentLegProgress.stepIndex == 2
         }
