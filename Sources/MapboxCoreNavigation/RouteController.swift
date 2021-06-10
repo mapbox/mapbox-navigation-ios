@@ -289,23 +289,25 @@ open class RouteController: NSObject {
         let newStepIndex = Int(status.stepIndex)
         let newIntersectionIndex = Int(status.intersectionIndex)
         
-        if (newLegIndex != progress.legIndex) {
+        if newLegIndex != progress.legIndex {
             progress.legIndex = newLegIndex
         }
-        if (newStepIndex != progress.currentLegProgress.stepIndex) {
+        
+        if newStepIndex != progress.currentLegProgress.stepIndex {
             progress.currentLegProgress.stepIndex = newStepIndex
         }
         
-        if (newIntersectionIndex != progress.currentLegProgress.currentStepProgress.intersectionIndex) {
+        if newIntersectionIndex != progress.currentLegProgress.currentStepProgress.intersectionIndex {
             progress.currentLegProgress.currentStepProgress.intersectionIndex = newIntersectionIndex
         }
         
-        if let spokenIndexPrimitive = status.voiceInstruction?.index, progress.currentLegProgress.currentStepProgress.spokenInstructionIndex != Int(spokenIndexPrimitive)
-            {
+        if let spokenIndexPrimitive = status.voiceInstruction?.index,
+           progress.currentLegProgress.currentStepProgress.spokenInstructionIndex != Int(spokenIndexPrimitive) {
             progress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(spokenIndexPrimitive)
         }
         
-        if let visualInstructionIndex = status.bannerInstruction?.index, routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex != Int(visualInstructionIndex) {
+        if let visualInstructionIndex = status.bannerInstruction?.index,
+           routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex != Int(visualInstructionIndex) {
             routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex = Int(visualInstructionIndex)
         }
     }

@@ -290,7 +290,7 @@ class MapboxCoreNavigationTests: XCTestCase {
             navigation.locationManager(locationManager, didUpdateLocations: [location])
         }
 
-        self.waitForExpectations(timeout: 5) { (error) in
+        waitForExpectations(timeout: 5) { (error) in
             XCTAssertNil(error)
         }
     }
