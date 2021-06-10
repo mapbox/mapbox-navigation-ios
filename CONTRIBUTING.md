@@ -135,16 +135,20 @@ Snapshot tests verified using [SnapshotTesting](https://github.com/pointfreeco/s
 1. Select the `MapboxNavigation-Package` scheme.
 1. Add a Swift file to the `Tests/MapboxNavigationTests/` folder.
 1. Write an `XCTestCase` as you would normally do.
+1. Make sure to apply the desired style in `XCTestCase.setup()`. For example:
+   ```swift
+   DayStyle().apply()
+   ```
 1. Use `assertImageSnapshot` function to verify views.
-```swift
-let view: UIView
-...
-assertImageSnapshot(matching: view, as: .image(precision: 0.95))
-```
+   ```swift
+   let view: UIView
+   ...
+   assertImageSnapshot(matching: view, as: .image(precision: 0.95))
+   ```
 1. For each [supported device](#supported-devices), do the following:
- - Select the device as the target to run tests.
- - Perform a test run that will generate reference images for future verification. 
- - Perform a second test run and make sure that it succeeds. 
+   1. Select the device as the target to run tests.
+   1. Perform a test run that will generate reference images for future verification. 
+   1. Perform a second test run and make sure that it succeeds. 
 1. Commit new tests along with generated snapshot images.
 
 ### Running unit tests
