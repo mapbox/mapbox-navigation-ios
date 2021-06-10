@@ -147,6 +147,12 @@ class NavigationServiceTests: XCTestCase {
             
             var stepLocations: [CLLocation] = []
             for coordinate in stepCoordinates {
+                if let lastLocation = stepLocations.last,
+                   lastLocation.timestamp >= (currentDate + offset) {
+                    XCTFail("Previous timestamp should not be equal to, or higher than the current one.")
+                    return
+                }
+                
                 stepLocations.append(CLLocation(coordinate: coordinate,
                                                 altitude: -1,
                                                 horizontalAccuracy: 10,
