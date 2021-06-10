@@ -63,7 +63,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     func recenter(_ sender: AnyObject, completion: ((CameraController, CLLocation) -> ())?) {
         guard let location = navigationMapView.mostRecentUserCourseViewLocation else { return }
         
-        navigationMapView.updateUserCourseView(location)
+        navigationMapView.moveUserLocation(to: location)
         completion?(self, location)
         
         navigationMapView.navigationCamera.follow()

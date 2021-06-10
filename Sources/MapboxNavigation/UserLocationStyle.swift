@@ -13,12 +13,12 @@ public enum UserLocationStyle {
     /**
      The course view representing the user’s location and course on the map, switching between `UserPuckCourseView` and `UserHaloCourseView` based on the level of location accuracy.
      */
-    case courseView(configuration: UserCourseView)
+    case courseView(_ view: UserCourseView)
     
     /**
      A 2-dimensional puck from `MapboxMaps`. Optionally provide `Puck2DConfiguration` to configure the puck's appearance.
      */
-    case puck2D(configuration: Puck2DConfiguration = Puck2DConfiguration())
+    case puck2D(configuration: Puck2DConfiguration? = nil)
     
     /**
      A 3-dimensional puck from `MapboxMaps`. It's required to provide a `Puck3DConfiguration` to configure the puck's appearance.

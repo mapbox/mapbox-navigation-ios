@@ -122,7 +122,7 @@ class CustomViewController: UIViewController {
         instructionsBannerView.isHidden = false
         
         // Update `UserCourseView` to be placed on the most recent location.
-        navigationMapView.updateUserCourseView(location, animated: true)
+        navigationMapView.moveUserLocation(to: location, animated: true)
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {

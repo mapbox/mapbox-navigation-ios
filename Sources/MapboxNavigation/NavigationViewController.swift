@@ -777,7 +777,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         if snapsUserLocationAnnotationToRoute, userHasArrivedAndShouldPreventRerouting {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation), for: location)
-            navigationMapView?.updateUserCourseView(location, animated: true)
+            navigationMapView?.moveUserLocation(to: location, animated: true)
         } else  {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation))
         }
