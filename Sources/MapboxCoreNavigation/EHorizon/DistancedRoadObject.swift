@@ -94,32 +94,32 @@ public enum DistancedRoadObject {
     }
 
     init(_ native: MapboxNavigationNative.RoadObjectDistance) {
-        if native.distanceInfo.isMBNNPointDistanceInfo() {
-            let info = native.distanceInfo.getMBNNPointDistanceInfo()
+        if native.distanceInfo.isPointDistanceInfo() {
+            let info = native.distanceInfo.getPointDistanceInfo()
             self = .point(identifier: native.roadObjectId,
                           type: RoadObjectType(native.type),
                           distance: info.distance)
-        } else if native.distanceInfo.isMBNNGantryDistanceInfo() {
-            let info = native.distanceInfo.getMBNNGantryDistanceInfo()
+        } else if native.distanceInfo.isGantryDistanceInfo() {
+            let info = native.distanceInfo.getGantryDistanceInfo()
             self = .gantry(identifier: native.roadObjectId,
                            type: RoadObjectType(native.type),
                            distance: info.distance)
-        } else if native.distanceInfo.isMBNNPolygonDistanceInfo() {
-            let info = native.distanceInfo.getMBNNPolygonDistanceInfo()
+        } else if native.distanceInfo.isPolygonDistanceInfo() {
+            let info = native.distanceInfo.getPolygonDistanceInfo()
             self = .polygon(identifier: native.roadObjectId,
                             type: RoadObjectType(native.type),
                             distanceToNearestEntry: info.distanceToNearestEntry,
                             distanceToNearestExit: info.distanceToNearestExit,
                             isInside: info.isInside)
-        } else if native.distanceInfo.isMBNNSubGraphDistanceInfo() {
-            let info = native.distanceInfo.getMBNNSubGraphDistanceInfo()
+        } else if native.distanceInfo.isSubGraphDistanceInfo() {
+            let info = native.distanceInfo.getSubGraphDistanceInfo()
             self = .subgraph(identifier: native.roadObjectId,
                              type: RoadObjectType(native.type),
                              distanceToNearestEntry: info.distanceToNearestEntry,
                              distanceToNearestExit: info.distanceToNearestExit,
                              isInside: info.isInside)
-        } else if native.distanceInfo.isMBNNLineDistanceInfo() {
-            let info = native.distanceInfo.getMBNNLineDistanceInfo()
+        } else if native.distanceInfo.isLineDistanceInfo() {
+            let info = native.distanceInfo.getLineDistanceInfo()
             self = .line(identifier: native.roadObjectId,
                          type: RoadObjectType(native.type),
                          distanceToEntry: info.distanceToEntry,

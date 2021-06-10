@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
         "state": {
           "branch": null,
-          "revision": "f809deb30dc5c9d9b78c872e553261a61177721a",
-          "version": "2.0.0"
+          "revision": "682841464136f8c66e04afe5dbd01ab51a3a56f2",
+          "version": "2.1.0"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "c19b6b960d6b790d7489709a2e38c880c76214b7",
-          "version": "51.0.0"
+          "revision": "3b748e2105b8358d000943d27493ca8559ae0a47",
+          "version": "52.0.0"
         }
       },
       {

@@ -57,33 +57,33 @@ public enum RoadObjectLocation {
      */
     case routeAlert(shape: Turf.Geometry)
 
-    init(_ native: MapboxNavigationNative.MBNNMatchedRoadObjectLocation) {
-        if native.isMBNNOpenLRLineLocation() {
-            let location = native.getMBNNOpenLRLineLocation()
-            self = .openLRLine(path: RoadGraph.Path(location.path), shape: Geometry(location.shape))
-        } else if native.isMBNNOpenLRPointAlongLineLocation() {
-            let location = native.getMBNNOpenLRPointAlongLineLocation()
-            self = .openLRPoint(position: RoadGraph.Position(location.position),
-                                sideOfRoad: OpenLRSideOfRoad(location.sideOfRoad),
-                                orientation: OpenLROrientation(location.orientation),
-                                coordinate: location.coordinate)
-        } else if native.isMBNNMatchedPolylineLocation() {
-            let location = native.getMBNNMatchedPolylineLocation()
-            self = .polyline(path: RoadGraph.Path(location.path), shape: Geometry(location.shape))
-        } else if native.isMBNNMatchedGantryLocation() {
-            let location = native.getMBNNMatchedGantryLocation()
-            self = .gantry(positions: location.positions.map(RoadObjectPosition.init), shape: Geometry(location.shape))
-        } else if native.isMBNNMatchedPolygonLocation() {
-            let location = native.getMBNNMatchedPolygonLocation()
-            self = .polygon(entries: location.entries.map(RoadObjectPosition.init),
-                            exits: location.exits.map(RoadObjectPosition.init),
-                            shape: Geometry(location.shape))
-        } else if native.isMBNNMatchedPointLocation() {
-            let location = native.getMBNNMatchedPointLocation()
-            self = .point(position: RoadObjectPosition(location.position))
-        } else if native.isMBNNRouteAlert() {
-            let location = native.getMBNNRouteAlert()
-            self = .routeAlert(shape: Geometry(location.shape))
+    init(_ native: MapboxNavigationNative.MatchedRoadObjectLocation) {
+        if native.isOpenLRLineLocation() {
+            let location = native.getOpenLRLineLocation()
+            self = .openLRLine(path: RoadGraph.Path(location.getPath()), shape: Geometry(location.getShape()))
+        } else if native.isOpenLRPointAlongLineLocation() {
+            let location = native.getOpenLRPointAlongLineLocation()
+            self = .openLRPoint(position: RoadGraph.Position(location.getPosition()),
+                                sideOfRoad: OpenLRSideOfRoad(location.getSideOfRoad()),
+                                orientation: OpenLROrientation(location.getOrientation()),
+                                coordinate: location.getCoordinate())
+        } else if native.isMatchedPolylineLocation() {
+            let location = native.getMatchedPolylineLocation()
+            self = .polyline(path: RoadGraph.Path(location.getPath()), shape: Geometry(location.getShape()))
+        } else if native.isMatchedGantryLocation() {
+            let location = native.getMatchedGantryLocation()
+            self = .gantry(positions: location.getPositions().map(RoadObjectPosition.init), shape: Geometry(location.getShape()))
+        } else if native.isMatchedPolygonLocation() {
+            let location = native.getMatchedPolygonLocation()
+            self = .polygon(entries: location.getEntries().map(RoadObjectPosition.init),
+                            exits: location.getExits().map(RoadObjectPosition.init),
+                            shape: Geometry(location.getShape()))
+        } else if native.isMatchedPointLocation() {
+            let location = native.getMatchedPointLocation()
+            self = .point(position: RoadObjectPosition(location.getPosition()))
+        } else if native.isRouteAlert() {
+            let location = native.getRouteAlert()
+            self = .routeAlert(shape: Geometry(location.getShape()))
         } else {
             preconditionFailure("RoadObjectLocation can't be constructed. Unknown type.")
         }
