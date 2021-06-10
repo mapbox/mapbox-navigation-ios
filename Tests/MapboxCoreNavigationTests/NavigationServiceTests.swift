@@ -133,11 +133,15 @@ class NavigationServiceTests: XCTestCase {
     }
 
     func testNotReroutingForAllSteps() {
-        let navigation = dependencies.navigationService
-        let route = navigation.route
+        let navigationService = dependencies.navigationService
+        let route = navigationService.route
         
         route.legs[0].steps.enumerated().forEach {
-            let stepCoordinates = $0.element.shape!.coordinates
+            guard let stepCoordinates = $0.element.shape?.coordinates else {
+                XCTFail("Route shape should be valid.")
+                return
+            }
+            
             let now = Date()
             let stepLocations = stepCoordinates.enumerated().map {
                 CLLocation(coordinate: $0.element,
@@ -149,11 +153,18 @@ class NavigationServiceTests: XCTestCase {
                            timestamp: now + $0.offset)
             }
             
-            stepLocations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+            stepLocations.forEach {
+                navigationService.router.locationManager?(navigationService.locationManager, didUpdateLocations: [$0])
+            }
             
             waitForNavNativeCallbacks()
             
-            XCTAssertTrue(navigation.router.userIsOnRoute(stepLocations.last!), "User should be on route")
+            guard let lastLocation = stepLocations.last else {
+                XCTFail("Last location should be valid.")
+                return
+            }
+            
+            XCTAssertTrue(navigationService.router.userIsOnRoute(lastLocation), "User should be on route")
         }
     }
 
