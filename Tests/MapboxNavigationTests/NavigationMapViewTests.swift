@@ -373,7 +373,7 @@ class NavigationMapViewTests: XCTestCase {
                                           zoom: 17.0,
                                           bearing: 0.0,
                                           pitch: 0.0)
-        navigationMapView.mapView.camera.setCamera(to: cameraOptions)
+        navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
         let buildingHighlightCoordinates: [CLLocationCoordinate2D] = [
             CLLocationCoordinate2D(latitude: 37.79066471218174, longitude: -122.39581404166825),
             CLLocationCoordinate2D(latitude: 37.78999490647732, longitude: -122.39485917526815)
