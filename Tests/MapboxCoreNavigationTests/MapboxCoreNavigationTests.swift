@@ -246,7 +246,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
 
         let locationManager = DummyLocationManager()
-        navigation = MapboxNavigationService(route: route, routeIndex: 0,
+        navigation = MapboxNavigationService(route: route,
+                                             routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directions,
                                              locationSource: locationManager,
