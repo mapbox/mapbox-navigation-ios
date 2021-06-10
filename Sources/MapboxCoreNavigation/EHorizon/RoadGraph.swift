@@ -32,6 +32,35 @@ public final class RoadGraph {
         }
         return LineString(locations.map { $0.coordinate })
     }
+    
+    /**
+     Returns a line string geometry corresponding to the given path.
+     
+     - returns: A line string corresponding to the given path, or `nil` if any of path edges is inaccessible.
+     */
+    public func shape(of path: Path) -> LineString? {
+        let nativePath = GraphPath(edges: path.edgeIdentifiers.map { NSNumber(value: $0) },
+                                   percentAlongBegin: path.fractionFromStart,
+                                   percentAlongEnd: path.fractionToEnd,
+                                   length: path.length)
+        guard let locations = native.getPathShape(for: nativePath) else {
+            return nil
+        }
+        return LineString(locations.map { $0.coordinate })
+    }
+    
+    /**
+     Returns a point corresponding to the given position.
+     
+     - returns: A point corresponding to the given position, or `nil` if the edge is inaccessible.
+     */
+    public func shape(of position: Position) -> Point? {
+        let nativePosition = GraphPosition(edgeId: UInt64(position.edgeIdentifier), percentAlong: position.fractionFromStart)
+        guard let location = native.getPositionCoordinate(for: nativePosition) else {
+            return nil
+        }
+        return Point(location.coordinate)
+    }
 
     init(_ native: GraphAccessor) {
         self.native = native
