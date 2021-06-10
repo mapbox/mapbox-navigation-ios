@@ -136,21 +136,26 @@ class NavigationServiceTests: XCTestCase {
         let navigationService = dependencies.navigationService
         let route = navigationService.route
         
+        var offset = 0
+        let currentDate = Date()
+        
         route.legs[0].steps.enumerated().forEach {
             guard let stepCoordinates = $0.element.shape?.coordinates else {
                 XCTFail("Route shape should be valid.")
                 return
             }
             
-            let now = Date()
-            let stepLocations = stepCoordinates.enumerated().map {
-                CLLocation(coordinate: $0.element,
-                           altitude: -1,
-                           horizontalAccuracy: 10,
-                           verticalAccuracy: -1,
-                           course: -1,
-                           speed: 10,
-                           timestamp: now + $0.offset)
+            var stepLocations: [CLLocation] = []
+            for coordinate in stepCoordinates {
+                stepLocations.append(CLLocation(coordinate: coordinate,
+                                                altitude: -1,
+                                                horizontalAccuracy: 10,
+                                                verticalAccuracy: -1,
+                                                course: -1,
+                                                speed: 10,
+                                                timestamp: currentDate + offset))
+                
+                offset += 1
             }
             
             stepLocations.forEach {
