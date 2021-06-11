@@ -35,7 +35,7 @@ public extension CourseUpdatable {
 /**
  A view representing the user’s location on screen.
  */
-public class UserPuckCourseView: UIView, CourseUpdatable {
+open class UserPuckCourseView: UIView, CourseUpdatable {
     private var lastLocationUpdate: Date?
     private var staleTimer: Timer!
 

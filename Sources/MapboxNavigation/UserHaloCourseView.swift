@@ -4,7 +4,7 @@ import CoreLocation
 /**
  A view representing the user’s reduced accuracy location on screen.
  */
-public class UserHaloCourseView: UIView, CourseUpdatable {
+open class UserHaloCourseView: UIView, CourseUpdatable {
     private var lastLocationUpdate: Date?
 
     // Sets the inner fill color of the user halo

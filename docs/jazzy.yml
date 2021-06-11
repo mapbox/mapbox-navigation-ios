@@ -67,6 +67,7 @@ custom_categories:
       - Style
       - PassiveLocationManager
       - WaypointStyle
+      - UserLocationStyle
   - name: Styling
     children:
       - Style

@@ -43,6 +43,7 @@ extension ViewController {
         
         if let location = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation {
             trackStyledFeature.lineString.coordinates.append(contentsOf: [location.coordinate])
+            navigationMapView.moveUserLocation(to: location)
         }
         
         if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
