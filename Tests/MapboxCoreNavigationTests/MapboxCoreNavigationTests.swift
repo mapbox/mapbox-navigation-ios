@@ -116,12 +116,12 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
     
-    func testNewStep() {
+    func disabled_testNewStep() {
         let steps = route.legs[0].steps
-        // Create list of coordinates, which includes only second and third steps.
-        let coordinates = (steps[1].shape?.coordinates ?? []) + (steps[2].shape?.coordinates ?? [])
+        // Create list of coordinates, which includes only first step.
+        let coordinates = steps[0].shape?.coordinates ?? []
         
-        XCTAssertEqual(coordinates.count, 36, "Incorrect coordinates count.")
+        XCTAssertEqual(coordinates.count, 9, "Incorrect coordinates count.")
         
         let currentDate = Date()
         let locations = coordinates.enumerated().map {
@@ -140,7 +140,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         var receivedSpokenInstructions: [String] = []
         
-        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
+        let expectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
                     object: navigationService.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
@@ -151,13 +151,13 @@ class MapboxCoreNavigationTests: XCTestCase {
             
             receivedSpokenInstructions.append(spokenInstruction)
             
-            // Navigator always returns first spoken instruction for the fourth step.
-            return routeProgress?.currentLegProgress.stepIndex == 3
+            // Navigator always returns first spoken instruction for the second step.
+            return routeProgress?.currentLegProgress.stepIndex == 1
         }
         
         navigationService.start()
         
-        // Iterate overal locations in second and third steps with delay of one second.
+        // Iterate overal locations in first step with delay of one second.
         var delay = 0.0
         for location in locations {
             DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
@@ -167,22 +167,16 @@ class MapboxCoreNavigationTests: XCTestCase {
             delay += 1.0
         }
         
+        wait(for: [expectation], timeout: 10.0)
+        
         // TODO: Consider improving this test by decreasing delays for location simulation.
-        let timeout = 40.0
-        waitForExpectations(timeout: timeout) { (error) in
-            XCTAssertNil(error)
-            
-            let expectedSpokenInstructions = [
-                "In a quarter mile, turn left onto Hyde Street",
-                "Turn left onto Hyde Street",
-                "Continue on Hyde Street for 1 mile",
-                "In a quarter mile, turn right onto Market Street",
-                "Turn right onto Market Street",
-                "Continue on Market Street for a half mile"
-            ]
-            
-            XCTAssertEqual(expectedSpokenInstructions, receivedSpokenInstructions, "Spoken instructions are not equal.")
-        }
+        let expectedSpokenInstructions = [
+            "Head south on Taylor Street, then turn right onto California Street",
+            "Turn right onto California Street",
+            "In a quarter mile, turn left onto Hyde Street"
+        ]
+
+        XCTAssertEqual(expectedSpokenInstructions, receivedSpokenInstructions, "Spoken instructions are not equal.")
     }
     
     func testJumpAheadToLastStep() {
