@@ -160,7 +160,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         // Iterate overal locations in second and third steps with delay of one second.
         var delay = 0.0
         for location in locations {
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) { [weak self] in
+                guard let self = self else { return }
                 self.navigation.router?.locationManager?(self.navigation.locationManager, didUpdateLocations: [location])
             }
             
