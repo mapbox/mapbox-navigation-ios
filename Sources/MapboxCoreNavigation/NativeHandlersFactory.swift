@@ -12,22 +12,28 @@ class NativeHandlersFactory {
     let tileStorePath: String
     let credentials: DirectionsCredentials
     let tilesVersion: String?
-    let historyDirectoryURL: URL?
+    let historyDirectoryURL: URL
+    let targetVersion: String?
     
     init(tileStorePath: String,
          credentials: DirectionsCredentials = Directions.shared.credentials,
          tilesVersion: String? = nil,
-         historyDirectoryURL: URL? = nil) {
+         historyDirectoryURL: URL = Navigator.historyDirectoryURL,
+         targetVersion: String? = nil) {
         self.tileStorePath = tileStorePath
         self.credentials = credentials
         self.tilesVersion = tilesVersion
         self.historyDirectoryURL = historyDirectoryURL
+        self.targetVersion = targetVersion
     }
     
     // MARK: - Native Handlers
     
-    lazy var historyRecorder: HistoryRecorderHandle? = {
-        HistoryRecorderHandle.build(forHistoryDir: historyDirectoryURL?.path ?? "", config: configHandle)
+    lazy var historyRecorder: HistoryRecorderHandle = {
+        guard let historyRecorder = HistoryRecorderHandle.build(forHistoryDir: historyDirectoryURL.path, config: configHandle) else {
+            preconditionFailure("Could not setup a `HistoryRecorder` on specified directory: '\(historyDirectoryURL.path)'")
+        }
+        return historyRecorder
     }()
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
@@ -62,7 +68,7 @@ class NativeHandlersFactory {
         TileEndpointConfiguration(credentials: credentials,
                                   tilesVersion: tilesVersion ?? "",
                                   minimumDaysToPersistVersion: nil,
-                                  isFallback: tilesVersion != nil)
+                                  targetVersion: targetVersion)
     }()
     
     lazy var tilesConfig: TilesConfig = {
