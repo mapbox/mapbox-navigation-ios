@@ -75,21 +75,22 @@ class NavigationMapViewTests: XCTestCase {
     }
     
     func testRemoveWaypointsDoesNotRemoveUserAnnotations() {
-        let annotationManager = navigationMapView.mapView.annotations
-        XCTAssertEqual(0, annotationManager?.annotations.count)
-        annotationManager?.addAnnotation(PointAnnotation(coordinate: CLLocationCoordinate2D()))
-        annotationManager?.addAnnotation(PointAnnotation(coordinate: CLLocationCoordinate2D()))
-        XCTAssertEqual(annotationManager?.annotations.count, 2)
+        navigationMapView.pointAnnotationManager = navigationMapView.mapView.annotations.makePointAnnotationManager()
+        let pointAnnotationManager = navigationMapView.pointAnnotationManager
+        XCTAssertEqual(0, pointAnnotationManager?.annotations.count)
+        pointAnnotationManager?.syncAnnotations([PointAnnotation(coordinate: CLLocationCoordinate2D()),
+                                                 PointAnnotation(coordinate: CLLocationCoordinate2D())])
+        XCTAssertEqual(pointAnnotationManager?.annotations.count, 2)
         
         navigationMapView.showWaypoints(on: route)
-        XCTAssertEqual(annotationManager?.annotations.count, 3)
+        XCTAssertEqual(pointAnnotationManager?.annotations.count, 1)
         
         navigationMapView.removeWaypoints()
-        XCTAssertEqual(annotationManager?.annotations.count, 2)
+        XCTAssertEqual(pointAnnotationManager?.annotations.count, 0)
         
         // Clean up
-        annotationManager?.removeAnnotations(annotationManager?.annotations.compactMap({ $0.value }) ?? [])
-        XCTAssertEqual(0, annotationManager?.annotations.count)
+        pointAnnotationManager?.syncAnnotations([])
+        XCTAssertEqual(0, pointAnnotationManager?.annotations.count)
     }
 
     func setUpVanishingRouteLine() -> Route {
@@ -170,7 +171,7 @@ class NavigationMapViewTests: XCTestCase {
         return validRoute
     }
     
-    func congestionLevel(_ feature: Feature) -> CongestionLevel? {
+    func congestionLevel(_ feature: Turf.Feature) -> CongestionLevel? {
         guard let congestionLevel = feature.properties?["congestion"] as? String else { return nil }
         
         return CongestionLevel(rawValue: congestionLevel)

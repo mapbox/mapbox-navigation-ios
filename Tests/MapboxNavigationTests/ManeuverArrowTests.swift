@@ -16,7 +16,7 @@ class ManeuverArrowTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        CredentialsManager.default.accessToken = .mockedAccessToken
+        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         isRecording = false
         DayStyle().apply()
     }

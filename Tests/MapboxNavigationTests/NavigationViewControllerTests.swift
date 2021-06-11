@@ -52,7 +52,7 @@ class NavigationViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
-        CredentialsManager.default.accessToken = .mocked
+        ResourceOptionsManager.default.resourceOptions.accessToken = .mocked
     }
     
     func testDefaultUserInterfaceUsage() {
@@ -211,10 +211,10 @@ class NavigationViewControllerTests: XCTestCase {
         navigationViewController.indexedRoute = (initialRoute, 0)
 
         runUntil({
-            return !navigationViewController.navigationMapView!.mapView.annotations.annotations.isEmpty
+            return !navigationViewController.navigationMapView!.pointAnnotationManager.annotations.annotations.isEmpty
         })
         
-        let annotations = navigationViewController.navigationMapView!.mapView.annotations.annotations.compactMap({ $0.value as? PointAnnotation })
+        let annotations = navigationViewController.navigationMapView!.pointAnnotationManager.annotations.compactMap({ $0.value as? PointAnnotation })
 
         guard let firstDestination = initialRoute.legs.last?.destination?.coordinate else {
             return XCTFail("PointAnnotation is not valid.")
@@ -225,7 +225,7 @@ class NavigationViewControllerTests: XCTestCase {
         // Set the second route.
         navigationViewController.indexedRoute = (newRoute, 0)
         
-        let newAnnotations = navigationViewController.navigationMapView!.mapView.annotations.annotations.compactMap({ $0.value as? PointAnnotation })
+        let newAnnotations = navigationViewController.navigationMapView!.pointAnnotationManager.annotations.compactMap({ $0.value as? PointAnnotation })
         
         guard let secondDestination = newRoute.legs.last?.destination?.coordinate else {
             return XCTFail("PointAnnotation is not valid.")
