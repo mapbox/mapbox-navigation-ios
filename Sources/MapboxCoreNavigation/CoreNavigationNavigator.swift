@@ -195,7 +195,7 @@ extension Navigator: FallbackVersionsObserver {
         }
     }
 
-    func onCanReturnToLatest() {
+    func onCanReturnToLatest(forVersion version: String) {
         DispatchQueue.main.async { [self] in
             switch tileVersionState {
             case .nominal, .shouldFallback:

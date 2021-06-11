@@ -234,9 +234,9 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         let offRouteCoordinates = [
             [-122.41765, 37.79095],
-            [-122.41830,37.79087],
-            [-122.41907,37.79079],
-            [-122.41960,37.79073]
+            [-122.41830, 37.79087],
+            [-122.41907, 37.79079],
+            [-122.41960, 37.79073]
         ].map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) }
         
         let offRouteLocations = offRouteCoordinates.enumerated().map {
