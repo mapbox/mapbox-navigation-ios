@@ -228,7 +228,7 @@ extension NavigationMapView {
         }
     }
     
-    func updateRouteLine(congestionSegments: [Feature]? = nil, layerIdentifier: String, fractionTraveledUpdate: Double) {
+    func updateRouteLine(congestionSegments: [Turf.Feature]? = nil, layerIdentifier: String, fractionTraveledUpdate: Double) {
         do {
             if let congestionSegments = congestionSegments {
                 try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
@@ -248,7 +248,7 @@ extension NavigationMapView {
         }
     }
     
-    func routeLineGradient(_ congestionFeatures: [Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {
+    func routeLineGradient(_ congestionFeatures: [Turf.Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {
         var gradientStops = [Double: UIColor]()
         var distanceTraveled = fractionTraveled
         

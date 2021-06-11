@@ -273,7 +273,8 @@ class ViewController: UIViewController {
         
         present(customViewController, animated: true) {
             if let destinationCoordinate = route.shape?.coordinates.last {
-                let destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
+                var destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
+                destinationAnnotation.image = .default
                 customViewController.destinationAnnotation = destinationAnnotation
             }
         }

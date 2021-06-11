@@ -50,18 +50,18 @@ public enum RoadObjectType {
         }
     }
 
-    init(type: MapboxNavigationNative.RoadObjectType, metadata: MapboxNavigationNative.MBNNRoadObjectMetadata) {
+    init(type: MapboxNavigationNative.RoadObjectType, metadata: MapboxNavigationNative.RoadObjectMetadata) {
         switch type {
         case .incident:
-            self = .incident(metadata.isMBNNIncidentInfo() ? Incident(metadata.getMBNNIncidentInfo()) : nil)
+            self = .incident(metadata.isIncidentInfo() ? Incident(metadata.getIncidentInfo()) : nil)
         case .tollCollectionPoint:
-            self = .tollCollection(metadata.isMBNNTollCollectionInfo() ? TollCollection(metadata.getMBNNTollCollectionInfo()) : nil)
+            self = .tollCollection(metadata.isTollCollectionInfo() ? TollCollection(metadata.getTollCollectionInfo()) : nil)
         case .borderCrossing:
-            self = .borderCrossing(metadata.isMBNNBorderCrossingInfo() ? BorderCrossing(metadata.getMBNNBorderCrossingInfo()) : nil)
+            self = .borderCrossing(metadata.isBorderCrossingInfo() ? BorderCrossing(metadata.getBorderCrossingInfo()) : nil)
         case .tunnel:
-            self = .tunnel(metadata.isMBNNTunnelInfo() ? Tunnel(metadata.getMBNNTunnelInfo()) : nil)
+            self = .tunnel(metadata.isTunnelInfo() ? Tunnel(metadata.getTunnelInfo()) : nil)
         case .serviceArea:
-            self = .serviceArea(metadata.isMBNNServiceAreaInfo() ? RestStop(metadata.getMBNNServiceAreaInfo()) : nil)
+            self = .serviceArea(metadata.isServiceAreaInfo() ? RestStop(metadata.getServiceAreaInfo()) : nil)
         case .restrictedArea:
             self = .restrictedArea
         case .bridge:

@@ -26,8 +26,8 @@ class NativeHandlersFactory {
     
     // MARK: - Native Handlers
     
-    lazy var historyRecorder: HistoryRecorderHandle = {
-        HistoryRecorderHandle.build(forHistoryFile: historyDirectoryURL?.path ?? "", config: configHandle)
+    lazy var historyRecorder: HistoryRecorderHandle? = {
+        HistoryRecorderHandle.build(forHistoryDir: historyDirectoryURL?.path ?? "", config: configHandle)
     }()
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
@@ -40,7 +40,6 @@ class NativeHandlersFactory {
     lazy var cacheHandle: CacheHandle = {
         CacheFactory.build(for: tilesConfig,
                            config: configHandle,
-                           runLoop: runloopExecutor,
                            historyRecorder: historyRecorder)
     }()
     

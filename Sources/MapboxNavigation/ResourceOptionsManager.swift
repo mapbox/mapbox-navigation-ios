@@ -1,7 +1,7 @@
 import Foundation
 import MapboxMaps
 
-extension CredentialsManager {
+extension ResourceOptionsManager {
     
     static let mapboxChinaBaseAPIURL = "https://api.mapbox.cn"
     

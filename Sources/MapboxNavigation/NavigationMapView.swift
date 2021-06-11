@@ -93,6 +93,22 @@ open class NavigationMapView: UIView {
         }
     }
     
+    @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .selectedRouteDurationAnnotationColor
+    @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
+    @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
+    @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
+
+    /**
+     List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
+     These are used for features such as Route Duration Annotations that are optionally added during route preview.
+     See https://docs.mapbox.com/ios/maps/api/6.3.0/customizing-fonts.html for more information about server-side fonts.
+     */
+    @objc dynamic public var routeDurationAnnotationFontNames: [String] = [
+        "DIN Pro Medium",
+        "Noto Sans CJK JP Medium",
+        "Arial Unicode MS Regular"
+    ]
+    
     /**
      `MapView`, which is added on top of `NavigationMapView` and allows to render navigation related components.
      */
@@ -107,19 +123,12 @@ open class NavigationMapView: UIView {
      Most recent user location, which is used to place `UserCourseView`.
      */
     var mostRecentUserCourseViewLocation: CLLocation?
-
-    @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .selectedRouteDurationAnnotationColor
-    @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
-    @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
-    @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
-
+    
     /**
-     List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
-     These are used for features such as Route Duration Annotations that are optionally added during route preview.
-     See https://docs.mapbox.com/ios/maps/api/6.3.0/customizing-fonts.html for more information about server-side fonts.
+     `PointAnnotationManager`, which is used to manage addition and removal of final destination annotation.
      */
-    @objc dynamic public var routeDurationAnnotationFontNames: [String] = ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"]
-
+    var pointAnnotationManager: PointAnnotationManager?
+    
     var routes: [Route]?
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
@@ -184,7 +193,7 @@ open class NavigationMapView: UIView {
      A `TileStore` instance used by map view.
      */
     open var mapTileStore: TileStore? {
-        mapView.mapboxMap.__map.getResourceOptions().tileStore
+        mapView.mapboxMap.resourceOptions.tileStore
     }
     
     /**
@@ -206,7 +215,9 @@ open class NavigationMapView: UIView {
      - parameter navigationCameraType: Type of `NavigationCamera`, which is used for the current instance of `NavigationMapView`.
      - parameter tileStoreLocation: Configuration of `TileStore` location, where Map tiles are stored. Use `nil` to disable onboard tile storage.
      */
-    public init(frame: CGRect, navigationCameraType: NavigationCameraType = .mobile, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+    public init(frame: CGRect,
+                navigationCameraType: NavigationCameraType = .mobile,
+                tileStoreLocation: TileStoreConfiguration.Location? = .default) {
         super.init(frame: frame)
         
         setupMapView(frame, navigationCameraType: navigationCameraType, tileStoreLocation: tileStoreLocation)
@@ -285,14 +296,33 @@ open class NavigationMapView: UIView {
     func setupMapView(_ frame: CGRect,
                       navigationCameraType: NavigationCameraType = .mobile,
                       tileStoreLocation: TileStoreConfiguration.Location? = .default) {
-        guard let accessToken = CredentialsManager.default.accessToken else {
-            fatalError("Access token was not set.")
+        let accessToken = ResourceOptionsManager.default.resourceOptions.accessToken
+        
+        // TODO: allow customising tile store location.
+        let tileStore = tileStoreLocation?.tileStore
+        
+        // In case of CarPlay, use `pixelRatio` value, which is used on second `UIScreen`.
+        var pixelRatio = UIScreen.main.scale
+        if navigationCameraType == .carPlay, UIScreen.screens.indices.contains(1) {
+            pixelRatio = UIScreen.screens[1].scale
         }
         
-        let tileStore = tileStoreLocation?.tileStore
-        // TODO: allow customising tile store location.
-        let resourceOptions = ResourceOptions(accessToken: accessToken, tileStore: tileStore)
-        mapView = MapView(frame: frame, mapInitOptions: MapInitOptions(resourceOptions: resourceOptions))
+        let mapOptions = MapOptions(constrainMode: .widthAndHeight,
+                                    viewportMode: .default,
+                                    orientation: .upwards,
+                                    crossSourceCollisions: false,
+                                    optimizeForTerrain: false,
+                                    size: nil,
+                                    pixelRatio: pixelRatio,
+                                    glyphsRasterizationOptions: .init())
+        
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              tileStore: tileStore)
+        
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
+                                            mapOptions: mapOptions)
+        
+        mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.ornaments.options.scaleBar.visibility = .hidden
         
@@ -303,6 +333,11 @@ open class NavigationMapView: UIView {
             case .courseView: self.moveUserLocation(to: location)
             default: break
             }
+        }
+        
+        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
         }
         
         addSubview(mapView)
@@ -362,7 +397,8 @@ open class NavigationMapView: UIView {
     }
     
     @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {
-        mapView.options.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        // FIXME: Mapbox Maps SDK v10.0.0-beta.21 doesn't publicly expose the ability to change `preferredFramesPerSecond`.
+        // mapView.options.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
     /**
@@ -376,21 +412,22 @@ open class NavigationMapView: UIView {
     public func updatePreferredFrameRate(for routeProgress: RouteProgress) {
         guard navigationCamera.state == .following else { return }
         
-        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
-        let expectedTravelTime = stepProgress.step.expectedTravelTime
-        let durationUntilNextManeuver = stepProgress.durationRemaining
-        let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
+        // FIXME: Mapbox Maps SDK v10.0.0-beta.21 doesn't publicly expose the ability to change `preferredFramesPerSecond`.
+        // let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        // let expectedTravelTime = stepProgress.step.expectedTravelTime
+        // let durationUntilNextManeuver = stepProgress.durationRemaining
+        // let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
         
-        var preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
-        let maneuverDirections: [ManeuverDirection] = [.straightAhead, .slightLeft, .slightRight]
-        if let maneuverDirection = routeProgress.currentLegProgress.upcomingStep?.maneuverDirection,
-           maneuverDirections.contains(maneuverDirection) ||
-            (durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
-                durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver) {
-            preferredFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
-        }
+        // var preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
+        // let maneuverDirections: [ManeuverDirection] = [.straightAhead, .slightLeft, .slightRight]
+        // if let maneuverDirection = routeProgress.currentLegProgress.upcomingStep?.maneuverDirection,
+        //    maneuverDirections.contains(maneuverDirection) ||
+        //     (durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
+        //         durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver) {
+        //     preferredFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
+        // }
 
-        mapView.options.preferredFramesPerSecond = preferredFramesPerSecond
+        // mapView.options.preferredFramesPerSecond = preferredFramesPerSecond
     }
     
     // MARK: - User tracking methods
@@ -416,8 +453,8 @@ open class NavigationMapView: UIView {
             // While animating to overview mode, don't animate the puck.
             let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-                guard let screenCoordinate = self?.mapView.screenCoordinate(for: location.coordinate) else { return }
-                self?.userCourseView.center = CGPoint(x: screenCoordinate.x, y: screenCoordinate.y)
+                guard let point = self?.mapView.point(for: location.coordinate) else { return }
+                self?.userCourseView.center = point
             }
             
             let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
@@ -527,7 +564,7 @@ open class NavigationMapView: UIView {
                                                          padding: edgeInsets,
                                                          bearing: nil,
                                                          pitch: nil) {
-            mapView?.camera.setCamera(to: cameraOptions)
+            mapView?.mapboxMap.setCamera(to: cameraOptions)
         }
     }
 
@@ -539,7 +576,7 @@ open class NavigationMapView: UIView {
     func setInitialCamera(_ coordinate: CLLocationCoordinate2D) {
         guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
         
-        mapView.camera.setCamera(to: CameraOptions(center: coordinate,
+        mapView.mapboxMap.setCamera(to: CameraOptions(center: coordinate,
                                                    zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)))
         moveUserLocation(to: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
@@ -677,7 +714,7 @@ open class NavigationMapView: UIView {
     public func showWaypoints(on route: Route, legIndex: Int = 0) {
         let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap({ $0.destination }))
 
-        var features = [Feature]()
+        var features = [Turf.Feature]()
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             var feature = Feature(Point(waypoint.coordinate))
             feature.properties = [
@@ -727,12 +764,10 @@ open class NavigationMapView: UIView {
         }
 
         if let lastLeg = route.legs.last, let destinationCoordinate = lastLeg.destination?.coordinate {
-            mapView.annotations.removeAnnotations(annotationsToRemove())
-            
-            var destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
-            let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-            destinationAnnotation.title = title
-            mapView.annotations.addAnnotation(destinationAnnotation)
+            let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+            var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
+            destinationAnnotation.image = .default
+            pointAnnotationManager?.syncAnnotations([destinationAnnotation])
             
             delegate?.navigationMapView(self, didAdd: destinationAnnotation)
         }
@@ -809,7 +844,7 @@ open class NavigationMapView: UIView {
      Removes all existing `Waypoint` objects from `MapView`, which were added by `NavigationMapView`.
      */
     public func removeWaypoints() {
-        mapView.annotations.removeAnnotations(annotationsToRemove())
+        pointAnnotationManager?.syncAnnotations([])
         
         let layers: Set = [
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
@@ -821,8 +856,8 @@ open class NavigationMapView: UIView {
     }
     
     func annotationsToRemove() -> [Annotation] {
-        let title = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-        return mapView.annotations.annotations.values.filter({ $0.title == title })
+        let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+        return pointAnnotationManager?.annotations.filter({ $0.id == identifier }) ?? []
     }
     
     /**
@@ -1059,7 +1094,7 @@ open class NavigationMapView: UIView {
         // pick a random tail direction to keep things varied
         guard let randomTailPosition = [RouteDurationAnnotationTailPosition.left, RouteDurationAnnotationTailPosition.right].randomElement() else { return }
 
-        var features = [Feature]()
+        var features = [Turf.Feature]()
 
         // Run through our heuristic algorithm looking for a good coordinate along each route line to place it's route annotation
         // First, we will look for a set of RouteSteps unique to each route

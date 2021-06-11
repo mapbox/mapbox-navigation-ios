@@ -32,7 +32,7 @@ class Navigator {
      - parameter completionHandler: A block object to be executed when history dumping ends.
      */
     func writeHistory(completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder.dumpHistory { (path) in
+        historyRecorder?.dumpHistory { (path) in
             if let path = path {
                 completionHandler(URL(fileURLWithPath: path))
             } else {
@@ -41,7 +41,7 @@ class Navigator {
         }
     }
     
-    private(set) var historyRecorder: HistoryRecorderHandle
+    private(set) var historyRecorder: HistoryRecorderHandle?
     
     private(set) var navigator: MapboxNavigationNative.Navigator
     
@@ -195,7 +195,7 @@ extension Navigator: FallbackVersionsObserver {
         }
     }
 
-    func onCanReturnToLatest() {
+    func onCanReturnToLatest(forVersion version: String) {
         DispatchQueue.main.async { [self] in
             switch tileVersionState {
             case .nominal, .shouldFallback:

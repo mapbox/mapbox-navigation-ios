@@ -277,6 +277,7 @@ extension TileEndpointConfiguration {
                   userAgent: URLSession.userAgent,
                   navigatorVersion: "",
                   isFallback: isFallback,
+                  versionBeforeFallback: "",
                   minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
     }
 }

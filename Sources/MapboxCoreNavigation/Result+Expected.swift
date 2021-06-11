@@ -2,7 +2,8 @@ import Foundation
 @_implementationOnly import MapboxCommon_Private
 
 extension Result {
-    init(expected: MBXExpected<AnyObject, AnyObject>) {
+    
+    init(expected: Expected<AnyObject, AnyObject>) {
         if expected.isValue(), let value = expected.value {
             guard let typedValue = value as? Success else {
                 preconditionFailure("Result value can't be constructed. Unknown expected value type.")
