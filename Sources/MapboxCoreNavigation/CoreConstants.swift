@@ -400,9 +400,9 @@ public extension Notification.Name {
     /**
      Posted when NavNative sends updated navigation status.
      
-     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
+     The user info dictionary contains the keys `Navigator.NotificationUserInfoKey.originKey` and `Navigator.NotificationUserInfoKey.statusKey`.
     */
-    static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
+    internal static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
 }
 
 extension Navigator {

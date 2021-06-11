@@ -174,10 +174,10 @@ extension Navigator: FallbackVersionsObserver {
     }
     
     func onFallbackVersionsFound(forVersions versions: [String]) {
-        switch tileVersionState {
-        case .nominal, .shouldReturnToLatest:
-            tileVersionState = .shouldFallback(versions)
-            DispatchQueue.main.async {
+        DispatchQueue.main.async { [self] in
+            switch tileVersionState {
+            case .nominal, .shouldReturnToLatest:
+                tileVersionState = .shouldFallback(versions)
                 guard let fallbackVersion = versions.last else { return }
                 
                 Navigator.shared.restartNavigator(forcing: fallbackVersion)
@@ -189,24 +189,24 @@ extension Navigator: FallbackVersionsObserver {
                 NotificationCenter.default.post(name: .navigationDidSwitchToFallbackVersion,
                                                 object: nil,
                                                 userInfo: userInfo)
+            case .shouldFallback:
+                break // do nothing
             }
-        case .shouldFallback:
-            break // do nothing
         }
     }
 
     func onCanReturnToLatest() {
-        switch tileVersionState {
-        case .nominal, .shouldFallback:
-            tileVersionState = .shouldReturnToLatest
-            DispatchQueue.main.async {
+        DispatchQueue.main.async { [self] in
+            switch tileVersionState {
+            case .nominal, .shouldFallback:
+                tileVersionState = .shouldReturnToLatest
                 Navigator.shared.restartNavigator(forcing: nil)
                 NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion,
                                                 object: nil,
                                                 userInfo: nil)
+            case .shouldReturnToLatest:
+                break // do nothing
             }
-        case .shouldReturnToLatest:
-            break // do nothing
         }
     }
 }
