@@ -91,7 +91,8 @@ class MapboxCoreNavigationTests: XCTestCase {
         let now = Date()
         let locations = coordinates.enumerated().map {
             CLLocation(coordinate: $0.element,
-                       altitude: -1, horizontalAccuracy: 10,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
                        verticalAccuracy: -1,
                        course: -1,
                        speed: 10,
@@ -99,7 +100,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+            let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
             return routeProgress != nil && routeProgress?.currentLegProgress.userHasArrivedAtWaypoint == false
         }
@@ -116,17 +117,19 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testNewStep() {
-        // Coordinates from beginning of step[1] to end of step[2]
         let steps = route.legs[0].steps
+        // Create list of coordinates, which includes only second and third steps.
         let coordinates = (steps[1].shape?.coordinates ?? []) + (steps[2].shape?.coordinates ?? [])
         
-        let now = Date()
+        XCTAssertEqual(coordinates.count, 36, "Incorrect coordinates count.")
+        
+        let currentDate = Date()
         let locations = coordinates.enumerated().map {
             CLLocation(coordinate: $0.element,
                        altitude: -1,
                        horizontalAccuracy: -1,
                        verticalAccuracy: -1,
-                       timestamp: now + $0.offset)
+                       timestamp: currentDate + $0.offset)
         }
         
         navigation = MapboxNavigationService(route: route,
@@ -134,20 +137,51 @@ class MapboxCoreNavigationTests: XCTestCase {
                                              routeOptions: routeOptions,
                                              directions: directions,
                                              simulating: .never)
-        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
+        
+        var receivedSpokenInstructions: [String] = []
+        
+        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
+                    object: navigation.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
-            return routeProgress?.currentLegProgress.stepIndex == 2
+            guard let spokenInstruction = routeProgress?.currentLegProgress.currentStepProgress.currentSpokenInstruction?.text else {
+                XCTFail("Spoken instruction should be valid.")
+                return false
+            }
+            
+            receivedSpokenInstructions.append(spokenInstruction)
+            
+            // Navigator always returns first spoken instruction for the fourth step.
+            return routeProgress?.currentLegProgress.stepIndex == 3
         }
         
         navigation.start()
         
-        locations.forEach {
-            navigation.router?.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
+        // Iterate overal locations in second and third steps with delay of one second.
+        var delay = 0.0
+        for location in locations {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
+                self.navigation.router?.locationManager?(self.navigation.locationManager, didUpdateLocations: [location])
+            }
+            
+            delay += 1.0
         }
         
-        waitForExpectations(timeout: waitForInterval) { (error) in
+        // TODO: Consider improving this test by decreasing delays for location simulation.
+        let timeout = 40.0
+        waitForExpectations(timeout: timeout) { (error) in
             XCTAssertNil(error)
+            
+            let expectedSpokenInstructions = [
+                "In a quarter mile, turn left onto Hyde Street",
+                "Turn left onto Hyde Street",
+                "Continue on Hyde Street for 1 mile",
+                "In a quarter mile, turn right onto Market Street",
+                "Turn right onto Market Street",
+                "Continue on Market Street for a half mile"
+            ]
+            
+            XCTAssertEqual(expectedSpokenInstructions, receivedSpokenInstructions, "Spoken instructions are not equal.")
         }
     }
     
@@ -172,8 +206,9 @@ class MapboxCoreNavigationTests: XCTestCase {
                                              locationSource: locationManager,
                                              simulating: .never)
         
-        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
+                    object: navigation.router) { (notification) -> Bool in
+            let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             return routeProgress?.currentLegProgress.stepIndex == 4
         }
         

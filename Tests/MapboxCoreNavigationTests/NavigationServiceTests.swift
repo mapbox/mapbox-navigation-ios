@@ -139,6 +139,9 @@ class NavigationServiceTests: XCTestCase {
         var offset = 0
         let currentDate = Date()
         
+        // Iterate over each step in leg, take all coordinates it contains and create array of `CLLocation`s
+        // based on them. Each `CLLocation` must contain `timestamp` property, which is strictly
+        // increasing, otherwise Navigator might filter them out.
         route.legs[0].steps.enumerated().forEach {
             guard let stepCoordinates = $0.element.shape?.coordinates else {
                 XCTFail("Route shape should be valid.")
