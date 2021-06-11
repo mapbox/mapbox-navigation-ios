@@ -177,18 +177,19 @@ extension Navigator: FallbackVersionsObserver {
         switch tileVersionState {
         case .nominal, .shouldReturnToLatest:
             tileVersionState = .shouldFallback(versions)
-            
-            guard let fallbackVersion = versions.last else { return }
-            
-            Navigator.shared.restartNavigator(forcing: fallbackVersion)
-            
-            let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
-                .tilesVersionKey: fallbackVersion // internal use only
-            ]
-            
-            NotificationCenter.default.post(name: .navigationDidSwitchToFallbackVersion,
-                                            object: nil,
-                                            userInfo: userInfo)
+            DispatchQueue.main.async {
+                guard let fallbackVersion = versions.last else { return }
+                
+                Navigator.shared.restartNavigator(forcing: fallbackVersion)
+                
+                let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+                    .tilesVersionKey: fallbackVersion
+                ]
+                
+                NotificationCenter.default.post(name: .navigationDidSwitchToFallbackVersion,
+                                                object: nil,
+                                                userInfo: userInfo)
+            }
         case .shouldFallback:
             break // do nothing
         }
@@ -198,10 +199,12 @@ extension Navigator: FallbackVersionsObserver {
         switch tileVersionState {
         case .nominal, .shouldFallback:
             tileVersionState = .shouldReturnToLatest
-            Navigator.shared.restartNavigator(forcing: nil)
-            NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion,
-                                            object: nil,
-                                            userInfo: nil)
+            DispatchQueue.main.async {
+                Navigator.shared.restartNavigator(forcing: nil)
+                NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion,
+                                                object: nil,
+                                                userInfo: nil)
+            }
         case .shouldReturnToLatest:
             break // do nothing
         }

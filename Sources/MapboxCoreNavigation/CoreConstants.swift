@@ -380,6 +380,7 @@ extension RoadGraph {
 
 public extension Notification.Name {
     /**
+     :nodoc:
      Posted when Navigator has not enough tiles for map matching on current tiles version, but there are suitable older versions inside underlying Offline Regions. Navigator has restarted when this notification is issued.
      
      Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
@@ -389,6 +390,7 @@ public extension Notification.Name {
     static let navigationDidSwitchToFallbackVersion: Notification.Name = .init(rawValue: "NavigatorDidFallbackToOfflineVersion")
     
     /**
+     :nodoc:
      Posted when Navigator was switched to a fallback offline tiles version, but latest tiles became available again. Navigator has restarted when this notification is issued.
      
      Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
@@ -415,6 +417,7 @@ extension Navigator {
         }
         
         /**
+         :nodoc:
          A key in the user info dictionary of a `Notification.Name.navigationDidSwitchToFallbackVersion` notification. The corresponding value is a string representation of selected tiles version.
          
          For internal use only.
