@@ -132,16 +132,16 @@ class MapboxCoreNavigationTests: XCTestCase {
                        timestamp: currentDate + $0.offset)
         }
         
-        navigation = MapboxNavigationService(route: route,
-                                             routeIndex: 0,
-                                             routeOptions: routeOptions,
-                                             directions: directions,
-                                             simulating: .never)
+        let navigationService = MapboxNavigationService(route: route,
+                                                        routeIndex: 0,
+                                                        routeOptions: routeOptions,
+                                                        directions: directions,
+                                                        simulating: .never)
         
         var receivedSpokenInstructions: [String] = []
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
-                    object: navigation.router) { (notification) -> Bool in
+                    object: navigationService.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
             guard let spokenInstruction = routeProgress?.currentLegProgress.currentStepProgress.currentSpokenInstruction?.text else {
@@ -155,14 +155,13 @@ class MapboxCoreNavigationTests: XCTestCase {
             return routeProgress?.currentLegProgress.stepIndex == 3
         }
         
-        navigation.start()
+        navigationService.start()
         
         // Iterate overal locations in second and third steps with delay of one second.
         var delay = 0.0
         for location in locations {
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) { [weak self] in
-                guard let self = self else { return }
-                self.navigation.router?.locationManager?(self.navigation.locationManager, didUpdateLocations: [location])
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
+                navigationService.router?.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
             }
             
             delay += 1.0
