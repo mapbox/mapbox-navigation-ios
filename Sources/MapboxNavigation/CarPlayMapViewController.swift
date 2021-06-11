@@ -146,7 +146,7 @@ public class CarPlayMapViewController: UIViewController {
             navigationMapView.localizeLabels()
         }
         
-        navigationMapView.mapView.location.options.puckType = .puck2D()
+        navigationMapView.userLocationStyle = .puck2D()
         
         navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden

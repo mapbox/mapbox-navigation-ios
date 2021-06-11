@@ -147,9 +147,6 @@ public class CarPlayNavigationViewController: UIViewController {
         navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
         
-        navigationMapView.mapView.location.options.puckType = .none
-        
-        navigationMapView.userCourseView.isHidden = false
         navigationMapView.navigationCamera.follow()
         
         view.addSubview(navigationMapView)
