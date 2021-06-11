@@ -377,3 +377,55 @@ extension RoadGraph {
         public static let didTransitionAtEndpointKey: NotificationUserInfoKey = .init(rawValue: "didTransitionAtEndpoint")
     }
 }
+
+public extension Notification.Name {
+    /**
+     :nodoc:
+     Posted when Navigator has not enough tiles for map matching on current tiles version, but there are suitable older versions inside underlying Offline Regions. Navigator has restarted when this notification is issued.
+     
+     Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
+     
+     The user info dictionary contains the key `Navigator.NotificationUserInfoKey.tilesVersionKey`
+    */
+    static let navigationDidSwitchToFallbackVersion: Notification.Name = .init(rawValue: "NavigatorDidFallbackToOfflineVersion")
+    
+    /**
+     :nodoc:
+     Posted when Navigator was switched to a fallback offline tiles version, but latest tiles became available again. Navigator has restarted when this notification is issued.
+     
+     Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
+     */
+    static let navigationDidSwitchToTargetVersion: Notification.Name = .init(rawValue: "NavigatorDidRestoreToOnlineVersion")
+    
+    /**
+     Posted when NavNative sends updated navigation status.
+     
+     The user info dictionary contains the keys `Navigator.NotificationUserInfoKey.originKey` and `Navigator.NotificationUserInfoKey.statusKey`.
+    */
+    internal static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
+}
+
+extension Navigator {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances of `Navigator`.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
+        public var rawValue: String
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        /**
+         :nodoc:
+         A key in the user info dictionary of a `Notification.Name.navigationDidSwitchToFallbackVersion` notification. The corresponding value is a string representation of selected tiles version.
+         
+         For internal use only.
+         */
+        public static let tilesVersionKey: NotificationUserInfoKey = .init(rawValue: "tilesVersion")
+        
+        static let originKey: NotificationUserInfoKey = .init(rawValue: "origin")
+        
+        static let statusKey: NotificationUserInfoKey = .init(rawValue: "status")
+    }
+}
