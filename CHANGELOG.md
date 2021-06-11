@@ -79,6 +79,7 @@
 * Removed deprecated `CarPlayManager.overviewButton`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Removed unused `CarPlayNavigationViewController.drivingSide` property. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Added `CarPlayManagerDelegate.carPlayManager(_:shouldPresentArrivalUIFor:)` and `CarPlayNavigationViewController.navigationService(_:didArriveAt:)` to allow developers to determine whether to present Arrival UI for CarPlay. ([#3016](https://github.com/mapbox/mapbox-navigation-ios/pull/3016))
+* Renamed `CarPlayNavigationDelegate` to `CarPlayNavigationViewControllerDelegate` and `CarPlayNavigationViewController.carPlayNavigationDelegate` to `CarPlayNavigationViewController.delegate`. ([#3036](https://github.com/mapbox/mapbox-navigation-ios/pull/3036))
 
 ### Other changes
 
