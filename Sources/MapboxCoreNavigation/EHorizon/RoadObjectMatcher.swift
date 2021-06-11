@@ -16,11 +16,10 @@ final public class RoadObjectMatcher {
         didSet {
             if delegate != nil {
                 internalRoadObjectMatcherListener.delegate = delegate
-                native.setListenerFor(internalRoadObjectMatcherListener)
             } else {
                 internalRoadObjectMatcherListener.delegate = nil
-                native.setListenerFor(nil)
             }
+            updateListener()
         }
     }
     
@@ -107,7 +106,19 @@ final public class RoadObjectMatcher {
         native.setListenerFor(nil)
     }
 
-    private let native: MapboxNavigationNative.RoadObjectMatcher
+    private func updateListener() {
+        if delegate != nil {
+            native.setListenerFor(internalRoadObjectMatcherListener)
+        } else {
+            native.setListenerFor(nil)
+        }
+    }
+    
+    var native: MapboxNavigationNative.RoadObjectMatcher {
+        didSet {
+            updateListener()
+        }
+    }
 }
 
 extension MapboxNavigationNative.RoadObjectMatcherError: Error {}

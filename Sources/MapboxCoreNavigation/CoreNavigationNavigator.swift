@@ -49,21 +49,21 @@ class Navigator {
     
     private(set) var roadGraph: RoadGraph
     
-    lazy var roadObjectStore: RoadObjectStore = {
-        return RoadObjectStore(navigator.roadObjectStore())
-    }()
-    
-    lazy var roadObjectMatcher: RoadObjectMatcher = {
-        return RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
-    }()
-    
     lazy var router: MapboxNavigationNative.Router = {
         return MapboxNavigationNative.Router(cache: cacheHandle,
                                              historyRecorder: historyRecorder)
     }()
 
+    private(set) var roadObjectStore: RoadObjectStore
+
+    private(set) var roadObjectMatcher: RoadObjectMatcher
 
     private(set) var tileStore: TileStore
+    
+    /**
+     Current Navigator status in terms of tile versioning.
+     */
+    private(set) var tileVersionState: TileVersionState
     
     /**
      The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.
@@ -93,11 +93,42 @@ class Navigator {
                                             credentials: Self.credentials ?? Directions.shared.credentials,
                                             tilesVersion: Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL)
+        tileVersionState = .nominal
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
         roadGraph = factory.roadGraph
         navigator = factory.navigator
+        roadObjectStore = RoadObjectStore(navigator.roadObjectStore())
+        roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
+        
+        subscribeNavigator()
+    }
+
+    /**
+     Destroys and creates new instance of Navigator together with other related entities.
+     
+     Typically, this method is used to restart a Navigator with a specific Version during switching to offline or online modes.
+     - parameter version: String representing a tile version name. `nil` value means "latest". Specifying exact version also enables `fallback` mode which will passively monitor newer version available and will notify `tileVersionState` if found.
+     */
+    func restartNavigator(forcing version: String? = nil) {
+        unsubscribeNavigator()
+        tileVersionState = .nominal
+        navigator.shutdown()
+        
+        let factory = NativeHandlersFactory(tileStorePath: Self.tilesURL?.path ?? "",
+                                            credentials: Self.credentials ?? Directions.shared.credentials,
+                                            tilesVersion: version ?? Self.tilesVersion,
+                                            historyDirectoryURL: Self.historyDirectoryURL)
+        tileStore = factory.tileStore
+        historyRecorder = factory.historyRecorder
+        cacheHandle = factory.cacheHandle
+        roadGraph = factory.roadGraph
+        navigator = factory.navigator
+        
+        roadObjectStore.native = navigator.roadObjectStore()
+        roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
+        setupElectronicHorizonOptions()
         
         subscribeNavigator()
     }
@@ -105,10 +136,19 @@ class Navigator {
     private func subscribeNavigator() {
         navigator.setElectronicHorizonObserverFor(self)
         navigator.addObserver(for: self)
+        navigator.setFallbackVersionsObserverFor(self)
     }
     
     private func unsubscribeNavigator() {
         navigator.setElectronicHorizonObserverFor(nil)
+        navigator.removeObserver(for: self)
+        navigator.setFallbackVersionsObserverFor(nil)
+    }
+     
+    private func setupElectronicHorizonOptions() {
+        let nativeOptions = electronicHorizonOptions.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
+        
+        navigator.setElectronicHorizonOptionsFor(nativeOptions)
     }
     
     deinit {
@@ -117,13 +157,56 @@ class Navigator {
     
     var electronicHorizonOptions: ElectronicHorizonOptions? {
         didSet {
-            let nativeOptions: MapboxNavigationNative.ElectronicHorizonOptions?
-            if let electronicHorizonOptions = electronicHorizonOptions {
-                nativeOptions = MapboxNavigationNative.ElectronicHorizonOptions(electronicHorizonOptions)
-            } else {
-                nativeOptions = nil
+            setupElectronicHorizonOptions()
+        }
+    }
+}
+
+extension Navigator: FallbackVersionsObserver {
+    
+    enum TileVersionState {
+        /// No tiles version switch is required. Navigator has enough tiles for map matching.
+        case nominal
+        /// Navigator does not have tiles on current version for map matching, but TileStore contains regions with required tiles of a different version
+        case shouldFallback([String])
+        /// Navigator is in a fallback mode but newer tiles version were successefully downloaded and ready to use.
+        case shouldReturnToLatest
+    }
+    
+    func onFallbackVersionsFound(forVersions versions: [String]) {
+        DispatchQueue.main.async { [self] in
+            switch tileVersionState {
+            case .nominal, .shouldReturnToLatest:
+                tileVersionState = .shouldFallback(versions)
+                guard let fallbackVersion = versions.last else { return }
+                
+                Navigator.shared.restartNavigator(forcing: fallbackVersion)
+                
+                let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+                    .tilesVersionKey: fallbackVersion
+                ]
+                
+                NotificationCenter.default.post(name: .navigationDidSwitchToFallbackVersion,
+                                                object: nil,
+                                                userInfo: userInfo)
+            case .shouldFallback:
+                break // do nothing
             }
-            navigator.setElectronicHorizonOptionsFor(nativeOptions)
+        }
+    }
+
+    func onCanReturnToLatest() {
+        DispatchQueue.main.async { [self] in
+            switch tileVersionState {
+            case .nominal, .shouldFallback:
+                tileVersionState = .shouldReturnToLatest
+                Navigator.shared.restartNavigator(forcing: nil)
+                NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion,
+                                                object: nil,
+                                                userInfo: nil)
+            case .shouldReturnToLatest:
+                break // do nothing
+            }
         }
     }
 }
@@ -173,30 +256,3 @@ extension Navigator: NavigatorObserver {
         NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
     }
 }
-extension Notification.Name {
-    /**
-     Posted when NavNative sends updated navigation status.
-     
-     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
-    */
-    static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
-}
-
-extension Navigator {
-    
-    struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
-        
-        typealias RawValue = String
-        
-        var rawValue: String
-        
-        init(rawValue: String) {
-            self.rawValue = rawValue
-        }
-        
-        static let originKey: NotificationUserInfoKey = .init(rawValue: "origin")
-        
-        static let statusKey: NotificationUserInfoKey = .init(rawValue: "status")
-    }
-}
-

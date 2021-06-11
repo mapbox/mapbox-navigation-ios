@@ -29,14 +29,12 @@ open class PassiveLocationDataSource: NSObject {
         super.init()
         
         self.systemLocationManager.delegate = self
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(navigationStatusDidChange),
-                                               name: .navigationStatusDidChange,
-                                               object: nil)
+
+        subscribeNotifications()
     }
     
     deinit {
-        NotificationCenter.default.removeObserver(self)
+        unsubscribeNotifications()
     }
     
     /**
@@ -181,6 +179,17 @@ open class PassiveLocationDataSource: NSObject {
         NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: userInfo)
     }
     
+    private func subscribeNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationStatusDidChange),
+                                               name: .navigationStatusDidChange,
+                                               object: nil)
+    }
+    
+    private func unsubscribeNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     /**
      Path to the directory where history could be stored when `PassiveLocationDataSource.writeHistory(completionHandler:)` is called.
      */
@@ -253,8 +262,9 @@ extension TileEndpointConfiguration {
            - parameter credentials: Credentials for accessing road network data.
            - parameter tilesVersion: Routing tile version.
            - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
+           - parameter isFallback: Flag allowing to look up newer tile versions.
      */
-    convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?) {
+    convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?, isFallback: Bool) {
         let host = credentials.host.absoluteString
         guard let accessToken = credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")
@@ -266,7 +276,7 @@ extension TileEndpointConfiguration {
                   token: accessToken,
                   userAgent: URLSession.userAgent,
                   navigatorVersion: "",
-                  isFallback: false,
+                  isFallback: isFallback,
                   versionBeforeFallback: "",
                   minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
     }

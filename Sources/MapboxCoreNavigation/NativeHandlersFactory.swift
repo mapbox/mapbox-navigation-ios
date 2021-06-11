@@ -61,7 +61,8 @@ class NativeHandlersFactory {
     lazy var endpointConfig: TileEndpointConfiguration = {
         TileEndpointConfiguration(credentials: credentials,
                                   tilesVersion: tilesVersion ?? "",
-                                  minimumDaysToPersistVersion: nil)
+                                  minimumDaysToPersistVersion: nil,
+                                  isFallback: tilesVersion != nil)
     }()
     
     lazy var tilesConfig: TilesConfig = {
