@@ -75,6 +75,7 @@ class NavigationMapViewTests: XCTestCase {
     }
     
     func testRemoveWaypointsDoesNotRemoveUserAnnotations() {
+        navigationMapView.pointAnnotationManager = navigationMapView.mapView.annotations.makePointAnnotationManager()
         let pointAnnotationManager = navigationMapView.pointAnnotationManager
         XCTAssertEqual(0, pointAnnotationManager?.annotations.count)
         pointAnnotationManager?.syncAnnotations([PointAnnotation(coordinate: CLLocationCoordinate2D()),
