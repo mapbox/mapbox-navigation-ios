@@ -67,7 +67,7 @@ open class WayNameView: UIView {
     ///
     /// This method attempts to extract the road name and shield image as well as styling information and tries to display it. Return result shows if it was a success.
     @discardableResult
-    public func setupWith(feature: MapboxCommon.Feature, using style: MapboxMaps.Style?) -> Bool {
+    func setupWith(feature: MapboxCommon.Feature, using style: MapboxMaps.Style?) -> Bool {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false
         

@@ -228,7 +228,7 @@ extension NavigationMapView {
         }
     }
     
-    func updateRouteLine(congestionSegments: [Feature]? = nil, layerIdentifier: String, fractionTraveledUpdate: Double) {
+    func updateRouteLine(congestionSegments: [Turf.Feature]? = nil, layerIdentifier: String, fractionTraveledUpdate: Double) {
         do {
             if let congestionSegments = congestionSegments {
                 try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
