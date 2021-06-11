@@ -194,22 +194,44 @@ extension AppDelegate: CPListTemplateDelegate {
     }
 }
 
+// MARK: - CarPlaySceneDelegate methods
+
 @available(iOS 13.0, *)
 class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
 
     func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
-                                  didConnect interfaceController: CPInterfaceController, to window: CPWindow) {
-
+                                  didConnect interfaceController: CPInterfaceController,
+                                  to window: CPWindow) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
+        
         appDelegate.carPlayManager.delegate = appDelegate
         appDelegate.carPlaySearchController.delegate = appDelegate
-        appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene, didConnectCarInterfaceController: interfaceController, to: window)
+        appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene,
+                                                            didConnectCarInterfaceController: interfaceController,
+                                                            to: window)
+        
+        appDelegate.carPlayManager.application(UIApplication.shared,
+                                               didConnectCarInterfaceController: interfaceController,
+                                               to: window)
     }
 
     func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
-                                  didDisconnect interfaceController: CPInterfaceController, from window: CPWindow) {
-
+                                  didDisconnect interfaceController: CPInterfaceController,
+                                  from window: CPWindow) {
         guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
-        appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene, didDisconnectCarInterfaceController: interfaceController, from: window)
+        
+        appDelegate.carPlayManager.delegate = nil
+        appDelegate.carPlaySearchController.delegate = nil
+        appDelegate.carPlayManager.application(UIApplication.shared,
+                                               didDisconnectCarInterfaceController: interfaceController,
+                                               from: window)
+        
+        if let navigationViewController = appDelegate.currentAppRootViewController?.activeNavigationViewController {
+            navigationViewController.didDisconnectFromCarPlay()
+        }
+        
+        appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene,
+                                                            didDisconnectCarInterfaceController: interfaceController,
+                                                            from: window)
     }
 }
