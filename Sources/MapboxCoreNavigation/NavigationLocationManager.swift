@@ -18,6 +18,10 @@ open class NavigationLocationManager: CLLocationManager {
         }
     }
     
+    /**
+     `simulatesLocation` used to indicate whether the location manager is providing simulated locations.
+     - seealso: `NavigationMapView.simulatesLocation`
+     */
     public var simulatesLocation: Bool = false
 }
 

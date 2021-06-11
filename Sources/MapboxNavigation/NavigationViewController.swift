@@ -419,7 +419,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                               routeProgress: navigationService.routeProgress)
         }
 
-        navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation || (navigationService.simulationMode != .never)
+        navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation
     }
     
     func setupVoiceController() {
@@ -829,6 +829,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         for component in navigationComponents {
             component.navigationService(service, willBeginSimulating: progress, becauseOf: reason)
         }
+        navigationMapView?.simulatesLocation = true
     }
     
     public func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
@@ -841,6 +842,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         for component in navigationComponents {
             component.navigationService(service, willEndSimulating: progress, becauseOf: reason)
         }
+        navigationMapView?.simulatesLocation = true
     }
     
     public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
