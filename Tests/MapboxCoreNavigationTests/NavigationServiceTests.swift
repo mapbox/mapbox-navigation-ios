@@ -132,7 +132,7 @@ class NavigationServiceTests: XCTestCase {
         }
     }
 
-    func testNotReroutingForAllSteps() {
+    func disabled_testNotReroutingForAllSteps() {
         let navigationService = dependencies.navigationService
         let route = navigationService.route
         
