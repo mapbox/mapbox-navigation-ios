@@ -103,7 +103,7 @@ custom_categories:
       - CarPlayManager
       - CarPlayManagerDelegate
       - CarPlayNavigationViewController
-      - CarPlayNavigationDelegate
+      - CarPlayNavigationViewControllerDelegate
       - CarPlayActivity
       - CarPlayCompassView
       - CarPlayMapViewController

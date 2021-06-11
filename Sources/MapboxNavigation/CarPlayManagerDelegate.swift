@@ -179,7 +179,7 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
     }
     
@@ -187,7 +187,7 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
     }
     
@@ -195,7 +195,7 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
     }
     
@@ -203,21 +203,21 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert? {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
     }
     
@@ -225,7 +225,7 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return trip
     }
     
@@ -233,7 +233,7 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return previewTextConfiguration
     }
     
@@ -241,28 +241,28 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return false
     }
 
@@ -270,6 +270,6 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self,  level: .debug)
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
 }

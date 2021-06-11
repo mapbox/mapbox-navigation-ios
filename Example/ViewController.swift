@@ -180,7 +180,7 @@ class ViewController: UIViewController {
 
         guard activeNavigationViewController == nil else { return }
 
-        presentAndRemoveMapview(navigationViewController)
+        presentAndRemoveNavigationMapView(navigationViewController)
     }
     
     func beginCarPlayNavigation() {
@@ -237,7 +237,7 @@ class ViewController: UIViewController {
         // Example of building highlighting in 2D.
         navigationViewController.waypointStyle = .building
         
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startBasicNavigation() {
@@ -258,7 +258,7 @@ class ViewController: UIViewController {
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
         
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startCustomNavigation() {
@@ -288,7 +288,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startGuidanceCardsNavigation() {
@@ -301,7 +301,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     // MARK: - UIGestureRecognizer methods
@@ -447,7 +447,8 @@ class ViewController: UIViewController {
         return navigationViewController
     }
     
-    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler? = nil) {
+    func presentAndRemoveNavigationMapView(_ navigationViewController: NavigationViewController,
+                                           completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
         
@@ -459,7 +460,7 @@ class ViewController: UIViewController {
     
     func endCarPlayNavigation(canceled: Bool) {
         if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
-            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
+            delegate.carPlayManager.carPlayNavigationViewController?.exitNavigation(byCanceling: canceled)
         }
     }
     
@@ -534,7 +535,7 @@ extension ViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         if #available(iOS 12.0, *),
            let delegate = UIApplication.shared.delegate as? AppDelegate,
-           let carPlayNavigationViewController = delegate.carPlayManager.currentNavigator {
+           let carPlayNavigationViewController = delegate.carPlayManager.carPlayNavigationViewController {
             return carPlayNavigationViewController.navigationService(navigationViewController.navigationService, didArriveAt: waypoint)
         }
         return true

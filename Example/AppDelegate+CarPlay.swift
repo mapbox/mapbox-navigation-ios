@@ -6,8 +6,10 @@ import MapboxDirections
 
 let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 
+// MARK: - CPApplicationDelegate methods
+
 /**
- This example application delegate implementation is used in both our "Example-Swift" and our "Example-CarPlay" example apps.
+ This example application delegate implementation is used for "Example-CarPlay" target.
  
  In order to run the "Example-CarPlay" example app with CarPlay functionality enabled, one must first obtain a CarPlay entitlement from Apple.
  
@@ -19,20 +21,23 @@ let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 @available(iOS 12.0, *)
 extension AppDelegate: CPApplicationDelegate {
     
-    // MARK: - CPApplicationDelegate methods
-    
-    func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
+    func application(_ application: UIApplication,
+                     didConnectCarInterfaceController interfaceController: CPInterfaceController,
+                     to window: CPWindow) {
         carPlayManager.delegate = self
         carPlaySearchController.delegate = self
         carPlayManager.application(application, didConnectCarInterfaceController: interfaceController, to: window)
         
         if let navigationViewController = self.window?.rootViewController?.presentedViewController as? NavigationViewController,
-           let service = navigationViewController.navigationService {
-            carPlayManager.beginNavigationWithCarPlay(using: service.router.location!.coordinate, navigationService: service)
+           let navigationService = navigationViewController.navigationService,
+           let currentLocation = navigationService.router.location?.coordinate {
+            carPlayManager.beginNavigationWithCarPlay(using: currentLocation, navigationService: navigationService)
         }
     }
     
-    func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+    func application(_ application: UIApplication,
+                     didDisconnectCarInterfaceController interfaceController: CPInterfaceController,
+                     from window: CPWindow) {
         carPlayManager.delegate = nil
         carPlaySearchController.delegate = nil
         carPlayManager.application(application, didDisconnectCarInterfaceController: interfaceController, from: window)
@@ -43,47 +48,49 @@ extension AppDelegate: CPApplicationDelegate {
     }
 }
 
+// MARK: - CarPlayManagerDelegate methods
+
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlayManagerDelegate {
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
- 
-        if let nvc = self.window?.rootViewController?.presentedViewController as? NavigationViewController, let service = nvc.navigationService {
-            //Do not set simulation mode if we already have an active navigation session.
-            return service
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        navigationServiceAlong route: Route,
+                        routeIndex: Int,
+                        routeOptions: RouteOptions,
+                        desiredSimulationMode: SimulationMode) -> NavigationService {
+        if let navigationViewController = self.window?.rootViewController?.presentedViewController as? NavigationViewController,
+           let navigationService = navigationViewController.navigationService {
+            // Do not set simulation mode if we already have an active navigation session.
+            return navigationService
         }
-        return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: routeOptions,  simulating: desiredSimulationMode)
+        
+        return MapboxNavigationService(route: route,
+                                       routeIndex: routeIndex,
+                                       routeOptions: routeOptions,
+                                       simulating: desiredSimulationMode)
     }
     
-    // MARK: CarPlayManagerDelegate
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
         currentAppRootViewController?.beginNavigationWithCarPlay(navigationService: service)
-        carPlayManager.currentNavigator?.compassView.isHidden = false
+        carPlayManager.carPlayNavigationViewController?.compassView.isHidden = false
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
-        carPlayManager.currentNavigator?.routeLineTracksTraversal = true
+        carPlayManager.carPlayNavigationViewController?.routeLineTracksTraversal = true
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
         // Dismiss NavigationViewController if it's present in the navigation stack
         currentAppRootViewController?.dismissActiveNavigationViewController()
     }
-    
+
     func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
         return true
     }
     
-    func favoritesListTemplate() -> CPListTemplate {
-        let mapboxSFItem = CPListItem(text: FavoritesList.POI.mapboxSF.rawValue,
-                                      detailText: FavoritesList.POI.mapboxSF.subTitle)
-        let timesSquareItem = CPListItem(text: FavoritesList.POI.timesSquare.rawValue,
-                                         detailText: FavoritesList.POI.timesSquare.subTitle)
-        mapboxSFItem.userInfo = [CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.mapboxSF.location)]
-        timesSquareItem.userInfo = [CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.timesSquare.location)]
-        let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
-        return CPListTemplate(title: "Favorites List", sections: [listSection])
-    }
-    
-    func carPlayManager(_ carPlayManager: CarPlayManager, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                        in template: CPTemplate,
+                        for activity: CarPlayActivity) -> [CPBarButton]? {
         guard let interfaceController = self.carPlayManager.interfaceController else {
             return nil
         }
@@ -92,16 +99,28 @@ extension AppDelegate: CarPlayManagerDelegate {
         case .browsing:
             let searchTemplate = CPSearchTemplate()
             searchTemplate.delegate = carPlaySearchController
-            let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate, interfaceController: interfaceController, traitCollection: traitCollection)
+            let searchButton = carPlaySearchController.searchTemplateButton(searchTemplate: searchTemplate,
+                                                                            interfaceController: interfaceController,
+                                                                            traitCollection: traitCollection)
             return [searchButton]
         case .navigating, .previewing, .panningInBrowsingMode:
             return nil
         }
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert? {
-        let okTitle = NSLocalizedString("CARPLAY_OK", bundle: .main, value: "OK", comment: "CPAlertTemplate OK button title")
-        let action = CPAlertAction(title: okTitle, style: .default, handler: {_ in })
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didFailToFetchRouteBetween waypoints: [Waypoint]?,
+                        options: RouteOptions,
+                        error: DirectionsError) -> CPNavigationAlert? {
+        let title = NSLocalizedString("CARPLAY_OK",
+                                      bundle: .main,
+                                      value: "OK",
+                                      comment: "CPAlertTemplate OK button title")
+        
+        let action = CPAlertAction(title: title,
+                                   style: .default,
+                                   handler: { _ in })
+        
         let alert = CPNavigationAlert(titleVariants: [error.localizedDescription],
                                       subtitleVariants: [error.failureReason ?? ""],
                                       imageSet: nil,
@@ -111,11 +130,32 @@ extension AppDelegate: CarPlayManagerDelegate {
         return alert
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPBarButton]? {
+    func favoritesListTemplate() -> CPListTemplate {
+        let mapboxSFItem = CPListItem(text: FavoritesList.POI.mapboxSF.rawValue,
+                                      detailText: FavoritesList.POI.mapboxSF.subTitle)
+        mapboxSFItem.userInfo = [
+            CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.mapboxSF.location)
+        ]
+        
+        let timesSquareItem = CPListItem(text: FavoritesList.POI.timesSquare.rawValue,
+                                         detailText: FavoritesList.POI.timesSquare.subTitle)
+        timesSquareItem.userInfo = [
+            CarPlayWaypointKey: Waypoint(location: FavoritesList.POI.timesSquare.location)
+        ]
+        
+        let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
+        
+        return CPListTemplate(title: "Favorites List", sections: [listSection])
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                        in template: CPTemplate,
+                        for activity: CarPlayActivity) -> [CPBarButton]? {
         switch activity {
         case .previewing:
             let disableSimulateText = "Disable Simulation"
-            let enableSimulateText =  "Enable Simulation"
+            let enableSimulateText = "Enable Simulation"
             let simulationButton = CPBarButton(type: .text) { (barButton) in
                 carPlayManager.simulatesLocations = !carPlayManager.simulatesLocations
                 barButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
@@ -124,9 +164,9 @@ extension AppDelegate: CarPlayManagerDelegate {
             return [simulationButton]
         case .browsing:
             let favoriteTemplateButton = CPBarButton(type: .image) { [weak self] button in
-                guard let strongSelf = self else { return }
-                let listTemplate = strongSelf.favoritesListTemplate()
-                listTemplate.delegate = strongSelf
+                guard let self = self else { return }
+                let listTemplate = self.favoritesListTemplate()
+                listTemplate.delegate = self
                 carPlayManager.interfaceController?.pushTemplate(listTemplate, animated: true)
             }
             favoriteTemplateButton.image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)
@@ -136,30 +176,36 @@ extension AppDelegate: CarPlayManagerDelegate {
         }
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in template: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        mapButtonsCompatibleWith traitCollection: UITraitCollection,
+                        in template: CPTemplate,
+                        for activity: CarPlayActivity) -> [CPMapButton]? {
         switch activity {
         case .browsing:
-            guard let mapViewController = carPlayManager.carPlayMapViewController,
+            guard let carPlayMapViewController = carPlayManager.carPlayMapViewController,
                 let mapTemplate = template as? CPMapTemplate else {
                 return nil
             }
-            var mapButtons = [mapViewController.recenterButton,
-                              mapViewController.zoomInButton,
-                              mapViewController.zoomOutButton]
-            mapButtons.insert(mapViewController.panningInterfaceDisplayButton(for: mapTemplate), at: 1)
+            
+            var mapButtons = [
+                carPlayMapViewController.recenterButton,
+                carPlayMapViewController.zoomInButton,
+                carPlayMapViewController.zoomOutButton
+            ]
+            
+            mapButtons.insert(carPlayMapViewController.panningInterfaceDisplayButton(for: mapTemplate), at: 1)
             return mapButtons
         case .previewing, .navigating, .panningInBrowsingMode:
             return nil
         }
     }
-
-    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
-        // no-op
-    }
 }
+
+// MARK: - CarPlaySearchControllerDelegate methods
 
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlaySearchControllerDelegate {
+    
     func previewRoutes(to waypoint: Waypoint, completionHandler: @escaping () -> Void) {
         carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
     }
@@ -180,8 +226,11 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
     }
 }
 
+// MARK: - CPListTemplateDelegate methods
+
 @available(iOS 12.0, *)
 extension AppDelegate: CPListTemplateDelegate {
+    
     func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
         // Selected a favorite
         if let userInfo = item.userInfo as? [String: Any],
