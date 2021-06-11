@@ -52,6 +52,7 @@ class NavigationViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
+        CredentialsManager.default.accessToken = .mocked
     }
     
     func testDefaultUserInterfaceUsage() {
@@ -72,8 +73,8 @@ class NavigationViewControllerTests: XCTestCase {
         customRoadName[taylorStreetLocation.coordinate] = roadName
         
         service.locationManager!(service.locationManager, didUpdateLocations: [taylorStreetLocation])
-        
-        let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
+
+        let wayNameView = navigationViewController.navigationView.wayNameView
         let currentRoadName = wayNameView.text
         XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(String(describing: currentRoadName))")
         XCTAssertFalse(wayNameView.isHidden, "WayNameView should be visible.")
@@ -171,7 +172,7 @@ class NavigationViewControllerTests: XCTestCase {
         
         service.locationManager!(service.locationManager, didUpdateLocations: [turkStreetLocation])
         
-        let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
+        let wayNameView = navigationViewController.navigationView.wayNameView
         guard let currentRoadName = wayNameView.text else {
             XCTFail("UI Failed to consume progress update. The chain from location update -> progress update generation -> progress update consumption is broken somewhere.")
             return
@@ -188,8 +189,8 @@ class NavigationViewControllerTests: XCTestCase {
         
         // Identify a location without a custom road name.
         let fultonStreetLocation = dependencies.poi[2]
-        
-        navigationViewController.mapViewController!.labelRoadNameCompletionHandler = { (defaultRoadNameAssigned) in
+
+        navigationViewController.ornamentsController!.labelRoadNameCompletionHandler = { (defaultRoadNameAssigned) in
             XCTAssertTrue(defaultRoadNameAssigned, "label road name was not successfully set")
         }
         
@@ -210,12 +211,10 @@ class NavigationViewControllerTests: XCTestCase {
         navigationViewController.indexedRoute = (initialRoute, 0)
 
         runUntil({
-            return !navigationViewController.navigationMapView!.mapView.annotationManager.annotations.isEmpty
+            return !navigationViewController.navigationMapView!.mapView.annotations.annotations.isEmpty
         })
         
-        guard let annotations = navigationViewController.navigationMapView?.mapView.annotationManager.annotations.compactMap({ $0.value as? PointAnnotation }) else {
-            return XCTFail("No point annotations found.")
-        }
+        let annotations = navigationViewController.navigationMapView!.mapView.annotations.annotations.compactMap({ $0.value as? PointAnnotation })
 
         guard let firstDestination = initialRoute.legs.last?.destination?.coordinate else {
             return XCTFail("PointAnnotation is not valid.")
@@ -226,9 +225,7 @@ class NavigationViewControllerTests: XCTestCase {
         // Set the second route.
         navigationViewController.indexedRoute = (newRoute, 0)
         
-        guard let newAnnotations = navigationViewController.navigationMapView?.mapView.annotationManager.annotations.compactMap({ $0.value as? PointAnnotation }) else {
-            return XCTFail("New annotations not found.")
-        }
+        let newAnnotations = navigationViewController.navigationMapView!.mapView.annotations.annotations.compactMap({ $0.value as? PointAnnotation })
         
         guard let secondDestination = newRoute.legs.last?.destination?.coordinate else {
             return XCTFail("PointAnnotation is not valid.")
@@ -273,20 +270,21 @@ class NavigationViewControllerTests: XCTestCase {
         
         let top = TopBannerFake(nibName: nil, bundle: nil)
         let bottom = BottomBannerFake(nibName: nil, bundle: nil)
-        
-        let navOptions = NavigationOptions(topBanner: top, bottomBanner: bottom)
-        
-        let options = NavigationRouteOptions(coordinates: [
+
+        let routeOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
-        let route = Fixture.route(from: "DCA-Arboretum", options: options)
-        
-        let subject = NavigationViewController(for: route, routeIndex: 0, routeOptions: options, navigationOptions: navOptions)
+
+        let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
+        let navService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: .mocked)
+        let navOptions = NavigationOptions(navigationService: navService, topBanner: top, bottomBanner: bottom)
+
+        let subject = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navOptions)
         XCTAssert(subject.topViewController == top, "Top banner not injected properly into NVC")
         XCTAssert(subject.bottomViewController == bottom, "Bottom banner not injected properly into NVC")
-        XCTAssert(subject.mapViewController!.children.contains(top), "Top banner not found in child VC heirarchy")
-        XCTAssert(subject.mapViewController!.children.contains(bottom), "Bottom banner not found in child VC heirarchy")
+        XCTAssert(subject.children.contains(top), "Top banner not found in child VC heirarchy")
+        XCTAssert(subject.children.contains(bottom), "Bottom banner not found in child VC heirarchy")
     }
 }
 

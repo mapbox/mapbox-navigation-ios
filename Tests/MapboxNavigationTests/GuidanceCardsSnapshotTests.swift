@@ -1,13 +1,15 @@
-import MapboxDirections
-@testable import MapboxNavigation
-import MapboxCoreNavigation
-import SnappyShrimp
-@testable import TestHelper
+import XCTest
 import Foundation
+import SnapshotTesting
+import MapboxDirections
+import MapboxCoreNavigation
+import CoreLocation
+@testable import MapboxNavigation
+@testable import TestHelper
 
 @available(iOS 11.0, *)
 /// :nodoc:
-class GuidanceCardsSnapshotTests: SnapshotTest {
+class GuidanceCardsSnapshotTests: XCTestCase {
     let tertiaryRouteOptions = NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 39.749216, longitude: -105.008272),
         CLLocationCoordinate2D(latitude: 39.694833, longitude: -104.976949),
@@ -15,11 +17,12 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         
     override func setUp() {
         super.setUp()
-        recordMode = false
+        isRecording = false
+        DayStyle().apply()
     }
     
     
-        func disableTestRegularManeuver() {
+    func testRegularManeuver() {
         let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
@@ -37,11 +40,11 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         let progress = RouteProgress(route: route, routeIndex: 0, options: tertiaryRouteOptions, legIndex: 0, spokenInstructionIndex: 0)
         
         subject.routeProgress = progress
-        
-        verify(host, for: Device.iPhone8Plus.portrait)
+        assertImageSnapshot(matching: host, as: .image(precision: 0.95))
+
     }
     
-    func disableTestLanesManeuver() {
+    func testLanesManeuver() {
         let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
@@ -61,10 +64,12 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         
         subject.routeProgress = progress
         
-        verify(host, for: Device.iPhone8Plus.portrait)
+
+        assertImageSnapshot(matching: host, as: .image(precision: 0.95))
     }
     
-    func disableTestTertiaryManeuver() {
+
+    func testTertiaryManeuver() {
         let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
         let host = UIViewController(nibName: nil, bundle: nil)
@@ -85,6 +90,7 @@ class GuidanceCardsSnapshotTests: SnapshotTest {
         subject.routeProgress = progress
         subject.view.setNeedsDisplay()
         
-        verify(host, for: Device.iPhone8Plus.portrait)
+
+        assertImageSnapshot(matching: host, as: .image(precision: 0.95))
     }
 }

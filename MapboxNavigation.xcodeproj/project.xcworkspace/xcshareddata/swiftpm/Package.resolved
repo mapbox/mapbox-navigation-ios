@@ -20,15 +20,6 @@
         }
       },
       {
-        "package": "FBSnapshotTestCase",
-        "repositoryURL": "https://github.com/alanzeino/ios-snapshot-test-case.git",
-        "state": {
-          "branch": "master",
-          "revision": "c3189948974569421d867af5bedd8addf44330b0",
-          "version": null
-        }
-      },
-      {
         "package": "MapboxCommon",
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
@@ -143,6 +134,15 @@
           "branch": null,
           "revision": "eacab01aa732612d97c723ceb77c748aaba54c82",
           "version": "2.2.0"
+        }
+      },
+      {
+        "package": "SnapshotTesting",
+        "repositoryURL": "https://github.com/pointfreeco/swift-snapshot-testing.git",
+        "state": {
+          "branch": null,
+          "revision": "f8a9c997c3c1dab4e216a8ec9014e23144cbab37",
+          "version": "1.9.0"
         }
       },
       {
