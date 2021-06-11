@@ -21,9 +21,13 @@ class Navigator {
     static var tilesURL: URL? = nil
     
     /**
-     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
+     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called. Defaults to user support directory.
      */
-    static var historyDirectoryURL: URL? = nil
+    static var historyDirectoryURL: URL = {
+        let supportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        
+        return supportDir.appendingPathComponent("com.mapbox.navigation.history")
+    }()
     
     /**
      Store history to the directory stored in `Navigator.historyDirectoryURL` and asynchronously run a callback
@@ -32,7 +36,7 @@ class Navigator {
      - parameter completionHandler: A block object to be executed when history dumping ends.
      */
     func writeHistory(completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder?.dumpHistory { (path) in
+        historyRecorder.dumpHistory { (path) in
             if let path = path {
                 completionHandler(URL(fileURLWithPath: path))
             } else {
@@ -41,7 +45,7 @@ class Navigator {
         }
     }
     
-    private(set) var historyRecorder: HistoryRecorderHandle?
+    private(set) var historyRecorder: HistoryRecorderHandle
     
     private(set) var navigator: MapboxNavigationNative.Navigator
     
@@ -119,7 +123,8 @@ class Navigator {
         let factory = NativeHandlersFactory(tileStorePath: Self.tilesURL?.path ?? "",
                                             credentials: Self.credentials ?? Directions.shared.credentials,
                                             tilesVersion: version ?? Self.tilesVersion,
-                                            historyDirectoryURL: Self.historyDirectoryURL)
+                                            historyDirectoryURL: Self.historyDirectoryURL,
+                                            targetVersion: version.map { _ in Self.tilesVersion })
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
@@ -201,9 +206,14 @@ extension Navigator: FallbackVersionsObserver {
             case .nominal, .shouldFallback:
                 tileVersionState = .shouldReturnToLatest
                 Navigator.shared.restartNavigator(forcing: nil)
+                
+                let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+                    .tilesVersionKey: version
+                ]
+                
                 NotificationCenter.default.post(name: .navigationDidSwitchToTargetVersion,
                                                 object: nil,
-                                                userInfo: nil)
+                                                userInfo: userInfo)
             case .shouldReturnToLatest:
                 break // do nothing
             }

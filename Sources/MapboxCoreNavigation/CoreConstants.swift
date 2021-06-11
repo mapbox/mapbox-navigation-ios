@@ -394,6 +394,8 @@ public extension Notification.Name {
      Posted when Navigator was switched to a fallback offline tiles version, but latest tiles became available again. Navigator has restarted when this notification is issued.
      
      Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
+     
+     The user info dictionary contains the key `Navigator.NotificationUserInfoKey.tilesVersionKey`
      */
     static let navigationDidSwitchToTargetVersion: Notification.Name = .init(rawValue: "NavigatorDidRestoreToOnlineVersion")
     
@@ -418,7 +420,7 @@ extension Navigator {
         
         /**
          :nodoc:
-         A key in the user info dictionary of a `Notification.Name.navigationDidSwitchToFallbackVersion` notification. The corresponding value is a string representation of selected tiles version.
+         A key in the user info dictionary of a `Notification.Name.navigationDidSwitchToFallbackVersion` or `Notification.Name.navigationDidSwitchToTargetVersion` notification. The corresponding value is a string representation of selected tiles version.
          
          For internal use only.
          */

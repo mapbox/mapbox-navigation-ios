@@ -193,7 +193,7 @@ open class PassiveLocationDataSource: NSObject {
     /**
      Path to the directory where history could be stored when `PassiveLocationDataSource.writeHistory(completionHandler:)` is called.
      */
-    public static var historyDirectoryURL: URL? = nil {
+    public static var historyDirectoryURL: URL = Navigator.historyDirectoryURL {
         didSet {
             Navigator.historyDirectoryURL = historyDirectoryURL
         }
@@ -262,9 +262,9 @@ extension TileEndpointConfiguration {
            - parameter credentials: Credentials for accessing road network data.
            - parameter tilesVersion: Routing tile version.
            - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
-           - parameter isFallback: Flag allowing to look up newer tile versions.
+           - parameter targetVersion: Routing tile version, which navigator would like to eventually switch to if it becomes available
      */
-    convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?, isFallback: Bool) {
+    convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?, targetVersion: String?) {
         let host = credentials.host.absoluteString
         guard let accessToken = credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")
@@ -276,8 +276,8 @@ extension TileEndpointConfiguration {
                   token: accessToken,
                   userAgent: URLSession.userAgent,
                   navigatorVersion: "",
-                  isFallback: isFallback,
-                  versionBeforeFallback: "",
+                  isFallback: targetVersion != nil,
+                  versionBeforeFallback: targetVersion ?? tilesVersion,
                   minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
     }
 }
