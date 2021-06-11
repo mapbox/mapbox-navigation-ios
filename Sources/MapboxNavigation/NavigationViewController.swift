@@ -418,6 +418,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                               didPassVisualInstructionPoint: firstInstruction,
                               routeProgress: navigationService.routeProgress)
         }
+
+        navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation
     }
     
     func setupVoiceController() {
@@ -776,7 +778,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         
         if snapsUserLocationAnnotationToRoute, userHasArrivedAndShouldPreventRerouting {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation), for: location)
-            navigationMapView?.updateUserCourseView(location, animated: true)
+            navigationMapView?.moveUserLocation(to: location, animated: true)
         } else  {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation))
         }
@@ -827,6 +829,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         for component in navigationComponents {
             component.navigationService(service, willBeginSimulating: progress, becauseOf: reason)
         }
+        navigationMapView?.simulatesLocation = true
     }
     
     public func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
@@ -839,6 +842,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         for component in navigationComponents {
             component.navigationService(service, willEndSimulating: progress, becauseOf: reason)
         }
+        navigationMapView?.simulatesLocation = true
     }
     
     public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {

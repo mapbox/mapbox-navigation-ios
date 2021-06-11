@@ -79,10 +79,16 @@ open class NavigationMapView: UIView {
         didSet {
             let frame = CGRect(origin: .zero, size: 75.0)
             let isHidden = userCourseView.isHidden
-            userCourseView = reducedAccuracyActivatedMode
+            switch userLocationStyle {
+            case .courseView(let courseView):
+                userCourseView = reducedAccuracyActivatedMode
+                    ? UserHaloCourseView(frame: frame)
+                    : courseView
+            default:
+                userCourseView = reducedAccuracyActivatedMode
                 ? UserHaloCourseView(frame: frame)
                 : UserPuckCourseView(frame: frame)
-            
+            }
             userCourseView.isHidden = isHidden
         }
     }
@@ -154,11 +160,6 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     A type that represents a `UIView` that is `CourseUpdatable`.
-     */
-    public typealias UserCourseView = UIView & CourseUpdatable
-    
-    /**
      A `UserCourseView` used to indicate the user’s location and course on the map.
      
      The `UserCourseView`'s `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
@@ -167,6 +168,19 @@ open class NavigationMapView: UIView {
         didSet {
             oldValue.removeFromSuperview()
             installUserCourseView()
+        }
+    }
+    
+    var simulatesLocation: Bool = true
+    
+    /**
+     Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
+     
+     By default, this property is set to `UserLocationStyle.courseView`.
+     */
+    public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
+        didSet {
+            setupUserLocation()
         }
     }
     
@@ -227,6 +241,26 @@ open class NavigationMapView: UIView {
         setupGestureRecognizers()
         installUserCourseView()
         subscribeForNotifications()
+        setupUserLocation()
+    }
+    
+    func setupUserLocation() {
+        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            switch self.userLocationStyle {
+            case .courseView((let courseView)):
+                self.mapView.location.options.puckType = nil
+                self.userCourseView = courseView
+                self.userCourseView.isHidden = false
+            case .puck2D(configuration: var configuration):
+                self.userCourseView.isHidden = true
+                self.mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
+                configuration = configuration ?? Puck2DConfiguration()
+            case .puck3D(configuration: let configuration):
+                self.userCourseView.isHidden = true
+                self.mapView.location.options.puckType = .puck3D(configuration)
+            }
+        }
     }
     
     deinit {
@@ -254,7 +288,7 @@ open class NavigationMapView: UIView {
         case .idle:
             break
         case .transitionToFollowing, .following, .transitionToOverview, .overview:
-            updateUserCourseView(location)
+            moveUserLocation(to: location)
             break
         }
     }
@@ -295,7 +329,10 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
-            self.updateUserCourseView(location)
+            switch self.userLocationStyle {
+            case .courseView: self.moveUserLocation(to: location)
+            default: break
+            }
         }
         
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
@@ -401,28 +438,75 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Updates `UserCourseView` to provided location.
+     Updates `UserLocationStyle` to provided location.
      
-     - parameter location: Location, where `UserCourseView` should be shown.
-     - parameter animated: Property, which determines whether `UserCourseView` transition to new location will be animated.
+     - parameter location: Location, where `UserLocationStyle` should be shown.
+     - parameter animated: Property, which determines whether `UserLocationStyle` transition to new location will be animated.
      */
-    public func updateUserCourseView(_ location: CLLocation, animated: Bool = false) {
+    public func moveUserLocation(to location: CLLocation, animated: Bool = false) {
         guard CLLocationCoordinate2DIsValid(location.coordinate) else { return }
         
         mostRecentUserCourseViewLocation = location
         
-        // While animating to overview mode, don't animate the puck.
-        let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-            guard let point = self?.mapView.point(for: location.coordinate) else { return }
-            self?.userCourseView.center = point
+        switch userLocationStyle {
+        case .courseView:
+            // While animating to overview mode, don't animate the puck.
+            let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
+                guard let point = self?.mapView.point(for: location.coordinate) else { return }
+                self?.userCourseView.center = point
+            }
+            
+            let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
+            userCourseView.update(location: location,
+                                  pitch: cameraOptions.pitch!,
+                                  direction: cameraOptions.bearing!,
+                                  animated: animated,
+                                  navigationCameraState: navigationCamera.state)
+        case .puck2D(configuration: _):
+            if simulatesLocation {
+                if !(mapView.location.locationProvider is PassiveLocationManager) {
+                    mapView.location.locationProvider.stopUpdatingLocation()
+                }
+                if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
+                    let newLocation: [Double] = [
+                        location.coordinate.latitude,
+                        location.coordinate.longitude,
+                        location.altitude
+                    ]
+                    do {
+                        try mapView.mapboxMap.style.setLayerProperties(for: NavigationMapView.LayerIdentifier.puck2DLayer,
+                                                                       properties: [
+                                                                        "location": newLocation,
+                                                                        "bearing": location.course
+                                                                       ])
+                    } catch {
+                        print("Failed to perform operation while updating 2D puck bearing arrow with error: \(error.localizedDescription).")
+                    }
+                }
+            }
+        case .puck3D(configuration: let configuration):
+            if simulatesLocation {
+                if !(mapView.location.locationProvider is PassiveLocationManager) {
+                    mapView.location.locationProvider.stopUpdatingLocation()
+                }
+                if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.puck3DSource) {
+                    var model = configuration.model
+                    model.position = [location.coordinate.longitude, location.coordinate.latitude]
+                    if var orientation = model.orientation,
+                       orientation.count > 2 {
+                        orientation[2] = orientation[2] + location.course
+                        model.orientation = orientation
+                    }
+                    
+                    let modelSourceCode = [NavigationMapView.ModelKeyIdentifier.modelSouce: model]
+                    if let data = try? JSONEncoder().encode(modelSourceCode),
+                       let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        try? mapView.mapboxMap.style.setSourceProperty(for: NavigationMapView.SourceIdentifier.puck3DSource, property: "models", value: jsonDictionary)
+                    }
+                }
+            }
         }
-        
-        userCourseView.update(location: location,
-                              pitch: mapView.cameraState.pitch,
-                              direction: mapView.cameraState.bearing,
-                              animated: animated,
-                              navigationCameraState: navigationCamera.state)
     }
     
     // MARK: Feature addition/removal methods
@@ -494,7 +578,7 @@ open class NavigationMapView: UIView {
         
         mapView.mapboxMap.setCamera(to: CameraOptions(center: coordinate,
                                                    zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)))
-        updateUserCourseView(CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+        moveUserLocation(to: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
 
     @discardableResult func addRouteLayer(_ route: Route,
