@@ -5,6 +5,7 @@ import XCTest
  * This class stubs out the URL loading for any request url registered in `registerData(_, forURL:)` and records requests for a given URL for inspection. Note that unstubbed URLs will continue to load as normal.
  */
 class ImageLoadingURLProtocolSpy: URLProtocol {
+    private static let lock: NSLock = .init()
     private static var responseData: [URL: Data] = [:]
     private static var activeRequests: [URL: URLRequest] = [:]
     private static var pastRequests: [URL: URLRequest] = [:]
@@ -13,12 +14,16 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     private var loadingStopped: Bool = false
 
     override class func canInit(with request: URLRequest) -> Bool {
-        return responseData.keys.contains(request.url!)
+        return withLock {
+            responseData.keys.contains(request.url!)
+        }
     }
 
     override class func canInit(with task: URLSessionTask) -> Bool {
-        let keys = responseData.keys
-        return keys.contains(task.currentRequest!.url!) || keys.contains(task.originalRequest!.url!)
+        return withLock {
+            let keys = responseData.keys
+            return keys.contains(task.currentRequest!.url!) || keys.contains(task.originalRequest!.url!)
+        }
     }
 
     override class func canonicalRequest(for request: URLRequest) -> URLRequest {
@@ -30,44 +35,50 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     }
 
     override func startLoading() {
-        let request = self.request
-        
-        guard let url = request.url else {
-            XCTFail("Somehow the request doesn't have a URL")
-            return
-        }
+        ImageLoadingURLProtocolSpy.withLock {
+            let request = self.request
 
-        guard let data = ImageLoadingURLProtocolSpy.responseData[url], let image: UIImage = UIImage(data: data), let client = client else {
-            XCTFail("No valid image data found for url: \(url)")
-            return
-        }
-
-        let urlLoadingBlock = {
-            defer {
-                ImageLoadingURLProtocolSpy.pastRequests[url] = ImageLoadingURLProtocolSpy.activeRequests[url]
-                ImageLoadingURLProtocolSpy.activeRequests[url] = nil
+            guard let url = request.url else {
+                XCTFail("Somehow the request doesn't have a URL")
+                return
             }
 
-            XCTAssertFalse(self.loadingStopped, "URL Loading was previously stopped")
+            guard let data = ImageLoadingURLProtocolSpy.responseData[url], let image: UIImage = UIImage(data: data), let client = client else {
+                XCTFail("No valid image data found for url: \(url)")
+                return
+            }
 
-            // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
-            XCTAssertFalse(ImageLoadingURLProtocolSpy.hasActiveRequestForURL(url), "There should only be one request in flight at a time per resource")
-            ImageLoadingURLProtocolSpy.activeRequests[url] = request
+            let urlLoadingBlock = {
+                defer {
+                    ImageLoadingURLProtocolSpy.withLock {
+                        ImageLoadingURLProtocolSpy.pastRequests[url] = ImageLoadingURLProtocolSpy.activeRequests[url]
+                        ImageLoadingURLProtocolSpy.activeRequests[url] = nil
+                    }
+                }
 
-            // send an NSHTTPURLResponse to the client
-            let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-            client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
+                XCTAssertFalse(self.loadingStopped, "URL Loading was previously stopped")
 
-            ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
+                // We only want there to be one active request per resource at any given time (with callbacks appended if requested multiple times)
+                XCTAssertFalse(ImageLoadingURLProtocolSpy.hasActiveRequestForURL(url), "There should only be one request in flight at a time per resource")
+                ImageLoadingURLProtocolSpy.withLock {
+                    ImageLoadingURLProtocolSpy.activeRequests[url] = request
+                }
 
-            client.urlProtocol(self, didLoad: image.pngData()!)
-            client.urlProtocolDidFinishLoading(self)
+                // send an NSHTTPURLResponse to the client
+                let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+                client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
 
-            ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
+                ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
+
+                client.urlProtocol(self, didLoad: image.pngData()!)
+                client.urlProtocolDidFinishLoading(self)
+
+                ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
+            }
+
+            let defaultQueue = DispatchQueue.global(qos: .default)
+            defaultQueue.async(execute: urlLoadingBlock)
         }
-
-        let defaultQueue = DispatchQueue.global(qos: .default)
-        defaultQueue.async(execute: urlLoadingBlock)
     }
 
     override func stopLoading() {
@@ -78,30 +89,38 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
      * Registers data for a given URL
      */
     class func registerData(_ data: Data, forURL url: URL) {
-        responseData[url] = data
+        withLock {
+            responseData[url] = data
+        }
     }
 
     /**
      * Reset stubbed data, active and past requests
      */
     class func reset() {
-        responseData = [:]
-        activeRequests = [:]
-        pastRequests = [:]
+        withLock {
+            responseData = [:]
+            activeRequests = [:]
+            pastRequests = [:]
+        }
     }
 
     /**
      * Indicates whether a request for the given URL is in progress
      */
     class func hasActiveRequestForURL(_ url: URL) -> Bool {
-        return activeRequests.keys.contains(url)
+        return withLock {
+            activeRequests.keys.contains(url)
+        }
     }
 
     /**
      * Returns the most recently completed request for the given URL
      */
     class func pastRequestForURL(_ url: URL) -> URLRequest? {
-        return pastRequests[url]
+        return withLock {
+            pastRequests[url]
+        }
     }
 
     /**
@@ -116,5 +135,12 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
      */
     class func resumeImageLoading() {
         ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
+    }
+
+    private static func withLock<ReturnValue>(_ perform: () throws -> ReturnValue) rethrows -> ReturnValue {
+        lock.lock(); defer {
+            lock.unlock()
+        }
+        return try perform()
     }
 }
