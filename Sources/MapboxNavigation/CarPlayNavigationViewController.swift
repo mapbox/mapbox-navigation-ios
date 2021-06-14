@@ -247,7 +247,10 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {
-        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else {
+            assertionFailure("RouteProgress should be available.")
+            return
+        }
         
         updateManeuvers(routeProgress)
         navigationMapView?.showWaypoints(on: routeProgress.route)
@@ -258,7 +261,10 @@ public class CarPlayNavigationViewController: UIViewController {
     
     @objc func progressDidChange(_ notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
-              let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation else { return }
+              let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation else {
+            assertionFailure("RouteProgress and CLLocation should be available.")
+            return
+        }
         
         // Update the user puck
         navigationMapView?.updatePreferredFrameRate(for: routeProgress)
