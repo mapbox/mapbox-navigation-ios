@@ -4,7 +4,7 @@ import XCTest
 /**
  * This class stubs out the URL loading for any request url registered in `registerData(_, forURL:)` and records requests for a given URL for inspection. Note that unstubbed URLs will continue to load as normal.
  */
-class ImageLoadingURLProtocolSpy: URLProtocol {
+final class ImageLoadingURLProtocolSpy: URLProtocol {
     enum Error: Swift.Error {
         case httpStatus(Int)
         case other(Swift.Error)
@@ -18,24 +18,24 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
 
     private var loadingStopped: Bool = false
 
-    override class func canInit(with request: URLRequest) -> Bool {
+    override static func canInit(with request: URLRequest) -> Bool {
         return withLock {
             responseData.keys.contains(request.url!)
         }
     }
 
-    override class func canInit(with task: URLSessionTask) -> Bool {
+    override static func canInit(with task: URLSessionTask) -> Bool {
         return withLock {
             let keys = responseData.keys
             return keys.contains(task.currentRequest!.url!) || keys.contains(task.originalRequest!.url!)
         }
     }
 
-    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+    override static func canonicalRequest(for request: URLRequest) -> URLRequest {
         return request
     }
 
-    override class func requestIsCacheEquivalent(_ a: URLRequest, to b: URLRequest) -> Bool {
+    override static func requestIsCacheEquivalent(_ a: URLRequest, to b: URLRequest) -> Bool {
         return a.url == b.url
     }
 
@@ -88,7 +88,7 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
                         client.urlProtocol(self, didFailWithError: otherError)
                     case .httpStatus(let statusCode):
                         // send an NSHTTPURLResponse to the client
-                        let response = HTTPURLResponse.init(url: url, statusCode: 404, httpVersion: "1.1", headerFields: nil)
+                        let response = HTTPURLResponse.init(url: url, statusCode: statusCode, httpVersion: "1.1", headerFields: nil)
                         client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
                     }
                 }
@@ -109,7 +109,7 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     /**
      * Registers data for a given URL
      */
-    class func registerData(_ data: Data, forURL url: URL) {
+    static func registerData(_ data: Data, forURL url: URL) {
         withLock {
             responseData[url] = .success(data)
         }
@@ -132,7 +132,7 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     /**
      * Reset stubbed data, active and past requests
      */
-    class func reset() {
+    static func reset() {
         withLock {
             responseData = [:]
             activeRequests = [:]
@@ -143,7 +143,7 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     /**
      * Indicates whether a request for the given URL is in progress
      */
-    class func hasActiveRequestForURL(_ url: URL) -> Bool {
+    static func hasActiveRequestForURL(_ url: URL) -> Bool {
         return withLock {
             activeRequests.keys.contains(url)
         }
@@ -152,7 +152,7 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     /**
      * Returns the most recently completed request for the given URL
      */
-    class func pastRequestForURL(_ url: URL) -> URLRequest? {
+    static func pastRequestForURL(_ url: URL) -> URLRequest? {
         return withLock {
             pastRequests[url]
         }
@@ -161,14 +161,14 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
     /**
      * Pauses image loading once a request receives a response. Useful for testing re-entrant resource requests.
      */
-    class func delayImageLoading() {
+    static func delayImageLoading() {
         ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
     }
 
     /**
      * Resumes image loading which was previously delayed due to `delayImageLoading()` having been called.
      */
-    class func resumeImageLoading() {
+    static func resumeImageLoading() {
         ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
     }
 
