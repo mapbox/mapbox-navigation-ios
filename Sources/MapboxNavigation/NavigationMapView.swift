@@ -392,20 +392,21 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return
         }
         
-        let centerUserCourseView = { [weak self] in
-            guard let point = self?.convert(location.coordinate, toPointTo: self) else { return }
-            self?.userCourseView.center = point
-        }
-        
+        // when course tracking is on the users pin is centered and the route moves to that center,
+        // this the position where the userAnchorPoint is can this be changes by the delegate
         if tracksUserCourse {
-            centerUserCourseView()
+            
+            userCourseView.center = userAnchorPoint
             
             let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
             setCamera(newCamera, withDuration: duration, animationTimingFunction: function, completionHandler: nil)
         } else {
             // Animate course view updates in overview mode
-            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: centerUserCourseView)
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
+                guard let point = self?.convert(location.coordinate, toPointTo: self) else { return }
+                self?.userCourseView.center = point
+            }
         }
         
         userCourseView.update(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
