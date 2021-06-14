@@ -435,7 +435,7 @@ open class RouteController: NSObject {
     /**
      Path to the directory where history could be stored when `RouteController.writeHistory(completionHandler:)` is called.
      */
-    public static var historyDirectoryURL: URL = Navigator.historyDirectoryURL {
+    public static var historyDirectoryURL: URL? = nil {
         didSet {
             Navigator.historyDirectoryURL = historyDirectoryURL
         }

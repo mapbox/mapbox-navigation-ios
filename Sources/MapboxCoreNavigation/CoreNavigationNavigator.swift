@@ -21,13 +21,11 @@ class Navigator {
     static var tilesURL: URL? = nil
     
     /**
-     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called. Defaults to user support directory.
+     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
+     
+     Setting `nil` disables history recording. Defaults to `nil`.
      */
-    static var historyDirectoryURL: URL = {
-        let supportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        
-        return supportDir.appendingPathComponent("com.mapbox.navigation.history")
-    }()
+    static var historyDirectoryURL: URL? = nil
     
     /**
      Store history to the directory stored in `Navigator.historyDirectoryURL` and asynchronously run a callback
@@ -36,7 +34,7 @@ class Navigator {
      - parameter completionHandler: A block object to be executed when history dumping ends.
      */
     func writeHistory(completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder.dumpHistory { (path) in
+        historyRecorder?.dumpHistory { (path) in
             if let path = path {
                 completionHandler(URL(fileURLWithPath: path))
             } else {
@@ -45,7 +43,7 @@ class Navigator {
         }
     }
     
-    private(set) var historyRecorder: HistoryRecorderHandle
+    private(set) var historyRecorder: HistoryRecorderHandle?
     
     private(set) var navigator: MapboxNavigationNative.Navigator
     
