@@ -13,10 +13,7 @@ protocol ReentrantImageDownloader {
 class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegate {
     private let sessionConfiguration: URLSessionConfiguration
 
-    private lazy var urlSession: URLSession = {
-        return URLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
-    }()
-
+    private var urlSession: URLSession!
     private let downloadQueue: OperationQueue
     private let accessQueue: DispatchQueue
 
@@ -35,11 +32,8 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         self.accessQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloaderInternal")
         super.init()
 
-        // NOTE: `lazy var` isn't thread safe while `init` methods are.
-        //       `lazy var` for `urlSession` is used to specify `self` as a delegate which only available after
-        //       all properties are initialized ans `super.init` is called if appropriate.
-        //       So we trigger `init` here so that `urlSession` is initialized in a thread safe manner.
-        _ = urlSession
+        // TODO: Write `URLSessionDelegate` proxy to break retain cycle between `Self` and `URLSession.delegate`.
+        urlSession = URLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
     }
 
     deinit {
