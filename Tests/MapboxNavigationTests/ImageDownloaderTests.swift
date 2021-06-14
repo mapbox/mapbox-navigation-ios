@@ -151,7 +151,8 @@ class ImageDownloaderTests: XCTestCase {
         var errorReturned: Error?
         let imageDownloaded = expectation(description: "Image Downloaded")
 
-        let faultyUrl = URL(string: "https://www.mapbox.com/incorrect")!
+        let faultyUrl = URL(string: "https://www.mapbox.com")!
+        ImageLoadingURLProtocolSpy.registerHttpStatusCodeError(404, for: faultyUrl)
         downloader.downloadImage(with: faultyUrl) { (image, data, error) in
             imageReturned = image
             dataReturned = data

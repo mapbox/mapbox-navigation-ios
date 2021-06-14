@@ -5,8 +5,13 @@ import XCTest
  * This class stubs out the URL loading for any request url registered in `registerData(_, forURL:)` and records requests for a given URL for inspection. Note that unstubbed URLs will continue to load as normal.
  */
 class ImageLoadingURLProtocolSpy: URLProtocol {
+    enum Error: Swift.Error {
+        case httpStatus(Int)
+        case other(Swift.Error)
+    }
+
     private static let lock: NSLock = .init()
-    private static var responseData: [URL: Data] = [:]
+    private static var responseData: [URL: Result<Data, Error>] = [:]
     private static var activeRequests: [URL: URLRequest] = [:]
     private static var pastRequests: [URL: URLRequest] = [:]
     private static let imageLoadingSemaphore = DispatchSemaphore(value: 1)
@@ -43,9 +48,10 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
                 return
             }
 
-            guard let data = ImageLoadingURLProtocolSpy.responseData[url], let image: UIImage = UIImage(data: data), let client = client else {
-                XCTFail("No valid image data found for url: \(url)")
-                return
+            guard let result = ImageLoadingURLProtocolSpy.responseData[url],
+                  let client = client else {
+                        XCTFail("No valid response data found for url: \(url)")
+                        return
             }
 
             let urlLoadingBlock = {
@@ -64,13 +70,28 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
                     ImageLoadingURLProtocolSpy.activeRequests[url] = request
                 }
 
-                // send an NSHTTPURLResponse to the client
-                let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
-                client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
+                switch result {
+                case .success(let imageData):
+                    guard let image: UIImage = UIImage(data: imageData) else {
+                        XCTFail("Invalid image data found"); return
+                    }
+                    // send an NSHTTPURLResponse to the client
+                    let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
+                    client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
 
-                ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
+                    ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
 
-                client.urlProtocol(self, didLoad: image.pngData()!)
+                    client.urlProtocol(self, didLoad: image.pngData()!)
+                case .failure(let error):
+                    switch error {
+                    case .other(let otherError):
+                        client.urlProtocol(self, didFailWithError: otherError)
+                    case .httpStatus(let statusCode):
+                        // send an NSHTTPURLResponse to the client
+                        let response = HTTPURLResponse.init(url: url, statusCode: 404, httpVersion: "1.1", headerFields: nil)
+                        client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
+                    }
+                }
                 client.urlProtocolDidFinishLoading(self)
 
                 ImageLoadingURLProtocolSpy.imageLoadingSemaphore.signal()
@@ -90,7 +111,21 @@ class ImageLoadingURLProtocolSpy: URLProtocol {
      */
     class func registerData(_ data: Data, forURL url: URL) {
         withLock {
-            responseData[url] = data
+            responseData[url] = .success(data)
+        }
+    }
+
+    static func registerError(_ error: Swift.Error, for url: URL) {
+        withLock {
+            responseData[url] = .failure(.other(error))
+        }
+    }
+
+    static func registerHttpStatusCodeError(_ httpStatus: Int, for url: URL) {
+        assert(httpStatus >= 400, "Only these status codes handled as errors")
+
+        withLock {
+            responseData[url] = .failure(.httpStatus(httpStatus))
         }
     }
 
