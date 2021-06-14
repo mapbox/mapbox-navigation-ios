@@ -333,6 +333,11 @@ workflows:
           xcode: "12.4.0"
           iOS: "14.4"          
           device: "iPhone 12 Pro Max"
+      - spm-test-job:
+          name: "swift test; Xcode 12.5; iOS 14.5"
+          xcode: "12.5.0"
+          iOS: "14.5"          
+          device: "iPhone 12 Pro Max"          
       - ios-trigger-metrics:
           filters:
             branches:
