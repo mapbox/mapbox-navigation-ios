@@ -23,6 +23,6 @@
 }
 
 - (void)setUpcomingManeuvers:(NSArray<CPManeuver *> *)upcomingManeuvers {
-    NSAssert(FALSE, @"FATAL ERROR");
+
 }
 @end

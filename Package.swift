@@ -108,7 +108,6 @@ let package = Package(
             exclude: [
                 "Info.plist",
                 "MapboxNavigationTests-Bridging.h",
-                "CarPlayManagerTests.swift", // There are issues with setting accessToken
                 "__Snapshots__", // Ignore snapshots folder
             ],
             resources: [
