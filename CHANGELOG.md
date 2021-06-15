@@ -3,6 +3,7 @@
 ## main
 
 * Fixed the moment of custom feedback event creation. ([#2495](https://github.com/mapbox/mapbox-navigation-ios/pull/2495))
+* Fixed a bug in `RouterDelegate.router(_:shouldDiscard:)` handling. If you implemented this method, you will need to reverse the value you return. Previously, if you returned `true`, the `Router` wouldn't discard the location. ([#3058](https://github.com/mapbox/mapbox-navigation-ios/pull/3058))
 
 ## v1.4.0
 

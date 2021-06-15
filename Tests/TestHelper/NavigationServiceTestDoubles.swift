@@ -32,7 +32,7 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
 
     public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
         recentMessages.append(#function)
-        return true
+        return false
     }
 
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
