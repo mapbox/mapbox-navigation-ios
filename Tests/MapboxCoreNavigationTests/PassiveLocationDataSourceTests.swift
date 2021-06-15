@@ -64,10 +64,7 @@ class PassiveLocationDataSourceTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         
-        // Configure the navigator (used by PassiveLocationDataSource) with the tiles version (version is used to find the tiles in the cache folder)
-        let tilesVersion = "preloadedtiles" // any string
         Navigator.credentials = directions.credentials
-        Navigator.tilesVersion = tilesVersion
 
         let bundle = Bundle(for: Fixture.self)
         let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
@@ -96,6 +93,33 @@ class PassiveLocationDataSourceTests: XCTestCase {
             locationUpdateExpectation.fulfill()
         }
         wait(for: [locationUpdateExpectation], timeout: 5)
+    }
+    
+    func testNoHistoryRecording() {
+        PassiveLocationDataSource.historyDirectoryURL = nil
+        
+        Navigator.shared.restartNavigator()
+        
+        let noHistoryExpectation = XCTestExpectation(description: "History should not be written on 'nil' path")
+        noHistoryExpectation.isInverted = true
+        PassiveLocationDataSource.writeHistory { _ in
+            noHistoryExpectation.fulfill()
+        }
+        wait(for: [noHistoryExpectation], timeout: 3)
+    }
+    
+    func testHistoryRecording() {
+        let supportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!.appendingPathComponent("test")
+        
+        PassiveLocationDataSource.historyDirectoryURL = supportDir
+        
+        Navigator.shared.restartNavigator()
+        
+        let historyExpectation = XCTestExpectation(description: "History should be written to '\(supportDir)'")
+        PassiveLocationDataSource.writeHistory { _ in
+            historyExpectation.fulfill()
+        }
+        wait(for: [historyExpectation], timeout: 3)
     }
 }
 
