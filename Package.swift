@@ -108,9 +108,7 @@ let package = Package(
             exclude: [
                 "Info.plist",
                 "MapboxNavigationTests-Bridging.h",
-                "NavigationViewControllerTests.swift", // Crash on `UNUserNotificationCenter.current()`. This API doesn't work in SPM.
                 "CarPlayManagerTests.swift", // There are issues with setting accessToken
-                "LeaksSpec.swift", // Crash on `UNUserNotificationCenter.current()`. This API doesn't work in SPM.
                 "__Snapshots__", // Ignore snapshots folder
             ],
             resources: [
