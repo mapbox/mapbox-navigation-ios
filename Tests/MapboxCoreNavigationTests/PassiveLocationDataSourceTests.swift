@@ -73,6 +73,7 @@ class PassiveLocationDataSourceTests: XCTestCase {
     
     override func tearDown() {
         PassiveLocationDataSource.historyDirectoryURL = nil
+        Navigator.tilesURL = nil
         Navigator._recreateNavigator()
     }
     
@@ -102,6 +103,7 @@ class PassiveLocationDataSourceTests: XCTestCase {
     
     func testNoHistoryRecording() {
         PassiveLocationDataSource.historyDirectoryURL = nil
+        Navigator._recreateNavigator()
                 
         let noHistoryExpectation = XCTestExpectation(description: "History should not be written on 'nil' path")
         noHistoryExpectation.isInverted = true
@@ -115,9 +117,11 @@ class PassiveLocationDataSourceTests: XCTestCase {
         let supportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!.appendingPathComponent("test")
         
         PassiveLocationDataSource.historyDirectoryURL = supportDir
+        Navigator._recreateNavigator()
                 
         let historyExpectation = XCTestExpectation(description: "History should be written to '\(supportDir)'")
-        PassiveLocationDataSource.writeHistory { _ in
+        PassiveLocationDataSource.writeHistory { url in
+            XCTAssertNotNil(url)
             historyExpectation.fulfill()
         }
         wait(for: [historyExpectation], timeout: 3)

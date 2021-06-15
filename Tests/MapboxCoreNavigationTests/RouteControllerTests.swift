@@ -4,6 +4,7 @@ import MapboxDirections
 import CoreLocation
 @testable import MapboxCoreNavigation
 import TestHelper
+import MapboxNavigationNative
 
 class RouteControllerTests: XCTestCase {
     var replayManager: ReplayLocationManager?
@@ -45,6 +46,14 @@ class RouteControllerTests: XCTestCase {
         locationManager.delegate = routeController
         
         var testCoordinates = [CLLocationCoordinate2D]()
+
+        // Dirty fix
+        // Setting dummy first location to kick start NN.Navigator
+        routeController.navigator.updateLocation(for: FixLocation(CLLocation(coordinate: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
+                                                                             altitude: 0,
+                                                                             horizontalAccuracy: 0,
+                                                                             verticalAccuracy: 0,
+                                                                             timestamp: Date())))
         
         while testCoordinates.count < locationManager.locations.count {
             locationManager.tick()
