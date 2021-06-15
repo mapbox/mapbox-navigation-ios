@@ -358,9 +358,9 @@ open class NavigationMapView: UIView {
         }
 
         mapView.mapboxMap.onNext(.mapLoaded, handler: { [weak self] _ in
-            self?.addAnnotationSymbolImages()
+            try? self?.updateAnnotationSymbolImages()
         })
-        
+
         addSubview(mapView)
         
         mapView.pinTo(parentView: self)
@@ -1070,6 +1070,28 @@ open class NavigationMapView: UIView {
                                stretchY: stretchY,
                                content: imageContent)
         }
+
+        // Centered pin
+        if let image = Bundle.mapboxNavigation.image(named: "AnnotationCentered") {
+            // define the "stretchable" areas in the image that will be fitted to the text label
+            let stretchX = [ImageStretches(first: Float(5), second: Float(7)), ImageStretches(first: Float(24), second: Float(27))]
+            let stretchY = [ImageStretches(first: Float(6), second: Float(8))]
+            let imageContent = ImageContent(left: 5, top: 6, right: 27, bottom: 8)
+
+            let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
+            try style.addImage(regularAnnotationImage,
+                               id: "AnnotationCentered",
+                               stretchX: stretchX,
+                               stretchY: stretchY,
+                               content: imageContent)
+
+            let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
+            try style.addImage(selectedAnnotationImage,
+                               id: "AnnotationCentered-Highlighted",
+                               stretchX: stretchX,
+                               stretchY: stretchY,
+                               content: imageContent)
+        }
     }
 
     /**
@@ -1601,7 +1623,9 @@ open class NavigationMapView: UIView {
     public var intersectionsToAnnotate: [EdgeIntersection]?
 
     open func updateAnnotations(for routeProgress: RouteProgress?) {
-        var features = [Feature]()
+        var features = [Turf.Feature]()
+
+        try? updateAnnotationSymbolImages()
 
         // add an annotation for the next step
         if let upcomingStep = routeProgress?.upcomingStep, let currentLeg = routeProgress?.currentLeg {
@@ -1623,48 +1647,6 @@ open class NavigationMapView: UIView {
         }
         
         updateAnnotationLayer(with: FeatureCollection(features: features))
-    }
-
-    private func addAnnotationSymbolImages() {
-        let style = mapView.mapboxMap.style
-        guard style.image(withId: "AnnotationLeftHanded") == nil, style.image(withId: "AnnotationRightHanded") == nil else { return }
-
-        // Centered pin
-        if let image = UIImage(named: "AnnotationCentered", in: .mapboxNavigation, compatibleWith: nil) {
-            let stretchX = [ImageStretches(first: Float(10), second: Float(15)), ImageStretches(first: Float(45), second: Float(50))]
-            let stretchY = [ImageStretches(first: Float(13), second: Float(16))]
-            let imageContent = ImageContent(left: 10, top: 13, right: 50, bottom: 16)
-
-            let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
-            try? style.addImage(regularAnnotationImage, id: "AnnotationCentered", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
-
-            let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
-            try? style.addImage(highlightedAnnotationImage, id: "AnnotationCentered-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
-        }
-
-        let stretchX = [ImageStretches(first: Float(16), second: Float(21))]
-        let stretchY = [ImageStretches(first: Float(13), second: Float(16))]
-        let imageContent = ImageContent(left: 16, top: 13, right: 23, bottom: 16)
-
-        // Right-hand pin
-        if let image =  UIImage(named: "AnnotationRightHanded", in: .mapboxNavigation, compatibleWith: nil) {
-            let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
-
-            try? style.addImage(regularAnnotationImage, id: "AnnotationRightHanded", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
-
-            let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
-            try? style.addImage(highlightedAnnotationImage, id: "AnnotationRightHanded-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
-        }
-
-        // Left-hand pin
-        if let image = UIImage(named: "AnnotationLeftHanded", in: .mapboxNavigation, compatibleWith: nil) {
-            let regularAnnotationImage = image.tint(.intersectionAnnotationDefaultBackgroundColor)
-
-            try? style.addImage(regularAnnotationImage, id: "AnnotationLeftHanded", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
-
-            let highlightedAnnotationImage = image.tint(.intersectionAnnotationSelectedBackgroundColor)
-            try? style.addImage(highlightedAnnotationImage, id: "AnnotationLeftHanded-Highlighted", sdf: false, stretchX: stretchX, stretchY: stretchY, content: imageContent)
-        }
     }
 
     private func removeRouteAnnotationsLayerFromStyle() {

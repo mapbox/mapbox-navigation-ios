@@ -60,12 +60,12 @@ extension NavigationMapView {
             return "EdgeIntersection: root: \(wayName ?? "") intersection: \(intersectingWayName ?? "") coordinate: \(String(describing: coordinate))"
         }
 
-        public var feature: Feature? {
+        public var feature: Turf.Feature? {
             guard let coordinate = annotationPoint else { return nil }
             var featurePoint = Feature(Point(coordinate))
             let tailPosition = incidentAngle < 180 ? AnnotationTailPosition.left : AnnotationTailPosition.right
 
-            let imageName = tailPosition == .left ? "AnnotationLeftHanded" : "AnnotationRightHanded"
+            let imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
 
             // set the feature attributes which will be used in styling the symbol style layer
             featurePoint.properties = ["highlighted": false, "tailPosition": tailPosition.rawValue, "text": intersectingWayName, "imageName": imageName]
@@ -104,7 +104,7 @@ extension RouteStep {
         return label
     }
 
-    var annotationFeature: Feature {
+    var annotationFeature: Turf.Feature {
         var featurePoint = Feature(Point(maneuverLocation))
 
         let tailPosition = NavigationMapView.AnnotationTailPosition.center
