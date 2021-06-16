@@ -92,28 +92,28 @@ final class ImageDownloadOperation: Operation, ImageDownload {
     }
 
     override func cancel() {
-        super.cancel()
         withLock {
+            super.cancel()
             if let dataTask = dataTask {
                 dataTask.cancel()
                 incomingData = nil
                 self.dataTask = nil
             }
+            state = .finished
         }
-        state = .finished
     }
 
     override func start() {
-        guard !isCancelled else {
-            state = .finished;
-            return
-        }
-
-        state = .executing
-        let dataTask = session.dataTask(with: self.request)
-        dataTask.resume()
-
         withLock {
+            guard !isCancelled && state != .finished else {
+                state = .finished;
+                return
+            }
+
+            state = .executing
+            let dataTask = session.dataTask(with: self.request)
+            dataTask.resume()
+
             self.dataTask = dataTask
         }
     }
