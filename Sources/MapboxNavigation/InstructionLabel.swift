@@ -4,16 +4,16 @@ import MapboxDirections
 
 /// :nodoc:
 open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
-    typealias AvailableBoundsHandler = () -> (CGRect)
-    var availableBounds: AvailableBoundsHandler!
+    public typealias AvailableBoundsHandler = () -> (CGRect)
+    open var availableBounds: AvailableBoundsHandler!
     // This optional view can be used for calculating the available width when using e.g. a UITableView or a UICollectionView where the frame is unknown before the cells are displayed. The bounds of `InstructionLabel` will be used if this view is unset.
-    weak var viewForAvailableBoundsCalculation: UIView?
+    open weak var viewForAvailableBoundsCalculation: UIView?
     var shieldHeight: CGFloat = 30
     var imageRepository: ImageRepository = .shared
     var imageDownloadCompletion: (() -> Void)?
     weak var instructionDelegate: VisualInstructionDelegate?
     
-    var instruction: VisualInstruction? {
+    open var instruction: VisualInstruction? {
         didSet {
             guard let instruction = instruction else {
                 text = nil
