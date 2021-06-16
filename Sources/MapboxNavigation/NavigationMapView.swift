@@ -24,6 +24,9 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
     }
     
+    /// By default this is 150 from the bottom. This will allow the puck for the user location to be above the bottom banner while navigation is active
+    public var cameraUserTrackingCourseEdgePadding: UIEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 150, right: 0)
+    
     /**
      The minimum preferred frames per second at which to render map animations.
      
@@ -402,7 +405,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             
             let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
             let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, completionHandler: nil)
+            setCamera(
+                newCamera,
+                withDuration: duration,
+                animationTimingFunction: function,
+                edgePadding: cameraUserTrackingCourseEdgePadding,
+                completionHandler: nil
+            )
+
         } else {
             // Animate course view updates in overview mode
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: centerUserCourseView)
