@@ -145,7 +145,12 @@ extension AppDelegate: CarPlayManagerDelegate {
         
         let listSection = CPListSection(items: [mapboxSFItem, timesSquareItem])
         
-        return CPListTemplate(title: "Favorites List", sections: [listSection])
+        let title = NSLocalizedString("CARPLAY_FAVORITES_LIST",
+                                      bundle: .main,
+                                      value: "Favorites List",
+                                      comment: "CPListTemplate title, which shows list of favorite destinations")
+        
+        return CPListTemplate(title: title, sections: [listSection])
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
@@ -154,8 +159,16 @@ extension AppDelegate: CarPlayManagerDelegate {
                         for activity: CarPlayActivity) -> [CPBarButton]? {
         switch activity {
         case .previewing:
-            let disableSimulateText = "Disable Simulation"
-            let enableSimulateText = "Enable Simulation"
+            let disableSimulateText = NSLocalizedString("CARPLAY_DISABLE_SIMULATION",
+                                                        bundle: .main,
+                                                        value: "Disable Simulation",
+                                                        comment: "CPBarButton title, which allows to disable location simulation")
+            
+            let enableSimulateText = NSLocalizedString("CARPLAY_ENABLE_SIMULATION",
+                                                       bundle: .main,
+                                                       value: "Enable Simulation",
+                                                       comment: "CPBarButton title, which allows to enable location simulation")
+            
             let simulationButton = CPBarButton(type: .text) { (barButton) in
                 carPlayManager.simulatesLocations = !carPlayManager.simulatesLocations
                 barButton.title = carPlayManager.simulatesLocations ? disableSimulateText : enableSimulateText
