@@ -104,6 +104,10 @@
 * Fixed an issue where 'Navigation cancel' event might be not logged. ([#3050](https://github.com/mapbox/mapbox-navigation-ios/pull/3050))
 * Fixed an issue where offline route calculation might hang up. ([#3040](https://github.com/mapbox/mapbox-navigation-ios/pull/3040))
 * Fixed the moment of custom feedback event creation. ([#3049](https://github.com/mapbox/mapbox-navigation-ios/pull/3049))
+
+## v1.4.1
+
+* Fixed the moment of custom feedback event creation. ([#2495](https://github.com/mapbox/mapbox-navigation-ios/pull/2495))
 * Fixed a bug in `RouterDelegate.router(_:shouldDiscard:)` handling. If you implemented this method, you will need to reverse the value you return. Previously, if you returned `true`, the `Router` wouldn't discard the location. ([#3058](https://github.com/mapbox/mapbox-navigation-ios/pull/3058))
 
 ## v1.4.0
