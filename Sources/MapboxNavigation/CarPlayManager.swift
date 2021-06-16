@@ -442,7 +442,10 @@ extension CarPlayManager {
                                      bundle: .mapboxNavigation,
                                      value: "Current Location",
                                      comment: "Name of the waypoint associated with the current location")
-        let origin = Waypoint(location: userLocation.internalLocation, heading: userLocation.heading, name: name)
+        
+        let origin = Waypoint(location: userLocation.internalLocation,
+                              heading: userLocation.heading,
+                              name: name)
         
         previewRoutes(between: [origin, destination], completionHandler: completionHandler)
     }
@@ -664,7 +667,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         
         let decelerationRate: CGFloat = 0.9
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
+        let offset = CGPoint(x: velocity.x * decelerationRate / 4,
+                             y: velocity.y * decelerationRate / 4)
         updatePan(by: offset, mapTemplate: mapTemplate, animated: true)
     }
     
@@ -751,7 +755,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {
         guard let interfaceController = interfaceController else { return }
         if interfaceController.templates.count > 1 {
-            // TODO: CPInterfaceController.popToRootTemplate(animated:completion:) (available on iOS 14/Xcode 12) should be used after Xcode 11 support is dropped.
+            // TODO: CPInterfaceController.popToRootTemplate(animated:completion:) (available on iOS 14/Xcode 12)
+            // should be used after Xcode 11 support is dropped.
             interfaceController.popToRootTemplate(animated: animated)
         }
     }
@@ -769,11 +774,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
     
-    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
         return delegate?.carPlayManager(self, shouldPresentArrivalUIFor: waypoint) ?? true
     }
     
-    public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
+    public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                          byCanceling canceled: Bool) {
         guard let interfaceController = interfaceController else {
             return
         }
@@ -887,7 +894,9 @@ internal class MapTemplateProvider: NSObject {
     
     weak var delegate: MapTemplateProviderDelegate?
 
-    func mapTemplate(forPreviewing trip: CPTrip, traitCollection: UITraitCollection, mapDelegate: CPMapTemplateDelegate) -> CPMapTemplate {
+    func mapTemplate(forPreviewing trip: CPTrip,
+                     traitCollection: UITraitCollection,
+                     mapDelegate: CPMapTemplateDelegate) -> CPMapTemplate {
         let mapTemplate = createMapTemplate()
         mapTemplate.mapDelegate = mapDelegate
         
