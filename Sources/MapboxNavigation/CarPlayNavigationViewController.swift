@@ -9,7 +9,7 @@ import CarPlay
 /**
  `CarPlayNavigationViewController` is a fully-featured turn-by-turn navigation UI for CarPlay.
  
- - seealso: NavigationViewController
+ - seealso: `NavigationViewController`
  */
 @available(iOS 12.0, *)
 public class CarPlayNavigationViewController: UIViewController {
@@ -19,6 +19,10 @@ public class CarPlayNavigationViewController: UIViewController {
      */
     public weak var delegate: CarPlayNavigationViewControllerDelegate?
     
+    /**
+     `CarPlayManager` instance, which contains main `UIWindow` content and is used by
+     `CarPlayNavigationViewController` for presentation.
+     */
     public var carPlayManager: CarPlayManager
     
     /**
