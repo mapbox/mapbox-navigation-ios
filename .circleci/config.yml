@@ -1,6 +1,24 @@
 version: 2.1
 
 commands:
+  restore-carthage-cache:
+    parameters:
+      xcode:
+        type: string
+    steps:
+      - restore_cache:
+          key: carthage-cache-v1-{{ checksum "Cartfile.resolved" }}-<< parameters.xcode >>
+
+  save-carthage-cache:
+    parameters:
+      xcode:
+        type: string
+    steps:
+      - save_cache:
+          key: carthage-cache-v1-{{ checksum "Cartfile.resolved" }}-<< parameters.xcode >>
+          paths:
+            - Carthage
+
   save-api-diff-cache:
     parameters:
       api_diff_cache:
@@ -40,13 +58,40 @@ commands:
             - nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-<< parameters.api_diff_cache >>
 
   build-api-diff-report:
+    parameters:
+      sourcekitten-version:
+        type: string
+        default: "0.31.0"
     steps:
+      - restore-sourcekitten-cache:
+          version: << parameters.sourcekitten-version >>
       - run:
           name: Install Sourcekitten
-          command: brew update && brew install sourcekitten
+          command: if [ ! -d /usr/local/Cellar/sourcekitten/<< parameters.sourcekitten-version >> ]; then brew update && brew install sourcekitten; fi
+      - save-sourcekitten-cache:
+          version: << parameters.sourcekitten-version >>      
       - run:
           name: Building API Diff Report
           command: cd scripts/APIDiffReport && swift build 
+  save-sourcekitten-cache:
+    description: "Save sourcekitten binary"
+    parameters:
+      version: 
+        type: string
+    steps:
+      - save_cache:
+          key: sourcekitten-v2-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-<< parameters.version >>
+          paths:
+            - /usr/local/Cellar/sourcekitten/<< parameters.version >>
+            - /usr/local/bin/sourcekitten
+  restore-sourcekitten-cache:    
+    description: "Restore sourcekitten binary"
+    parameters:
+      version: 
+        type: string
+    steps:
+      - restore_cache:
+          key: sourcekitten-v2-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-<< parameters.version >>
 
   run_api_log:
     parameters:
@@ -62,18 +107,20 @@ commands:
           name: Generating MapboxNavigation API Log
           command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
 
+  install-dependencies:
+    parameters:
+      spm:
+        type: boolean
+    steps:
+      - when:
+          condition: 
+            not: << parameters.spm >>
+          steps:
+            - run:
+                name: Install Dependencies
+                command: carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
+
 step-library:
-  - &restore-cache
-      restore_cache:
-        keys:
-          - nav-cache-v{{ .Environment.CARTHAGE_CACHE_VERSION }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-
-  - &save-cache
-      save_cache:
-        key: nav-cache-v{{ .Environment.CARTHAGE_CACHE_VERSION }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-        paths:
-          - Carthage
-
   - &restore-cache-cocoapods
       restore_cache:
         keys:
@@ -147,16 +194,6 @@ step-library:
         name: Add GitHub to known hosts
         command: |
           for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
-
-  - &install-dependencies
-      when:
-        condition:
-          not: << parameters.spm >>
-        steps:
-          run:
-            name: Install Dependencies
-            command: |
-              carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
 
   - &build-Example
       run:
@@ -234,7 +271,7 @@ jobs:
         default: "12.4.0"
       device:
         type: string
-        default: "iPhone 8 Plus"
+        default: "iPhone 12 Pro Max"
       iOS:
         type: string
         default: "14.4"
@@ -253,6 +290,9 @@ jobs:
       generate_api_log:
         type: boolean
         default: false
+      verify_localization:
+        type: boolean
+        default: true
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -264,23 +304,32 @@ jobs:
       - run:
           name: Install prerequisites
           command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
-      - run:
-          name: pre-start simulator
-          command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
-      - *verify-missing-localizable-strings
+      - when: # Simulator is needed only for tests
+          condition: << parameters.test >>
+          steps:
+            - run:          
+                name: pre-start simulator
+                command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
+      - when:
+          condition: << parameters.verify_localization >>
+          steps:
+            - *verify-missing-localizable-strings
       - *add-github-to-known-hosts
       - when:
           condition:
             not: << parameters.spm >>
           steps:
             - *update-carthage-version
-            - *restore-cache
+            - restore-carthage-cache:
+                xcode: << parameters.xcode >>
             - when:
                 condition: << parameters.delete_private_deps >>
                 steps:
                   - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
-            - *install-dependencies
-            - *save-cache
+            - install-dependencies:
+                spm: << parameters.spm >>
+            - save-carthage-cache:
+                xcode: << parameters.xcode >>
             - run:
                 name: MapboxCoreNavigation
                 command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
@@ -374,22 +423,23 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "11.4.1"
+        default: "12.4.0"
       device:
         type: string
-        default: "iPhone 8 Plus"
+        default: "iPhone 12 Pro Max"
       iOS:
         type: string
-        default: "13.4.1"
+        default: "14.4"
       base_api_tag:
         type: string
-        default: "v0.40.0"
+        default: "v2.0.0-beta.12"
     macos:
       xcode: << parameters.xcode >>
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
+      - *add-github-to-known-hosts
       - build-api-diff-report
       - run:
           name: Store latest APIDiffReport
@@ -401,19 +451,21 @@ jobs:
           api_diff_cache: .Environment.CIRCLE_SHA1
       - run:
           name: Move Api Diff
-          command: |
-            mv api_logs original_api
+          command: mv api_logs original_api
       - restore-api-diff-cache-by-tag:
           api_diff_cache: << parameters.base_api_tag >>
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - *update-carthage-version
-      - *restore-cache
-      - *install-dependencies
+      - restore-carthage-cache:
+          xcode: << parameters.xcode >>
+      - install-dependencies:
+          spm: false
       - run:
           name: Install prerequisites
           command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
-      - *save-cache
+      - save-carthage-cache:
+          xcode: << parameters.xcode >>
       - save-api-diff-cache-by-tag:
           api_diff_cache: << parameters.base_api_tag >>
       - run:
@@ -431,50 +483,84 @@ jobs:
           name: Generating MapboxNavigation API Diff
           command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/original_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json
 
+  generate-api-log:
+    parameters:
+      xcode:
+        type: string
+        default: "12.4.0"
+      device:
+        type: string
+        default: "iPhone 12 Pro Max"
+      iOS:
+        type: string
+        default: "14.4"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *add-github-to-known-hosts
+      - *update-carthage-version
+      - restore-carthage-cache:
+          xcode: << parameters.xcode >>
+#      - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
+      - install-dependencies:
+          spm: false
+      - save-carthage-cache:
+          xcode: << parameters.xcode >>
+      - build-api-diff-report
+      - run_api_log:
+          iOS: << parameters.iOS >>
+          device: << parameters.device >>
+      - save-api-diff-cache:
+          api_diff_cache: .Environment.CIRCLE_SHA1
+
+
 workflows:
   workflow:
     jobs:
-      - build-job:
-          name: "Xcode_12.4_iOS_14.4"
-          xcode: "12.4.0"
-          iOS: "14.4"
-          device: "iPhone 8 Plus"
-          generate_api_log: true
-      - build-job:
-          name: "Xcode_12.4_iOS_14.4_SPM"
-          xcode: "12.4.0"
-          iOS: "14.4"
-          device: "iPhone 8 Plus"
-          spm: true
-          codecoverage: false
-      - pod-job:
-          name: "Xcode_12.0_iOS_14.0_CP_install"
-          update: false
-          xcode: "12.0.0"
-          iOS: "14.0"
-          archive: true
-      - pod-job:
-          name: "Xcode_12.0_iOS_14.0_CP_update"
-          update: true
-          xcode: "12.0.0"
-          iOS: "14.0"
-          lint: true
-      - xcode-12-examples
-      - spm-test-job:
-          name: "swift test; Xcode 12.4; iOS 13.7"
-          xcode: "12.4.0"
-          iOS: "13.7"          
-      - spm-test-job:
-          name: "swift test; Xcode 12.4; iOS 14.4"
-          xcode: "12.4.0"
-          iOS: "14.4"          
-      - ios-trigger-metrics:
-          filters:
-            branches:
-              only: release-v2.0
+      - generate-api-log:
+          name: "Generate API Log"
+      # - build-job:
+      #     name: "Xcode_12.4_iOS_14.4_SPM"
+      #     xcode: "12.4.0"
+      #     iOS: "14.4"
+      #     device: "iPhone 8 Plus"
+      #     spm: true
+      #     codecoverage: false
+      # - pod-job:
+      #     name: "Xcode_12.0_iOS_14.0_CP_install"
+      #     update: false
+      #     xcode: "12.0.0"
+      #     iOS: "14.0"
+      #     archive: true
+      # - pod-job:
+      #     name: "Xcode_12.0_iOS_14.0_CP_update"
+      #     update: true
+      #     xcode: "12.0.0"
+      #     iOS: "14.0"
+      #     lint: true
+      # - xcode-12-examples
+      # - spm-test-job:
+      #     name: "swift test; Xcode 12.4; iOS 13.7"
+      #     xcode: "12.4.0"
+      #     iOS: "13.7"          
+      # - spm-test-job:
+      #     name: "swift test; Xcode 12.4; iOS 14.4"
+      #     xcode: "12.4.0"
+      #     iOS: "14.4"          
+      # - ios-trigger-metrics:
+      #     filters:
+      #       branches:
+      #         only: release-v2.0
       - api-diff-job-approval:
+          name: "Approve API Diff"
           type: approval
       - api-diff-job:
+          name: "Verify no breaking API changes introduced"
           requires:
-            - "Xcode_12.0_iOS_14.0"
-            - api-diff-job-approval
+            - "Generate API Log"
+            - "Approve API Diff"
