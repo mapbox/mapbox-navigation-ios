@@ -29,6 +29,12 @@ open class PassiveLocationDataSource: NSObject {
         super.init()
         
         self.systemLocationManager.delegate = self
+
+        subscribeNotifications()
+    }
+    
+    deinit {
+        unsubscribeNotifications()
     }
     
     /**
@@ -96,6 +102,8 @@ open class PassiveLocationDataSource: NSObject {
         return Navigator.shared.roadObjectMatcher
     }
     
+    var lastRawLocation: CLLocation?
+    
     /**
      Manually sets the current location.
      
@@ -113,11 +121,20 @@ open class PassiveLocationDataSource: NSObject {
             navigator.updateLocation(for: FixLocation(location))
         }
 
-        guard let lastRawLocation = locations.last else {
-            return
+        lastRawLocation = locations.last
+    }
+    
+    @objc private func navigationStatusDidChange(_ notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.update(to: status)
         }
-
-        let status = navigator.status(at: lastRawLocation.timestamp)
+    }
+    
+    private func update(to status: NavigationStatus) {
+        guard let lastRawLocation = lastRawLocation else { return }
+        
         let lastLocation = CLLocation(status.location)
         var speedLimit: Measurement<UnitSpeed>?
         var signStandard: SignStandard?
@@ -160,6 +177,17 @@ open class PassiveLocationDataSource: NSObject {
             userInfo[.signStandardKey] = signStandard
         }
         NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: userInfo)
+    }
+    
+    private func subscribeNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationStatusDidChange),
+                                               name: .navigationStatusDidChange,
+                                               object: nil)
+    }
+    
+    private func unsubscribeNotifications() {
+        NotificationCenter.default.removeObserver(self)
     }
     
     /**
@@ -234,8 +262,9 @@ extension TileEndpointConfiguration {
            - parameter credentials: Credentials for accessing road network data.
            - parameter tilesVersion: Routing tile version.
            - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
+           - parameter targetVersion: Routing tile version, which navigator would like to eventually switch to if it becomes available
      */
-    convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?) {
+    convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?, targetVersion: String?) {
         let host = credentials.host.absoluteString
         guard let accessToken = credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")
@@ -247,7 +276,8 @@ extension TileEndpointConfiguration {
                   token: accessToken,
                   userAgent: URLSession.userAgent,
                   navigatorVersion: "",
-                  isFallback: false,
+                  isFallback: targetVersion != nil,
+                  versionBeforeFallback: targetVersion ?? tilesVersion,
                   minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
     }
 }

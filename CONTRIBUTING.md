@@ -118,17 +118,38 @@ The .strings files should still be in the original English – that’s expecte
 
 ## Adding tests
 
+### Supported devices:
+- iPhone 11 Pro Max, iOS 13.7
+- iPhone 12 Pro Max, iOS 14
+
 ### Adding a unit test suite
 
-1. Add a Unit Test Case Class file to the MapboxCoreNavigationTests group in MapboxNavigation.xcodeproj. It will be located in Tests/MapboxCoreNavigationTests/.
-1. If a unit test requires a fixture, add a file to Tests/MapboxCoreNavigationTests/Fixtures/. Import `TestHelper` and call `Fixture.stringFromFileNamed(name:)` or `Fixture.JSONFromFileNamed(name:)`. 
+1. Add a Unit Test Case Class file to the `MapboxCoreNavigationTests` group in `MapboxNavigation.xcodeproj`. It will be located in `Tests/MapboxCoreNavigationTests/`.
+1. If a unit test requires a fixture, add a file to `Sources/TestHelper/Fixtures/`. Import `TestHelper` and call `Fixture.stringFromFileNamed(name:)` or `Fixture.JSONFromFileNamed(name:)`.
 
 ### Adding a snapshot test suite
 
-1. Add a file to the MapboxNavigationTests group in MapboxNavigation.xcodeproj. It will be located in Tests/MapboxNavigationTests/.
-1. Import `SnappyShrimp` and subclass `SnapshotTest`, or import `FBSnapshotTestCase` and subclass `FBSnapshotTestCase`.
-1. Add the expected screenshot image to Tests/MapboxNavigationTests/ReferenceImages/MapboxNavigationTests._TestSuiteName_ with a file name like `testLanesManeuver_iPhone_8_Plus_Portrait_iOS_12.1@3x.png` that indicates the test case name, device, iOS version, and resolution. Make sure the screenshot was taken on an iOS version and device that is consistent with the existing reference images.
-1. Call `verify(_:)`.
+Snapshot tests verified using [SnapshotTesting](https://github.com/pointfreeco/swift-snapshot-testing) library.
+
+1. Open Package.swift in Xcode.
+1. Select the `MapboxNavigation-Package` scheme.
+1. Add a Swift file to the `Tests/MapboxNavigationTests/` folder.
+1. Write an `XCTestCase` as you would normally do.
+1. Make sure to apply the desired style in `XCTestCase.setup()`. For example:
+   ```swift
+   DayStyle().apply()
+   ```
+1. Use `assertImageSnapshot` function to verify views.
+   ```swift
+   let view: UIView
+   ...
+   assertImageSnapshot(matching: view, as: .image(precision: 0.95))
+   ```
+1. For each [supported device](#supported-devices), do the following:
+   1. Select the device as the target to run tests.
+   1. Perform a test run that will generate reference images for future verification. 
+   1. Perform a second test run and make sure that it succeeds. 
+1. Commit new tests along with generated snapshot images.
 
 ### Running unit tests
 

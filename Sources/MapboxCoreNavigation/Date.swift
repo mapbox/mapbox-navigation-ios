@@ -15,6 +15,6 @@ extension Date {
     
     var nanosecondsSince1970: Double {
         // UnitDuration.nanoseconds requires iOS 13
-        return timeIntervalSince1970 * 1e6
+        return timeIntervalSince1970 * 1e9
     }
 }

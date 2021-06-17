@@ -30,20 +30,30 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
+        navigation = nil
         UserDefaults.resetStandardUserDefaults()
-        Navigator.shared.navigator.resetRideSession()
+        Navigator._recreateNavigator()
     }
     
     func testNavigationNotificationsInfoDict() {
-        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .never)
+        navigation = MapboxNavigationService(route: route,
+                                             routeIndex: 0,
+                                             routeOptions: routeOptions,
+                                             directions: directions,
+                                             simulating: .never)
         let now = Date()
         let steps = route.legs.first!.steps
         let coordinates = steps[2].shape!.coordinates + steps[3].shape!.coordinates
         
-        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                                  altitude: -1, horizontalAccuracy: 10,
-                                                                  verticalAccuracy: -1, course: -1, speed: 10,
-                                                                  timestamp: now + $0.offset) }
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + $0.offset)
+        }
         
         let spokenTest = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (note) -> Bool in
             return note.userInfo!.count == 2
@@ -56,7 +66,13 @@ class MapboxCoreNavigationTests: XCTestCase {
             navigation.locationManager(navigation.locationManager, didUpdateLocations: [loc])
         }
         
-        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.78895, longitude: -122.42543), altitude: 1, horizontalAccuracy: 1, verticalAccuracy: 1, course: 171, speed: 10, timestamp: Date() + 4)
+        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.78895, longitude: -122.42543),
+                                  altitude: 1,
+                                  horizontalAccuracy: 1,
+                                  verticalAccuracy: 1,
+                                  course: 171,
+                                  speed: 10,
+                                  timestamp: Date() + 4)
         
         navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
         
@@ -64,18 +80,27 @@ class MapboxCoreNavigationTests: XCTestCase {
     }
     
     func testDepart() {
-        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .never)
+        navigation = MapboxNavigationService(route: route,
+                                             routeIndex: 0,
+                                             routeOptions: routeOptions,
+                                             directions: directions,
+                                             simulating: .never)
         
         // Coordinates from first step
         let coordinates = route.legs[0].steps[0].shape!.coordinates
         let now = Date()
-        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                                  altitude: -1, horizontalAccuracy: 10,
-                                                                  verticalAccuracy: -1, course: -1, speed: 10,
-                                                                  timestamp: now + $0.offset) }
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + $0.offset)
+        }
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+            let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
             return routeProgress != nil && routeProgress?.currentLegProgress.userHasArrivedAtWaypoint == false
         }
@@ -91,48 +116,97 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
     
-    func testNewStep() {
-        // Coordinates from beginning of step[1] to end of step[2]
-        let coordinates = route.legs[0].steps[1].shape!.coordinates + route.legs[0].steps[2].shape!.coordinates
-        let locations: [CLLocation]
-        let now = Date()
-        locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                              altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, course: -1, speed: 10,
-                                                              timestamp: now + $0.offset) }
+    func disabled_testNewStep() {
+        let steps = route.legs[0].steps
+        // Create list of coordinates, which includes only first step.
+        let coordinates = steps[0].shape?.coordinates ?? []
         
-        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .never)
-        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+        XCTAssertEqual(coordinates.count, 9, "Incorrect coordinates count.")
+        
+        let currentDate = Date()
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: -1,
+                       verticalAccuracy: -1,
+                       timestamp: currentDate + $0.offset)
+        }
+        
+        let navigationService = MapboxNavigationService(route: route,
+                                                        routeIndex: 0,
+                                                        routeOptions: routeOptions,
+                                                        directions: directions,
+                                                        simulating: .never)
+        
+        var receivedSpokenInstructions: [String] = []
+        
+        let expectation = self.expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
+                    object: navigationService.router) { (notification) -> Bool in
+            let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
-            return routeProgress?.currentLegProgress.stepIndex == 2
+            guard let spokenInstruction = routeProgress?.currentLegProgress.currentStepProgress.currentSpokenInstruction?.text else {
+                XCTFail("Spoken instruction should be valid.")
+                return false
+            }
+            
+            receivedSpokenInstructions.append(spokenInstruction)
+            
+            // Navigator always returns first spoken instruction for the second step.
+            return routeProgress?.currentLegProgress.stepIndex == 1
         }
         
-        navigation.start()
+        navigationService.start()
         
-        locations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0])}
-        
-        waitForExpectations(timeout: waitForInterval) { (error) in
-            XCTAssertNil(error)
+        // Iterate overal locations in first step with delay of one second.
+        var delay = 0.0
+        for location in locations {
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
+                navigationService.router?.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
+            }
+            
+            delay += 1.0
         }
+        
+        wait(for: [expectation], timeout: 10.0)
+        
+        // TODO: Consider improving this test by decreasing delays for location simulation.
+        let expectedSpokenInstructions = [
+            "Head south on Taylor Street, then turn right onto California Street",
+            "Turn right onto California Street",
+            "In a quarter mile, turn left onto Hyde Street"
+        ]
+
+        XCTAssertEqual(expectedSpokenInstructions, receivedSpokenInstructions, "Spoken instructions are not equal.")
     }
     
     func testJumpAheadToLastStep() {
         let coordinates = route.legs[0].steps.map { $0.shape!.coordinates }.flatMap { $0 }
         
         let now = Date()
-        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, timestamp: now + $0.offset) }
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: -1,
+                       verticalAccuracy: -1,
+                       timestamp: now + $0.offset)
+        }
         
         let locationManager = ReplayLocationManager(locations: locations)
-        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
+        locationManager.speedMultiplier = 100
+        navigation = MapboxNavigationService(route: route,
+                                             routeIndex: 0,
+                                             routeOptions: routeOptions,
+                                             directions: directions,
+                                             locationSource: locationManager,
+                                             simulating: .never)
         
-        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
-            let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
+                    object: navigation.router) { (notification) -> Bool in
+            let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             return routeProgress?.currentLegProgress.stepIndex == 4
         }
         
         navigation.start()
-        
-        locations.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
         
         waitForExpectations(timeout: waitForInterval) { (error) in
             XCTAssertNil(error)
@@ -142,25 +216,45 @@ class MapboxCoreNavigationTests: XCTestCase {
     func testShouldReroute() {
         let coordinates = route.legs[0].steps[1].shape!.coordinates
         let now = Date()
-        let locations = coordinates.enumerated().map { CLLocation(coordinate: $0.element,
-                                                                  altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + $0.offset) }
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + $0.offset)
+        }
         
-        let offRouteCoordinates = [[-122.41765, 37.79095],[-122.41830,37.79087],[-122.41907,37.79079],[-122.41960,37.79073]]
-            .map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) }
+        let offRouteCoordinates = [
+            [-122.41765, 37.79095],
+            [-122.41830, 37.79087],
+            [-122.41907, 37.79079],
+            [-122.41960, 37.79073]
+        ].map { CLLocationCoordinate2D(latitude: $0[1], longitude: $0[0]) }
         
         let offRouteLocations = offRouteCoordinates.enumerated().map {
-            CLLocation(coordinate: $0.element, altitude: -1, horizontalAccuracy: 10,
-                       verticalAccuracy: -1, course: -1, speed: 10,
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
                        timestamp: now + locations.count + $0.offset)
         }
         
-        let locationManager = ReplayLocationManager(locations: locations + offRouteLocations)
-        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
+        let locationManager = DummyLocationManager()
+        navigation = MapboxNavigationService(route: route,
+                                             routeIndex: 0,
+                                             routeOptions: routeOptions,
+                                             directions: directions,
+                                             locationSource: locationManager,
+                                             simulating: .never)
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
             XCTAssertEqual(notification.userInfo?.count, 1)
             
-            let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
-            return location?.coordinate == offRouteLocations[1].coordinate
+            let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
+            return offRouteLocations.contains(location)
         }
         
         navigation.start()
@@ -181,7 +275,12 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
 
         let locationManager = DummyLocationManager()
-        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, locationSource: locationManager, simulating: .never)
+        navigation = MapboxNavigationService(route: route,
+                                             routeIndex: 0,
+                                             routeOptions: routeOptions,
+                                             directions: directions,
+                                             locationSource: locationManager,
+                                             simulating: .never)
 
         expectation(forNotification: .routeControllerProgressDidChange, object: navigation.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
@@ -221,7 +320,7 @@ class MapboxCoreNavigationTests: XCTestCase {
             navigation.locationManager(locationManager, didUpdateLocations: [location])
         }
 
-        self.waitForExpectations(timeout: 5) { (error) in
+        waitForExpectations(timeout: 5) { (error) in
             XCTAssertNil(error)
         }
     }
@@ -229,7 +328,15 @@ class MapboxCoreNavigationTests: XCTestCase {
     func testOrderOfExecution() {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let directions = DirectionsSpy()
-        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions)
+        let locationManager = ReplayLocationManager(locations: trace)
+        locationManager.speedMultiplier = 100
+        // ReplayLocationManager contains 411 location and at speed 100 it will take at most 5 second to stream all of them into the NavigationService
+        let waitExpectation = expectation(description: "Waiting for ReplayLocationManager")
+        navigation = MapboxNavigationService(route: route,
+                                             routeIndex: 0,
+                                             routeOptions: routeOptions,
+                                             directions: directions,
+                                             locationSource: locationManager)
         
         struct InstructionPoint {
             enum InstructionType {
@@ -245,45 +352,43 @@ class MapboxCoreNavigationTests: XCTestCase {
         
         var points = [InstructionPoint]()
         
-        expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil) { (notification) -> Bool in
+        let spokenInstructionsExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
             let legIndex = routeProgress.legIndex
             let stepIndex = routeProgress.currentLegProgress.stepIndex
             let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
             let visualInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex
             
-            let point = InstructionPoint(type: .spoken, legIndex: legIndex, stepIndex: stepIndex, spokenInstructionIndex: spokenInstructionIndex, visualInstructionIndex: visualInstructionIndex)
+            let point = InstructionPoint(type: .spoken,
+                                         legIndex: legIndex,
+                                         stepIndex: stepIndex,
+                                         spokenInstructionIndex: spokenInstructionIndex,
+                                         visualInstructionIndex: visualInstructionIndex)
             points.append(point)
             
             return true
         }
         
-        expectation(forNotification: .routeControllerDidPassVisualInstructionPoint, object: nil) { (notification) -> Bool in
+        let visualInstructionsExpectation = expectation(forNotification: .routeControllerDidPassVisualInstructionPoint, object: nil) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
             let legIndex = routeProgress.legIndex
             let stepIndex = routeProgress.currentLegProgress.stepIndex
             let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
             let visualInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex
             
-            let point = InstructionPoint(type: .visual, legIndex: legIndex, stepIndex: stepIndex, spokenInstructionIndex: spokenInstructionIndex, visualInstructionIndex: visualInstructionIndex)
+            let point = InstructionPoint(type: .visual,
+                                         legIndex: legIndex,
+                                         stepIndex: stepIndex,
+                                         spokenInstructionIndex: spokenInstructionIndex,
+                                         visualInstructionIndex: visualInstructionIndex)
             points.append(point)
             
             return true
         }
         
-        for location in trace {
-            // Attempt to snarf visual and spoken instructions by calling methods which internally call
-            // `Navigator.getStatusForMonotonicTimestampNanoseconds(_:)` multiple times.
-            let _ = navigation.router.userIsOnRoute(location)
-            let _ = navigation.router.location
-            let _ = (navigation.router as? RouteController)?.snappedLocation
-            
-            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [location])
-        }
+        locationManager.startUpdatingLocation()
         
-        waitForExpectations(timeout: 2) { (error) in
-            XCTAssertNil(error)
-        }
+        _ = XCTWaiter.wait(for: [waitExpectation, spokenInstructionsExpectation, visualInstructionsExpectation], timeout: waitForInterval)
         
         if points.isEmpty {
             XCTFail()
@@ -335,7 +440,11 @@ class MapboxCoreNavigationTests: XCTestCase {
     
     func testFailToReroute() {
         let directionsClientSpy = DirectionsSpy()
-        navigation = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy,  simulating: .never)
+        navigation = MapboxNavigationService(route: route,
+                                             routeIndex: 0,
+                                             routeOptions: routeOptions,
+                                             directions: directionsClientSpy,
+                                             simulating: .never)
         
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
             return true

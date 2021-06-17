@@ -69,6 +69,11 @@ open class SimulatedLocationManager: NavigationLocationManager {
         return copy
     }
     
+    public override var simulatesLocation: Bool {
+        get { return true }
+        set { super.simulatesLocation = newValue }
+    }
+    
     private var routeProgress: RouteProgress?
     
     /**

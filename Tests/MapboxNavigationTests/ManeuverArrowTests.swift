@@ -1,12 +1,13 @@
 import XCTest
-import FBSnapshotTestCase
+import SnapshotTesting
 import MapboxDirections
 import TestHelper
 import CoreLocation
+import MapboxMaps
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class ManeuverArrowTests: FBSnapshotTestCase {
+class ManeuverArrowTests: XCTestCase {
     let waypointRoute = Fixture.route(from: "waypoint-after-turn", options: NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 37.787358, longitude: -122.408231),
         CLLocationCoordinate2D(latitude: 37.790177, longitude: -122.408687),
@@ -15,7 +16,9 @@ class ManeuverArrowTests: FBSnapshotTestCase {
 
     override func setUp() {
         super.setUp()
-        recordMode = false
+        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
+        isRecording = false
+        DayStyle().apply()
     }
     
     func testManeuverArrowHandlesWaypointsCorrectly() {
@@ -25,7 +28,6 @@ class ManeuverArrowTests: FBSnapshotTestCase {
         let linePlotter = LinePlotter.init(coordinates: polyline.coordinates, color: .red, lineWidth: 5.0, drawIndexesAsText: false)
         plotter.linePlotters = [linePlotter]
         print(polyline.coordinates.count)
-        
-        verify(plotter)
+        assertImageSnapshot(matching: plotter, as: .image(precision: 0.95))
     }
 }

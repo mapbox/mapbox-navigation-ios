@@ -21,7 +21,7 @@ class CarPlayManagerTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        CredentialsManager.default.accessToken = .mockedAccessToken
+        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         eventsManagerSpy = NavigationEventsManagerSpy()
         manager = CarPlayManager(directions: .mocked, eventsManager: eventsManagerSpy, navigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         searchController = CarPlaySearchController()
@@ -212,7 +212,7 @@ class CarPlayManagerTests: XCTestCase {
         // a navigation session is started on the mapTemplate
         // a CarPlayNavigationViewController is presented (why?)
 
-        // the CarPlayNavigationDelegate is notified
+        // the CarPlayNavigationViewControllerDelegate is notified
         XCTAssertTrue(exampleDelegate.navigationInitiated, "The CarPlayManagerDelegate should have been told that navigation was initiated.")
 
         manager.currentNavigator!.exitNavigation(byCanceling: true)
@@ -281,7 +281,7 @@ class CarPlayManagerSpec: QuickSpec {
     override func spec() {
         // NOTE: Xcode is going to complain here - ignore. This is a known XCTest bug.
         guard #available(iOS 12, *) else { return }
-        CredentialsManager.default.accessToken = .mockedAccessToken
+        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         var manager: CarPlayManager?
         var delegate: TestCarPlayManagerDelegate?
 

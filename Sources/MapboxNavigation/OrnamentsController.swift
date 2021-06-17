@@ -142,12 +142,6 @@ extension NavigationMapView {
                 return
             }
             
-            // Avoid aggressively opting the developer into Mapbox services if they haven’t provided an access token.
-            guard let _ = CredentialsManager.default.accessToken else {
-                navigationView.wayNameView.isHidden = true
-                return
-            }
-            
             labelCurrentRoadFeature(at: snappedLocation ?? rawLocation)
             
             if let labelRoadNameCompletionHandler = labelRoadNameCompletionHandler {
@@ -219,7 +213,8 @@ extension NavigationMapView {
                 streetLabelLayer.source = mapboxStreetsSource.id
                 
                 var sourceLayerIdentifier: String? {
-                    let identifiers = mapView.tileSetIdentifiers(mapboxStreetsSource.id, sourceType: mapboxStreetsSource.type)
+                    let identifiers = mapView.tileSetIdentifiers(mapboxStreetsSource.id,
+                                                                 sourceType: mapboxStreetsSource.type.rawValue)
                     if VectorSource.isMapboxStreets(identifiers) {
                         let roadLabelLayerIdentifiersByTileSetIdentifier = [
                             "mapbox.mapbox-streets-v8": "road",
@@ -261,7 +256,7 @@ extension NavigationMapView {
                 
                 do {
                     var layerPosition: MapboxMaps.LayerPosition? = nil
-                    if let firstLayerIdentifier = mapView.mapboxMap.__map.getStyleLayers().first?.id {
+                    if let firstLayerIdentifier = mapView.mapboxMap.style.allLayerIdentifiers.first?.id {
                         layerPosition = .below(firstLayerIdentifier)
                     }
                     
@@ -281,10 +276,10 @@ extension NavigationMapView {
                     guard let self = self else { return }
                     
                     var smallestLabelDistance = Double.infinity
-                    var latestFeature: MBXFeature?
+                    var latestFeature: MapboxCommon.Feature?
                     
                     var minimumEditDistance = Int.max
-                    var similarFeature: MBXFeature?
+                    var similarFeature: MapboxCommon.Feature?
 
                     for queriedFeature in queriedFeatures {
                         // Calculate the Levenshtein–Damerau edit distance between the EHorizon road name and the feature property road name, and then use the smallest one for the road label.
@@ -300,10 +295,10 @@ extension NavigationMapView {
                         
                         var lineStrings: [LineString] = []
                         
-                        if queriedFeature.feature.geometry.geometryType == MBXGeometryType_Line,
+                        if queriedFeature.feature.geometry.geometryType == GeometryType_Line,
                            let coordinates = queriedFeature.feature.geometry.extractLocationsArray() as? [CLLocationCoordinate2D] {
                             lineStrings.append(LineString(coordinates))
-                        } else if queriedFeature.feature.geometry.geometryType == MBXGeometryType_MultiLine,
+                        } else if queriedFeature.feature.geometry.geometryType == GeometryType_MultiLine,
                                   let coordinates = queriedFeature.feature.geometry.extractLocations2DArray() as? [[CLLocationCoordinate2D]] {
                             for coordinates in coordinates {
                                 lineStrings.append(LineString(coordinates))
@@ -333,14 +328,14 @@ extension NavigationMapView {
                     if latestFeature != similarFeature {
                         let style = self.navigationMapView.mapView.mapboxMap.style
                         if let similarFeature = similarFeature,
-                           self.navigationView.wayNameView.setupWith(roadFeature: similarFeature,
+                           self.navigationView.wayNameView.setupWith(feature: similarFeature,
                                                                      using: style) {
                             hideWayName = false
                         }
                     } else if smallestLabelDistance < 5 {
                         let style = self.navigationMapView.mapView.mapboxMap.style
                         if let latestFeature = latestFeature,
-                           self.navigationView.wayNameView.setupWith(roadFeature: latestFeature,
+                           self.navigationView.wayNameView.setupWith(feature: latestFeature,
                                                                      using: style) {
                             hideWayName = false
                         }

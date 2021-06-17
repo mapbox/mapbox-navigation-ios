@@ -187,7 +187,7 @@ extension NavigationMapView {
                 try mapView.mapboxMap.style.removeLayer(withId: mainRouteLayerIdentifier)
                 try mapView.mapboxMap.style.removeLayer(withId: mainRouteCasingLayerIdentifier)
             } catch {
-                NSLog("Failed to remove main route line layer.")
+                print("Failed to remove main route line layer.")
             }
             
             fractionTraveled = 0.0
@@ -202,37 +202,53 @@ extension NavigationMapView {
         if traveledDifference == 0.0 {
             return
         }
-        let startDate = Date()
-        vanishingRouteLineUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
-            let timePassedInMilliseconds = Date().timeIntervalSince(startDate) * 1000
-            if timePassedInMilliseconds >= 980 {
-                timer.invalidate()
-                return
-            }
-            
-            let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
-            
-            do {
-                try self.mapView.mapboxMap.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
-                    let congestionSegments = routeProgress.route.congestionFeatures(legIndex: self.currentLegIndex, roadClassesWithOverriddenCongestionLevels: self.roadClassesWithOverriddenCongestionLevels)
-                    let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
-                                                                        fractionTraveled: newFractionTraveled)
-                    
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
+        
+        let congestionSegments = routeProgress.route.congestionFeatures(legIndex: currentLegIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+        
+        switch userLocationStyle {
+        
+        case .courseView:
+            let startDate = Date()
+            vanishingRouteLineUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
+                let timePassedInMilliseconds = Date().timeIntervalSince(startDate) * 1000
+                // In case if the time was already in the last interval - invalidate the timer and wait for the next routeProgress update.
+                if timePassedInMilliseconds >= 980 {
+                    timer.invalidate()
+                    return
                 }
                 
-                try self.mapView.mapboxMap.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
-                    let mainRouteCasingLayerGradient = self.routeLineGradient(fractionTraveled: newFractionTraveled)
+                let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
+                self.updateRouteLine(congestionSegments:congestionSegments, layerIdentifier: mainRouteLayerIdentifier, fractionTraveledUpdate: newFractionTraveled)
+                self.updateRouteLine(layerIdentifier: mainRouteCasingLayerIdentifier, fractionTraveledUpdate: newFractionTraveled)
+            })
+            
+        default:
+            self.updateRouteLine(congestionSegments:congestionSegments, layerIdentifier: mainRouteLayerIdentifier, fractionTraveledUpdate: fractionTraveled)
+            self.updateRouteLine(layerIdentifier: mainRouteCasingLayerIdentifier, fractionTraveledUpdate: fractionTraveled)
+        }
+    }
+    
+    func updateRouteLine(congestionSegments: [Turf.Feature]? = nil, layerIdentifier: String, fractionTraveledUpdate: Double) {
+        do {
+            if let congestionSegments = congestionSegments {
+                try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
+                    let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
+                                                                        fractionTraveled: fractionTraveledUpdate)
+                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
+                }
+            } else {
+                try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
+                    let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveledUpdate)
                     
                     lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
                 }
-            } catch {
-                NSLog("Failed to update main route line layer.")
             }
-        })
+        } catch {
+            print("Failed to update main route line layer.")
+        }
     }
     
-    func routeLineGradient(_ congestionFeatures: [Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {
+    func routeLineGradient(_ congestionFeatures: [Turf.Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {
         var gradientStops = [Double: UIColor]()
         var distanceTraveled = fractionTraveled
         

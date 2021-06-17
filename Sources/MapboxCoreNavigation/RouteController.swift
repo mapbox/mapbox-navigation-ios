@@ -96,11 +96,9 @@ open class RouteController: NSObject {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        guard let locationUpdateDate = lastLocationUpdateDate else {
+        guard lastLocationUpdateDate != nil, let status = navigator.getStatus() else {
             return nil
         }
-
-        let status = navigator.status(at: locationUpdateDate)
         
         guard status.routeState == .tracking || status.routeState == .complete else {
             return nil
@@ -168,12 +166,14 @@ open class RouteController: NSObject {
         
         super.init()
         
+        subscribeNotifications()
         updateNavigator(with: _routeProgress)
         updateObservation(for: _routeProgress)
     }
     
     deinit {
         resetObservation(for: _routeProgress)
+        unsubscribeNotifications()
     }
     
     func resetObservation(for progress: RouteProgress) {
@@ -239,8 +239,8 @@ open class RouteController: NSObject {
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
     private func updateRouteLeg(to value: Int) {
         let legIndex = UInt32(value)
-        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let timestamp = location?.timestamp {
-            updateIndexes(status: navigator.status(at: timestamp), progress: routeProgress)
+        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let status = navigator.getStatus() {
+            updateIndexes(status: status, progress: routeProgress)
         }
     }
     
@@ -254,9 +254,18 @@ open class RouteController: NSObject {
         rawLocation = location
         
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
+    }
+    
+    @objc private func navigationStatusDidChange(_ notification: NSNotification) {
+        guard let userInfo = notification.userInfo,
+              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.update(to: status)
+        }
+    }
 
-        let status = navigator.status(at: location.timestamp)
-        
+    private func update(to status: NavigationStatus) {
+        guard let location = rawLocation else { return }
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
         
@@ -275,28 +284,59 @@ open class RouteController: NSObject {
         refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
+    private func subscribeNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(fallbackToOffline),
+                                               name: .navigationDidSwitchToFallbackVersion,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(restoreToOnline),
+                                               name: .navigationDidSwitchToTargetVersion,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationStatusDidChange),
+                                               name: .navigationStatusDidChange,
+                                               object: nil)
+    }
+    
+    private func unsubscribeNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc func fallbackToOffline(_ notification: Notification) {
+        self.updateNavigator(with: self._routeProgress)
+        self.updateRouteLeg(to: self._routeProgress.legIndex)
+    }
+    
+    @objc func restoreToOnline(_ notification: Notification) {
+        self.updateNavigator(with: self._routeProgress)
+        self.updateRouteLeg(to: self._routeProgress.legIndex)
+    }
+    
     func updateIndexes(status: NavigationStatus, progress: RouteProgress) {
         let newLegIndex = Int(status.legIndex)
         let newStepIndex = Int(status.stepIndex)
         let newIntersectionIndex = Int(status.intersectionIndex)
         
-        if (newLegIndex != progress.legIndex) {
+        if newLegIndex != progress.legIndex {
             progress.legIndex = newLegIndex
         }
-        if (newStepIndex != progress.currentLegProgress.stepIndex) {
+        
+        if newStepIndex != progress.currentLegProgress.stepIndex {
             progress.currentLegProgress.stepIndex = newStepIndex
         }
         
-        if (newIntersectionIndex != progress.currentLegProgress.currentStepProgress.intersectionIndex) {
+        if newIntersectionIndex != progress.currentLegProgress.currentStepProgress.intersectionIndex {
             progress.currentLegProgress.currentStepProgress.intersectionIndex = newIntersectionIndex
         }
         
-        if let spokenIndexPrimitive = status.voiceInstruction?.index, progress.currentLegProgress.currentStepProgress.spokenInstructionIndex != Int(spokenIndexPrimitive)
-            {
+        if let spokenIndexPrimitive = status.voiceInstruction?.index,
+           progress.currentLegProgress.currentStepProgress.spokenInstructionIndex != Int(spokenIndexPrimitive) {
             progress.currentLegProgress.currentStepProgress.spokenInstructionIndex = Int(spokenIndexPrimitive)
         }
         
-        if let visualInstructionIndex = status.bannerInstruction?.index, routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex != Int(visualInstructionIndex) {
+        if let visualInstructionIndex = status.bannerInstruction?.index,
+           routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex != Int(visualInstructionIndex) {
             routeProgress.currentLegProgress.currentStepProgress.visualInstructionIndex = Int(visualInstructionIndex)
         }
     }
@@ -466,7 +506,8 @@ extension RouteController: Router {
             return true
         }
         
-        let status = status ?? navigator.status(at: location.timestamp)
+        // If we still wait for the first status from NavNative, there is no need to reroute
+        guard let status = status ?? navigator.getStatus() else { return true }
         let offRoute = status.routeState == .offRoute || status.routeState == .invalid
         return !offRoute
     }

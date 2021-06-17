@@ -12,7 +12,7 @@ public enum RoadObjectLocation {
      - parameter positions: Positions of gantry entries.
      - parameter shape: Shape of a gantry.
      */
-    case gantry(positions: [RoadObjectPosition], shape: Geometry)
+    case gantry(positions: [RoadObjectPosition], shape: Turf.Geometry)
 
     /**
      Location of an object represented as a point.
@@ -26,21 +26,21 @@ public enum RoadObjectLocation {
      - parameter exits: Positions of polygon exits.
      - parameter shape: Shape of a polygon.
      */
-    case polygon(entries: [RoadObjectPosition], exits: [RoadObjectPosition], shape: Geometry)
+    case polygon(entries: [RoadObjectPosition], exits: [RoadObjectPosition], shape: Turf.Geometry)
 
     /**
      Location of an object represented as a polyline.
      - parameter path: Position of a polyline on a road graph.
      - parameter shape: Shape of a polyline.
      */
-    case polyline(path: RoadGraph.Path, shape: Geometry)
+    case polyline(path: RoadGraph.Path, shape: Turf.Geometry)
 
     /**
      Location of an object represented as an OpenLR line.
      - parameter path: Position of a line on a road graph.
      - parameter shape: Shape of a line.
      */
-    case openLRLine(path: RoadGraph.Path, shape: Geometry)
+    case openLRLine(path: RoadGraph.Path, shape: Turf.Geometry)
 
     /**
      Location of an object represented as an OpenLR point.
@@ -55,35 +55,35 @@ public enum RoadObjectLocation {
      Location of a route alert.
      - parameter shape: Shape of an object.
      */
-    case routeAlert(shape: Geometry)
+    case routeAlert(shape: Turf.Geometry)
 
-    init(_ native: MapboxNavigationNative.MBNNMatchedRoadObjectLocation) {
-        if native.isMBNNOpenLRLineLocation() {
-            let location = native.getMBNNOpenLRLineLocation()
-            self = .openLRLine(path: RoadGraph.Path(location.path), shape: Geometry(location.shape))
-        } else if native.isMBNNOpenLRPointAlongLineLocation() {
-            let location = native.getMBNNOpenLRPointAlongLineLocation()
-            self = .openLRPoint(position: RoadGraph.Position(location.position),
-                                sideOfRoad: OpenLRSideOfRoad(location.sideOfRoad),
-                                orientation: OpenLROrientation(location.orientation),
-                                coordinate: location.coordinate)
-        } else if native.isMBNNMatchedPolylineLocation() {
-            let location = native.getMBNNMatchedPolylineLocation()
-            self = .polyline(path: RoadGraph.Path(location.path), shape: Geometry(location.shape))
-        } else if native.isMBNNMatchedGantryLocation() {
-            let location = native.getMBNNMatchedGantryLocation()
-            self = .gantry(positions: location.positions.map(RoadObjectPosition.init), shape: Geometry(location.shape))
-        } else if native.isMBNNMatchedPolygonLocation() {
-            let location = native.getMBNNMatchedPolygonLocation()
-            self = .polygon(entries: location.entries.map(RoadObjectPosition.init),
-                            exits: location.exits.map(RoadObjectPosition.init),
-                            shape: Geometry(location.shape))
-        } else if native.isMBNNMatchedPointLocation() {
-            let location = native.getMBNNMatchedPointLocation()
-            self = .point(position: RoadObjectPosition(location.position))
-        } else if native.isMBNNRouteAlert() {
-            let location = native.getMBNNRouteAlert()
-            self = .routeAlert(shape: Geometry(location.shape))
+    init(_ native: MapboxNavigationNative.MatchedRoadObjectLocation) {
+        if native.isOpenLRLineLocation() {
+            let location = native.getOpenLRLineLocation()
+            self = .openLRLine(path: RoadGraph.Path(location.getPath()), shape: Geometry(location.getShape()))
+        } else if native.isOpenLRPointAlongLineLocation() {
+            let location = native.getOpenLRPointAlongLineLocation()
+            self = .openLRPoint(position: RoadGraph.Position(location.getPosition()),
+                                sideOfRoad: OpenLRSideOfRoad(location.getSideOfRoad()),
+                                orientation: OpenLROrientation(location.getOrientation()),
+                                coordinate: location.getCoordinate())
+        } else if native.isMatchedPolylineLocation() {
+            let location = native.getMatchedPolylineLocation()
+            self = .polyline(path: RoadGraph.Path(location.getPath()), shape: Geometry(location.getShape()))
+        } else if native.isMatchedGantryLocation() {
+            let location = native.getMatchedGantryLocation()
+            self = .gantry(positions: location.getPositions().map(RoadObjectPosition.init), shape: Geometry(location.getShape()))
+        } else if native.isMatchedPolygonLocation() {
+            let location = native.getMatchedPolygonLocation()
+            self = .polygon(entries: location.getEntries().map(RoadObjectPosition.init),
+                            exits: location.getExits().map(RoadObjectPosition.init),
+                            shape: Geometry(location.getShape()))
+        } else if native.isMatchedPointLocation() {
+            let location = native.getMatchedPointLocation()
+            self = .point(position: RoadObjectPosition(location.getPosition()))
+        } else if native.isRouteAlert() {
+            let location = native.getRouteAlert()
+            self = .routeAlert(shape: Geometry(location.getShape()))
         } else {
             preconditionFailure("RoadObjectLocation can't be constructed. Unknown type.")
         }

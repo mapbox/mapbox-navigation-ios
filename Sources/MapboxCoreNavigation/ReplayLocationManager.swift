@@ -35,6 +35,11 @@ open class ReplayLocationManager: NavigationLocationManager {
         }
     }
     
+    public override var simulatesLocation: Bool {
+        get { return true }
+        set { super.simulatesLocation = newValue }
+    }
+    
     public init(locations: [CLLocation]) {
         self.locations = locations.sorted { $0.timestamp < $1.timestamp }
         super.init()

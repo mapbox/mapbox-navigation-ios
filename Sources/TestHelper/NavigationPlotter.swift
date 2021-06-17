@@ -167,7 +167,7 @@ public class NavigationPlotter: UIView {
         
         if let coordinateBounds = coordinateBounds {
             let cameraOptions = navigationMapView.mapView.mapboxMap.camera(for: coordinateBounds, padding: padding, bearing: nil, pitch: nil)
-            navigationMapView.mapView.camera.setCamera(to: cameraOptions)
+            navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
         }
     }
     

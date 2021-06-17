@@ -17,11 +17,7 @@ public final class RoadObjectStore {
     /// The road object store’s delegate.
     public weak var delegate: RoadObjectStoreDelegate? {
         didSet {
-            if delegate != nil {
-                native.setObserverForOptions(self)
-            } else {
-                native.setObserverForOptions(nil)
-            }
+            updateObserver()
         }
     }
 
@@ -93,7 +89,19 @@ public final class RoadObjectStore {
         native.setObserverForOptions(nil)
     }
 
-    private let native: MapboxNavigationNative.RoadObjectsStore
+    var native: MapboxNavigationNative.RoadObjectsStore {
+        didSet {
+            updateObserver()
+        }
+    }
+    
+    private func updateObserver() {
+        if delegate != nil {
+            native.setObserverForOptions(self)
+        } else {
+            native.setObserverForOptions(nil)
+        }
+    }
 }
 
 extension RoadObjectStore: RoadObjectsStoreObserver {

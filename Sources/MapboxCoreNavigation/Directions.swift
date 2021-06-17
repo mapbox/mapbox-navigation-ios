@@ -47,7 +47,7 @@ extension Directions {
         let directionsUri = url(forCalculating: options)
         
         Navigator.shared.router.getRouteForDirectionsUri(directionsUri.absoluteString) { (result) in
-            let json = result?.value as? String
+            let json = result.value as? String
             let data = json?.data(using: .utf8)
             let decoder = JSONDecoder()
             decoder.userInfo = [.options: options,
@@ -63,7 +63,7 @@ extension Directions {
             } else {
                 DispatchQueue.main.async {
                     completionHandler(session, .failure(.unknown(response: nil,
-                                                                 underlying: result?.error as? Error,
+                                                                 underlying: result.error as? Error,
                                                                  code: nil,
                                                                  message: nil)))
                 }

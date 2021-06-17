@@ -8,7 +8,7 @@ class CustomViewController: UIViewController {
     
     var destinationAnnotation: PointAnnotation! {
         didSet {
-            navigationMapView.mapView.annotations.addAnnotation(destinationAnnotation)
+            pointAnnotationManager?.syncAnnotations([destinationAnnotation])
         }
     }
     
@@ -35,6 +35,8 @@ class CustomViewController: UIViewController {
     lazy var feedbackViewController: FeedbackViewController = {
         return FeedbackViewController(eventsManager: navigationService.eventsManager)
     }()
+    
+    var pointAnnotationManager: PointAnnotationManager?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +80,11 @@ class CustomViewController: UIViewController {
                                                                                   right: 10.0)
         
         navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            self.pointAnnotationManager = self.navigationMapView.mapView.annotations.makePointAnnotationManager()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -105,10 +112,9 @@ class CustomViewController: UIViewController {
     // Notifications sent on all location updates
     @objc func progressDidChange(_ notification: NSNotification) {
         // do not update if we are previewing instruction steps
-        guard previewInstructionsView == nil else { return }
-        
-        let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
+        guard previewInstructionsView == nil,
+              let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
+              let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation else { return }
         
         // Add maneuver arrow
         if routeProgress.currentLegProgress.followOnStep != nil {
@@ -122,11 +128,15 @@ class CustomViewController: UIViewController {
         instructionsBannerView.isHidden = false
         
         // Update `UserCourseView` to be placed on the most recent location.
-        navigationMapView.updateUserCourseView(location, animated: true)
+        navigationMapView.moveUserLocation(to: location, animated: true)
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
-        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else {
+            assertionFailure("RouteProgress should be available.")
+            return
+        }
+        
         instructionsBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 

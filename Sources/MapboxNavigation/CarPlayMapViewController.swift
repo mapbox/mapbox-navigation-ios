@@ -57,13 +57,14 @@ public class CarPlayMapViewController: UIViewController {
      */
     public lazy var zoomInButton: CPMapButton = {
         let zoomInButton = CPMapButton { [weak self] (button) in
-            guard let self = self, let mapView = self.navigationMapView.mapView else { return }
+            guard let self = self,
+                  let mapView = self.navigationMapView.mapView else { return }
             
             self.navigationMapView.navigationCamera.stop()
             
             var cameraOptions = CameraOptions(cameraState: mapView.cameraState)
             cameraOptions.zoom = mapView.cameraState.zoom + 1.0
-            mapView.camera.setCamera(to: cameraOptions)
+            mapView.mapboxMap.setCamera(to: cameraOptions)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -77,13 +78,14 @@ public class CarPlayMapViewController: UIViewController {
      */
     public lazy var zoomOutButton: CPMapButton = {
         let zoomOutButton = CPMapButton { [weak self] button in
-            guard let self = self, let mapView = self.navigationMapView.mapView else { return }
+            guard let self = self,
+                  let mapView = self.navigationMapView.mapView else { return }
             
             self.navigationMapView.navigationCamera.stop()
             
             var cameraOptions = CameraOptions(cameraState: mapView.cameraState)
             cameraOptions.zoom = mapView.cameraState.zoom - 1.0
-            mapView.camera.setCamera(to: cameraOptions)
+            mapView.mapboxMap.setCamera(to: cameraOptions)
         }
         
         let bundle = Bundle.mapboxNavigation
@@ -140,13 +142,30 @@ public class CarPlayMapViewController: UIViewController {
         navigationMapView.navigationCamera.follow()
     }
     
+    override public func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        
+        guard let activeRoute = navigationMapView.routes?.first else {
+            navigationMapView.navigationCamera.follow()
+            return
+        }
+        
+        if navigationMapView.navigationCamera.state == .idle {
+            var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
+            cameraOptions.pitch = 0
+            navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
+            
+            navigationMapView.fitCamera(to: activeRoute)
+        }
+    }
+    
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
         }
         
-        navigationMapView.mapView.location.options.puckType = .puck2D()
+        navigationMapView.userLocationStyle = .puck2D()
         
         navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
@@ -202,35 +221,24 @@ public class CarPlayMapViewController: UIViewController {
         
         return closeButton
     }
-    
-    override public func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        
-        guard let activeRoute = navigationMapView.routes?.first else {
-            navigationMapView.navigationCamera.follow()
-            return
-        }
-        
-        if navigationMapView.navigationCamera.state == .idle {
-            var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
-            cameraOptions.pitch = 0
-            navigationMapView.mapView.camera.setCamera(to: cameraOptions)
-            
-            navigationMapView.fitCamera(to: activeRoute)
-        }
-    }
 }
+
+// MARK: - StyleManagerDelegate methods
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
+    
     public func location(for styleManager: StyleManager) -> CLLocation? {
-        return navigationMapView.mostRecentUserCourseViewLocation ?? navigationMapView.mapView.location.latestLocation?.internalLocation ?? coarseLocationManager.location
+        return navigationMapView.mostRecentUserCourseViewLocation ??
+            navigationMapView.mapView.location.latestLocation?.internalLocation ??
+            coarseLocationManager.location
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let styleURL = style.previewMapStyleURL
-        if navigationMapView.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
-            navigationMapView.mapView.mapboxMap.style.uri = StyleURI(url: styleURL)
+        let mapboxMapStyle = navigationMapView.mapView.mapboxMap.style
+        if mapboxMapStyle.uri?.rawValue != style.mapStyleURL.absoluteString {
+            mapboxMapStyle.uri = StyleURI(url: styleURL)
         }
     }
     
