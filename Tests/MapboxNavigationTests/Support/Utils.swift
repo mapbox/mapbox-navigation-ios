@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 import CoreLocation
@@ -11,3 +12,11 @@ var routeOptions: NavigationRouteOptions {
 }
 let jsonFileName = "routeWithInstructions"
 let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+
+extension UIViewController {
+    func simulatateViewControllerPresented() {
+        _ = view // load view
+        viewWillAppear(false)
+        viewDidAppear(false)
+    }
+}

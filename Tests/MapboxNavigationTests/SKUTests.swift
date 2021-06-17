@@ -24,26 +24,17 @@ class SKUTests: XCTestCase {
         XCTAssertEqual(speechSkuToken?.skuId, SkuID.navigationUser.rawValue)
     }
 
-    // NOTE: Disable due to `UIApplication.shared.delegate` is nil during SPM testing. 
-    func disabled_testSKUTokensMatch() {
+    func testSKUTokensMatch() {
         let viewController = TokenTestViewController()
         let tokenExpectation = XCTestExpectation(description: "All tokens should be fetched")
         viewController.tokenExpectation = tokenExpectation
 
-        let rootViewController = UIApplication.shared.delegate!.window!!.rootViewController!
-        rootViewController.present(viewController, animated: false)
+        viewController.simulatateViewControllerPresented()
 
         wait(for: [tokenExpectation], timeout: 5)
 
         XCTAssertEqual(viewController.mapViewToken?.skuId, SkuID.navigationUser.rawValue)
         XCTAssertEqual(viewController.mapViewToken, viewController.directionsToken)
         XCTAssertEqual(viewController.mapViewToken, viewController.speechSynthesizerToken)
-
-        let dismissExpectation = XCTestExpectation(description: "VC should be dismissed")
-        viewController.dismiss(animated: false) {
-            dismissExpectation.fulfill()
-        }
-
-        wait(for: [dismissExpectation], timeout: 3)
     }
 }
