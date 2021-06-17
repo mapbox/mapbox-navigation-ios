@@ -34,6 +34,8 @@ class TokenTestViewController: UIViewController {
         // Force cache-cleaning
         NotificationCenter.default.post(name: UIApplication.didReceiveMemoryWarningNotification,
                                         object: nil)
+
+        mapView = .init(frame: .zero)
         
         // TODO: Find a way to clean offline storage.
     }
