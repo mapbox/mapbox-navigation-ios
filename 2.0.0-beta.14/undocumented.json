@@ -1,0 +1,3708 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Accounts.swift",
+      "line": 12,
+      "symbol": "Accounts",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/BorderCrossing.swift",
+      "line": 7,
+      "symbol": "AdministrativeRegion.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/BorderCrossing.swift",
+      "line": 16,
+      "symbol": "BorderCrossing.from",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/BorderCrossing.swift",
+      "line": 17,
+      "symbol": "BorderCrossing.to",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/BundleAdditions.swift",
+      "line": 14,
+      "symbol": "Bundle.locationAlwaysAndWhenInUseUsageDescription",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/BundleAdditions.swift",
+      "line": 20,
+      "symbol": "Bundle.locationWhenInUseUsageDescription",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/BundleAdditions.swift",
+      "line": 59,
+      "symbol": "Bundle.ensureSuggestedTileURLExists()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CLLocation.swift",
+      "line": 7,
+      "symbol": "CLLocation.isQualified",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CLLocation.swift",
+      "line": 11,
+      "symbol": "CLLocation.isQualifiedForStartingRoute",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CLLocation.swift",
+      "line": 33,
+      "symbol": "CLLocation.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CLLocation.swift",
+      "line": 67,
+      "symbol": "CLLocation.snapped(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CLLocation.swift",
+      "line": 171,
+      "symbol": "CLLocation.shifted(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CLLocationDirection.swift",
+      "line": 5,
+      "symbol": "CLLocationDirection.clockwiseDifference(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CLLocationDirection.swift",
+      "line": 16,
+      "symbol": "CLLocationDirection.isQualified",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CoreNavigationNavigator.swift",
+      "line": 168,
+      "symbol": "Navigator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CoreNavigationNavigator.swift",
+      "line": 222,
+      "symbol": "Navigator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CoreNavigationNavigator.swift",
+      "line": 257,
+      "symbol": "Navigator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/CoreNavigationNavigator.swift",
+      "line": 410,
+      "symbol": "Navigator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Date.swift",
+      "line": 4,
+      "symbol": "Date.ISO8601",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Date.swift",
+      "line": 8,
+      "symbol": "Date.ISO8601Formatter",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Date.swift",
+      "line": 16,
+      "symbol": "Date.nanosecondsSince1970",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 8,
+      "symbol": "DispatchTimer.State",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 12,
+      "symbol": "DispatchTimer.Payload",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 13,
+      "symbol": "DispatchTimer.defaultAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 27,
+      "symbol": "DispatchTimer.state",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 100,
+      "symbol": "DistanceFormatter.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 149,
+      "symbol": "DistanceFormatter.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 155,
+      "symbol": "DistanceFormatter.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 220,
+      "symbol": "DistanceFormatter.string(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 230,
+      "symbol": "DistanceFormatter.attributedString(for:withDefaultAttributes:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 242,
+      "symbol": "Double.rounded(precision:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 250,
+      "symbol": "Double.round(precision:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 254,
+      "symbol": "Double.rounded(roundingIncrement:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 262,
+      "symbol": "Double.round(roundingIncrement:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EHorizon/ElectronicHorizonOptions.swift",
+      "line": 30,
+      "symbol": "ElectronicHorizonOptions.init(length:expansionLevel:branchLength:minTimeDeltaBetweenUpdates:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EHorizon/ElectronicHorizonOptions.swift",
+      "line": 39,
+      "symbol": "MapboxNavigationNative.ElectronicHorizonOptions.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EHorizon/OpenLRStandard.swift",
+      "line": 23,
+      "symbol": "MapboxNavigationNative.OpenLRStandard.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EHorizon/RoadObjectMatcher.swift",
+      "line": 127,
+      "symbol": "CLLocation.init(coordinate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EHorizon/RoadObjectStore.swift",
+      "line": 108,
+      "symbol": "RoadObjectStore.onRoadObjectAdded(forId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EHorizon/RoadObjectStore.swift",
+      "line": 112,
+      "symbol": "RoadObjectStore.onRoadObjectUpdated(forId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EHorizon/RoadObjectStore.swift",
+      "line": 116,
+      "symbol": "RoadObjectStore.onRoadObjectRemoved(forId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EndOfRouteFeedback.swift",
+      "line": 17,
+      "symbol": "EndOfRouteFeedback.init(rating:comment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EndOfRouteFeedback.swift",
+      "line": 21,
+      "symbol": "EndOfRouteFeedback.init(rating:comment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EventDetails.swift",
+      "line": 325,
+      "symbol": "EventDetails",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/EventDetails.swift",
+      "line": 355,
+      "symbol": "AVAudioSession.audioType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 109,
+      "symbol": "IncorrectVisualSubtype.turnIconIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 110,
+      "symbol": "IncorrectVisualSubtype.streetNameIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 111,
+      "symbol": "IncorrectVisualSubtype.instructionUnnecessary",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 112,
+      "symbol": "IncorrectVisualSubtype.instructionMissing",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 113,
+      "symbol": "IncorrectVisualSubtype.maneuverIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 114,
+      "symbol": "IncorrectVisualSubtype.exitInfoIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 115,
+      "symbol": "IncorrectVisualSubtype.laneGuidanceIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 116,
+      "symbol": "IncorrectVisualSubtype.roadKnownByDifferentName",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 117,
+      "symbol": "IncorrectVisualSubtype.incorrectSpeedLimit",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 118,
+      "symbol": "IncorrectVisualSubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 123,
+      "symbol": "ConfusingAudioSubtype.guidanceTooEarly",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 124,
+      "symbol": "ConfusingAudioSubtype.guidanceTooLate",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 125,
+      "symbol": "ConfusingAudioSubtype.pronunciationIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 126,
+      "symbol": "ConfusingAudioSubtype.roadNameRepeated",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 127,
+      "symbol": "ConfusingAudioSubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 132,
+      "symbol": "RouteQualitySubtype.routeNonDrivable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 133,
+      "symbol": "RouteQualitySubtype.routeNotPreferred",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 134,
+      "symbol": "RouteQualitySubtype.alternativeRouteNotExpected",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 135,
+      "symbol": "RouteQualitySubtype.routeIncludedMissingRoads",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 136,
+      "symbol": "RouteQualitySubtype.routeHadRoadsTooNarrowToPass",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 137,
+      "symbol": "RouteQualitySubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 142,
+      "symbol": "IllegalRouteSubtype.routedDownAOneWay",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 143,
+      "symbol": "IllegalRouteSubtype.turnWasNotAllowed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 144,
+      "symbol": "IllegalRouteSubtype.carsNotAllowedOnStreet",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 145,
+      "symbol": "IllegalRouteSubtype.turnAtIntersectionUnprotected",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 146,
+      "symbol": "IllegalRouteSubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 151,
+      "symbol": "RoadClosureSubtype.streetPermanentlyBlockedOff",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 152,
+      "symbol": "RoadClosureSubtype.roadMissingFromMap",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 153,
+      "symbol": "RoadClosureSubtype.other",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 156,
+      "symbol": "PositioningSubtype",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 162,
+      "symbol": "FeedbackSource.user",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 163,
+      "symbol": "FeedbackSource.reroute",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Feedback.swift",
+      "line": 164,
+      "symbol": "FeedbackSource.unknown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/FixLocation.swift",
+      "line": 6,
+      "symbol": "FixLocation.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Geometry.swift",
+      "line": 7,
+      "symbol": "Turf.Geometry.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Geometry.swift",
+      "line": 61,
+      "symbol": "NSValue.locationValue",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Incident.swift",
+      "line": 6,
+      "symbol": "Incident.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Incident.swift",
+      "line": 51,
+      "symbol": "Incident.Impact.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/LegacyRouteController.swift",
+      "line": 14,
+      "symbol": "LegacyRouteController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Locale.swift",
+      "line": 27,
+      "symbol": "Locale.usesMetric",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Locale.swift",
+      "line": 35,
+      "symbol": "Locale.usesMetric",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/MMEEventsManager.swift",
+      "line": 10,
+      "symbol": "MMEEventsManager.unrated",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/MMEEventsManager.swift",
+      "line": 14,
+      "symbol": "UIDevice.machine",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/MapboxStreetsRoadClass.swift",
+      "line": 11,
+      "symbol": "MapboxStreetsRoadClass.init(_:isRamp:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/MinimumEditDistance.swift",
+      "line": 5,
+      "symbol": "String.minimumEditDistance(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 11,
+      "symbol": "EventsManagerDataSource.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 12,
+      "symbol": "EventsManagerDataSource.router",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 13,
+      "symbol": "EventsManagerDataSource.desiredAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 14,
+      "symbol": "EventsManagerDataSource.locationProvider",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 65,
+      "symbol": "NavigationEventsManager.init(dataSource:accessToken:mobileEventsManager:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 205,
+      "symbol": "NavigationEventsManager.sendCarPlayConnectEvent()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationEventsManager.swift",
+      "line": 211,
+      "symbol": "NavigationEventsManager.sendCarPlayDisconnectEvent()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationLocationManager.swift",
+      "line": 11,
+      "symbol": "NavigationLocationManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationRouteOptions.swift",
+      "line": 62,
+      "symbol": "NavigationRouteOptions.init(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationRouteOptions.swift",
+      "line": 112,
+      "symbol": "NavigationMatchOptions.init(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationRouteOptions.swift",
+      "line": 130,
+      "symbol": "OptimizedForNavigation",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 5,
+      "symbol": "SimulationIntent",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 393,
+      "symbol": "MapboxNavigationService.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 397,
+      "symbol": "MapboxNavigationService.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 424,
+      "symbol": "MapboxNavigationService.locationManagerDidChangeAuthorization(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 440,
+      "symbol": "MapboxNavigationService.Default",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 521,
+      "symbol": "MapboxNavigationService.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 525,
+      "symbol": "MapboxNavigationService.desiredAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/NavigationSettings.swift",
+      "line": 12,
+      "symbol": "NavigationSettings.StoredProperty",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/PassiveLocationDataSource.swift",
+      "line": 221,
+      "symbol": "PassiveLocationDataSource.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/PassiveLocationDataSource.swift",
+      "line": 225,
+      "symbol": "PassiveLocationDataSource.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/PassiveLocationDataSource.swift",
+      "line": 229,
+      "symbol": "PassiveLocationDataSource.locationManager(_:didFailWithError:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/PassiveLocationDataSource.swift",
+      "line": 233,
+      "symbol": "PassiveLocationDataSource.locationManager(_:didChangeAuthorization:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/PredictiveCacheManager.swift",
+      "line": 10,
+      "symbol": "PredictiveCacheManager.MapOptions",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/PredictiveCacheManager.swift",
+      "line": 11,
+      "symbol": "PredictiveCacheManager.TileStoreMapOptions",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/PredictiveCacheOptions.swift",
+      "line": 43,
+      "symbol": "PredictiveCacheOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/PredictiveCacheOptions.swift",
+      "line": 50,
+      "symbol": "PredictiveLocationTrackerOptions.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/ProcessInfo.swift",
+      "line": 8,
+      "symbol": "ProcessInfo.systemName",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/ProcessInfo.swift",
+      "line": 20,
+      "symbol": "ProcessInfo.systemVersion",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 29,
+      "symbol": "ReplayLocationManager.location",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 43,
+      "symbol": "ReplayLocationManager.init(locations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 52,
+      "symbol": "ReplayLocationManager.startUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 57,
+      "symbol": "ReplayLocationManager.stopUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RestStop.swift",
+      "line": 7,
+      "symbol": "RestStop.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Result+Expected.swift",
+      "line": 6,
+      "symbol": "Result.init(expected:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 16,
+      "symbol": "RouteController.DefaultBehavior",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 35,
+      "symbol": "RouteController.indexedRoute",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 45,
+      "symbol": "RouteController.route",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 247,
+      "symbol": "RouteController.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 496,
+      "symbol": "RouteController.userIsOnRoute(_:status:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 515,
+      "symbol": "RouteController.reroute(from:along:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteLeg.swift",
+      "line": 5,
+      "symbol": "RouteLeg.shape",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteLegProgress.swift",
+      "line": 59,
+      "symbol": "RouteLegProgress.userHasArrivedAtWaypoint",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteLegProgress.swift",
+      "line": 106,
+      "symbol": "RouteLegProgress.upcomingStep",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteOptions.swift",
+      "line": 33,
+      "symbol": "RouteOptions.copy(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 21,
+      "symbol": "RouteProgress.routeOptions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 117,
+      "symbol": "RouteProgress.priorLeg",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 201,
+      "symbol": "RouteProgress.averageCongestionLevelRemainingOnLeg",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteStep.swift",
+      "line": 4,
+      "symbol": "RouteStep.==(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteStepProgress.swift",
+      "line": 150,
+      "symbol": "RouteStepProgress.keyPathsAffectingValueForRemainingVisualInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/RouteStepProgress.swift",
+      "line": 154,
+      "symbol": "RouteStepProgress.keyPathsAffectingValueForRemainingSpokenInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Router.swift",
+      "line": 52,
+      "symbol": "Router.indexedRoute",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Router.swift",
+      "line": 54,
+      "symbol": "Router.route",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Router.swift",
+      "line": 62,
+      "symbol": "Router.reroute(from:along:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Router.swift",
+      "line": 117,
+      "symbol": "InternalRouter",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/Router.swift",
+      "line": 273,
+      "symbol": "Array.mostSimilar(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/ScreenCapture.swift",
+      "line": 21,
+      "symbol": "UIImage.scaled(toFit:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 46,
+      "symbol": "SimulatedLocationManager.location",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 61,
+      "symbol": "SimulatedLocationManager.copy()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 145,
+      "symbol": "SimulatedLocationManager.startUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 149,
+      "symbol": "SimulatedLocationManager.stopUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/TileStore.swift",
+      "line": 5,
+      "symbol": "TileStore.ContainsCompletion",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxCoreNavigation/TollCollection.swift",
+      "line": 7,
+      "symbol": "TollCollection.init(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/AVAudioSession.swift",
+      "line": 4,
+      "symbol": "AVAudioSession.tryDuckAudio()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/AVAudioSession.swift",
+      "line": 18,
+      "symbol": "AVAudioSession.tryUnduckAudio()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Array.swift",
+      "line": 45,
+      "symbol": "Array.flatten()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Array.swift",
+      "line": 103,
+      "symbol": "Array.sliced(from:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Array.swift",
+      "line": 107,
+      "symbol": "Array.distance(from:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Array.swift",
+      "line": 111,
+      "symbol": "Array.trimmed(from:distance:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Array.swift",
+      "line": 119,
+      "symbol": "Array.centerCoordinate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Array.swift",
+      "line": 129,
+      "symbol": "Array.boundingBoxPoints",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Array.swift",
+      "line": 152,
+      "symbol": "Array.continuousShape(tolerance:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 120,
+      "symbol": "BottomBannerViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 125,
+      "symbol": "BottomBannerViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 152,
+      "symbol": "BottomBannerViewController.prepareForInterfaceBuilder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 4,
+      "symbol": "BottomBannerViewController.setupRootViews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 10,
+      "symbol": "BottomBannerViewController.setupRootViewConstraints()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 26,
+      "symbol": "BottomBannerViewController.setupBottomBanner()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 127,
+      "symbol": "BottomBannerViewController.reinstallConstraints()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 132,
+      "symbol": "BottomBannerViewController.traitCollectionDidChange(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Bundle.swift",
+      "line": 17,
+      "symbol": "Bundle.image(named:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Bundle.swift",
+      "line": 21,
+      "symbol": "Bundle.microphoneUsageDescription",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CGSize.swift",
+      "line": 7,
+      "symbol": "CGSize.init(size:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CGSize.swift",
+      "line": 15,
+      "symbol": "CGSize.aspectRatio",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CPMapTemplate.swift",
+      "line": 7,
+      "symbol": "CLLocationDirection.init(panDirection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CPTrip.swift",
+      "line": 6,
+      "symbol": "CPTrip.init(routes:routeOptions:waypoints:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Cache.swift",
+      "line": 3,
+      "symbol": "CompletionHandler",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Cache.swift",
+      "line": 10,
+      "symbol": "BimodalCache.clearMemory()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Cache.swift",
+      "line": 11,
+      "symbol": "BimodalCache.clearDisk(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Cache.swift",
+      "line": 18,
+      "symbol": "BimodalImageCache.store(_:forKey:toDisk:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Cache.swift",
+      "line": 19,
+      "symbol": "BimodalImageCache.image(forKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Cache.swift",
+      "line": 26,
+      "symbol": "BimodalDataCache.store(_:forKey:toDisk:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Cache.swift",
+      "line": 27,
+      "symbol": "BimodalDataCache.data(forKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CameraStateTransition.swift",
+      "line": 12,
+      "symbol": "CameraStateTransition.mapView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPayCompassView.swift",
+      "line": 44,
+      "symbol": "CarPlayCompassView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPayCompassView.swift",
+      "line": 49,
+      "symbol": "CarPlayCompassView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 278,
+      "symbol": "CarPlayManager.application(_:didConnectCarInterfaceController:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 304,
+      "symbol": "CarPlayManager.application(_:didDisconnectCarInterfaceController:from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 326,
+      "symbol": "CarPlayManager.mapTemplate(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 335,
+      "symbol": "CarPlayManager.reloadButtons(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 366,
+      "symbol": "CarPlayManager.resetPanButtons(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 404,
+      "symbol": "CarPlayManager.templateWillAppear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 411,
+      "symbol": "CarPlayManager.templateDidAppear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 421,
+      "symbol": "CarPlayManager.templateWillDisappear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 434,
+      "symbol": "CarPlayManager.previewRoutes(to:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 453,
+      "symbol": "CarPlayManager.previewRoutes(between:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 458,
+      "symbol": "CarPlayManager.previewRoutes(for:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 547,
+      "symbol": "CarPlayManager.mapTemplate(_:startedTrip:using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 599,
+      "symbol": "CarPlayManager.mapTemplate(forNavigating:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 635,
+      "symbol": "CarPlayManager.mapTemplate(_:selectedPreviewFor:using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 651,
+      "symbol": "CarPlayManager.mapTemplateDidCancelNavigation(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 661,
+      "symbol": "CarPlayManager.mapTemplate(_:didEndPanGestureWithVelocity:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 675,
+      "symbol": "CarPlayManager.mapTemplateDidShowPanningInterface(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 693,
+      "symbol": "CarPlayManager.mapTemplateWillDismissPanningInterface(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 697,
+      "symbol": "CarPlayManager.mapTemplate(_:didUpdatePanGestureWithTranslation:velocity:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 720,
+      "symbol": "CarPlayManager.coordinate(of:in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 728,
+      "symbol": "CarPlayManager.mapTemplate(_:panWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 764,
+      "symbol": "CarPlayManager.mapTemplate(_:displayStyleFor:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 807,
+      "symbol": "CarPlayManager.mapTemplateProvider(_:mapTemplate:leadingNavigationBarButtonsCompatibleWith:for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 817,
+      "symbol": "CarPlayManager.mapTemplateProvider(_:mapTemplate:trailingNavigationBarButtonsCompatibleWith:for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 831,
+      "symbol": "CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 855,
+      "symbol": "CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 127,
+      "symbol": "CarPlayMapViewController.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 133,
+      "symbol": "CarPlayMapViewController.loadView()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 138,
+      "symbol": "CarPlayMapViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 145,
+      "symbol": "CarPlayMapViewController.viewSafeAreaInsetsDidChange()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 120,
+      "symbol": "CarPlayNavigationViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 132,
+      "symbol": "CarPlayNavigationViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 10,
+      "symbol": "CarPlaySearchController.CarPlayGeocodedPlacemarkKey",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 12,
+      "symbol": "CarPlaySearchController.recentItems",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 14,
+      "symbol": "CarPlaySearchController.maximumInitialSearchResults",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 16,
+      "symbol": "CarPlaySearchController.maximumExtendedSearchResults",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 25,
+      "symbol": "CarPlaySearchController.searchTemplate(_:updatedSearchText:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 56,
+      "symbol": "CarPlaySearchController.searchTemplateSearchButtonPressed(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 67,
+      "symbol": "CarPlaySearchController.searchTemplate(_:selectedResult:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 88,
+      "symbol": "CarPlaySearchController.searchTemplateButton(searchTemplate:interfaceController:traitCollection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 112,
+      "symbol": "CarPlaySearchController.forwardGeocodeOptions(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 126,
+      "symbol": "CarPlaySearchController.selectResult(item:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 145,
+      "symbol": "CarPlaySearchController.recentSearches(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 154,
+      "symbol": "CarPlaySearchController.resultsOrNoResults(_:limit:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 182,
+      "symbol": "CarPlaySearchController.listTemplate(_:didSelect:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 200,
+      "symbol": "GeocodedPlacemark.listItem()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 210,
+      "symbol": "GeocodedPlacemark.subtitle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DataCache.swift",
+      "line": 3,
+      "symbol": "DataCache",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DateComponentsFormatter+NavigationAdditions.swift",
+      "line": 4,
+      "symbol": "DateComponentsFormatter.fullDateComponentsFormatter",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DateComponentsFormatter+NavigationAdditions.swift",
+      "line": 11,
+      "symbol": "DateComponentsFormatter.shortDateComponentsFormatter",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DateComponentsFormatter+NavigationAdditions.swift",
+      "line": 18,
+      "symbol": "DateComponentsFormatter.briefDateComponentsFormatter",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 5,
+      "symbol": "UIColor.defaultRouteCasing",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 6,
+      "symbol": "UIColor.defaultRouteLayer",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 7,
+      "symbol": "UIColor.defaultAlternateLine",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 8,
+      "symbol": "UIColor.defaultAlternateLineCasing",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 9,
+      "symbol": "UIColor.defaultTraversedRouteColor",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 10,
+      "symbol": "UIColor.defaultManeuverArrowStroke",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 11,
+      "symbol": "UIColor.defaultManeuverArrow",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 13,
+      "symbol": "UIColor.defaultTurnArrowPrimary",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 14,
+      "symbol": "UIColor.defaultTurnArrowPrimaryHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 15,
+      "symbol": "UIColor.defaultTurnArrowSecondary",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 16,
+      "symbol": "UIColor.defaultTurnArrowSecondaryHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 18,
+      "symbol": "UIColor.defaultLaneArrowPrimary",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 19,
+      "symbol": "UIColor.defaultLaneArrowSecondary",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 20,
+      "symbol": "UIColor.defaultLaneArrowPrimaryHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 21,
+      "symbol": "UIColor.defaultLaneArrowSecondaryHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 23,
+      "symbol": "UIColor.defaultLaneArrowPrimaryCarPlay",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 24,
+      "symbol": "UIColor.defaultLaneArrowSecondaryCarPlay",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 26,
+      "symbol": "UIColor.trafficUnknown",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 27,
+      "symbol": "UIColor.trafficLow",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 28,
+      "symbol": "UIColor.trafficModerate",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 29,
+      "symbol": "UIColor.trafficHeavy",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 30,
+      "symbol": "UIColor.trafficSevere",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 32,
+      "symbol": "UIColor.alternativeTrafficUnknown",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 33,
+      "symbol": "UIColor.alternativeTrafficLow",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 34,
+      "symbol": "UIColor.alternativeTrafficModerate",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 35,
+      "symbol": "UIColor.alternativeTrafficHeavy",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 36,
+      "symbol": "UIColor.alternativeTrafficSevere",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 37,
+      "symbol": "UIColor.defaultBuildingColor",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 38,
+      "symbol": "UIColor.defaultBuildingHighlightColor",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 40,
+      "symbol": "UIColor.routeDurationAnnotationColor",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 41,
+      "symbol": "UIColor.selectedRouteDurationAnnotationColor",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 43,
+      "symbol": "UIColor.routeDurationAnnotationTextColor",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 44,
+      "symbol": "UIColor.selectedRouteDurationAnnotationTextColor",
+      "symbol_kind": "source.lang.swift.decl.var.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 66,
+      "symbol": "DayStyle.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/EndOfRouteViewController.swift",
+      "line": 161,
+      "symbol": "EndOfRouteViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ExitView.swift",
+      "line": 11,
+      "symbol": "ExitView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Expression.swift",
+      "line": 5,
+      "symbol": "Expression.routeLineWidthExpression(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Expression.swift",
+      "line": 13,
+      "symbol": "Expression.routeLineGradientExpression(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Expression.swift",
+      "line": 21,
+      "symbol": "Expression.buildingExtrusionHeightExpression(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Feature.swift",
+      "line": 6,
+      "symbol": "Feature.featureIdentifier",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackItem.swift",
+      "line": 152,
+      "symbol": "FeedbackSubtypeItem",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 5,
+      "symbol": "FeedbackViewController.animationController(forDismissed:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 9,
+      "symbol": "FeedbackViewController.animationController(forPresented:presenting:source:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 13,
+      "symbol": "FeedbackViewController.interactionControllerForDismissal(using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 92,
+      "symbol": "FeedbackViewController.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 147,
+      "symbol": "FeedbackViewController.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 151,
+      "symbol": "FeedbackViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 164,
+      "symbol": "FeedbackViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 178,
+      "symbol": "FeedbackViewController.viewDidAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 183,
+      "symbol": "FeedbackViewController.viewWillTransition(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 207,
+      "symbol": "FeedbackViewController.gestureRecognizer(_:shouldReceive:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 264,
+      "symbol": "FeedbackViewController.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 275,
+      "symbol": "FeedbackViewController.numberOfSections(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 279,
+      "symbol": "FeedbackViewController.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 285,
+      "symbol": "FeedbackViewController.collectionView(_:didSelectItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 306,
+      "symbol": "FeedbackViewController.collectionView(_:layout:sizeForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/FeedbackViewController.swift",
+      "line": 322,
+      "symbol": "String.height(constrainedTo:font:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/GenericRouteShield.swift",
+      "line": 11,
+      "symbol": "GenericRouteShield.foregroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/GenericRouteShield.swift",
+      "line": 57,
+      "symbol": "GenericRouteShield.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 71,
+      "symbol": "InstructionsCardContainerView.customBackgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 72,
+      "symbol": "InstructionsCardContainerView.highlightedBackgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 74,
+      "symbol": "InstructionsCardContainerView.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 76,
+      "symbol": "InstructionsCardContainerView.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 85,
+      "symbol": "InstructionsCardContainerView.prepareLayout()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 89,
+      "symbol": "InstructionsCardContainerView.updateBackgroundColor(highlightEnabled:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 163,
+      "symbol": "InstructionsCardContainerView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 188,
+      "symbol": "InstructionsCardContainerView.updateInstruction(for:distance:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 197,
+      "symbol": "InstructionsCardContainerView.updateInstruction(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 203,
+      "symbol": "InstructionsCardContainerView.updateInstructionCard(distance:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 14,
+      "symbol": "InstructionsCardViewController.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 36,
+      "symbol": "InstructionsCardViewController.isInPreview",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 37,
+      "symbol": "InstructionsCardViewController.currentStepIndex",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 39,
+      "symbol": "InstructionsCardViewController.steps",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 83,
+      "symbol": "InstructionsCardViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 130,
+      "symbol": "InstructionsCardViewController.viewWillTransition(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 160,
+      "symbol": "InstructionsCardViewController.reloadDataSource()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 172,
+      "symbol": "InstructionsCardViewController.updateVisibleInstructionCards(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 191,
+      "symbol": "InstructionsCardViewController.handlePagingforScrollToItem(indexPath:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 201,
+      "symbol": "InstructionsCardViewController.stopPreview()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 207,
+      "symbol": "InstructionsCardViewController.instructionContainerView(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 257,
+      "symbol": "InstructionsCardViewController.scrollViewWillBeginDragging(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 262,
+      "symbol": "InstructionsCardViewController.scrollViewWillEndDragging(_:withVelocity:targetContentOffset:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 278,
+      "symbol": "InstructionsCardViewController.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 282,
+      "symbol": "InstructionsCardViewController.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 301,
+      "symbol": "UICollectionViewFlowLayout.flipsHorizontallyInOppositeLayoutDirection",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 307,
+      "symbol": "InstructionsCardViewController.collectionView(_:layout:sizeForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/JunctionView.swift",
+      "line": 14,
+      "symbol": "JunctionView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/JunctionView.swift",
+      "line": 19,
+      "symbol": "JunctionView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/LaneView.swift",
+      "line": 5,
+      "symbol": "LaneIndication.lefts",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/LaneView.swift",
+      "line": 6,
+      "symbol": "LaneIndication.rights",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/LaneView.swift",
+      "line": 8,
+      "symbol": "LaneIndication.Ranking",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/LaneView.swift",
+      "line": 317,
+      "symbol": "ManeuverDirection.isLeft",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/LaneView.swift",
+      "line": 321,
+      "symbol": "ManeuverDirection.isRight",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/LanesStyleKit.swift",
+      "line": 16,
+      "symbol": "LanesStyleKit",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 13,
+      "symbol": "ManeuverView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 24,
+      "symbol": "ManeuverView.primaryColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 30,
+      "symbol": "ManeuverView.secondaryColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 36,
+      "symbol": "ManeuverView.primaryColorHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 42,
+      "symbol": "ManeuverView.secondaryColorHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 48,
+      "symbol": "ManeuverView.shouldShowHighlightedColors",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 55,
+      "symbol": "ManeuverView.isStart",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 61,
+      "symbol": "ManeuverView.isEnd",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 92,
+      "symbol": "ManeuverView.draw(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/MapView.swift",
+      "line": 141,
+      "symbol": "MapView.mainRouteLineParentLayerIdentifier",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/MapboxMapsStyle.swift",
+      "line": 6,
+      "symbol": "MapboxMaps.Style.mapboxChinaDayStyleURL",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/MapboxMapsStyle.swift",
+      "line": 9,
+      "symbol": "MapboxMaps.Style.mapboxChinaNightStyleURL",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/MapboxSpeechSynthesizer.swift",
+      "line": 53,
+      "symbol": "MapboxSpeechSynthesizer.init(accessToken:host:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/MapboxSpeechSynthesizer.swift",
+      "line": 260,
+      "symbol": "MapboxSpeechSynthesizer.audioPlayerDidFinishPlaying(_:successfully:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/MultiplexedSpeechSynthesizer.swift",
+      "line": 33,
+      "symbol": "MultiplexedSpeechSynthesizer.speechSynthesizers",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/MultiplexedSpeechSynthesizer.swift",
+      "line": 65,
+      "symbol": "MultiplexedSpeechSynthesizer.init(_:accessToken:host:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NSAttributedString.swift",
+      "line": 4,
+      "symbol": "NSAttributedString.+(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NSAttributedString.swift",
+      "line": 13,
+      "symbol": "NSMutableAttributedString.canonicalizeAttachments(maximumImageSize:imageRendererFormat:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationCameraConstants.swift",
+      "line": 55,
+      "symbol": "NavigationCamera.NotificationUserInfoKey",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationCameraStateTransition.swift",
+      "line": 10,
+      "symbol": "NavigationCameraStateTransition.mapView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 10,
+      "symbol": "NavigationMapView.RoutePoints",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 15,
+      "symbol": "NavigationMapView.RouteLineGranularDistances",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 20,
+      "symbol": "NavigationMapView.RouteLineDistancesIndex",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 27,
+      "symbol": "NavigationMapView.initPrimaryRoutePoints(route:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 91,
+      "symbol": "NavigationMapView.getSlicedLinePointsCount(currentLegProgress:currentStepProgress:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 107,
+      "symbol": "NavigationMapView.calculateGranularDistances(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 132,
+      "symbol": "NavigationMapView.projectX(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 136,
+      "symbol": "NavigationMapView.projectY(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 231,
+      "symbol": "NavigationMapView.updateRouteLine(congestionSegments:layerIdentifier:fractionTraveledUpdate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView+VanishingRouteLine.swift",
+      "line": 251,
+      "symbol": "NavigationMapView.routeLineGradient(_:fractionTraveled:isMain:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 59,
+      "symbol": "NavigationMapView.trafficUnknownColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 60,
+      "symbol": "NavigationMapView.trafficLowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 61,
+      "symbol": "NavigationMapView.trafficModerateColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 62,
+      "symbol": "NavigationMapView.trafficHeavyColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 63,
+      "symbol": "NavigationMapView.trafficSevereColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 64,
+      "symbol": "NavigationMapView.alternativeTrafficUnknownColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 65,
+      "symbol": "NavigationMapView.alternativeTrafficLowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 66,
+      "symbol": "NavigationMapView.alternativeTrafficModerateColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 67,
+      "symbol": "NavigationMapView.alternativeTrafficHeavyColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 68,
+      "symbol": "NavigationMapView.alternativeTrafficSevereColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 70,
+      "symbol": "NavigationMapView.routeCasingColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 71,
+      "symbol": "NavigationMapView.routeAlternateColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 72,
+      "symbol": "NavigationMapView.routeAlternateCasingColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 73,
+      "symbol": "NavigationMapView.traversedRouteColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 74,
+      "symbol": "NavigationMapView.maneuverArrowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 75,
+      "symbol": "NavigationMapView.maneuverArrowStrokeColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 76,
+      "symbol": "NavigationMapView.buildingDefaultColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 77,
+      "symbol": "NavigationMapView.buildingHighlightColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 78,
+      "symbol": "NavigationMapView.reducedAccuracyActivatedMode",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 96,
+      "symbol": "NavigationMapView.routeDurationAnnotationSelectedColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 97,
+      "symbol": "NavigationMapView.routeDurationAnnotationColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 98,
+      "symbol": "NavigationMapView.routeDurationAnnotationSelectedTextColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 99,
+      "symbol": "NavigationMapView.routeDurationAnnotationTextColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 387,
+      "symbol": "NavigationMapView.prepareForInterfaceBuilder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 1340,
+      "symbol": "NavigationMapView.localizeLabels()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapViewIdentifiers.swift",
+      "line": 5,
+      "symbol": "NavigationMapView.identifier",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapViewIdentifiers.swift",
+      "line": 7,
+      "symbol": "NavigationMapView.LayerIdentifier",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapViewIdentifiers.swift",
+      "line": 21,
+      "symbol": "NavigationMapView.SourceIdentifier",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapViewIdentifiers.swift",
+      "line": 31,
+      "symbol": "NavigationMapView.ImageIdentifier",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapViewIdentifiers.swift",
+      "line": 35,
+      "symbol": "NavigationMapView.ModelKeyIdentifier",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationMapViewIdentifiers.swift",
+      "line": 39,
+      "symbol": "NavigationMapView.AnnotationIdentifier",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationOptions.swift",
+      "line": 57,
+      "symbol": "NavigationOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 145,
+      "symbol": "NavigationView.init(frame:tileStoreLocation:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 151,
+      "symbol": "NavigationView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 190,
+      "symbol": "NavigationView.prepareForInterfaceBuilder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 208,
+      "symbol": "NavigationView.setupConstraints()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 244,
+      "symbol": "NavigationView.constrainEndOfRoute()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 253,
+      "symbol": "NavigationView.reinstallConstraints()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 292,
+      "symbol": "NavigationViewController.preferredStatusBarStyle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 336,
+      "symbol": "NavigationViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 531,
+      "symbol": "NavigationViewController.loadView()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 543,
+      "symbol": "NavigationViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 553,
+      "symbol": "NavigationViewController.viewWillAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 567,
+      "symbol": "NavigationViewController.viewDidAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 575,
+      "symbol": "NavigationViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 587,
+      "symbol": "NavigationViewController.viewDidDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 595,
+      "symbol": "NavigationViewController.viewDidLayoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 603,
+      "symbol": "NavigationViewController.preferredContentSizeDidChange(forChildContentContainer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 709,
+      "symbol": "NavigationViewController.navigationView(_:didTapCancelButton:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 930,
+      "symbol": "NavigationViewController.roadName(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 971,
+      "symbol": "NavigationViewController.didChangeSpeed(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 983,
+      "symbol": "NavigationViewController.topBanner(_:didSwipeInDirection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 1026,
+      "symbol": "NavigationViewController.preview(step:in:remaining:route:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 1058,
+      "symbol": "NavigationViewController.topBanner(_:didSelect:stepIndex:cell:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 1066,
+      "symbol": "NavigationViewController.topBanner(_:didDisplayStepsController:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewData.swift",
+      "line": 24,
+      "symbol": "NavigationComponentDelegate.navigationViewDidLoad(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewData.swift",
+      "line": 25,
+      "symbol": "NavigationComponentDelegate.navigationViewWillAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewData.swift",
+      "line": 26,
+      "symbol": "NavigationComponentDelegate.navigationViewDidAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewData.swift",
+      "line": 27,
+      "symbol": "NavigationComponentDelegate.navigationViewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewData.swift",
+      "line": 28,
+      "symbol": "NavigationComponentDelegate.navigationViewDidDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewData.swift",
+      "line": 29,
+      "symbol": "NavigationComponentDelegate.navigationViewDidLayoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NavigationViewportDataSource.swift",
+      "line": 476,
+      "symbol": "NavigationViewportDataSource.shouldTrackLocation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/NightStyle.swift",
+      "line": 8,
+      "symbol": "NightStyle.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/RecentItem.swift",
+      "line": 45,
+      "symbol": "Array.save()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/RecentItem.swift",
+      "line": 51,
+      "symbol": "Array.add(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/RecentItem.swift",
+      "line": 65,
+      "symbol": "Array.remove(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/ResourceOptionsManager.swift",
+      "line": 6,
+      "symbol": "ResourceOptionsManager.mapboxChinaBaseAPIURL",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Route.swift",
+      "line": 46,
+      "symbol": "Route.congestionFeatures(legIndex:isAlternativeRoute:roadClassesWithOverriddenCongestionLevels:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Route.swift",
+      "line": 94,
+      "symbol": "Route.identifier(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Route.swift",
+      "line": 111,
+      "symbol": "Route.leg(containing:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Route.swift",
+      "line": 115,
+      "symbol": "Route.tollIntersections",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Route.swift",
+      "line": 125,
+      "symbol": "Route.shapes(within:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Route.swift",
+      "line": 162,
+      "symbol": "RouteStep.intersects(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/RouteVoiceController.swift",
+      "line": 9,
+      "symbol": "NSAttributedString.pronounced(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/RouteVoiceController.swift",
+      "line": 27,
+      "symbol": "SpokenInstruction.attributedText(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/RouteVoiceController.swift",
+      "line": 174,
+      "symbol": "RouteVoiceController.didPassSpokenInstructionPoint(notification:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/SpeedLimitStyleKit.swift",
+      "line": 16,
+      "symbol": "SpeedLimitStyleKit",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/SpeedLimitView.swift",
+      "line": 103,
+      "symbol": "SpeedLimitView.draw(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 193,
+      "symbol": "StepsViewController.tableView(_:didSelectRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 211,
+      "symbol": "StepsViewController.numberOfSections(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 215,
+      "symbol": "StepsViewController.tableView(_:numberOfRowsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 220,
+      "symbol": "StepsViewController.tableView(_:heightForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 224,
+      "symbol": "StepsViewController.tableView(_:cellForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 229,
+      "symbol": "StepsViewController.tableView(_:willDisplay:forRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 233,
+      "symbol": "StepsViewController.updateCell(_:at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 252,
+      "symbol": "StepsViewController.tableView(_:titleForHeaderInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/String.swift",
+      "line": 13,
+      "symbol": "String.ISO8601Date",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/String.swift",
+      "line": 24,
+      "symbol": "String.Replacement",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/String.swift",
+      "line": 26,
+      "symbol": "String.byReplacing(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Style.swift",
+      "line": 52,
+      "symbol": "Style.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Style.swift",
+      "line": 536,
+      "symbol": "BottomPaddingView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StyleKitMarker.swift",
+      "line": 3,
+      "symbol": "StyleKitMarker",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StyleManager.swift",
+      "line": 125,
+      "symbol": "StyleManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StyleManager.swift",
+      "line": 274,
+      "symbol": "Date.intervalUntilTimeOfDayChanges(sunrise:sunset:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StyleManager.swift",
+      "line": 307,
+      "symbol": "Solar.init(date:coordinate:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/StyleType.swift",
+      "line": 3,
+      "symbol": "StyleType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 38,
+      "symbol": "SystemSpeechSynthesizer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 146,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didStart:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 150,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didContinue:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 154,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didFinish:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 165,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didPause:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 169,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didCancel:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 7,
+      "symbol": "TopBannerViewControllerDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 21,
+      "symbol": "TopBannerViewControllerDelegate",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 122,
+      "symbol": "TopBannerViewController.isDisplayingPreviewInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 126,
+      "symbol": "TopBannerViewController.isDisplayingSteps",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 133,
+      "symbol": "TopBannerViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 141,
+      "symbol": "TopBannerViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 187,
+      "symbol": "TopBannerViewController.displayStepsTable()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 242,
+      "symbol": "TopBannerViewController.dismissStepsTable(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 318,
+      "symbol": "TopBannerViewController.preview(step:maneuverStep:distance:steps:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 345,
+      "symbol": "TopBannerViewController.stopPreviewing(showingSecondaryChildren:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Transitioning.swift",
+      "line": 9,
+      "symbol": "DismissAnimator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Transitioning.swift",
+      "line": 34,
+      "symbol": "PresentAnimator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/Transitioning.swift",
+      "line": 83,
+      "symbol": "DismissDraggable",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UICollectionView.swift",
+      "line": 4,
+      "symbol": "UICollectionView.numberOfRows(using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIEdgeInsets.swift",
+      "line": 5,
+      "symbol": "UIEdgeInsets.+(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIEdgeInsets.swift",
+      "line": 12,
+      "symbol": "UIEdgeInsets.+=(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIEdgeInsets.swift",
+      "line": 19,
+      "symbol": "UIEdgeInsets.rectValue(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIEdgeInsets.swift",
+      "line": 26,
+      "symbol": "UIEdgeInsets.centerEdgeInsets",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIFont.swift",
+      "line": 4,
+      "symbol": "UIFont.fontSizeMultiplier",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIFont.swift",
+      "line": 32,
+      "symbol": "UIFont.with(multiplier:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIGestureRecognizer.swift",
+      "line": 5,
+      "symbol": "UIGestureRecognizer.point",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIGestureRecognizer.swift",
+      "line": 10,
+      "symbol": "UIGestureRecognizer.requireFailure(of:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIImage.swift",
+      "line": 5,
+      "symbol": "UIImage.init(color:size:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIImage.swift",
+      "line": 18,
+      "symbol": "UIImage.withCenteredText(_:color:font:scale:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIImage.swift",
+      "line": 37,
+      "symbol": "UIImage.scaled(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIImage.swift",
+      "line": 47,
+      "symbol": "UIImage.tint(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIScreen.swift",
+      "line": 5,
+      "symbol": "UIScreen.mainCarPlay",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIStackView.swift",
+      "line": 4,
+      "symbol": "UIStackView.init(orientation:alignment:distribution:spacing:autoLayout:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIStackView.swift",
+      "line": 13,
+      "symbol": "UIStackView.addArrangedSubviews(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 4,
+      "symbol": "UIView.defaultAnimation(_:delay:animations:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 8,
+      "symbol": "UIView.defaultSpringAnimation(_:delay:animations:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 12,
+      "symbol": "UIView.addSubviews(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 16,
+      "symbol": "UIView.applyDefaultCornerRadiusShadow(cornerRadius:shadowOpacity:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 23,
+      "symbol": "UIView.applyGradient(colors:locations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 36,
+      "symbol": "UIView.constraints(affecting:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 49,
+      "symbol": "UIView.constraintsForPinning(to:respectingMargins:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 61,
+      "symbol": "UIView.pinTo(parentView:respectingMargins:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 66,
+      "symbol": "UIView.pinInSuperview(respectingMargins:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 71,
+      "symbol": "UIView.forAutoLayout(frame:hidden:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 78,
+      "symbol": "UIView.safeArea",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 83,
+      "symbol": "UIView.safeTopAnchor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 90,
+      "symbol": "UIView.safeLeadingAnchor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 97,
+      "symbol": "UIView.safeBottomAnchor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 104,
+      "symbol": "UIView.safeRightAnchor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 111,
+      "symbol": "UIView.safeTrailingAnchor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIView.swift",
+      "line": 118,
+      "symbol": "UIView.imageRepresentation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIViewController.swift",
+      "line": 4,
+      "symbol": "UIViewController.topMostViewController()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UIViewController.swift",
+      "line": 8,
+      "symbol": "UIViewController.topViewController(controller:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 74,
+      "symbol": "UserPuckCourseView.puckColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 81,
+      "symbol": "UserPuckCourseView.stalePuckColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 88,
+      "symbol": "UserPuckCourseView.fillColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 95,
+      "symbol": "UserPuckCourseView.shadowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 103,
+      "symbol": "UserPuckCourseView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 108,
+      "symbol": "UserPuckCourseView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserHaloCourseView.swift",
+      "line": 11,
+      "symbol": "UserHaloCourseView.haloColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserHaloCourseView.swift",
+      "line": 18,
+      "symbol": "UserHaloCourseView.haloRingColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserHaloCourseView.swift",
+      "line": 25,
+      "symbol": "UserHaloCourseView.haloRadius",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserHaloCourseView.swift",
+      "line": 33,
+      "symbol": "UserHaloCourseView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/UserHaloCourseView.swift",
+      "line": 38,
+      "symbol": "UserHaloCourseView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/VisualInstruction.swift",
+      "line": 5,
+      "symbol": "VisualInstruction.laneComponents",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/VisualInstruction.swift",
+      "line": 14,
+      "symbol": "VisualInstruction.containsLaneIndications",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/VisualInstruction.swift",
+      "line": 18,
+      "symbol": "VisualInstruction.maneuverImage(side:color:size:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/VisualInstruction.swift",
+      "line": 30,
+      "symbol": "VisualInstruction.laneImage(side:indication:maneuverDirection:isUsable:useableColor:unuseableColor:size:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/VisualInstruction.swift",
+      "line": 50,
+      "symbol": "VisualInstruction.lanesImage(side:direction:useableColor:unuseableColor:size:scale:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/VisualInstructionComponent.swift",
+      "line": 5,
+      "symbol": "VisualInstruction.Component.scale",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt/Sources/MapboxNavigation/VisualInstructionComponent.swift",
+      "line": 7,
+      "symbol": "VisualInstruction.Component.cacheKey",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/viktorkononov/sources/public/mapbox-navigation-ios_alt"
+}
