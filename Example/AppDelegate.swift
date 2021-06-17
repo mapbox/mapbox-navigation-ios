@@ -4,21 +4,24 @@ import CarPlay
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    
     weak var currentAppRootViewController: ViewController?
     
     var window: UIWindow?
+    
     @available(iOS 12.0, *)
     lazy var carPlayManager: CarPlayManager = CarPlayManager()
     
     @available(iOS 12.0, *)
     lazy var carPlaySearchController: CarPlaySearchController = CarPlaySearchController()
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         if isRunningTests() {
             if window == nil {
                 window = UIWindow(frame: UIScreen.main.bounds)
             }
-            window!.rootViewController = UIViewController()
+            window?.rootViewController = UIViewController()
         }
         
         listMapboxFrameworks()
@@ -42,18 +45,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+// MARK: - UIWindowSceneDelegate methods
+
 @available(iOS 13.0, *)
 extension AppDelegate: UIWindowSceneDelegate {
 
-    func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
-
+    func application(_ application: UIApplication,
+                     configurationForConnecting connectingSceneSession: UISceneSession,
+                     options: UIScene.ConnectionOptions) -> UISceneConfiguration {
         if connectingSceneSession.role == .carTemplateApplication {
             return UISceneConfiguration(name: "ExampleCarPlayApplicationConfiguration", sessionRole: connectingSceneSession.role)
         }
+        
         return UISceneConfiguration(name: "ExampleAppConfiguration", sessionRole: connectingSceneSession.role)
-    }
-
-    func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-
     }
 }

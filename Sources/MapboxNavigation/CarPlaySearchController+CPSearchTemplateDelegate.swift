@@ -6,19 +6,25 @@ import MapboxDirections
 
 @available(iOS 12.0, *)
 extension CarPlaySearchController: CPSearchTemplateDelegate {
-    static var recentItems = RecentItem.loadDefaults()
+    
     public static let CarPlayGeocodedPlacemarkKey: String = "MBGecodedPlacemark"
     
-    static var MaximumInitialSearchResults: UInt = 5
-    static var MaximumExtendedSearchResults: UInt = 10
-    /// A very coarse location manager used for focal location when searching
+    static var recentItems = RecentItem.loadDefaults()
+    
+    static var maximumInitialSearchResults: UInt = 5
+    
+    static var maximumExtendedSearchResults: UInt = 10
+    
+    // A very coarse location manager used for focal location when searching
     fileprivate static let coarseLocationManager: CLLocationManager = {
         let coarseLocationManager = CLLocationManager()
         coarseLocationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
         return coarseLocationManager
     }()
     
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
+    public func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                               updatedSearchText searchText: String,
+                               completionHandler: @escaping ([CPListItem]) -> Void) {
         recentSearchText = searchText
         
         // Append recent searches
@@ -29,24 +35,28 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         if shouldSearch {
             let options = CarPlaySearchController.forwardGeocodeOptions(searchText)
             Geocoder.shared.geocode(options, completionHandler: { [weak self] (placemarks, attribution, error) in
-                guard let strongSelf = self else { return }
+                guard let self = self else { return }
                 guard let placemarks = placemarks else {
-                    completionHandler(strongSelf.resultsOrNoResults(items, limit: CarPlaySearchController.MaximumInitialSearchResults))
+                    completionHandler(self.resultsOrNoResults(items,
+                                                              limit: CarPlaySearchController.maximumInitialSearchResults))
                     return
                 }
                 
                 let results = placemarks.map { $0.listItem() }
                 items.append(contentsOf: results)
-                completionHandler(strongSelf.resultsOrNoResults(results, limit: CarPlaySearchController.MaximumInitialSearchResults))
+                completionHandler(self.resultsOrNoResults(results,
+                                                          limit: CarPlaySearchController.maximumInitialSearchResults))
             })
         } else {
-            completionHandler(resultsOrNoResults(items, limit: CarPlaySearchController.MaximumInitialSearchResults))
+            completionHandler(resultsOrNoResults(items,
+                                                 limit: CarPlaySearchController.maximumInitialSearchResults))
         }
     }
     
     public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
         guard let items = recentSearchItems else { return }
-        let extendedItems = resultsOrNoResults(items, limit: CarPlaySearchController.MaximumExtendedSearchResults)
+        let extendedItems = resultsOrNoResults(items,
+                                               limit: CarPlaySearchController.maximumExtendedSearchResults)
         
         let section = CPListSection(items: extendedItems)
         let template = CPListTemplate(title: recentSearchText, sections: [section])
@@ -54,7 +64,9 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         delegate?.pushTemplate(template, animated: true)
     }
     
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
+    public func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                               selectedResult item: CPListItem,
+                               completionHandler: @escaping () -> Void) {
         guard let userInfo = item.userInfo as? [String: Any],
               let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
               let location = placemark.location else {
@@ -65,11 +77,17 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         CarPlaySearchController.recentItems.add(RecentItem(placemark))
         CarPlaySearchController.recentItems.save()
         
-        let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
-        delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
+        let destinationWaypoint = Waypoint(location: location,
+                                           heading: nil,
+                                           name: placemark.formattedName)
+        
+        delegate?.previewRoutes(to: destinationWaypoint,
+                                completionHandler: completionHandler)
     }
     
-    public func searchTemplateButton(searchTemplate: CPSearchTemplate, interfaceController: CPInterfaceController, traitCollection: UITraitCollection) -> CPBarButton {
+    public func searchTemplateButton(searchTemplate: CPSearchTemplate,
+                                     interfaceController: CPInterfaceController,
+                                     traitCollection: UITraitCollection) -> CPBarButton {
         let searchTemplateButton = CPBarButton(type: .image) { [weak self] button in
             guard let strongSelf = self else {
                 return
@@ -83,7 +101,9 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         }
         
         let bundle = Bundle.mapboxNavigation
-        searchTemplateButton.image = UIImage(named: "carplay_search", in: bundle, compatibleWith: traitCollection)
+        searchTemplateButton.image = UIImage(named: "carplay_search",
+                                             in: bundle,
+                                             compatibleWith: traitCollection)
         
         return searchTemplateButton
     }
@@ -96,8 +116,9 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         var allScopes: PlacemarkScope = .all
         allScopes.remove(.postalCode)
         options.allowedScopes = allScopes
-        options.maximumResultCount = CarPlaySearchController.MaximumExtendedSearchResults
+        options.maximumResultCount = CarPlaySearchController.maximumExtendedSearchResults
         options.includesRoutableLocations = true
+        
         return options
     }
     
@@ -113,7 +134,10 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         CarPlaySearchController.recentItems.add(RecentItem(placemark))
         CarPlaySearchController.recentItems.save()
         
-        let destinationWaypoint = Waypoint(location: location, heading: nil, name: placemark.formattedName)
+        let destinationWaypoint = Waypoint(location: location,
+                                           heading: nil,
+                                           name: placemark.formattedName)
+        
         delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
@@ -122,6 +146,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         if searchText.isEmpty {
             return CarPlaySearchController.recentItems.map { $0.geocodedPlacemark.listItem() }
         }
+        
         return CarPlaySearchController.recentItems.filter { $0.matches(searchText) }.map { $0.geocodedPlacemark.listItem() }
     }
     
@@ -136,8 +161,16 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
             
             return items
         } else {
-            let title = NSLocalizedString("CARPLAY_SEARCH_NO_RESULTS", bundle: .mapboxNavigation, value: "No results", comment: "Message when search returned zero results in CarPlay")
-            let noResult = CPListItem(text: title, detailText: nil, image: nil, showsDisclosureIndicator: false)
+            let title = NSLocalizedString("CARPLAY_SEARCH_NO_RESULTS",
+                                          bundle: .mapboxNavigation,
+                                          value: "No results",
+                                          comment: "Message when search returned zero results in CarPlay")
+            
+            let noResult = CPListItem(text: title,
+                                      detailText: nil,
+                                      image: nil,
+                                      showsDisclosureIndicator: false)
+            
             return [noResult]
         }
     }
@@ -145,7 +178,10 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
 
 @available(iOS 12.0, *)
 extension CarPlaySearchController: CPListTemplateDelegate {
-    public func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
+    
+    public func listTemplate(_ listTemplate: CPListTemplate,
+                             didSelect item: CPListItem,
+                             completionHandler: @escaping () -> Void) {
         // Selected a search item from the extended list?
         if let userInfo = item.userInfo as? [String: Any],
            let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? GeocodedPlacemark,
@@ -159,15 +195,21 @@ extension CarPlaySearchController: CPListTemplateDelegate {
 }
 
 extension GeocodedPlacemark {
+    
     @available(iOS 12.0, *)
     func listItem() -> CPListItem {
-        let item = CPListItem(text: formattedName, detailText: subtitle, image: nil, showsDisclosureIndicator: true)
+        let item = CPListItem(text: formattedName,
+                              detailText: subtitle,
+                              image: nil,
+                              showsDisclosureIndicator: true)
         item.userInfo = [CarPlaySearchController.CarPlayGeocodedPlacemarkKey: self]
+        
         return item
     }
     
     var subtitle: String? {
-        if let addressDictionary = addressDictionary, var lines = addressDictionary["formattedAddressLines"] as? [String] {
+        if let addressDictionary = addressDictionary,
+           var lines = addressDictionary["formattedAddressLines"] as? [String] {
             // Chinese addresses have no commas and are reversed.
             if scope == .address {
                 if qualifiedName?.contains(", ") ?? false {
@@ -177,24 +219,39 @@ extension GeocodedPlacemark {
                 }
             }
             
+            let separator = NSLocalizedString("ADDRESS_LINE_SEPARATOR",
+                                              value: ", ",
+                                              comment: "Delimiter between lines in an address when displayed inline")
+            
             if let regionCode = administrativeRegion?.code,
-               let abbreviatedRegion = regionCode.components(separatedBy: "-").last, (abbreviatedRegion as NSString).intValue == 0 {
+               let abbreviatedRegion = regionCode.components(separatedBy: "-").last,
+               (abbreviatedRegion as NSString).intValue == 0 {
                 // Cut off country and postal code and add abbreviated state/region code at the end.
                 
-                let stitle = lines.prefix(2).joined(separator: NSLocalizedString("ADDRESS_LINE_SEPARATOR", value: ", ", comment: "Delimiter between lines in an address when displayed inline"))
+                let stitle = lines.prefix(2).joined(separator: separator)
                 
-                if scope == .region || scope == .district || scope == .place || scope == .postalCode {
+                let scopes: PlacemarkScope = [
+                    .region,
+                    .district,
+                    .place,
+                    .postalCode
+                ]
+                
+                if scopes.contains(scope) {
                     return stitle
                 }
-                return stitle.appending("\(NSLocalizedString("ADDRESS_LINE_SEPARATOR", value: ", ", comment: "Delimiter between lines in an address when displayed inline"))\(abbreviatedRegion)")
+                
+                return stitle.appending("\(separator)\(abbreviatedRegion)")
             }
             
             if scope == .country {
                 return ""
             }
+            
             if qualifiedName?.contains(", ") ?? false {
-                return lines.joined(separator: NSLocalizedString("ADDRESS_LINE_SEPARATOR", value: ", ", comment: "Delimiter between lines in an address when displayed inline"))
+                return lines.joined(separator: separator)
             }
+            
             return lines.joined()
         }
         

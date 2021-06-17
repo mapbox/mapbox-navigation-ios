@@ -180,7 +180,7 @@ class ViewController: UIViewController {
 
         guard activeNavigationViewController == nil else { return }
 
-        presentAndRemoveMapview(navigationViewController)
+        presentAndRemoveNavigationMapView(navigationViewController)
     }
     
     func beginCarPlayNavigation() {
@@ -237,7 +237,7 @@ class ViewController: UIViewController {
         // Example of building highlighting in 2D.
         navigationViewController.waypointStyle = .building
         
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startBasicNavigation() {
@@ -258,7 +258,7 @@ class ViewController: UIViewController {
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
         
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startCustomNavigation() {
@@ -288,7 +288,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startGuidanceCardsNavigation() {
@@ -301,7 +301,7 @@ class ViewController: UIViewController {
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
-        presentAndRemoveMapview(navigationViewController, completion: beginCarPlayNavigation)
+        presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     // MARK: - UIGestureRecognizer methods
@@ -447,7 +447,8 @@ class ViewController: UIViewController {
         return navigationViewController
     }
     
-    func presentAndRemoveMapview(_ navigationViewController: NavigationViewController, completion: CompletionHandler? = nil) {
+    func presentAndRemoveNavigationMapView(_ navigationViewController: NavigationViewController,
+                                           completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
         
@@ -459,7 +460,7 @@ class ViewController: UIViewController {
     
     func endCarPlayNavigation(canceled: Bool) {
         if #available(iOS 12.0, *), let delegate = UIApplication.shared.delegate as? AppDelegate {
-            delegate.carPlayManager.currentNavigator?.exitNavigation(byCanceling: canceled)
+            delegate.carPlayManager.carPlayNavigationViewController?.exitNavigation(byCanceling: canceled)
         }
     }
     
@@ -507,24 +508,38 @@ extension ViewController: NavigationMapViewDelegate {
     }
 
     private func presentWaypointRemovalAlert(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
-        let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE", value: "Remove Waypoint?", comment: "Title of alert confirming waypoint removal")
-        let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG", value: "Do you want to remove this waypoint?", comment: "Message of alert confirming waypoint removal")
-        let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE", value: "Remove Waypoint", comment: "Title of alert action for removing a waypoint")
-        let cancelTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_CANCEL", value: "Cancel", comment: "Title of action for dismissing waypoint removal confirmation sheet")
+        let title = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_TITLE",
+                                      value: "Remove Waypoint?",
+                                      comment: "Title of alert confirming waypoint removal")
         
-        let waypointRemovalAlertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let removeAction = UIAlertAction(title: removeTitle, style: .destructive, handler: approve)
-        let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+        let message = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_MSG",
+                                        value: "Do you want to remove this waypoint?",
+                                        comment: "Message of alert confirming waypoint removal")
+        
+        let removeTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_REMOVE",
+                                            value: "Remove Waypoint",
+                                            comment: "Title of alert action for removing a waypoint")
+        
+        let cancelTitle = NSLocalizedString("REMOVE_WAYPOINT_CONFIRM_CANCEL",
+                                            value: "Cancel",
+                                            comment: "Title of action for dismissing waypoint removal confirmation sheet")
+        
+        let waypointRemovalAlertController = UIAlertController(title: title,
+                                                               message: message,
+                                                               preferredStyle: .alert)
+        
+        let removeAction = UIAlertAction(title: removeTitle,
+                                         style: .destructive,
+                                         handler: approve)
+        
+        let cancelAction = UIAlertAction(title: cancelTitle,
+                                         style: .cancel,
+                                         handler: nil)
+        
         [removeAction, cancelAction].forEach(waypointRemovalAlertController.addAction(_:))
         
         self.present(waypointRemovalAlertController, animated: true, completion: nil)
     }
-}
-
-// MARK: - RouteVoiceControllerDelegate methods
-
-extension ViewController: RouteVoiceControllerDelegate {
-
 }
 
 // MARK: - NavigationViewControllerDelegate methods
@@ -534,7 +549,7 @@ extension ViewController: NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool {
         if #available(iOS 12.0, *),
            let delegate = UIApplication.shared.delegate as? AppDelegate,
-           let carPlayNavigationViewController = delegate.carPlayManager.currentNavigator {
+           let carPlayNavigationViewController = delegate.carPlayManager.carPlayNavigationViewController {
             return carPlayNavigationViewController.navigationService(navigationViewController.navigationService, didArriveAt: waypoint)
         }
         return true
@@ -545,10 +560,4 @@ extension ViewController: NavigationViewControllerDelegate {
         dismissActiveNavigationViewController()
         clearNavigationMapView()
     }
-}
-
-// MARK: - VisualInstructionDelegate methods
-
-extension ViewController: VisualInstructionDelegate {
-
 }

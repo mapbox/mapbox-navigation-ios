@@ -212,7 +212,7 @@ class CarPlayManagerTests: XCTestCase {
         // a navigation session is started on the mapTemplate
         // a CarPlayNavigationViewController is presented (why?)
 
-        // the CarPlayNavigationDelegate is notified
+        // the CarPlayNavigationViewControllerDelegate is notified
         XCTAssertTrue(exampleDelegate.navigationInitiated, "The CarPlayManagerDelegate should have been told that navigation was initiated.")
 
         manager.currentNavigator!.exitNavigation(byCanceling: true)

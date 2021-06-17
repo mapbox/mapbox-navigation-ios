@@ -112,10 +112,9 @@ class CustomViewController: UIViewController {
     // Notifications sent on all location updates
     @objc func progressDidChange(_ notification: NSNotification) {
         // do not update if we are previewing instruction steps
-        guard previewInstructionsView == nil else { return }
-        
-        let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
+        guard previewInstructionsView == nil,
+              let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
+              let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation else { return }
         
         // Add maneuver arrow
         if routeProgress.currentLegProgress.followOnStep != nil {
@@ -133,7 +132,11 @@ class CustomViewController: UIViewController {
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
-        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else {
+            assertionFailure("RouteProgress should be available.")
+            return
+        }
+        
         instructionsBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 

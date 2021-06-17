@@ -8,7 +8,7 @@ import CarPlay
 import CarPlayTestHelper
 
 @available(iOS 12.0, *)
-fileprivate class CarPlayNavigationDelegateSpy: NSObject, CarPlayNavigationDelegate {
+fileprivate class CarPlayNavigationViewControllerDelegateSpy: NSObject, CarPlayNavigationViewControllerDelegate {
     var didArriveExpectation: XCTestExpectation!
     
     init(_ didArriveExpectation: XCTestExpectation) {
