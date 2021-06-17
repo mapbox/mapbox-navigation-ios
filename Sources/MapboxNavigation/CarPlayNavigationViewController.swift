@@ -479,9 +479,17 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         var buttons: [CPGridButton] = []
-        let starImage = UIImage(named: "star", in: .mapboxNavigation, compatibleWith: nil)!
-        for i in 1...5 {
-            let button = CPGridButton(titleVariants: ["\(i) star\(i == 1 ? "" : "s")"],
+        let starImage = UIImage(named: "star",
+                                in: .mapboxNavigation,
+                                compatibleWith: nil)!
+        
+        for rating in 1...5 {
+            let title = NSLocalizedString("RATING_STARS_FORMAT",
+                                          bundle: .mapboxNavigation,
+                                          value: "%ld star(s) set.",
+                                          comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars")
+            let titleVariant = String.localizedStringWithFormat(title, rating)
+            let button = CPGridButton(titleVariants: [titleVariant],
                                       image: starImage,
                                       handler: buttonHandler)
             buttons.append(button)
@@ -534,12 +542,20 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     func presentWaypointArrivalUI(for waypoint: Waypoint) {
-        var title = NSLocalizedString("CARPLAY_ARRIVED", bundle: .mapboxNavigation, value: "You have arrived", comment: "Title on arrival action sheet")
+        var title = NSLocalizedString("CARPLAY_ARRIVED",
+                                      bundle: .mapboxNavigation,
+                                      value: "You have arrived",
+                                      comment: "Title on arrival action sheet")
+        
         if let name = waypoint.name {
             title = name
         }
         
-        let continueTitle = NSLocalizedString("CARPLAY_CONTINUE", bundle: .mapboxNavigation, value: "Continue", comment: "Title on continue button in CarPlay")
+        let continueTitle = NSLocalizedString("CARPLAY_CONTINUE",
+                                              bundle: .mapboxNavigation,
+                                              value: "Continue",
+                                              comment: "Title on continue button in CarPlay")
+        
         let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
             self.navigationService.router?.advanceLegIndex()
             self.carInterfaceController.dismissTemplate(animated: true)
