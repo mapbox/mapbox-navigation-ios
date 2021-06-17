@@ -542,12 +542,6 @@ extension ViewController: NavigationMapViewDelegate {
     }
 }
 
-// MARK: - RouteVoiceControllerDelegate methods
-
-extension ViewController: RouteVoiceControllerDelegate {
-
-}
-
 // MARK: - NavigationViewControllerDelegate methods
 
 extension ViewController: NavigationViewControllerDelegate {
@@ -566,10 +560,4 @@ extension ViewController: NavigationViewControllerDelegate {
         dismissActiveNavigationViewController()
         clearNavigationMapView()
     }
-}
-
-// MARK: - VisualInstructionDelegate methods
-
-extension ViewController: VisualInstructionDelegate {
-
 }
