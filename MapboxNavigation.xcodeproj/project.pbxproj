@@ -40,6 +40,7 @@
 		2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */; };
 		2B955B1C25EFDDCB00BBFEC6 /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B955B1B25EFDDCB00BBFEC6 /* Directions.swift */; };
 		2BBED92F265E2C7D00F90032 /* NativeHandlersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBED92E265E2C7D00F90032 /* NativeHandlersFactory.swift */; };
+		2BBED93B267A3AB900F90032 /* BillingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBED93A267A3AB900F90032 /* BillingHandler.swift */; };
 		2BBEEDA52508DB1700C8DA4A /* RouteLegProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */; };
 		2BBEEDA72508E1E300C8DA4A /* RouteStepProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBEEDA62508E1E300C8DA4A /* RouteStepProgress.swift */; };
 		2BDD653D2614BCA1005B8B55 /* WayNameView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BDD653C2614BCA1005B8B55 /* WayNameView.swift */; };
@@ -586,6 +587,7 @@
 		2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxSpeechSynthesizer.swift; sourceTree = "<group>"; };
 		2B955B1B25EFDDCB00BBFEC6 /* Directions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
 		2BBED92E265E2C7D00F90032 /* NativeHandlersFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeHandlersFactory.swift; sourceTree = "<group>"; };
+		2BBED93A267A3AB900F90032 /* BillingHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingHandler.swift; sourceTree = "<group>"; };
 		2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLegProgress.swift; sourceTree = "<group>"; };
 		2BBEEDA62508E1E300C8DA4A /* RouteStepProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteStepProgress.swift; sourceTree = "<group>"; };
 		2BDD653C2614BCA1005B8B55 /* WayNameView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WayNameView.swift; sourceTree = "<group>"; };
@@ -1861,6 +1863,7 @@
 				C56173591F182103005954F6 /* Extensions */,
 				C53C196A1F38E9C1008DB406 /* Resources */,
 				DABA591425E58D5600D0C1DB /* Accounts.swift */,
+				2BBED93A267A3AB900F90032 /* BillingHandler.swift */,
 				C58D6BAC1DDCF2AE00387F53 /* CoreConstants.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
 				8DCE104F210FC5880048B0FB /* EndOfRouteFeedback.swift */,
@@ -3011,6 +3014,7 @@
 				DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */,
 				5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
+				2BBED93B267A3AB900F90032 /* BillingHandler.swift in Sources */,
 				2BE701352535948100F46E4E /* RestStop.swift in Sources */,
 				8D4CF9C621349FFB009C3FEE /* NavigationServiceDelegate.swift in Sources */,
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,

@@ -155,6 +155,8 @@ open class RouteController: NSObject {
         return snappedLocation ?? rawLocation
     }
     
+    private var sessionId: BillingHandler.SessionId!
+    
     required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
         self.directions = directions
         Navigator.credentials = directions.credentials
@@ -169,9 +171,15 @@ open class RouteController: NSObject {
         subscribeNotifications()
         updateNavigator(with: _routeProgress)
         updateObservation(for: _routeProgress)
+        
+        BillingHandler.shared.beginBillingSession(type: .activeGuidance) { [weak self] id in
+            self?.sessionId = id
+        }
     }
     
     deinit {
+        BillingHandler.shared.cancelBillingSession(with: sessionId)
+        
         resetObservation(for: _routeProgress)
         unsubscribeNotifications()
     }

@@ -31,11 +31,19 @@ open class PassiveLocationManager: NSObject {
         self.systemLocationManager.delegate = self
 
         subscribeNotifications()
+        
+        BillingHandler.shared.beginBillingSession(type: .freeDrive) { [weak self] id in
+            self?.sessionId = id
+        }
     }
     
     deinit {
+        BillingHandler.shared.cancelBillingSession(with: sessionId)
+        
         unsubscribeNotifications()
     }
+    
+    private var sessionId: BillingHandler.SessionId!
     
     /**
      The directions service that allows the location manager to access road network data.
@@ -102,6 +110,21 @@ open class PassiveLocationManager: NSObject {
         return Navigator.shared.roadObjectMatcher
     }
     
+    /// Suspends the driving session.
+    ///
+    /// Use this method when you no longer need to receive updates of location status to preserve existing billing session.
+    public func pauseDriveSession() {
+        BillingHandler.shared.pauseBillingSession()
+    }
+    
+    /// Resumes the driving session.
+    ///
+    /// Resumes location updates and billing session.
+    public func resumeDriveSession() {
+        BillingHandler.shared.resumeBillingSession()
+    }
+    
+    
     var lastRawLocation: CLLocation?
     
     /**
@@ -126,7 +149,8 @@ open class PassiveLocationManager: NSObject {
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
-              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
+              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus,
+              !BillingHandler.shared.sessionIsPaused else { return }
         DispatchQueue.main.async { [weak self] in
             self?.update(to: status)
         }
