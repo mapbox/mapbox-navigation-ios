@@ -21,43 +21,48 @@ commands:
 
   save-api-diff-cache:
     parameters:
-      api_diff_cache:
-        type: string
+      key:
+        type: string    
+      is_template:
+        type: boolean
+        default: false
     steps:
-      - save_cache:
-          key: nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-{{ << parameters.api_diff_cache >> }}
-          paths:
-            - api_logs
-
-  save-api-diff-cache-by-tag:
-    parameters:
-      api_diff_cache:
-        type: string
-    steps:
-      - save_cache:
-          key: nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-<< parameters.api_diff_cache >>
-          paths:
-            - api_logs
+      - when:
+          condition: << parameters.is_template >>
+          steps: 
+            - save_cache:
+                key: nav-sdk-diff-cache-v5-{{ << parameters.key >> }}
+                paths:
+                  - api_logs
+      - unless:
+          condition: << parameters.is_template >>
+          steps:
+            - save_cache:
+                key: nav-sdk-diff-cache-v5-<< parameters.key >>
+                paths:
+                  - api_logs
 
   restore-api-diff-cache:
     parameters:
-        api_diff_cache:
-          type: string
+      key:
+        type: string
+      is_template:
+        type: boolean
+        default: false
     steps:
-      - restore_cache:
-          keys:
-            - nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-{{ << parameters.api_diff_cache >> }}
+      - when:
+          condition: << parameters.is_template >>
+          steps: 
+            - restore_cache:
+                key: nav-sdk-diff-cache-v5-{{ << parameters.key >> }}
+      - unless:
+          condition: << parameters.is_template >>
+          steps:
+            - restore_cache:
+                key: nav-sdk-diff-cache-v5-<< parameters.key >>
 
-  restore-api-diff-cache-by-tag:
-    parameters:
-        api_diff_cache:
-          type: string
-    steps:
-      - restore_cache:
-          keys:
-            - nav-api-diff-cache-v5-{{ .Environment.CIRCLE_WORKFLOW_ID }}-<< parameters.api_diff_cache >>
-
-  build-api-diff-report:
+  build-api-diff-cli-tool:
+    description: "Builds CLI tool which produce diff reports"
     parameters:
       sourcekitten-version:
         type: string
@@ -73,6 +78,7 @@ commands:
       - run:
           name: Building API Diff Report
           command: cd scripts/APIDiffReport && swift build 
+
   save-sourcekitten-cache:
     description: "Save sourcekitten binary"
     parameters:
@@ -84,6 +90,7 @@ commands:
           paths:
             - /usr/local/Cellar/sourcekitten/<< parameters.version >>
             - /usr/local/bin/sourcekitten
+
   restore-sourcekitten-cache:    
     description: "Restore sourcekitten binary"
     parameters:
@@ -93,7 +100,7 @@ commands:
       - restore_cache:
           key: sourcekitten-v2-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-<< parameters.version >>
 
-  run_api_log:
+  run_api_log_in_current_env:
     parameters:
       iOS:
         type: string
@@ -102,23 +109,16 @@ commands:
     steps:
       - run:
           name: Generating MapboxCoreNavigation API Log
-          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build
+          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
       - run:
           name: Generating MapboxNavigation API Log
-          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxNavigation clean build
+          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
 
-  install-dependencies:
-    parameters:
-      spm:
-        type: boolean
+  carthage-bootstrap:
     steps:
-      - when:
-          condition: 
-            not: << parameters.spm >>
-          steps:
-            - run:
-                name: Install Dependencies
-                command: carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
+      - run:
+          name: Install Dependencies
+          command: carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
 
 step-library:
   - &restore-cache-cocoapods
@@ -284,12 +284,6 @@ jobs:
       codecoverage:
         type: boolean
         default: false
-      delete_private_deps:
-        type: boolean
-        default: false
-      generate_api_log:
-        type: boolean
-        default: false
       verify_localization:
         type: boolean
         default: true
@@ -322,12 +316,7 @@ jobs:
             - *update-carthage-version
             - restore-carthage-cache:
                 xcode: << parameters.xcode >>
-            - when:
-                condition: << parameters.delete_private_deps >>
-                steps:
-                  - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
-            - install-dependencies:
-                spm: << parameters.spm >>
+            - carthage-bootstrap
             - save-carthage-cache:
                 xcode: << parameters.xcode >>
             - run:
@@ -351,15 +340,6 @@ jobs:
             - run:
                 name: Send code coverage
                 command: bash <(curl -s https://codecov.io/bash)
-      - when:
-          condition: << parameters.generate_api_log >>
-          steps:
-            - build-api-diff-report
-            - run_api_log:
-                iOS: << parameters.iOS >>
-                device: << parameters.device >>
-            - save-api-diff-cache:
-                api_diff_cache: .Environment.CIRCLE_SHA1
 
   xcode-12-examples:
     parameters:
@@ -418,6 +398,61 @@ jobs:
           name: Run xcodebuild for Package.swift
           command: xcodebuild -scheme MapboxNavigation-Package test -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" | xcpretty
 
+  get-api-log-job:
+    parameters:
+      xcode:
+        type: string
+        default: "12.4.0"
+      device:
+        type: string
+        default: "iPhone 12 Pro Max"
+      iOS:
+        type: string
+        default: "14.4"
+      commit_hash: 
+        description: "git hash of the commit to be used for generating logs in api_logs folder"
+        type: string        
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1        
+    steps:      
+      - restore-api-diff-cache:
+          key: << parameters.commit_hash >>
+      - run:
+          name: "Check if cache already exists"
+          command: |
+            API_LOGS_DIR=api_logs
+            if test -d "$API_LOGS_DIR"; then
+                echo "API logs cache at $API_LOGS_DIR exist. Finishing job."
+                circleci step halt
+            else
+                echo "API logs cache at $API_LOGS_DIR doesnt exist. Building from scratch."
+            fi
+      - checkout
+      - *add-github-to-known-hosts
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
+      - *add-github-to-known-hosts
+      - run:
+          name: Checking out commit
+          command: git checkout << parameters.commit_hash >>
+      - restore-carthage-cache:
+          xcode: << parameters.xcode >>
+      - carthage-bootstrap
+      - save-carthage-cache:
+          xcode: << parameters.xcode >>
+      - build-api-diff-cli-tool
+      - run:
+          name: Move Xcode project aside
+          command: rm -rf *.xcodeproj
+      - run_api_log_in_current_env:
+          iOS: << parameters.iOS >>
+          device: << parameters.device >>
+      - save-api-diff-cache:
+          key: << parameters.commit_hash >>
+
   api-diff-job:
     parameters:
       xcode:
@@ -429,9 +464,9 @@ jobs:
       iOS:
         type: string
         default: "14.4"
-      base_api_tag:
+      base_api_commit_hash:
+        description: "The hash of the commit which will be used as a base API from which breaking changes should be detected. It should be the commit hash of the first mayor release of the release this build targets. For example: If the latest release is 2.3.1 the base api commit hash should be the hash of the 2.0.0 tag"
         type: string
-        default: "v2.0.0-beta.12"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -439,87 +474,45 @@ jobs:
     steps:
       - checkout
       - *add-github-to-known-hosts
-      - build-api-diff-report
-      - run:
-          name: Store latest APIDiffReport
-          command: cp -R scripts/APIDiffReport ~/.
-      - run:
-          name: Checking out Base API
-          command: git checkout << parameters.base_api_tag >>
+      - build-api-diff-cli-tool
       - restore-api-diff-cache:
-          api_diff_cache: .Environment.CIRCLE_SHA1
+          key: .Environment.CIRCLE_SHA1
+          is_template: true
       - run:
-          name: Move Api Diff
-          command: mv api_logs original_api
-      - restore-api-diff-cache-by-tag:
-          api_diff_cache: << parameters.base_api_tag >>
-      - *prepare-mapbox-file
-      - *prepare-netrc-file
-      - *update-carthage-version
-      - restore-carthage-cache:
-          xcode: << parameters.xcode >>
-      - install-dependencies:
-          spm: false
+          name: Pick current API
+          command: mv api_logs new_api
+      - restore-api-diff-cache:
+          key: << parameters.base_api_commit_hash >>
       - run:
-          name: Install prerequisites
-          command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
-      - save-carthage-cache:
-          xcode: << parameters.xcode >>
-      - save-api-diff-cache-by-tag:
-          api_diff_cache: << parameters.base_api_tag >>
-      - run:
-          name: Restore latest APIDiffReport
-          command: |
-            rm -rf scripts/APIDiffReport
-            cp -R ~/APIDiffReport scripts/.
-      - run_api_log:
-          iOS: << parameters.iOS >>
-          device: << parameters.device >>
+          name: Pick old API
+          command: mv api_logs old_api
       - run:
           name: Generating MapboxCoreNavigation API Diff
-          command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/original_api/core_navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json
+          command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json
       - run:
           name: Generating MapboxNavigation API Diff
-          command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/original_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json
-
-  generate-api-log:
-    parameters:
-      xcode:
-        type: string
-        default: "12.4.0"
-      device:
-        type: string
-        default: "iPhone 12 Pro Max"
-      iOS:
-        type: string
-        default: "14.4"
-    macos:
-      xcode: << parameters.xcode >>
-    environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1
-    steps:
-      - checkout
-      - *prepare-mapbox-file
-      - *prepare-netrc-file
-      - *add-github-to-known-hosts
-      - *update-carthage-version
-      - restore-carthage-cache:
-          xcode: << parameters.xcode >>
-#      - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
-      - install-dependencies:
-          spm: false
-      - save-carthage-cache:
-          xcode: << parameters.xcode >>
-      - build-api-diff-report
-      - run_api_log:
-          iOS: << parameters.iOS >>
-          device: << parameters.device >>
-      - save-api-diff-cache:
-          api_diff_cache: .Environment.CIRCLE_SHA1
-
+          command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json
 
 workflows:
-  workflow:
+  api-diff-workflow:
+    jobs:
+      - get-api-log-job:
+          name: "Get old API logs"
+          commit_hash: "61bc7f5d2cf257eb955f7188f9641cb8bf41fa83"
+      - get-api-log-job:
+          name: "Get new API logs"
+          commit_hash: << pipeline.git.revision >>
+      - api-diff-job-approval:
+          name: "Approve API Diff"
+          type: approval
+      - api-diff-job:
+          name: "Verify no breaking API changes introduced"
+          base_api_commit_hash: "61bc7f5d2cf257eb955f7188f9641cb8bf41fa83"
+          requires:
+            - "Get old API logs"
+            - "Get new API logs"
+            - "Approve API Diff"
+  builds-workflow:
     jobs:
       - build-job:
           name: "Xcode_12.4_iOS_14.4"
@@ -560,14 +553,5 @@ workflows:
           filters:
             branches:
               only: release-v2.0
-      - generate-api-log:
-          name: "Generate API Log"
-      - api-diff-job-approval:
-          name: "Approve API Diff"
-          type: approval
-      - api-diff-job:
-          name: "Verify no breaking API changes introduced"
-          requires:
-            - "Generate API Log"
-            - "Approve API Diff"
+
             
