@@ -67,6 +67,9 @@ commands:
       sourcekitten-version:
         type: string
         default: "0.31.0"
+      swift-api-diff-version:
+        type: string
+        default: v1.0.0
     steps:
       - restore-sourcekitten-cache:
           version: << parameters.sourcekitten-version >>
@@ -75,9 +78,21 @@ commands:
           command: if [ ! -d /usr/local/Cellar/sourcekitten/<< parameters.sourcekitten-version >> ]; then brew update && brew install sourcekitten; fi
       - save-sourcekitten-cache:
           version: << parameters.sourcekitten-version >>      
+      - add_ssh_keys:
+          fingerprints:
+            - "8c:24:d5:99:22:42:45:8f:16:6f:8d:24:ee:08:97:13"
+      - run:
+          name: Checkout swift-api-diff CLI
+          command: cd Scripts && git clone git@github.com:mapbox/swift-api-diff.git --branch <<parameters.swift-api-diff-version>> --depth 1
+      - restore_cache:
+          key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
       - run:
           name: Building API Diff Report
-          command: cd scripts/APIDiffReport && swift build 
+          command: if [ ! -f "scripts/swift-api-diff/.build/release/swift-api-diff" ]; then cd scripts/swift-api-diff && swift build --configuration release; fi
+      - save_cache:
+          key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
+          paths:
+            - scripts/swift-api-diff/.build/release/swift-api-diff
 
   save-sourcekitten-cache:
     description: "Save sourcekitten binary"
@@ -109,10 +124,10 @@ commands:
     steps:
       - run:
           name: Generating MapboxCoreNavigation API Log
-          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff log ./ $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
       - run:
           name: Generating MapboxNavigation API Log
-          command: cd scripts/APIDiffReport && swift run APIDiffReport log ../.. $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff log ./ $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
 
   carthage-bootstrap:
     steps:
@@ -488,10 +503,11 @@ jobs:
           command: mv api_logs old_api
       - run:
           name: Generating MapboxCoreNavigation API Diff
-          command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff diff $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json
       - run:
           name: Generating MapboxNavigation API Diff
-          command: cd scripts/APIDiffReport && swift run APIDiffReport diff $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff diff $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json
+      
 
 workflows:
   api-diff-workflow:
@@ -503,7 +519,7 @@ workflows:
           name: "Get new API logs"
           commit_hash: << pipeline.git.revision >>
       - api-diff-job-approval:
-          name: "Approve API Diff"
+          name: "Start v2 API verification"
           type: approval
       - api-diff-job:
           name: "Verify no breaking API changes introduced"
@@ -511,7 +527,7 @@ workflows:
           requires:
             - "Get old API logs"
             - "Get new API logs"
-            - "Approve API Diff"
+            - "Start v2 API verification"
   builds-workflow:
     jobs:
       - build-job:
@@ -553,5 +569,3 @@ workflows:
           filters:
             branches:
               only: release-v2.0
-
-            
