@@ -162,3 +162,22 @@ custom_categories:
       - NavigationViewportDataSource
       - ViewportDataSourceType
       - ViewportDataSourceDelegate
+  - name: Electronic Horizon
+    children:
+      - ElectronicHorizonOptions
+      - RoadGraph
+      - OpenLROprientation
+      - OpenLRStandard
+      - RoadName
+      - RoadObject
+      - DistancedRoadObject
+      - RoadObjectMatcher
+      - RoadObjectsStore
+      - RoadObjectLocation
+      - RoadObjectType
+      - RoadObjectMatcherDelegate
+      - RoadObjectsStoreDelegate
+      - RoadObjectEdgeLocation
+      - RoadObjectMatcherError
+      - RoadObjectPosition
+      - RoadObjectIdentifier
