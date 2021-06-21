@@ -10,12 +10,12 @@ import MapboxMaps
 
 extension ViewController {
     
-    func setupPassiveLocationManager() {
+    func setupPassiveLocationProvider() {
         setupFreeDriveStyledFeatures()
 
         let passiveLocationDataSource = PassiveLocationDataSource()
-        let passiveLocationManager = PassiveLocationManager(dataSource: passiveLocationDataSource)
-        navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationManager)
+        let passiveLocationProvider = PassiveLocationProvider(dataSource: passiveLocationDataSource)
+        navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
         
         subscribeForFreeDriveNotifications()
     }
@@ -139,7 +139,7 @@ extension ViewController {
     }
     
     func edgeNames(identifier: RoadGraph.Edge.Identifier) -> [String] {
-        let passiveLocationDataSource = (navigationMapView.mapView.location.locationProvider as? PassiveLocationManager)?.dataSource
+        let passiveLocationDataSource = (navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider)?.dataSource
         guard let metadata = passiveLocationDataSource?.roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
             return []
         }

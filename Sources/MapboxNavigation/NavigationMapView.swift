@@ -466,7 +466,7 @@ open class NavigationMapView: UIView {
                                   navigationCameraState: navigationCamera.state)
         case .puck2D(configuration: _):
             if simulatesLocation {
-                if !(mapView.location.locationProvider is PassiveLocationManager) {
+                if !(mapView.location.locationProvider is PassiveLocationProvider) {
                     mapView.location.locationProvider.stopUpdatingLocation()
                 }
                 if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
@@ -488,7 +488,7 @@ open class NavigationMapView: UIView {
             }
         case .puck3D(configuration: let configuration):
             if simulatesLocation {
-                if !(mapView.location.locationProvider is PassiveLocationManager) {
+                if !(mapView.location.locationProvider is PassiveLocationProvider) {
                     mapView.location.locationProvider.stopUpdatingLocation()
                 }
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.puck3DSource) {

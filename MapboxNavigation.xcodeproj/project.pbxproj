@@ -168,7 +168,7 @@
 		4341758423061666004264A9 /* SnapshotTest+Mapbox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4341758323061666004264A9 /* SnapshotTest+Mapbox.swift */; };
 		439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */; };
 		43FB386923A202420064481E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0557202154EF4700A1F2AA /* Route.swift */; };
-		5A1C075824BDEB44000A6330 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationManager.swift */; };
+		5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */; };
 		5A39B9282498F9890026DFD1 /* PassiveLocationDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationDataSource.swift */; };
 		5A43FC8B24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift */; };
 		64847A041F04629D003F3A69 /* Feedback.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64847A031F04629D003F3A69 /* Feedback.swift */; };
@@ -746,7 +746,7 @@
 		4341758323061666004264A9 /* SnapshotTest+Mapbox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SnapshotTest+Mapbox.swift"; sourceTree = "<group>"; };
 		439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceCardsSnapshotTests.swift; sourceTree = "<group>"; };
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
-		5A1C075724BDEB44000A6330 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
+		5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationProvider.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* PassiveLocationDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationDataSource.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* PassiveLocationDataSourceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationDataSourceTests.swift; sourceTree = "<group>"; };
 		64847A031F04629D003F3A69 /* Feedback.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feedback.swift; sourceTree = "<group>"; };
@@ -1502,7 +1502,7 @@
 				2B3ED3952609FB2300861A84 /* CameraController.swift */,
 				8DEDEF3321E3FBE80049E114 /* NavigationViewControllerDelegate.swift */,
 				8D3322262200E4CA001D44AA /* NavigationOptions.swift */,
-				5A1C075724BDEB44000A6330 /* PassiveLocationManager.swift */,
+				5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */,
 				2BDD65502615C0E0005B8B55 /* RouteLineController.swift */,
 				AEC3AC992106703100A26F34 /* HighwayShield.swift */,
 				8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */,
@@ -2811,7 +2811,7 @@
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
 				43FB386923A202420064481E /* Route.swift in Sources */,
 				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
-				5A1C075824BDEB44000A6330 /* PassiveLocationManager.swift in Sources */,
+				5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */,
 				3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */,
 				2B8098412411375700FED452 /* SpeechSynthesizing.swift in Sources */,
 				3EA9371104016CD402547F1A /* ImageCache.swift in Sources */,

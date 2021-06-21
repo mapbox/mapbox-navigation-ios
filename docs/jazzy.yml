@@ -65,7 +65,7 @@ custom_categories:
       - AccountManager
       - PointAnnotation
       - Style
-      - PassiveLocationManager
+      - PassiveLocationProvider
       - NavigationLocationProvider
       - WaypointStyle
       - UserLocationStyle
