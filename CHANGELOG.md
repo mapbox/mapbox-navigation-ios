@@ -47,6 +47,7 @@
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationManager.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
 * Added the `RouteController.historyDirectoryURL` property and `RouteController.writeHistory(completionHandler:)` method for recording details about a trip for debugging purposes. ([#2930](https://github.com/mapbox/mapbox-navigation-ios/pull/2930))
+* Added the `NavigationLocationProvider` class to conform to `LocationProvider` protocol, which depends on `NavigationLocationManager` to detect the user’s location as it changes. . `PassiveLocationManager` now conforms to `NavigationLocationProvider`. ([#3070](https://github.com/mapbox/mapbox-navigation-ios/pull/3070))
 
 ### Electronic horizon
 

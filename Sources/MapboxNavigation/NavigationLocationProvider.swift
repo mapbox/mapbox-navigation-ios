@@ -3,11 +3,18 @@ import CoreLocation
 import MapboxCoreNavigation
 import MapboxMaps
 
-public class NavigationLocationProvider: NSObject, LocationProvider, CLLocationManagerDelegate {
+/**
+ An object that notifies a map view when the user’s location changes, minimizing the noise that normally accompanies location updates from a `CLLocationManager` object.
+ 
+ If your application displays a `MapView` before starting turn-by-turn navigation, call `LocationManager.overrideLocationProvider(with:)` to override default location provider so that the map view always shows the location snapped to the road network. For example, use this class to show the user’s current location as they wander around town.
+ 
+ This class depends on `NavigationLocationManager` to detect the user’s location as it changes.
+ */
+open class NavigationLocationProvider: NSObject, LocationProvider, CLLocationManagerDelegate {
     /**
      The location provider's location manager, which detects the user’s location as it changes.
      */
-    private var locationManager: NavigationLocationManager
+    public var locationManager: NavigationLocationManager
     
     public var locationProviderOptions: LocationOptions {
         didSet {
@@ -20,7 +27,7 @@ public class NavigationLocationProvider: NSObject, LocationProvider, CLLocationM
     /**
      The location provider's delegate.
      */
-    private weak var delegate: LocationProviderDelegate?
+    public weak var delegate: LocationProviderDelegate?
     
     public var authorizationStatus: CLAuthorizationStatus {
         CLLocationManager.authorizationStatus()
@@ -34,7 +41,6 @@ public class NavigationLocationProvider: NSObject, LocationProvider, CLLocationM
         }
     }
     
-    //TODO, if no heading, form a heading from the location.course
     public var heading: CLHeading? {
         return locationManager.heading
     }

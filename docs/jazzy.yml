@@ -66,6 +66,7 @@ custom_categories:
       - PointAnnotation
       - Style
       - PassiveLocationManager
+      - NavigationLocationProvider
       - WaypointStyle
       - UserLocationStyle
   - name: Styling

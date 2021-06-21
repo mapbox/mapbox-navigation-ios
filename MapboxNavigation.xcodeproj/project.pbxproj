@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1603C891214351EE00167D95 /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1603C890214351EE00167D95 /* Cedar.framework */; };
-		160A4A712127A46C0028B070 /* CPBarButton+MBTestable.m in Sources */ = {isa = PBXBuildFile; fileRef = 160A4A69212791010028B070 /* CPBarButton+MBTestable.m */; };
 		160D8279205996DA00D278D6 /* DataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D8278205996DA00D278D6 /* DataCache.swift */; };
 		160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D827A2059973C00D278D6 /* DataCacheTests.swift */; };
 		162039CF216C348500875F5C /* NavigationEventsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162039CE216C348500875F5C /* NavigationEventsManagerTests.swift */; };
@@ -97,7 +95,6 @@
 		353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E68FD1EF0B985007B2AE5 /* BundleAdditions.swift */; };
 		353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */; };
 		353EC9D71FB09708002EB0AB /* StepsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 353EC9D61FB09708002EB0AB /* StepsViewController.swift */; };
-		354A01B91E66256600D765C2 /* MapboxDirections.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354A01B81E66256600D765C2 /* MapboxDirections.framework */; };
 		354A9BC620EA991900F03325 /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BC520EA991900F03325 /* SessionState.swift */; };
 		354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCA20EA9BDA00F03325 /* EventDetails.swift */; };
 		354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */; };
@@ -308,6 +305,7 @@
 		B4A78D30261FD47700FDF212 /* route-with-road-classes-single-congestion.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFC261FD0A30078546C /* route-with-road-classes-single-congestion.json */; };
 		B4A78D31261FD47700FDF212 /* route-with-lanes.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFD261FD0A30078546C /* route-with-lanes.json */; };
 		B4A78D32261FD47700FDF212 /* sthlm-double-back.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFE261FD0A30078546C /* sthlm-double-back.json */; };
+		B4E19C47268114840011581F /* NavigationLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E19C46268114840011581F /* NavigationLocationProvider.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC31620F689F800400CE7 /* CustomStyles.swift */; };
@@ -387,6 +385,25 @@
 		DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF27251264E02D800C0AC37 /* RoadObject.swift */; };
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 		E27A2204265674E400AA935F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E27A2202265674E400AA935F /* Localizable.strings */; };
+		E2842798265B907C003F86E4 /* UnimplementedLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */; };
+		E2C1CDA0265E22AA00E158E0 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; };
+		E2C1CDA1265E22AA00E158E0 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E2C1CDA4265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
+		E2C1CDA5265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E2C1CDA7265E22B400E158E0 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
+		E2C1CDA8265E22B400E158E0 /* MapboxNavigationNative.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E2C1CDAA265E22B900E158E0 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */; };
+		E2C1CDAB265E22B900E158E0 /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E2C1CDAD265E22BD00E158E0 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */; };
+		E2C1CDAE265E22BD00E158E0 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E2C1CDB0265E22C100E158E0 /* MapboxCommon.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */; };
+		E2C1CDB1265E22C100E158E0 /* MapboxCommon.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		E2C1CDB2265E439300E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
+		E2C1CDB3265E43BC00E158E0 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
+		E2C1CDB5265E43D500E158E0 /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB4265E43D500E158E0 /* Quick.xcframework */; };
+		E2C1CDB7265E43E100E158E0 /* Nimble.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB6265E43E100E158E0 /* Nimble.xcframework */; };
+		E2C1CDB9265E43EB00E158E0 /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB8265E43EB00E158E0 /* MapboxGeocoder.xcframework */; };
+		E2CC18F4265FA28900D61CBC /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2CC18F3265FA28900D61CBC /* Cedar.framework */; };
 		E2D14952265CF97D008135A3 /* CarPlayTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = E2D14950265CF97D008135A3 /* CarPlayTestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E2D1495A265CF9D1008135A3 /* CPMapTemplate+MBTestable.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2D14956265CF9D1008135A3 /* CPMapTemplate+MBTestable.mm */; };
 		E2D1495B265CF9D1008135A3 /* CPNavigationSessionFake.m in Sources */ = {isa = PBXBuildFile; fileRef = E2D14957265CF9D1008135A3 /* CPNavigationSessionFake.m */; };
@@ -407,27 +424,7 @@
 		E2D14980265CFD33008135A3 /* CarPlayUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D1497E265CFD33008135A3 /* CarPlayUtils.swift */; };
 		E2D14981265CFD33008135A3 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D1497F265CFD33008135A3 /* Utils.swift */; };
 		E2D14983265CFD3C008135A3 /* StatusViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D14982265CFD3C008135A3 /* StatusViewTests.swift */; };
-		E2842798265B907C003F86E4 /* UnimplementedLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */; };
-		E2C1CDA0265E22AA00E158E0 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; };
-		E2C1CDA1265E22AA00E158E0 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDA4265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
-		E2C1CDA5265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDA7265E22B400E158E0 /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
-		E2C1CDA8265E22B400E158E0 /* MapboxNavigationNative.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDAA265E22B900E158E0 /* Polyline.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */; };
-		E2C1CDAB265E22B900E158E0 /* Polyline.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDAD265E22BD00E158E0 /* Turf.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */; };
-		E2C1CDAE265E22BD00E158E0 /* Turf.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDB0265E22C100E158E0 /* MapboxCommon.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */; };
-		E2C1CDB1265E22C100E158E0 /* MapboxCommon.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		E2C1CDB2265E439300E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
-		E2C1CDB3265E43BC00E158E0 /* MapboxCoreNavigation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5ADFBC91DDCC7840011824B /* MapboxCoreNavigation.framework */; };
-		E2C1CDB5265E43D500E158E0 /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB4265E43D500E158E0 /* Quick.xcframework */; };
-		E2C1CDB7265E43E100E158E0 /* Nimble.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB6265E43E100E158E0 /* Nimble.xcframework */; };
-		E2C1CDB9265E43EB00E158E0 /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB8265E43EB00E158E0 /* MapboxGeocoder.xcframework */; };
 		F46FF187260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */; };
-		E2CC18F4265FA28900D61CBC /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2CC18F3265FA28900D61CBC /* Cedar.framework */; };
-		F452634C25B2506A00F7A464 /* Turf.swift in Sources */ = {isa = PBXBuildFile; fileRef = F452634B25B2506A00F7A464 /* Turf.swift */; };
 		F4BF512E24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */; };
 		F4C5A26F24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */; };
 /* End PBXBuildFile section */
@@ -775,16 +772,9 @@
 		8A41F5EB25BF624900BD6FCF /* MapOrnamentPosition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapOrnamentPosition.swift; sourceTree = "<group>"; };
 		8A41F63A25BF631500BD6FCF /* NavigationMapView+VanishingRouteLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+VanishingRouteLine.swift"; sourceTree = "<group>"; };
 		8A41F63B25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+BuildingHighlighting.swift"; sourceTree = "<group>"; };
-		8A41F65A25BF642200BD6FCF /* MapboxMobileEvents.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMobileEvents.xcframework; path = MapboxNavigation/MapboxMaps/MapboxMobileEvents.xcframework; sourceTree = "<group>"; };
-		8A41F65B25BF642200BD6FCF /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = MapboxNavigation/MapboxMaps/Turf.xcframework; sourceTree = "<group>"; };
-		8A41F65C25BF642200BD6FCF /* MapboxMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMaps.xcframework; path = MapboxNavigation/MapboxMaps/MapboxMaps.xcframework; sourceTree = "<group>"; };
-		8A41F65D25BF642200BD6FCF /* MapboxCommon.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCommon.xcframework; path = MapboxNavigation/MapboxMaps/MapboxCommon.xcframework; sourceTree = "<group>"; };
-		8A41F65E25BF642200BD6FCF /* MapboxCoreMaps.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCoreMaps.xcframework; path = MapboxNavigation/MapboxMaps/MapboxCoreMaps.xcframework; sourceTree = "<group>"; };
 		8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataSourceType.swift; sourceTree = "<group>"; };
 		8A446644260A7B24008BA55E /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		8A8C3D97260175D20071D274 /* CLLocationDirection+Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationDirection+Camera.swift"; sourceTree = "<group>"; };
-		8A997F2A2581A9E4005D50D6 /* MapboxMapsAnnotations.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMapsAnnotations.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		8A997F2D2581A9EA005D50D6 /* MapboxMaps.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = MapboxMaps.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
 		8AC3965225DC66570027A035 /* NavigationCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraType.swift; sourceTree = "<group>"; };
 		8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCamera.swift; sourceTree = "<group>"; };
@@ -905,6 +895,7 @@
 		B47C1B02261FD0A30078546C /* DirectionsSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSpy.swift; sourceTree = "<group>"; };
 		B47C1B03261FD0A30078546C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B4D4291826260D5900EE92A8 /* MBXInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
+		B4E19C46268114840011581F /* NavigationLocationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationLocationProvider.swift; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
 		C51DF8651F38C31C006C6A15 /* Locale.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Locale.swift; sourceTree = "<group>"; };
 		C51FC31620F689F800400CE7 /* CustomStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomStyles.swift; path = Example/CustomStyles.swift; sourceTree = "<group>"; };
@@ -1072,6 +1063,17 @@
 		E27A21F22654FB6800AA935F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E27A21FD265672D500AA935F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E27A2203265674E400AA935F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnimplementedLoggingTests.swift; sourceTree = "<group>"; };
+		E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = Carthage/Build/MapboxDirections.xcframework; sourceTree = "<group>"; };
+		E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMobileEvents.xcframework; path = Carthage/Build/MapboxMobileEvents.xcframework; sourceTree = "<group>"; };
+		E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigationNative.xcframework; path = Carthage/Build/MapboxNavigationNative.xcframework; sourceTree = "<group>"; };
+		E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Polyline.xcframework; path = Carthage/Build/Polyline.xcframework; sourceTree = "<group>"; };
+		E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = Carthage/Build/Turf.xcframework; sourceTree = "<group>"; };
+		E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCommon.xcframework; path = Carthage/Build/MapboxCommon.xcframework; sourceTree = "<group>"; };
+		E2C1CDB4265E43D500E158E0 /* Quick.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Quick.xcframework; path = Carthage/Build/Quick.xcframework; sourceTree = "<group>"; };
+		E2C1CDB6265E43E100E158E0 /* Nimble.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Nimble.xcframework; path = Carthage/Build/Nimble.xcframework; sourceTree = "<group>"; };
+		E2C1CDB8265E43EB00E158E0 /* MapboxGeocoder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxGeocoder.xcframework; path = Carthage/Build/MapboxGeocoder.xcframework; sourceTree = "<group>"; };
+		E2CC18F3265FA28900D61CBC /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = "Carthage/Checkouts/mapbox-events-ios/Frameworks/Cedar.framework"; sourceTree = "<group>"; };
 		E2D1494E265CF97D008135A3 /* CarPlayTestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CarPlayTestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2D14950265CF97D008135A3 /* CarPlayTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CarPlayTestHelper.h; sourceTree = "<group>"; };
 		E2D14951265CF97D008135A3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -1093,19 +1095,7 @@
 		E2D1497E265CFD33008135A3 /* CarPlayUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayUtils.swift; sourceTree = "<group>"; };
 		E2D1497F265CFD33008135A3 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		E2D14982265CFD3C008135A3 /* StatusViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusViewTests.swift; sourceTree = "<group>"; };
-		E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnimplementedLoggingTests.swift; sourceTree = "<group>"; };
-		E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = Carthage/Build/MapboxDirections.xcframework; sourceTree = "<group>"; };
-		E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMobileEvents.xcframework; path = Carthage/Build/MapboxMobileEvents.xcframework; sourceTree = "<group>"; };
-		E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigationNative.xcframework; path = Carthage/Build/MapboxNavigationNative.xcframework; sourceTree = "<group>"; };
-		E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Polyline.xcframework; path = Carthage/Build/Polyline.xcframework; sourceTree = "<group>"; };
-		E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Turf.xcframework; path = Carthage/Build/Turf.xcframework; sourceTree = "<group>"; };
-		E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxCommon.xcframework; path = Carthage/Build/MapboxCommon.xcframework; sourceTree = "<group>"; };
-		E2C1CDB4265E43D500E158E0 /* Quick.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Quick.xcframework; path = Carthage/Build/Quick.xcframework; sourceTree = "<group>"; };
-		E2C1CDB6265E43E100E158E0 /* Nimble.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Nimble.xcframework; path = Carthage/Build/Nimble.xcframework; sourceTree = "<group>"; };
-		E2C1CDB8265E43EB00E158E0 /* MapboxGeocoder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxGeocoder.xcframework; path = Carthage/Build/MapboxGeocoder.xcframework; sourceTree = "<group>"; };
 		F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DateComponentsFormatter+NavigationAdditions.swift"; sourceTree = "<group>"; };
-		E2CC18F3265FA28900D61CBC /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = "Carthage/Checkouts/mapbox-events-ios/Frameworks/Cedar.framework"; sourceTree = "<group>"; };
-		F452634B25B2506A00F7A464 /* Turf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Turf.swift; sourceTree = "<group>"; };
 		F4BF512D24EAD7A50066A49B /* FeedbackSubtypeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeCollectionViewCell.swift; sourceTree = "<group>"; };
 		F4C5A26E24EF1D16004ED0DD /* FeedbackSubtypeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSubtypeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1499,6 +1489,7 @@
 		8A0E0A66257ADD3D00C2E924 /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				B4E19C46268114840011581F /* NavigationLocationProvider.swift */,
 				8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */,
 				8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */,
 				8DCB4247218A540A00D6FCAD /* NavigationComponent.swift */,
@@ -1703,6 +1694,27 @@
 			path = Fixtures;
 			sourceTree = "<group>";
 		};
+		B4E19C4526810A7C0011581F /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */,
+				E2C1CDAF265E22C100E158E0 /* MapboxCommon.xcframework */,
+				E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */,
+				E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */,
+				E2C1CDAC265E22BD00E158E0 /* Turf.xcframework */,
+				E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */,
+				8A07D31625CA0B50005E1790 /* Turf.xcframework */,
+				8A07D31525CA0B50005E1790 /* MapboxCoreMaps.xcframework */,
+				8A07D31425CA0B50005E1790 /* MapboxMobileEvents.xcframework */,
+				8A07D31725CA0B50005E1790 /* MapboxCommon.xcframework */,
+				8A07D31325CA0B50005E1790 /* MapboxMaps.xcframework */,
+				E2C1CDB4265E43D500E158E0 /* Quick.xcframework */,
+				E2C1CDB6265E43E100E158E0 /* Nimble.xcframework */,
+				E2C1CDB8265E43EB00E158E0 /* MapboxGeocoder.xcframework */,
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		C51923B41EA55C5E002AF9E1 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -1819,6 +1831,7 @@
 				35CDA81C21908F320072B675 /* BenchTests */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
+				B4E19C4526810A7C0011581F /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -2731,6 +2744,7 @@
 				F46FF187260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift in Sources */,
 				353E3C8F20A3501C00FD1789 /* MapboxMapsStyle.swift in Sources */,
 				C57491DF1FACC42F006F97BC /* CGPoint.swift in Sources */,
+				B4E19C47268114840011581F /* NavigationLocationProvider.swift in Sources */,
 				16C2A421211526EE00FE6E68 /* CarPlayManager.swift in Sources */,
 				8D53136B20653FA20044891E /* ExitView.swift in Sources */,
 				8D3322272200E4CA001D44AA /* NavigationOptions.swift in Sources */,
