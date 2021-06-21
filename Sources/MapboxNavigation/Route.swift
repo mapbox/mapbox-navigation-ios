@@ -67,7 +67,7 @@ extension Route {
                                                                        roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                 
                 legFeatures = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> Feature in
-                    var feature = Feature(LineString(congestionSegment.0))
+                    var feature = Feature(geometry: .lineString(LineString(congestionSegment.0)))
                     feature.properties = [
                         CongestionAttribute: String(describing: congestionSegment.1),
                         "isAlternativeRoute": isAlternativeRoute,
@@ -77,7 +77,7 @@ extension Route {
                     return feature
                 }
             } else {
-                var feature = Feature(LineString(shape.coordinates))
+                var feature = Feature(geometry: .lineString(LineString(shape.coordinates)))
                 feature.properties = [
                     "isAlternativeRoute": isAlternativeRoute,
                     CurrentLegAttribute: (legIndex != nil) ? index == legIndex : true

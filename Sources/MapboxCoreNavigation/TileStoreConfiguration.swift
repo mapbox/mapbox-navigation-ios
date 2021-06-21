@@ -42,9 +42,9 @@ public struct TileStoreConfiguration {
         public var tileStore: TileStore {
             switch self {
             case .default:
-                return TileStore.__getInstance()
+                return TileStore.__create()
             case .custom(let url):
-                return TileStore.__getInstanceForPath(url.path)
+                return TileStore.__create(forPath: url.path)
             }
         }
     }

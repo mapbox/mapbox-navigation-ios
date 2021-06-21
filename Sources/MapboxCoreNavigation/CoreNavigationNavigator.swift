@@ -1,5 +1,6 @@
 import MapboxNavigationNative
 import MapboxDirections
+@_implementationOnly import MapboxCommon_Private
 
 class Navigator {
     
@@ -51,9 +52,10 @@ class Navigator {
     
     private(set) var roadGraph: RoadGraph
     
-    lazy var router: MapboxNavigationNative.Router = {
-        return MapboxNavigationNative.Router(cache: cacheHandle,
-                                             historyRecorder: historyRecorder)
+    lazy var routerInterface: MapboxNavigationNative.RouterInterface = {
+        return MapboxNavigationNative.RouterFactory.build(for: .hybrid,
+                                                          cache: cacheHandle,
+                                                          historyRecorder: historyRecorder)
     }()
 
     private(set) var roadObjectStore: RoadObjectStore

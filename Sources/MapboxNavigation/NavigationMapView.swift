@@ -717,7 +717,7 @@ open class NavigationMapView: UIView {
 
         var features = [Turf.Feature]()
         for (waypointIndex, waypoint) in waypoints.enumerated() {
-            var feature = Feature(Point(waypoint.coordinate))
+            var feature = Feature(geometry: .point(Point(waypoint.coordinate)))
             feature.properties = [
                 "waypointCompleted": waypointIndex < legIndex,
                 "name": waypointIndex + 1
@@ -890,10 +890,10 @@ open class NavigationMapView: UIView {
                 let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
                 
                 var arrowSource = GeoJSONSource()
-                arrowSource.data = .feature(Feature(shaftPolyline))
+                arrowSource.data = .feature(.init(geometry: .lineString(shaftPolyline)))
                 var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSource) {
-                    let geoJSON = Feature(shaftPolyline)
+                    let geoJSON = Feature(geometry: .lineString(shaftPolyline))
                     try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSource, geoJSON: geoJSON)
                 } else {
                     arrowLayer.minZoom = Double(minimumZoomLevel)
@@ -913,11 +913,12 @@ open class NavigationMapView: UIView {
                 }
                 
                 var arrowStrokeSource = GeoJSONSource()
-                arrowStrokeSource.data = .feature(Feature(shaftPolyline))
+                arrowStrokeSource.data = .feature(Feature(geometry: .lineString(shaftPolyline)))
                 var arrowStrokeLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource) {
-                    let geoJSON = Feature(shaftPolyline)
-                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource, geoJSON: geoJSON)
+                    let geoJSON = Feature(geometry: .lineString(shaftPolyline))
+                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource,
+                                                                    geoJSON: geoJSON)
                 } else {
                     arrowStrokeLayer.minZoom = arrowLayer.minZoom
                     arrowStrokeLayer.lineCap = arrowLayer.lineCap
@@ -932,7 +933,7 @@ open class NavigationMapView: UIView {
                 
                 let point = Point(shaftStrokeCoordinates.last!)
                 var arrowSymbolSource = GeoJSONSource()
-                arrowSymbolSource.data = .feature(Feature(point))
+                arrowSymbolSource.data = .feature(Feature(geometry: .point(point)))
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource) {
                     let geoJSON = Feature.init(geometry: Geometry.point(point))
                     try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource,
@@ -1151,7 +1152,7 @@ open class NavigationMapView: UIView {
             let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
 
             // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
-            var feature = Feature(Point(annotationCoordinate))
+            var feature = Feature(geometry: .point(Point(annotationCoordinate)))
 
             var tailPosition = randomTailPosition
 
@@ -1359,7 +1360,7 @@ open class NavigationMapView: UIView {
                     guard let shape = route.legs[legIndex].steps[stepIndex].shape,
                           let coordinateFromStart = LineString(shape.coordinates.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep) else { continue }
                     
-                    var feature = Feature(Point(coordinateFromStart))
+                    var feature = Feature(geometry: .point(Point(coordinateFromStart)))
                     feature.properties = [
                         "instruction": instruction.text
                     ]
