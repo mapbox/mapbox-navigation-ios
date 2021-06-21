@@ -398,8 +398,7 @@ open class NavigationMapView: UIView {
     }
     
     @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {
-        // FIXME: Mapbox Maps SDK v10.0.0-beta.21 doesn't publicly expose the ability to change `preferredFramesPerSecond`.
-        // mapView.options.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
+        mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
     /**
@@ -413,22 +412,21 @@ open class NavigationMapView: UIView {
     public func updatePreferredFrameRate(for routeProgress: RouteProgress) {
         guard navigationCamera.state == .following else { return }
         
-        // FIXME: Mapbox Maps SDK v10.0.0-beta.21 doesn't publicly expose the ability to change `preferredFramesPerSecond`.
-        // let stepProgress = routeProgress.currentLegProgress.currentStepProgress
-        // let expectedTravelTime = stepProgress.step.expectedTravelTime
-        // let durationUntilNextManeuver = stepProgress.durationRemaining
-        // let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
+        let stepProgress = routeProgress.currentLegProgress.currentStepProgress
+        let expectedTravelTime = stepProgress.step.expectedTravelTime
+        let durationUntilNextManeuver = stepProgress.durationRemaining
+        let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
         
-        // var preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
-        // let maneuverDirections: [ManeuverDirection] = [.straightAhead, .slightLeft, .slightRight]
-        // if let maneuverDirection = routeProgress.currentLegProgress.upcomingStep?.maneuverDirection,
-        //    maneuverDirections.contains(maneuverDirection) ||
-        //     (durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
-        //         durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver) {
-        //     preferredFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
-        // }
-
-        // mapView.options.preferredFramesPerSecond = preferredFramesPerSecond
+        var preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
+        let maneuverDirections: [ManeuverDirection] = [.straightAhead, .slightLeft, .slightRight]
+        if let maneuverDirection = routeProgress.currentLegProgress.upcomingStep?.maneuverDirection,
+           maneuverDirections.contains(maneuverDirection) ||
+            (durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
+                durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver) {
+            preferredFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
+        }
+        
+        mapView.preferredFramesPerSecond = preferredFramesPerSecond
     }
     
     // MARK: - User tracking methods
