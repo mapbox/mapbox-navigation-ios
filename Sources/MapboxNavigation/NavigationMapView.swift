@@ -349,9 +349,10 @@ open class NavigationMapView: UIView {
     }
     
     func setupGestureRecognizers() {
-        for recognizer in mapView.gestureRecognizers ?? [] where recognizer is UITapGestureRecognizer {
-            recognizer.addTarget(self, action: #selector(didReceiveTap(sender:)))
-        }
+        // Gesture recognizer, which is used to detect taps on route line and waypoint.
+        let mapViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didReceiveTap(sender:)))
+        mapViewTapGestureRecognizer.delegate = self
+        mapView.addGestureRecognizer(mapViewTapGestureRecognizer)
     }
     
     /**
@@ -1480,5 +1481,19 @@ open class NavigationMapView: UIView {
         for gestureRecognizer in gestureRecognizers ?? [] {
             gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
         }
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate methods
+
+extension NavigationMapView: UIGestureRecognizerDelegate {
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer is UITapGestureRecognizer &&
+            otherGestureRecognizer is UITapGestureRecognizer {
+            return true
+        }
+        
+        return false
     }
 }
