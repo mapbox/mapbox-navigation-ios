@@ -34,8 +34,8 @@ extension CLLocationCoordinate2D {
     }
 }
 
-class PassiveLocationDataSourceTests: XCTestCase {
-    class Delegate: PassiveLocationDataSourceDelegate {
+class PassiveLocationManagerTests: XCTestCase {
+    class Delegate: PassiveLocationManagerDelegate {
         let road: Road
         let locationUpdateExpectation: XCTestExpectation
         
@@ -44,20 +44,20 @@ class PassiveLocationDataSourceTests: XCTestCase {
             self.locationUpdateExpectation = locationUpdateExpectation
         }
         
-        func passiveLocationDataSourceDidChangeAuthorization(_ dataSource: PassiveLocationDataSource) {
+        func passiveLocationManagerDidChangeAuthorization(_ manager: PassiveLocationManager) {
         }
         
-        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
+        func passiveLocationManager(_ manager: PassiveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
             print("Got location: \(rawLocation.coordinate.latitude), \(rawLocation.coordinate.longitude) → \(location.coordinate.latitude), \(location.coordinate.longitude)")
             print("Value: \(road.proximity(of: location.coordinate)) should be less or equal to \(road.proximity(of: rawLocation.coordinate))")
 
             XCTAssert(road.proximity(of: location.coordinate) <= road.proximity(of: rawLocation.coordinate), "Raw Location wasn't mapped to a road")
         }
         
-        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateHeading newHeading: CLHeading) {
+        func passiveLocationManager(_ manager: PassiveLocationManager, didUpdateHeading newHeading: CLHeading) {
         }
         
-        func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error) {
+        func passiveLocationManager(_ manager: PassiveLocationManager, didFailWithError error: Error) {
         }
     }
     
@@ -72,13 +72,13 @@ class PassiveLocationDataSourceTests: XCTestCase {
     }
     
     override func tearDown() {
-        PassiveLocationDataSource.historyDirectoryURL = nil
+        PassiveLocationManager.historyDirectoryURL = nil
         Navigator.tilesURL = nil
         Navigator._recreateNavigator()
     }
     
     func testManualLocations() {
-        let locationManager = PassiveLocationDataSource(directions: directions)
+        let locationManager = PassiveLocationManager(directions: directions)
         Navigator.shared.navigator.resetRideSession()
         let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
         locationUpdateExpectation.expectedFulfillmentCount = 1
@@ -102,12 +102,12 @@ class PassiveLocationDataSourceTests: XCTestCase {
     }
     
     func testNoHistoryRecording() {
-        PassiveLocationDataSource.historyDirectoryURL = nil
+        PassiveLocationManager.historyDirectoryURL = nil
         Navigator._recreateNavigator()
                 
         let noHistoryExpectation = XCTestExpectation(description: "History should not be written on 'nil' path")
         noHistoryExpectation.isInverted = true
-        PassiveLocationDataSource.writeHistory { _ in
+        PassiveLocationManager.writeHistory { _ in
             noHistoryExpectation.fulfill()
         }
         wait(for: [noHistoryExpectation], timeout: 3)
@@ -116,11 +116,11 @@ class PassiveLocationDataSourceTests: XCTestCase {
     func testHistoryRecording() {
         let supportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!.appendingPathComponent("test")
         
-        PassiveLocationDataSource.historyDirectoryURL = supportDir
+        PassiveLocationManager.historyDirectoryURL = supportDir
         Navigator._recreateNavigator()
                 
         let historyExpectation = XCTestExpectation(description: "History should be written to '\(supportDir)'")
-        PassiveLocationDataSource.writeHistory { url in
+        PassiveLocationManager.writeHistory { url in
             XCTAssertNotNil(url)
             historyExpectation.fulfill()
         }

@@ -56,7 +56,7 @@ custom_categories:
       - RouteOptions
       - NavigationMatchOptions
       - SimulationMode
-      - PassiveLocationDataSource
+      - PassiveLocationManager
   - name: Maps
     children:
       - NavigationMapView
@@ -65,7 +65,8 @@ custom_categories:
       - AccountManager
       - PointAnnotation
       - Style
-      - PassiveLocationManager
+      - PassiveLocationProvider
+      - NavigationLocationProvider
       - WaypointStyle
       - UserLocationStyle
   - name: Styling

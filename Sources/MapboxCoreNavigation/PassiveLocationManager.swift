@@ -7,14 +7,14 @@ import MapboxDirections
  
  Unlike `Router` classes such as `RouteController` and `LegacyRouteController`, this class operates without a predefined route, matching the user’s location to the road network at large. You can use a passive location manager to determine a starting point for a route that you calculate using the `Directions.calculate(_:completionHandler:)` method. If the user happens to be moving while you calculate the route, the passive location manager makes it less likely that the route will begin with a short segment on a side road or driveway and a confusing instruction to turn onto the current road.
  
- To find out when the user’s location changes, implement the `PassiveLocationDataSourceDelegate` protocol, or observe `Notification.Name.passiveLocationDataSourceDidUpdate` notifications for more detailed information.
+ To find out when the user’s location changes, implement the `PassiveLocationManagerDelegate` protocol, or observe `Notification.Name.passiveLocationManagerDidUpdate` notifications for more detailed information.
  */
-open class PassiveLocationDataSource: NSObject {
+open class PassiveLocationManager: NSObject {
     /**
-     Initializes the location data source with the given directions service.
+     Initializes the location manager with the given directions service.
      
-     - parameter directions: The directions service that allows the location data source to access road network data. If this argument is omitted, the shared `Directions` object is used.
-     - parameter systemLocationManager: The location manager that provides raw locations for the receiver to match against the road network.
+     - parameter directions: The directions service that allows the location manager to access road network data. If this argument is omitted, the shared `Directions` object is used.
+     - parameter systemLocationManager: The system location manager that provides raw locations for the receiver to match against the road network.
      - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      
      - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
@@ -38,12 +38,12 @@ open class PassiveLocationDataSource: NSObject {
     }
     
     /**
-     The directions service that allows the location data source to access road network data.
+     The directions service that allows the location manager to access road network data.
      */
     public let directions: Directions
     
     /**
-     The location manager that provides raw locations for the receiver to match against the road network.
+     A `NavigationLocationManager` that provides raw locations for the receiver to match against the road network.
      */
     public let systemLocationManager: NavigationLocationManager
     
@@ -62,9 +62,9 @@ open class PassiveLocationDataSource: NSObject {
     }
     
     /**
-     The location data source’s delegate.
+     The location manager's delegate.
      */
-    public weak var delegate: PassiveLocationDataSourceDelegate?
+    public weak var delegate: PassiveLocationManagerDelegate?
     
     /**
      Starts the generation of location updates. 
@@ -87,12 +87,12 @@ open class PassiveLocationDataSource: NSObject {
         }
     }
     
-    /// The road graph that is updated as the passive location data source tracks the user’s location.
+    /// The road graph that is updated as the passive location manager tracks the user’s location.
     public var roadGraph: RoadGraph {
         return Navigator.shared.roadGraph
     }
     
-    /// The road object store that is updated as the passive location data source tracks the user’s location.
+    /// The road object store that is updated as the passive location manager tracks the user’s location.
     public var roadObjectStore: RoadObjectStore {
         return Navigator.shared.roadObjectStore
     }
@@ -139,7 +139,7 @@ open class PassiveLocationDataSource: NSObject {
         var speedLimit: Measurement<UnitSpeed>?
         var signStandard: SignStandard?
 
-        delegate?.passiveLocationDataSource(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
+        delegate?.passiveLocationManager(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
         let matches = status.mapMatcherOutput.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
         }
@@ -176,7 +176,7 @@ open class PassiveLocationDataSource: NSObject {
         if let signStandard = signStandard {
             userInfo[.signStandardKey] = signStandard
         }
-        NotificationCenter.default.post(name: .passiveLocationDataSourceDidUpdate, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: .passiveLocationManagerDidUpdate, object: self, userInfo: userInfo)
     }
     
     private func subscribeNotifications() {
@@ -191,7 +191,7 @@ open class PassiveLocationDataSource: NSObject {
     }
     
     /**
-     Path to the directory where history could be stored when `PassiveLocationDataSource.writeHistory(completionHandler:)` is called.
+     Path to the directory where history could be stored when `PassiveLocationManager.writeHistory(completionHandler:)` is called.
      */
     public static var historyDirectoryURL: URL? = nil {
         didSet {
@@ -207,7 +207,7 @@ open class PassiveLocationDataSource: NSObject {
     public typealias WriteHistoryCompletionHandler = (_ historyFileURL: URL?) -> Void
     
     /**
-     Store history to the directory stored in `PassiveLocationDataSource.historyDirectoryURL` and asynchronously run a callback
+     Store history to the directory stored in `PassiveLocationManager.historyDirectoryURL` and asynchronously run a callback
      when writing finishes.
      
      - parameter completion: A block object to be executed when history writing ends.
@@ -217,42 +217,42 @@ open class PassiveLocationDataSource: NSObject {
     }
 }
 
-extension PassiveLocationDataSource: CLLocationManagerDelegate {
+extension PassiveLocationManager: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         didUpdate(locations: locations)
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        delegate?.passiveLocationDataSource(self, didUpdateHeading: newHeading)
+        delegate?.passiveLocationManager(self, didUpdateHeading: newHeading)
     }
 
     public func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
-        delegate?.passiveLocationDataSource(self, didFailWithError: error)
+        delegate?.passiveLocationManager(self, didFailWithError: error)
     }
     
     public func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         if #available(iOS 14.0, *) {
-            delegate?.passiveLocationDataSourceDidChangeAuthorization(self)
+            delegate?.passiveLocationManagerDidChangeAuthorization(self)
         }
     }
 }
 
 /**
- A delegate of a `PassiveLocationDataSource` object implements methods that the location data source calls as the user’s location changes.
+ A delegate of a `PassiveLocationManager` object implements methods that the location manager calls as the user’s location changes.
  */
-public protocol PassiveLocationDataSourceDelegate: AnyObject {
+public protocol PassiveLocationManagerDelegate: AnyObject {
     /// - seealso: `CLLocationManagerDelegate.locationManagerDidChangeAuthorization(_:)`
     @available(iOS 14.0, *)
-    func passiveLocationDataSourceDidChangeAuthorization(_ dataSource: PassiveLocationDataSource)
+    func passiveLocationManagerDidChangeAuthorization(_ manager: PassiveLocationManager)
     
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateLocations:)`
-    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation)
+    func passiveLocationManager(_ manager: PassiveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation)
     
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didUpdateHeading:)`
-    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateHeading newHeading: CLHeading)
+    func passiveLocationManager(_ manager: PassiveLocationManager, didUpdateHeading newHeading: CLHeading)
     
     /// - seealso: `CLLocationManagerDelegate.locationManager(_:didFailWithError:)`
-    func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error)
+    func passiveLocationManager(_ manager: PassiveLocationManager, didFailWithError error: Error)
 }
 
 extension TileEndpointConfiguration {
