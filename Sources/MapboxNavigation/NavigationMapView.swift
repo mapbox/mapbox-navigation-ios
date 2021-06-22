@@ -885,6 +885,7 @@ open class NavigationMapView: UIView {
             let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             
             if shaftPolyline.coordinates.count > 1 {
+                let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
                 let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
                 let minimumZoomLevel: Double = 14.5
                 let shaftStrokeCoordinates = shaftPolyline.coordinates
@@ -906,7 +907,9 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
+                    if allLayerIds.contains(NavigationMapView.LayerIdentifier.puck3DLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.puck3DLayer))
+                    } else if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
                         try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
                     } else {
                         try mapView.mapboxMap.style.addLayer(arrowLayer)
@@ -972,7 +975,12 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    try mapView.mapboxMap.style.addLayer(arrowSymbolLayer)
+                    if allLayerIds.contains(NavigationMapView.LayerIdentifier.puck3DLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer,
+                                                             layerPosition: .below(NavigationMapView.LayerIdentifier.puck3DLayer))
+                    } else {
+                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer)
+                    }
                     try mapView.mapboxMap.style.addLayer(arrowSymbolCasingLayer,
                                                          layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
