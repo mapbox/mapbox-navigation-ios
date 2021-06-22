@@ -55,11 +55,14 @@ open class NavigationLocationProvider: NSObject, LocationProvider, CLLocationMan
     }
 
     /**
-     Initializes the location provider with the `NavigationLocationManager`.
+     Initializes the location provider with the given location manager.
+     
+     - parameter locationManager: A location manager that detects the user’s location as it changes.
      */
-    public override init() {
-        locationManager = NavigationLocationManager()
-        locationProviderOptions = LocationOptions()
+    public init(locationManager: NavigationLocationManager) {
+        self.locationManager = locationManager
+        self.locationProviderOptions = LocationOptions()
+        
         super.init()
         locationManager.delegate = self
     }

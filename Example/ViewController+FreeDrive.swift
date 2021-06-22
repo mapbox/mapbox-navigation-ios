@@ -13,8 +13,8 @@ extension ViewController {
     func setupPassiveLocationProvider() {
         setupFreeDriveStyledFeatures()
 
-        let passiveLocationDataSource = PassiveLocationDataSource()
-        let passiveLocationProvider = PassiveLocationProvider(dataSource: passiveLocationDataSource)
+        let passiveLocationManager = PassiveLocationManager()
+        let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
         
         subscribeForFreeDriveNotifications()
@@ -23,7 +23,7 @@ extension ViewController {
     func subscribeForFreeDriveNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didUpdatePassiveLocation),
-                                               name: .passiveLocationDataSourceDidUpdate,
+                                               name: .passiveLocationManagerDidUpdate,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(didUpdateElectronicHorizonPosition),
@@ -32,26 +32,26 @@ extension ViewController {
     }
     
     func unsubscribeFromFreeDriveNotifications() {
-        NotificationCenter.default.removeObserver(self, name: .passiveLocationDataSourceDidUpdate, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .passiveLocationManagerDidUpdate, object: nil)
         NotificationCenter.default.removeObserver(self, name: .electronicHorizonDidUpdatePosition, object: nil)
     }
     
     @objc func didUpdatePassiveLocation(_ notification: Notification) {
-        if let roadName = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey] as? String {
+        if let roadName = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.roadNameKey] as? String {
             title = roadName
         }
         
-        if let location = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation {
+        if let location = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {
             trackStyledFeature.lineString.coordinates.append(contentsOf: [location.coordinate])
             navigationMapView.moveUserLocation(to: location)
         }
         
-        if let rawLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
+        if let rawLocation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.rawLocationKey] as? CLLocation {
             rawTrackStyledFeature.lineString.coordinates.append(contentsOf: [rawLocation.coordinate])
         }
         
-        speedLimitView.signStandard = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.signStandardKey] as? SignStandard
-        speedLimitView.speedLimit = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
+        speedLimitView.signStandard = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
+        speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
         
         updateFreeDriveStyledFeatures()
     }
@@ -139,8 +139,8 @@ extension ViewController {
     }
     
     func edgeNames(identifier: RoadGraph.Edge.Identifier) -> [String] {
-        let passiveLocationDataSource = (navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider)?.dataSource
-        guard let metadata = passiveLocationDataSource?.roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
+        let passiveLocationManager = (navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider)?.locationManager
+        guard let metadata = passiveLocationManager?.roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
             return []
         }
         let names = metadata.names.map { name -> String in

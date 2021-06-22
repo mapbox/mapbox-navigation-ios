@@ -115,20 +115,20 @@ public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
 
 public extension Notification.Name {
     /**
-     Posted when `PassiveLocationDataSource` receives a user location update representing movement along the expected route.
+     Posted when `PassiveLocationManager` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `PassiveLocationDataSource.NotificationUserInfoKey.locationKey`, `PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey`, `PassiveLocationDataSource.NotificationUserInfoKey.matchesKey`, and `PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey`.
+     The user info dictionary contains the keys `PassiveLocationManager.NotificationUserInfoKey.locationKey`, `PassiveLocationManager.NotificationUserInfoKey.rawLocationKey`, `PassiveLocationManager.NotificationUserInfoKey.matchesKey`, and `PassiveLocationManager.NotificationUserInfoKey.roadNameKey`.
      
      - seealso: `routeControllerProgressDidUpdate`
      */
-    static let passiveLocationDataSourceDidUpdate: Notification.Name = .init(rawValue: "PassiveLocationDataSourceDidUpdate")
+    static let passiveLocationManagerDidUpdate: Notification.Name = .init(rawValue: "PassiveLocationManagerDidUpdate")
     
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
      The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey`, `RouteController.NotificationUserInfoKey.locationKey`, and `RouteController.NotificationUserInfoKey.rawLocationKey`.
      
-     - seealso: `passiveLocationDataSourceDidUpdate`
+     - seealso: `passiveLocationManagerDidUpdate`
      */
     static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
     
@@ -240,9 +240,9 @@ extension RouteController {
     }
 }
 
-extension PassiveLocationDataSource {
+extension PassiveLocationManager {
     /**
-     Keys in the user info dictionaries of various notifications posted by instances of `PassiveLocationDataSource`.
+     Keys in the user info dictionaries of various notifications posted by instances of `PassiveLocationManager`.
      */
     public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
         public typealias RawValue = String
@@ -254,34 +254,34 @@ extension PassiveLocationDataSource {
         }
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
          */
         public static let locationKey: NotificationUserInfoKey = .init(rawValue: "location")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
          */
         public static let rawLocationKey: NotificationUserInfoKey = .init(rawValue: "rawLocation")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is an array of `Match` objects representing possible matches against the road network.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is an array of `Match` objects representing possible matches against the road network.
          */
         public static let matchesKey: NotificationUserInfoKey = .init(rawValue: "matches")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a string representing the name of the road the user is currently traveling on.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a string representing the name of the road the user is currently traveling on.
          
          - seealso: `WayNameView`
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `Measurement<UnitSpeed>` representing the maximum speed limit of the current road.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `Measurement<UnitSpeed>` representing the maximum speed limit of the current road.
          */
         public static let speedLimitKey: NotificationUserInfoKey = .init(rawValue: "speedLimit")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `SignStandard` representing the sign standard used for speed limit signs along the current road.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `SignStandard` representing the sign standard used for speed limit signs along the current road.
          */
         public static let signStandardKey: NotificationUserInfoKey = .init(rawValue: "signStandard")
     }
@@ -336,7 +336,7 @@ public extension Notification.Name {
 
 extension RoadGraph {
     /**
-     Keys in the user info dictionaries of various notifications posted by instances of `RouteController` or `PassiveLocationDataSource` about `RoadGraph`s.
+     Keys in the user info dictionaries of various notifications posted by instances of `RouteController` or `PassiveLocationManager` about `RoadGraph`s.
      */
     public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
         public typealias RawValue = String

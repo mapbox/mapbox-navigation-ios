@@ -67,7 +67,7 @@ class CustomViewController: UIViewController {
             self?.navigationMapView.show([route])
         })
         
-        // By default `NavigationViewportDataSource` tracks location changes from `PassiveLocationDataSource`, to consume
+        // By default `NavigationViewportDataSource` tracks location changes from `PassiveLocationManager`, to consume
         // locations in active guidance navigation `ViewportDataSourceType` should be set to `.active`.
         let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView, viewportDataSourceType: .active)
         

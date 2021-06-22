@@ -81,7 +81,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         case .passive:
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(progressDidChange(_:)),
-                                                   name: .passiveLocationDataSourceDidUpdate,
+                                                   name: .passiveLocationManagerDidUpdate,
                                                    object: nil)
         case .active:
             NotificationCenter.default.addObserver(self,
@@ -97,12 +97,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                   object: nil)
         
         NotificationCenter.default.removeObserver(self,
-                                                  name: .passiveLocationDataSourceDidUpdate,
+                                                  name: .passiveLocationManagerDidUpdate,
                                                   object: nil)
     }
     
     @objc func progressDidChange(_ notification: NSNotification) {
-        let passiveLocation = notification.userInfo?[PassiveLocationDataSource.NotificationUserInfoKey.locationKey] as? CLLocation
+        let passiveLocation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation
         let activeLocation = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
         let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
         let cameraOptions = self.cameraOptions(passiveLocation: passiveLocation,

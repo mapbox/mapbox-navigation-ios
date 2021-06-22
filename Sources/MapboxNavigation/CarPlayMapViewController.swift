@@ -180,8 +180,8 @@ public class CarPlayMapViewController: UIViewController {
     }
     
     func setupPassiveLocationProvider() {
-        let passiveLocationDataSource = PassiveLocationDataSource()
-        let passiveLocationProvider = PassiveLocationProvider(dataSource: passiveLocationDataSource)
+        let passiveLocationManager = PassiveLocationManager()
+        let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
     }
     

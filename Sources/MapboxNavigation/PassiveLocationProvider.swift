@@ -8,56 +8,56 @@ import MapboxMaps
  
  Unlike `Router` classes such as `RouteController` and `LegacyRouteController`, this class operates without a predefined route, matching the user’s location to the road network at large. If your application displays a `MapView` before starting turn-by-turn navigation, call `LocationManager.overrideLocationProvider(with:)` to override default location provider so that the map view always shows the location snapped to the road network. For example, use this class to show the user’s current location as they wander around town.
  
- This class depends on `PassiveLocationDataSource` to detect the user’s location as it changes. If you want location updates but do not need to display them on a map and do not want a dependency on the MapboxNavigation module, you can use `PassiveLocationDataSource` instead of this class.
+ This class depends on `PassiveLocationManager` to detect the user’s location as it changes. If you want location updates but do not need to display them on a map and do not want a dependency on the MapboxNavigation module, you can use `PassiveLocationManager` instead of this class.
  */
 open class PassiveLocationProvider: NSObject, LocationProvider {
     /**
-     Initializes the location manager with the given data source.
+     Initializes the location provider with the given location manager.
      
-     - parameter dataSource: A data source that detects the user’s location as it changes.
+     - parameter locationManager: A location manager that detects the user’s location as it changes.
      */
-    public init(dataSource: PassiveLocationDataSource) {
-        self.dataSource = dataSource
+    public init(locationManager: PassiveLocationManager) {
+        self.locationManager = locationManager
         self.locationProviderOptions = LocationOptions()
         
         super.init()
-        dataSource.delegate = self
+        locationManager.delegate = self
     }
     
     /**
-     The location manager’s delegate.
+     The location provider's delegate.
      */
     public weak var delegate: LocationProviderDelegate?
     
     /**
-     The location manager’s data source, which detects the user’s location as it changes.
+     The location provider's location manager, which detects the user’s location as it changes.
      */
-    public let dataSource: PassiveLocationDataSource
+    public let locationManager: PassiveLocationManager
 
     public var authorizationStatus: CLAuthorizationStatus {
         CLLocationManager.authorizationStatus()
     }
 
     public func requestAlwaysAuthorization() {
-        dataSource.systemLocationManager.requestAlwaysAuthorization()
+        locationManager.systemLocationManager.requestAlwaysAuthorization()
     }
 
     public func requestWhenInUseAuthorization() {
-        dataSource.systemLocationManager.requestWhenInUseAuthorization()
+        locationManager.systemLocationManager.requestWhenInUseAuthorization()
     }
     
     public var locationProviderOptions: LocationOptions
     
     public var accuracyAuthorization: CLAccuracyAuthorization {
         if #available(iOS 14.0, *) {
-            return dataSource.systemLocationManager.accuracyAuthorization
+            return locationManager.systemLocationManager.accuracyAuthorization
         } else {
             return .fullAccuracy
         }
     }
     
     public var heading: CLHeading? {
-        return dataSource.systemLocationManager.heading
+        return locationManager.systemLocationManager.heading
     }
     
     // TODO: Consider replacing with public property.
@@ -69,57 +69,57 @@ open class PassiveLocationProvider: NSObject, LocationProvider {
     public func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
         // CLLocationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey:) was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
         let requestTemporaryFullAccuracyAuthorization = Selector(("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:" as NSString) as String)
-        guard dataSource.systemLocationManager.responds(to: requestTemporaryFullAccuracyAuthorization) else {
+        guard locationManager.systemLocationManager.responds(to: requestTemporaryFullAccuracyAuthorization) else {
             return
         }
-        dataSource.systemLocationManager.perform(requestTemporaryFullAccuracyAuthorization, with: purposeKey)
+        locationManager.systemLocationManager.perform(requestTemporaryFullAccuracyAuthorization, with: purposeKey)
     }
 
     public func startUpdatingLocation() {
-        dataSource.startUpdatingLocation()
+        locationManager.startUpdatingLocation()
     }
 
     public func stopUpdatingLocation() {
-        dataSource.systemLocationManager.stopUpdatingLocation()
+        locationManager.systemLocationManager.stopUpdatingLocation()
     }
 
     public var headingOrientation: CLDeviceOrientation {
         get {
-            dataSource.systemLocationManager.headingOrientation
+            locationManager.systemLocationManager.headingOrientation
         }
         set {
-            dataSource.systemLocationManager.headingOrientation = newValue
+            locationManager.systemLocationManager.headingOrientation = newValue
         }
     }
 
     public func startUpdatingHeading() {
-        dataSource.systemLocationManager.startUpdatingHeading()
+        locationManager.systemLocationManager.startUpdatingHeading()
     }
 
     public func stopUpdatingHeading() {
-        dataSource.systemLocationManager.stopUpdatingHeading()
+        locationManager.systemLocationManager.stopUpdatingHeading()
     }
 
     public func dismissHeadingCalibrationDisplay() {
-        dataSource.systemLocationManager.dismissHeadingCalibrationDisplay()
+        locationManager.systemLocationManager.dismissHeadingCalibrationDisplay()
     }
 }
 
-extension PassiveLocationProvider: PassiveLocationDataSourceDelegate {
+extension PassiveLocationProvider: PassiveLocationManagerDelegate {
     @available(iOS 14.0, *)
-    public func passiveLocationDataSourceDidChangeAuthorization(_ dataSource: PassiveLocationDataSource) {
+    public func passiveLocationManagerDidChangeAuthorization(_ manager: PassiveLocationManager) {
         delegate?.locationProviderDidChangeAuthorization(self)
     }
     
-    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
+    public func passiveLocationManager(_ manager: PassiveLocationManager, didUpdateLocation location: CLLocation, rawLocation: CLLocation) {
         delegate?.locationProvider(self, didUpdateLocations: [location])
     }
     
-    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didUpdateHeading newHeading: CLHeading) {
+    public func passiveLocationManager(_ manager: PassiveLocationManager, didUpdateHeading newHeading: CLHeading) {
         delegate?.locationProvider(self, didUpdateHeading: newHeading)
     }
     
-    public func passiveLocationDataSource(_ dataSource: PassiveLocationDataSource, didFailWithError error: Error) {
+    public func passiveLocationManager(_ manager: PassiveLocationManager, didFailWithError error: Error) {
         delegate?.locationProvider(self, didFailWithError: error)
     }
 }

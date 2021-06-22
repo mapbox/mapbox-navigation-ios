@@ -11,7 +11,7 @@ public typealias RoadObjectIdentifier = String
 /**
  Stores and provides access to metadata about road objects.
  
- You do not create a `RoadObjectStore` object manually. Instead, use the `RouteController.roadObjectStore` or `PassiveLocationDataSource.roadObjectStore` to access the currently active road object store.
+ You do not create a `RoadObjectStore` object manually. Instead, use the `RouteController.roadObjectStore` or `PassiveLocationManager.roadObjectStore` to access the currently active road object store.
  */
 public final class RoadObjectStore {
     /// The road object store’s delegate.

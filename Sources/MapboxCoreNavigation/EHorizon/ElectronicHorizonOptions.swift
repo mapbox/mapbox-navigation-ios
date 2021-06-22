@@ -3,7 +3,7 @@ import CoreLocation
 import MapboxNavigationNative
 
 /**
- Defines options for emitting `Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, and `Notification.Name.electronicHorizonDidExitRoadObject` notifications while a `RouteController` or `PassiveLocationDataSource` is active.
+ Defines options for emitting `Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, and `Notification.Name.electronicHorizonDidExitRoadObject` notifications while a `RouteController` or `PassiveLocationManager` is active.
  */
 public struct ElectronicHorizonOptions {
 

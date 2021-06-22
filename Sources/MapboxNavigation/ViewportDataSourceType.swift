@@ -14,7 +14,7 @@ public enum ViewportDataSourceType {
     /**
      If `.passive` type is specified `NavigationViewportDataSource` will track location updates
      (snapped to road) during free drive navigation by subscribing to
-     `Notification.Name.passiveLocationDataSourceDidUpdate` notifications.
+     `Notification.Name.passiveLocationManagerDidUpdate` notifications.
      */
     case passive
     
