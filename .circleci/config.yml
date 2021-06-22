@@ -296,7 +296,27 @@ jobs:
           command: xcodebuild -scheme MapboxNavigation-Package test -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" | xcpretty
 
 workflows:
-  workflow:
+  extended-workflow:
+    jobs:
+      - spm-test-job:
+          name: "swift test; Xcode 12.4; iOS 14.4"
+          xcode: "12.4.0"
+          iOS: "14.4"          
+          device: "iPhone 12 Pro Max"     
+      - spm-test-job:
+          name: "swift test; Xcode 12.4; iOS 13.7"
+          xcode: "12.4.0"
+          iOS: "13.7"          
+          device: "iPhone 11 Pro Max"
+    triggers:
+       - schedule:
+           cron: "0 0 * * *" # Once per day at 00:00
+           filters:
+             branches:
+               only:
+                 - main
+                 - release-v2.0
+  main-workflow:
     jobs:
       - build-job:
           name: "Xcode_12.4_iOS_14.4"
@@ -323,16 +343,6 @@ workflows:
           iOS: "14.0"
           lint: true
       - xcode-12-examples
-      - spm-test-job:
-          name: "swift test; Xcode 12.4; iOS 13.7"
-          xcode: "12.4.0"
-          iOS: "13.7"          
-          device: "iPhone 11 Pro Max"
-      - spm-test-job:
-          name: "swift test; Xcode 12.4; iOS 14.4"
-          xcode: "12.4.0"
-          iOS: "14.4"          
-          device: "iPhone 12 Pro Max"
       - spm-test-job:
           name: "swift test; Xcode 12.5; iOS 14.5"
           xcode: "12.5.0"
