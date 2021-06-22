@@ -120,14 +120,15 @@ open class NavigationMapView: UIView {
     public weak var delegate: NavigationMapViewDelegate?
     
     /**
+     `PointAnnotationManager`, which is used to manage addition and removal of final destination annotation.
+     `PointAnnotationManager` will become valid only after fully loading `MapView` style.
+     */
+    public var pointAnnotationManager: PointAnnotationManager?
+    
+    /**
      Most recent user location, which is used to place `UserCourseView`.
      */
     var mostRecentUserCourseViewLocation: CLLocation?
-    
-    /**
-     `PointAnnotationManager`, which is used to manage addition and removal of final destination annotation.
-     */
-    var pointAnnotationManager: PointAnnotationManager?
     
     var routes: [Route]?
     var routePoints: RoutePoints?
@@ -762,13 +763,15 @@ open class NavigationMapView: UIView {
             }
         }
 
-        if let lastLeg = route.legs.last, let destinationCoordinate = lastLeg.destination?.coordinate {
+        if let lastLeg = route.legs.last,
+           let destinationCoordinate = lastLeg.destination?.coordinate,
+           let pointAnnotationManager = pointAnnotationManager {
             let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
             var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
             destinationAnnotation.image = .default
-            pointAnnotationManager?.syncAnnotations([destinationAnnotation])
+            pointAnnotationManager.syncAnnotations([destinationAnnotation])
             
-            delegate?.navigationMapView(self, didAdd: destinationAnnotation)
+            delegate?.navigationMapView(self, didAdd: destinationAnnotation, pointAnnotationManager: pointAnnotationManager)
         }
     }
     
