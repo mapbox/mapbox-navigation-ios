@@ -105,8 +105,9 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
      
      - parameter navigationMapView: The `NavigationMapView` object.
      - parameter finalDestinationAnnotation: `PointAnnotation`, which was added to the `NavigationMapView`.
+     - parameter pointAnnotationManager: `PointAnnotationManager` instance, which is responsible for `PointAnnotation`s management in the `NavigationMapView`.
      */
-    func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation)
+    func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager)
 }
 
 public extension NavigationMapViewDelegate {
@@ -184,7 +185,7 @@ public extension NavigationMapViewDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation) {
+    func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
 }

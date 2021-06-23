@@ -1119,7 +1119,7 @@ extension NavigationViewController: NavigationMapViewDelegate {
         delegate?.navigationViewController(self, shapeFor: waypoints, legIndex: legIndex)
     }
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation) {
-        delegate?.navigationViewController(self, didAdd: finalDestinationAnnotation)
+    public func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
+        delegate?.navigationViewController(self, didAdd: finalDestinationAnnotation, pointAnnotationManager: pointAnnotationManager)
     }
 }

@@ -192,8 +192,9 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      
      - parameter navigationViewController: The `NavigationViewController` object.
      - parameter finalDestinationAnnotation: `PointAnnotation`, which was added to the `NavigationViewController`.
+     - parameter pointAnnotationManager: `PointAnnotationManager` instance, which is responsible for `PointAnnotation`s management in the `NavigationMapView`.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation)
+    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager)
 }
 
 public extension NavigationViewControllerDelegate {
@@ -328,7 +329,7 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation) {
+    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
 }
