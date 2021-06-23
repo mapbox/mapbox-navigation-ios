@@ -116,7 +116,7 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
     
-    func disabled_testNewStep() {
+    func testNewStep() {
         let steps = route.legs[0].steps
         // Create list of coordinates, which includes only first step.
         let coordinates = steps[0].shape?.coordinates ?? []
