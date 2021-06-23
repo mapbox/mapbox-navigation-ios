@@ -16,7 +16,7 @@ extension DismissAnimator: UIViewControllerAnimatedTransitioning {
         guard let toVC = transitionContext.viewController(forKey: .to) else { return }
         let containerView = transitionContext.containerView
         
-        let point = CGPoint(x: 0, y: toVC.view.bounds.maxY)
+        let point = CGPoint(x: 0, y: UIScreen.main.bounds.size.height)
         let height = fromVC.view.bounds.height-toVC.view.frame.minY
         let finalFrame = CGRect(origin: point, size: CGSize(width: fromVC.view.bounds.width, height: height))
         
@@ -37,7 +37,6 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
         let containerView = transitionContext.containerView
         let toView = transitionContext.view(forKey: .to)!
         let toVC = transitionContext.viewController(forKey: .to)!
@@ -59,8 +58,13 @@ extension PresentAnimator: UIViewControllerAnimatedTransitioning {
             height = draggable.draggableHeight
         }
         
-        let finalFrame = CGRect(origin: CGPoint(x: 0, y: fromVC.view.bounds.height - height),
-                                size: CGSize(width: fromVC.view.bounds.width, height: height))
+        // To correctly present `FeedbackViewController` with certain presentation styles on iPad,
+        // `UIScreen` size is used instead of `UIViewController` size from which transition
+        // is being performed.
+        let finalFrame = CGRect(x: 0,
+                                y: UIScreen.main.bounds.size.height - height,
+                                width: UIScreen.main.bounds.size.width,
+                                height: height)
         
         UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
             toView.frame = finalFrame
