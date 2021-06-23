@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "16e7bb71288b7835e420ba8213c1c45276338839",
-          "version": "13.0.0"
+          "revision": "828fef26fb99d86622d8a0f2c423b05fae49f15e",
+          "version": "14.2.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "b293ea5976b2b91d8aceff8096e24107de94afad",
-          "version": "10.0.0-beta.23"
+          "revision": "e20e0d3bdc356482a6178888b21c83aa943952fc",
+          "version": "10.0.0-rc.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "c2bfe34699721f1fbdb2a31fb62f00b036ffb248",
-          "version": "2.0.0-beta.3"
+          "revision": "2d9edcedef9506546fa390c8f7f10de848b2aec2",
+          "version": "2.0.0-beta.5"
         }
       },
       {
@@ -60,8 +60,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "ccf4cc26db8c7ace9b45fa72a5020c56ad0d0c30",
-          "version": "10.0.0-beta.21"
+          "revision": "ed2a16402b2e5993a1cd7a16b841dc7600e51c13",
+          "version": "10.0.0-rc.1"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "3b748e2105b8358d000943d27493ca8559ae0a47",
-          "version": "52.0.0"
+          "revision": "5ba563469285fbee7c3d4d54cd7dc976270e8e44",
+          "version": "53.0.1"
         }
       },
       {
@@ -159,8 +159,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "23e72d4174eacd76cc6414f063b427d2dac81cfb",
-          "version": "2.0.0-alpha.3"
+          "revision": "e460a117d2ac6b7a79a68c83ed75cb9a8acaeb6c",
+          "version": "2.0.0-beta.1"
         }
       }
     ]

@@ -229,8 +229,13 @@ public class CarPlayMapViewController: UIViewController {
 extension CarPlayMapViewController: StyleManagerDelegate {
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
+        var latestLocation: CLLocation? = nil
+        if let coordinate = navigationMapView.mapView.location.latestLocation?.coordinate {
+            latestLocation = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        }
+        
         return navigationMapView.mostRecentUserCourseViewLocation ??
-            navigationMapView.mapView.location.latestLocation?.internalLocation ??
+            latestLocation ??
             coarseLocationManager.location
     }
     

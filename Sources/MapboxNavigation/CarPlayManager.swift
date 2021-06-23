@@ -443,7 +443,10 @@ extension CarPlayManager {
                                      value: "Current Location",
                                      comment: "Name of the waypoint associated with the current location")
         
-        let origin = Waypoint(location: userLocation.internalLocation,
+        let location = CLLocation(latitude: userLocation.coordinate.latitude,
+                                  longitude: userLocation.coordinate.longitude)
+        
+        let origin = Waypoint(location: location,
                               heading: userLocation.heading,
                               name: name)
         

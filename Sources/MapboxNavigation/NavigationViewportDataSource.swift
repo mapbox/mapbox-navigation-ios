@@ -483,7 +483,9 @@ extension NavigationViewportDataSource: LocationConsumer {
     }
     
     public func locationUpdate(newLocation: Location) {
-        let cameraOptions = self.cameraOptions(newLocation.internalLocation)
+        let location = CLLocation(latitude: newLocation.coordinate.latitude,
+                                  longitude: newLocation.coordinate.longitude)
+        let cameraOptions = self.cameraOptions(location)
         delegate?.viewportDataSource(self, didUpdate: cameraOptions)
     }
 }

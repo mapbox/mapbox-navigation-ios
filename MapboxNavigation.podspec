@@ -44,7 +44,7 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
-  s.dependency "MapboxMaps", "10.0.0-beta.21"
+  s.dependency "MapboxMaps", "10.0.0-rc.1"
   s.dependency "Solar", "~> 2.1"
   s.dependency "MapboxSpeech-pre", "2.0.0-alpha.1"
   s.dependency "MapboxMobileEvents", "~> 1.0.0" # Always specify a patch release if pre-v1.0
