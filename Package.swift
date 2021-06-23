@@ -108,7 +108,6 @@ let package = Package(
                 "NavigationViewControllerTests.swift", // Crash on `UNUserNotificationCenter.current()`. This API doesn't work in SPM.
                 "CarPlayManagerTests.swift", // There are issues with setting accessToken
                 "LeaksSpec.swift", // Crash on `UNUserNotificationCenter.current()`. This API doesn't work in SPM.
-                "LaneViewTests.swift", // Needs proofread for new correct behaviour
                 "__Snapshots__", // Ignore snapshots folder
             ],
             resources: [
