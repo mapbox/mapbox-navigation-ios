@@ -932,7 +932,11 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
-                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: .above(mainRouteLayerIdentifier))
+                    if allLayerIds.contains(mainRouteLayerIdentifier) {
+                        try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: .above(mainRouteLayerIdentifier))
+                    } else {
+                        try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.arrowLayer))
+                    }
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
