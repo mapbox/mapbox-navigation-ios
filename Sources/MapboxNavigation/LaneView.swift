@@ -28,6 +28,10 @@ extension LaneIndication {
             primaryIndication = .slightLeft
         } else if indications.contains(.slightRight) && maneuverDirection ?? .slightRight == .slightRight {
             primaryIndication = .slightRight
+        } else if indications.isSubset(of: [.left, .straightAhead]) && maneuverDirection ?? .slightLeft == .slightLeft {
+            primaryIndication = .left
+        } else if indications.isSubset(of: [.right, .straightAhead]) && maneuverDirection ?? .slightRight == .slightRight {
+            primaryIndication = .right
         } else if indications.contains(.left) && maneuverDirection ?? .left == .left {
             primaryIndication = .left
         } else if indications.contains(.right) && maneuverDirection ?? .right == .right {
@@ -36,6 +40,14 @@ extension LaneIndication {
             primaryIndication = .sharpLeft
         } else if indications.contains(.sharpRight) && maneuverDirection ?? .sharpRight == .sharpRight {
             primaryIndication = .sharpRight
+        } else if indications.contains(.left) && !indications.contains(.sharpLeft) && !indications.contains(.uTurn) && maneuverDirection ?? .sharpLeft == .sharpLeft {
+            primaryIndication = .left
+        } else if indications.contains(.right) && !indications.contains(.sharpRight) && !indications.contains(.uTurn) && maneuverDirection ?? .sharpRight == .sharpRight {
+            primaryIndication = .right
+        } else if !indications.isDisjoint(with: .lefts) && !indications.isDisjoint(with: .rights) && maneuverDirection?.isLeft ?? false {
+            primaryIndication = .left
+        } else if !indications.isDisjoint(with: .lefts) && !indications.isDisjoint(with: .rights) && maneuverDirection?.isRight ?? false {
+            primaryIndication = .right
         } else if indications.contains(.uTurn) && maneuverDirection ?? .uTurn == .uTurn {
             primaryIndication = .uTurn
         } else {
@@ -71,10 +83,10 @@ extension LaneIndication {
             secondaryIndication = .straightAhead
         } else if !primaryIndication.isDisjoint(with: .rights) && indications.contains(.slightLeft) {
             // No assets for slight or sharp opposite turns.
-            secondaryIndication = .slightLeft
+            secondaryIndication = .left
         } else if !primaryIndication.isDisjoint(with: .lefts) && indications.contains(.slightRight) {
             // No assets for slight or sharp opposite turns.
-            secondaryIndication = .slightRight
+            secondaryIndication = .right
         } else if indications.contains(.left) {
             secondaryIndication = .left
             // No assets for slight or sharp opposite turns.
@@ -89,10 +101,10 @@ extension LaneIndication {
             }
         } else if !primaryIndication.isDisjoint(with: .rights) && indications.contains(.sharpLeft) {
             // No assets for slight or sharp opposite turns.
-            secondaryIndication = .sharpLeft
+            secondaryIndication = .left
         } else if !primaryIndication.isDisjoint(with: .lefts) && indications.contains(.sharpRight) {
             // No assets for slight or sharp opposite turns.
-            secondaryIndication = .sharpRight
+            secondaryIndication = .right
         } else if indications.contains(.uTurn) {
             secondaryIndication = .uTurn
             // No asset for sharp turn or U-turn.
@@ -105,6 +117,10 @@ extension LaneIndication {
             secondaryIndication = .left
         } else if !primaryIndication.isDisjoint(with: .lefts) && !indications.isDisjoint(with: .rights) {
             secondaryIndication = .right
+        } else if primaryIndication == .straightAhead && indications == .slightLeft {
+            secondaryIndication = .slightLeft
+        } else if primaryIndication == .straightAhead && indications == .slightRight {
+            secondaryIndication = .slightRight
         } else {
             secondaryIndication = nil
         }

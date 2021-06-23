@@ -21,22 +21,22 @@ class LaneViewTests: XCTestCase {
                        .init(primary: .uTurn, secondary: nil, tertiary: nil))
         
         XCTAssertEqual(LaneIndication.sharpLeft.ranked(favoring: nil),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .sharpLeft, secondary: nil, tertiary: nil))
         XCTAssertEqual(LaneIndication.sharpLeft.ranked(favoring: .sharpLeft),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .sharpLeft, secondary: nil, tertiary: nil))
         XCTAssertEqual(LaneIndication.sharpLeft.ranked(favoring: .left),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .sharpLeft, secondary: nil, tertiary: nil))
         XCTAssertEqual(LaneIndication.sharpLeft.ranked(favoring: .right),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .sharpLeft, secondary: nil, tertiary: nil))
         
         XCTAssertEqual(LaneIndication.sharpRight.ranked(favoring: nil),
-                       .init(primary: .right, secondary: nil, tertiary: nil))
+                       .init(primary: .sharpRight, secondary: nil, tertiary: nil))
         XCTAssertEqual(LaneIndication.sharpRight.ranked(favoring: .sharpRight),
-                       .init(primary: .right, secondary: nil, tertiary: nil))
+                       .init(primary: .sharpRight, secondary: nil, tertiary: nil))
         XCTAssertEqual(LaneIndication.sharpRight.ranked(favoring: .right),
-                       .init(primary: .right, secondary: nil, tertiary: nil))
+                       .init(primary: .sharpRight, secondary: nil, tertiary: nil))
         XCTAssertEqual(LaneIndication.sharpRight.ranked(favoring: .left),
-                       .init(primary: .right, secondary: nil, tertiary: nil))
+                       .init(primary: .sharpRight, secondary: nil, tertiary: nil))
         
         XCTAssertEqual(LaneIndication.left.ranked(favoring: nil),
                        .init(primary: .left, secondary: nil, tertiary: nil))
@@ -94,15 +94,15 @@ class LaneViewTests: XCTestCase {
                        .init(primary: .left, secondary: .straightAhead, tertiary: nil))
         
         XCTAssertEqual(([.straightAhead, .slightLeft] as LaneIndication).ranked(favoring: nil),
-                       .init(primary: .straightAhead, secondary: .left, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .slightLeft, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .slightLeft] as LaneIndication).ranked(favoring: .right),
-                       .init(primary: .straightAhead, secondary: .left, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .slightLeft, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .slightLeft] as LaneIndication).ranked(favoring: .left),
-                       .init(primary: .straightAhead, secondary: .left, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .slightLeft, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .slightLeft] as LaneIndication).ranked(favoring: .sharpLeft),
-                       .init(primary: .straightAhead, secondary: .left, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .slightLeft, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .slightLeft] as LaneIndication).ranked(favoring: .slightLeft),
-                       .init(primary: .left, secondary: .straightAhead, tertiary: nil))
+                       .init(primary: .slightLeft, secondary: .straightAhead, tertiary: nil))
         
         XCTAssertEqual(([.straightAhead, .right] as LaneIndication).ranked(favoring: nil),
                        .init(primary: .straightAhead, secondary: .right, tertiary: nil))
@@ -116,47 +116,47 @@ class LaneViewTests: XCTestCase {
                        .init(primary: .right, secondary: .straightAhead, tertiary: nil))
         
         XCTAssertEqual(([.straightAhead, .slightRight] as LaneIndication).ranked(favoring: nil),
-                       .init(primary: .straightAhead, secondary: .right, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .slightRight, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .slightRight] as LaneIndication).ranked(favoring: .left),
-                       .init(primary: .straightAhead, secondary: .right, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .slightRight, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .slightRight] as LaneIndication).ranked(favoring: .right),
-                       .init(primary: .straightAhead, secondary: .right, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .slightRight, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .slightRight] as LaneIndication).ranked(favoring: .sharpRight),
-                       .init(primary: .straightAhead, secondary: .right, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .slightRight, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .slightRight] as LaneIndication).ranked(favoring: .slightRight),
-                       .init(primary: .right, secondary: .straightAhead, tertiary: nil))
+                       .init(primary: .slightRight, secondary: .straightAhead, tertiary: nil))
         
         XCTAssertEqual(([.left, .uTurn] as LaneIndication).ranked(favoring: nil),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .left, secondary: .uTurn, tertiary: nil))
         XCTAssertEqual(([.left, .uTurn] as LaneIndication).ranked(favoring: .left),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .left, secondary: .uTurn, tertiary: nil))
         XCTAssertEqual(([.left, .uTurn] as LaneIndication).ranked(favoring: .uTurn),
-                       .init(primary: .uTurn, secondary: nil, tertiary: nil))
+                       .init(primary: .uTurn, secondary: .left, tertiary: nil))
         
         XCTAssertEqual(([.straightAhead, .uTurn] as LaneIndication).ranked(favoring: nil),
-                       .init(primary: .straightAhead, secondary: nil, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .uTurn, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .uTurn] as LaneIndication).ranked(favoring: .straightAhead),
-                       .init(primary: .straightAhead, secondary: nil, tertiary: nil))
+                       .init(primary: .straightAhead, secondary: .uTurn, tertiary: nil))
         XCTAssertEqual(([.straightAhead, .uTurn] as LaneIndication).ranked(favoring: .uTurn),
-                       .init(primary: .uTurn, secondary: nil, tertiary: nil))
+                       .init(primary: .uTurn, secondary: .straightAhead, tertiary: nil))
         
         XCTAssertEqual(([.left, .right] as LaneIndication).ranked(favoring: nil),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .left, secondary: .right, tertiary: nil))
         XCTAssertEqual(([.left, .right] as LaneIndication).ranked(favoring: .left),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .left, secondary: .right, tertiary: nil))
         XCTAssertEqual(([.left, .right] as LaneIndication).ranked(favoring: .right),
-                       .init(primary: .right, secondary: nil, tertiary: nil))
+                       .init(primary: .right, secondary: .left, tertiary: nil))
         XCTAssertEqual(([.left, .right] as LaneIndication).ranked(favoring: .slightRight),
-                       .init(primary: .right, secondary: nil, tertiary: nil))
+                       .init(primary: .right, secondary: .left, tertiary: nil))
         
         XCTAssertEqual(([.left, .slightRight] as LaneIndication).ranked(favoring: nil),
-                       .init(primary: .slightRight, secondary: nil, tertiary: nil))
+                       .init(primary: .right, secondary: .left, tertiary: nil))
         XCTAssertEqual(([.left, .slightRight] as LaneIndication).ranked(favoring: .left),
-                       .init(primary: .left, secondary: nil, tertiary: nil))
+                       .init(primary: .left, secondary: .right, tertiary: nil))
         XCTAssertEqual(([.left, .slightRight] as LaneIndication).ranked(favoring: .slightRight),
-                       .init(primary: .slightRight, secondary: nil, tertiary: nil))
+                       .init(primary: .right, secondary: .left, tertiary: nil))
         XCTAssertEqual(([.left, .slightRight] as LaneIndication).ranked(favoring: .right),
-                       .init(primary: .slightRight, secondary: nil, tertiary: nil))
+                       .init(primary: .right, secondary: .left, tertiary: nil))
     }
     
     func testLaneConfiguration() {
@@ -164,23 +164,27 @@ class LaneViewTests: XCTestCase {
                        .uTurn(side: .left))
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .uTurn, secondary: nil, tertiary: nil), drivingSide: .left),
                        .uTurn(side: .right))
-        XCTAssertNil(LaneConfiguration(rankedIndications: .init(primary: .uTurn, secondary: .left, tertiary: nil), drivingSide: .right))
+        XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .uTurn, secondary: .left, tertiary: nil), drivingSide: .right),
+                       .turnOrUTurn(side: .left, turn: false, uTurn: true))
         
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .straightAhead, secondary: nil, tertiary: nil), drivingSide: .right),
                        .straight)
-        XCTAssertNil(LaneConfiguration(rankedIndications: .init(primary: .straightAhead, secondary: .slightLeft, tertiary: nil), drivingSide: .right))
+        XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .straightAhead, secondary: .slightLeft, tertiary: nil), drivingSide: .right),
+                       .straightOrSlightTurn(side: .left, straight: true, slightTurn: false))
         
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .slightLeft, secondary: nil, tertiary: nil), drivingSide: .right),
                        .slightTurn(side: .left))
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .slightRight, secondary: nil, tertiary: nil), drivingSide: .right),
                        .slightTurn(side: .right))
-        XCTAssertNil(LaneConfiguration(rankedIndications: .init(primary: .slightLeft, secondary: .straightAhead, tertiary: nil), drivingSide: .right))
+        XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .slightLeft, secondary: .straightAhead, tertiary: nil), drivingSide: .right),
+                       .straightOrSlightTurn(side: .left, straight: false, slightTurn: true))
         
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .left, secondary: nil, tertiary: nil), drivingSide: .right),
                        .turn(side: .left))
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .right, secondary: nil, tertiary: nil), drivingSide: .right),
                        .turn(side: .right))
-        XCTAssertNil(LaneConfiguration(rankedIndications: .init(primary: .left, secondary: .right, tertiary: nil), drivingSide: .right))
+        XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .left, secondary: .right, tertiary: nil), drivingSide: .right),
+                       .turnOrOppositeTurn(side: .left))
         
         XCTAssertEqual(LaneConfiguration(rankedIndications: .init(primary: .left, secondary: .straightAhead, tertiary: nil), drivingSide: .right),
                        .straightOrTurn(side: .left, straight: false, turn: true))
