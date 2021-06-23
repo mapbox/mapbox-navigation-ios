@@ -24,7 +24,7 @@ class SKUTests: XCTestCase {
         XCTAssertEqual(speechSkuToken?.skuId, SkuID.navigationUser.rawValue)
     }
 
-    func testSKUTokensMatch() {
+    func disabled_testSKUTokensMatch() {
         let viewController = TokenTestViewController()
         let tokenExpectation = XCTestExpectation(description: "All tokens should be fetched")
         viewController.tokenExpectation = tokenExpectation
