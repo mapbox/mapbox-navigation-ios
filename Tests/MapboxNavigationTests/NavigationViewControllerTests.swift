@@ -235,6 +235,32 @@ class NavigationViewControllerTests: XCTestCase {
         XCTAssert(newAnnotations.contains { $0.coordinate.distance(to: secondDestination) < 1 }, "New destination annotation does not exist on map")
     }
     
+    func testpuck3DLayerPosition() {
+        let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: DirectionsSpy(), simulating: .never)
+        let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
+        let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        
+        let model = MapboxMaps.Model()
+        let puck3DConfiguration = Puck3DConfiguration(model: model)
+        navigationViewController.navigationMapView?.userLocation = .puck3D(configuration: puck3DConfiguration)
+        let styleLoadedExpectation = XCTestExpectation(description: "MapView style loading expectation.")
+        navigationViewController.navigationMapView?.mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            styleLoadedExpectation.fulfill()
+        }
+        
+        navigationViewController.navigationMapView?.addArrow(route: initialRoute, legIndex: 0, stepIndex: 0)
+        let allLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
+        let indexOfArrowLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowLayer)
+        let indexOfArrowStrokeLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
+        let indexOfArrowSymbolLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowSymbolLayer)
+        let indexOfPuck3DLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.puck3DLayer)
+        
+        XCTAssertNotNil(indexOfArrowStrokeLayer, "Arrow stroke layer failed to be added")
+        XCTAssert(indexOfArrowStrokeLayer < indexOfArrowLayer, "Arrow layer is below arrow stroke layer")
+        XCTAssert(indexOfArrowLayer < indexOfArrowSymbolLayer, "Arrow symbol layer is below arrow layer")
+        XCTAssert(indexOfArrowSymbolLayer < indexOfPuck3DLayer, "Puck 3D layer is below arrow symbol layer")
+    }
+    
     func testBlankBanner() {
         let window = UIApplication.shared.keyWindow!
         let viewController = window.rootViewController!
