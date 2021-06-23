@@ -890,7 +890,7 @@ open class NavigationMapView: UIView {
                 let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
                 
                 var arrowSource = GeoJSONSource()
-                arrowSource.data = .feature(.init(geometry: .lineString(shaftPolyline)))
+                arrowSource.data = .feature(Feature(geometry: .lineString(shaftPolyline)))
                 var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSource) {
                     let geoJSON = Feature(geometry: .lineString(shaftPolyline))
