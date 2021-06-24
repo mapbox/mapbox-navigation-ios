@@ -37,7 +37,9 @@ final public class RoadObjectMatcher {
      - parameter identifier: Unique identifier of the object.
      */
     public func matchOpenLR(location: String, standard: OpenLRStandard, identifier: RoadObjectIdentifier) {
-        native.matchOpenLR(forBase64Encoded: location, standard: MapboxNavigationNative.OpenLRStandard(standard), id: identifier)
+        let nativeStandard = MapboxNavigationNative.OpenLRStandard(standard)
+        let openLR = MatchableOpenLr(base64Encoded: location, standard: nativeStandard, id: identifier)
+        native.matchOpenLRs(for: [openLR], useOnlyPreloadedTiles: false)
     }
 
     /**
@@ -49,7 +51,8 @@ final public class RoadObjectMatcher {
      - parameter identifier: Unique identifier of the object.
      */
     public func match(polyline: LineString, identifier: RoadObjectIdentifier) {
-        native.matchPolyline(forPolyline: polyline.coordinates.map(CLLocation.init), id: identifier)
+        let polyline = MatchableGeometry(id: identifier, coordinates: polyline.coordinates.map(CLLocation.init))
+        native.matchPolylines(forPolylines: [polyline], useOnlyPreloadedTiles: false)
     }
 
     /**
@@ -61,7 +64,8 @@ final public class RoadObjectMatcher {
      - parameter identifier: Unique identifier of the object.
      */
     public func match(polygon: Polygon, identifier: RoadObjectIdentifier) {
-        native.matchPolygon(forPolygon: polygon.outerRing.coordinates.map(CLLocation.init), id: identifier)
+        let polygone = MatchableGeometry(id: identifier, coordinates: polygon.outerRing.coordinates.map(CLLocation.init))
+        native.matchPolygons(forPolygons: [polygone], useOnlyPreloadedTiles: false)
     }
 
     /**
@@ -73,7 +77,8 @@ final public class RoadObjectMatcher {
      - parameter identifier: Unique identifier of the object.
      */
     public func match(gantry: MultiPoint, identifier: RoadObjectIdentifier) {
-        native.matchGantry(forGantry: gantry.coordinates.map(CLLocation.init), id: identifier)
+        let gantry = MatchableGeometry(id: identifier, coordinates: gantry.coordinates.map(CLLocation.init))
+        native.matchGantries(forGantries: [gantry], useOnlyPreloadedTiles: false)
     }
 
     /**
@@ -83,7 +88,8 @@ final public class RoadObjectMatcher {
      - parameter identifier: Unique identifier of the object.
      */
     public func match(point: CLLocationCoordinate2D, identifier: RoadObjectIdentifier) {
-        native.matchPoint(forPoint: point, id: identifier)
+        let point = MatchableGeometry(id: identifier, coordinates: [point].map(CLLocation.init))
+        native.matchPoints(forPoints: [point], useOnlyPreloadedTiles: false)
     }
 
     /**
@@ -92,7 +98,7 @@ final public class RoadObjectMatcher {
      - parameter identifier: Identifier for which matching should be canceled.
      */
     public func cancel(identifier: RoadObjectIdentifier) {
-        native.cancel(forId: identifier)
+        native.cancel(forIds: [identifier])
     }
 
     init(_ native: MapboxNavigationNative.RoadObjectMatcher) {
@@ -153,5 +159,10 @@ class InternalRoadObjectMatcherListener: RoadObjectMatcherListener {
         case .failure(let error):
             delegate?.roadObjectMatcher(roadObjectMatcher, didFailToMatchWith: RoadObjectMatcherError(error))
         }
+    }
+    
+    func onMatchingCancelled(forId id: String) {
+        guard let roadObjectMatcher = roadObjectMatcher else { return }
+        delegate?.roadObjectMatcher(roadObjectMatcher, didCancelMatchingFor: id)
     }
 }

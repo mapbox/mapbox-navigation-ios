@@ -14,4 +14,9 @@ public protocol RoadObjectMatcherDelegate: AnyObject {
      This method is called when the matching is finished with error.
      */
     func roadObjectMatcher(_ matcher: RoadObjectMatcher, didFailToMatchWith error: RoadObjectMatcherError)
+    
+    /**
+     This method is called when the matching is canceled.
+     */
+    func roadObjectMatcher(_ matcher: RoadObjectMatcher, didCancelMatchingFor id: String)
 }

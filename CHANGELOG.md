@@ -6,9 +6,9 @@
 
 * The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * You can now install MapboxNavigation using Swift Package Manager, but you can no longer install it using Carthage. If you previously installed MapboxNavigation using Carthage, use Swift Package Manager instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/). ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
-* MapboxNavigation now depends on MapboxNavigationNative v53.0.1. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
-* MapboxNavigation now depends on MapboxCommon v14.2.0. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.2](https://github.com/mapbox/mapbox-maps-ios/). ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077), [#3113](https://github.com/mapbox/mapbox-navigation-ios/pull/3113))
+* MapboxNavigation now depends on MapboxNavigationNative v54.0.0. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077), [#3113](https://github.com/mapbox/mapbox-navigation-ios/pull/3113))
+* MapboxNavigation now depends on MapboxCommon v14.0.1. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
 * MapboxNavigation now depends on MapboxMobileEvents v1.0.2. ([#3039](https://github.com/mapbox/mapbox-navigation-ios/pull/3039))
 * MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.5 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829), [#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837), [#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
 * MapboxNavigation now depends on Turf v2.0.0-beta.1. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
