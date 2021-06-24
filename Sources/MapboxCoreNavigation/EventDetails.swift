@@ -17,6 +17,7 @@ struct PerformanceEventDetails: EventDetails {
     let sessionIdentifier: String
     var counters: [Counter] = []
     var attributes: [Attribute] = []
+    var appMetadata: [String: String?]? = nil
     
     private enum CodingKeys: String, CodingKey {
         case event
