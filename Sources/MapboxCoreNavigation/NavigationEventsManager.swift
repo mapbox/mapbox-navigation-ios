@@ -60,7 +60,7 @@ open class NavigationEventsManager {
      Optional application metadata that that can help Mapbox more reliably diagnose problems that occur in the SDK.
      For example, you can provide your application’s name and version, a unique identifier for the end user, and a session identifier.
     */
-    var userInfo: [String: String?]? = nil
+    public var userInfo: [String: String?]? = nil
     
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
@@ -135,6 +135,7 @@ open class NavigationEventsManager {
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState.arrivalTimestamp
+        event.appMetadata = userInfo
         
         let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
         assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
@@ -155,6 +156,7 @@ open class NavigationEventsManager {
         var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute?.responseEndDate)
         event.counters.append(PerformanceEventDetails.Counter(name: "elapsed_time",
                                                               value: responseEndDate.timeIntervalSince(fetchStartDate)))
+        event.appMetadata = userInfo
         if let routeIdentifier = sessionState.currentRoute?.routeIdentifier {
             event.attributes.append(PerformanceEventDetails.Attribute(name: "route_uuid", value: routeIdentifier))
         }
@@ -166,6 +168,7 @@ open class NavigationEventsManager {
 
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
+        event.appMetadata = userInfo
         return event
     }
     
@@ -174,8 +177,9 @@ open class NavigationEventsManager {
 
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
-        
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
+        event.appMetadata = userInfo
+
         return event
     }
     
@@ -218,6 +222,7 @@ open class NavigationEventsManager {
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
         event.created = timestamp
+        event.appMetadata = userInfo
         
         if let lastRerouteDate = sessionState.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))
@@ -357,12 +362,15 @@ open class NavigationEventsManager {
      
      You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
      */
-    public func recordFeedback(type: FeedbackType = .general, description: String? = nil, userInfo: [String: String?]? = nil) -> UUID? {
-        if (userInfo != nil) {
-            self.userInfo = userInfo
-        }
-        return enqueueFeedbackEvent(type: type, description: description, userInfo: userInfo)
+    public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID? {
+        return enqueueFeedbackEvent(type: type, description: description)
     }
+//    public func recordFeedback(type: FeedbackType = .general, description: String? = nil, userInfo: [String: String?]? = nil) -> UUID? {
+//        if (userInfo != nil) {
+//            self.userInfo = userInfo
+//        }
+//        return enqueueFeedbackEvent(type: type, description: description)
+//    }
     
     /**
      Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
