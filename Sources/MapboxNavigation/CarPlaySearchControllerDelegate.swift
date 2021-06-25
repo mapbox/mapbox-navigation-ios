@@ -83,8 +83,6 @@ public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDele
                         selectedResult item: CPListItem,
                         completionHandler: @escaping () -> Void)
     
-    func selectResult(item: CPListItem, completionHandler: @escaping () -> Void)
-    
     func recentSearches(with searchText: String) -> [CPListItem]
     
     func resultsOrNoResults(with items: [CPListItem], limit: UInt?) -> [CPListItem]

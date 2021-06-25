@@ -308,23 +308,6 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
         previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
     }
     
-    func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
-        guard let userInfo = item.userInfo as? [String: Any],
-              let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? NavigationGeocodedPlacemark,
-              let location = placemark.routableLocations?.first ?? placemark.location else {
-            completionHandler()
-            return
-        }
-        
-        recentItems.add(RecentItem(placemark))
-        recentItems.save()
-        
-        let destinationWaypoint = Waypoint(location: location,
-                                           heading: nil,
-                                           name: placemark.title)
-        previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
-    }
-    
     func recentSearches(with searchText: String) -> [CPListItem] {
         if searchText.isEmpty {
             return recentItems.map { $0.navigationGeocodedPlacemark.listItem() }

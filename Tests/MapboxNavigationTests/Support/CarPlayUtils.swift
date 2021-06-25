@@ -158,10 +158,6 @@ class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDele
         completionHandler()
     }
     
-    func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
-        completionHandler()
-    }
-    
     func recentSearches(with searchText: String) -> [CPListItem] {
         return []
     }
