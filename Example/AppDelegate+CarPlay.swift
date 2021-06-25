@@ -336,7 +336,6 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
         }
     }
     
-    @available(iOS 12.0, *)
     func resultsOrNoResults(with items: [CPListItem], limit: UInt?) -> [CPListItem] {
         recentSearchItems = items
         
