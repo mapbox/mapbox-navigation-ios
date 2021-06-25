@@ -1,11 +1,12 @@
 import CarPlay
 import MapboxDirections
+import MapboxGeocoder
 
 /**
  Delegate, which is used to control behavior based on certain actions from the user when performing search on CarPlay.
  */
 @available(iOS 12.0, *)
-public protocol CarPlaySearchControllerDelegate: AnyObject {
+public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDelegate {
     
     /**
      Method, which is called whenever user selects search result.
@@ -41,4 +42,26 @@ public protocol CarPlaySearchControllerDelegate: AnyObject {
      animated or not.
      */
     func popTemplate(animated: Bool)
+    
+    var recentItems: [RecentItem] { get set }
+    
+    var recentSearchItems: [CPListItem]? { get set }
+    
+    var recentSearchText: String? { get set }
+    
+    func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                        updatedSearchText searchText: String,
+                        completionHandler: @escaping ([CPListItem]) -> Void)
+    
+    func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                        selectedResult item: CPListItem,
+                        completionHandler: @escaping () -> Void)
+    
+    func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions
+    
+    func selectResult(item: CPListItem, completionHandler: @escaping () -> Void)
+    
+    func recentSearches(with searchText: String) -> [CPListItem]
+    
+    func resultsOrNoResults(with items: [CPListItem], limit: UInt?) -> [CPListItem]
 }

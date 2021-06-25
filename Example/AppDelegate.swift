@@ -15,6 +15,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 12.0, *)
     lazy var carPlaySearchController: CarPlaySearchController = CarPlaySearchController()
 
+    static let coarseLocationManager: CLLocationManager = {
+        let coarseLocationManager = CLLocationManager()
+        coarseLocationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        return coarseLocationManager
+    }()
+    
+    @available(iOS 12.0, *)
+    lazy var recentSearchItems: [CPListItem]? = []
+    var recentItems: [RecentItem] = RecentItem.loadDefaults()
+    var recentSearchText: String? = ""
+    
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         if isRunningTests() {

@@ -1,11 +1,11 @@
-/* Delimiter between lines in an address when displayed inline */
-"ADDRESS_LINE_SEPARATOR" = ", ";
-
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "You have arrived";
 
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "What would you like to do?";
+
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continue";
 
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Current Location";
@@ -39,9 +39,6 @@
 
 /* Title on rate button in CarPlay */
 "CARPLAY_RATE_TRIP" = "Rate your trip";
-
-/* Message when search returned zero results in CarPlay */
-"CARPLAY_SEARCH_NO_RESULTS" = "No results";
 
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "Submitted";

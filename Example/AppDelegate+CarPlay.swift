@@ -1,6 +1,7 @@
 import UIKit
 import MapboxNavigation
 import CarPlay
+import MapboxGeocoder
 import MapboxCoreNavigation
 import MapboxDirections
 
@@ -219,6 +220,11 @@ extension AppDelegate: CarPlayManagerDelegate {
 @available(iOS 12.0, *)
 extension AppDelegate: CarPlaySearchControllerDelegate {
     
+    struct MaximumSearchResults {
+        static var initial: UInt = 5
+        static var extended: UInt = 10
+    }
+    
     func previewRoutes(to waypoint: Waypoint, completionHandler: @escaping () -> Void) {
         carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
     }
@@ -236,6 +242,188 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
     
     func popTemplate(animated: Bool) {
         carPlayManager.interfaceController?.popTemplate(animated: animated)
+    }
+    
+    func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                        updatedSearchText searchText: String,
+                        completionHandler: @escaping ([CPListItem]) -> Void) {
+        recentSearchText = searchText
+        
+        var items = recentSearches(with: searchText)
+        
+        // Search for placemarks using MapboxGeocoder.swift
+        let shouldSearch = searchText.count > 2
+        if shouldSearch {
+            let options = forwardGeocodeOptions(searchText)
+            Geocoder.shared.geocode(options, completionHandler: { [weak self] (placemarks, attribution, error) in
+                guard let self = self else { return }
+                
+                guard let placemarks = placemarks else {
+                    completionHandler(self.resultsOrNoResults(with: items, limit: MaximumSearchResults.initial))
+                    return
+                }
+                
+                let navigationGeocodedPlacemarks = placemarks.map {
+                    NavigationGeocodedPlacemark(from: $0, subtitle: $0.subtitle)
+                }
+                
+                let results = navigationGeocodedPlacemarks.map { $0.listItem() }
+                items.append(contentsOf: results)
+                completionHandler(self.resultsOrNoResults(with: results, limit: MaximumSearchResults.initial))
+            })
+        } else {
+            completionHandler(self.resultsOrNoResults(with: items, limit: MaximumSearchResults.initial))
+        }
+    }
+    
+    func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                        selectedResult item: CPListItem,
+                        completionHandler: @escaping () -> Void) {
+        guard let userInfo = item.userInfo as? [String: Any],
+              let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? NavigationGeocodedPlacemark,
+              let location = placemark.routableLocations?.first ?? placemark.location else {
+            completionHandler()
+            return
+        }
+        
+        recentItems.add(RecentItem(placemark))
+        recentItems.save()
+        
+        let destinationWaypoint = Waypoint(location: location,
+                                           heading: nil,
+                                           name: placemark.title)
+        previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
+    }
+    
+    func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {
+        let options = ForwardGeocodeOptions(query: searchText)
+        options.focalLocation = AppDelegate.coarseLocationManager.location
+        options.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
+        var allScopes: PlacemarkScope = .all
+        allScopes.remove(.postalCode)
+        options.allowedScopes = allScopes
+        options.maximumResultCount = MaximumSearchResults.extended
+        options.includesRoutableLocations = true
+        return options
+    }
+    
+    func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
+        guard let userInfo = item.userInfo as? [String: Any],
+              let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? NavigationGeocodedPlacemark,
+              let location = placemark.routableLocations?.first ?? placemark.location else {
+            completionHandler()
+            return
+        }
+        
+        recentItems.add(RecentItem(placemark))
+        recentItems.save()
+        
+        let destinationWaypoint = Waypoint(location: location,
+                                           heading: nil,
+                                           name: placemark.title)
+        previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
+    }
+    
+    func recentSearches(with searchText: String) -> [CPListItem] {
+        if searchText.isEmpty {
+            return recentItems.map { $0.navigationGeocodedPlacemark.listItem() }
+        }
+        
+        return recentItems.filter {
+            $0.matches(searchText)
+        }.map {
+            $0.navigationGeocodedPlacemark.listItem()
+        }
+    }
+    
+    @available(iOS 12.0, *)
+    func resultsOrNoResults(with items: [CPListItem], limit: UInt?) -> [CPListItem] {
+        recentSearchItems = items
+        
+        if items.count > 0 {
+            if let limit = limit {
+                return Array<CPListItem>(items.prefix(Int(limit)))
+            }
+            
+            return items
+        } else {
+            let title = NSLocalizedString("CARPLAY_SEARCH_NO_RESULTS",
+                                          bundle: .mapboxNavigation,
+                                          value: "No results",
+                                          comment: "Message when search returned zero results in CarPlay")
+            
+            let noResult = CPListItem(text: title,
+                                      detailText: nil,
+                                      image: nil,
+                                      showsDisclosureIndicator: false)
+            
+            return [noResult]
+        }
+    }
+}
+
+extension GeocodedPlacemark {
+    
+    @available(iOS 12.0, *)
+    func listItem() -> CPListItem {
+        let item = CPListItem(text: formattedName,
+                              detailText: subtitle,
+                              image: nil,
+                              showsDisclosureIndicator: true)
+        item.userInfo = [CarPlaySearchController.CarPlayGeocodedPlacemarkKey: self]
+        
+        return item
+    }
+    
+    var subtitle: String? {
+        if let addressDictionary = addressDictionary,
+           var lines = addressDictionary["formattedAddressLines"] as? [String] {
+            // Chinese addresses have no commas and are reversed.
+            if scope == .address {
+                if qualifiedName?.contains(", ") ?? false {
+                    lines.removeFirst()
+                } else {
+                    lines.removeLast()
+                }
+            }
+            
+            let separator = NSLocalizedString("ADDRESS_LINE_SEPARATOR",
+                                              value: ", ",
+                                              comment: "Delimiter between lines in an address when displayed inline")
+            
+            if let regionCode = administrativeRegion?.code,
+               let abbreviatedRegion = regionCode.components(separatedBy: "-").last,
+               (abbreviatedRegion as NSString).intValue == 0 {
+                // Cut off country and postal code and add abbreviated state/region code at the end.
+                
+                let subtitle = lines.prefix(2).joined(separator: separator)
+                
+                let scopes: PlacemarkScope = [
+                    .region,
+                    .district,
+                    .place,
+                    .postalCode
+                ]
+                
+                if scopes.contains(scope) {
+                    return subtitle
+                }
+                
+                return subtitle.appending("\(separator)\(abbreviatedRegion)")
+            }
+            
+            if scope == .country {
+                return ""
+            }
+            
+            if qualifiedName?.contains(", ") ?? false {
+                return lines.joined(separator: separator)
+            }
+            
+            return lines.joined()
+        }
+        
+        return description
     }
 }
 
