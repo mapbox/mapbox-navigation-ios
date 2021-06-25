@@ -158,10 +158,6 @@ class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDele
         completionHandler()
     }
     
-    func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {
-        return ForwardGeocodeOptions(query: searchText)
-    }
-    
     func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {
         completionHandler()
     }

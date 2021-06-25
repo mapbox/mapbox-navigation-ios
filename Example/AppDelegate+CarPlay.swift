@@ -244,6 +244,19 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
         carPlayManager.interfaceController?.popTemplate(animated: animated)
     }
     
+    func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {
+        let options = ForwardGeocodeOptions(query: searchText)
+        options.focalLocation = AppDelegate.coarseLocationManager.location
+        options.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
+        var allScopes: PlacemarkScope = .all
+        allScopes.remove(.postalCode)
+        options.allowedScopes = allScopes
+        options.maximumResultCount = MaximumSearchResults.extended
+        options.includesRoutableLocations = true
+        
+        return options
+    }
+    
     func searchTemplate(_ searchTemplate: CPSearchTemplate,
                         updatedSearchText searchText: String,
                         completionHandler: @escaping ([CPListItem]) -> Void) {
@@ -293,18 +306,6 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
                                            heading: nil,
                                            name: placemark.title)
         previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
-    }
-    
-    func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {
-        let options = ForwardGeocodeOptions(query: searchText)
-        options.focalLocation = AppDelegate.coarseLocationManager.location
-        options.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
-        var allScopes: PlacemarkScope = .all
-        allScopes.remove(.postalCode)
-        options.allowedScopes = allScopes
-        options.maximumResultCount = MaximumSearchResults.extended
-        options.includesRoutableLocations = true
-        return options
     }
     
     func selectResult(item: CPListItem, completionHandler: @escaping () -> Void) {

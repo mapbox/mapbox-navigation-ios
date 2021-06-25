@@ -84,8 +84,6 @@ public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDele
                         selectedResult item: CPListItem,
                         completionHandler: @escaping () -> Void)
     
-    func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions
-    
     func selectResult(item: CPListItem, completionHandler: @escaping () -> Void)
     
     func recentSearches(with searchText: String) -> [CPListItem]
