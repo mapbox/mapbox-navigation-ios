@@ -1,8 +1,14 @@
 import Foundation
 import CarPlay
 
+/**
+ Struct, which represents recently found search item on CarPlay.
+ */
 public struct RecentItem: Equatable, Codable {
     
+    /**
+     Property, which contains information regarding geocoder result.
+     */
     public var navigationGeocodedPlacemark: NavigationGeocodedPlacemark
 
     var timestamp: Date
@@ -16,22 +22,39 @@ public struct RecentItem: Equatable, Codable {
             return url.appendingPathComponent(persistenceKey.appending(".data"))
         }
     }
+    
+    /**
+     Initializes a newly created `RecentItem` instance, with a geocoded data stored in
+     `NavigationGeocodedPlacemark`.
+     
+     - parameter navigationGeocodedPlacemark: A `NavigationGeocodedPlacemark` instance, which contains
+     information regarding geocoder result.
+     */
+    public init(_ navigationGeocodedPlacemark: NavigationGeocodedPlacemark) {
+        self.navigationGeocodedPlacemark = navigationGeocodedPlacemark
+        self.timestamp = Date()
+    }
 
+    /**
+     Loads a list of `RecentItem`s, which is stored in `filePathUrl`.
+     */
     static public func loadDefaults() -> [RecentItem] {
         let data = try? Data(contentsOf: RecentItem.filePathUrl)
         let decoder = JSONDecoder()
-        if let data = data, let recentItems = try? decoder.decode([RecentItem].self, from: data) {
+        if let data = data,
+           let recentItems = try? decoder.decode([RecentItem].self, from: data) {
             return recentItems.sorted(by: { $0.timestamp > $1.timestamp })
         }
 
         return [RecentItem]()
     }
 
-    public init(_ navigationGeocodedPlacemark: NavigationGeocodedPlacemark) {
-        self.navigationGeocodedPlacemark = navigationGeocodedPlacemark
-        self.timestamp = Date()
-    }
-
+    /**
+     Method, which allows to verify, whether current `RecentItem` instance contains data, which is
+     similar to data provided in `searchText` parameter.
+     
+     - parameter searchText: Text, which will be used for performing search.
+     */
     public func matches(_ searchText: String) -> Bool {
         return navigationGeocodedPlacemark.title.contains(searchText) ||
             navigationGeocodedPlacemark.address?.contains(searchText) ?? false

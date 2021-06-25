@@ -3,8 +3,8 @@ import CoreLocation
 import CarPlay
 
 /**
- Struct, which represents results of geocoding requests, and contains additional navigation related
- information like location and routable locations.
+ Struct, which represents result of a geocoding request, and contains additional navigation related
+ information like title, address, location and routable locations.
  */
 public struct NavigationGeocodedPlacemark: Equatable, Codable {
     
