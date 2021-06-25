@@ -272,6 +272,8 @@ class CarPlayManagerSpec: QuickSpec {
 
         //MARK: Previewing Routes
         describe("Previewing routes") {
+            // Fails on older iOS versions with "Unsupported object MapTemplateSpy"
+            guard #available(iOS 14, *) else { return }
             beforeEach {
                 manager!.mapTemplateProvider = MapTemplateSpyProvider()
             }
