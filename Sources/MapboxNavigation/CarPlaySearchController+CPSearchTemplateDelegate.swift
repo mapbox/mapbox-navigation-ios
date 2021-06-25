@@ -11,8 +11,9 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     static var MaximumExtendedSearchResults: UInt = 10
     
     public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
-        guard let items = delegate?.recentSearchItems else { return }
-        guard let extendedItems = delegate?.resultsOrNoResults(with: items, limit: CarPlaySearchController.MaximumExtendedSearchResults) else { return }
+        guard let items = delegate?.recentSearchItems,
+              let extendedItems = delegate?.resultsOrNoResults(with: items,
+                                                               limit: CarPlaySearchController.MaximumExtendedSearchResults) else { return }
         
         let section = CPListSection(items: extendedItems)
         let template = CPListTemplate(title: delegate?.recentSearchText, sections: [section])
@@ -24,15 +25,13 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
                                      interfaceController: CPInterfaceController,
                                      traitCollection: UITraitCollection) -> CPBarButton {
         let searchTemplateButton = CPBarButton(type: .image) { [weak self] button in
-            guard let strongSelf = self else {
-                return
-            }
+            guard let self = self else { return }
             
             if let mapTemplate = interfaceController.topTemplate as? CPMapTemplate {
-                strongSelf.delegate?.resetPanButtons(mapTemplate)
+                self.delegate?.resetPanButtons(mapTemplate)
             }
             
-            self?.delegate?.pushTemplate(searchTemplate, animated: false)
+            self.delegate?.pushTemplate(searchTemplate, animated: false)
         }
         
         let bundle = Bundle.mapboxNavigation
