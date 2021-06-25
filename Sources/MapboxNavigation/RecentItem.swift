@@ -13,13 +13,11 @@ public struct RecentItem: Equatable, Codable {
 
     var timestamp: Date
     
-    static let persistenceKey = "RecentItems"
-
     static var filePathUrl: URL {
         get {
             let documents = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
             let url = URL(fileURLWithPath: documents)
-            return url.appendingPathComponent(persistenceKey.appending(".data"))
+            return url.appendingPathComponent("RecentItems.data")
         }
     }
     
@@ -36,7 +34,7 @@ public struct RecentItem: Equatable, Codable {
     }
 
     /**
-     Loads a list of `RecentItem`s, which is stored in `filePathUrl`.
+     Loads a list of `RecentItem`s, which is serialized into a file stored in `filePathUrl`.
      */
     static public func loadDefaults() -> [RecentItem] {
         let data = try? Data(contentsOf: RecentItem.filePathUrl)
