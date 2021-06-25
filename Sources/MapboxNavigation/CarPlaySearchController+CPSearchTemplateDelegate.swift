@@ -5,14 +5,6 @@ import MapboxDirections
 @available(iOS 12.0, *)
 extension CarPlaySearchController: CPSearchTemplateDelegate {
     
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        delegate?.searchTemplate(searchTemplate, updatedSearchText: searchText, completionHandler: completionHandler)
-    }
-    
-    public func searchTemplate(_ searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-        delegate?.searchTemplate(searchTemplate, selectedResult: item, completionHandler: completionHandler)
-    }
-    
     public static let CarPlayGeocodedPlacemarkKey: String = "MBGecodedPlacemark"
     
     static var MaximumInitialSearchResults: UInt = 5
@@ -49,6 +41,22 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
                                              compatibleWith: traitCollection)
         
         return searchTemplateButton
+    }
+    
+    public func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                               updatedSearchText searchText: String,
+                               completionHandler: @escaping ([CPListItem]) -> Void) {
+        delegate?.searchTemplate(searchTemplate,
+                                 updatedSearchText: searchText,
+                                 completionHandler: completionHandler)
+    }
+    
+    public func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                               selectedResult item: CPListItem,
+                               completionHandler: @escaping () -> Void) {
+        delegate?.searchTemplate(searchTemplate,
+                                 selectedResult: item,
+                                 completionHandler: completionHandler)
     }
 }
 
