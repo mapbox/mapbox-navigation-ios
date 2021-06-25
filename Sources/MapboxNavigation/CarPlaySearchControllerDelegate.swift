@@ -58,10 +58,28 @@ public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDele
      */
     var recentSearchText: String? { get set }
     
+    /**
+     Method, which offers the delegate an opportunity to react to updates in the search text.
+     
+     - parameter searchTemplate: The search template currently accepting user input.
+     - parameter searchText: The updated search text in `searchTemplate`.
+     - parameter completionHandler: Called when the search is complete. Accepts a list of search results.
+     
+     - postcondition: You must call `completionHandler` within this method.
+     */
     func searchTemplate(_ searchTemplate: CPSearchTemplate,
                         updatedSearchText searchText: String,
                         completionHandler: @escaping ([CPListItem]) -> Void)
     
+    /**
+     Method, which offers the delegate an opportunity to react to selection of a search result.
+     
+     - parameter searchTemplate: The search template currently accepting user input.
+     - parameter item: The search result the user has selected.
+     - parameter completionHandler: Called when the delegate is done responding to the selection.
+     
+     - postcondition: You must call `completionHandler` within this method.
+     */
     func searchTemplate(_ searchTemplate: CPSearchTemplate,
                         selectedResult item: CPListItem,
                         completionHandler: @escaping () -> Void)
