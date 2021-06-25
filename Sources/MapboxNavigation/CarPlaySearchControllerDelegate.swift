@@ -43,10 +43,19 @@ public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDele
      */
     func popTemplate(animated: Bool)
     
+    /**
+     The most recent items.
+     */
     var recentItems: [RecentItem] { get set }
     
+    /**
+     The most recent search results.
+     */
     var recentSearchItems: [CPListItem]? { get set }
     
+    /**
+     The most recent search text.
+     */
     var recentSearchText: String? { get set }
     
     func searchTemplate(_ searchTemplate: CPSearchTemplate,
