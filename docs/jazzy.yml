@@ -109,7 +109,10 @@ custom_categories:
       - CarPlayCompassView
       - CarPlayMapViewController
       - CarPlaySearchController
+      - CarPlaySearchControllerDelegate
       - CarPlayConnectionObserver
+      - RecentItem
+      - NavigationGeocodedPlacemark
   - name: Configuration
     children:
       - RouteControllerDeadReckoningTimeInterval
