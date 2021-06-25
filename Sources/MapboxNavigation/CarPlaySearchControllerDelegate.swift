@@ -1,6 +1,5 @@
 import CarPlay
 import MapboxDirections
-import MapboxGeocoder
 
 /**
  Delegate, which is used to control behavior based on certain actions from the user when performing search on CarPlay.

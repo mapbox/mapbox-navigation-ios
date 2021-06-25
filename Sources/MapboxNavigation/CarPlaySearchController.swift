@@ -1,5 +1,4 @@
-import CarPlay
-import MapboxDirections
+import Foundation
 
 /**
  `CarPlaySearchController` is the main object responsible for managing the search feature on CarPlay.
@@ -10,10 +9,6 @@ import MapboxDirections
  */
 @available(iOS 12.0, *)
 public class CarPlaySearchController: NSObject {
-    /**
-     The completion handler that will process the list of search results initiated on CarPlay.
-     */
-    var searchCompletionHandler: (([CPListItem]) -> Void)?
     
     /**
      The `CarPlaySearchController` delegate.
