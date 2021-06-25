@@ -79,14 +79,14 @@ extension Array where Element == RecentItem {
             $0.navigationGeocodedPlacemark == recentItem.navigationGeocodedPlacemark
         }.first
 
-        guard let existingNavigationGeocodedPlacemark = existingNavigationGeocodedPlacemark else {
+        guard let validNavigationGeocodedPlacemark = existingNavigationGeocodedPlacemark else {
             insert(recentItem, at: 0)
             return
         }
 
-        var updatedNavigationGeocodedPlacemark = existingNavigationGeocodedPlacemark
+        var updatedNavigationGeocodedPlacemark = validNavigationGeocodedPlacemark
         updatedNavigationGeocodedPlacemark.timestamp = Date()
-        remove(existingNavigationGeocodedPlacemark)
+        remove(validNavigationGeocodedPlacemark)
         add(updatedNavigationGeocodedPlacemark)
     }
 
