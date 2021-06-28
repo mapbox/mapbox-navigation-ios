@@ -156,7 +156,7 @@ class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDele
         completionHandler()
     }
     
-    func resultsOrNoResults(with items: [CPListItem], limit: UInt?) -> [CPListItem] {
+    func searchResults(with items: [CPListItem], limit: UInt?) -> [CPListItem] {
         return []
     }
 }
