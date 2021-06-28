@@ -13,7 +13,7 @@ extension ViewController {
     func setupPassiveLocationProvider() {
         setupFreeDriveStyledFeatures()
 
-        let passiveLocationManager = PassiveLocationManager()
+        passiveLocationManager = PassiveLocationManager()
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
         

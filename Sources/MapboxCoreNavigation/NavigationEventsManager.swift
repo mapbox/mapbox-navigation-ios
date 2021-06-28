@@ -5,6 +5,19 @@ import MapboxDirections
 let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
 
 /**
+ The `EventsManagerFreeDriveDataSource` protocol declares values required for recording free drive events.
+ */
+public protocol EventsManagerFreeDriveDataSource: AnyObject {
+    var rawLocation: CLLocation? { get }
+}
+
+extension PassiveLocationManager: EventsManagerFreeDriveDataSource {
+    public var rawLocation: CLLocation? {
+        return self.lastRawLocation
+    }
+}
+
+/**
  The `EventsManagerDataSource` protocol declares values required for recording route following events.
  */
 public protocol EventsManagerDataSource: AnyObject {
@@ -12,6 +25,32 @@ public protocol EventsManagerDataSource: AnyObject {
     var router: Router! { get }
     var desiredAccuracy: CLLocationAccuracy { get }
     var locationProvider: NavigationLocationManager.Type { get }
+}
+
+open class FreeDriveNavigationEventsManager: NavigationEventsManager {
+    public weak var freeDriveDataSource: EventsManagerFreeDriveDataSource?
+    
+    public init(freeDriveDataSource: EventsManagerFreeDriveDataSource) {
+        self.freeDriveDataSource = freeDriveDataSource
+        super.init(dataSource: nil)
+    }
+    
+    public required init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
+        super.init(dataSource: nil)
+    }
+    
+    override func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails? {
+        guard let freeDriveDataSource = freeDriveDataSource else { return nil }
+        var event = FreeDriveEventDetails(dataSource: freeDriveDataSource)
+        event.event = MMEEventTypeNavigationFeedback
+        event.userId = UIDevice.current.identifierForVendor?.uuidString
+        event.feedbackType = type.description
+        event.description = description
+                
+        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
+
+        return event
+    }
 }
 
 /**
@@ -51,9 +90,9 @@ open class NavigationEventsManager {
     private var mobileEventsManager: MMEEventsManager!
 
     lazy var accessToken: String = {
-        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
-        let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
-        let token = dict["MGLMapboxAccessToken"] as? String else {
+        guard let token = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ??
+                Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAccessToken") as? String
+        else {
             //we can assert here because if the token was passed in, it would of overriden this closure.
             //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
             assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
@@ -103,11 +142,11 @@ open class NavigationEventsManager {
         mobileEventsManager.sendTurnstileEvent()
     }
     
-    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> NavigationEventDetails? {
+    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> ActiveGuidanceEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
         
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveGuidanceEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState.arrivalTimestamp
         
@@ -137,18 +176,18 @@ open class NavigationEventsManager {
         return event
     }
     
-    func navigationDepartEvent() -> NavigationEventDetails? {
+    func navigationDepartEvent() -> ActiveGuidanceEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveGuidanceEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
         return event
     }
     
-    func navigationArriveEvent() -> NavigationEventDetails? {
+    func navigationArriveEvent() -> ActiveGuidanceEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveGuidanceEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
         
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
@@ -163,10 +202,10 @@ open class NavigationEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> NavigationEventDetails? {
+    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> EventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveGuidanceEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationFeedback
         
         event.userId = UIDevice.current.identifierForVendor?.uuidString
@@ -178,12 +217,12 @@ open class NavigationEventsManager {
         return event
     }
     
-    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> NavigationEventDetails? {
+    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> ActiveGuidanceEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveGuidanceEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
         event.created = timestamp
         
@@ -254,7 +293,8 @@ open class NavigationEventsManager {
     }
     
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID? {
-        guard let eventDictionary = (try? navigationFeedbackEvent(type: type, description: description)?.asDictionary()) as [String: Any]?? else { return nil }
+        guard let feedbackEvent = navigationFeedbackEvent(type: type, description: description) else { return nil }
+        let eventDictionary = try? feedbackEvent.asDictionary()
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
         outstandingFeedbackEvents.append(event)
         return event.id

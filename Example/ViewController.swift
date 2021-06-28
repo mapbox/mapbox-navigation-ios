@@ -14,9 +14,19 @@ class ViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var clearMap: UIButton!
     
+    let feedbackButton: FloatingButton = {
+        let image = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!
+        let button = FloatingButton.rounded(image: image.withRenderingMode(.alwaysTemplate))
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.backgroundColor = #colorLiteral(red: 0.921431005, green: 0.9214526415, blue: 0.9214410186, alpha: 1)
+        return button
+    }()
+    
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
     var speedLimitView: SpeedLimitView!
+    var passiveLocationManager: PassiveLocationManager!
+    var eventsManager: FreeDriveNavigationEventsManager!
     
     var currentEdgeIdentifier: RoadGraph.Edge.Identifier?
     var nextEdgeIdentifier: RoadGraph.Edge.Identifier?
@@ -94,6 +104,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         setupSpeedLimitView()
         view.addSubview(speedLimitView)
+        setupFeedbackButton()
     }
     
     func setupSpeedLimitView() {
@@ -108,11 +119,19 @@ class ViewController: UIViewController {
         self.speedLimitView = speedLimitView
     }
     
+    func setupFeedbackButton() {
+        view.addSubview(feedbackButton)
+        feedbackButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
+        feedbackButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
+        feedbackButton.addTarget(self, action: #selector(feedback(_:)), for: .touchUpInside)
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
         if navigationMapView == nil {
             navigationMapView = NavigationMapView(frame: view.bounds)
+            eventsManager = FreeDriveNavigationEventsManager(freeDriveDataSource: passiveLocationManager)
         }
     }
     
@@ -170,6 +189,12 @@ class ViewController: UIViewController {
 
     @IBAction func startButtonPressed(_ sender: Any) {
         presentActionsAlertController()
+    }
+    
+    @objc func feedback(_ sender: Any) {
+        let feedbackViewController = FeedbackViewController(eventsManager: eventsManager)
+        feedbackViewController.detailedFeedbackEnabled = true
+        present(feedbackViewController, animated: true)
     }
     
     // MARK: - CarPlay navigation methods

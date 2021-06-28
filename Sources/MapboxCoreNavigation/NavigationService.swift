@@ -519,11 +519,11 @@ extension MapboxNavigationService: RouterDelegate {
 //MARK: EventsManagerDataSource Logic
 extension MapboxNavigationService {
     public var routeProgress: RouteProgress {
-        return self.router.routeProgress
+        return router.routeProgress
     }
     
     public var desiredAccuracy: CLLocationAccuracy {
-        return self.locationManager.desiredAccuracy
+        return locationManager.desiredAccuracy
     }
 }
 
