@@ -92,6 +92,7 @@
 * Moved `GeocodedPlacemark` extension from `CarPlaySearchController` to the application level. Removed `GeocodedPlacemark.listItem()`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * Added `NavigationGeocodedPlacemark` struct to replace `GeocodedPlacemark` and added `NavigationGeocodedPlacemark.listItem()`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * `RecentItem` is now a public struct. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
+* Removed unused `CarPlayManagerDelegate.carPlayManager(_:searchTemplate:updatedSearchText:ompletionHandler:)` and `CarPlayManagerDelegate.carPlayManager(_:carPlayManager:selectedResult:completionHandler:)`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 
 ### Other changes
 
