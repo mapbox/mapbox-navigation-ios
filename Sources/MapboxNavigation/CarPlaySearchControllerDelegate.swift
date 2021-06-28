@@ -43,17 +43,13 @@ public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDele
     func popTemplate(animated: Bool)
     
     /**
-     The most recent items.
-     */
-    var recentItems: [RecentItem] { get set }
-    
-    /**
      The most recent search results.
      */
     var recentSearchItems: [CPListItem]? { get set }
     
     /**
-     The most recent search text.
+     The most recent search text, which is going to be used as `CPListTemplate` title after
+     performing search.
      */
     var recentSearchText: String? { get set }
     
@@ -83,7 +79,13 @@ public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDele
                         selectedResult item: CPListItem,
                         completionHandler: @escaping () -> Void)
     
-    func recentSearches(with searchText: String) -> [CPListItem]
-    
-    func resultsOrNoResults(with items: [CPListItem], limit: UInt?) -> [CPListItem]
+    /**
+     Method, which allows to provide list of `CPListItem`s and show them in `CPListTemplate` after
+     performing search.
+     
+     - parameter items: List of `CPListItem`, which will be shown in `CPListTemplate`.
+     - parameter limit: Optional integer, which serves as a limiter for a list of search results.
+     - returns: List of `CPListItem` objects with certain limit (if applicable).
+     */
+    func searchResults(with items: [CPListItem], limit: UInt?) -> [CPListItem]
 }

@@ -11,9 +11,9 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
     static var MaximumExtendedSearchResults: UInt = 10
     
     public func searchTemplateSearchButtonPressed(_ searchTemplate: CPSearchTemplate) {
-        guard let items = delegate?.recentSearchItems,
-              let extendedItems = delegate?.resultsOrNoResults(with: items,
-                                                               limit: CarPlaySearchController.MaximumExtendedSearchResults) else { return }
+        guard let recentSearchItems = delegate?.recentSearchItems,
+              let extendedItems = delegate?.searchResults(with: recentSearchItems,
+                                                          limit: CarPlaySearchController.MaximumExtendedSearchResults) else { return }
         
         let section = CPListSection(items: extendedItems)
         let template = CPListTemplate(title: delegate?.recentSearchText, sections: [section])

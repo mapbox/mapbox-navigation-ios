@@ -140,8 +140,6 @@ class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDele
         interfaceController?.popTemplate(animated: animated)
     }
     
-    var recentItems: [RecentItem] = []
-    
     var recentSearchItems: [CPListItem]?
     
     var recentSearchText: String?
@@ -156,10 +154,6 @@ class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDele
                         selectedResult item: CPListItem,
                         completionHandler: @escaping () -> Void) {
         completionHandler()
-    }
-    
-    func recentSearches(with searchText: String) -> [CPListItem] {
-        return []
     }
     
     func resultsOrNoResults(with items: [CPListItem], limit: UInt?) -> [CPListItem] {

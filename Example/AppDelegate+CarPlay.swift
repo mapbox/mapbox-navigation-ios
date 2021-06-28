@@ -257,22 +257,62 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
         return options
     }
     
+    func recentSearches(with searchText: String) -> [CPListItem] {
+        if searchText.isEmpty {
+            return recentItems.map { $0.navigationGeocodedPlacemark.listItem() }
+        }
+        
+        return recentItems.filter {
+            $0.matches(searchText)
+        }.map {
+            $0.navigationGeocodedPlacemark.listItem()
+        }
+    }
+    
+    func searchResults(with items: [CPListItem], limit: UInt?) -> [CPListItem] {
+        recentSearchItems = items
+        
+        if items.count > 0 {
+            if let limit = limit {
+                return Array<CPListItem>(items.prefix(Int(limit)))
+            }
+            
+            return items
+        } else {
+            let title = NSLocalizedString("CARPLAY_SEARCH_NO_RESULTS",
+                                          bundle: .mapboxNavigation,
+                                          value: "No results",
+                                          comment: "Message when search returned zero results in CarPlay")
+            
+            let noResultListItem = CPListItem(text: title,
+                                              detailText: nil,
+                                              image: nil,
+                                              showsDisclosureIndicator: false)
+            
+            return [noResultListItem]
+        }
+    }
+    
     func searchTemplate(_ searchTemplate: CPSearchTemplate,
                         updatedSearchText searchText: String,
                         completionHandler: @escaping ([CPListItem]) -> Void) {
         recentSearchText = searchText
         
         var items = recentSearches(with: searchText)
+        let limit = MaximumSearchResults.initial
         
         // Search for placemarks using MapboxGeocoder.swift
         let shouldSearch = searchText.count > 2
         if shouldSearch {
             let options = forwardGeocodeOptions(searchText)
             Geocoder.shared.geocode(options, completionHandler: { [weak self] (placemarks, attribution, error) in
-                guard let self = self else { return }
+                guard let self = self else {
+                    completionHandler([])
+                    return
+                }
                 
                 guard let placemarks = placemarks else {
-                    completionHandler(self.resultsOrNoResults(with: items, limit: MaximumSearchResults.initial))
+                    completionHandler(self.searchResults(with: items, limit: limit))
                     return
                 }
                 
@@ -282,10 +322,10 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
                 
                 let results = navigationGeocodedPlacemarks.map { $0.listItem() }
                 items.append(contentsOf: results)
-                completionHandler(self.resultsOrNoResults(with: results, limit: MaximumSearchResults.initial))
+                completionHandler(self.searchResults(with: results, limit: limit))
             })
         } else {
-            completionHandler(self.resultsOrNoResults(with: items, limit: MaximumSearchResults.initial))
+            completionHandler(self.searchResults(with: items, limit: limit))
         }
     }
     
@@ -307,56 +347,9 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
                                            name: placemark.title)
         previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
     }
-    
-    func recentSearches(with searchText: String) -> [CPListItem] {
-        if searchText.isEmpty {
-            return recentItems.map { $0.navigationGeocodedPlacemark.listItem() }
-        }
-        
-        return recentItems.filter {
-            $0.matches(searchText)
-        }.map {
-            $0.navigationGeocodedPlacemark.listItem()
-        }
-    }
-    
-    func resultsOrNoResults(with items: [CPListItem], limit: UInt?) -> [CPListItem] {
-        recentSearchItems = items
-        
-        if items.count > 0 {
-            if let limit = limit {
-                return Array<CPListItem>(items.prefix(Int(limit)))
-            }
-            
-            return items
-        } else {
-            let title = NSLocalizedString("CARPLAY_SEARCH_NO_RESULTS",
-                                          bundle: .mapboxNavigation,
-                                          value: "No results",
-                                          comment: "Message when search returned zero results in CarPlay")
-            
-            let noResult = CPListItem(text: title,
-                                      detailText: nil,
-                                      image: nil,
-                                      showsDisclosureIndicator: false)
-            
-            return [noResult]
-        }
-    }
 }
 
 extension GeocodedPlacemark {
-    
-    @available(iOS 12.0, *)
-    func listItem() -> CPListItem {
-        let item = CPListItem(text: formattedName,
-                              detailText: subtitle,
-                              image: nil,
-                              showsDisclosureIndicator: true)
-        item.userInfo = [CarPlaySearchController.CarPlayGeocodedPlacemarkKey: self]
-        
-        return item
-    }
     
     var subtitle: String? {
         if let addressDictionary = addressDictionary,
