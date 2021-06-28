@@ -842,7 +842,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         for component in navigationComponents {
             component.navigationService(service, willEndSimulating: progress, becauseOf: reason)
         }
-        navigationMapView?.simulatesLocation = true
+        navigationMapView?.simulatesLocation = false
     }
     
     public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
