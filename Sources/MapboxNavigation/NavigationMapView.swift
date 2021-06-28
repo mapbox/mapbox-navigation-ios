@@ -474,7 +474,10 @@ open class NavigationMapView: UIView {
                                   animated: animated,
                                   navigationCameraState: navigationCamera.state)
             
-        default: break
+        default:
+            if simulatesLocation, let locationProvider = mapView.location.locationProvider {
+                mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+            }
         }
     }
     
