@@ -477,6 +477,7 @@ open class NavigationMapView: UIView {
         default:
             if simulatesLocation, let locationProvider = mapView.location.locationProvider {
                 mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+                mapView.location.locationProvider.stopUpdatingLocation()
             }
         }
     }
