@@ -235,7 +235,7 @@ class NavigationViewControllerTests: XCTestCase {
         XCTAssert(newAnnotations.contains { $0.coordinate.distance(to: secondDestination) < 1 }, "New destination annotation does not exist on map")
     }
     
-    func testpuck3DLayerPosition() {
+    func testPuck3DLayerPosition() {
         let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: DirectionsSpy(), simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
