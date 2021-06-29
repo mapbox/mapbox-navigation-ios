@@ -195,6 +195,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         set {
             navigationMapView?.routeLineTracksTraversal = newValue
+            routeOverlayController?.routeLineTracksTraversal = newValue
         }
     }
 
