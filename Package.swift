@@ -61,7 +61,10 @@ let package = Package(
             resources: [.copy("MBXInfo.plist")]),
         .target(
             name: "CTestHelper",
-            dependencies: ["MapboxMobileEvents"]),
+            dependencies: [
+                "MapboxMobileEvents",
+                "MapboxCoreNavigation",
+            ]),
         .target(
             name: "TestHelper",
             dependencies: [
