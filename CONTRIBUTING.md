@@ -23,7 +23,9 @@ When reporting a bug in the navigation SDK itself, please indicate:
 
 ## Setting up a development environment
 
-To contribute code changes to this project, use either Carthage or Swift Package Manager to set up a development environment. Carthage and the Xcode project in this repository are important for making sure dependent projects can use Carthage and for checking your work in the included Example or Example-CarPlay application. Swift Package Manager only builds MapboxCoreNavigation.
+To contribute code changes to this project, use Swift Package Manager to set up a development environment. The repository includes:
+1. `MapboxNavigation-SPM.xcodeproj` with Example or Example-CarPlay applications. 
+1. `MapboxNavigation.xcodeproj`, which builds the navigation SDK and its dependencies using Carthage but does not include a sample application.
 
 ### Using Carthage
 
@@ -63,6 +65,10 @@ open Package.swift
 ```
 
 The resulting package only includes the framework and test targets. It does not include the example applications, and the file list is not synchronized with the Xcode project used by Carthage, so make sure to [build and test the SDK in the Xcode workspace](#using-carthage) before opening a pull request.
+
+### Adding new files
+
+If you add a new file while working with `Package.swift`, don't forget to add this file to `MapboxNavigation.xcodeproj` in the appropriate location.
 
 ## Making any symbol public
 

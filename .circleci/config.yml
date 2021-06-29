@@ -100,7 +100,7 @@ step-library:
       run:
         name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=14.4,name=iPhone 8 Plus' -project MapboxNavigation.xcodeproj -scheme Example clean build | xcpretty
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=14.4,name=iPhone 8 Plus' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build | xcpretty
 
   - &trigger-metrics
       run:
@@ -224,13 +224,10 @@ jobs:
           steps:
             - run:
                 name: Move Xcode project aside
-                command: mv MapboxNavigation.xcodeproj MapboxNavigation.xcodeproj-aside
+                command: rm -rf *.xcodeproj
             - run:
                 name: MapboxNavigation-Package
                 command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
-            - run:
-                name: Move Xcode project back in place
-                command: mv MapboxNavigation.xcodeproj-aside MapboxNavigation.xcodeproj
       - when:
           condition: << parameters.codecoverage >>
           steps:
