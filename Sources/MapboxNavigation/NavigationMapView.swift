@@ -884,7 +884,17 @@ open class NavigationMapView: UIView {
             let shaftLength = max(min(30 * mapView.metersPerPointAtLatitude(latitude: maneuverCoordinate.latitude), 30), 10)
             let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             
+            var puckLayerIdentifier: String?
+            switch userLocationStyle {
+            case .puck2D(configuration: _):
+                puckLayerIdentifier = NavigationMapView.LayerIdentifier.puck2DLayer
+            case .puck3D(configuration: _):
+                puckLayerIdentifier = NavigationMapView.LayerIdentifier.puck3DLayer
+            default: break
+            }
+            
             if shaftPolyline.coordinates.count > 1 {
+                let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
                 let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
                 let minimumZoomLevel: Double = 14.5
                 let shaftStrokeCoordinates = shaftPolyline.coordinates
@@ -906,7 +916,9 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
+                    if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(puckLayer))
+                    } else if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
                         try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
                     } else {
                         try mapView.mapboxMap.style.addLayer(arrowLayer)
@@ -929,7 +941,9 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
-                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: .above(mainRouteLayerIdentifier))
+                    
+                    let arrowStrokeLayerPsoition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
+                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPsoition)
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
@@ -972,7 +986,11 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    try mapView.mapboxMap.style.addLayer(arrowSymbolLayer)
+                    if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer, layerPosition: .below(puckLayer))
+                    } else {
+                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer)
+                    }
                     try mapView.mapboxMap.style.addLayer(arrowSymbolCasingLayer,
                                                          layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
