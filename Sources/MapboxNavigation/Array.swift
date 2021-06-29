@@ -125,23 +125,35 @@ extension Array where Iterator.Element == CLLocationCoordinate2D {
 }
 
 extension Array where Iterator.Element == CGPoint {
-    
     var boundingBoxPoints: [CGPoint] {
-        let yCoordinates = self.map({ $0.y })
-        let xCoordinates = self.map({ $0.x })
-        if let yMax = yCoordinates.max(),
-           let xMin = xCoordinates.min(),
-           let yMin = yCoordinates.min(),
-           let xMax = xCoordinates.max() {
-            let topLeftPoint = CGPoint(x: xMin, y: yMin)
-            let topRightPoint = CGPoint(x: xMax, y: yMin)
-            let bottomRightPoint = CGPoint(x: xMax, y: yMax)
-            let bottomLeftPoint = CGPoint(x: xMin, y: yMax)
-            
-            return [topLeftPoint, topRightPoint, bottomRightPoint, bottomLeftPoint]
+        guard !isEmpty else { return [] }
+
+        var xMin: CGFloat = CGFloat.greatestFiniteMagnitude
+        var yMin: CGFloat = CGFloat.greatestFiniteMagnitude
+        var xMax: CGFloat = CGFloat.leastNormalMagnitude
+        var yMax: CGFloat = CGFloat.leastNormalMagnitude
+
+        for point in self {
+            if point.x < xMin {
+                xMin = point.x
+            }
+            if point.x > xMax {
+                xMax = point.x
+            }
+            if point.y < yMin {
+                yMin = point.y
+            }
+            if point.y > yMax {
+                yMax = point.y
+            }
         }
-        
-        return []
+
+        let topLeftPoint = CGPoint(x: xMin, y: yMin)
+        let topRightPoint = CGPoint(x: xMax, y: yMin)
+        let bottomRightPoint = CGPoint(x: xMax, y: yMax)
+        let bottomLeftPoint = CGPoint(x: xMin, y: yMax)
+
+        return [topLeftPoint, topRightPoint, bottomRightPoint, bottomLeftPoint]
     }
 }
 
