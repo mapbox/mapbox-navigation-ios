@@ -109,6 +109,7 @@
 * Fixed an issue where offline route calculation might hang up. ([#3040](https://github.com/mapbox/mapbox-navigation-ios/pull/3040))
 * Fixed the moment of custom feedback event creation. ([#3049](https://github.com/mapbox/mapbox-navigation-ios/pull/3049))
 * Increased stability of unit tests by addressing sporadic failures. ([#3089](https://github.com/mapbox/mapbox-navigation-ios/pull/3089))([#3072](https://github.com/mapbox/mapbox-navigation-ios/pull/3072))
+* Fixed a retain cycle in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
 
 ## v1.4.1
 
