@@ -53,10 +53,10 @@ open class NavigationEventsManager {
     lazy var accessToken: String = {
         guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
         let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
-        let token = dict["MGLMapboxAccessToken"] as? String else {
+        let token = dict["MBXAccessToken"] as? String ?? dict["MGLMapboxAccessToken"] as? String else {
             //we can assert here because if the token was passed in, it would of overriden this closure.
             //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
-            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
+            assertionFailure("`accessToken` must be set in the Info.plist as `MBXAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
             return ""
         }
         return token
