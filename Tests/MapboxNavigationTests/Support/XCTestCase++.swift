@@ -25,5 +25,5 @@ extension XCTestCase {
             parent.view.addConstraints(childConstraints)
         }
         child.didMove(toParent: parent)
-    }
+    }    
 }
