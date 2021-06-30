@@ -44,50 +44,56 @@ class NavigationViewControllerTests: XCTestCase {
     var customRoadName = [CLLocationCoordinate2D: String?]()
     
     var updatedStyleNumberOfTimes = 0
-    lazy var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController) = {
-        UNUserNotificationCenter.mockForTests()
-
-        let fakeDirections = DirectionsSpy()
-        let fakeService = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions, directions: fakeDirections, locationSource: NavigationLocationManagerStub(), simulating: .never)
-        let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
-        let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
-        let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
-        
-        navigationViewController.delegate = self
-        _ = navigationViewController.view // trigger view load
-        let navigationService = navigationViewController.navigationService!
-        let router = navigationService.router!
-        let firstCoord      = router.routeProgress.nearbyShape.coordinates.first!
-        let firstLocation   = location(at: firstCoord)
-        
-        var poi = [CLLocation]()
-        let taylorStreetIntersection = router.route.legs.first!.steps.first!.intersections!.first!
-        let turkStreetIntersection   = router.route.legs.first!.steps[3].intersections!.first!
-        let fultonStreetIntersection = router.route.legs.first!.steps[5].intersections!.first!
-        
-        poi.append(location(at: taylorStreetIntersection.location))
-        poi.append(location(at: turkStreetIntersection.location))
-        poi.append(location(at: fultonStreetIntersection.location))
-        
-        let lastCoord    = router.routeProgress.currentLegProgress.remainingSteps.last!.shape!.coordinates.first!
-        let lastLocation = location(at: lastCoord)
-
-        return (navigationViewController: navigationViewController, navigationService: navigationService, startLocation: firstLocation, poi: poi, endLocation: lastLocation, voice: fakeVoice)
-    }()
+    var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController)!
     
-    lazy var initialRoute: Route = {
-        return Fixture.route(from: jsonFileName, options: routeOptions)
-    }()
+    var initialRoute: Route!
     
-    lazy var newRoute: Route = {
-        return Fixture.route(from: jsonFileName, options: routeOptions)
-    }()
+    var newRoute: Route!
     
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
         ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         DirectionsCredentials.injectSharedToken(.mockedAccessToken)
+        initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
+        newRoute = Fixture.route(from: jsonFileName, options: routeOptions)
+        dependencies = {
+            UNUserNotificationCenter.mockForTests()
+
+            let fakeDirections = DirectionsSpy()
+            let fakeService = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions, directions: fakeDirections, locationSource: NavigationLocationManagerStub(), simulating: .never)
+            let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
+            let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
+            let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+
+            navigationViewController.delegate = self
+            _ = navigationViewController.view // trigger view load
+            let navigationService = navigationViewController.navigationService!
+            let router = navigationService.router!
+            let firstCoord      = router.routeProgress.nearbyShape.coordinates.first!
+            let firstLocation   = location(at: firstCoord)
+
+            var poi = [CLLocation]()
+            let taylorStreetIntersection = router.route.legs.first!.steps.first!.intersections!.first!
+            let turkStreetIntersection   = router.route.legs.first!.steps[3].intersections!.first!
+            let fultonStreetIntersection = router.route.legs.first!.steps[5].intersections!.first!
+
+            poi.append(location(at: taylorStreetIntersection.location))
+            poi.append(location(at: turkStreetIntersection.location))
+            poi.append(location(at: fultonStreetIntersection.location))
+
+            let lastCoord    = router.routeProgress.currentLegProgress.remainingSteps.last!.shape!.coordinates.first!
+            let lastLocation = location(at: lastCoord)
+
+            return (navigationViewController: navigationViewController, navigationService: navigationService, startLocation: firstLocation, poi: poi, endLocation: lastLocation, voice: fakeVoice)
+        }()
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        initialRoute = nil
+        dependencies = nil
+        Navigator._recreateNavigator()
     }
     
     func testDefaultUserInterfaceUsage() {
@@ -135,9 +141,8 @@ class NavigationViewControllerTests: XCTestCase {
 
     /// Disabled. Looks like status is update asynchorniously or something else. Needs investigation.
     func disabled_testCompleteRoute() {
-        let deps = dependencies
-        let navigationViewController = deps.navigationViewController
-        let service = deps.navigationService
+        let navigationViewController = dependencies.navigationViewController
+        let service = dependencies.navigationService
         
         let delegate = NavigationServiceDelegateSpy()
         service.delegate = delegate
