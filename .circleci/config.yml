@@ -1,5 +1,30 @@
 version: 2.1
 
+orbs:
+  slack: circleci/slack@4.4.2
+
+commands:
+  notify-build-finished:
+      parameters:
+        notify_success:
+          type: boolean
+          default: false
+      steps:
+        - when:
+            condition: << parameters.notify_success >>
+            steps:
+              - slack/notify:
+                  channel: mobile-bots
+                  event: pass
+                  template: basic_success_1   
+                  branch_pattern: main
+        - slack/notify:
+            channel: mobile-bots
+            event: fail
+            template: basic_fail_1   
+            branch_pattern: main
+            mentions: '@here'
+
 step-library:
   - &restore-cache
       restore_cache:
@@ -164,6 +189,8 @@ jobs:
       - *save-cache-podmaster
       - *save-cache-cocoapods
       - *save-cache-cocoapods-installation
+      - notify-build-finished
+
 
   build-job:
     parameters:
@@ -233,7 +260,9 @@ jobs:
           steps:
             - run:
                 name: Send code coverage
-                command: bash <(curl -s https://codecov.io/bash)
+                command: bash <(curl -s https://codecov.io/bash)       
+      - notify-build-finished
+
 
   xcode-12-examples:
     parameters:
@@ -253,6 +282,8 @@ jobs:
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - *build-Example
+      - notify-build-finished
+      
 
   ios-trigger-metrics:
     parameters:
@@ -275,7 +306,10 @@ jobs:
         type: string
       iOS:
         type: string
-        default: "14.4"        
+        default: "14.4"     
+      notify_success:
+        type: boolean
+        default: false   
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -291,6 +325,8 @@ jobs:
       - run:
           name: Run xcodebuild for Package.swift
           command: xcodebuild -scheme MapboxNavigation-Package test -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" | xcpretty
+      - notify-build-finished:
+          notify_success: << parameters.notify_success >>
 
 workflows:
   extended-workflow:
@@ -300,11 +336,15 @@ workflows:
           xcode: "12.4.0"
           iOS: "14.4"          
           device: "iPhone 12 Pro Max"     
+          context: Slack Orb
+          notify_success: true
       - spm-test-job:
           name: "swift test; Xcode 12.4; iOS 13.7"
           xcode: "12.4.0"
           iOS: "13.7"          
           device: "iPhone 11 Pro Max"
+          context: Slack Orb
+          notify_success: true
     triggers:
        - schedule:
            cron: "0 0 * * *" # Once per day at 00:00
@@ -319,6 +359,7 @@ workflows:
           xcode: "12.4.0"
           iOS: "14.4"
           device: "iPhone 12 Pro Max"
+          context: Slack Orb
       - build-job:
           name: "Xcode_12.4_iOS_14.4_SPM"
           xcode: "12.4.0"
@@ -326,24 +367,29 @@ workflows:
           device: "iPhone 12 Pro Max"
           spm: true
           codecoverage: false
+          context: Slack Orb
       - pod-job:
           name: "Xcode_12.0_iOS_14.0_CP_install"
           update: false
           xcode: "12.0.0"
           iOS: "14.0"
           archive: true
+          context: Slack Orb
       - pod-job:
           name: "Xcode_12.0_iOS_14.0_CP_update"
           update: true
           xcode: "12.0.0"
           iOS: "14.0"
           lint: true
-      - xcode-12-examples
+          context: Slack Orb
+      - xcode-12-examples:
+          context: Slack Orb
       - spm-test-job:
           name: "swift test; Xcode 12.5; iOS 14.5"
           xcode: "12.5.0"
           iOS: "14.5"          
           device: "iPhone 12 Pro Max"          
+          context: Slack Orb
       - ios-trigger-metrics:
           filters:
             branches:
