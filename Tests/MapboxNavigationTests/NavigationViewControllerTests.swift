@@ -294,18 +294,24 @@ class NavigationViewControllerTests: XCTestCase {
         
         let model = MapboxMaps.Model()
         let puck3DConfiguration = Puck3DConfiguration(model: model)
-        navigationViewController.navigationMapView?.userLocation = .puck3D(configuration: puck3DConfiguration)
-        let styleLoadedExpectation = XCTestExpectation(description: "MapView style loading expectation.")
+        navigationViewController.navigationMapView?.userLocationStyle = .puck3D(configuration: puck3DConfiguration)
+        let styleLoadedExpectation = expectation(description: "MapView style loading expectation.")
         navigationViewController.navigationMapView?.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
         }
+        waitForExpectations(timeout: 1, handler: nil)
         
         navigationViewController.navigationMapView?.addArrow(route: initialRoute, legIndex: 0, stepIndex: 0)
-        let allLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
-        let indexOfArrowLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowLayer)
-        let indexOfArrowStrokeLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
-        let indexOfArrowSymbolLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowSymbolLayer)
-        let indexOfPuck3DLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.puck3DLayer)
+        guard let allLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers
+                .map({ $0.id }) else {
+            XCTFail("No layers in map"); return
+        }
+        guard let indexOfArrowLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowLayer),
+              let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer),
+              let indexOfArrowSymbolLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowSymbolLayer),
+              let indexOfPuck3DLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.puck3DLayer) else {
+            XCTFail("Failed to find all the layers"); return
+        }
         
         XCTAssertNotNil(indexOfArrowStrokeLayer, "Arrow stroke layer failed to be added")
         XCTAssert(indexOfArrowStrokeLayer < indexOfArrowLayer, "Arrow layer is below arrow stroke layer")
