@@ -664,39 +664,28 @@ class NavigationServiceTests: XCTestCase {
 
     func testUnimplementedLogging() {
         _unimplementedLoggingState.clear()
-
-        let options =  NavigationRouteOptions(coordinates: [
-                   CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
-                   CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
-               ])
-        let route = Fixture.route(from: "DCA-Arboretum", options: options)
-        let directions = Directions(credentials: Fixture.credentials)
-        let locationManager = DummyLocationManager()
-        let trace = Fixture.generateTrace(for: route, speedMultiplier: 2).shiftedToPresent()
-
-        let service = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: directions, locationSource: locationManager, eventsManagerType: nil)
-
-        let spy = EmptyNavigationServiceDelegate()
-        service.delegate = spy
-        service.start()
-
-        for location in trace {
-            service.locationManager(locationManager, didUpdateLocations: [location])
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 0)
+        struct DummyType: UnimplementedLogging {
+            func method1() {
+                logUnimplemented(protocolType: DummyType.self, level: .debug)
+            }
+            func method2() {
+                logUnimplemented(protocolType: DummyType.self, level: .debug)
+            }
+            func method3() {
+                logUnimplemented(protocolType: DummyType.self, level: .debug)
+            }
         }
-        
-        let waitExpectation = expectation(description: "Waiting for NavNative callbacks")
-        _ = XCTWaiter.wait(for: [waitExpectation], timeout: 1)
-        
-        let numberOfCallbacks = _unimplementedLoggingState.countWarned(forTypeDescription: "EmptyNavigationServiceDelegate")
-        var expectedNumberOfCallback = 7
-        
-        if #available(iOS 14.0, *) {
-            // On iOS 14+ there is a new callback navigationServiceDidChangeAuthorization, bc we run tests on iOS 13 too
-            expectedNumberOfCallback += 1
-        }
-        
-        XCTAssertEqual(numberOfCallbacks, expectedNumberOfCallback, "Expected logs to be populated and expected number of messages sent")
-    }    
+        let type = DummyType()
+        type.method1()
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 1)
+        type.method2()
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 2)
+        type.method2()
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 2)
+        type.method3()
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 3)
+    }
     
     func waitForNavNativeCallbacks(timeout: TimeInterval = 0.1) {
         let waitExpectation = expectation(description: "Waiting for the NatNative callback")
