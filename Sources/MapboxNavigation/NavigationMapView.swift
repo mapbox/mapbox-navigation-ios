@@ -344,6 +344,12 @@ open class NavigationMapView: UIView {
             case .courseView: self.moveUserLocation(to: location)
             default: break
             }
+            
+            if self.simulatesLocation {
+                if let locationProvider = self.mapView.location.locationProvider {
+                    self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+                }
+            }
         }
         
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
@@ -474,11 +480,7 @@ open class NavigationMapView: UIView {
                                   animated: animated,
                                   navigationCameraState: navigationCamera.state)
             
-        default:
-            if simulatesLocation, let locationProvider = mapView.location.locationProvider {
-                mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
-                mapView.location.locationProvider.stopUpdatingLocation()
-            }
+        default: break
         }
     }
     
