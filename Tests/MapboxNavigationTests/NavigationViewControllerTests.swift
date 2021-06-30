@@ -115,11 +115,13 @@ class NavigationViewControllerTests: XCTestCase {
         customRoadName[taylorStreetLocation.coordinate] = roadName
         
         service.locationManager!(service.locationManager, didUpdateLocations: [taylorStreetLocation])
-        RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        let wayNameView = navigationViewController.navigationView.wayNameView
-        let currentRoadName = wayNameView.text
-        XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(String(describing: currentRoadName))")
-        XCTAssertFalse(wayNameView.isHidden, "WayNameView should be visible.")
+        expectation(description: "Road name is \(roadName)") {
+            navigationViewController.navigationView.wayNameView.text == roadName
+        }
+        expectation(description: "WayNameView is visible") {
+            navigationViewController.navigationView.wayNameView.isHidden == false
+        }
+        waitForExpectations(timeout: 3, handler: nil)
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
@@ -209,8 +211,10 @@ class NavigationViewControllerTests: XCTestCase {
         // Submit nonEmptry road location first to switch wayNameView to visibleState
         customRoadName[dependencies.poi[0].coordinate] = "Taylor Swift Street"
         service.locationManager!(service.locationManager, didUpdateLocations: [dependencies.poi[0]])
-        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
-        XCTAssertFalse(navigationViewController.navigationView.wayNameView.isHidden)
+        expectation {
+            !navigationViewController.navigationView.wayNameView.isHidden
+        }
+        waitForExpectations(timeout: 3, handler: nil)
 
         // Set empty road to make sure that it becomes hidden
         // Identify a location to set the custom road name.
@@ -219,10 +223,10 @@ class NavigationViewControllerTests: XCTestCase {
         customRoadName[turkStreetLocation.coordinate] = roadName
         
         service.locationManager!(service.locationManager, didUpdateLocations: [turkStreetLocation])
-        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
-
-        let wayNameView = navigationViewController.navigationView.wayNameView
-        XCTAssertTrue(wayNameView.isHidden, "WayNameView should be hidden.")
+        expectation {
+            navigationViewController.navigationView.wayNameView.isHidden
+        }
+        waitForExpectations(timeout: 3, handler: nil)
     }
     
     func testNavigationViewControllerDelegateRoadNameAtLocationUmimplemented() {
