@@ -155,7 +155,7 @@ class CarPlayManagerTests: XCTestCase {
         XCTAssertEqual(4, mapTemplate.mapButtons.count)
     }
 
-    func disabled_testManagerTellsDelegateWhenNavigationStartsAndEndsDueToArrival() {
+    func testManagerTellsDelegateWhenNavigationStartsAndEndsDueToArrival() {
         guard let manager = manager else {
             XCTFail("Won't continue without a test subject...")
             return
@@ -181,7 +181,7 @@ class CarPlayManagerTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
         ])
         choice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), 0, options)
-
+        CarPlayMapViewController.swizzleMethods()
         manager.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
 
         // trip previews are hidden on the mapTemplate
@@ -441,7 +441,9 @@ class CarPlayManagerSpec: QuickSpec {
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController {
-    static var swizzled: Bool = false
+    private static var presentedViewControllers: [UIViewController] = []
+    private static var swizzled: Bool = false
+
     static func swizzleMethods() {
         guard !swizzled else { return }
         swizzled = true
@@ -454,9 +456,10 @@ extension CarPlayMapViewController {
         )
     }
 
-    @objc func swizzled_present(_ viewControllerToPresent: UIViewController,
+    @objc private func swizzled_present(_ viewControllerToPresent: UIViewController,
                                 animated flag: Bool,
                                 completion: (() -> Void)? = nil) {
+        Self.presentedViewControllers.append(viewControllerToPresent)
         completion?()
     }
 }
