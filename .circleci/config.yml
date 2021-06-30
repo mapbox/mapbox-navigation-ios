@@ -312,7 +312,6 @@ workflows:
              branches:
                only:
                  - main
-                 - release-v2.0
   main-workflow:
     jobs:
       - build-job:
@@ -348,4 +347,4 @@ workflows:
       - ios-trigger-metrics:
           filters:
             branches:
-              only: release-v2.0
+              only: main
