@@ -105,7 +105,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a road name provided and wayNameView label is visible.
-    func disabled_testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {
+    func testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
         
@@ -115,7 +115,7 @@ class NavigationViewControllerTests: XCTestCase {
         customRoadName[taylorStreetLocation.coordinate] = roadName
         
         service.locationManager!(service.locationManager, didUpdateLocations: [taylorStreetLocation])
-
+        RunLoop.main.run(until: Date().addingTimeInterval(0.01))
         let wayNameView = navigationViewController.navigationView.wayNameView
         let currentRoadName = wayNameView.text
         XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(String(describing: currentRoadName))")
@@ -139,8 +139,7 @@ class NavigationViewControllerTests: XCTestCase {
         updatedStyleNumberOfTimes = 0
     }
 
-    /// Disabled. Looks like status is update asynchorniously or something else. Needs investigation.
-    func disabled_testCompleteRoute() {
+    func testCompleteRoute() {
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
         
@@ -157,6 +156,7 @@ class NavigationViewControllerTests: XCTestCase {
         
         for location in locations {
             service.locationManager!(service.locationManager, didUpdateLocations: [location])
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
         }
 
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
@@ -202,14 +202,14 @@ class NavigationViewControllerTests: XCTestCase {
     
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a blank road name (empty string) provided and wayNameView label is hidden.
-    // NOTE: disabled due to failing.
-    func disabled_testNavigationViewControllerDelegateRoadNameAtLocationEmptyString() {
+    func testNavigationViewControllerDelegateRoadNameAtLocationEmptyString() {
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
 
         // Submit nonEmptry road location first to switch wayNameView to visibleState
         customRoadName[dependencies.poi[0].coordinate] = "Taylor Swift Street"
         service.locationManager!(service.locationManager, didUpdateLocations: [dependencies.poi[0]])
+        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
         XCTAssertFalse(navigationViewController.navigationView.wayNameView.isHidden)
 
         // Set empty road to make sure that it becomes hidden
@@ -219,16 +219,15 @@ class NavigationViewControllerTests: XCTestCase {
         customRoadName[turkStreetLocation.coordinate] = roadName
         
         service.locationManager!(service.locationManager, didUpdateLocations: [turkStreetLocation])
+        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
 
-        waitForExpectations(timeout: 10, handler: nil)
-        
         let wayNameView = navigationViewController.navigationView.wayNameView
         XCTAssertTrue(wayNameView.isHidden, "WayNameView should be hidden.")
     }
     
-    func disabled_testNavigationViewControllerDelegateRoadNameAtLocationUmimplemented() {
+    func testNavigationViewControllerDelegateRoadNameAtLocationUmimplemented() {
         let navigationViewController = dependencies.navigationViewController
-        UIApplication.shared.delegate!.window!!.addSubview(navigationViewController.view)
+        _ = navigationViewController.view // trigger view load
         let service = dependencies.navigationService
         
         // Identify a location without a custom road name.
@@ -320,9 +319,6 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testBlankBanner() {
-        let window = UIApplication.shared.keyWindow!
-        let viewController = window.rootViewController!
-        
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
@@ -331,7 +327,7 @@ class NavigationViewControllerTests: XCTestCase {
         let route = Fixture.route(from: "DCA-Arboretum", options: options)
         let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: options)
         
-        viewController.present(navigationViewController, animated: false, completion: nil)
+        _ = navigationViewController.view
         
         let firstInstruction = route.legs[0].steps[0].instructionsDisplayedAlongStep!.first
         let topViewController = navigationViewController.topViewController as! TopBannerViewController
@@ -339,13 +335,6 @@ class NavigationViewControllerTests: XCTestCase {
         
         XCTAssertNotNil(instructionsBannerView.primaryLabel.text)
         XCTAssertEqual(instructionsBannerView.primaryLabel.text, firstInstruction?.primaryInstruction.text)
-        
-        let dismissExpectation = XCTestExpectation(description: "VC should be dismissed")
-        navigationViewController.dismiss(animated: false) {
-            dismissExpectation.fulfill()
-        }
-        
-        wait(for: [dismissExpectation], timeout: 3)
     }
     
     func testBannerInjection() {
