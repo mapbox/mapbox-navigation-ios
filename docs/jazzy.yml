@@ -56,26 +56,19 @@ custom_categories:
       - RouteOptions
       - NavigationMatchOptions
       - SimulationMode
-      - PassiveLocationDataSource
+      - PassiveLocationManager
   - name: Maps
     children:
       - NavigationMapView
       - NavigationMapViewDelegate
-      - NavigationMapViewCourseTrackingDelegate
-      - MGLMapView
-      - MGLAccountManager
-      - MGLMultiPolygonFeature
-      - MGLMultiPolyline
-      - MGLMultiPolylineFeature
-      - MGLPointAnnotation
-      - MGLPointFeature
-      - MGLPolygon
-      - MGLPolygonFeature
-      - MGLPolyline
-      - MGLPolylineFeature
-      - MGLStyle
-      - PassiveLocationManager
+      - MapView
+      - AccountManager
+      - PointAnnotation
+      - Style
+      - PassiveLocationProvider
+      - NavigationLocationProvider
       - WaypointStyle
+      - UserLocationStyle
   - name: Styling
     children:
       - Style
@@ -111,7 +104,7 @@ custom_categories:
       - CarPlayManager
       - CarPlayManagerDelegate
       - CarPlayNavigationViewController
-      - CarPlayNavigationDelegate
+      - CarPlayNavigationViewControllerDelegate
       - CarPlayActivity
       - CarPlayCompassView
       - CarPlayMapViewController
@@ -128,9 +121,9 @@ custom_categories:
       - RouteControllerMaximumDistanceBeforeRecalculating
       - RouteControllerUserLocationSnappingDistance
       - MapOrnamentPosition
-      - MBCongestionAttribute
-      - MBCurrentLegAttribute
-      - MBRouteLineWidthByZoomLevel
+      - CongestionAttribute
+      - CurrentLegAttribute
+      - RouteLineWidthByZoomLevel
       - NavigationMapViewMinimumDistanceForOverheadZooming
       - NavigationViewMinimumVolumeForWarning
       - RouteControllerIncorrectCourseMultiplier
@@ -159,3 +152,33 @@ custom_categories:
       - RoadClosureSubtype
       - FeedbackSource
       - EndOfRouteFeedback
+  - name: Camera
+    children:
+      - NavigationCamera
+      - NavigationCameraType
+      - NavigationCameraState
+      - CameraStateTransition
+      - NavigationCameraStateTransition
+      - ViewportDataSource
+      - NavigationViewportDataSource
+      - ViewportDataSourceType
+      - ViewportDataSourceDelegate
+  - name: Electronic Horizon
+    children:
+      - ElectronicHorizonOptions
+      - RoadGraph
+      - OpenLROprientation
+      - OpenLRStandard
+      - RoadName
+      - RoadObject
+      - DistancedRoadObject
+      - RoadObjectMatcher
+      - RoadObjectsStore
+      - RoadObjectLocation
+      - RoadObjectType
+      - RoadObjectMatcherDelegate
+      - RoadObjectsStoreDelegate
+      - RoadObjectEdgeLocation
+      - RoadObjectMatcherError
+      - RoadObjectPosition
+      - RoadObjectIdentifier

@@ -4,6 +4,8 @@
 
 Bug reports and feature requests are more than welcome, but please consider the following tips so we can respond to your feedback more effectively.
 
+Please familiarize yourself with the contributor license agreement (CLA) at the bottom of this document. All contributions to the project must reflect its development standards and be offered under the terms of the CLA.
+
 Before reporting a bug here, please determine whether the issue lies with the navigation SDK itself or with another Mapbox product:
 
 * For general questions and troubleshooting help, please contact the [Mapbox support](https://www.mapbox.com/contact/support/) team.
@@ -21,11 +23,13 @@ When reporting a bug in the navigation SDK itself, please indicate:
 
 ## Setting up a development environment
 
-To contribute code changes to this project, use either Carthage or Swift Package Manager to set up a development environment. Carthage and the Xcode project in this repository are important for making sure dependent projects can use Carthage and for checking your work in the included Example or Example-CarPlay application. Swift Package Manager only builds MapboxCoreNavigation.
+To contribute code changes to this project, use Swift Package Manager to set up a development environment. The repository includes:
+1. `MapboxNavigation-SPM.xcodeproj` with Example or Example-CarPlay applications. 
+1. `MapboxNavigation.xcodeproj`, which builds the navigation SDK and its dependencies using Carthage but does not include a sample application.
 
 ### Using Carthage
 
-To build this SDK, you need Xcode 11.4.1 and [Carthage](https://github.com/Carthage/Carthage/) v0.35:
+To build this SDK, you need Xcode 12.4 and [Carthage](https://github.com/Carthage/Carthage/) v0.38:
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
@@ -40,9 +44,13 @@ To build this SDK, you need Xcode 11.4.1 and [Carthage](https://github.com/Carth
    rm -rf ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/{MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic}
    ```
 
-1. Run `./scripts/wcarthage.sh bootstrap --platform iOS --cache-builds --use-netrc`. (wcarthage.sh is a temporary workaround for [a linker error in Xcode 12](https://github.com/Carthage/Carthage/issues/3019).)
+1. Run `carthage bootstrap --platform iOS --cache-builds --use-xcframeworks --use-netrc`.
 
-1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme. Switch to the Example or Example-CarPlay scheme to see the SDK in action.
+1. Once the Carthage build finishes, open `MapboxNavigation.xcodeproj` in Xcode and build the MapboxNavigation scheme.
+
+1. Open the Info.plist in the `Example` target and paste your [Mapbox Access Token](https://account.mapbox.com/access-tokens/) into `MGLMapboxAccessToken`. (Alternatively, if you plan to use this project as the basis for a public project on GitHub, place the access token in a plain text file named `.mapbox` or `mapbox` in your home directory instead of adding it to Info.plist.)
+
+1. Switch to the Example or Example-CarPlay scheme, then Run the scheme to see the SDK in action.
 
 ### Using Swift Package Manager
 
@@ -56,7 +64,11 @@ cd mapbox-navigation-ios/
 open Package.swift
 ```
 
-The resulting package only includes MapboxCoreNavigation and MapboxCoreNavigationTests. It does not include MapboxNavigation, MapboxNavigationTests, or the example applications, so make sure to [build and test the SDK in the Xcode workspace](#using-carthage) before opening a pull request.
+The resulting package only includes the framework and test targets. It does not include the example applications, and the file list is not synchronized with the Xcode project used by Carthage, so make sure to [build and test the SDK in the Xcode workspace](#using-carthage) before opening a pull request.
+
+### Adding new files
+
+If you add a new file while working with `Package.swift`, don't forget to add this file to `MapboxNavigation.xcodeproj` in the appropriate location.
 
 ## Making any symbol public
 
@@ -112,17 +124,38 @@ The .strings files should still be in the original English – that’s expecte
 
 ## Adding tests
 
+### Supported devices:
+- iPhone 11 Pro Max, iOS 13.7
+- iPhone 12 Pro Max, iOS 14
+
 ### Adding a unit test suite
 
-1. Add a Unit Test Case Class file to the MapboxCoreNavigationTests group in MapboxNavigation.xcodeproj. It will be located in Tests/MapboxCoreNavigationTests/.
-1. If a unit test requires a fixture, add a file to Tests/MapboxCoreNavigationTests/Fixtures/. Import `TestHelper` and call `Fixture.stringFromFileNamed(name:)` or `Fixture.JSONFromFileNamed(name:)`. 
+1. Add a Unit Test Case Class file to the `MapboxCoreNavigationTests` group in `MapboxNavigation.xcodeproj`. It will be located in `Tests/MapboxCoreNavigationTests/`.
+1. If a unit test requires a fixture, add a file to `Sources/TestHelper/Fixtures/`. Import `TestHelper` and call `Fixture.stringFromFileNamed(name:)` or `Fixture.JSONFromFileNamed(name:)`.
 
 ### Adding a snapshot test suite
 
-1. Add a file to the MapboxNavigationTests group in MapboxNavigation.xcodeproj. It will be located in Tests/MapboxNavigationTests/.
-1. Import `SnappyShrimp` and subclass `SnapshotTest`, or import `FBSnapshotTestCase` and subclass `FBSnapshotTestCase`.
-1. Add the expected screenshot image to Tests/MapboxNavigationTests/ReferenceImages/MapboxNavigationTests._TestSuiteName_ with a file name like `testLanesManeuver_iPhone_8_Plus_Portrait_iOS_12.1@3x.png` that indicates the test case name, device, iOS version, and resolution. Make sure the screenshot was taken on an iOS version and device that is consistent with the existing reference images.
-1. Call `verify(_:)`.
+Snapshot tests verified using [SnapshotTesting](https://github.com/pointfreeco/swift-snapshot-testing) library.
+
+1. Open Package.swift in Xcode.
+1. Select the `MapboxNavigation-Package` scheme.
+1. Add a Swift file to the `Tests/MapboxNavigationTests/` folder.
+1. Write an `XCTestCase` as you would normally do.
+1. Make sure to apply the desired style in `XCTestCase.setup()`. For example:
+   ```swift
+   DayStyle().apply()
+   ```
+1. Use `assertImageSnapshot` function to verify views.
+   ```swift
+   let view: UIView
+   ...
+   assertImageSnapshot(matching: view, as: .image(precision: 0.95))
+   ```
+1. For each [supported device](#supported-devices), do the following:
+   1. Select the device as the target to run tests.
+   1. Perform a test run that will generate reference images for future verification. 
+   1. Perform a second test run and make sure that it succeeds. 
+1. Commit new tests along with generated snapshot images.
 
 ### Running unit tests
 
@@ -133,3 +166,27 @@ Go to Product ‣ Test in Xcode. Snapshot tests will only pass if you select iPh
 Pull requests are appreciated. If your PR includes any changes that would impact developers or end users, please mention those changes in the “main” section of [CHANGELOG.md](CHANGELOG.md), noting the PR number. Examples of noteworthy changes include new features, fixes for user-visible bugs, and renamed or deleted public symbols.
 
 Before we can merge your PR, it must pass automated continuous integration checks in each of the supported environments, as well as a check to ensure that code coverage has not decreased significantly.
+
+## Contributor License Agreement
+
+Thank you for contributing to the Mapbox Navigation SDK for iOS ("the SDK")! This Contributor License Agreement (“Agreement”) sets out the terms governing any source code, object code, bug fixes, configuration changes, tools, specifications, documentation, data, materials, feedback, information or other works of authorship that you submit, beginning February 19, 2021, in any form and in any manner, to the SDK (https://github.com/mapbox/mapbox-navigation-ios) (collectively “Contributions”).
+
+You agree that the following terms apply to all of your Contributions beginning February 19, 2021. Except for the licenses you grant under this Agreement, you retain all of your right, title and interest in and to your Contributions.
+
+**Disclaimer.** To the fullest extent permitted under applicable law, you provide your Contributions on an "as-is" basis, without any warranties or conditions, express or implied, including, without limitation, any implied warranties or conditions of non-infringement, merchantability or fitness for a particular purpose. You have no obligation to provide support for your Contributions, but you may offer support to the extent you desire.
+
+**Copyright License.** You hereby grant, and agree to grant, to Mapbox, Inc. (“Mapbox”) a non-exclusive, perpetual, irrevocable, worldwide, fully-paid, royalty-free, transferable copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, and distribute your Contributions and such derivative works, with the right to sublicense the foregoing rights through multiple tiers of sublicensees.
+
+**Patent License.** To the extent you have or will have patent rights to grant, you hereby grant, and agree to grant, to Mapbox a non-exclusive, perpetual, irrevocable, worldwide, fully-paid, royalty-free, transferable patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer your Contributions, for any patent claims infringed by your Contributions alone or by combination of your Contributions with the SDK, with the right to sublicense these rights through multiple tiers of sublicensees.
+
+**Moral Rights.** To the fullest extent permitted under applicable law, you hereby waive, and agree not to assert, all of your “moral rights” in or relating to your Contributions for the benefit of Mapbox, its assigns, and their respective direct and indirect sublicensees.
+
+**Third Party Content/Rights.** If your Contribution includes or is based on any source code, object code, bug fixes, configuration changes, tools, specifications, documentation, data, materials, feedback, information, or other works of authorship that you did not author (“Third Party Content”), or if you are aware of any third party intellectual property or proprietary rights in your Contribution (“Third Party Rights”), then you agree to include with the submission of your Contribution full details on such Third Party Content and Third Party Rights, including, without limitation, identification of which aspects of your Contribution contain Third Party Content or are associated with Third Party Rights, the owner/author of the Third Party Content and/or Third Party Rights, where you obtained the Third Party Content, and any applicable third party license terms or restrictions for the Third Party Content and/or Third Party Rights. (You need not identify material from the Mapbox Web SDK project as “Third Party Content” to fulfill the obligations in this paragraph.)
+
+**Representations.** You represent that, other than the Third Party Content and Third Party Rights you identify in your Contributions in accordance with this Agreement, you are the sole author of your Contributions and are legally entitled to grant the licenses and waivers in this Agreement. If your Contributions were created in the course of your employment with your past or present employer(s), you represent that such employer(s) has authorized you to make your Contributions on behalf of such employer(s) or such employer(s) has waived all of their right, title or interest in or to your Contributions.
+
+**No Obligation.** You acknowledge that Mapbox is under no obligation to use or incorporate your Contributions into the SDK. Mapbox has sole discretion in deciding whether to use or incorporate your Contributions.
+
+**Disputes.** These Terms are governed by and construed in accordance with the laws of California, without giving effect to any principles of conflicts of law. Any action arising out of or relating to these Terms must be filed in the state or federal courts for San Francisco County, California, USA, and you hereby consent and submit to the exclusive personal jurisdiction and venue of these courts for the purposes of litigating any such action.
+
+**Assignment.** You agree that Mapbox may assign this Agreement, and all of its rights, obligations and licenses hereunder.

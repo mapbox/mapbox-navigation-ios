@@ -1,11 +1,17 @@
-import Foundation
+import UIKit
 
 extension Bundle {
     /**
      The Mapbox Navigation framework bundle.
      */
     public class var mapboxNavigation: Bundle {
-        get { return Bundle(for: NavigationViewController.self) }
+        get {
+            #if SWIFT_PACKAGE
+            return .module
+            #else
+            return Bundle(for: NavigationViewController.self)
+            #endif
+        }
     }
     
     func image(named: String) -> UIImage? {

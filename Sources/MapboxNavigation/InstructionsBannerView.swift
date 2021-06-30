@@ -1,3 +1,4 @@
+import CoreLocation
 import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
@@ -10,7 +11,6 @@ public protocol InstructionsBannerViewDelegate: AnyObject, UnimplementedLogging 
      Called when the user taps the `InstructionsBannerView`.
      */
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
-    
     
     /**
      Called when the user swipes either left, right, or down on the `InstructionsBannerView`
@@ -26,20 +26,12 @@ public extension InstructionsBannerViewDelegate {
         logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
     }
     
-    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        //no-op, deprecated.
-    }
-    
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
         logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
     }
-}
-
-private protocol InstructionsBannerViewDelegateDeprecations {
-    func didDragInstructionsBanner(_ sender: BaseInstructionsBannerView)
 }
 
 /// :nodoc:
@@ -150,10 +142,7 @@ open class BaseInstructionsBannerView: UIControl {
                 stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
             }
             
-            if let delegate = delegate {
-                delegate.didSwipeInstructionsBanner(self, swipeDirection: .down)
-                (delegate as? InstructionsBannerViewDelegateDeprecations)?.didDragInstructionsBanner(self)
-            }
+            delegate?.didSwipeInstructionsBanner(self, swipeDirection: .down)
         }
     }
         

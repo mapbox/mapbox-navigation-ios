@@ -4,7 +4,7 @@ import CarPlay
 extension VisualInstruction {
     var laneComponents: [Component] {
         return components.filter { component -> Bool in
-            if case VisualInstruction.Component.lane(indications: _, isUsable: _) = component {
+            if case VisualInstruction.Component.lane(indications: _, isUsable: _, preferredDirection: _) = component {
                 return true
             }
             return false
@@ -49,8 +49,8 @@ extension VisualInstruction {
 
     func lanesImage(side: DrivingSide, direction: ManeuverDirection?, useableColor: UIColor, unuseableColor: UIColor, size: CGSize, scale: CGFloat) -> UIImage? {
         let subimages = components.compactMap { (component) -> UIImage? in
-            if case let .lane(indications: indications, isUsable: isUsable) = component {
-                return laneImage(side: side, indication: indications, maneuverDirection: direction, isUsable: isUsable, useableColor: useableColor, unuseableColor: unuseableColor, size: CGSize(width: size.height, height: size.height))
+            if case let .lane(indications: indications, isUsable: isUsable, preferredDirection: preferredDirection) = component {
+                return laneImage(side: side, indication: indications, maneuverDirection: preferredDirection ?? direction, isUsable: isUsable, useableColor: useableColor, unuseableColor: unuseableColor, size: CGSize(width: size.height, height: size.height))
             } else {
                 return nil
             }

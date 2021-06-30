@@ -1,25 +1,5 @@
 import UIKit
 
-/// :nodoc:
-public protocol DeprecatedStatusViewDelegate: AnyObject {}
-
-/**
- A protocol for listening in on changes made to a `StatusView`.
- */
-@available(*, deprecated, message: "Add a target to StatusView for UIControl.Event.valueChanged instead.")
-public protocol StatusViewDelegate: DeprecatedStatusViewDelegate {
-    /**
-     Indicates a value in the status view has changed by the user interacting with it.
-     */
-    @available(*, deprecated, message: "Add a target to StatusView for UIControl.Event.valueChanged instead.")
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double)
-}
-
-/// :nodoc:
-private protocol StatusViewDelegateDeprecations {
-    func statusView(_ statusView: StatusView, valueChangedTo value: Double)
-}
-
 /**
  :nodoc:
  
@@ -29,20 +9,12 @@ private protocol StatusViewDelegateDeprecations {
 public class StatusView: UIControl {
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!
-    public weak var delegate: DeprecatedStatusViewDelegate?
     var panStartPoint: CGPoint?
-    
     var isCurrentlyVisible: Bool = false
-    
-    @available(swift, obsoleted: 0.1, renamed: "isEnabled")
-    public var canChangeValue: Bool {
-        fatalError()
-    }
     
     var value: Double = 0 {
         didSet {
             sendActions(for: .valueChanged)
-            (delegate as? StatusViewDelegateDeprecations)?.statusView(self, valueChangedTo: value)
         }
     }
     
@@ -136,7 +108,6 @@ public class StatusView: UIControl {
         
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(StatusView.tap(_:)))
         addGestureRecognizer(tapRecognizer)
-        
     }
     
     @objc func pan(_ sender: UIPanGestureRecognizer) {
@@ -168,16 +139,6 @@ public class StatusView: UIControl {
             }
             value = min(max(value + incrementer, 0), 1)
         }
-    }
-    
-    /**
-     Shows the status view for a specified amount of time.
-     `showStatus()` uses a default value for priority and the title input as identifier. To use these variables, use `show(_:)`
-     */
-    @available(*, deprecated, message: "Add a status using show(_:) instead")
-    public func showStatus(title: String, spinner spin: Bool = false, duration: TimeInterval, animated: Bool = true, interactive: Bool = false) {
-        let status = Status(identifier: title, title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive, priority: 1)
-        show(status)
     }
     
     /**

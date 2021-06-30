@@ -1,4 +1,6 @@
+import CoreLocation
 import Foundation
+import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
@@ -471,11 +473,6 @@ extension TopBannerViewController: NavigationStatusPresenter {
     
     public func hide(_ status: StatusView.Status) {
         statusView.hide(status)
-    }
-    
-    @available(*, deprecated, message: "Add a status using show(_:) instead")
-    public func showStatus(title: String, spinner spin: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
-        statusView.showStatus(title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive)
     }
 }
 

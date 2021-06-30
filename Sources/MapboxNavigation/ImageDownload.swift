@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 enum DownloadError: Error {
     case serverError
@@ -12,44 +12,73 @@ protocol ImageDownload: URLSessionDataDelegate {
     var isFinished: Bool { get }
 }
 
-class ImageDownloadOperation: Operation, ImageDownload {
+final class ImageDownloadOperation: Operation, ImageDownload {
+    @objc(ImageDownloadOperationState)
+    private enum State: Int {
+        case ready
+        case executing
+        case finished
+    }
+
+    private let stateLock: NSLock = .init()
+    private var _state: State = .ready
+
+    @objc
+    private dynamic var state: State {
+        get {
+            stateLock.lock(); defer {
+                stateLock.unlock()
+            }
+            return _state
+        }
+        set {
+            willChangeValue(forKey: #keyPath(state))
+            stateLock.lock()
+            _state = newValue
+            stateLock.unlock()
+            didChangeValue(forKey: #keyPath(state))
+        }
+    }
+
+    final override var isReady: Bool {
+        return state == .ready && super.isReady
+    }
+
+    final override var isExecuting: Bool {
+        return state == .executing
+    }
+
+    final override var isFinished: Bool {
+        return state == .finished
+    }
+
     override var isConcurrent: Bool {
         return true
     }
 
-    override var isFinished: Bool {
-        return _finished
+    // MARK: - NSObject
+
+    @objc
+    private dynamic class func keyPathsForValuesAffectingIsReady() -> Set<String> {
+        return [#keyPath(state)]
     }
 
-    override var isExecuting: Bool {
-        return _executing
+    @objc
+    private dynamic class func keyPathsForValuesAffectingIsExecuting() -> Set<String> {
+        return [#keyPath(state)]
     }
 
-    private var _finished = false {
-        willSet {
-            willChangeValue(forKey: "isFinished")
-        }
-        didSet {
-            didChangeValue(forKey: "isFinished")
-        }
+    @objc private dynamic class func keyPathsForValuesAffectingIsFinished() -> Set<String> {
+        return [#keyPath(state)]
     }
 
-    private var _executing = false {
-        willSet {
-            willChangeValue(forKey: "isExecuting")
-        }
-        didSet {
-            didChangeValue(forKey: "isExecuting")
-        }
-    }
-
-    private var request: URLRequest
-    private var session: URLSession
+    private let request: URLRequest
+    private let session: URLSession
 
     private var dataTask: URLSessionDataTask?
     private var incomingData: Data?
-    private var completionBlocks: Array<ImageDownloadCompletionBlock> = []
-    private let barrierQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloadCompletionBarrierQueue", attributes: .concurrent)
+    private var completionBlocks: [ImageDownloadCompletionBlock] = .init()
+    private let lock: NSLock = .init()
 
     required init(request: URLRequest, in session: URLSession) {
         self.request = request
@@ -57,103 +86,112 @@ class ImageDownloadOperation: Operation, ImageDownload {
     }
 
     func addCompletion(_ completion: @escaping ImageDownloadCompletionBlock) {
-        barrierQueue.async(flags: .barrier) {
-            self.completionBlocks.append(completion)
+        withLock {
+            completionBlocks.append(completion)
         }
     }
 
     override func cancel() {
-        objc_sync_enter(self)
-        defer {
-            objc_sync_exit(self)
-        }
-        super.cancel()
-
-        if let dataTask = dataTask {
-            dataTask.cancel()
-            incomingData = nil
-            self.dataTask = nil
-        }
-
-        if isExecuting {
-            _executing = false
-        }
-
-        if !isFinished {
-            _finished = true
-        }
-
-        barrierQueue.async {
-            self.completionBlocks.removeAll()
+        withLock {
+            super.cancel()
+            if let dataTask = dataTask {
+                dataTask.cancel()
+                incomingData = nil
+                self.dataTask = nil
+            }
+            state = .finished
         }
     }
 
     override func start() {
-        objc_sync_enter(self)
-        defer {
-            objc_sync_exit(self)
-        }
+        withLock {
+            guard !isCancelled && state != .finished else {
+                state = .finished;
+                return
+            }
 
-        if isCancelled == true {
-            _finished = true
-            return
-        }
-
-        dataTask = session.dataTask(with: self.request)
-        if let dataTask = dataTask {
-            _executing = true
+            state = .executing
+            let dataTask = session.dataTask(with: self.request)
             dataTask.resume()
-        } else {
-            //fail and bail; connection failed or bad URL (client-side error)
+
+            self.dataTask = dataTask
         }
     }
 
     // MARK: URLSessionDataDelegate
 
-    func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive response: URLResponse, completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
+    func urlSession(_ session: URLSession,
+                    dataTask: URLSessionDataTask,
+                    didReceive response: URLResponse,
+                    completionHandler: @escaping (URLSession.ResponseDisposition) -> Void) {
         guard let response: HTTPURLResponse = response as? HTTPURLResponse else {
             completionHandler(.cancel)
             return
         }
         if response.statusCode < 400 {
-            self.incomingData = Data()
+            withLock {
+                incomingData = Data()
+            }
             completionHandler(.allow)
         } else {
-            fireAllCompletions(nil, data: nil, error: DownloadError.serverError)
             completionHandler(.cancel)
         }
     }
 
     func urlSession(_ session: URLSession, dataTask: URLSessionDataTask, didReceive data: Data) {
-        if var localData: Data = self.incomingData {
-            let bytes = [UInt8](data)
-            localData.append(bytes, count: bytes.count)
-            self.incomingData = localData
+        withLock {
+            incomingData?.append(data)
         }
     }
 
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-        guard error == nil else {
-            fireAllCompletions(nil, data: nil, error: DownloadError.clientError)
-            return
+        let (incomingData, completions) = withLock { () -> (Data?, [ImageDownloadCompletionBlock]) in
+            let returnData = (self.incomingData, self.completionBlocks)
+            self.completionBlocks.removeAll()
+            return returnData
         }
 
-        if let data = incomingData, let image = UIImage(data: data, scale: UIScreen.main.scale) {
-            fireAllCompletions(image, data: data, error: nil)
-        } else {
-            fireAllCompletions(nil, data: incomingData, error: DownloadError.noImageData)
+        let completionData: (UIImage?, Data?, Error?)
+
+        if error != nil {
+            if let urlResponse = task.response as? HTTPURLResponse,
+               urlResponse.statusCode >= 400 {
+                completionData = (nil, nil, DownloadError.serverError)
+
+            }
+            else {
+                completionData = (nil, nil, DownloadError.clientError)
+            }
         }
-        _finished = true
-        _executing = false
-        dataTask = nil
-        barrierQueue.async {
-            self.completionBlocks.removeAll()
+        else {
+            if let data = incomingData {
+                if let image = UIImage(data: data, scale: UIScreen.main.scale) {
+                    completionData = (image, data,  nil)
+                }
+                else {
+                    completionData = (nil, data,  nil)
+                }
+            }
+            else {
+                completionData = (nil, nil,  nil)
+            }
         }
+
+        // The motivation is to call completions outside the lock to reduce the likehood of a deadlock.
+        for completion in completions {
+            completion(completionData.0, completionData.1, completionData.2)
+        }
+
+        withLock {
+            dataTask = nil
+        }
+        state = .finished
     }
 
-    private func fireAllCompletions(_ image: UIImage?, data: Data?, error: Error?) {
-        barrierQueue.sync {
-            completionBlocks.forEach { $0(image, data, error) }
+    private func withLock<ReturnValue>(_ perform: () throws -> ReturnValue) rethrows -> ReturnValue {
+        lock.lock(); defer {
+            lock.unlock()
         }
+        return try perform()
     }
 }

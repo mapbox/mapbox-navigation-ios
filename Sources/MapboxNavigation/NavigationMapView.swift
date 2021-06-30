@@ -1,10 +1,9 @@
-import Foundation
-import Mapbox
+import UIKit
+import MapboxMaps
+import MapboxCoreMaps
 import MapboxDirections
 import MapboxCoreNavigation
 import Turf
-
-let identifierNamespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
 
 private enum RouteDurationAnnotationTailPosition: Int {
     case left
@@ -12,39 +11,25 @@ private enum RouteDurationAnnotationTailPosition: Int {
 }
 
 /**
- `NavigationMapView` is a subclass of `MGLMapView` with convenience functions for adding `Route` lines to a map.
+ `NavigationMapView` is a subclass of `UIView`, which draws `MapView` on its surface and provides convenience functions for adding `Route` lines to a map.
  */
-open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
-    // MARK: Class Constants
+open class NavigationMapView: UIView {
+    
+    // MARK: Class constants
     
     struct FrameIntervalOptions {
         static let durationUntilNextManeuver: TimeInterval = 7
         static let durationSincePreviousManeuver: TimeInterval = 3
-        static let defaultFramesPerSecond = MGLMapViewPreferredFramesPerSecond.maximum
-        static let pluggedInFramesPerSecond = MGLMapViewPreferredFramesPerSecond.lowPower
+        static let defaultFramesPerSecond = PreferredFPS.normal
+        static let pluggedInFramesPerSecond = PreferredFPS.maximum
     }
     
     /**
      The minimum preferred frames per second at which to render map animations.
      
-     This property takes effect when the application has limited resources for animation, such as when the device is running on battery power. By default, this property is set to `MGLMapViewPreferredFramesPerSecond.lowPower`.
+     This property takes effect when the application has limited resources for animation, such as when the device is running on battery power. By default, this property is set to `PreferredFPS.normal`.
      */
-    public var minimumFramesPerSecond = MGLMapViewPreferredFramesPerSecond(20)
-    
-    /**
-     Returns the altitude that the map camera initally defaults to.
-     */
-    public var defaultAltitude: CLLocationDistance = 1000.0
-    
-    /**
-     Returns the altitude the map conditionally zooms out to when user is on a motorway, and the maneuver length is sufficently long.
-     */
-    public var zoomedOutMotorwayAltitude: CLLocationDistance = 2000.0
-    
-    /**
-     Returns the threshold for what the map considers a "long-enough" maneuver distance to trigger a zoom-out when the user enters a motorway.
-     */
-    public var longManeuverDistance: CLLocationDistance = 1000.0
+    public var minimumFramesPerSecond = PreferredFPS.normal
     
     /**
      Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
@@ -60,68 +45,28 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
     
     /**
-     The object that acts as the navigation delegate of the map view.
+     `NavigationCamera`, which allows to control camera states.
      */
-    public weak var navigationMapViewDelegate: NavigationMapViewDelegate?
-    @available(swift, obsoleted: 0.1, renamed: "navigationMapViewDelegate")
-    public weak var navigationMapDelegate: NavigationMapViewDelegate? {
-        fatalError()
-    }
+    public private(set) var navigationCamera: NavigationCamera!
     
     /**
-     The object that acts as the course tracking delegate of the map view.
+     Controls whether to show congestion levels on alternative route lines. Defaults to `false`.
+     
+     If `true` and there're multiple routes to choose, the alternative route lines would display the congestion levels at different colors, similar to the main route. To customize the congestion colors that represent different congestion levels, override the `alternativeTrafficUnknownColor`, `alternativeTrafficLowColor`, `alternativeTrafficModerateColor`, `alternativeTrafficHeavyColor`, `alternativeTrafficSevereColor` property for the `NavigationMapView.appearance()`.
      */
-    public weak var courseTrackingDelegate: NavigationMapViewCourseTrackingDelegate?
-    
-    let sourceOptions: [MGLShapeSourceOption: Any] = [.maximumZoomLevel: 16]
+    public var showsCongestionForAlternativeRoutes: Bool = false
 
-    struct SourceIdentifier {
-        static let waypoint = "\(identifierNamespace).waypoints"
-        static let waypointCircle = "\(identifierNamespace).waypointsCircle"
-        static let waypointSymbol = "\(identifierNamespace).waypointsSymbol"
-
-        static let arrow = "\(identifierNamespace).arrow"
-        static let arrowSymbol = "\(identifierNamespace).arrowSymbol"
-        static let arrowStroke = "\(identifierNamespace).arrowStroke"
-        
-        static let instruction = "\(identifierNamespace).instruction"
-        
-        static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
-        static let routeDurationAnnotations = "\(identifierNamespace).RouteDurationAnnotations"
-    }
-    
-    struct StyleLayerIdentifier {
-        static let namespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
-
-        static let waypointCircle = "\(identifierNamespace).waypointsCircle"
-        static let waypointSymbol = "\(identifierNamespace).waypointsSymbol"
-
-        static let arrow = "\(identifierNamespace).arrow"
-        static let arrowSymbol = "\(identifierNamespace).arrowSymbol"
-        static let arrowStroke = "\(identifierNamespace).arrowStroke"
-        static let arrowCasingSymbol = "\(identifierNamespace).arrowCasingSymbol"
-
-        static let instructionLabel = "\(identifierNamespace).instructionLabel"
-        static let instructionCircle = "\(identifierNamespace).instructionCircle"
-        
-        static let buildingExtrusion = "\(identifierNamespace).buildingExtrusion"
-        static let routeDurationAnnotations = "\(identifierNamespace).RouteDurationAnnotations"
-    }
-    
-    enum IdentifierType: Int {
-        case source
-        
-        case route
-        
-        case routeCasing
-    }
-
-    // MARK: - Instance Properties
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
     @objc dynamic public var trafficModerateColor: UIColor = .trafficModerate
     @objc dynamic public var trafficHeavyColor: UIColor = .trafficHeavy
     @objc dynamic public var trafficSevereColor: UIColor = .trafficSevere
+    @objc dynamic public var alternativeTrafficUnknownColor: UIColor = .alternativeTrafficUnknown
+    @objc dynamic public var alternativeTrafficLowColor: UIColor = .alternativeTrafficLow
+    @objc dynamic public var alternativeTrafficModerateColor: UIColor = .alternativeTrafficModerate
+    @objc dynamic public var alternativeTrafficHeavyColor: UIColor = .alternativeTrafficHeavy
+    @objc dynamic public var alternativeTrafficSevereColor: UIColor = .alternativeTrafficSevere
+    
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
     @objc dynamic public var routeAlternateCasingColor: UIColor = .defaultAlternateLineCasing
@@ -132,20 +77,60 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
-            userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: CGRect(origin: .zero, size: 75.0)) : UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))
+            let frame = CGRect(origin: .zero, size: 75.0)
+            let isHidden = userCourseView.isHidden
+            switch userLocationStyle {
+            case .courseView(let courseView):
+                userCourseView = reducedAccuracyActivatedMode
+                    ? UserHaloCourseView(frame: frame)
+                    : courseView
+            default:
+                userCourseView = reducedAccuracyActivatedMode
+                ? UserHaloCourseView(frame: frame)
+                : UserPuckCourseView(frame: frame)
+            }
+            userCourseView.isHidden = isHidden
         }
     }
-
+    
     @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .selectedRouteDurationAnnotationColor
     @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
     @objc dynamic public var routeDurationAnnotationSelectedTextColor: UIColor = .selectedRouteDurationAnnotationTextColor
     @objc dynamic public var routeDurationAnnotationTextColor: UIColor = .routeDurationAnnotationTextColor
-    @objc dynamic public var routeDurationAnnotationFontName: String = "DIN Pro Medium"
-    var userLocationForCourseTracking: CLLocation?
-    var animatesUserLocation: Bool = false
-    var altitude: CLLocationDistance
+
+    /**
+     List of Mapbox Maps font names to be used for any symbol layers added by the Navigation SDK.
+     These are used for features such as Route Duration Annotations that are optionally added during route preview.
+     See https://docs.mapbox.com/ios/maps/api/6.3.0/customizing-fonts.html for more information about server-side fonts.
+     */
+    @objc dynamic public var routeDurationAnnotationFontNames: [String] = [
+        "DIN Pro Medium",
+        "Noto Sans CJK JP Medium",
+        "Arial Unicode MS Regular"
+    ]
+    
+    /**
+     `MapView`, which is added on top of `NavigationMapView` and allows to render navigation related components.
+     */
+    public private(set) var mapView: MapView!
+    
+    /**
+     The object that acts as the navigation delegate of the map view.
+     */
+    public weak var delegate: NavigationMapViewDelegate?
+    
+    /**
+     `PointAnnotationManager`, which is used to manage addition and removal of final destination annotation.
+     `PointAnnotationManager` will become valid only after fully loading `MapView` style.
+     */
+    public var pointAnnotationManager: PointAnnotationManager?
+    
+    /**
+     Most recent user location, which is used to place `UserCourseView`.
+     */
+    var mostRecentUserCourseViewLocation: CLLocation?
+    
     var routes: [Route]?
-    var isAnimatingToOverheadMode = false
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?
@@ -153,85 +138,27 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     var fractionTraveled: Double = 0.0
     var preFractionTraveled: Double = 0.0
     var vanishingRouteLineUpdateTimer: Timer? = nil
-    
-    var shouldPositionCourseViewFrameByFrame = false {
-        didSet {
-            if shouldPositionCourseViewFrameByFrame {
-                preferredFramesPerSecond = .maximum
-            }
-        }
-    }
+    var currentLegIndex: Int?
     
     var showsRoute: Bool {
         get {
-            guard let mainRouteLayerIdentifier = identifier(routes?.first, identifierType: .route),
-                  let mainRouteCasingLayerIdentifier = identifier(routes?.first, identifierType: .routeCasing) else { return false }
+            guard let mainRouteLayerIdentifier = routes?.first?.identifier(.route(isMainRoute: true)),
+                  let mainRouteCasingLayerIdentifier = routes?.first?.identifier(.routeCasing(isMainRoute: true)) else { return false }
             
-            return style?.layer(withIdentifier: mainRouteLayerIdentifier) != nil &&
-                style?.layer(withIdentifier: mainRouteCasingLayerIdentifier) != nil
-        }
-    }
-    
-    open override var showsUserLocation: Bool {
-        get {
-            if tracksUserCourse || userLocationForCourseTracking != nil {
-                return !(userCourseView.isHidden)
+            let identifiers = [
+                mainRouteLayerIdentifier,
+                mainRouteCasingLayerIdentifier
+            ]
+            
+            for identifier in identifiers {
+                if !mapView.mapboxMap.style.layerExists(withId: identifier) {
+                    return false
+                }
             }
-            return super.showsUserLocation
-        }
-        set {
-            if tracksUserCourse || userLocationForCourseTracking != nil {
-                super.showsUserLocation = false
-                
-                userCourseView.isHidden = !newValue
-            } else {
-                userCourseView.isHidden = true
-                super.showsUserLocation = newValue
-            }
-        }
-    }
-    
-    /**
-     The minimum default insets from the content frame to the edges of the user course view.
-     */
-    static let courseViewMinimumInsets = UIEdgeInsets(top: 50, left: 50, bottom: 50, right: 50)
-    
-    /**
-     Center point of the user course view in screen coordinates relative to the map view.
-     - seealso: NavigationMapViewDelegate.navigationMapViewUserAnchorPoint(_:)
-     */
-    var userAnchorPoint: CGPoint {
-        if let anchorPoint = navigationMapViewDelegate?.navigationMapViewUserAnchorPoint(self), anchorPoint != .zero {
-            return anchorPoint
-        }
-        let contentFrame = bounds.inset(by: contentInset)
-        return CGPoint(x: contentFrame.midX, y: contentFrame.midY)
-    }
-    
-    /**
-     Determines whether the map should follow the user location and rotate when the course changes.
-     - seealso: NavigationMapViewCourseTrackingDelegate
-     */
-    open var tracksUserCourse: Bool = false {
-        didSet {
-            if tracksUserCourse {
-                enableFrameByFrameCourseViewTracking(for: 3)
-                altitude = defaultAltitude
-                showsUserLocation = true
-                courseTrackingDelegate?.navigationMapViewDidStartTrackingCourse(self)
-            } else {
-                courseTrackingDelegate?.navigationMapViewDidStopTrackingCourse(self)
-            }
-            if let location = userLocationForCourseTracking {
-                updateCourseTracking(location: location, animated: true)
-            }
-        }
-    }
 
-    /**
-     A type that represents a `UIView` that is `CourseUpdatable`.
-     */
-    public typealias UserCourseView = UIView & CourseUpdatable
+            return true
+        }
+    }
     
     /**
      A `UserCourseView` used to indicate the user’s location and course on the map.
@@ -245,58 +172,224 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         }
     }
     
-    private lazy var mapTapGesture = UITapGestureRecognizer(target: self, action: #selector(didRecieveTap(sender:)))
+    var simulatesLocation: Bool = true
     
-    //MARK: - Initalizers
+    /**
+     Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
+     
+     By default, this property is set to `UserLocationStyle.courseView`.
+     */
+    public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
+        didSet {
+            setupUserLocation()
+        }
+    }
     
+    /**
+     A manager object, used to init and maintain predictive caching.
+     */
+    private(set) var predictiveCacheManager: PredictiveCacheManager?
+    
+    /**
+     A `TileStore` instance used by map view.
+     */
+    open var mapTileStore: TileStore? {
+        mapView.mapboxMap.resourceOptions.tileStore
+    }
+    
+    /**
+     Initializes a newly allocated `NavigationMapView` object with the specified frame rectangle.
+     
+     - parameter frame: The frame rectangle for the `NavigationMapView`.
+     */
     public override init(frame: CGRect) {
-        altitude = defaultAltitude
         super.init(frame: frame)
+        
+        setupMapView(frame)
         commonInit()
     }
     
-    public required init?(coder decoder: NSCoder) {
-        altitude = defaultAltitude
-        super.init(coder: decoder)
+    /**
+     Initializes a newly allocated `NavigationMapView` object with the specified frame rectangle and type of `NavigationCamera`.
+     
+     - parameter frame: The frame rectangle for the `NavigationMapView`.
+     - parameter navigationCameraType: Type of `NavigationCamera`, which is used for the current instance of `NavigationMapView`.
+     - parameter tileStoreLocation: Configuration of `TileStore` location, where Map tiles are stored. Use `nil` to disable onboard tile storage.
+     */
+    public init(frame: CGRect,
+                navigationCameraType: NavigationCameraType = .mobile,
+                tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+        super.init(frame: frame)
+        
+        setupMapView(frame, navigationCameraType: navigationCameraType, tileStoreLocation: tileStoreLocation)
         commonInit()
     }
     
-    public override init(frame: CGRect, styleURL: URL?) {
-        altitude = defaultAltitude
-        super.init(frame: frame, styleURL: styleURL)
+    /**
+     Returns a `NavigationMapView` object initialized from data in a given unarchiver.
+     
+     - parameter coder: An unarchiver object.
+     */
+    public required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        
+        setupMapView(self.bounds)
         commonInit()
     }
     
     fileprivate func commonInit() {
-        makeGestureRecognizersRespectCourseTracking()
-        makeGestureRecognizersUpdateCourseView()
-        
-        let gestures = gestureRecognizers ?? []
-        let mapTapGesture = self.mapTapGesture
-        mapTapGesture.requireFailure(of: gestures)
-        addGestureRecognizer(mapTapGesture)
-        
+        makeGestureRecognizersResetFrameRate()
+        setupGestureRecognizers()
         installUserCourseView()
-        showsUserLocation = false
+        subscribeForNotifications()
+        setupUserLocation()
+    }
+    
+    func setupUserLocation() {
+        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            switch self.userLocationStyle {
+            case .courseView((let courseView)):
+                self.mapView.location.options.puckType = nil
+                self.userCourseView = courseView
+                self.userCourseView.isHidden = false
+            case .puck2D(configuration: var configuration):
+                self.userCourseView.isHidden = true
+                self.mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
+                configuration = configuration ?? Puck2DConfiguration()
+            case .puck3D(configuration: let configuration):
+                self.userCourseView.isHidden = true
+                self.mapView.location.options.puckType = .puck3D(configuration)
+            }
+        }
+    }
+    
+    deinit {
+        unsubscribeFromNotifications()
+    }
+    
+    func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationCameraStateDidChange(_:)),
+                                               name: .navigationCameraStateDidChange,
+                                               object: navigationCamera)
+    }
+    
+    func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationCameraStateDidChange,
+                                                  object: nil)
+    }
+    
+    @objc func navigationCameraStateDidChange(_ notification: Notification) {
+        guard let location = mostRecentUserCourseViewLocation,
+              let navigationCameraState = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
         
+        switch navigationCameraState {
+        case .idle:
+            break
+        case .transitionToFollowing, .following, .transitionToOverview, .overview:
+            moveUserLocation(to: location)
+            break
+        }
     }
     
-    open override func reloadStyle(_ sender: Any?) {
-        vanishingRouteLineUpdateTimer?.invalidate()
-        vanishingRouteLineUpdateTimer = nil
-        super.reloadStyle(sender)
+    func setupMapView(_ frame: CGRect,
+                      navigationCameraType: NavigationCameraType = .mobile,
+                      tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+        let accessToken = ResourceOptionsManager.default.resourceOptions.accessToken
+        
+        // TODO: allow customising tile store location.
+        let tileStore = tileStoreLocation?.tileStore
+        
+        // In case of CarPlay, use `pixelRatio` value, which is used on second `UIScreen`.
+        var pixelRatio = UIScreen.main.scale
+        if navigationCameraType == .carPlay, UIScreen.screens.indices.contains(1) {
+            pixelRatio = UIScreen.screens[1].scale
+        }
+        
+        let mapOptions = MapOptions(constrainMode: .widthAndHeight,
+                                    viewportMode: .default,
+                                    orientation: .upwards,
+                                    crossSourceCollisions: false,
+                                    optimizeForTerrain: false,
+                                    size: nil,
+                                    pixelRatio: pixelRatio,
+                                    glyphsRasterizationOptions: .init())
+        
+        let resourceOptions = ResourceOptions(accessToken: accessToken,
+                                              tileStore: tileStore)
+        
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions,
+                                            mapOptions: mapOptions)
+        
+        mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
+        mapView.translatesAutoresizingMaskIntoConstraints = false
+        mapView.ornaments.options.scaleBar.visibility = .hidden
+        
+        mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
+            guard let self = self,
+                  let location = self.mostRecentUserCourseViewLocation else { return }
+            switch self.userLocationStyle {
+            case .courseView: self.moveUserLocation(to: location)
+            default: break
+            }
+        }
+        
+        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
+        }
+        
+        addSubview(mapView)
+        
+        mapView.pinTo(parentView: self)
+        
+        navigationCamera = NavigationCamera(mapView, navigationCameraType: navigationCameraType)
+        navigationCamera.follow()
     }
     
-    open override func layoutMarginsDidChange() {
-        super.layoutMarginsDidChange()
-        enableFrameByFrameCourseViewTracking(for: 3)
+    func setupGestureRecognizers() {
+        // Gesture recognizer, which is used to detect taps on route line and waypoint.
+        let mapViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didReceiveTap(sender:)))
+        mapViewTapGestureRecognizer.delegate = self
+        mapView.addGestureRecognizer(mapViewTapGestureRecognizer)
     }
     
-    //MARK: - Overrides
+    /**
+     Setups the Predictive Caching mechanism using provided Options.
+     
+     This will handle all the required manipulations to enable the feature and maintain it during the navigations. Once enabled, it will be present as long as `NavigationMapView` is retained.
+     If `NavigationMapView` was not configured to maintain a tile storage - this function does nothing.
+     
+     - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
+     - parameter tileStoreConfiguration: configuration for tile storage parameters. If `nil` - default settings will be used.
+     */
+    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions, tileStoreConfiguration: TileStoreConfiguration?) {
+        let styleSourcePaths = mapView.styleSourceDatasets(["raster", "vector"])
+        
+        if let tileStoreConfiguration = tileStoreConfiguration {
+            let tileStoreMapOptions = PredictiveCacheManager.TileStoreMapOptions(tileStoreConfiguration,
+                                                                                 styleSourcePaths)
+                                                                                 
+            
+            predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                            tileStoreMapOptions: tileStoreMapOptions)
+        } else if let tileStore = mapTileStore {
+            let mapOptions = PredictiveCacheManager.MapOptions(tileStore,
+                                                               styleSourcePaths)
+            
+            predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                            mapOptions: mapOptions)
+        }
+    }
+    
+    // MARK: - Overridden methods
     
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         
+        // TODO: Verify that image is correctly drawn when `NavigationMapView` is created in storyboard.
         let image = UIImage(named: "feedback-map-error", in: .mapboxNavigation, compatibleWith: nil)
         let imageView = UIImageView(image: image)
         imageView.contentMode = .center
@@ -305,478 +398,444 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         addSubview(imageView)
     }
     
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        //If the map is in tracking mode, make sure we update the camera after the layout pass.
-        if (tracksUserCourse) {
-            updateCourseTracking(location: userLocationForCourseTracking, camera:self.camera, animated: false)
-        }
-    }
-    
-    open override func anchorPoint(forGesture gesture: UIGestureRecognizer) -> CGPoint {
-        if tracksUserCourse {
-            return userAnchorPoint
-        } else {
-            return super.anchorPoint(forGesture: gesture)
-        }
-    }
-    
-    open override func mapViewDidFinishRenderingFrameFullyRendered(_ fullyRendered: Bool) {
-        super.mapViewDidFinishRenderingFrameFullyRendered(fullyRendered)
-        
-        guard shouldPositionCourseViewFrameByFrame else { return }
-        guard let location = userLocationForCourseTracking else { return }
-        
-        userCourseView.center = convert(location.coordinate, toPointTo: self)
+    @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {
+        mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
     /**
      Updates the map view’s preferred frames per second to the appropriate value for the current route progress.
      
-     This method accounts for the proximity to a maneuver and the current power source. It has no effect if `tracksUserCourse` is set to `true`.
+     This method accounts for the proximity to a maneuver and the current power source.
+     It has no effect if `NavigationCamera` is in `NavigationCameraState.following` state.
+     
+     - parameter routeProgress: Object, which stores current progress along specific route.
      */
-    open func updatePreferredFrameRate(for routeProgress: RouteProgress) {
-        guard tracksUserCourse else { return }
+    public func updatePreferredFrameRate(for routeProgress: RouteProgress) {
+        guard navigationCamera.state == .following else { return }
         
         let stepProgress = routeProgress.currentLegProgress.currentStepProgress
         let expectedTravelTime = stepProgress.step.expectedTravelTime
         let durationUntilNextManeuver = stepProgress.durationRemaining
         let durationSincePreviousManeuver = expectedTravelTime - durationUntilNextManeuver
-        let conservativeFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         
-        if let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
-           upcomingStep.maneuverDirection == .straightAhead || upcomingStep.maneuverDirection == .slightLeft || upcomingStep.maneuverDirection == .slightRight {
-            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
-        } else if durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
-                    durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver {
-            preferredFramesPerSecond = shouldPositionCourseViewFrameByFrame ? FrameIntervalOptions.defaultFramesPerSecond : conservativeFramesPerSecond
-        } else {
-            preferredFramesPerSecond = FrameIntervalOptions.pluggedInFramesPerSecond
+        var preferredFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
+        let maneuverDirections: [ManeuverDirection] = [.straightAhead, .slightLeft, .slightRight]
+        if let maneuverDirection = routeProgress.currentLegProgress.upcomingStep?.maneuverDirection,
+           maneuverDirections.contains(maneuverDirection) ||
+            (durationUntilNextManeuver > FrameIntervalOptions.durationUntilNextManeuver &&
+                durationSincePreviousManeuver > FrameIntervalOptions.durationSincePreviousManeuver) {
+            preferredFramesPerSecond = UIDevice.current.isPluggedIn ? FrameIntervalOptions.pluggedInFramesPerSecond : minimumFramesPerSecond
         }
+        
+        mapView.preferredFramesPerSecond = preferredFramesPerSecond
     }
     
-    /**
-     Track position on a frame by frame basis. Used for first location update and when resuming tracking mode
-     */
-    public func enableFrameByFrameCourseViewTracking(for duration: TimeInterval) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(disableFrameByFramePositioning), object: nil)
-        perform(#selector(disableFrameByFramePositioning), with: nil, afterDelay: duration)
-        shouldPositionCourseViewFrameByFrame = true
-    }
-    
-    @objc fileprivate func disableFrameByFramePositioning() {
-        shouldPositionCourseViewFrameByFrame = false
-    }
-    
-    //MARK: - User Tracking
+    // MARK: - User tracking methods
     
     func installUserCourseView() {
-        if let location = userLocationForCourseTracking {
-            updateCourseTracking(location: location, animated: false)
-        }
-        addSubview(userCourseView)
+        userCourseView.isHidden = true
+        mapView.addSubview(userCourseView)
     }
-    
-    @objc private func disableUserCourseTracking() {
-        guard tracksUserCourse else { return }
-        tracksUserCourse = false
-    }
-    
-    public func updateCourseTracking(location: CLLocation?, camera: MGLMapCamera? = nil, animated: Bool = false) {
-        // While animating to overhead mode, don't animate the puck.
-        let duration: TimeInterval = animated && !isAnimatingToOverheadMode ? 1 : 0
-        animatesUserLocation = animated
-        userLocationForCourseTracking = location
-        guard let location = location, CLLocationCoordinate2DIsValid(location.coordinate) else {
-            return
-        }
-        
-        let centerUserCourseView = { [weak self] in
-            guard let point = self?.convert(location.coordinate, toPointTo: self) else { return }
-            self?.userCourseView.center = point
-        }
-        
-        if tracksUserCourse {
-            centerUserCourseView()
-            
-            let newCamera = camera ?? MGLMapCamera(lookingAtCenter: location.coordinate, altitude: altitude, pitch: 45, heading: location.course)
-            let function: CAMediaTimingFunction? = animated ? CAMediaTimingFunction(name: .linear) : nil
-            setCamera(newCamera, withDuration: duration, animationTimingFunction: function, completionHandler: nil)
-        } else {
-            // Animate course view updates in overview mode
-            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear], animations: centerUserCourseView)
-        }
-        
-        userCourseView.update(location: location, pitch: self.camera.pitch, direction: direction, animated: animated, tracksUserCourse: tracksUserCourse)
-    }
-    
-    //MARK: - Gesture Recognizers
     
     /**
-     Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
+     Updates `UserLocationStyle` to provided location.
+     
+     - parameter location: Location, where `UserLocationStyle` should be shown.
+     - parameter animated: Property, which determines whether `UserLocationStyle` transition to new location will be animated.
      */
-    @objc func didRecieveTap(sender: UITapGestureRecognizer) {
-        guard let routes = routes, let tapPoint = sender.point else { return }
+    public func moveUserLocation(to location: CLLocation, animated: Bool = false) {
+        guard CLLocationCoordinate2DIsValid(location.coordinate) else { return }
         
-        let waypointTest = waypoints(on: routes, closeTo: tapPoint) //are there waypoints near the tapped location?
-        if let selected = waypointTest?.first { //test passes
-            navigationMapViewDelegate?.navigationMapView(self, didSelect: selected)
-            return
-        } else if let routes = self.routes(closeTo: tapPoint) {
-            guard let selectedRoute = routes.first else { return }
-            navigationMapViewDelegate?.navigationMapView(self, didSelect: selectedRoute)
-        }
-    }
-    
-    @objc func updateCourseView(_ sender: UIGestureRecognizer) {
-        if sender.state == .ended {
-            altitude = self.camera.altitude
-            enableFrameByFrameCourseViewTracking(for: 2)
-        }
+        mostRecentUserCourseViewLocation = location
         
-        // Capture altitude for double tap and two finger tap after animation finishes
-        if sender is UITapGestureRecognizer, sender.state == .ended {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: {
-                self.altitude = self.camera.altitude
-            })
-        }
-        
-        if let pan = sender as? UIPanGestureRecognizer {
-            if sender.state == .ended || sender.state == .cancelled {
-                let velocity = pan.velocity(in: self)
-                let didFling = sqrt(velocity.x * velocity.x + velocity.y * velocity.y) > 100
-                if didFling {
-                    enableFrameByFrameCourseViewTracking(for: 1)
+        switch userLocationStyle {
+        case .courseView:
+            // While animating to overview mode, don't animate the puck.
+            let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
+            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
+                guard let point = self?.mapView.point(for: location.coordinate) else { return }
+                self?.userCourseView.center = point
+            }
+            
+            let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
+            userCourseView.update(location: location,
+                                  pitch: cameraOptions.pitch!,
+                                  direction: cameraOptions.bearing!,
+                                  animated: animated,
+                                  navigationCameraState: navigationCamera.state)
+        case .puck2D(configuration: _):
+            if simulatesLocation {
+                if !(mapView.location.locationProvider is PassiveLocationProvider) {
+                    mapView.location.locationProvider.stopUpdatingLocation()
+                }
+                if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
+                    let newLocation: [Double] = [
+                        location.coordinate.latitude,
+                        location.coordinate.longitude,
+                        location.altitude
+                    ]
+                    do {
+                        try mapView.mapboxMap.style.setLayerProperties(for: NavigationMapView.LayerIdentifier.puck2DLayer,
+                                                                       properties: [
+                                                                        "location": newLocation,
+                                                                        "bearing": location.course
+                                                                       ])
+                    } catch {
+                        print("Failed to perform operation while updating 2D puck bearing arrow with error: \(error.localizedDescription).")
+                    }
+                }
+            }
+        case .puck3D(configuration: let configuration):
+            if simulatesLocation {
+                if !(mapView.location.locationProvider is PassiveLocationProvider) {
+                    mapView.location.locationProvider.stopUpdatingLocation()
+                }
+                if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.puck3DSource) {
+                    var model = configuration.model
+                    model.position = [location.coordinate.longitude, location.coordinate.latitude]
+                    if var orientation = model.orientation,
+                       orientation.count > 2 {
+                        orientation[2] = orientation[2] + location.course
+                        model.orientation = orientation
+                    }
+                    
+                    let modelSourceCode = [NavigationMapView.ModelKeyIdentifier.modelSouce: model]
+                    if let data = try? JSONEncoder().encode(modelSourceCode),
+                       let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                        try? mapView.mapboxMap.style.setSourceProperty(for: NavigationMapView.SourceIdentifier.puck3DSource, property: "models", value: jsonDictionary)
+                    }
                 }
             }
         }
-        
-        if sender.state == .changed {
-            guard let location = userLocationForCourseTracking else { return }
-            
-            updateCourseView(to: location)
-        }
     }
     
-    // MARK: Feature Addition/Removal
+    // MARK: Feature addition/removal methods
+    
     /**
      Showcases route array. Adds routes and waypoints to map, and sets camera to point encompassing the route.
+     
+     - parameter routes: List of `Route` objects, which will be shown on `MapView`.
+     - parameter animated: Property, which determines whether camera movement will be animated while fitting first route.
      */
-    public static let defaultPadding: UIEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-    
     public func showcase(_ routes: [Route], animated: Bool = false) {
-        guard let active = routes.first,
-              let coords = active.shape?.coordinates,
-              !coords.isEmpty else { return } //empty array
+        guard let activeRoute = routes.first,
+              let coordinates = activeRoute.shape?.coordinates,
+              !coordinates.isEmpty else { return }
         
         removeArrow()
         removeRoutes()
         removeWaypoints()
         
         show(routes)
-        showWaypoints(on: active)
+        showWaypoints(on: activeRoute)
         
-        fit(to: active, facing: 0, animated: animated)
-    }
-    
-    func fit(to route: Route, facing direction:CLLocationDirection = 0, animated: Bool = false) {
-        guard let shape = route.shape, !shape.coordinates.isEmpty else { return }
-      
-        setUserTrackingMode(.none, animated: false, completionHandler: nil)
-        let line = MGLPolyline(shape)
-        
-        // Current contentInset gets incorporated to cameraThatFitsShape.
-        // edgePadding is set to .zero as there's no need for additional padding.
-        contentInset = safeArea + NavigationMapView.defaultPadding
-        let camera = cameraThatFitsShape(line, direction: direction, edgePadding: .zero)
-        setCamera(camera, animated: animated)
+        navigationCamera.stop()
+        fitCamera(to: activeRoute, animated: animated)
     }
     
     /**
-     Adds or updates both the route line and the route line casing.
-
-     This method will be called multiple times:
-     • When the route preview map is shown, rendering alternative routes if necessary.
-     • When the navigation session starts, rendering only the single route line.
+     Adds main and alternative route lines and their casings on `MapView`. Prior to showing, previous
+     route lines and their casings will be removed.
+     
+     - parameter routes: List of `Route` objects, which will be shown on `MapView`.
+     - parameter legIndex: Index, which will be used to highlight specific `RouteLeg` on main route.
      */
-    public func show(_ routes: [Route], legIndex: Int = 0) {
-        guard let style = style else { return }
-        
+    public func show(_ routes: [Route], legIndex: Int? = nil) {
         removeRoutes()
         
         self.routes = routes
+        currentLegIndex = legIndex
         
-        var parentLayer: MGLStyleLayer? = nil
+        var parentLayerIdentifier: String? = nil
         for (index, route) in routes.enumerated() {
-            guard let routeSourceIdentifier = identifier(route, identifierType: .source),
-                  let routeCasingSourceIdentifier = identifier(route, identifierType: .source, isMainRouteCasingSource: true),
-                  let routeIdentifier = identifier(route, identifierType: .route),
-                  let routeCasingIdentifier = identifier(route, identifierType: .routeCasing) else { continue }
-            
-            // In case of main route there is the ability to provide custom `MGLShape` for either route or route casing by implemeting
-            // `NavigationMapViewDelegate.navigationMapView(_:shapeFor:)` or `NavigationMapViewDelegate.navigationMapView(_:simplifiedShapeFor:)`.
-            if index == 0 {
-                
-                let routeShape = navigationMapViewDelegate?.navigationMapView(self, shapeFor: [route]) ??
-                    shape(for: route, legIndex: legIndex, isAlternateRoute: false)
-                
-                let routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
-                
-                let fractionTraveledForGradient = routeLineTracksTraversal ? fractionTraveled : 0.0
-                
-                let mainRouteLayer = addMainRouteLayer(style,
-                                                       source: routeSource,
-                                                       identifier: routeIdentifier,
-                                                       lineGradient: routeLineGradient(route, fractionTraveled: fractionTraveledForGradient))
-                
-                let mainRouteCasingShape = navigationMapViewDelegate?.navigationMapView(self, simplifiedShapeFor: route) ??
-                    shape(forCasingOf: route, legIndex: legIndex)
-                
-                let routeCasingSource = addRouteSource(style, identifier: routeCasingSourceIdentifier, shape: mainRouteCasingShape)
-                
-                parentLayer = addMainRouteCasingLayer(style,
-                                                      source: routeCasingSource,
-                                                      identifier: routeCasingIdentifier,
-                                                      lineGradient: routeCasingGradient(fractionTraveledForGradient),
-                                                      below: mainRouteLayer)
-                
-                if routeLineTracksTraversal {
-                    initPrimaryRoutePoints(route: route)
-                }
-                
-                continue
+            if index == 0, routeLineTracksTraversal {
+                initPrimaryRoutePoints(route: route)
             }
             
-            let routeShape = shape(for: route, legIndex: legIndex, isAlternateRoute: true)
-            let routeSource = addRouteSource(style, identifier: routeSourceIdentifier, shape: routeShape)
-            
-            if let tempLayer = parentLayer {
-                let alternativeRouteLayer = addAlternativeRoutesLayer(style,
-                                                                      source: routeSource,
-                                                                      identifier: routeIdentifier,
-                                                                      below: tempLayer)
-                
-                parentLayer = addAlternativeRoutesCasingLayer(style,
-                                                              source: routeSource,
-                                                              identifier: routeCasingIdentifier,
-                                                              below: alternativeRouteLayer)
-            }
+            parentLayerIdentifier = addRouteLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0, legIndex: legIndex)
+            parentLayerIdentifier = addRouteCasingLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0)
         }
     }
     
-    // MARK: - Route line insertion methods
-    
-    func identifier(_ route: Route?, identifierType: IdentifierType, isMainRouteCasingSource: Bool = false) -> String? {
-        guard let route = route else { return nil }
-        let identifier = Unmanaged.passUnretained(route).toOpaque()
-        
-        switch identifierType {
-        case .source:
-            if isMainRouteCasingSource {
-                return "\(identifier)_casing_source"
-            }
-            
-            return "\(identifier)_source"
-            
-        case .route:
-            return "\(identifier)_route"
-            
-        case .routeCasing:
-            return "\(identifier)_casing"
+    func fitCamera(to route: Route, animated: Bool = false) {
+        guard let routeShape = route.shape, !routeShape.coordinates.isEmpty else { return }
+        let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
+        if let cameraOptions = mapView?.mapboxMap.camera(for: .lineString(routeShape),
+                                                         padding: edgeInsets,
+                                                         bearing: nil,
+                                                         pitch: nil) {
+            mapView?.mapboxMap.setCamera(to: cameraOptions)
         }
-    }
-    
-    func addRouteSource(_ style: MGLStyle, identifier: String, shape: MGLShape?) -> MGLSource {
-        if let routeSource = style.source(withIdentifier: identifier) as? MGLShapeSource {
-            routeSource.shape = shape
-            return routeSource
-        }
-        
-        let routeSource = MGLShapeSource(identifier: identifier, shape: shape, options: [.lineDistanceMetrics: true])
-        style.addSource(routeSource)
-        
-        return routeSource
     }
 
-    @discardableResult func addMainRouteLayer(_ style: MGLStyle, source: MGLSource, identifier: String, lineGradient: NSExpression?) -> MGLStyleLayer {
-        let customMainRouteLayer = navigationMapViewDelegate?.navigationMapView(self,
-                                                                                mainRouteStyleLayerWithIdentifier: identifier,
-                                                                                source: source)
-        let currentMainRouteLayer = style.layer(withIdentifier: identifier)
+    /**
+     Sets initial `CameraOptions` for specific coordinate.
+     
+     - parameter coordinate: Coordinate, where `MapView` will be centered.
+     */
+    func setInitialCamera(_ coordinate: CLLocationCoordinate2D) {
+        guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
         
-        var parentLayer: MGLStyleLayer? {
-            let identifiers = [
-                StyleLayerIdentifier.arrow,
-                StyleLayerIdentifier.arrowSymbol,
-                StyleLayerIdentifier.arrowCasingSymbol,
-                StyleLayerIdentifier.arrowStroke,
-                StyleLayerIdentifier.waypointCircle
-            ]
+        mapView.mapboxMap.setCamera(to: CameraOptions(center: coordinate,
+                                                   zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)))
+        moveUserLocation(to: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
+    }
+
+    @discardableResult func addRouteLayer(_ route: Route,
+                                          below parentLayerIndentifier: String? = nil,
+                                          isMainRoute: Bool = true,
+                                          legIndex: Int? = nil) -> String? {
+        guard let shape = route.shape else { return nil }
+        
+        let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, casingShapeFor: route) ?? shape)
+        let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: true))
+        
+        do {
+            try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+        } catch {
+            NSLog("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).")
+        }
+        
+        let layerIdentifier = route.identifier(.route(isMainRoute: isMainRoute))
+        var lineLayer = delegate?.navigationMapView(self,
+                                                    routeLineLayerWithIdentifier: layerIdentifier,
+                                                    sourceIdentifier: sourceIdentifier)
+        
+        if lineLayer == nil {
+            lineLayer = LineLayer(id: layerIdentifier)
+            lineLayer?.source = sourceIdentifier
+            lineLayer?.lineColor = .constant(.init(color: trafficUnknownColor))
+            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression())
+            lineLayer?.lineJoin = .constant(.round)
+            lineLayer?.lineCap = .constant(.round)
             
-            var parentLayer: MGLStyleLayer? = nil
-            for layer in style.layers.reversed() {
-                if !(layer is MGLSymbolStyleLayer) && !identifiers.contains(layer.identifier) {
-                    // MGLMapView automatically adds an MGLLineStyleLayer or MGLFillStyleLayer to the top of the layer stack when adding a polyline or polygon annotation, respectively. There’s no way to insert them lower in the layer stack, so they aren’t good indicators of where to insert the route line.
-                    // Detect and skip such a layer by checking if its source lacks a dedicated MGLSource subclass.
-                    if let vectorLayer = layer as? MGLVectorStyleLayer,
-                       let sourceIdentifier = vectorLayer.sourceIdentifier,
-                       let source = style.source(withIdentifier: sourceIdentifier), type(of: source) == MGLSource.self {
-                        continue
+            // TODO: Verify that `isAlternativeRoute` parameter usage is needed.
+            if isMainRoute {
+                let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+                let gradientStops = routeLineGradient(congestionFeatures,
+                                                      fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
+            } else {
+                if showsCongestionForAlternativeRoutes {
+                    let gradientStops = routeLineGradient(route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
+                                                          fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
+                                                          isMain: false)
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
+                } else {
+                    lineLayer?.lineColor = .constant(.init(color: routeAlternateColor))
+                }
+            }
+        }
+        
+        if let lineLayer = lineLayer {
+            do {
+                var layerPosition: MapboxMaps.LayerPosition? = nil
+                
+                if isMainRoute {
+                    if let aboveLayerIdentifier = mapView.mainRouteLineParentLayerIdentifier {
+                        layerPosition = .above(aboveLayerIdentifier)
                     }
-                    
-                    parentLayer = layer
-                    break
+                } else {
+                    if let belowLayerIdentifier = parentLayerIndentifier {
+                        layerPosition = .below(belowLayerIdentifier)
+                    }
                 }
+                
+                try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: layerPosition)
+            } catch {
+                NSLog("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).")
             }
+        }
+        
+        return layerIdentifier
+    }
+    
+    @discardableResult func addRouteCasingLayer(_ route: Route, below parentLayerIndentifier: String? = nil, isMainRoute: Bool = true) -> String? {
+        guard let shape = route.shape else { return nil }
+        
+        let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, shapeFor: route) ?? shape)
+        let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: isMainRoute))
+        do {
+            try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+        } catch {
+            NSLog("Failed to add route casing source \(sourceIdentifier) with error: \(error.localizedDescription).")
+        }
+        
+        let layerIdentifier = route.identifier(.routeCasing(isMainRoute: isMainRoute))
+        var lineLayer = delegate?.navigationMapView(self,
+                                                    routeCasingLineLayerWithIdentifier: layerIdentifier,
+                                                    sourceIdentifier: sourceIdentifier)
+        
+        if lineLayer == nil {
+            lineLayer = LineLayer(id: layerIdentifier)
+            lineLayer?.source = sourceIdentifier
+            lineLayer?.lineColor = .constant(.init(color: routeCasingColor))
+            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
+            lineLayer?.lineJoin = .constant(.round)
+            lineLayer?.lineCap = .constant(.round)
             
-            return parentLayer
+            if isMainRoute {
+                let gradientStops = routeLineGradient(fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(gradientStops))
+            } else {
+                lineLayer?.lineColor = .constant(.init(color: routeAlternateCasingColor))
+            }
         }
         
-        if let mainRouteLayer = customMainRouteLayer, currentMainRouteLayer == nil, let parentLayer = parentLayer {
-            style.insertLayer(mainRouteLayer, above: parentLayer)
-            return mainRouteLayer
+        if let lineLayer = lineLayer {
+            do {
+                var layerPosition: MapboxMaps.LayerPosition? = nil
+                if let parentLayerIndentifier = parentLayerIndentifier {
+                    layerPosition = .below(parentLayerIndentifier)
+                }
+                try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: layerPosition)
+            } catch {
+                NSLog("Failed to add route casing layer \(layerIdentifier) with error: \(error.localizedDescription).")
+            }
         }
         
-        if let mainRouteLayer = currentMainRouteLayer as? MGLLineStyleLayer {
-            return mainRouteLayer
-        }
-        
-        let mainRouteLayer = MGLLineStyleLayer(identifier: identifier, source: source)
-        mainRouteLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
-        mainRouteLayer.lineColor = NSExpression(forConstantValue: trafficUnknownColor)
-        mainRouteLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
-        mainRouteLayer.lineJoin = NSExpression(forConstantValue: "round")
-        mainRouteLayer.lineCap = NSExpression(forConstantValue: "round")
-        mainRouteLayer.lineGradient = lineGradient
-        
-        if let parentLayer = parentLayer {
-            style.insertLayer(mainRouteLayer, above: parentLayer)
-        }
-        
-        return mainRouteLayer
-    }
-
-    @discardableResult func addMainRouteCasingLayer(_ style: MGLStyle, source: MGLSource, identifier: String, lineGradient: NSExpression, below layer: MGLStyleLayer) -> MGLStyleLayer {
-        let customMainRouteCasingLayer = navigationMapViewDelegate?.navigationMapView(self,
-                                                                                      mainRouteCasingStyleLayerWithIdentifier: identifier,
-                                                                                      source: source)
-        let currentMainRouteCasingLayer = style.layer(withIdentifier: identifier)
-        
-        if let mainRouteCasingLayer = customMainRouteCasingLayer, let _ = currentMainRouteCasingLayer {
-            return mainRouteCasingLayer
-        }
-        
-        if let mainRouteCasingLayer = customMainRouteCasingLayer, currentMainRouteCasingLayer == nil {
-            style.insertLayer(mainRouteCasingLayer, below: layer)
-            return mainRouteCasingLayer
-        }
-        
-        if let mainRouteCasingLayer = currentMainRouteCasingLayer as? MGLLineStyleLayer {
-            return mainRouteCasingLayer
-        }
-        
-        let mainRouteCasingLayer = MGLLineStyleLayer(identifier: identifier, source: source)
-        mainRouteCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == false")
-        mainRouteCasingLayer.lineColor = NSExpression(forConstantValue: routeCasingColor)
-        mainRouteCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
-        mainRouteCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
-        mainRouteCasingLayer.lineCap = NSExpression(forConstantValue: "round")
-        mainRouteCasingLayer.lineGradient = lineGradient
-        
-        style.insertLayer(mainRouteCasingLayer, below: layer)
-        
-        return mainRouteCasingLayer
+        return layerIdentifier
     }
     
-    @discardableResult func addAlternativeRoutesLayer(_ style: MGLStyle, source: MGLSource, identifier: String, below layer: MGLStyleLayer) -> MGLStyleLayer {
-        let customAlternativeRoutesLayer = navigationMapViewDelegate?.navigationMapView(self,
-                                                                                        alternativeRouteStyleLayerWithIdentifier: identifier,
-                                                                                        source: source)
-        let currentAlternativeRoutesLayer = style.layer(withIdentifier: identifier)
+    func geoJSONSource(_ shape: LineString) -> GeoJSONSource {
+        var geoJSONSource = GeoJSONSource()
+        geoJSONSource.data = .geometry(.lineString(shape))
+        geoJSONSource.lineMetrics = true
         
-        if let alternativeRoutesLayer = customAlternativeRoutesLayer, let _ = currentAlternativeRoutesLayer {
-            return alternativeRoutesLayer
-        }
-        
-        if let alternativeRoutesLayer = customAlternativeRoutesLayer, currentAlternativeRoutesLayer == nil {
-            style.insertLayer(alternativeRoutesLayer, below: layer)
-            return alternativeRoutesLayer
-        }
-        
-        if let alternativeRoutesLayer = currentAlternativeRoutesLayer {
-            return alternativeRoutesLayer
-        }
-        
-        let alternativeRoutesLayer = MGLLineStyleLayer(identifier: identifier, source: source)
-        alternativeRoutesLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
-        alternativeRoutesLayer.lineColor = NSExpression(forConstantValue: routeAlternateColor)
-        alternativeRoutesLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel)
-        alternativeRoutesLayer.lineJoin = NSExpression(forConstantValue: "round")
-        alternativeRoutesLayer.lineCap = NSExpression(forConstantValue: "round")
-        style.insertLayer(alternativeRoutesLayer, below: layer)
-        
-        return alternativeRoutesLayer
-    }
-    
-    @discardableResult func addAlternativeRoutesCasingLayer(_ style: MGLStyle, source: MGLSource, identifier: String, below layer: MGLStyleLayer) -> MGLStyleLayer {
-        let customAlternativeRoutesCasingLayer = navigationMapViewDelegate?.navigationMapView(self,
-                                                                                              alternativeRouteCasingStyleLayerWithIdentifier: identifier,
-                                                                                              source: source)
-        let currentAlternativeRoutesCasingLayer = style.layer(withIdentifier: identifier)
-        
-        if let alternativeRoutesCasingLayer = customAlternativeRoutesCasingLayer, let _ = currentAlternativeRoutesCasingLayer {
-            return alternativeRoutesCasingLayer
-        }
-        
-        if let alternativeRoutesCasingLayer = customAlternativeRoutesCasingLayer, currentAlternativeRoutesCasingLayer == nil {
-            style.insertLayer(alternativeRoutesCasingLayer, below: layer)
-            return alternativeRoutesCasingLayer
-        }
-        
-        if let alternativeRoutesCasingLayer = currentAlternativeRoutesCasingLayer {
-            return alternativeRoutesCasingLayer
-        }
-        
-        let alternativeRoutesCasingLayer = MGLLineStyleLayer(identifier: identifier, source: source)
-        alternativeRoutesCasingLayer.predicate = NSPredicate(format: "isAlternateRoute == true")
-        alternativeRoutesCasingLayer.lineColor = NSExpression(forConstantValue: routeAlternateCasingColor)
-        alternativeRoutesCasingLayer.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 1.5))
-        alternativeRoutesCasingLayer.lineJoin = NSExpression(forConstantValue: "round")
-        alternativeRoutesCasingLayer.lineCap = NSExpression(forConstantValue: "round")
-        style.insertLayer(alternativeRoutesCasingLayer, below: layer)
-        
-        return alternativeRoutesCasingLayer
+        return geoJSONSource
     }
     
     /**
-     Removes route line and route line casing from map
+     Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
+     
+     - parameter route: `Route`, on which a certain `Waypoint` will be shown.
+     - parameter legIndex: Index, which determines for which `RouteLeg` `Waypoint` will be shown.
+     */
+    public func showWaypoints(on route: Route, legIndex: Int = 0) {
+        let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap({ $0.destination }))
+
+        var features = [Turf.Feature]()
+        for (waypointIndex, waypoint) in waypoints.enumerated() {
+            var feature = Feature(geometry: .point(Point(waypoint.coordinate)))
+            feature.properties = [
+                "waypointCompleted": waypointIndex < legIndex,
+                "name": waypointIndex + 1
+            ]
+            features.append(feature)
+        }
+        
+        let shape = delegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex) ?? FeatureCollection(features: features)
+        
+        if route.legs.count > 1 {
+            routes = [route]
+            
+            do {
+                let waypointSourceIdentifier = NavigationMapView.SourceIdentifier.waypointSource
+                
+                if mapView.mapboxMap.style.sourceExists(withId: waypointSourceIdentifier) {
+                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: waypointSourceIdentifier, geoJSON: shape)
+                } else {
+                    var waypointSource = GeoJSONSource()
+                    waypointSource.data = .featureCollection(shape)
+                    try mapView.mapboxMap.style.addSource(waypointSource, id: waypointSourceIdentifier)
+                    
+                    let waypointCircleLayerIdentifier = NavigationMapView.LayerIdentifier.waypointCircleLayer
+                    let circlesLayer = delegate?.navigationMapView(self,
+                                                                   waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
+                                                                   sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
+                    
+                    if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
+                        try mapView.mapboxMap.style.addLayer(circlesLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
+                    } else {
+                        let layerIdentifier = route.identifier(.route(isMainRoute: true))
+                        try mapView.mapboxMap.style.addLayer(circlesLayer, layerPosition: .above(layerIdentifier))
+                    }
+                    
+                    let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
+                    let symbolsLayer = delegate?.navigationMapView(self,
+                                                                   waypointSymbolLayerWithIdentifier: waypointSymbolLayerIdentifier,
+                                                                   sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointSymbolLayer()
+                    
+                    try mapView.mapboxMap.style.addLayer(symbolsLayer, layerPosition: .above(circlesLayer.id))
+                }
+            } catch {
+                NSLog("Failed to perform operation while adding waypoint with error: \(error.localizedDescription).")
+            }
+        }
+
+        if let lastLeg = route.legs.last,
+           let destinationCoordinate = lastLeg.destination?.coordinate,
+           let pointAnnotationManager = pointAnnotationManager {
+            let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+            var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
+            destinationAnnotation.image = .default
+            pointAnnotationManager.syncAnnotations([destinationAnnotation])
+            
+            delegate?.navigationMapView(self, didAdd: destinationAnnotation, pointAnnotationManager: pointAnnotationManager)
+        }
+    }
+    
+    func defaultWaypointCircleLayer() -> CircleLayer {
+        var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.waypointCircleLayer)
+        circleLayer.source = NavigationMapView.SourceIdentifier.waypointSource
+        let opacity = Exp(.switchCase) {
+            Exp(.any) {
+                Exp(.get) {
+                    "waypointCompleted"
+                }
+            }
+            0.5
+            1
+        }
+        circleLayer.circleColor = .constant(.init(color: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
+        circleLayer.circleOpacity = .expression(opacity)
+        circleLayer.circleRadius = .constant(.init(10))
+        circleLayer.circleStrokeColor = .constant(.init(color: UIColor.black))
+        circleLayer.circleStrokeWidth = .constant(.init(1))
+        circleLayer.circleStrokeOpacity = .expression(opacity)
+        
+        return circleLayer
+    }
+    
+    func defaultWaypointSymbolLayer() -> SymbolLayer {
+        var symbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.waypointSymbolLayer)
+        symbolLayer.source = NavigationMapView.SourceIdentifier.waypointSource
+        symbolLayer.textField = .expression(Exp(.toString) {
+            Exp(.get) {
+                "name"
+            }
+        })
+        symbolLayer.textSize = .constant(.init(10))
+        symbolLayer.textOpacity = .expression(Exp(.switchCase) {
+            Exp(.any) {
+                Exp(.get) {
+                    "waypointCompleted"
+                }
+            }
+            0.5
+            1
+        })
+        symbolLayer.textHaloWidth = .constant(.init(0.25))
+        symbolLayer.textHaloColor = .constant(.init(color: UIColor.black))
+        
+        return symbolLayer
+    }
+    
+    /**
+     Removes all existing `Route` objects from `MapView`, which were added by `NavigationMapView`.
      */
     public func removeRoutes() {
-        guard let style = style else { return }
-        
         var sourceIdentifiers = Set<String>()
         var layerIdentifiers = Set<String>()
         routes?.enumerated().forEach {
-            if $0.offset == 0, let identifier = identifier($0.element, identifierType: .source, isMainRouteCasingSource: true) {
-                sourceIdentifiers.insert(identifier)
-            }
-            
-            if let identifier = identifier($0.element, identifierType: .source) {
-                sourceIdentifiers.insert(identifier)
-            }
-            
-            if let identifier = identifier($0.element, identifierType: .route) {
-                layerIdentifiers.insert(identifier)
-            }
-            
-            if let identifier = identifier($0.element, identifierType: .routeCasing) {
-                layerIdentifiers.insert(identifier)
-            }
+            sourceIdentifiers.insert($0.element.identifier(.source(isMainRoute: $0.offset == 0, isSourceCasing: true)))
+            sourceIdentifiers.insert($0.element.identifier(.source(isMainRoute: $0.offset == 0, isSourceCasing: false)))
+            layerIdentifiers.insert($0.element.identifier(.route(isMainRoute: $0.offset == 0)))
+            layerIdentifiers.insert($0.element.identifier(.routeCasing(isMainRoute: $0.offset == 0)))
         }
         
-        style.remove(layerIdentifiers.compactMap({ style.layer(withIdentifier: $0) }))
-        style.remove(Set(sourceIdentifiers.compactMap({ style.source(withIdentifier: $0) })))
+        mapView.mapboxMap.style.removeLayers(layerIdentifiers)
+        mapView.mapboxMap.style.removeSources(sourceIdentifiers)
         
         routes = nil
         routePoints = nil
@@ -784,198 +843,184 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     /**
-     Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
-     */
-    public func showWaypoints(on route: Route, legIndex: Int = 0) {
-        guard let style = style else {
-            return
-        }
-
-        let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap { $0.destination })
-        
-        let source = navigationMapViewDelegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex) ?? shape(for: waypoints, legIndex: legIndex)
-        if route.legs.count > 1 { //are we on a multipoint route?
-            
-            routes = [route] //update the model
-            if let waypointSource = style.source(withIdentifier: SourceIdentifier.waypoint) as? MGLShapeSource {
-                waypointSource.shape = source
-            } else {
-                let sourceShape = MGLShapeSource(identifier: SourceIdentifier.waypoint, shape: source, options: sourceOptions)
-                style.addSource(sourceShape)
-                
-                let circles = navigationMapViewDelegate?.navigationMapView(self, waypointStyleLayerWithIdentifier: StyleLayerIdentifier.waypointCircle, source: sourceShape) ?? routeWaypointCircleStyleLayer(identifier: StyleLayerIdentifier.waypointCircle, source: sourceShape)
-                let symbols = navigationMapViewDelegate?.navigationMapView(self, waypointSymbolStyleLayerWithIdentifier: StyleLayerIdentifier.waypointSymbol, source: sourceShape) ?? routeWaypointSymbolStyleLayer(identifier: StyleLayerIdentifier.waypointSymbol, source: sourceShape)
-                
-                if let arrowLayer = style.layer(withIdentifier: StyleLayerIdentifier.arrowCasingSymbol) {
-                    style.insertLayer(circles, above: arrowLayer)
-                } else {
-                    style.addLayer(circles)
-                }
-                
-                style.insertLayer(symbols, above: circles)
-            }
-        }
-        
-        if let lastLeg =  route.legs.last, let destinationCoordinate = lastLeg.destination?.coordinate {
-            removeAnnotations(annotationsToRemove() ?? [])
-            let destination = NavigationAnnotation()
-            destination.coordinate = destinationCoordinate
-            addAnnotation(destination)
-        }
-    }
-    
-    func annotationsToRemove() -> [MGLAnnotation]? {
-        return annotations?.filter { $0 is NavigationAnnotation }
-    }
-    
-    /**
-     Removes all waypoints from the map.
+     Removes all existing `Waypoint` objects from `MapView`, which were added by `NavigationMapView`.
      */
     public func removeWaypoints() {
-        guard let style = style else { return }
+        pointAnnotationManager?.syncAnnotations([])
         
-        removeAnnotations(annotationsToRemove() ?? [])
+        let layers: Set = [
+            NavigationMapView.LayerIdentifier.waypointCircleLayer,
+            NavigationMapView.LayerIdentifier.waypointSymbolLayer
+        ]
         
-        style.remove([
-            StyleLayerIdentifier.waypointCircle,
-            StyleLayerIdentifier.waypointSymbol,
-        ].compactMap { style.layer(withIdentifier: $0) })
-        style.remove(Set([
-            SourceIdentifier.waypoint,
-            SourceIdentifier.waypointCircle,
-            SourceIdentifier.waypointSymbol,
-        ].compactMap { style.source(withIdentifier: $0) }))
+        mapView.mapboxMap.style.removeLayers(layers)
+        mapView.mapboxMap.style.removeSources([NavigationMapView.SourceIdentifier.waypointSource])
+    }
+    
+    func annotationsToRemove() -> [Annotation] {
+        let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
+        return pointAnnotationManager?.annotations.filter({ $0.id == identifier }) ?? []
     }
     
     /**
      Shows the step arrow given the current `RouteProgress`.
+     
+     - parameter route: `Route` object, for which maneuver arrows will be shown.
+     - parameter legIndex: Zero-based index of the `RouteLeg` which contains the maneuver.
+     - parameter stepIndex: Zero-based index of the `RouteStep` which contains the maneuver.
      */
     public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
         guard route.legs.indices.contains(legIndex),
-              route.legs[legIndex].steps.indices.contains(stepIndex) else { return }
+              route.legs[legIndex].steps.indices.contains(stepIndex),
+              let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
-        let step = route.legs[legIndex].steps[stepIndex]
-        let maneuverCoordinate = step.maneuverLocation
-        
-        guard let style = style else {
-            return
-        }
-
-        guard let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
-        
-        style.setImage(triangleImage, forName: "triangle-tip-navigation")
-        
-        guard step.maneuverType != .arrive else { return }
-        
-        let minimumZoomLevel: Float = 14.5
-        
-        let shaftLength = max(min(30 * metersPerPoint(atLatitude: maneuverCoordinate.latitude), 30), 10)
-        let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
-        
-        if shaftPolyline.coordinates.count > 1 {
-            var shaftStrokeCoordinates = shaftPolyline.coordinates
-            let shaftStrokePolyline = ArrowStrokePolyline(coordinates: &shaftStrokeCoordinates, count: UInt(shaftStrokeCoordinates.count))
-            let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
-            let maneuverArrowStrokePolylines = [shaftStrokePolyline]
-            let shaftPolyline = ArrowFillPolyline(coordinates: shaftPolyline.coordinates, count: UInt(shaftPolyline.coordinates.count))
+        do {
+            try mapView.mapboxMap.style.addImage(triangleImage, id: NavigationMapView.ImageIdentifier.arrowImage)
+            let step = route.legs[legIndex].steps[stepIndex]
+            let maneuverCoordinate = step.maneuverLocation
+            guard step.maneuverType != .arrive else { return }
             
-            let arrowShape = MGLShapeCollection(shapes: [shaftPolyline])
-            let arrowStrokeShape = MGLShapeCollection(shapes: maneuverArrowStrokePolylines)
+            // TODO: Implement ability to change `shaftLength` depending on zoom level.
+            let shaftLength = max(min(30 * mapView.metersPerPointAtLatitude(latitude: maneuverCoordinate.latitude), 30), 10)
+            let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             
-            let arrowSourceStroke = MGLShapeSource(identifier: SourceIdentifier.arrowStroke, shape: arrowStrokeShape, options: sourceOptions)
-            let arrowStroke = MGLLineStyleLayer(identifier: StyleLayerIdentifier.arrowStroke, source: arrowSourceStroke)
-            let arrowSource = MGLShapeSource(identifier: SourceIdentifier.arrow, shape: arrowShape, options: sourceOptions)
-            let arrow = MGLLineStyleLayer(identifier: StyleLayerIdentifier.arrow, source: arrowSource)
+            var puckLayerIdentifier: String?
+            switch userLocationStyle {
+            case .puck2D(configuration: _):
+                puckLayerIdentifier = NavigationMapView.LayerIdentifier.puck2DLayer
+            case .puck3D(configuration: _):
+                puckLayerIdentifier = NavigationMapView.LayerIdentifier.puck3DLayer
+            default: break
+            }
             
-            if let source = style.source(withIdentifier: SourceIdentifier.arrow) as? MGLShapeSource {
-                source.shape = arrowShape
-            } else {
-                arrow.minimumZoomLevel = minimumZoomLevel
-                arrow.lineCap = NSExpression(forConstantValue: "butt")
-                arrow.lineJoin = NSExpression(forConstantValue: "round")
-                arrow.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.70))
-                arrow.lineColor = NSExpression(forConstantValue: maneuverArrowColor)
+            if shaftPolyline.coordinates.count > 1 {
+                let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
+                let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
+                let minimumZoomLevel: Double = 14.5
+                let shaftStrokeCoordinates = shaftPolyline.coordinates
+                let shaftDirection = shaftStrokeCoordinates[shaftStrokeCoordinates.count - 2].direction(to: shaftStrokeCoordinates.last!)
                 
-                style.addSource(arrowSource)
-                if let waypoints = style.layer(withIdentifier: StyleLayerIdentifier.waypointCircle) {
-                    style.insertLayer(arrow, below: waypoints)
+                var arrowSource = GeoJSONSource()
+                arrowSource.data = .feature(Feature(geometry: .lineString(shaftPolyline)))
+                var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
+                if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSource) {
+                    let geoJSON = Feature(geometry: .lineString(shaftPolyline))
+                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSource, geoJSON: geoJSON)
                 } else {
-                    style.addLayer(arrow)
+                    arrowLayer.minZoom = Double(minimumZoomLevel)
+                    arrowLayer.lineCap = .constant(.butt)
+                    arrowLayer.lineJoin = .constant(.round)
+                    arrowLayer.lineWidth = .expression(Expression.routeLineWidthExpression(0.70))
+                    arrowLayer.lineColor = .constant(.init(color: maneuverArrowColor))
+                    
+                    try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
+                    arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
+                    
+                    if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(puckLayer))
+                    } else if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
+                    } else {
+                        try mapView.mapboxMap.style.addLayer(arrowLayer)
+                    }
+                }
+                
+                var arrowStrokeSource = GeoJSONSource()
+                arrowStrokeSource.data = .feature(Feature(geometry: .lineString(shaftPolyline)))
+                var arrowStrokeLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
+                if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource) {
+                    let geoJSON = Feature(geometry: .lineString(shaftPolyline))
+                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource,
+                                                                    geoJSON: geoJSON)
+                } else {
+                    arrowStrokeLayer.minZoom = arrowLayer.minZoom
+                    arrowStrokeLayer.lineCap = arrowLayer.lineCap
+                    arrowStrokeLayer.lineJoin = arrowLayer.lineJoin
+                    arrowStrokeLayer.lineWidth = .expression(Expression.routeLineWidthExpression(0.80))
+                    arrowStrokeLayer.lineColor = .constant(.init(color: maneuverArrowStrokeColor))
+                    
+                    try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
+                    arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
+                    
+                    let arrowStrokeLayerPsoition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
+                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPsoition)
+                }
+                
+                let point = Point(shaftStrokeCoordinates.last!)
+                var arrowSymbolSource = GeoJSONSource()
+                arrowSymbolSource.data = .feature(Feature(geometry: .point(point)))
+                if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource) {
+                    let geoJSON = Feature.init(geometry: Geometry.point(point))
+                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource,
+                                                                    geoJSON: geoJSON)
+                    
+                    try mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+                                                                 property: "icon-rotate",
+                                                                 value: shaftDirection)
+                    
+                    try mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer,
+                                                                 property: "icon-rotate",
+                                                                 value: shaftDirection)
+                } else {
+                    var arrowSymbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.arrowSymbolLayer)
+                    arrowSymbolLayer.minZoom = Double(minimumZoomLevel)
+                    arrowSymbolLayer.iconImage = .constant(.name(NavigationMapView.ImageIdentifier.arrowImage))
+                    // FIXME: `iconColor` has no effect.
+                    arrowSymbolLayer.iconColor = .constant(.init(color: maneuverArrowColor))
+                    arrowSymbolLayer.iconRotationAlignment = .constant(.map)
+                    arrowSymbolLayer.iconRotate = .constant(.init(shaftDirection))
+                    arrowSymbolLayer.iconSize = .expression(Expression.routeLineWidthExpression(0.12))
+                    arrowSymbolLayer.iconAllowOverlap = .constant(true)
+                    
+                    var arrowSymbolCasingLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer)
+                    arrowSymbolCasingLayer.minZoom = arrowSymbolLayer.minZoom
+                    arrowSymbolCasingLayer.iconImage = arrowSymbolLayer.iconImage
+                    // FIXME: `iconColor` has no effect.
+                    arrowSymbolCasingLayer.iconColor = .constant(.init(color: maneuverArrowStrokeColor))
+                    arrowSymbolCasingLayer.iconRotationAlignment = arrowSymbolLayer.iconRotationAlignment
+                    arrowSymbolCasingLayer.iconRotate = arrowSymbolLayer.iconRotate
+                    arrowSymbolCasingLayer.iconSize = .expression(Expression.routeLineWidthExpression(0.14))
+                    arrowSymbolCasingLayer.iconAllowOverlap = arrowSymbolLayer.iconAllowOverlap
+                    
+                    try mapView.mapboxMap.style.addSource(arrowSymbolSource, id: NavigationMapView.SourceIdentifier.arrowSymbolSource)
+                    arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
+                    arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
+                    
+                    if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer, layerPosition: .below(puckLayer))
+                    } else {
+                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer)
+                    }
+                    try mapView.mapboxMap.style.addLayer(arrowSymbolCasingLayer,
+                                                         layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
             }
-            
-            if let source = style.source(withIdentifier: SourceIdentifier.arrowStroke) as? MGLShapeSource {
-                source.shape = arrowStrokeShape
-            } else {
-                arrowStroke.minimumZoomLevel = arrow.minimumZoomLevel
-                arrowStroke.lineCap = arrow.lineCap
-                arrowStroke.lineJoin = arrow.lineJoin
-                arrowStroke.lineWidth = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.80))
-                arrowStroke.lineColor = NSExpression(forConstantValue: maneuverArrowStrokeColor)
-                
-                style.addSource(arrowSourceStroke)
-                style.insertLayer(arrowStroke, below: arrow)
-            }
-            
-            // Arrow symbol
-            let point = MGLPointFeature()
-            point.coordinate = shaftStrokeCoordinates.last!
-            let arrowSymbolSource = MGLShapeSource(identifier: SourceIdentifier.arrowSymbol, features: [point], options: sourceOptions)
-            
-            if let source = style.source(withIdentifier: SourceIdentifier.arrowSymbol) as? MGLShapeSource {
-                source.shape = arrowSymbolSource.shape
-                if let arrowSymbolLayer = style.layer(withIdentifier: StyleLayerIdentifier.arrowSymbol) as? MGLSymbolStyleLayer {
-                    arrowSymbolLayer.iconRotation = NSExpression(forConstantValue: shaftDirection as NSNumber)
-                }
-                if let arrowSymbolLayerCasing = style.layer(withIdentifier: StyleLayerIdentifier.arrowCasingSymbol) as? MGLSymbolStyleLayer {
-                    arrowSymbolLayerCasing.iconRotation = NSExpression(forConstantValue: shaftDirection as NSNumber)
-                }
-            } else {
-                let arrowSymbolLayer = MGLSymbolStyleLayer(identifier: StyleLayerIdentifier.arrowSymbol, source: arrowSymbolSource)
-                arrowSymbolLayer.minimumZoomLevel = minimumZoomLevel
-                arrowSymbolLayer.iconImageName = NSExpression(forConstantValue: "triangle-tip-navigation")
-                arrowSymbolLayer.iconColor = NSExpression(forConstantValue: maneuverArrowColor)
-                arrowSymbolLayer.iconRotationAlignment = NSExpression(forConstantValue: "map")
-                arrowSymbolLayer.iconRotation = NSExpression(forConstantValue: shaftDirection as NSNumber)
-                arrowSymbolLayer.iconScale = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.12))
-                arrowSymbolLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
-                
-                let arrowSymbolLayerCasing = MGLSymbolStyleLayer(identifier: StyleLayerIdentifier.arrowCasingSymbol, source: arrowSymbolSource)
-                arrowSymbolLayerCasing.minimumZoomLevel = arrowSymbolLayer.minimumZoomLevel
-                arrowSymbolLayerCasing.iconImageName = arrowSymbolLayer.iconImageName
-                arrowSymbolLayerCasing.iconColor = NSExpression(forConstantValue: maneuverArrowStrokeColor)
-                arrowSymbolLayerCasing.iconRotationAlignment = arrowSymbolLayer.iconRotationAlignment
-                arrowSymbolLayerCasing.iconRotation = arrowSymbolLayer.iconRotation
-                arrowSymbolLayerCasing.iconScale = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", MBRouteLineWidthByZoomLevel.multiplied(by: 0.14))
-                arrowSymbolLayerCasing.iconAllowsOverlap = arrowSymbolLayer.iconAllowsOverlap
-                
-                style.addSource(arrowSymbolSource)
-                style.insertLayer(arrowSymbolLayer, above: arrow)
-                style.insertLayer(arrowSymbolLayerCasing, below: arrow)
-            }
+        } catch {
+            NSLog("Failed to perform operation while adding maneuver arrow with error: \(error.localizedDescription).")
         }
     }
     
     /**
-     Removes the step arrow from the map.
+     Removes the `RouteStep` arrow from the `MapView`.
      */
     public func removeArrow() {
-        guard let style = style else {
-            return
-        }
+        let layers: Set = [
+            NavigationMapView.LayerIdentifier.arrowLayer,
+            NavigationMapView.LayerIdentifier.arrowStrokeLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolLayer,
+            NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer
+        ]
+        mapView.mapboxMap.style.removeLayers(layers)
         
-        style.remove([
-            StyleLayerIdentifier.arrow,
-            StyleLayerIdentifier.arrowStroke,
-            StyleLayerIdentifier.arrowSymbol,
-            StyleLayerIdentifier.arrowCasingSymbol,
-        ].compactMap { style.layer(withIdentifier: $0) })
-        style.remove(Set([
-            SourceIdentifier.arrow,
-            SourceIdentifier.arrowStroke,
-            SourceIdentifier.arrowSymbol,
-        ].compactMap { style.source(withIdentifier: $0) }))
+        let sources: Set = [
+            NavigationMapView.SourceIdentifier.arrowSource,
+            NavigationMapView.SourceIdentifier.arrowStrokeSource,
+            NavigationMapView.SourceIdentifier.arrowSymbolSource
+        ]
+        mapView.mapboxMap.style.removeSources(sources)
     }
+    
+    // MARK: - Route duration annotations methods
 
     /**
      Shows a callout containing the duration of each route.
@@ -983,33 +1028,68 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      If the route contains any tolled segments then the callout will specify that as well.
      */
     public func showRouteDurations(along routes: [Route]?) {
-        guard let visibleRoutes = self.routes, visibleRoutes.count > 0 else { return }
-        updateAnnotationSymbolImages()
+        guard let visibleRoutes = routes, visibleRoutes.count > 0 else { return }
+        
+        do {
+            try updateAnnotationSymbolImages()
+        } catch {
+            NSLog("Error occured while updating annotation symbol images: \(error.localizedDescription).")
+        }
+        
         updateRouteDurations(along: visibleRoutes)
     }
 
     /**
      Updates the image assets in the map style for the route duration annotations. Useful when the desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
      */
-    private func updateAnnotationSymbolImages() {
-        guard let style = style, style.image(forName: "RouteInfoAnnotationLeftHanded") == nil, style.image(forName: "RouteInfoAnnotationRightHanded") == nil else { return }
-        let capInsetHeight = CGFloat(22)
-        let capInsetWidth = CGFloat(11)
-        let capInsets = UIEdgeInsets(top: capInsetHeight, left: capInsetWidth, bottom: capInsetHeight, right: capInsetWidth)
-        if let image =  Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
-            let regularRouteImage = image.tint(routeDurationAnnotationColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
-            style.setImage(regularRouteImage, forName: "RouteInfoAnnotationLeftHanded")
-
-            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
-            style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationLeftHanded-Selected")
-        }
-
+    private func updateAnnotationSymbolImages() throws {
+        let style = mapView.mapboxMap.style
+        
+        guard style.image(withId: "RouteInfoAnnotationLeftHanded") == nil,
+              style.image(withId: "RouteInfoAnnotationRightHanded") == nil else { return }
+        
+        // Right-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
-            let regularRouteImage = image.tint(routeDurationAnnotationColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
-            style.setImage(regularRouteImage, forName: "RouteInfoAnnotationRightHanded")
-
-            let selectedRouteImage = image.tint(routeDurationAnnotationSelectedColor).resizableImage(withCapInsets: capInsets, resizingMode: .stretch)
-            style.setImage(selectedRouteImage, forName: "RouteInfoAnnotationRightHanded-Selected")
+            // define the "stretchable" areas in the image that will be fitted to the text label
+            let stretchX = [ImageStretches(first: Float(24), second: Float(40))]
+            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
+            let imageContent = ImageContent(left: 24, top: 25, right: 40, bottom: 35)
+            
+            let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
+            try style.addImage(regularAnnotationImage,
+                               id: "RouteInfoAnnotationRightHanded",
+                               stretchX: stretchX,
+                               stretchY: stretchY,
+                               content: imageContent)
+            
+            let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
+            try style.addImage(selectedAnnotationImage,
+                               id: "RouteInfoAnnotationRightHanded-Selected",
+                               stretchX: stretchX,
+                               stretchY: stretchY,
+                               content: imageContent)
+        }
+        
+        // Left-hand pin
+        if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
+            // define the "stretchable" areas in the image that will be fitted to the text label
+            let stretchX = [ImageStretches(first: Float(34), second: Float(50))]
+            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
+            let imageContent = ImageContent(left: 34, top: 25, right: 50, bottom: 35)
+            
+            let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
+            try style.addImage(regularAnnotationImage,
+                               id: "RouteInfoAnnotationLeftHanded",
+                               stretchX: stretchX,
+                               stretchY: stretchY,
+                               content: imageContent)
+            
+            let selectedAnnotationImage = image.tint(routeDurationAnnotationSelectedColor)
+            try style.addImage(selectedAnnotationImage,
+                               id: "RouteInfoAnnotationLeftHanded-Selected",
+                               stretchX: stretchX,
+                               stretchY: stretchY,
+                               content: imageContent)
         }
     }
 
@@ -1017,14 +1097,15 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
      Remove any old route duration callouts and generate new ones for each passed in route.
      */
     private func updateRouteDurations(along routes: [Route]?) {
-        guard let style = style else { return }
+        let style = mapView.mapboxMap.style
         
         // remove any existing route annotation
         removeRouteDurationAnnotationsLayerFromStyle(style)
 
         guard let routes = routes else { return }
 
-        let visibleBoundingBox = BoundingBox(coordinateBounds: visibleCoordinateBounds)
+        let coordinateBounds = mapView.mapboxMap.coordinateBounds(for: mapView.frame)
+        let visibleBoundingBox = BoundingBox(southWest: coordinateBounds.southwest, northEast: coordinateBounds.northeast)
 
         let tollRoutes = routes.filter { route -> Bool in
             return (route.tollIntersections?.count ?? 0) > 0
@@ -1034,7 +1115,7 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         // pick a random tail direction to keep things varied
         guard let randomTailPosition = [RouteDurationAnnotationTailPosition.left, RouteDurationAnnotationTailPosition.right].randomElement() else { return }
 
-        var features = [MGLPointFeature]()
+        var features = [Turf.Feature]()
 
         // Run through our heuristic algorithm looking for a good coordinate along each route line to place it's route annotation
         // First, we will look for a set of RouteSteps unique to each route
@@ -1090,13 +1171,12 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
 
             // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
-            let point = MGLPointFeature()
-            point.coordinate = annotationCoordinate
+            var feature = Feature(geometry: .point(Point(annotationCoordinate)))
 
             var tailPosition = randomTailPosition
 
             // convert our coordinate to screen space so we can make a choice on which side of the coordinate the label ends up on
-            let unprojectedCoordinate = convert(annotationCoordinate, toPointTo: nil)
+            let unprojectedCoordinate = mapView.mapboxMap.point(for: annotationCoordinate)
 
             // pick the orientation of the bubble "stem" based on how close to the edge of the screen it is
             if tailPosition == .left && unprojectedCoordinate.x > bounds.width * 0.75 {
@@ -1113,92 +1193,151 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             }
 
             // set the feature attributes which will be used in styling the symbol style layer
-            point.attributes = ["selected": index == 0, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": imageName, "sortOrder": -index]
+            feature.properties = ["selected": index == 0, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": imageName, "sortOrder": index == 0 ? index : -index]
 
-            features.append(point)
+            features.append(feature)
         }
 
         // add the features to the style
-        self.addRouteAnnotationSymbolLayer(features: features)
+        do {
+            try addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features))
+        } catch {
+            NSLog("Error occured while adding route annotation symbol layer: \(error.localizedDescription).")
+        }
     }
 
     /**
      Add the MGLSymbolStyleLayer for the route duration annotations.
      */
-    private func addRouteAnnotationSymbolLayer(features: [MGLPointFeature]) {
-        guard let style = style else { return }
-        let dataSource: MGLShapeSource
-        if let source = style.source(withIdentifier: SourceIdentifier.routeDurationAnnotations) as? MGLShapeSource {
-            dataSource = source
+    private func addRouteAnnotationSymbolLayer(features: FeatureCollection) throws {
+        let style = mapView.mapboxMap.style
+        
+        let routeDurationAnnotationsSourceIdentifier = NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource
+        if style.sourceExists(withId: routeDurationAnnotationsSourceIdentifier) {
+            try style.updateGeoJSONSource(withId: routeDurationAnnotationsSourceIdentifier, geoJSON: features)
         } else {
-            dataSource = MGLShapeSource(identifier: SourceIdentifier.routeDurationAnnotations, features: features, options: nil)
-            style.addSource(dataSource)
+            var dataSource = GeoJSONSource()
+            dataSource.data = .featureCollection(features)
+            try style.addSource(dataSource, id: routeDurationAnnotationsSourceIdentifier)
         }
-
-        let shapeLayer: MGLSymbolStyleLayer
-
-        if let layer = style.layer(withIdentifier: StyleLayerIdentifier.routeDurationAnnotations) as? MGLSymbolStyleLayer {
+        
+        let routeDurationAnnotationsLayerIdentifier = NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer
+        var shapeLayer: SymbolLayer
+        if let layer = try? style.layer(withId: routeDurationAnnotationsLayerIdentifier) as SymbolLayer {
             shapeLayer = layer
         } else {
-            shapeLayer = MGLSymbolStyleLayer(identifier: StyleLayerIdentifier.routeDurationAnnotations, source: dataSource)
+            shapeLayer = SymbolLayer(id: routeDurationAnnotationsLayerIdentifier)
         }
 
-        shapeLayer.text = NSExpression(forKeyPath: "text")
-        let fontSizeByZoomLevel = [
-            13: NSExpression(forConstantValue: 16),
-            15.5: NSExpression(forConstantValue: 20)
+        shapeLayer.source = routeDurationAnnotationsSourceIdentifier
+
+        shapeLayer.textField = .expression(Exp(.get) {
+            "text"
+        })
+
+        shapeLayer.iconImage = .expression(Exp(.get) {
+            "imageName"
+        })
+
+        shapeLayer.textColor = .expression(Exp(.switchCase) {
+            Exp(.any) {
+                Exp(.get) {
+                    "selected"
+                }
+            }
+            routeDurationAnnotationSelectedTextColor
+            routeDurationAnnotationTextColor
+        })
+
+        shapeLayer.textSize = .constant(16)
+        shapeLayer.iconTextFit = .constant(IconTextFit.both)
+        shapeLayer.iconAllowOverlap = .constant(true)
+        shapeLayer.textAllowOverlap = .constant(true)
+        shapeLayer.textJustify = .constant(TextJustify.left)
+        shapeLayer.symbolZOrder = .constant(SymbolZOrder.auto)
+        shapeLayer.textFont = .constant(self.routeDurationAnnotationFontNames)
+
+        try style.addLayer(shapeLayer)
+
+        let symbolSortKeyString =
+        """
+        ["get", "sortOrder"]
+        """
+
+        if let expressionData = symbolSortKeyString.data(using: .utf8),
+           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+            let property = "symbol-sort-key"
+            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
+                                       property: property,
+                                       value: expJSONObject)
+        }
+
+        let expressionString =
+        """
+        [
+          "match",
+          ["get", "tailPosition"],
+          [0],
+          "bottom-left",
+          [1],
+          "bottom-right",
+          "center"
         ]
-        shapeLayer.textFontSize = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fontSizeByZoomLevel)
+        """
 
-        shapeLayer.textColor = NSExpression(forConditional: NSPredicate(format: "selected == true"),
-                                            trueExpression: NSExpression(forConstantValue: routeDurationAnnotationSelectedTextColor),
-                     falseExpression: NSExpression(forConstantValue: routeDurationAnnotationTextColor))
+        if let expressionData = expressionString.data(using: .utf8),
+           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
+                                       property: "icon-anchor",
+                                       value: expJSONObject)
+            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
+                                       property: "text-anchor",
+                                       value: expJSONObject)
+        }
 
-        shapeLayer.textFontNames = NSExpression(forConstantValue: [self.routeDurationAnnotationFontName])
-        shapeLayer.textAllowsOverlap = NSExpression(forConstantValue: true)
-        shapeLayer.textJustification = NSExpression(forConstantValue: "left")
-        shapeLayer.symbolZOrder = NSExpression(forConstantValue: NSValue(mglSymbolZOrder: MGLSymbolZOrder.auto))
-        shapeLayer.symbolSortKey = NSExpression(forConditional: NSPredicate(format: "selected == true"),
-                                                trueExpression: NSExpression(forConstantValue: 1),
-                                                   falseExpression: NSExpression(format: "sortOrder"))
-        shapeLayer.iconAnchor = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
-                                             trueExpression: NSExpression(forConstantValue: "bottom-left"),
-                                                falseExpression: NSExpression(forConstantValue: "bottom-right"))
-        shapeLayer.textAnchor = shapeLayer.iconAnchor
-        shapeLayer.iconTextFit = NSExpression(forConstantValue: "both")
-
-        shapeLayer.iconImageName = NSExpression(forKeyPath: "imageName")
-        shapeLayer.iconOffset = NSExpression(forConditional: NSPredicate(format: "tailPosition == 0"),
-                                             trueExpression: NSExpression(forConstantValue: CGVector(dx: 0.5, dy: -1.0)),
-                      falseExpression: NSExpression(forConstantValue: CGVector(dx: -0.5, dy: -1.0)))
-        shapeLayer.textOffset = shapeLayer.iconOffset
-        shapeLayer.iconAllowsOverlap = NSExpression(forConstantValue: true)
-
-        style.addLayer(shapeLayer)
+        let offsetExpressionString =
+            """
+        [
+          "match",
+          ["get", "tailPosition"],
+          [0],
+          ["literal", [0.5, -1]],
+          ["literal", [-0.5, -1]]
+        ]
+        """
+        
+        if let expressionData = offsetExpressionString.data(using: .utf8),
+           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
+            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
+                                       property: "icon-offset",
+                                       value: expJSONObject)
+            
+            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
+                                       property: "text-offset",
+                                       value: expJSONObject)
+        }
     }
 
     /**
      Removes all visible route duration callouts.
      */
     public func removeRouteDurations() {
-        guard let style = style else { return }
+        let style = mapView.mapboxMap.style
         removeRouteDurationAnnotationsLayerFromStyle(style)
     }
 
     /**
      Remove the underlying style layers and data sources for the route duration annotations.
      */
-    private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MGLStyle) {
-        if let annotationsLayer = style.layer(withIdentifier: StyleLayerIdentifier.routeDurationAnnotations) {
-            style.removeLayer(annotationsLayer)
-        }
-
-        if let annotationsSource = style.source(withIdentifier: SourceIdentifier.routeDurationAnnotations) {
-            style.removeSource(annotationsSource)
-        }
+    private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MapboxMaps.Style) {
+        style.removeLayers([NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer])
+        style.removeSources([NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource])
     }
 
-    // This function generates the text for the label to be shown on screen. It will include estimated duration and info on Tolls, if applicable
+    /**
+     Generate the text for the label to be shown on screen. It will include estimated duration
+     and info on Tolls, if applicable.
+     */
     private func annotationLabelForRoute(_ route: Route, tolls: Bool) -> String {
         var eta = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
 
@@ -1217,50 +1356,113 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
         return eta
     }
     
-    // MARK: Utility Methods
+    // MARK: - Road labels localization methods
     
-    /** Modifies the gesture recognizers to also disable course tracking. */
-    func makeGestureRecognizersRespectCourseTracking() {
-        for gestureRecognizer in gestureRecognizers ?? []
-        where gestureRecognizer is UIPanGestureRecognizer || gestureRecognizer is UIRotationGestureRecognizer {
-            gestureRecognizer.addTarget(self, action: #selector(disableUserCourseTracking))
-        }
+    public func localizeLabels() {
+        // TODO: Implement ability to localize road labels.
     }
     
-    func makeGestureRecognizersUpdateCourseView() {
-        for gestureRecognizer in gestureRecognizers ?? [] {
-            gestureRecognizer.addTarget(self, action: #selector(updateCourseView(_:)))
-        }
-    }
+    // MARK: - Route voice instructions methods
     
-    private func updateCourseView(to location: CLLocation, pitch: CGFloat? = nil, direction: CLLocationDirection? = nil, animated: Bool = false) {
-        userCourseView.update(location: location,
-                              pitch: pitch ?? camera.pitch,
-                              direction: direction ?? self.direction,
-                              animated: animated,
-                              tracksUserCourse: tracksUserCourse)
+    /**
+     Shows voice instructions for specific `Route` object.
+     
+     - parameter route: `Route` object, along which voice instructions will be shown.
+     */
+    public func showVoiceInstructionsOnMap(route: Route) {
+        var featureCollection = FeatureCollection(features: [])
         
-        userCourseView.center = convert(location.coordinate, toPointTo: self)
+        for (legIndex, leg) in route.legs.enumerated() {
+            for (stepIndex, step) in leg.steps.enumerated() {
+                guard let instructions = step.instructionsSpokenAlongStep else { continue }
+                for instruction in instructions {
+                    guard let shape = route.legs[legIndex].steps[stepIndex].shape,
+                          let coordinateFromStart = LineString(shape.coordinates.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep) else { continue }
+                    
+                    var feature = Feature(geometry: .point(Point(coordinateFromStart)))
+                    feature.properties = [
+                        "instruction": instruction.text
+                    ]
+                    featureCollection.features.append(feature)
+                }
+            }
+        }
+        
+        do {
+            if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource) {
+                try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource, geoJSON: featureCollection)
+            } else {
+                var source = GeoJSONSource()
+                source.data = .featureCollection(featureCollection)
+                try mapView.mapboxMap.style.addSource(source, id: NavigationMapView.SourceIdentifier.voiceInstructionSource)
+                
+                var symbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionLabelLayer)
+                symbolLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
+                
+                let instruction = Exp(.toString) {
+                    Exp(.get) {
+                        "instruction"
+                    }
+                }
+                
+                symbolLayer.textField = .expression(instruction)
+                symbolLayer.textSize = .constant(14)
+                symbolLayer.textHaloWidth = .constant(1)
+                symbolLayer.textHaloColor = .constant(.init(color: .white))
+                symbolLayer.textOpacity = .constant(0.75)
+                symbolLayer.textAnchor = .constant(.bottom)
+                symbolLayer.textJustify = .constant(.left)
+                try mapView.mapboxMap.style.addLayer(symbolLayer)
+                
+                var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer)
+                circleLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
+                circleLayer.circleRadius = .constant(5)
+                circleLayer.circleOpacity = .constant(0.75)
+                circleLayer.circleColor = .constant(.init(color: .white))
+                try mapView.mapboxMap.style.addLayer(circleLayer)
+            }
+        } catch {
+            NSLog("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).")
+        }
+    }
+    
+    // MARK: - Gesture recognizers methods
+    
+    /**
+     Fired when NavigationMapView detects a tap not handled elsewhere by other gesture recognizers.
+     */
+    @objc func didReceiveTap(sender: UITapGestureRecognizer) {
+        guard let routes = routes, let tapPoint = sender.point else { return }
+        
+        let waypointTest = waypoints(on: routes, closeTo: tapPoint)
+        if let selected = waypointTest?.first {
+            delegate?.navigationMapView(self, didSelect: selected)
+            return
+        } else if let routes = self.routes(closeTo: tapPoint) {
+            guard let selectedRoute = routes.first else { return }
+            delegate?.navigationMapView(self, didSelect: selectedRoute)
+        }
     }
     
     private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
-        let tapCoordinate = convert(point, toCoordinateFrom: self)
+        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
         let multipointRoutes = routes.filter { $0.legs.count > 1}
         guard multipointRoutes.count > 0 else { return nil }
         let waypoints = multipointRoutes.compactMap { route in
             route.legs.dropLast().compactMap { $0.destination }
         }.flatMap {$0}
         
-        //lets sort the array in order of closest to tap
+        // Sort the array in order of closest to tap.
         let closest = waypoints.sorted { (left, right) -> Bool in
             let leftDistance = calculateDistance(coordinate1: left.coordinate, coordinate2: tapCoordinate)
             let rightDistance = calculateDistance(coordinate1: right.coordinate, coordinate2: tapCoordinate)
             return leftDistance < rightDistance
         }
         
-        //lets filter to see which ones are under threshold
+        // Filter to see which ones are under threshold.
         let candidates = closest.filter({
-            let coordinatePoint = self.convert($0.coordinate, toPointTo: self)
+            let coordinatePoint = mapView.mapboxMap.point(for: $0.coordinate)
+            
             return coordinatePoint.distance(to: point) < tapGestureDistanceThreshold
         })
         
@@ -1268,14 +1470,14 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
     }
     
     private func routes(closeTo point: CGPoint) -> [Route]? {
-        let tapCoordinate = convert(point, toCoordinateFrom: self)
+        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
         
-        //do we have routes? If so, filter routes with at least 2 coordinates.
+        // Filter routes with at least 2 coordinates.
         guard let routes = routes?.filter({ $0.shape?.coordinates.count ?? 0 > 1 }) else { return nil }
         
-        //Sort routes by closest distance to tap gesture.
+        // Sort routes by closest distance to tap gesture.
         let closest = routes.sorted { (left, right) -> Bool in
-            //existance has been assured through use of filter.
+            // Existence has been assured through use of filter.
             let leftLine = left.shape!
             let rightLine = right.shape!
             let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.coordinate.distance(to: tapCoordinate)
@@ -1284,434 +1486,34 @@ open class NavigationMapView: MGLMapView, UIGestureRecognizerDelegate {
             return leftDistance < rightDistance
         }
         
-        //filter closest coordinates by which ones are under threshold.
+        // Filter closest coordinates by which ones are under threshold.
         let candidates = closest.filter {
             let closestCoordinate = $0.shape!.closestCoordinate(to: tapCoordinate)!.coordinate
-            let closestPoint = self.convert(closestCoordinate, toPointTo: self)
+            let closestPoint = mapView.mapboxMap.point(for: closestCoordinate)
             
             return closestPoint.distance(to: point) < tapGestureDistanceThreshold
         }
+        
         return candidates
     }
-
-    func shape(for route: Route, legIndex: Int?, isAlternateRoute: Bool) -> MGLShape? {
-        let mainRoute = MGLPolylineFeature(route.shape!)
-        mainRoute.attributes["isAlternateRoute"] = isAlternateRoute
-
-        return MGLShapeCollectionFeature(shapes: [mainRoute])
-    }
     
-    func addCongestion(to route: Route, legIndex: Int?) -> [MGLPolylineFeature]? {
-        guard let coordinates = route.shape?.coordinates else { return nil }
-
-        var linesPerLeg: [MGLPolylineFeature] = []
-
-        for (index, leg) in route.legs.enumerated() {
-            let lines: [MGLPolylineFeature]
-            if let legCongestion = leg.segmentCongestionLevels, legCongestion.count < coordinates.count {
-                // The last coord of the preceding step, is shared with the first coord of the next step, we don't need both.
-                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
-                    let index = current.offset
-                    let step = current.element
-                    let stepCoordinates = step.shape!.coordinates
-
-                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
-                }
-                
-                let mergedCongestionSegments = combine(legCoordinates,
-                                                       with: legCongestion,
-                                                       streetsRoadClasses: leg.streetsRoadClasses,
-                                                       roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-
-                lines = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> MGLPolylineFeature in
-                    let polyline = MGLPolylineFeature(coordinates: congestionSegment.0, count: UInt(congestionSegment.0.count))
-                    polyline.attributes[MBCongestionAttribute] = String(describing: congestionSegment.1)
-                    return polyline
-                }
-            } else {
-                // If there is no congestion, don't try and add it
-                lines = [MGLPolylineFeature(route.shape!)]
-            }
-
-            for line in lines {
-                line.attributes["isAlternateRoute"] = false
-                if let legIndex = legIndex {
-                    line.attributes[MBCurrentLegAttribute] = index == legIndex
-                } else {
-                    line.attributes[MBCurrentLegAttribute] = index == 0
-                }
-            }
-
-            linesPerLeg.append(contentsOf: lines)
+    func makeGestureRecognizersResetFrameRate() {
+        for gestureRecognizer in gestureRecognizers ?? [] {
+            gestureRecognizer.addTarget(self, action: #selector(resetFrameRate(_:)))
         }
-
-        return linesPerLeg
-    }
-    
-    /**
-     Returns an array of congestion segments by associating the given congestion levels with the coordinates of the respective line segments that they apply to.
-     
-     This method coalesces consecutive line segments that have the same congestion level.
-     
-     For each item in the`CongestionSegment` collection a `CongestionLevel` substitution will take place that has a streets road class contained in the `roadClassesWithOverriddenCongestionLevels` collection.
-     For each of these items the `CongestionLevel` for `.unknown` traffic congestion will be replaced with the `.low` traffic congestion.
-     
-     - parameter coordinates: The coordinates of a leg.
-     - parameter congestions: The congestion levels along a leg. There should be one fewer congestion levels than coordinates.
-     - parameter streetsRoadClasses: A collection of streets road classes for each geometry index in `Intersection`. There should be the same amount of `streetsRoadClasses` and `congestions`.
-     - parameter roadClassesWithOverriddenCongestionLevels: Streets road classes for which a `CongestionLevel` substitution should occur.
-     - returns: A list of `CongestionSegment` tuples with coordinate and congestion level.
-     */
-    func combine(_ coordinates: [CLLocationCoordinate2D],
-                 with congestions: [CongestionLevel],
-                 streetsRoadClasses: [MapboxStreetsRoadClass?]? = nil,
-                 roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [CongestionSegment] {
-        var segments: [CongestionSegment] = []
-        segments.reserveCapacity(congestions.count)
-        
-        var index = 0
-        for (firstSegment, congestionLevel) in zip(zip(coordinates, coordinates.suffix(from: 1)), congestions) {
-            let coordinates = [firstSegment.0, firstSegment.1]
-            
-            var overriddenCongestionLevel = congestionLevel
-            if let streetsRoadClasses = streetsRoadClasses,
-               let roadClassesWithOverriddenCongestionLevels = roadClassesWithOverriddenCongestionLevels,
-               streetsRoadClasses.indices.contains(index),
-               let streetsRoadClass = streetsRoadClasses[index],
-               congestionLevel == .unknown,
-               roadClassesWithOverriddenCongestionLevels.contains(streetsRoadClass) {
-                overriddenCongestionLevel = .low
-            }
-            
-            if segments.last?.1 == overriddenCongestionLevel {
-                segments[segments.count - 1].0 += coordinates
-            } else {
-                segments.append((coordinates, overriddenCongestionLevel))
-            }
-            
-            index += 1
-        }
-        
-        return segments
-    }
-
-    /**
-     Creates a single route line for each route leg.
-
-     A route with multiple legs (caused by adding more than one waypoint),
-     will cause linesPerLeg.count > 1.
-     */
-    func shape(forCasingOf route: Route, legIndex: Int?) -> MGLShape? {
-        var linesPerLeg: [MGLPolylineFeature] = []
-        
-        for (index, leg) in route.legs.enumerated() {
-            let polyline = MGLPolylineFeature(leg.shape)
-            if let legIndex = legIndex {
-                polyline.attributes[MBCurrentLegAttribute] = index == legIndex
-            } else {
-                polyline.attributes[MBCurrentLegAttribute] = index == 0
-            }
-            polyline.attributes["isAlternateRoute"] = false
-            linesPerLeg.append(polyline)
-        }
-        
-        return MGLShapeCollectionFeature(shapes: linesPerLeg)
-    }
-    
-    func shape(for waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
-        var features = [MGLPointFeature]()
-        
-        for (waypointIndex, waypoint) in waypoints.enumerated() {
-            let feature = MGLPointFeature()
-            feature.coordinate = waypoint.coordinate
-            feature.attributes = [
-                "waypointCompleted": waypointIndex < legIndex,
-                "name": waypointIndex + 1
-            ]
-            features.append(feature)
-        }
-        
-        return MGLShapeCollectionFeature(shapes: features)
-    }
-    
-    func routeWaypointCircleStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
-        let circles = MGLCircleStyleLayer(identifier: identifier, source: source)
-        let opacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == true"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
-        
-        circles.circleColor = NSExpression(forConstantValue: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0))
-        circles.circleOpacity = opacity
-        circles.circleRadius = NSExpression(forConstantValue: 10)
-        circles.circleStrokeColor = NSExpression(forConstantValue: UIColor.black)
-        circles.circleStrokeWidth = NSExpression(forConstantValue: 1)
-        circles.circleStrokeOpacity = opacity
-        
-        return circles
-    }
-    
-    func routeWaypointSymbolStyleLayer(identifier: String, source: MGLSource) -> MGLStyleLayer {
-        let symbol = MGLSymbolStyleLayer(identifier: identifier, source: source)
-        
-        symbol.text = NSExpression(format: "CAST(name, 'NSString')")
-        symbol.textOpacity = NSExpression(forConditional: NSPredicate(format: "waypointCompleted == true"), trueExpression: NSExpression(forConstantValue: 0.5), falseExpression: NSExpression(forConstantValue: 1))
-        symbol.textFontSize = NSExpression(forConstantValue: 10)
-        symbol.textHaloWidth = NSExpression(forConstantValue: 0.25)
-        symbol.textHaloColor = NSExpression(forConstantValue: UIColor.black)
-        
-        return symbol
-    }
-
-    /**
-     Attempts to localize road labels into the local language and other labels
-     into the system’s preferred language.
-     
-     When this property is enabled, the style automatically modifies the `text`
-     property of any symbol style layer whose source is the
-     <a href="https://docs.mapbox.com/vector-tiles/mapbox-streets-v7/#overview">Mapbox
-     Streets source</a>. On iOS, the user can set the system’s preferred
-     language in Settings, General Settings, Language & Region.
-     
-     Unlike the `MGLStyle.localizeLabels(into:)` method, this method localizes
-     road labels into the local language, regardless of the system’s preferred
-     language, in an effort to match road signage. The turn banner always
-     displays road names and exit destinations in the local language, so you
-     should call this method in the
-     `MGLMapViewDelegate.mapView(_:didFinishLoading:)` method of any delegate of
-     a standalone `NavigationMapView`. The map view embedded in
-     `NavigationViewController` is localized automatically, so you do not need
-     to call this method on the value of `NavigationViewController.mapView`.
-     */
-    public func localizeLabels() {
-        guard MGLAccountManager.hasChinaBaseURL == false else{
-            return
-        }
-        
-        guard let style = style else {
-            return
-        }
-        
-        let streetsSourceIdentifiers: [String] = style.sources.compactMap {
-            $0 as? MGLVectorTileSource
-        }.filter {
-            $0.isMapboxStreets
-        }.map {
-            $0.identifier
-        }
-        
-        for layer in style.layers where layer is MGLSymbolStyleLayer {
-            let layer = layer as! MGLSymbolStyleLayer
-            guard let sourceIdentifier = layer.sourceIdentifier,
-                  streetsSourceIdentifiers.contains(sourceIdentifier) else {
-                continue
-            }
-            guard let text = layer.text else {
-                continue
-            }
-            
-            // Road labels should match road signage.
-            let isLabelLayer = MGLVectorTileSource.roadLabelLayerIdentifiersByTileSetIdentifier.values.contains(layer.sourceLayerIdentifier ?? "")
-            let locale = isLabelLayer ? Locale(identifier: "mul") : nil
-            
-            let localizedText = text.mgl_expressionLocalized(into: locale)
-            if localizedText != text {
-                layer.text = localizedText
-            }
-        }
-    }
-    
-    public func showVoiceInstructionsOnMap(route: Route) {
-        guard let style = style else {
-            return
-        }
-        
-        var features = [MGLPointFeature]()
-        for (legIndex, leg) in route.legs.enumerated() {
-            for (stepIndex, step) in leg.steps.enumerated() {
-                for instruction in step.instructionsSpokenAlongStep! {
-                    let feature = MGLPointFeature()
-                    feature.coordinate = LineString(route.legs[legIndex].steps[stepIndex].shape!.coordinates.reversed()).coordinateFromStart(distance: instruction.distanceAlongStep)!
-                    feature.attributes = [ "instruction": instruction.text ]
-                    features.append(feature)
-                }
-            }
-        }
-        
-        let instructionPoints = MGLShapeCollectionFeature(shapes: features)
-        
-        if let instructionSource = style.source(withIdentifier: SourceIdentifier.instruction) as? MGLShapeSource {
-            instructionSource.shape = instructionPoints
-        } else {
-            let sourceShape = MGLShapeSource(identifier: SourceIdentifier.instruction, shape: instructionPoints, options: nil)
-            style.addSource(sourceShape)
-            
-            let symbol = MGLSymbolStyleLayer(identifier: StyleLayerIdentifier.instructionLabel, source: sourceShape)
-            symbol.text = NSExpression(format: "instruction")
-            symbol.textFontSize = NSExpression(forConstantValue: 14)
-            symbol.textHaloWidth = NSExpression(forConstantValue: 1)
-            symbol.textHaloColor = NSExpression(forConstantValue: UIColor.white)
-            symbol.textOpacity = NSExpression(forConstantValue: 0.75)
-            symbol.textAnchor = NSExpression(forConstantValue: "bottom-left")
-            symbol.textJustification = NSExpression(forConstantValue: "left")
-            
-            let circle = MGLCircleStyleLayer(identifier: StyleLayerIdentifier.instructionCircle, source: sourceShape)
-            circle.circleRadius = NSExpression(forConstantValue: 5)
-            circle.circleOpacity = NSExpression(forConstantValue: 0.75)
-            circle.circleColor = NSExpression(forConstantValue: UIColor.white)
-            
-            style.addLayer(circle)
-            style.addLayer(symbol)
-        }
-    }
-    
-    /**
-     Sets the camera directly over a series of coordinates.
-     */
-    public func setOverheadCameraView(from userLocation: CLLocation, along lineString: LineString, for padding: UIEdgeInsets) {
-        isAnimatingToOverheadMode = true
-        
-        let line = MGLPolyline(lineString)
-        
-        tracksUserCourse = false
-        
-        // If the user has a short distance left on the route, prevent the camera from zooming all the way.
-        // `MGLMapView.setVisibleCoordinateBounds(:edgePadding:animated:)` will go beyond what is convenient for the driver.
-        guard line.overlayBounds.ne.distance(to: line.overlayBounds.sw) > NavigationMapViewMinimumDistanceForOverheadZooming else {
-            let camera = self.camera
-            camera.pitch = 0
-            camera.heading = 0
-            camera.centerCoordinate = userLocation.coordinate
-            camera.altitude = self.defaultAltitude
-            setCamera(camera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
-                self?.isAnimatingToOverheadMode = false
-            }
-            self.updateCourseView(to: userLocation, pitch: camera.pitch, direction: camera.heading, animated: true)
-            return
-        }
-        
-        let currentCamera = self.camera
-        currentCamera.pitch = 0
-        currentCamera.heading = 0
-
-        contentInset = padding
-        // Current contentInset gets incorporated to calculated camera.
-        // edgePadding is set to .zero as there's no need for additional padding.
-        let newCamera = camera(currentCamera, fitting: line, edgePadding: .zero)
-        
-        setCamera(newCamera, withDuration: 1, animationTimingFunction: nil) { [weak self] in
-            self?.isAnimatingToOverheadMode = false
-        }
-        self.updateCourseView(to: userLocation, pitch: newCamera.pitch, direction: newCamera.heading, animated: true)
-    }
-    
-    /**
-     Recenters the camera and begins tracking the user's location.
-     */
-    public func recenterMap() {
-        tracksUserCourse = true
-        enableFrameByFrameCourseViewTracking(for: 3)
     }
 }
 
-// MARK: - Building Extrusion Highlighting
+// MARK: - UIGestureRecognizerDelegate methods
 
-extension NavigationMapView {
-       
-    /**
-     Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2D or 3D depending on the `in3D` value.
-     
-     - parameter coordinates: Coordinates which represent building locations.
-     - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
-     
-     - returns: Bool indicating if number of buildings found equals number of coordinates supplied.
-     */
-    @discardableResult public func highlightBuildings(at coordinates: [CLLocationCoordinate2D], in3D extrudesBuildings: Bool = true) -> Bool {
-        let foundBuildingIds = Set(coordinates.compactMap({ buildingIdentifier(at: $0) }))
-        highlightBuildings(with: foundBuildingIds, in3D: extrudesBuildings)
-        return foundBuildingIds.count == coordinates.count
-    }
+extension NavigationMapView: UIGestureRecognizerDelegate {
     
-    /**
-     Removes the highlight from all buildings highlighted by `highlightBuildings(at:in3D:)`.
-     */
-    public func unhighlightBuildings() {
-        guard let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) else { return }
-        
-        style?.removeLayer(highlightedBuildingsLayer)
-    }
-    
-    private func addBuildingsSource() -> MGLSource? {
-        let buildingsSource = style?.source(withIdentifier: SourceIdentifier.buildingExtrusion)
-        if buildingsSource == nil {
-            let buildingsSource = MGLVectorTileSource(identifier: SourceIdentifier.buildingExtrusion,
-                                                      configurationURL: URL(string: "mapbox://mapbox.mapbox-streets-v8")!)
-            style?.addSource(buildingsSource)
-            
-            return buildingsSource
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer is UITapGestureRecognizer &&
+            otherGestureRecognizer is UITapGestureRecognizer {
+            return true
         }
         
-        return buildingsSource
-    }
-    
-    private func addBuildingsLayer() -> MGLFillExtrusionStyleLayer? {
-        if let highlightedBuildingsLayer = style?.layer(withIdentifier: StyleLayerIdentifier.buildingExtrusion) as? MGLFillExtrusionStyleLayer { return highlightedBuildingsLayer }
-        guard let buildingsSource = addBuildingsSource() else { return nil }
-        
-        let highlightedBuildingsLayer = MGLFillExtrusionStyleLayer(identifier: StyleLayerIdentifier.buildingExtrusion, source: buildingsSource)
-        highlightedBuildingsLayer.sourceLayerIdentifier = "building"
-        highlightedBuildingsLayer.fillExtrusionColor = NSExpression(forConstantValue: buildingDefaultColor)
-        highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(forConstantValue: 0.05)
-        highlightedBuildingsLayer.fillExtrusionHeightTransition = MGLTransition(duration: 0.8, delay: 0)
-        highlightedBuildingsLayer.fillExtrusionOpacityTransition = MGLTransition(duration: 0.8, delay: 0)
-        
-        style?.addLayer(highlightedBuildingsLayer)
-        
-        return highlightedBuildingsLayer
-    }
-
-    private func buildingIdentifier(at coordinate: CLLocationCoordinate2D) -> Int64? {
-        let screenCoordinate = convert(coordinate, toPointTo: self)
-        guard let style = style else { return nil }
-        
-        let identifiers = Set(style.layers.compactMap({ $0 as? MGLVectorStyleLayer }).filter({ $0.sourceLayerIdentifier == "building" }).compactMap({ $0.identifier }))
-        let features = visibleFeatures(at: screenCoordinate, styleLayerIdentifiers: identifiers)
-
-        if let feature = features.first, let identifier = feature.identifier as? Int64 {
-            return identifier
-        }
-        
-        return nil
-    }
-    
-    private func highlightBuildings(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
-        // In case if set with highlighted building identifiers is empty - do nothing.
-        if identifiers.isEmpty { return }
-        // Add layer which will be used to highlight buildings if it wasn't added yet.
-        guard let highlightedBuildingsLayer = addBuildingsLayer() else { return }
-        
-        if extrudeAll {
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND underground = 'false'")
-        } else {
-            // Form a predicate to filter out the other buildings from the datasource so only the desired ones are included.
-            highlightedBuildingsLayer.predicate = NSPredicate(format: "extrude = 'true' AND underground = 'false' AND $featureIdentifier IN %@", identifiers.map { $0 })
-        }
-        
-        // Buildings with identifiers will be highlighted with provided color. Rest of the buildings will be highlighted, but kept at a uniform color.
-        let highlightedBuildingsHeightExpression = NSExpression(format: "TERNARY(%@ = TRUE AND (%@ = TRUE OR $featureIdentifier IN %@), height, 0)", in3D as NSValue, extrudeAll as NSValue, identifiers.map { $0 })
-        let colorsByBuilding = Dictionary(identifiers.map { (NSExpression(forConstantValue: $0), NSExpression(forConstantValue: buildingHighlightColor)) }) { (_, last) in last }
-        let highlightedBuildingsColorExpression = NSExpression(forMGLMatchingKey: NSExpression(forVariable: "featureIdentifier"), in: colorsByBuilding, default: NSExpression(forConstantValue: buildingDefaultColor))
-        
-        let fillExtrusionHeightStops = [0: NSExpression(forConstantValue: 0),
-                                        13: NSExpression(forConstantValue: 0),
-                                        13.25: highlightedBuildingsHeightExpression]
-        
-        let fillExtrusionBaseStops = [0: NSExpression(forConstantValue: 0),
-                                      13: NSExpression(forConstantValue: 0),
-                                      13.25: NSExpression(forKeyPath: "min_height")]
-        
-        let opacityStops = [13: 0.5, 17: 0.8]
-        
-        highlightedBuildingsLayer.fillExtrusionHeight = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionHeightStops)
-        highlightedBuildingsLayer.fillExtrusionBase = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", fillExtrusionBaseStops)
-        highlightedBuildingsLayer.fillExtrusionColor = highlightedBuildingsColorExpression
-        highlightedBuildingsLayer.fillExtrusionOpacity = NSExpression(format: "mgl_interpolate:withCurveType:parameters:stops:($zoomLevel, 'linear', nil, %@)", opacityStops)
+        return false
     }
 }

@@ -1,15 +1,22 @@
 import XCTest
-import FBSnapshotTestCase
+import SnapshotTesting
 import MapboxDirections
 @testable import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class LaneTests: FBSnapshotTestCase {
+class LaneTests: XCTestCase {
     override func setUp() {
         super.setUp()
-        recordMode = false
-        agnosticOptions = [.OS, .device]
+        isRecording = false
+        DayStyle().apply()
+
+        // Apply correct appearance for test case envirounment.
+        LaneView.appearance().primaryColor = LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColor
+        LaneView.appearance().secondaryColor = LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColor
+        LaneView.appearance().primaryColorHighlighted = LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColorHighlighted
+        LaneView.appearance().secondaryColorHighlighted = LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColorHighlighted
+        LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
     }
     
     func testAllLanes30x30() {
@@ -56,7 +63,8 @@ class LaneTests: FBSnapshotTestCase {
         addLanes(lanes: rightHandLanes, stackView: view)
         addLanes(lanes: leftHandLanes, stackView: view)
         
-        verify(view, overallTolerance: 0)
+
+        assertImageSnapshot(matching: view, as: .image(precision: 0.95))
     }
 }
 

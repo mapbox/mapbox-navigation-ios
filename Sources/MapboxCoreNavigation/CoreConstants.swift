@@ -115,20 +115,20 @@ public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
 
 public extension Notification.Name {
     /**
-     Posted when `PassiveLocationDataSource` receives a user location update representing movement along the expected route.
+     Posted when `PassiveLocationManager` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `PassiveLocationDataSource.NotificationUserInfoKey.locationKey`, `PassiveLocationDataSource.NotificationUserInfoKey.rawLocationKey`, `PassiveLocationDataSource.NotificationUserInfoKey.matchesKey`, and `PassiveLocationDataSource.NotificationUserInfoKey.roadNameKey`.
+     The user info dictionary contains the keys `PassiveLocationManager.NotificationUserInfoKey.locationKey`, `PassiveLocationManager.NotificationUserInfoKey.rawLocationKey`, `PassiveLocationManager.NotificationUserInfoKey.matchesKey`, and `PassiveLocationManager.NotificationUserInfoKey.roadNameKey`.
      
      - seealso: `routeControllerProgressDidUpdate`
      */
-    static let passiveLocationDataSourceDidUpdate: Notification.Name = .init(rawValue: "PassiveLocationDataSourceDidUpdate")
+    static let passiveLocationManagerDidUpdate: Notification.Name = .init(rawValue: "PassiveLocationManagerDidUpdate")
     
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
      The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey`, `RouteController.NotificationUserInfoKey.locationKey`, and `RouteController.NotificationUserInfoKey.rawLocationKey`.
      
-     - seealso: `passiveLocationDataSourceDidUpdate`
+     - seealso: `passiveLocationManagerDidUpdate`
      */
     static let routeControllerProgressDidChange: Notification.Name = .init(rawValue: "RouteControllerProgressDidChange")
     
@@ -240,9 +240,9 @@ extension RouteController {
     }
 }
 
-extension PassiveLocationDataSource {
+extension PassiveLocationManager {
     /**
-     Keys in the user info dictionaries of various notifications posted by instances of `PassiveLocationDataSource`.
+     Keys in the user info dictionaries of various notifications posted by instances of `PassiveLocationManager`.
      */
     public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
         public typealias RawValue = String
@@ -254,26 +254,36 @@ extension PassiveLocationDataSource {
         }
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
          */
         public static let locationKey: NotificationUserInfoKey = .init(rawValue: "location")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
          */
         public static let rawLocationKey: NotificationUserInfoKey = .init(rawValue: "rawLocation")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is an array of `Match` objects representing possible matches against the road network.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is an array of `Match` objects representing possible matches against the road network.
          */
         public static let matchesKey: NotificationUserInfoKey = .init(rawValue: "matches")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.passiveLocationDataSourceDidUpdate` notification. The corresponding value is a string representing the name of the road the user is currently traveling on.
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a string representing the name of the road the user is currently traveling on.
          
          - seealso: `WayNameView`
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `Measurement<UnitSpeed>` representing the maximum speed limit of the current road.
+         */
+        public static let speedLimitKey: NotificationUserInfoKey = .init(rawValue: "speedLimit")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `SignStandard` representing the sign standard used for speed limit signs along the current road.
+         */
+        public static let signStandardKey: NotificationUserInfoKey = .init(rawValue: "signStandard")
     }
 }
 
@@ -289,7 +299,135 @@ extension MapboxNavigationService {
         }
         
         /**
-         A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a CLAccuracyAuthorization` indicating the current location authorization setting. */
+         A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a `CLAccuracyAuthorization` indicating the current location authorization setting. */
         public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
+    }
+}
+
+public extension Notification.Name {
+    /**
+     Posted when the user’s position in the electronic horizon changes. This notification may be posted multiple times after `electronicHorizonDidEnterRoadObject` until the user transitions to a new electronic horizon.
+     
+     The user info dictionary contains the keys `RoadGraph.NotificationUserInfoKey.positionKey`, `RoadGraph.NotificationUserInfoKey.treeKey`, `RoadGraph.NotificationUserInfoKey.updatesMostProbablePathKey`, and `RoadGraph.NotificationUserInfoKey.distancesByRoadObjectKey`.
+    */
+    static let electronicHorizonDidUpdatePosition: Notification.Name = .init(rawValue: "ElectronicHorizonDidUpdatePosition")
+    
+    /**
+     Posted when the user enters a linear road object.
+     
+     The user info dictionary contains the keys `RoadGraph.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.NotificationUserInfoKey.didTransitionAtEndpointKey`.
+    */
+    static let electronicHorizonDidEnterRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidEnterRoadObject")
+    
+    /**
+     Posted when the user exits a linear road object.
+     
+     The user info dictionary contains the keys `RoadGraph.NotificationUserInfoKey.roadObjectIdentifierKey` and `RoadGraph.NotificationUserInfoKey.transitionKey`.
+    */
+    static let electronicHorizonDidExitRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidExitRoadObject")
+
+    /**
+     Posted when user has passed point-like object.
+
+     The user info dictionary contains the key `ElectronicHorizon.NotificationUserInfoKey.roadObjectIdentifierKey`.
+    */
+    static let electronicHorizonDidPassRoadObject: Notification.Name = .init(rawValue: "ElectronicHorizonDidPassRoadObject")
+}
+
+extension RoadGraph {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances of `RouteController` or `PassiveLocationManager` about `RoadGraph`s.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
+        public var rawValue: String
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is a `RoadGraph.Position` indicating the current position in the road graph. */
+        public static let positionKey: NotificationUserInfoKey = .init(rawValue: "position")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an `RoadGraph.Edge` at the root of a tree of edges in the routing graph. This graph represents a probable path (or paths) of a vehicle within the routing graph for a certain distance in front of the vehicle, thus extending the user’s perspective beyond the “visible” horizon as the vehicle’s position and trajectory change.
+         */
+        public static let treeKey: NotificationUserInfoKey = .init(rawValue: "tree")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is a Boolean value of `true` if the position update indicates a new most probable path (MPP) or `false` if it updates an existing MPP that the user has continued to follow.
+         
+         An electronic horizon can represent a new MPP in three scenarios:
+         - An electronic horizon is detected for the very first time.
+         - A user location tracking error leads to an MPP completely distinct from the previous MPP.
+         - The user has departed from the previous MPP, for example by driving to a side path of the previous MPP.
+         */
+        public static let updatesMostProbablePathKey: NotificationUserInfoKey = .init(rawValue: "updatesMostProbablePath")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidUpdatePosition` notification. The corresponding value is an array of upcoming road object distances from the user’s current location as `DistancedRoadObject` values. */
+        public static let distancesByRoadObjectKey: NotificationUserInfoKey = .init(rawValue: "distancesByRoadObject")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidEnterRoadObject` or `Notification.Name.electronicHorizonDidExitRoadObject` notification. The corresponding value is a `RoadObjectIdentifier` identifying the road object that the user entered or exited. */
+        public static let roadObjectIdentifierKey: NotificationUserInfoKey = .init(rawValue: "roadObjectIdentifier")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.electronicHorizonDidEnterRoadObject` or `Notification.Name.electronicHorizonDidExitRoadObject` notification. The corresponding value is an `NSNumber` containing a Boolean value set to `true` if the user entered at the beginning or exited at the end of the road object, or `false` if they entered or exited somewhere along the road object. */
+        public static let didTransitionAtEndpointKey: NotificationUserInfoKey = .init(rawValue: "didTransitionAtEndpoint")
+    }
+}
+
+public extension Notification.Name {
+    /**
+     :nodoc:
+     Posted when Navigator has not enough tiles for map matching on current tiles version, but there are suitable older versions inside underlying Offline Regions. Navigator has restarted when this notification is issued.
+     
+     Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
+     
+     The user info dictionary contains the key `Navigator.NotificationUserInfoKey.tilesVersionKey`
+    */
+    static let navigationDidSwitchToFallbackVersion: Notification.Name = .init(rawValue: "NavigatorDidFallbackToOfflineVersion")
+    
+    /**
+     :nodoc:
+     Posted when Navigator was switched to a fallback offline tiles version, but latest tiles became available again. Navigator has restarted when this notification is issued.
+     
+     Such action invalidates all existing matched `RoadObject`s which should be re-applied manually.
+     
+     The user info dictionary contains the key `Navigator.NotificationUserInfoKey.tilesVersionKey`
+     */
+    static let navigationDidSwitchToTargetVersion: Notification.Name = .init(rawValue: "NavigatorDidRestoreToOnlineVersion")
+    
+    /**
+     Posted when NavNative sends updated navigation status.
+     
+     The user info dictionary contains the keys `Navigator.NotificationUserInfoKey.originKey` and `Navigator.NotificationUserInfoKey.statusKey`.
+    */
+    internal static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
+}
+
+extension Navigator {
+    /**
+     Keys in the user info dictionaries of various notifications posted by instances of `Navigator`.
+     */
+    public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {
+        public typealias RawValue = String
+        public var rawValue: String
+        public init(rawValue: String) {
+            self.rawValue = rawValue
+        }
+        
+        /**
+         :nodoc:
+         A key in the user info dictionary of a `Notification.Name.navigationDidSwitchToFallbackVersion` or `Notification.Name.navigationDidSwitchToTargetVersion` notification. The corresponding value is a string representation of selected tiles version.
+         
+         For internal use only.
+         */
+        public static let tilesVersionKey: NotificationUserInfoKey = .init(rawValue: "tilesVersion")
+        
+        static let originKey: NotificationUserInfoKey = .init(rawValue: "origin")
+        
+        static let statusKey: NotificationUserInfoKey = .init(rawValue: "status")
     }
 }

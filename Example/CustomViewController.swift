@@ -1,16 +1,19 @@
 import UIKit
 import MapboxCoreNavigation
 import MapboxNavigation
-import Mapbox
-import CoreLocation
-import AVFoundation
 import MapboxDirections
-import Turf
+import MapboxMaps
 
-class CustomViewController: UIViewController, MGLMapViewDelegate {
-    var destination: MGLPointAnnotation!
-    let directions = Directions.shared
+class CustomViewController: UIViewController {
+    
+    var destinationAnnotation: PointAnnotation! {
+        didSet {
+            pointAnnotationManager?.syncAnnotations([destinationAnnotation])
+        }
+    }
+    
     var navigationService: NavigationService!
+    
     var simulateLocation = false
 
     var userIndexedRoute: IndexedRoute?
@@ -25,22 +28,30 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     // View that is placed over the instructions banner while we are previewing
     var previewInstructionsView: StepInstructionsView?
     
-    @IBOutlet var mapView: NavigationMapView!
+    @IBOutlet var navigationMapView: NavigationMapView!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var instructionsBannerView: InstructionsBannerView!
     
     lazy var feedbackViewController: FeedbackViewController = {
         return FeedbackViewController(eventsManager: navigationService.eventsManager)
     }()
+    
+    var pointAnnotationManager: PointAnnotationManager?
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(route: userIndexedRoute!.0, routeIndex: userIndexedRoute!.1, routeOptions: userRouteOptions!, locationSource: locationManager, simulating: simulateLocation ? .always : .onPoorGPS)
+        navigationMapView.mapView.mapboxMap.style.uri = StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")
+        navigationMapView.userCourseView.isHidden = false
         
-        mapView.delegate = self
-        mapView.compassView.isHidden = true
+        let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
+        navigationService = MapboxNavigationService(route: userIndexedRoute!.0,
+                                                    routeIndex: userIndexedRoute!.1,
+                                                    routeOptions: userRouteOptions!,
+                                                    locationSource: locationManager,
+                                                    simulating: simulateLocation ? .always : .onPoorGPS)
+        
+        navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         
         instructionsBannerView.delegate = self
         instructionsBannerView.swipeable = true
@@ -51,8 +62,29 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         // Start navigation
         navigationService.start()
         
-        // Center map on user
-        mapView.recenterMap()
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
+            guard let route = self?.navigationService.route else { return }
+            self?.navigationMapView.show([route])
+        })
+        
+        // By default `NavigationViewportDataSource` tracks location changes from `PassiveLocationManager`, to consume
+        // locations in active guidance navigation `ViewportDataSourceType` should be set to `.active`.
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView, viewportDataSourceType: .active)
+        
+        // Disable any updates to `CameraOptions.padding` in `NavigationCameraState.following` state
+        // to prevent overlapping.
+        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
+        navigationViewportDataSource.followingMobileCamera.padding = UIEdgeInsets(top: 200.0,
+                                                                                  left: 10.0,
+                                                                                  bottom: 100.0,
+                                                                                  right: 10.0)
+        
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        
+        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            self.pointAnnotationManager = self.navigationMapView.mapView.annotations.makePointAnnotationManager()
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -77,43 +109,42 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
     }
 
-    func mapView(_ mapView: MGLMapView, didFinishLoading style: MGLStyle) {
-        self.mapView.show([navigationService.route])
-    }
-
     // Notifications sent on all location updates
     @objc func progressDidChange(_ notification: NSNotification) {
         // do not update if we are previewing instruction steps
-        guard previewInstructionsView == nil else { return }
-        
-        let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
-        let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
+        guard previewInstructionsView == nil,
+              let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
+              let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation else { return }
         
         // Add maneuver arrow
         if routeProgress.currentLegProgress.followOnStep != nil {
-            mapView.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
+            navigationMapView.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
         } else {
-            mapView.removeArrow()
+            navigationMapView.removeArrow()
         }
         
         // Update the top banner with progress updates
         instructionsBannerView.updateDistance(for: routeProgress.currentLegProgress.currentStepProgress)
         instructionsBannerView.isHidden = false
         
-        // Update the user puck
-        mapView.updateCourseTracking(location: location, animated: true)
+        // Update `UserCourseView` to be placed on the most recent location.
+        navigationMapView.moveUserLocation(to: location, animated: true)
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
-        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else { return }
+        guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else {
+            assertionFailure("RouteProgress should be available.")
+            return
+        }
+        
         instructionsBannerView.update(for: routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction)
     }
 
     // Fired when the user is no longer on the route.
     // Update the route on the map.
     @objc func rerouted(_ notification: NSNotification) {
-        self.mapView.removeWaypoints()
-        self.mapView.show([navigationService.route])
+        self.navigationMapView.removeWaypoints()
+        self.navigationMapView.show([navigationService.route])
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {
@@ -121,7 +152,7 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
     }
     
     @IBAction func recenterMap(_ sender: Any) {
-        mapView.recenterMap()
+        navigationMapView.navigationCamera.follow()
     }
     
     @IBAction func showFeedback(_ sender: Any) {
@@ -171,13 +202,15 @@ class CustomViewController: UIViewController, MGLMapViewDelegate {
         updatePreviewBannerWith(step: step, maneuverStep: maneuverStep)
         
         // stop tracking user, and move camera to step location
-        mapView.tracksUserCourse = false
-        mapView.userTrackingMode = .none
-        mapView.enableFrameByFrameCourseViewTracking(for: 1)
-        mapView.setCenter(maneuverStep.maneuverLocation, zoomLevel: mapView.zoomLevel, direction: maneuverStep.initialHeading!, animated: true, completionHandler: nil)
+        navigationMapView.navigationCamera.stop()
+        
+        if let bearing = maneuverStep.initialHeading {
+            let cameraOptions = CameraOptions(center: maneuverStep.maneuverLocation, bearing: bearing)
+            navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 1.0)
+        }
         
         // add arrow to map for preview instruction
-        mapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
+        navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
     }
     
     func updatePreviewBannerWith(step: RouteStep, maneuverStep: RouteStep) {

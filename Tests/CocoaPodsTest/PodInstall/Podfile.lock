@@ -1,30 +1,33 @@
 PODS:
-  - Mapbox-iOS-SDK (6.3.0):
-    - MapboxMobileEvents (~> 0.10.4)
-  - MapboxAccounts (2.3.1)
-  - MapboxCommon (9.2.0)
-  - MapboxCoreNavigation (1.4.1):
-    - MapboxAccounts (~> 2.3.0)
-    - MapboxDirections (~> 1.2.0)
-    - MapboxMobileEvents (~> 0.10.2)
-    - MapboxNavigationNative (~> 32.0)
-    - Turf (~> 1.0)
-  - MapboxDirections (1.2.0):
+  - MapboxCommon (14.0.1)
+  - MapboxCoreMaps (10.0.0-rc.2):
+    - MapboxCommon (~> 14.0.1)
+  - MapboxCoreNavigation (2.0.0-beta.15):
+    - MapboxDirections-pre (= 2.0.0-beta.5)
+    - MapboxMobileEvents (~> 1.0.0)
+    - MapboxNavigationNative (~> 54.0)
+    - Turf (= 2.0.0-beta.1)
+  - MapboxDirections-pre (2.0.0-beta.5):
     - Polyline (~> 5.0)
-    - Turf (~> 1.0)
-  - MapboxMobileEvents (0.10.8)
-  - MapboxNavigation (1.4.1):
-    - Mapbox-iOS-SDK (~> 6.0)
-    - MapboxCoreNavigation (= 1.4.1)
-    - MapboxMobileEvents (~> 0.10.2)
-    - MapboxSpeech (~> 1.0)
+    - Turf (~> 2.0.0-beta.1)
+  - MapboxMaps (10.0.0-rc.2):
+    - MapboxCommon (= 14.0.1)
+    - MapboxCoreMaps (= 10.0.0-rc.2)
+    - MapboxMobileEvents (= 1.0.2)
+    - Turf (= 2.0.0-beta.1)
+  - MapboxMobileEvents (1.0.2)
+  - MapboxNavigation (2.0.0-beta.15):
+    - MapboxCoreNavigation (= 2.0.0-beta.15)
+    - MapboxMaps (= 10.0.0-rc.2)
+    - MapboxMobileEvents (~> 1.0.0)
+    - MapboxSpeech-pre (= 2.0.0-alpha.1)
     - Solar (~> 2.1)
-  - MapboxNavigationNative (32.0.0):
-    - MapboxCommon (= 9.2.0)
-  - MapboxSpeech (1.0.0)
+  - MapboxNavigationNative (54.0.0):
+    - MapboxCommon (~> 14.0)
+  - MapboxSpeech-pre (2.0.0-alpha.1)
   - Polyline (5.0.2)
   - Solar (2.1.0)
-  - Turf (1.2.0)
+  - Turf (2.0.0-beta.1)
 
 DEPENDENCIES:
   - MapboxCoreNavigation (from `../../../`)
@@ -32,13 +35,13 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
-    - Mapbox-iOS-SDK
-    - MapboxAccounts
     - MapboxCommon
-    - MapboxDirections
+    - MapboxCoreMaps
+    - MapboxDirections-pre
+    - MapboxMaps
     - MapboxMobileEvents
     - MapboxNavigationNative
-    - MapboxSpeech
+    - MapboxSpeech-pre
     - Polyline
     - Solar
     - Turf
@@ -50,19 +53,19 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  Mapbox-iOS-SDK: 2563ed87ead6ec08f1c2090873977b8a7be335a8
-  MapboxAccounts: e40ef575df5d8b7ef33d0504ff2d393f4fde0455
-  MapboxCommon: 2c4ef00c10cba35302835423f4d63c6f3dea4bc4
-  MapboxCoreNavigation: 6d70c5f314252436cdbe4f98e91972b0082e21fd
-  MapboxDirections: 383df0cd65784897c2269750a42d9654c832f0ce
-  MapboxMobileEvents: 36ff53b135aac486eed94b61f813c7967a0c2c6f
-  MapboxNavigation: d59bf0692d0478acc6861ba04ac5ceebf5d62040
-  MapboxNavigationNative: e811b9beed18c01e4693e29f843d36b4a760fa61
-  MapboxSpeech: 4b3aea42e35d056fae1d7ad847a9fc0f412d911e
+  MapboxCommon: 47c5a2bd5d9fda5baa57ed48d5c12e8ec9f5c3d2
+  MapboxCoreMaps: 962dd25587a15f33a5c836697165d475ebfdf84d
+  MapboxCoreNavigation: c8d2283ec505405e3d770a8072b91241c96cb4ba
+  MapboxDirections-pre: 6ffb118e2aa395aef174f8a1b4d5cf7d787702a7
+  MapboxMaps: 42c6cd1283ca7ff7fc45aa7b13cdc38c02b0247f
+  MapboxMobileEvents: 9775eb995e06cc3ea10894bf6ab111683c8e73e7
+  MapboxNavigation: c01c69c6fc9fde1722867222669e93593b0b25d7
+  MapboxNavigationNative: 29a9dc819f1d44ebe6ae5192ae0a29be4edc0217
+  MapboxSpeech-pre: aeb16de604d07ceb4195150c3359d5401bb298e6
   Polyline: fce41d72e1146c41c6d081f7656827226f643dff
   Solar: 2dc6e7cc39186cb0c8228fa08df76fb50c7d8f24
-  Turf: aaa060138b11a8e979a19e6d81091d156a31bc58
+  Turf: 8851f941a6e6476ea200bf057d31cf21b2418467
 
-PODFILE CHECKSUM: d4084fe664fbacd0cffd88ab45eaed1ad907ad1d
+PODFILE CHECKSUM: ce6227c2aeeca0d51c521648629d4f06ae38a439
 
 COCOAPODS: 1.10.1

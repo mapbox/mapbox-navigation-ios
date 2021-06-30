@@ -1,5 +1,116 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.0.0
+
+### Packaging
+
+* The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* You can now install MapboxNavigation using Swift Package Manager, but you can no longer install it using Carthage. If you previously installed MapboxNavigation using Carthage, use Swift Package Manager instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.2](https://github.com/mapbox/mapbox-maps-ios/). ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077), [#3113](https://github.com/mapbox/mapbox-navigation-ios/pull/3113))
+* MapboxNavigation now depends on MapboxNavigationNative v54.0.0. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077), [#3113](https://github.com/mapbox/mapbox-navigation-ios/pull/3113))
+* MapboxNavigation now depends on MapboxCommon v14.0.1. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
+* MapboxNavigation now depends on MapboxMobileEvents v1.0.2. ([#3039](https://github.com/mapbox/mapbox-navigation-ios/pull/3039))
+* MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.5 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829), [#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837), [#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
+* MapboxNavigation now depends on Turf v2.0.0-beta.1. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
+* MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Xcode 12.4 or above is now required for building this SDK from source.
+* Carthage v0.38 or above is now required for installing this SDK if you use Carthage. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
+* You can fully build this SDK on Macs with Apple Silicon. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
+
+### Map
+
+* To gain access to Mapbox server APIs, set `MBXAccessToken` in your Info.plist. `MGLMapboxAccessToken` is still supported but is now deprecated. ([#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837))
+* Removed obsoleted `NavigationMapView.navigationMapDelegate`, which was replaced by `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapView.navigationMapViewDelegate` was renamed to `NavigationMapView.delegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed `NavigationAnnotation`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapView.updateCourseTracking(location:camera:animated:)` no longer accepts `MGLMapCamera` as parameter, and uses `CameraOptions` instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapView.showsUserLocation` was removed, because `NavigationMapView` is no longer inherited from `MGLMapView`. `NavigationMapView.mapView` is now exposed as public property instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationViewController.pendingCamera` type was changed from `MGLMapCamera` to `CameraOptions`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Renamed public constant `Constants.MBRouteLineWidthByZoomLevel` to public variable `Constants.MBRouteLineWidthByZoomLevel`, which now accepts `Double` for keys and values. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Renamed public property `MBCurrentLegAttribute` to `CurrentLegAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Renamed public property `MBCongestionAttribute` to `CongestionAttribute`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationViewController.mapView` was renamed to `NavigationViewController.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `NavigationMapView.highlightBuildings(at:in3D:)` was renamed to `NavigationMapView.highlightBuildings(at:in3D:completion:)`. ([#2827](https://github.com/mapbox/mapbox-navigation-ios/pull/2827))
+* Added the `NavigationMapView.showsCongestionForAlternativeRoutes` property to show congestion levels with different colors on alternative route lines. ([#2887](https://github.com/mapbox/mapbox-navigation-ios/pull/2887))
+* Added the `NavigationMapView.navigationMapView(_:didAdd:pointAnnotationManager:)` and `NavigationViewController.navigationViewController(_:didAdd:pointAnnotationManager:)` delegate methods, which will be called whenever final destination `PointAnnotation` is added to `NavigationMapView` or `NavigationViewController` respectively. Made `NavigationMapView.pointAnnotationManager` public. ([#2961](https://github.com/mapbox/mapbox-navigation-ios/pull/2961), [#3109](https://github.com/mapbox/mapbox-navigation-ios/pull/3109))
+* Added the ability to show specific route leg with color overriding. When specifying the `legIndex` in `NavigationMapView.show(_:legIndex:)`, the route line for the specific route leg would show congestion colors, while other route legs would show `NavigationMapView.routeCasingColor` by default. If not specified, all the route legs would show congestion colors. During turn-by-turn navigation, the default specified route leg is the current route leg. The route leg colors could be overridden by `NavigationMapView.routeCasingColor` and the congestion colors. ([#2833](https://github.com/mapbox/mapbox-navigation-ios/pull/2833))
+* Added the `NavigationMapView.userLocationStyle` property to customize how the user’s current location is displayed on the map. Set this property to `UserLocationStyle.puck2D(configuration:)` or `UserLocationStyle.puck3D(configuration:)` to use the [location indicator layer](https://docs.mapbox.com/ios/maps/api/10.0.0-beta.21/Enums/LayerType.html#/s:10MapboxMaps9LayerTypeO17locationIndicatoryA2CmF) powered by the Mapbox Maps SDK instead of the default view-backed implementation specified by the `NavigationMapView.userCourseView` property. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
+* If you need to customize the appearance of the user location indicator, you can subclass `UserPuckCourseView` and `UserHaloCourseView` as a starting point. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
+
+### Location tracking
+
+* Added the `NavigationLocationProvider` class to conform to `LocationProvider` protocol, which depends on `NavigationLocationManager` to detect the user’s location as it changes during turn-by-turn navigation. `SimulatedLocationManager` and `ReplayLocationManager` can now be used with a standalone `NavigationMapView` through `NavigationMapView.mapView.location.overrideLocationProvider(with:)`. ([#3091](https://github.com/mapbox/mapbox-navigation-ios/pull/3091))
+* Renamed `PassiveLocationManager` to `PassiveLocationProvider` and `PassiveLocationDataSource` to `PassiveLocationManager` for consistency with `NavigationLocationProvider` and `NavigationLocationManager`. ([#3091](https://github.com/mapbox/mapbox-navigation-ios/pull/3091))
+* `PassiveLocationProvider` now conforms to the `LocationProvider` protocol instead of `MGLLocationManager`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* The `PassiveLocationProvider.delegate` property is now of type `LocationProviderDelegate` instead of `MGLLocationManagerDelegate`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Replaced `PassiveLocationManager.accuracyAuthorization()` was replaced with the `PassiveLocationProvider.accuracyAuthorization` property, which now returns `CLAccuracyAuthorization` instead of `MBNavigationAccuracyAuthorization`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Fixed a potential hang when `PassiveLocationManager` fails to download routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Fixed an issue where `RouteController` or `PassiveLocationManager` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationProvider.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
+* Added the `RouteController.historyDirectoryURL` property and `RouteController.writeHistory(completionHandler:)` method for recording details about a trip for debugging purposes. ([#2930](https://github.com/mapbox/mapbox-navigation-ios/pull/2930))
+
+### Electronic horizon
+
+* While a `RouteController`, `PassiveLocationProvider`, or `PassiveLocationManager` is tracking the user’s location, you can get notifications about location changes that indicate relevant details in the _electronic horizon_ – the upcoming portion of the routing graph – such as the names of cross streets and upcoming speed limit changes. To receive this information, observe the `Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, `Notification.Name.electronicHorizonDidExitRoadObject`, and `Notification.Name.electronicHorizonDidPassRoadObject` notifications. Use the `RouteController.roadGraph` or `PassiveLocationManager.roadGraph` property to get more information about the edges contained in these notifications. Optionally set the `RouteController.electronicHorizonOptions` or `PassiveLocationManager.electronicHorizonOptions` property to configure the extent of electronic horizon calculations. ([#2834](https://github.com/mapbox/mapbox-navigation-ios/pull/2834))
+* Added `RoadObject` struct which describes the object on the road. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added `DistancedRoadObject` enum which contains information about distance to the road object of a concrete type/shape (gantry, polygon, line, point, subgraph). ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added `RoadObjectPosition` struct which contains information about the position of the object on the graph and its geo-position. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added `RoadObjectLocation` enum that represents the location of a road object in the road graph of a concrete type/shape. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added `OpenLROrientation` struct which describes the relationship between the road object and the referenced line. Used for `OpenLRLineLocation` struct. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added `OpenLRSideOfRoad` struct which describes the relationship between the road object and the road. Used for `OpenLRPointLocation` struct. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added `RoadObjectMatcher` class that creates user-defined road objects by matching location primitives to the road graph. Accessible through `RouteController.roadObjectMatcher` and `PassiveLocationManager.roadObjectMatcher`. Matched road object or matching error `RoadObjectMatcherError` is delivered via `RoadObjectMatcherDelegate`. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
+* Added `OpenLRStandard` enum which specifies OpenLR standard of encoded OpenLR location. Used for road object matching via `RoadObjectMatcher`. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
+* Added `RoadObjectStore.addUserDefinedRoadObject(_:)`, `RoadObjectStore.removeUserDefinedRoadObject(identifier:)`, and `RoadObjectStore.removeAllUserDefinedRoadObjects()` for adding/removing user-defined road objects to the electronic horizon. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
+* Removed `Alert` enum, and `alert`, `distance`, `length`, `beginCoordinate`, `endCoordinate`, `beginSegmentIndex`, and `endSegmentIndex` properties from `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added the `RouteAlerts.roadObject` property. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+
+### Camera
+
+* Added Navigation Viewport Camera APIs, which allow to control camera viewport system frames based on various properties, such as: current location, some or all of the remaining route line coordinates, upcoming maneuvers etc. This allows to provide a camera viewport system, which is optimal for visualization and animation in navigation applications. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Removed `CarPlayNavigationViewController.tracksUserCourse`, `NavigationMapView.defaultAltitude`, `NavigationMapView.zoomedOutMotorwayAltitude`, `NavigationMapView.longManeuverDistance`, `NavigationMapView.showsUserLocation`, `NavigationMapView.tracksUserCourse`, `NavigationMapView.enableFrameByFrameCourseViewTracking(for:)`, `NavigationMapView.updateCourseTracking(location:camera:animated:)` `NavigationMapView.defaultPadding`, `NavigationMapView.setOverheadCameraView(from:along:for:)`, `NavigationMapView.recenterMap()`, `NavigationMapViewDelegate.navigationMapViewUserAnchorPoint(_:)`, `NavigationMapViewCourseTrackingDelegate`, `NavigationViewController.pendingCamera` in favor of new Navigation Viewport Camera APIs. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Replaced `CourseUpdatable.update(location:pitch:direction:animated:tracksUserCourse:)` with `CourseUpdatable.update(location:pitch:direction:animated:navigationCameraState:)` to provide more agile way of handling `NavigationCameraState`. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Added `NavigationMapView.init(frame:navigationCameraType:)` to be able to provide type of `NavigationCamera`, which should be used for that specific instance of `NavigationMapView` (either iOS or CarPlay). ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Added `NavigationCamera`, `ViewportDataSourceType`, `ViewportDataSourceDelegate`, `NavigationCameraState` Navigation Viewport Camera APIs. By default Navigation SDK for iOS provides default camera behavior via `NavigationViewportDataSource` and `NavigationCameraStateTransition` classes. If you'd like to override current behavior use `ViewportDataSource` and `CameraStateTransition` protocols for custom behavior. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
+* Added `NavigationViewportDataSourceOptions`, which provides the ability to change specific `CameraOptions` of `NavigationViewportDataSource`. ([#2944](https://github.com/mapbox/mapbox-navigation-ios/pull/2944))
+
+### CarPlay
+
+* Removed deprecated `CarPlayNavigationDelegate.carPlayNavigationViewControllerDidArrive(_:)`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* `CarPlayManager.mapView` was renamed to `CarPlayManager.navigationMapView`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed deprecated `CarPlayManager.overviewButton`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed unused `CarPlayNavigationViewController.drivingSide` property. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Added `CarPlayManagerDelegate.carPlayManager(_:shouldPresentArrivalUIFor:)` and `CarPlayNavigationViewController.navigationService(_:didArriveAt:)` to allow developers to determine whether to present Arrival UI for CarPlay. ([#3016](https://github.com/mapbox/mapbox-navigation-ios/pull/3016))
+* Renamed `CarPlayNavigationDelegate` to `CarPlayNavigationViewControllerDelegate` and `CarPlayNavigationViewController.carPlayNavigationDelegate` to `CarPlayNavigationViewController.delegate`. ([#3036](https://github.com/mapbox/mapbox-navigation-ios/pull/3036))
+
+### Other changes
+
+* Removed deprecated `InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)` method. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Removed `NavigationViewController.origin` property, which was not used. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* A new predictive cache proactively fetches tiles which may become necessary if the device loses its Internet connection at some point during passive or active turn-by-turn navigation. Pass a `PredictiveCacheOptions` instance into the `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:predictiveCacheOptions:)` initializer as you configure a `NavigationViewController`, or manually call `NavigationMapView.enablePredictiveCaching(options:)`. ([#2830](https://github.com/mapbox/mapbox-navigation-ios/pull/2830))
+* Added the `Directions.calculateOffline(options:completionHandler:)` and `Directions.calculateWithCache(options:completionHandler:)` methods, which incorporate routing tiles from the predictive cache when possible to avoid relying on a network connection to calculate the route. `RouteController` now also uses the predictive cache when rerouting. ([#2848](https://github.com/mapbox/mapbox-navigation-ios/pull/2848)) 
+* Fixed an issue where `PassiveLocationManager` and `RouteController` did not use the access token and host specified by `PassiveLocationDataSource.directions` and `RouteController.directions`, respectively. Added the `PredictiveCacheOptions.credentials` property for specifying the access token and host used for prefetching resources. ([#2876](https://github.com/mapbox/mapbox-navigation-ios/pull/2876))
+* The top banner can now show a wider variety of turn lane configurations, such as combination U-turn/left turn lanes and combination through/slight right turn lanes. ([#2882](https://github.com/mapbox/mapbox-navigation-ios/pull/2882))
+* Exposed `NavigationMapView.mapTileStore`, `PassiveLocationManager.navigatorTileStore` and `RouteController.navigatorTileStore` for accessing corresponding `TileStore` instancies ([#2955](https://github.com/mapbox/mapbox-navigation-ios/pull/2955))
+* Fixed an issue that the current road name label flashes when camera state changes or travels onto an unnamed road. ([#2958](https://github.com/mapbox/mapbox-navigation-ios/pull/2958))
+* Added the `NavigationOptions.tileStoreConfiguration` property and arguments to `PassiveLocationManager(directions:systemLocationManager:tileStoreLocation:)`, `NavigationMapView(frame:navigationCameraType:tileStoreLocation:)`, and `PredictiveCacheManager(predictiveCacheOptions:tileStoreMapOptions:)` for customizing the locations where navigation and map tiles are stored. ([#2956](https://github.com/mapbox/mapbox-navigation-ios/pull/2956))
+* Fixed an issue where lane guidance icons would sometimes highlight the wrong arrow.([#2942](https://github.com/mapbox/mapbox-navigation-ios/pull/2942))
+* The duration annotations added by the `NavigationMapView.showRouteDurations(along:)` method are now set in the fonts you specify using the `NavigationMapView.routeDurationAnnotationFontNames` property. Use this property to specify a list of fallback fonts for better language support. ([#2873](https://github.com/mapbox/mapbox-navigation-ios/pull/2873))
+* Removed deprecated and obsoleted `EventsManager` typealias, `StatusView.delegate`, `StatusView.canChangeValue`, `RouteLegProgress.upComingStep`, `StatusViewDelegate`, `DeprecatedStatusViewDelegate` and `BottomBannerViewController.init(delegate:)`. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
+* Fixed a potential memory leak when using `MultiplexedSpeechSynthesizer`. ([#3005](https://github.com/mapbox/mapbox-navigation-ios/pull/3005))
+* Fixed an issue where instruction banners could appear in the wrong color after switching between `Style`s. ([#2977](https://github.com/mapbox/mapbox-navigation-ios/pull/2977))
+* Developers can create an instance of `NavigationViewController` from `UIStoryboardSegue`, which is located in `Navigation.storyboard`. To successfully create `NavigationViewController` instance developer has to pre-define `route`, `routeIndex`, `routeOptions` and `navigationOptions` properties of `NavigationViewController` in `UIViewController.prepare(for:sender:)`. ([#2974](https://github.com/mapbox/mapbox-navigation-ios/pull/2974))
+* Added methods for convenience checking Navigation tiles in a `TileStore`: `containsLatestNavigationTiles(forCacheLocation:, completion:)`, `tileRegionContainsLatestNavigationTiles(forId:, cacheLocation:, completion:)` and methods for getting Navigation tiles from `TilesetDescriptorFactory`: `getLatest(forCacheLocation:)`, `getSpecificVersion(forCacheLocation:, version:)`. ([#3015](https://github.com/mapbox/mapbox-navigation-ios/pull/3015))
+* Fixed a thread-safety issue in `UnimplementedLogging` protocol implementation. ([#3024](https://github.com/mapbox/mapbox-navigation-ios/pull/3024))
+* Implemented automatic switching to older navigation tiles versions (if they are present in current `TileStore`) and back. You can subscribe to `Notification.Name.navigationDidSwitchToFallbackVersion` and `Notification.Name.navigationDidSwitchToTargetVersion` notifications to monitor such events. ([#3014](https://github.com/mapbox/mapbox-navigation-ios/pull/3014))
+* Fixed an issue where the current road name label sometimes displayed the name of an intersecting road instead of the current road or blinked in and out. ([#3019](https://github.com/mapbox/mapbox-navigation-ios/pull/3019))
+* Fixed an issue where 'Navigation cancel' event might be not logged. ([#3050](https://github.com/mapbox/mapbox-navigation-ios/pull/3050))
+* Fixed an issue where offline route calculation might hang up. ([#3040](https://github.com/mapbox/mapbox-navigation-ios/pull/3040))
+* Fixed the moment of custom feedback event creation. ([#3049](https://github.com/mapbox/mapbox-navigation-ios/pull/3049))
+* Increased stability of unit tests by addressing sporadic failures. ([#3089](https://github.com/mapbox/mapbox-navigation-ios/pull/3089))([#3072](https://github.com/mapbox/mapbox-navigation-ios/pull/3072))
+* Fixed a retain cycle in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
+
 ## v1.4.1
 
 * Fixed the moment of custom feedback event creation. ([#2495](https://github.com/mapbox/mapbox-navigation-ios/pull/2495))
@@ -54,15 +165,8 @@
 * Fixed an issue where the route line periodically peeked out from behind the user puck even though `NavigationViewController.routeLineTracksTraversal` was enabled. ([#2737](https://github.com/mapbox/mapbox-navigation-ios/pull/2737))
 * Created the `UserHaloCourseView` similar to `UserCourseView` for approximate location on iOS 14 during the navigation to represent user location. Allow the switch between `UserHaloCourseView` and `UserCourseView` when precise mode is changed. ([#2664](https://github.com/mapbox/mapbox-navigation-ios/pull/2664))
 * Added option to show route duration callouts when previewing route alternatives ([#2734](https://github.com/mapbox/mapbox-navigation-ios/pull/2734)):
-  * `NavigationMapView.showRouteDurations(along routes:)` to show duration annotation callouts on the map for the provided routes.
+  * `NavigationMapView.showRouteDurations(along:)` to show duration annotation callouts on the map for the provided routes.
   * `NavigationMapView.removeRouteDurations()` to remove any route duration annotations currently displayed on the map.
-* Added convenience methods for visualizing geographic information on a map style as a debugging tool. ([#2734](https://github.com/mapbox/mapbox-navigation-ios/pull/2734)):
-  * `MGStyle.addDebugCircleLayer(identifier:coordinate:color:)` to add a MGLCircleStyleLayer with the specified coordinate and color.
-  * `MGStyle.removeDebugCircleLayers()` to remove from the style all MGLCircleStyleLayers added via `MGStyle.addDebugCircleLayer(identifier:coordinate:color:)`
-  * `MGStyle.addDebugLineLayer(identifier:coordinates:color:)` to add a MGLLineStyleLayer with the specified coordinates and color.
-  * `MGStyle.removeDebugLineLayers()` to remove from the style all MGLLineStyleLayers added via `MGStyle.addDebugLineLayer(identifier:coordinates:color:)`
-  * `MGStyle.addDebugPolygonLayer(identifier:coordinates:color:)` to add a MGLFillStyleLayer with the specified coordinates and color.
-  * `MGStyle.removeDebugLineLayers()` to remove from the style all MGLFillStyleLayers added via `MGStyle.addDebugPolygonLayer(identifier:coordinates:color:)`
 
 ### Instruction banners
 

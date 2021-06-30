@@ -40,8 +40,9 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
+     - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      */
-    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
+    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -89,10 +90,6 @@ public protocol Router: CLLocationManagerDelegate {
      This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
      */
     func advanceLegIndex()
-    
-    func enableLocationRecording()
-    func disableLocationRecording()
-    func locationHistory() -> String?
 }
 
 protocol InternalRouter: AnyObject {
@@ -230,7 +227,7 @@ extension InternalRouter where Self: Router {
         
         lastRerouteLocation = location
         
-        routeTask = directions.calculate(options) {(session, result) in
+        routeTask = directions.calculateWithCache(options: options) {(session, result) in
             
             guard case let .success(response) = result else {
                 return completion(session, result)

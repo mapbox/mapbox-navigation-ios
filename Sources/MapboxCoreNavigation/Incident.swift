@@ -1,40 +1,35 @@
-
 import Foundation
 import MapboxNavigationNative
 import MapboxDirections
 
 extension Incident {
-    init?(_ incidentInfo: RouteAlertIncidentInfo) {
-        var incidentType: Incident.Kind!
+    init(_ incidentInfo: IncidentInfo) {
+        let incidentType: Incident.Kind
         switch incidentInfo.type {
-        case .kAccident:
+        case .accident:
             incidentType = .accident
-        case .kCongestion:
+        case .congestion:
             incidentType = .congestion
-        case .kConstruction:
+        case .construction:
             incidentType = .construction
-        case .kDisabledVehicle:
+        case .disabledVehicle:
             incidentType = .disabledVehicle
-        case .kLaneRestriction:
+        case .laneRestriction:
             incidentType = .laneRestriction
-        case .kMassTransit:
+        case .massTransit:
             incidentType = .massTransit
-        case .kMiscellaneous:
+        case .miscellaneous:
             incidentType = .miscellaneous
-        case .kOtherNews:
+        case .otherNews:
             incidentType = .otherNews
-        case .kPlannedEvent:
+        case .plannedEvent:
             incidentType = .plannedEvent
-        case .kRoadClosure:
+        case .roadClosure:
             incidentType = .roadClosure
-        case .kRoadHazard:
+        case .roadHazard:
             incidentType = .roadHazard
-        case .kWeather:
+        case .weather:
             incidentType = .weather
-        }
-        
-        guard incidentType != nil else {
-            return nil
         }
         
         self.init(identifier: incidentInfo.id,
@@ -43,11 +38,28 @@ extension Incident {
                   creationDate: incidentInfo.creationTime ?? Date.distantPast,
                   startDate: incidentInfo.startTime ?? Date.distantPast,
                   endDate: incidentInfo.endTime ?? Date.distantPast,
-                  impact: incidentInfo.impact ?? "",
+                  impact: .init(incidentInfo.impact),
                   subtype: incidentInfo.subType,
                   subtypeDescription: incidentInfo.subTypeDescription,
                   alertCodes: Set(incidentInfo.alertcCodes.map { $0.intValue }),
                   lanesBlocked: BlockedLanes(descriptions: incidentInfo.lanesBlocked),
                   shapeIndexRange: -1 ..< -1)
+    }
+}
+
+extension Incident.Impact {
+    init(_ incidentImpact: IncidentImpact) {
+        switch incidentImpact {
+        case .unknown:
+            self = .unknown
+        case .critical:
+            self = .critical
+        case .major:
+            self = .major
+        case .minor:
+            self = .minor
+        case .low:
+            self = .low
+        }
     }
 }

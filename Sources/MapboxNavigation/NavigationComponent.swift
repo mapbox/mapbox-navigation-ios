@@ -45,11 +45,4 @@ public protocol NavigationStatusPresenter: AnyObject {
      Hides a given Status without hiding the status view.
      */
     func hide(_: StatusView.Status)
-    
-    /**
-     Shows the status view for a specified amount of time.
-     `showStatus()` uses a default value for priority and the title input as identifier. To use these variables, use `show(_:)`
-     */
-    @available(*, deprecated, message: "Add a status using show(_:) instead")
-    func showStatus(title: String, spinner spin: Bool, duration: TimeInterval, animated: Bool, interactive: Bool)
 }

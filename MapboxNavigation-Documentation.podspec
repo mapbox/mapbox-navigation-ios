@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation-Documentation"
-  s.version = '1.4.1'
+  s.version = '2.0.0-beta.15'
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.license = { :type => "ISC", :file => "LICENSE.md" }
+  s.license = { :type => "Mapbox Terms of Service", :file => "LICENSE.md" }
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -45,15 +45,14 @@ Pod::Spec.new do |s|
 
   s.frameworks = ['CarPlay']
 
-  s.dependency "MapboxAccounts", "~> 2.3.0"
-  s.dependency "MapboxDirections", "~> 1.2.0"
+  s.dependency "MapboxDirections-pre", "2.0.0-beta.5"
   s.dependency "MapboxGeocoder.swift", "~> 0.10.0"
-  s.dependency "Mapbox-iOS-SDK", "~> 6.0"
-  s.dependency "MapboxMobileEvents", "~> 0.10.2"
-  s.dependency "MapboxNavigationNative", "~> 32.0"
+  s.dependency "MapboxMaps", "10.0.0-rc.2"
+  s.dependency "MapboxMobileEvents", "~> 1.0.0"
+  s.dependency "MapboxNavigationNative", "~> 54.0"
   s.dependency "Solar", "~> 2.1"
-  s.dependency "Turf", "~> 1.0"
-  s.dependency "MapboxSpeech", "~> 1.0"
+  s.dependency "Turf", "2.0.0-beta.1"
+  s.dependency "MapboxSpeech-pre", "2.0.0-alpha.1"
 
   s.swift_version = "5.0"
 

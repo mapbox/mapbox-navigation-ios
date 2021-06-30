@@ -1,29 +1,30 @@
 import UIKit
 
-class Interactor: UIPercentDrivenInteractiveTransition {
-    var hasStarted = false
-    var shouldFinish = false
-}
-
 class DismissAnimator: NSObject { }
+
 extension DismissAnimator: UIViewControllerAnimatedTransitioning {
+    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
-        guard let toVC = transitionContext.viewController(forKey: .to) else { return }
-        let containerView = transitionContext.containerView
+        guard let fromViewController = transitionContext.viewController(forKey: .from),
+              let toViewController = transitionContext.viewController(forKey: .to) else { return }
         
-        let point = CGPoint(x: 0, y: toVC.view.bounds.maxY)
-        let height = fromVC.view.bounds.height-toVC.view.frame.minY
-        let finalFrame = CGRect(origin: point, size: CGSize(width: fromVC.view.bounds.width, height: height))
+        let height = fromViewController.view.bounds.height - toViewController.view.frame.minY
+        let finalFrame = CGRect(x: 0,
+                                y: UIScreen.main.bounds.size.height,
+                                width: fromViewController.view.bounds.width,
+                                height: height)
         
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
-            fromVC.view.frame = finalFrame
-            containerView.backgroundColor = .clear
-        }) { _ in
+        UIView.animate(withDuration: transitionDuration(using: transitionContext),
+                       delay: 0,
+                       options: [.curveEaseInOut],
+                       animations: {
+                        fromViewController.view.frame = finalFrame
+                        transitionContext.containerView.backgroundColor = .clear
+                       }) { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
@@ -32,68 +33,91 @@ extension DismissAnimator: UIViewControllerAnimatedTransitioning {
 class PresentAnimator: NSObject { }
 
 extension PresentAnimator: UIViewControllerAnimatedTransitioning {
+    
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
         return 0.5
     }
     
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
-        guard let fromVC = transitionContext.viewController(forKey: .from) else { return }
-        let containerView = transitionContext.containerView
-        let toView = transitionContext.view(forKey: .to)!
-        let toVC = transitionContext.viewController(forKey: .to)!
+        guard let toView = transitionContext.view(forKey: .to),
+              let toViewController = transitionContext.viewController(forKey: .to) else { return }
         
+        let containerView = transitionContext.containerView
         containerView.backgroundColor = .clear
-        toView.frame = CGRect(x: 0, y: containerView.bounds.height,
-                              width: containerView.bounds.width, height: containerView.bounds.midY)
+        toView.frame = CGRect(x: 0,
+                              y: containerView.bounds.height,
+                              width: containerView.bounds.width,
+                              height: containerView.bounds.midY)
         
         containerView.addSubview(toView)
         
-        let tap = UITapGestureRecognizer(target: toVC, action: #selector(FeedbackViewController.handleDismissTap(sender:)))
-        if let responder = toVC as? UIGestureRecognizerDelegate {
-            tap.delegate = responder
+        let tapGestureRecognizer = UITapGestureRecognizer(target: toViewController,
+                                                          action: #selector(FeedbackViewController.handleDismissTap(sender:)))
+        if let responder = toViewController as? UIGestureRecognizerDelegate {
+            tapGestureRecognizer.delegate = responder
         }
-        containerView.addGestureRecognizer(tap)
+        containerView.addGestureRecognizer(tapGestureRecognizer)
         
-        var height = toVC.view.bounds.height
-        if let draggable = toVC as? DismissDraggable {
+        var height = toViewController.view.bounds.height
+        if let draggable = toViewController as? DismissDraggable {
             height = draggable.draggableHeight
         }
         
-        let finalFrame = CGRect(origin: CGPoint(x: 0, y: fromVC.view.bounds.height - height),
-                                size: CGSize(width: fromVC.view.bounds.width, height: height))
+        // To correctly present `FeedbackViewController` with certain presentation styles on iPad,
+        // `UIScreen` size is used instead of `UIViewController` size from which transition
+        // is being performed.
+        let finalFrame = CGRect(x: 0,
+                                y: UIScreen.main.bounds.size.height - height,
+                                width: UIScreen.main.bounds.size.width,
+                                height: height)
         
-        UIView.animate(withDuration: transitionDuration(using: transitionContext), delay: 0, options: [.curveEaseInOut], animations: {
-            toView.frame = finalFrame
-            containerView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
-        }) { _ in
+        UIView.animate(withDuration: transitionDuration(using: transitionContext),
+                       delay: 0,
+                       options: [.curveEaseInOut],
+                       animations: {
+                        toView.frame = finalFrame
+                        containerView.backgroundColor = UIColor.black.withAlphaComponent(0.5)
+                       }) { _ in
             transitionContext.completeTransition(!transitionContext.transitionWasCancelled)
         }
     }
 }
 
+class Interactor: UIPercentDrivenInteractiveTransition {
+    
+    var hasStarted = false
+    var shouldFinish = false
+}
+
 protocol DismissDraggable: UIViewControllerTransitioningDelegate {
+    
     var interactor: Interactor { get }
     var draggableHeight: CGFloat { get }
 }
 
 fileprivate extension Selector {
+    
     static let handleDismissDrag = #selector(UIViewController.handleDismissPan(_:))
 }
 
 extension DismissDraggable where Self: UIViewController {
+    
     func enableDraggableDismiss() {
-        let pan = UIPanGestureRecognizer(target: self, action: .handleDismissDrag)
-        view.addGestureRecognizer(pan)
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self,
+                                                          action: .handleDismissDrag)
+        view.addGestureRecognizer(panGestureRecognizer)
     }
 }
 
 fileprivate extension UIViewController {
+    
     @objc func handleDismissPan(_ sender: UIPanGestureRecognizer) {
         self.handlePan(sender)
     }
     
     func handlePan(_ sender: UIPanGestureRecognizer) {
-        guard let vc = self as? DismissDraggable else { return }
+        guard let viewController = self as? DismissDraggable else { return }
+        let interactor = viewController.interactor
         
         let finishThreshold: CGFloat = 0.4
         let translation = sender.translation(in: view)
@@ -101,17 +125,17 @@ fileprivate extension UIViewController {
         
         switch sender.state {
         case .began:
-            vc.interactor.hasStarted = true
+            interactor.hasStarted = true
             dismiss(animated: true, completion: nil)
         case .changed:
-            vc.interactor.shouldFinish = progress > finishThreshold
-            vc.interactor.update(progress)
+            interactor.shouldFinish = progress > finishThreshold
+            interactor.update(progress)
         case .cancelled:
-            vc.interactor.hasStarted = false
-            vc.interactor.cancel()
+            interactor.hasStarted = false
+            interactor.cancel()
         case .ended:
-            vc.interactor.hasStarted = false
-            vc.interactor.shouldFinish ? vc.interactor.finish() : vc.interactor.cancel()
+            interactor.hasStarted = false
+            interactor.shouldFinish ? interactor.finish() : interactor.cancel()
         default:
             break
         }

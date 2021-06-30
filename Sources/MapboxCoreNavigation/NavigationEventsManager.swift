@@ -14,9 +14,6 @@ public protocol EventsManagerDataSource: AnyObject {
     var locationProvider: NavigationLocationManager.Type { get }
 }
 
-@available(swift, obsoleted: 0.1, renamed: "NavigationEventsManager")
-public typealias EventsManager = NSObject
-
 /**
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */
@@ -25,7 +22,23 @@ open class NavigationEventsManager {
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    weak var dataSource: EventsManagerDataSource?
+    func withBackupDataSource(_ forcedDataSource: EventsManagerDataSource, action: () -> Void) {
+        backupDataSource = forcedDataSource
+        action()
+        backupDataSource = nil
+    }
+    
+    private var backupDataSource: EventsManagerDataSource?
+    private weak var _dataSource: EventsManagerDataSource?
+    var dataSource: EventsManagerDataSource?
+    {
+        get {
+            return _dataSource ?? backupDataSource
+        }
+        set {
+            _dataSource = newValue
+        }
+    }
     
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
@@ -40,10 +53,10 @@ open class NavigationEventsManager {
     lazy var accessToken: String = {
         guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
         let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
-        let token = dict["MGLMapboxAccessToken"] as? String else {
+        let token = dict["MBXAccessToken"] as? String ?? dict["MGLMapboxAccessToken"] as? String else {
             //we can assert here because if the token was passed in, it would of overriden this closure.
             //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
-            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
+            assertionFailure("`accessToken` must be set in the Info.plist as `MBXAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
             return ""
         }
         return token
@@ -82,8 +95,11 @@ open class NavigationEventsManager {
 
     func start() {
         let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing: Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: "CFBundleShortVersionString")!))
-        mobileEventsManager.disableLocationMetrics()
+
+        guard let stringForShortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
+            preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
+        }
+        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
         mobileEventsManager.sendTurnstileEvent()
     }
     

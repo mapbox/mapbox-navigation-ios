@@ -1,4 +1,5 @@
 import MapboxDirections
+import UIKit
 
 /// :nodoc:
 public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerViewDelegate {

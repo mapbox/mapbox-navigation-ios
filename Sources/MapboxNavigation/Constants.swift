@@ -1,19 +1,23 @@
+import CoreLocation
 import Foundation
 import MapboxDirections
 
+/**
+ A tuple that pairs an array of coordinates with level of traffic congestion along these coordinates.
+ */
 typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
 
 /**
- A stop dictionary representing the default line widths of the route line by zoom level when `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)` is undefined.
+ A stop dictionary representing the default line widths of the route line by zoom level when `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)` is undefined.
  
- You may use this constant in your implementation of `NavigationMapViewDelegate.navigationMapView(_:routeStyleLayerWithIdentifier:source:)` if you want to keep the default line widths but customize other aspects of the route line.
+ You may use this constant in your implementation of `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)` if you want to keep the default line widths but customize other aspects of the route line.
  */
-public let MBRouteLineWidthByZoomLevel: [Int: NSExpression] = [
-    10: NSExpression(forConstantValue: 8),
-    13: NSExpression(forConstantValue: 9),
-    16: NSExpression(forConstantValue: 11),
-    19: NSExpression(forConstantValue: 22),
-    22: NSExpression(forConstantValue: 28)
+public var RouteLineWidthByZoomLevel: [Double: Double] = [
+    10.0: 8.0,
+    13.0: 9.0,
+    16.0: 11.0,
+    19.0: 22.0,
+    22.0: 28.0
 ]
 
 /**
@@ -24,12 +28,12 @@ public var NavigationMapViewMinimumDistanceForOverheadZooming: CLLocationDistanc
 /**
  Attribute name for the route line that is used for identifying whether a RouteLeg is the current active leg.
  */
-public let MBCurrentLegAttribute = "isCurrentLeg"
+public let CurrentLegAttribute = "isCurrentLeg"
 
 /**
  Attribute name for the route line that is used for identifying different `CongestionLevel` along the route.
  */
-public let MBCongestionAttribute = "congestion"
+public let CongestionAttribute = "congestion"
 
 /**
  The minimum volume for the device before a gentle warning is emitted when beginning navigation.
@@ -43,7 +47,7 @@ extension Notification.Name {
      This notification is the equivalent of `StyleManagerDelegate.styleManager(_:didApply:)`.
      The user info dictionary contains the key `StyleManagerNotificationUserInfoKey.style` and `StyleManagerNotificationUserInfoKey.styleManager`.
      */
-    public static let styleManagerDidApplyStyle: Notification.Name = .init(rawValue: "MBStyleManagerDidApplyStyle")
+    public static let styleManagerDidApplyStyle: Notification.Name = .init(rawValue: "StyleManagerDidApplyStyle")
 }
 
 /**

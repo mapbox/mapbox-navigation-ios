@@ -1,27 +1,18 @@
 import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxSpeech
 import AVFoundation
+import UserNotifications
 import MobileCoreServices
+import MapboxMaps
+import MapboxCoreMaps
+import Turf
 
 /**
  A container view controller is a view controller that behaves as a navigation component; that is, it responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
  */
 public typealias ContainerViewController = UIViewController & NavigationComponent
-
-/**
- The position of speed limit view and floating buttons, including the overview, mute and feedback report in a navigation view.
- */
-public enum MapOrnamentPosition {
-    /**
-     The top-left corner when using a left-to-right language or the top-right corner when using a right-to-left language.
-     */
-    case topLeading
-    /**
-     The top-right corner when using a left-to-right language or the top-left corner when using a right-to-left language.
-     */
-    case topTrailing
-}
 
 /**
  `NavigationViewController` is a fully-featured user interface for turn-by-turn navigation. Do not confuse it with the `NavigationController` class in UIKit.
@@ -32,11 +23,10 @@ public enum MapOrnamentPosition {
  
  `CarPlayNavigationViewController` manages the corresponding user interface on a CarPlay screen.
  */
-open class NavigationViewController: UIViewController, NavigationStatusPresenter {
-    
+open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData {
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with its index in a `RouteResponse`.
-      
+     
      In cases where you need to update the route after navigation has started, you can set a new route here and `NavigationViewController` will update its UI accordingly.
      */
     public var indexedRoute: IndexedRoute {
@@ -52,37 +42,52 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
-    var didChangeAuthorizationIsFirstCalled = true
+    var _route: Route?
     
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
      */
-    public var route: Route {
-        return indexedRoute.0
+    public var route: Route? {
+        get {
+            return navigationService.indexedRoute.0
+        }
+        
+        set {
+            _route = newValue
+        }
     }
     
-    public var routeOptions: RouteOptions {
+    var _routeOptions: RouteOptions?
+    
+    /**
+     The route options used to get the route.
+     */
+    public var routeOptions: RouteOptions? {
         get {
             return navigationService.routeProgress.routeOptions
         }
+        
+        set {
+            _routeOptions = newValue
+        }
     }
+    
+    /**
+     The index of the route within the original `RouteResponse` object.
+     */
+    public var routeIndex: Int?
+    
+    /**
+     The `NavigationOptions` object, which is used for the navigation session.
+     */
+    public var navigationOptions: NavigationOptions?
     
     /**
      An instance of `Directions` need for rerouting. See [Mapbox Directions](https://docs.mapbox.com/ios/api/directions/) for further information.
      */
     public var directions: Directions {
-        return navigationService!.directions
+        return navigationService.directions
     }
-    
-    /**
-     An optional `MGLMapCamera` you can use to improve the initial transition from a previous viewport and prevent a trigger from an excessive significant location update.
-     */
-    public var pendingCamera: MGLMapCamera?
-    
-    /**
-     An instance of `MGLAnnotation` representing the origin of your route.
-     */
-    public var origin: MGLAnnotation?
     
     /**
      The receiver’s delegate.
@@ -95,22 +100,13 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public var voiceController: RouteVoiceController!
     
     /**
-     The navigation service that coordinates the view controller’s nonvisual components, tracking the user’s location as they proceed along the route.
-     */
-    private(set) public var navigationService: NavigationService! {
-        didSet {
-            mapViewController?.navService = navigationService
-        }
-    }
-    
-    /**
-     The main map view displayed inside the view controller.
+     The `NavigationMapView` displayed inside the view controller.
      
-     - note: Do not change this map view’s `NavigationMapView.navigationMapDelegate` property; instead, implement the corresponding methods on `NavigationViewControllerDelegate`.
+     - note: Do not change `NavigationMapView.delegate` property; instead, implement the corresponding methods on `NavigationViewControllerDelegate`.
      */
-    @objc public var mapView: NavigationMapView? {
+    @objc public var navigationMapView: NavigationMapView? {
         get {
-            return mapViewController?.mapView
+            return navigationView.navigationMapView
         }
     }
     
@@ -131,17 +127,22 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var showsReportFeedback: Bool = true {
         didSet {
-            mapViewController?.reportButton.isHidden = !showsReportFeedback
+            ornamentsController?.reportButton.isHidden = !showsReportFeedback
             showsEndOfRouteFeedback = showsReportFeedback
         }
     }
     
     /**
-     Shows End of route Feedback UI when the route controller arrives at the final destination. Defaults to `true.`
+     Shows End of route Feedback UI when the route controller arrives at the final destination.
+     
+     Defaults to `true.`
      */
-    public var showsEndOfRouteFeedback: Bool = true {
-        didSet {
-            mapViewController?.showsEndOfRoute = showsEndOfRouteFeedback
+    public var showsEndOfRouteFeedback: Bool {
+        get {
+            arrivalController?.showsEndOfRoute ?? false
+        }
+        set {
+            arrivalController?.showsEndOfRoute = newValue
         }
     }
     
@@ -150,9 +151,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      
      The default value of this property is `true`.
      */
-    public var showsSpeedLimits: Bool = true {
-        didSet {
-            mapViewController?.showsSpeedLimits = showsSpeedLimits
+    public var showsSpeedLimits: Bool {
+        get {
+            ornamentsController?.showsSpeedLimits ?? false
+        }
+        set {
+            ornamentsController?.showsSpeedLimits = newValue
         }
     }
     
@@ -185,31 +189,29 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      traversed section of a route, override the `traversedRouteColor` property
      for the `NavigationMapView.appearance()`.
      */
-    public var routeLineTracksTraversal: Bool = false {
-        didSet {
-            mapViewController?.routeLineTracksTraversal = routeLineTracksTraversal
+    public var routeLineTracksTraversal: Bool {
+        get {
+            navigationMapView?.routeLineTracksTraversal ?? false
+        }
+        set {
+            navigationMapView?.routeLineTracksTraversal = newValue
         }
     }
 
     /**
      Controls whether or not the FeedbackViewController shows a second level of detail for feedback items.
+     
+     Defaults to `false`.
      */
-    public var detailedFeedbackEnabled: Bool = false {
-        didSet {
-            mapViewController?.detailedFeedbackEnabled = detailedFeedbackEnabled
+    public var detailedFeedbackEnabled: Bool {
+        get {
+            ornamentsController?.detailedFeedbackEnabled ?? false
+        }
+        set {
+            ornamentsController?.detailedFeedbackEnabled = newValue
         }
     }
-    
-    var isConnectedToCarPlay: Bool {
-        if #available(iOS 12.0, *) {
-            return CarPlayManager.isConnected
-        } else {
-            return false
-        }
-    }
-    
-    var mapViewController: RouteMapViewController?
-    
+        
     var topViewController: ContainerViewController?
     
     var bottomViewController: ContainerViewController?
@@ -219,31 +221,38 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     open var floatingButtonsPosition: MapOrnamentPosition? {
         get {
-            return mapViewController?.floatingButtonsPosition
+            ornamentsController?.floatingButtonsPosition
         }
         set {
-            if let newPosition = newValue {
-                mapViewController?.floatingButtonsPosition = newPosition
-            }
+            ornamentsController?.floatingButtonsPosition = newValue
         }
     }
     
     /**
-     The  floating buttons in an array of UIButton in navigation view. The default floating buttons include the overview, mute and feedback report button. The default type of the floatingButtons is `FloatingButton`, which is declared with `FloatingButton.rounded(image:selectedImage:size:)` to be consistent.
+     The floating buttons in an array of UIButton in navigation view. The default floating buttons include the overview, mute and feedback report button. The default type of the floatingButtons is `FloatingButton`, which is declared with `FloatingButton.rounded(image:selectedImage:size:)` to be consistent.
      */
     open var floatingButtons: [UIButton]? {
         get {
-            return mapViewController?.floatingButtons
+            ornamentsController?.floatingButtons
         }
         set {
-            mapViewController?.floatingButtons = newValue
+            ornamentsController?.floatingButtons = newValue
         }
     }
     
     var navigationComponents: [NavigationComponent] {
         var components: [NavigationComponent] = []
-        if let mvc = mapViewController {
-            components.append(mvc)
+        
+        if let routeOverlayController = routeOverlayController {
+            components.append(routeOverlayController)
+        }
+        
+        if let cameraController = cameraController {
+            components.append(cameraController)
+        }
+        
+        if let overlayController = ornamentsController {
+            components.append(overlayController)
         }
         
         if let topViewController = topViewController {
@@ -253,13 +262,23 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         if let bottomViewController = bottomViewController {
             components.append(bottomViewController)
         }
+        
         return components
     }
     
     /**
      A Boolean value that determines whether the map annotates the locations at which instructions are spoken for debugging purposes.
+     
+     Defaults to `false`.
      */
-    public var annotatesSpokenInstructions = false
+    public var annotatesSpokenInstructions: Bool {
+        get {
+            routeOverlayController?.annotatesSpokenInstructions ?? false
+        }
+        set {
+            routeOverlayController?.annotatesSpokenInstructions = newValue
+        }
+    }
     
     /**
      Controls the styling of NavigationViewController and its components.
@@ -276,19 +295,50 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    /**
+     The navigation service that coordinates the view controller’s nonvisual components, tracking the user’s location as they proceed along the route.
+     */
+    private(set) public var navigationService: NavigationService! {
+        didSet {
+            arrivalController?.destination = route?.legs.last?.destination
+        }
     }
     
     private var traversingTunnel = false
-    
     private var approachingDestinationThreshold: CLLocationDistance = 250.0
     private var passedApproachingDestinationThreshold: Bool = false
     private var currentLeg: RouteLeg?
     private var foundAllBuildings = false
     
+    var arrivalController: ArrivalController?
+    var cameraController: CameraController?
+    var ornamentsController: NavigationMapView.OrnamentsController?
+    var routeOverlayController: NavigationMapView.RouteOverlayController?
+    var viewObservers: [NavigationComponentDelegate?] = []
+    var mapTileStore: TileStoreConfiguration.Location? = .default
+    
+    // MARK: - NavigationViewData implementation
+        
+    var navigationView: NavigationView! {
+        return (view as! NavigationView)
+    }
+    
+    var router: Router! {
+        navigationService.router
+    }
+    
+    var containerViewController: UIViewController! {
+        return self
+    }
+    
+    // MARK: - Initialization methods
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
     /**
-     Initializes a navigation view controller that presents the user interface for following a predefined route based on the given options.
+     Initializes a `NavigationViewController` that presents the user interface for following a predefined route based on the given options.
 
      The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
      
@@ -298,54 +348,20 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
     required public init(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
+        if let options = navigationOptions {
+            mapTileStore = options.tileStoreConfiguration.mapLocation
+        }
+        
         super.init(nibName: nil, bundle: nil)
         
-        self.navigationService = navigationOptions?.navigationService ?? MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: routeOptions)
-        self.navigationService.delegate = self
-
-        let credentials = navigationService.directions.credentials
-        self.voiceController = navigationOptions?.voiceController ?? RouteVoiceController(navigationService: navigationService,accessToken: credentials.accessToken, host: credentials.host.absoluteString)
-
-        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
-        
-        styleManager = StyleManager()
-        styleManager.delegate = self
-        styleManager.styles = navigationOptions?.styles ?? [DayStyle(), NightStyle()]
-        
-        let bottomBanner = navigationOptions?.bottomBanner ?? {
-            let viewController: BottomBannerViewController = .init()
-            viewController.delegate = self
-            return viewController
-        }()
-        bottomViewController = bottomBanner
-
-        if let customBanner = navigationOptions?.topBanner {
-            topViewController = customBanner
-        } else {
-            let defaultBanner = TopBannerViewController(nibName: nil, bundle: nil)
-            defaultBanner.delegate = self
-            defaultBanner.statusView.addTarget(self, action: #selector(NavigationViewController.didChangeSpeed(_:)), for: .valueChanged)
-            topViewController = defaultBanner
-        }
-        
-        let mapViewController = RouteMapViewController(navigationService: self.navigationService, delegate: self, topBanner: topViewController!, bottomBanner: bottomBanner)
-        
-        self.mapViewController = mapViewController
-        mapViewController.destination = route.legs.last?.destination
-        mapViewController.view.translatesAutoresizingMaskIntoConstraints = false
-        
-        //Manually update the map style since the RMVC missed the "map style change" notification when the style manager was set up.
-        if let currentStyle = styleManager.currentStyle {
-            updateMapStyle(currentStyle, animated: false)
-        }
-        
-        if !(routeOptions is NavigationRouteOptions) {
-            print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
-        }
+        self.route = route
+        self.routeIndex = routeIndex
+        self.routeOptions = routeOptions
+        self.navigationOptions = navigationOptions
     }
     
     /**
-    Initializes a navigation view controller with the given route and navigation service.
+     Initializes a `NavigationViewController` with the given route and navigation service.
      
      - parameter route: The route to navigate along.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
@@ -353,43 +369,194 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationService: The navigation service that manages navigation along the route.
      */
     convenience init(route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationService service: NavigationService) {
-        let options = NavigationOptions(navigationService: service)
-        self.init(for: route, routeIndex: routeIndex, routeOptions: routeOptions, navigationOptions: options)
+        let navigationOptions = NavigationOptions(navigationService: service)
+        self.init(for: route,
+                  routeIndex: routeIndex,
+                  routeOptions: routeOptions,
+                  navigationOptions: navigationOptions)
     }
     
     deinit {
-        navigationService.stop()
+        navigationService?.stop()
     }
     
-    override open func viewDidLoad() {
-        super.viewDidLoad()
-        
-        if let mapViewController = mapViewController {
-            embed(mapViewController, in: view) { (parent, map) -> [NSLayoutConstraint] in
-                return map.view.constraintsForPinning(to: parent.view)
-            }
-            mapViewController.view.pinInSuperview()
-            mapViewController.reportButton.isHidden = !showsReportFeedback
+    // MARK: - Setting-up methods
+    
+    func setupNavigationService() {
+        guard let route = _route,
+              let routeIndex = routeIndex,
+              let routeOptions = _routeOptions else {
+            fatalError("`route`, `routeIndex` and `routeOptions` must be valid to create an instance of `NavigationViewController`.")
         }
+        
+        if !(routeOptions is NavigationRouteOptions) {
+            print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
+        }
+        
+        let tileStoreLocation = navigationOptions?.tileStoreConfiguration.navigatorLocation ?? .default
+        let defaultNavigationService = MapboxNavigationService(route: route,
+                                                               routeIndex: routeIndex,
+                                                               routeOptions: routeOptions,
+                                                               tileStoreLocation: tileStoreLocation)
+        navigationService = navigationOptions?.navigationService ?? defaultNavigationService
+        navigationService.delegate = self
+        
+        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
+        
+        setupControllers(navigationOptions)
+        setupStyleManager(navigationOptions)
+        
+        viewObservers.forEach {
+            $0?.navigationViewDidLoad(view)
+        }
+        
+        // Start the navigation service on presentation.
+        navigationService.start()
+        
+        if let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction {
+            navigationService(navigationService,
+                              didPassVisualInstructionPoint: firstInstruction,
+                              routeProgress: navigationService.routeProgress)
+        }
+
+        navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation
+    }
+    
+    func setupVoiceController() {
+        let credentials = navigationService.directions.credentials
+        let defaultVoiceController = RouteVoiceController(navigationService: navigationService,
+                                                          accessToken: credentials.accessToken,
+                                                          host: credentials.host.absoluteString)
+        
+        voiceController = navigationOptions?.voiceController ?? defaultVoiceController
         
         // Initialize voice controller if it hasn't been overridden.
         // This is optional and lazy so it can be mutated by the developer after init.
         _ = voiceController
+    }
+    
+    func setupStyleManager(_ navigationOptions: NavigationOptions?) {
+        styleManager = StyleManager()
+        styleManager.delegate = self
+        styleManager.styles = navigationOptions?.styles ?? [DayStyle(), NightStyle()]
         
-        //start the navigation service on presentation.
-        self.navigationService.start()
+        if let currentStyle = styleManager.currentStyle {
+            updateMapStyle(currentStyle)
+        }
+    }
+    
+    func setupControllers(_ navigationOptions: NavigationOptions?) {
+        arrivalController = ArrivalController(self)
+        routeOverlayController = NavigationMapView.RouteOverlayController(self)
+        cameraController = CameraController(self)
+        ornamentsController = NavigationMapView.OrnamentsController(self, eventsManager: navigationService.eventsManager)
+        
+        viewObservers = [
+            routeOverlayController,
+            cameraController,
+            ornamentsController,
+            arrivalController
+        ]
+        
+        subviewInits.append { [weak self] in
+            if let topBanner = self?.addTopBanner(navigationOptions),
+               let bottomBanner = self?.addBottomBanner(navigationOptions) {
+                self?.ornamentsController?.embedBanners(topBanner: topBanner,
+                                                        bottomBanner: bottomBanner)
+            }
+        }
+        
+        subviewInits.append { [weak self] in
+            if let predictiveCacheOptions = self?.navigationOptions?.predictiveCacheOptions {
+                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions,
+                                                                 tileStoreConfiguration: self?.navigationOptions?.tileStoreConfiguration)
+            }
+        }
+        
+        subviewInits.forEach {
+            $0()
+        }
+        subviewInits.removeAll()
+        
+        arrivalController?.destination = route?.legs.last?.destination
+        ornamentsController?.reportButton.isHidden = !showsReportFeedback
+    }
+    
+    func setupNavigationCamera() {
+        if let centerCoordinate = navigationService.routeProgress.route.shape?.coordinates.first {
+            navigationMapView?.setInitialCamera(centerCoordinate)
+        }
+        
+        // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
+        navigationMapView?.navigationCamera.follow()
+    }
+    
+    func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {
+        let topBanner = navigationOptions?.topBanner ?? {
+            let viewController: TopBannerViewController = .init()
+            viewController.delegate = self
+            viewController.statusView.addTarget(self, action: #selector(NavigationViewController.didChangeSpeed(_:)), for: .valueChanged)
+            
+            return viewController
+        }()
+        
+        topViewController = topBanner
+        
+        return topBanner
+    }
+
+    func addBottomBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {
+        let bottomBanner = navigationOptions?.bottomBanner ?? {
+            let viewController: BottomBannerViewController = .init()
+            viewController.delegate = self
+            
+            return viewController
+        }()
+        
+        bottomViewController = bottomBanner
+        
+        return bottomBanner
+    }
+    
+    fileprivate func handleCancelAction() {
+        if delegate?.navigationViewControllerDidDismiss(self, byCanceling: true) != nil {
+            // The receiver should handle dismissal of the NavigationViewController
+        } else {
+            dismiss(animated: true, completion: nil)
+        }
+    }
+    
+    // MARK: - UIViewController lifecycle methods
+    
+    open override func loadView() {
+        let frame = parent?.view.bounds ?? UIScreen.main.bounds
+        view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore)
+    }
+    
+    /**
+     Array of initialization hooks to be called at `NavigationViewController.viewDidLoad`.
+     
+     Once main view is loaded, `NavigationService` starts, and each UI component should be ready to accept navigation events and updates. At the same time, various components require embedding, which triggers main view initialization, which triggers service start... To break this cycle, wrap any custom subview configuration here, to avoid triggering main view initialization before it is required.
+     */
+    private var subviewInits: [() -> ()] = []
+    
+    override open func viewDidLoad() {
+        super.viewDidLoad()
         
         view.clipsToBounds = true
         
-        guard let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else {
-            return
-        }
-        navigationService(navigationService, didPassVisualInstructionPoint: firstInstruction, routeProgress: navigationService.routeProgress)
+        setupNavigationService()
+        setupVoiceController()
+        setupNavigationCamera()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        viewObservers.forEach {
+            $0?.navigationViewWillAppear(animated)
+        }
+        
         if shouldManageApplicationIdleTimer {
             UIApplication.shared.isIdleTimerDisabled = true
         }
@@ -397,12 +564,44 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         notifyUserAboutLowVolumeIfNeeded()
     }
     
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        viewObservers.forEach {
+            $0?.navigationViewDidAppear(animated)
+        }
+    }
+    
     open override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
 
+        viewObservers.forEach {
+            $0?.navigationViewWillDisappear(animated)
+        }
+        
         if shouldManageApplicationIdleTimer {
             UIApplication.shared.isIdleTimerDisabled = false
         }
+    }
+    
+    open override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        viewObservers.forEach {
+            $0?.navigationViewDidDisappear(animated)
+        }
+    }
+    
+    open override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        viewObservers.forEach {
+            $0?.navigationViewDidLayoutSubviews()
+        }
+    }
+    
+    open override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
+        arrivalController?.updatePreferredContentSize(container.preferredContentSize)
     }
     
     func notifyUserAboutLowVolumeIfNeeded() {
@@ -417,8 +616,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         show(lowVolumeStatus)
     }
     
-    
-    // MARK: Containerization
+    // MARK: - Containerization methods
     
     func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((NavigationViewController, UIViewController) -> [NSLayoutConstraint])?) {
         child.willMove(toParent: self)
@@ -430,12 +628,22 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         child.didMove(toParent: self)
     }
     
-    // MARK: Route controller notifications
+    // MARK: - Route controller notification handling methods
     
-    func scheduleLocalNotification(about step: RouteStep, identifier: String) {
+    func scheduleLocalNotification(_ routeProgress: RouteProgress) {
+        // Remove any notification about an already completed maneuver, even if there isn’t another notification to replace it with yet.
+        let identifier = "com.mapbox.route_progress_instruction"
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [identifier])
+        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [identifier])
+        
         guard sendsNotifications else { return }
         guard UIApplication.shared.applicationState == .background else { return }
-        guard let instruction = step.instructionsDisplayedAlongStep?.last else { return }
+        let currentLegProgress = routeProgress.currentLegProgress
+        if currentLegProgress.currentStepProgress.currentSpokenInstruction !=
+            currentLegProgress.currentStep.instructionsSpokenAlongStep?.last {
+            return
+        }
+        guard let instruction = currentLegProgress.currentStep.instructionsDisplayedAlongStep?.last else { return }
         
         let content = UNMutableNotificationContent()
         if let primaryText = instruction.primaryInstruction.text {
@@ -458,6 +666,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         } else {
             imageColor = .black
         }
+        
         if let image = instruction.primaryInstruction.maneuverImage(side: instruction.drivingSide, color: imageColor, size: CGSize(width: 72, height: 72)) {
             // Bake in any transform required for left turn arrows etc.
             let imageData = UIGraphicsImageRenderer(size: image.size).pngData { (context) in
@@ -468,7 +677,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                 try imageData.write(to: temporaryURL)
                 let iconAttachment = try UNNotificationAttachment(identifier: "maneuver", url: temporaryURL, options: [UNNotificationAttachmentOptionsTypeHintKey: kUTTypePNG])
                 content.attachments = [iconAttachment]
-            } catch {}
+            } catch {
+                NSLog("Failed to create UNNotificationAttachment with error: \(error.localizedDescription).")
+            }
         }
         
         let notificationRequest = UNNotificationRequest(identifier: identifier, content: content, trigger: nil)
@@ -492,95 +703,18 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             $0.hide(status)
         }
     }
-    
-    @available(*, deprecated, message: "Add a status using show(_:) instead")
-    public func showStatus(title: String, spinner spin: Bool, duration: TimeInterval, animated: Bool, interactive: Bool) {
-        navigationComponents.compactMap({ $0 as? NavigationStatusPresenter }).forEach {
-            $0.showStatus(title: title, spinner: spin, duration: duration, animated: animated, interactive: interactive)
-        }
+}
+
+extension NavigationViewController: NavigationViewDelegate {
+    func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
+        handleCancelAction()
     }
 }
 
-//MARK: - RouteMapViewControllerDelegate
-extension NavigationViewController: RouteMapViewControllerDelegate {
+// MARK: - NavigationServiceDelegate methods
 
-    public func navigationMapView(_ mapView: NavigationMapView, mainRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, mainRouteStyleLayerWithIdentifier: identifier, source: source)
-    }
-
-    public func navigationMapView(_ mapView: NavigationMapView, mainRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, mainRouteCasingStyleLayerWithIdentifier: identifier, source: source)
-    }
-
-    public func navigationMapView(_ mapView: NavigationMapView, alternativeRouteStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, alternativeRouteStyleLayerWithIdentifier: identifier, source: source)
-    }
-
-    public func navigationMapView(_ mapView: NavigationMapView, alternativeRouteCasingStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, alternativeRouteCasingStyleLayerWithIdentifier: identifier, source: source)
-    }
-    
-    public func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        delegate?.navigationViewController(self, didSelect: route)
-    }
-    
-    public func navigationMapView(_ mapView: NavigationMapView, shapeFor routes: [Route]) -> MGLShape? {
-        return delegate?.navigationViewController(self, shapeFor: routes)
-    }
-    
-    public func navigationMapView(_ mapView: NavigationMapView, simplifiedShapeFor route: Route) -> MGLShape? {
-        return delegate?.navigationViewController(self, simplifiedShapeFor: route)
-    }
-    
-    public func navigationMapView(_ mapView: NavigationMapView, waypointStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, waypointStyleLayerWithIdentifier: identifier, source: source)
-    }
-    
-    public func navigationMapView(_ mapView: NavigationMapView, waypointSymbolStyleLayerWithIdentifier identifier: String, source: MGLSource) -> MGLStyleLayer? {
-        return delegate?.navigationViewController(self, waypointSymbolStyleLayerWithIdentifier: identifier, source: source)
-    }
-    
-    public func navigationMapView(_ mapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> MGLShape? {
-        return delegate?.navigationViewController(self, shapeFor: waypoints, legIndex: legIndex)
-    }
-    
-    //Still Kept around for the EORVC. On it's way out.
-    func mapViewControllerDidDismiss(_ mapViewController: RouteMapViewController, byCanceling canceled: Bool) {
-        if delegate?.navigationViewControllerDidDismiss(self, byCanceling: canceled) != nil {
-            // The receiver should handle dismissal of the NavigationViewController
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
-    }
-    
-    public func navigationMapViewUserAnchorPoint(_ mapView: NavigationMapView) -> CGPoint {
-        return delegate?.navigationViewController(self, mapViewUserAnchorPoint: mapView) ?? .zero
-    }
-    
-    func mapViewControllerShouldAnnotateSpokenInstructions(_ routeMapViewController: RouteMapViewController) -> Bool {
-        return annotatesSpokenInstructions
-    }
-    
-    func mapViewController(_ mapViewController: RouteMapViewController, roadNameAt location: CLLocation) -> String? {
-        guard let roadName = delegate?.navigationViewController(self, roadNameAt: location) else {
-            return nil
-        }
-        return roadName
-    }
-    
-    public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        return delegate?.label(label, willPresent: instruction, as: presented)
-    }
-    
-    func mapViewController(_ mapViewController: RouteMapViewController, didCenterOn location: CLLocation) {
-        navigationComponents.compactMap({$0 as? NavigationMapInteractionObserver}).forEach {
-            $0.navigationViewController(didCenterOn: location)
-        }
-    }
-}
-
-//MARK: - NavigationServiceDelegate
 extension NavigationViewController: NavigationServiceDelegate {
+    
     public func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
         let defaultBehavior = RouteController.DefaultBehavior.shouldRerouteFromLocation
         let componentsWantReroute = navigationComponents.allSatisfy { $0.navigationService(service, shouldRerouteFrom: location) }
@@ -626,39 +760,32 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        //Check to see if we're in a tunnel.
+        // Check to see if we're in a tunnel.
         checkTunnelState(at: location, along: progress)
         
-        //Pass the message onto our navigation components
+        // Pass the message onto our navigation components.
         for component in navigationComponents {
             component.navigationService(service, didUpdate: progress, with: location, rawLocation: rawLocation)
         }
 
         // If the user has arrived, don't snap the user puck.
-        // In the case the user drives beyond the waypoint,
-        // we should accurately depict this.
-        
+        // In case if user drives beyond the waypoint, we should accurately depict this.
         guard let destination = progress.currentLeg.destination else {
             preconditionFailure("Current leg has no destination")
         }
         let shouldPrevent = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
         let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
         
-        if snapsUserLocationAnnotationToRoute,
-            userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.labelCurrentRoad(at: rawLocation, for: location)
+        if snapsUserLocationAnnotationToRoute, userHasArrivedAndShouldPreventRerouting {
+            ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation), for: location)
+            navigationMapView?.moveUserLocation(to: location, animated: true)
         } else  {
-            mapViewController?.labelCurrentRoad(at: rawLocation)
-        }
-        
-        if snapsUserLocationAnnotationToRoute,
-            userHasArrivedAndShouldPreventRerouting {
-            mapViewController?.mapView.updateCourseTracking(location: location, animated: true)
+            ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation))
         }
         
         attemptToHighlightBuildings(progress, with: location)
         
-        // Finally, pass the message onto the NVC delegate.
+        // Finally, pass the message onto the `NavigationViewControllerDelegate`.
         delegate?.navigationViewController(self, didUpdate: progress, with: location, rawLocation: rawLocation)
     }
     
@@ -667,15 +794,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             component.navigationService(service, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress)
         }
         
-        // Remove any notification about an already complete maneuver, even if there isn’t another notification to replace it with yet.
-        let notificationIdentifier = "instruction"
-        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationIdentifier])
-        UNUserNotificationCenter.current().removeDeliveredNotifications(withIdentifiers: [notificationIdentifier])
-        
-        let legProgress = routeProgress.currentLegProgress
-        if legProgress.currentStepProgress.currentSpokenInstruction == legProgress.currentStep.instructionsSpokenAlongStep?.last {
-            scheduleLocalNotification(about: legProgress.currentStep, identifier: notificationIdentifier)
-        }
+        scheduleLocalNotification(routeProgress)
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
@@ -697,24 +816,20 @@ extension NavigationViewController: NavigationServiceDelegate {
         let componentsWantAdvance = navigationComponents.allSatisfy { $0.navigationService(service, didArriveAt: waypoint) }
         let advancesToNextLeg = componentsWantAdvance && (delegate?.navigationViewController(self, didArriveAt: waypoint) ?? defaultBehavior)
         
-        if service.routeProgress.isFinalLeg && advancesToNextLeg && showsEndOfRouteFeedback {
-            // In case of final destination present end of route view first and then re-center final destination.
-            showEndOfRouteFeedback { [weak self] _ in
-                self?.frameDestinationArrival(for: service.router.location)
-            }
-        }
+        arrivalController?.showEndOfRouteIfNeeded(self,
+                                                  advancesToNextLeg: advancesToNextLeg,
+                                                  onDismiss: { [weak self] in
+                                                    self?.navigationService.endNavigation(feedback: $0)
+                                                    self?.handleCancelAction()
+                                                  })
         return advancesToNextLeg
-    }
-    
-    public func showEndOfRouteFeedback(duration: TimeInterval = 1.0, completionHandler: ((Bool) -> Void)? = nil) {
-        guard let mapController = mapViewController else { return }
-        mapController.showEndOfRoute(duration: duration, completion: completionHandler)
     }
 
     public func navigationService(_ service: NavigationService, willBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         for component in navigationComponents {
             component.navigationService(service, willBeginSimulating: progress, becauseOf: reason)
         }
+        navigationMapView?.simulatesLocation = true
     }
     
     public func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
@@ -727,6 +842,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         for component in navigationComponents {
             component.navigationService(service, willEndSimulating: progress, becauseOf: reason)
         }
+        navigationMapView?.simulatesLocation = true
     }
     
     public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
@@ -738,12 +854,14 @@ extension NavigationViewController: NavigationServiceDelegate {
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
         let inTunnel = navigationService.isInTunnel(at: location, along: progress)
         
-        if !traversingTunnel, inTunnel { // we're entering
+        // Entering tunnel
+        if !traversingTunnel, inTunnel {
             traversingTunnel = true
             styleManager.applyStyle(type: .night)
         }
         
-        if traversingTunnel, !inTunnel { //we're exiting
+        // Exiting tunnel
+        if traversingTunnel, !inTunnel {
             traversingTunnel = false
             styleManager.timeOfDayChanged()
         }
@@ -756,32 +874,26 @@ extension NavigationViewController: NavigationServiceDelegate {
     public func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool {
         return navigationComponents.allSatisfy { $0.navigationServiceShouldDisableBatteryMonitoring(service) }
     }
-        
+    
     public func navigationServiceDidChangeAuthorization(_ service: NavigationService, didChangeAuthorizationFor locationManager: CLLocationManager) {
-        // CLLocationManager.accuracyAuthorization was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
-        guard let accuracyAuthorizationValue = locationManager.value(forKey: "accuracyAuthorization") as? Int else { return }
-        let accuracyAuthorization = MBNavigationAccuracyAuthorization(rawValue: accuracyAuthorizationValue)
-        let previousAuthorizationValue = 1 - accuracyAuthorizationValue
-                        
-        // create authorization status
-        let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
-        let authorizationStatus = StatusView.Status(identifier: "ENABLE_PRECISE_LOCATION", title: title, duration: .infinity, priority: 1)
-        
-        if #available(iOS 14.0, *), accuracyAuthorization == .reducedAccuracy {
-            show(authorizationStatus)
-            mapView?.reducedAccuracyActivatedMode = true
-        } else if #available(iOS 14.0, *), previousAuthorizationValue == 1, didChangeAuthorizationIsFirstCalled == false {
-            hide(authorizationStatus)
-            mapView?.reducedAccuracyActivatedMode = false
+        if #available(iOS 14.0, *), locationManager.accuracyAuthorization == .reducedAccuracy {
+            let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
+            show(StatusView.Status(identifier: "ENABLE_PRECISE_LOCATION",
+                                   title: title,
+                                   spinner: false,
+                                   duration: 20,
+                                   animated: true,
+                                   interactive: false,
+                                   priority: 1))
+            navigationMapView?.reducedAccuracyActivatedMode = true
         } else {
-            //Fallback on earlier versions
-            mapView?.reducedAccuracyActivatedMode = false
+            // Fallback on earlier versions
+            navigationMapView?.reducedAccuracyActivatedMode = false
             return
         }
-        didChangeAuthorizationIsFirstCalled = false
     }
     
-    // MARK: - Building Extrusion Highlighting
+    // MARK: - Building Extrusion Highlighting methods
     
     private func attemptToHighlightBuildings(_ progress: RouteProgress, with location: CLLocation) {
         // In case if distance was fully covered - do nothing.
@@ -789,58 +901,43 @@ extension NavigationViewController: NavigationServiceDelegate {
         // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
         if progress.fractionTraveled >= 1.0 { return }
         if waypointStyle == .annotation { return }
-        guard let mapView = mapView else { return }
 
         if currentLeg != progress.currentLeg {
             currentLeg = progress.currentLeg
             passedApproachingDestinationThreshold = false
-            mapViewController?.suppressAutomaticAltitudeChanges = false
             foundAllBuildings = false
-            mapView.altitude = mapView.defaultAltitude
         }
-        
-        let altitude = MGLAltitudeForZoomLevel(16.1, mapView.camera.pitch, location.coordinate.latitude, mapView.frame.size)
         
         if !passedApproachingDestinationThreshold, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
             passedApproachingDestinationThreshold = true
-            mapViewController?.suppressAutomaticAltitudeChanges = true
         }
         
-        // Attempt to decrease altitude so that highlighted building becomes visible.
-        // This is required in cases when:
-        // - Switching from overview to follow mode.
-        // - Previous attempt to decrease altitude failed (happens when highlighted building is within destination
-        // threshold right after starting navigation).
-        // FIXME: When device was rotated to landscape mode altitude should be adjusted so that building is highlighted.
-        if passedApproachingDestinationThreshold, mapView.altitude == mapView.defaultAltitude, altitude < mapView.altitude {
-            mapView.altitude = altitude
+        if !foundAllBuildings, passedApproachingDestinationThreshold,
+           let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
+            navigationMapView?.highlightBuildings(at: [currentLegWaypoint],
+                                                  in3D: waypointStyle == .extrudedBuilding ? true : false,
+                                                  completion: { (found) in
+                                                    self.foundAllBuildings = found
+                                                  })
         }
-        
-        if !foundAllBuildings, passedApproachingDestinationThreshold, let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
-            foundAllBuildings = mapView.highlightBuildings(at: [currentLegWaypoint], in3D: waypointStyle == .extrudedBuilding ? true : false)
-        }
-    }
-    
-    private func frameDestinationArrival(for location: CLLocation?) {
-        if waypointStyle == .annotation { return }
-        guard let mapViewController = self.mapViewController else { return }
-        guard let location = location else { return }
-        
-        // Update insets to be able to correctly center map view after presenting end of route view.
-        mapViewController.updateMapViewContentInsets(animated: true, completion: {
-            // Update user course view to correctly place it in map view.
-            self.mapView?.updateCourseTracking(location: location, animated: false)
-        })
     }
 }
 
 // MARK: - StyleManagerDelegate
 
 extension NavigationViewController: StyleManagerDelegate {
+    
+    func roadName(at location: CLLocation) -> String? {
+        guard let roadName = delegate?.navigationViewController(self, roadNameAt: location) else {
+            return nil
+        }
+        return roadName
+    }
+    
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
-        } else if let firstCoord = route.shape?.coordinates.first {
+        } else if let firstCoord = route?.shape?.coordinates.first {
             return CLLocation(latitude: firstCoord.latitude, longitude: firstCoord.longitude)
         } else {
             return nil
@@ -851,10 +948,9 @@ extension NavigationViewController: StyleManagerDelegate {
         updateMapStyle(style)
     }
     
-    private func updateMapStyle(_ style: Style, animated: Bool = true) {
-        if mapView?.styleURL != style.mapStyleURL {
-            mapView?.style?.transition = MGLTransition(duration: animated ? 0.5 : 0, delay: 0)
-            mapView?.styleURL = style.mapStyleURL
+    private func updateMapStyle(_ style: Style) {
+        if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
+            navigationMapView?.mapView.mapboxMap.style.uri = StyleURI(url: style.mapStyleURL)
         }
         
         currentStatusBarStyle = style.statusBarStyle ?? .default
@@ -862,12 +958,16 @@ extension NavigationViewController: StyleManagerDelegate {
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
-        mapView?.reloadStyle(self)
+        // TODO: Implement the ability to reload style.
     }
 }
-// MARK: - TopBannerViewController
-// MARK: Status View Actions
+
+// MARK: - TopBannerViewController methods
+
 extension NavigationViewController {
+
+    // MARK: StatusView action related methods
+    
     @objc func didChangeSpeed(_ statusView: StatusView) {
         let displayValue = 1+min(Int(9 * statusView.value), 8)
         statusView.showSimulationStatus(speed: displayValue)
@@ -875,8 +975,11 @@ extension NavigationViewController {
         navigationService.simulationSpeedMultiplier = Double(displayValue)
     }
 }
-// MARK: TopBannerViewControllerDelegate
-extension NavigationViewController: TopBannerViewControllerDelegate {    
+
+// MARK: - TopBannerViewControllerDelegate methods
+
+extension NavigationViewController: TopBannerViewControllerDelegate {
+    
     public func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
         let progress = navigationService.routeProgress
         let route = progress.route
@@ -888,7 +991,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             banner.displayStepsTable()
             
             if banner.isDisplayingPreviewInstructions {
-                mapViewController?.recenter(self)
+                cameraController?.recenter(self)
             }
         default:
             break
@@ -920,76 +1023,103 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         }
     }
     
-    public func preview(step: RouteStep, in banner: TopBannerViewController, remaining: [RouteStep], route: Route, animated: Bool = true) {
-        guard let leg = route.leg(containing: step) else { return }
-        guard let legIndex = route.legs.firstIndex(of: leg) else { return }
-        guard let stepIndex = leg.steps.firstIndex(of: step) else { return }
-        let nextStepIndex = stepIndex + 1
-        
+    public func preview(step: RouteStep,
+                        in banner: TopBannerViewController,
+                        remaining: [RouteStep],
+                        route: Route,
+                        animated: Bool = true) {
+        guard let leg = route.leg(containing: step),
+              let legIndex = route.legs.firstIndex(of: leg),
+              let stepIndex = leg.steps.firstIndex(of: step) else { return }
+
         let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
         guard let upcomingStep = legProgress.upcomingStep else { return }
         
         let previewBanner: CompletionHandler = {
-            // Since Mapbox SDK v6.2.0-beta.1 `MGLMapView.setCenter(_:zoomLevel:direction:animated:completionHandler:)` method is calling `completionHandler`
-            // synchronously, this prevents from well-timed maneuver redrawing in `ManeuverView`. Workaround is to perform asynchronous redrawing on main queue.
-            DispatchQueue.main.async {
-                banner.preview(step: legProgress.currentStep, maneuverStep: upcomingStep, distance: legProgress.currentStep.distance, steps: remaining)
-            }
+            banner.preview(step: legProgress.currentStep,
+                           maneuverStep: upcomingStep,
+                           distance: legProgress.currentStep.distance,
+                           steps: remaining)
         }
         
-        mapViewController?.center(on: upcomingStep, route: route, legIndex: legIndex, stepIndex: nextStepIndex, animated: animated, completion: previewBanner)
+        cameraController?.center(on: upcomingStep,
+                                 route: route,
+                                 legIndex: legIndex,
+                                 stepIndex: stepIndex + 1,
+                                 animated: animated,
+                                 completion: previewBanner)
+        
+        banner.preview(step: legProgress.currentStep,
+                       maneuverStep: upcomingStep,
+                       distance: legProgress.currentStep.distance,
+                       steps: remaining)
     }
     
     public func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         let progress = navigationService.routeProgress
         let legProgress = RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
-        self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route, animated: false)
-        
-        // After selecting maneuver and dismissing steps table make sure to update contentInsets of NavigationMapView
-        // to correctly place selected maneuver in the center of the screen (taking into account top and bottom banner heights).
-        banner.dismissStepsTable { [weak self] in
-            self?.mapViewController?.updateMapViewContentInsets()
-        }
+        self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route)
+        banner.dismissStepsTable()
     }
     
     public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
-        mapViewController?.recenter(self)
+        cameraController?.recenter(self)
     }
 }
 
-fileprivate extension Route {
-    func leg(containing step: RouteStep) -> RouteLeg? {
-        return legs.first { $0.steps.contains(step) }
-    }
-}
-
-// MARK: - BottomBannerViewControllerDelegate
-
-// Handling cancel action in new Bottom Banner container.
-// Code duplicated with RouteMapViewController.mapViewControllerDidDismiss(_:byCanceling:)
+// MARK: - BottomBannerViewControllerDelegate methods
 
 extension NavigationViewController: BottomBannerViewControllerDelegate {
+    
+    // Handle cancel action in new Bottom Banner container.
     public func didTapCancel(_ sender: Any) {
-        if delegate?.navigationViewControllerDidDismiss(self, byCanceling: true) != nil {
-            // The receiver should handle dismissal of the NavigationViewController
-        } else {
-            dismiss(animated: true, completion: nil)
-        }
+        handleCancelAction()
     }
 }
 
-// MARK: - CarPlayConnectionObserver
+// MARK: - CarPlayConnectionObserver methods
 
 extension NavigationViewController: CarPlayConnectionObserver {
+    
     public func didConnectToCarPlay() {
-        navigationComponents.compactMap({$0 as? CarPlayConnectionObserver}).forEach {
+        navigationComponents.compactMap({ $0 as? CarPlayConnectionObserver }).forEach {
             $0.didConnectToCarPlay()
         }
     }
+    
     public func didDisconnectFromCarPlay() {
-        navigationComponents.compactMap({$0 as? CarPlayConnectionObserver}).forEach {
+        navigationComponents.compactMap({ $0 as? CarPlayConnectionObserver }).forEach {
             $0.didDisconnectFromCarPlay()
         }
+    }
+}
+
+// MARK: - NavigationMapViewDelegate methods
+
+extension NavigationViewController: NavigationMapViewDelegate {
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+        delegate?.navigationViewController(self, routeLineLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+        delegate?.navigationViewController(self, routeCasingLineLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
+        delegate?.navigationViewController(self, waypointCircleLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer? {
+        delegate?.navigationViewController(self, waypointSymbolLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
+        delegate?.navigationViewController(self, shapeFor: waypoints, legIndex: legIndex)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
+        delegate?.navigationViewController(self, didAdd: finalDestinationAnnotation, pointAnnotationManager: pointAnnotationManager)
     }
 }

@@ -1,3 +1,6 @@
+import UIKit
+import CoreLocation
+
 /// :nodoc:
 struct InstructionsCardConstants {
     static let highlightDistance: CLLocationDistance = 152.4 // 500 ft

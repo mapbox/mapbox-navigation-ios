@@ -1,4 +1,6 @@
 import UIKit
+import MapboxDirections
+import MapboxCoreNavigation
 
 /**
  A view that represents the root view of the MapboxNavigation drop-in UI.
@@ -36,9 +38,17 @@ import UIKit
  */
 @IBDesignable
 open class NavigationView: UIView {
+    
     private enum Constants {
         static let endOfRouteHeight: CGFloat = 260.0
         static let buttonSpacing: CGFloat = 8.0
+    }
+    
+    private enum Images {
+        static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+        static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+        static let volumeOff = UIImage(named: "volume_off", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
+        static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     }
     
     lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
@@ -47,20 +57,17 @@ open class NavigationView: UIView {
     
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
-    
-    private enum Images {
-        static let overview = UIImage(named: "overview", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
-        static let volumeUp = UIImage(named: "volume_up", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
-        static let volumeOff =  UIImage(named: "volume_off", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
-        static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
-    }
-    
-    lazy var mapView: NavigationMapView = {
-        let map: NavigationMapView = .forAutoLayout(frame: self.bounds)
-        map.navigationMapViewDelegate = delegate
-        map.courseTrackingDelegate = delegate
-        map.showsUserLocation = true
-        return map
+    var tileStoreLocation: TileStoreConfiguration.Location? = .default
+    lazy var navigationMapView: NavigationMapView = {
+        let navigationMapView = NavigationMapView(frame: self.bounds, tileStoreLocation: tileStoreLocation)
+        navigationMapView.isHidden = false
+        navigationMapView.translatesAutoresizingMaskIntoConstraints = false
+        
+        navigationMapView.delegate = delegate
+        navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                                             viewportDataSourceType: .active)
+        
+        return navigationMapView
     }()
     
     lazy var floatingStackView: UIStackView = {
@@ -73,17 +80,6 @@ open class NavigationView: UIView {
     lazy var overviewButton = FloatingButton.rounded(image: Images.overview)
     lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
     lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
-    
-    func reinstallConstraints() {
-        if let activeFloatingStackView = self.constraints(affecting: self.floatingStackView) {
-            NSLayoutConstraint.deactivate(activeFloatingStackView)
-        }
-        if let activeSpeedLimitView = self.constraints(affecting: self.speedLimitView) {
-            NSLayoutConstraint.deactivate(activeSpeedLimitView)
-        }
-
-        setupConstraints()
-    }
     
     var floatingButtonsPosition: MapOrnamentPosition = .topTrailing {
         didSet {
@@ -131,20 +127,28 @@ open class NavigationView: UIView {
         }
     }
     
-    //MARK: - Initializers
+    // MARK: - Initialization methods
+    
+    convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+        self.init(frame: frame, tileStoreLocation: tileStoreLocation)
+        self.delegate = delegate
+        updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
+    }
     
     convenience init(delegate: NavigationViewDelegate) {
         self.init(frame: .zero)
         self.delegate = delegate
-        updateDelegates() //this needs to be called because didSet's do not fire in init contexts.
+        updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
     }
     
-    override init(frame: CGRect) {
+    // TODO: Refine public APIs, which are exposed by `NavigationView`.
+    public init(frame: CGRect, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+        self.tileStoreLocation = tileStoreLocation
         super.init(frame: frame)
         commonInit()
     }
     
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -171,7 +175,7 @@ open class NavigationView: UIView {
     
     func setupViews() {
         let children: [UIView] = [
-            mapView,
+            navigationMapView,
             topBannerContainerView,
             floatingStackView,
             resumeButton,
@@ -186,16 +190,75 @@ open class NavigationView: UIView {
     open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         DayStyle().apply()
-        [mapView, topBannerContainerView, bottomBannerContainerView].forEach( { $0.prepareForInterfaceBuilder() })
+        [navigationMapView, topBannerContainerView, bottomBannerContainerView].forEach({ $0.prepareForInterfaceBuilder() })
         wayNameView.text = "Street Label"
     }
     
     private func updateDelegates() {
-        mapView.navigationMapViewDelegate = delegate
-        mapView.courseTrackingDelegate = delegate
+        navigationMapView.delegate = delegate
     }
 }
 
-protocol NavigationViewDelegate: NavigationMapViewDelegate, InstructionsBannerViewDelegate, NavigationMapViewCourseTrackingDelegate, VisualInstructionDelegate {
+protocol NavigationViewDelegate: NavigationMapViewDelegate, InstructionsBannerViewDelegate, VisualInstructionDelegate {
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton)
+}
+
+extension NavigationView {
+    
+    func setupConstraints() {
+        navigationMapView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        navigationMapView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        navigationMapView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        navigationMapView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+  
+        topBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        topBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        topBannerContainerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+
+        floatingStackView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor, constant: 10).isActive = true
+        
+        resumeButton.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
+        resumeButton.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
+
+        bottomBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        
+        wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
+        
+        speedLimitView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor, constant: 10).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: FloatingButton.buttonSize.width).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height).isActive = true
+        
+        switch floatingButtonsPosition {
+        case .topLeading:
+            floatingStackView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
+            speedLimitView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
+        case .topTrailing:
+            floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
+            speedLimitView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
+        }
+    }
+
+    func constrainEndOfRoute() {
+        self.endOfRouteHideConstraint?.isActive = true
+        
+        endOfRouteView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
+        self.endOfRouteHeightConstraint?.isActive = true
+    }
+    
+    func reinstallConstraints() {
+        if let activeFloatingStackView = self.constraints(affecting: self.floatingStackView) {
+            NSLayoutConstraint.deactivate(activeFloatingStackView)
+        }
+        
+        if let activeSpeedLimitView = self.constraints(affecting: self.speedLimitView) {
+            NSLayoutConstraint.deactivate(activeSpeedLimitView)
+        }
+
+        setupConstraints()
+    }
 }

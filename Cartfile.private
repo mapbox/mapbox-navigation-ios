@@ -1,5 +1,4 @@
 github "mapbox/MapboxGeocoder.swift" ~> 0.10
 github "Quick/Quick" ~> 3.1.2
 github "Quick/Nimble" ~> 9.0.1
-github "linksmt/OHHTTPStubs" "563f48d3fab84ef04639649c770b00f4fa502cca"
-github "Udumft/SnappyShrimp" "xcode-11-4-build"
+github "pointfreeco/swift-snapshot-testing" ~> 1.8.0

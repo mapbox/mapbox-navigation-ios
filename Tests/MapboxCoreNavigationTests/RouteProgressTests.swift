@@ -7,7 +7,7 @@ import Turf
 @testable import MapboxCoreNavigation
 
 class RouteProgressTests: XCTestCase {
-    #if !SWIFT_PACKAGE
+
     func testRouteProgress() {
         let routeProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions)
         XCTAssertEqual(routeProgress.fractionTraveled, 0)
@@ -48,7 +48,6 @@ class RouteProgressTests: XCTestCase {
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.userDistanceToManeuverLocation, 439.1)
         XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.step.description, "Turn right onto California Street")
     }
-    #endif
     
     func testRemainingWaypointsAlongRoute() {
         let coordinates = [
@@ -276,7 +275,6 @@ class RouteProgressTests: XCTestCase {
         XCTAssertTrue(legProgress.currentSpeedLimit?.value.isInfinite ?? false)
     }
     
-    #if !SWIFT_PACKAGE
     func testRouteProggressCodable() {
         let routeProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions)
         
@@ -303,7 +301,6 @@ class RouteProgressTests: XCTestCase {
         XCTAssertEqual(routeProgress.congestionTravelTimesSegmentsByStep.count, decoded.congestionTravelTimesSegmentsByStep.count)
         XCTAssertEqual(routeProgress.congestionTimesPerStep, decoded.congestionTimesPerStep)
     }
-    #endif
     
     func testRouteLegProgressCodable() {
         let coordinates = [

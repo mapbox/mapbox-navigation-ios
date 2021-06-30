@@ -1,6 +1,7 @@
 import XCTest
 import TestHelper
 import MapboxDirections
+import MapboxMaps
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 @testable import Bench
@@ -10,7 +11,8 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
     
     override func setUp() {
         super.setUp()
-        MGLAccountManager.accessToken = token
+        
+        ResourceOptionsManager.default.resourceOptions.accessToken = token
     }
     
     func testControlFirstRoute() {
@@ -57,7 +59,8 @@ class BenchTests: XCTestCase, CLLocationManagerDelegate {
     
     func navigationViewController(route: Route, routeIndex: Int, routeOptions: NavigationRouteOptions, locationManager: ReplayLocationManager) -> NavigationViewController {
         let directions = DirectionsSpy()
-        let service = MapboxNavigationService(route: route, routeIndex: 0,
+        let service = MapboxNavigationService(route: route,
+                                              routeIndex: 0,
                                               routeOptions: routeOptions,
                                               directions: directions,
                                               locationSource: locationManager,

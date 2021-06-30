@@ -1,5 +1,6 @@
 import UIKit
-import Mapbox
+import CoreLocation
+import MapboxMaps
 
 /**
  A control indicating the direction that the vehicle is traveling towards.
@@ -10,9 +11,10 @@ open class CarPlayCompassView: StylableView {
     // Round to closest 45° to only show main winds ["N", "NE", "E", "SE", "S", "SW", "W", "NW"]
     static let granularity: CLLocationDirection = 360 / 8
     
-    lazy var formatter: MGLCompassDirectionFormatter = {
-        let formatter = MGLCompassDirectionFormatter()
-        formatter.unitStyle = .short
+    lazy var formatter: CompassDirectionFormatter = {
+        let formatter = CompassDirectionFormatter()
+        formatter.style = .short
+        
         return formatter
     }()
     
@@ -32,7 +34,7 @@ open class CarPlayCompassView: StylableView {
         set {
             let snappedCourse = CarPlayCompassView.granularity * round(newValue / CarPlayCompassView.granularity)
             _snappedCourse = snappedCourse
-            label.text = formatter.string(fromDirection: snappedCourse).uppercased()
+            label.text = formatter.string(from: snappedCourse).uppercased()
         }
         get {
             return _snappedCourse

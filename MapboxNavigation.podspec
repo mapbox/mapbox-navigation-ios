@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxNavigation"
-  s.version = '1.4.1'
+  s.version = '2.0.0-beta.15'
   s.summary = "Complete turn-by-turn navigation interface for iOS."
 
   s.description  = <<-DESC
@@ -15,7 +15,7 @@ Pod::Spec.new do |s|
 
   # ―――  Spec License  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.license = { :type => "ISC", :file => "LICENSE.md" }
+  s.license = { :type => "Mapbox Terms of Service", :file => "LICENSE.md" }
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
 
   # ――― Platform Specifics ――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
-  s.ios.deployment_target = "10.0"
+  s.ios.deployment_target = "11.0"
 
   # ――― Source Location ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
@@ -44,10 +44,10 @@ Pod::Spec.new do |s|
   s.module_name = "MapboxNavigation"
 
   s.dependency "MapboxCoreNavigation", "#{s.version.to_s}"
-  s.dependency "Mapbox-iOS-SDK", "~> 6.0"
+  s.dependency "MapboxMaps", "10.0.0-rc.2"
   s.dependency "Solar", "~> 2.1"
-  s.dependency "MapboxSpeech", "~> 1.0"
-  s.dependency "MapboxMobileEvents", "~> 0.10.2" # Always specify a patch release if pre-v1.0
+  s.dependency "MapboxSpeech-pre", "2.0.0-alpha.1"
+  s.dependency "MapboxMobileEvents", "~> 1.0.0" # Always specify a patch release if pre-v1.0
 
   s.swift_version = "5.0"
 

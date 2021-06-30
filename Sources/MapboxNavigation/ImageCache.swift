@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 internal class ImageCache: BimodalImageCache {
     let memoryCache: NSCache<NSString, UIImage>
@@ -63,14 +63,8 @@ internal class ImageCache: BimodalImageCache {
         fileCache.clearDisk(completion: completion)
     }
 
-    private func cost(forImage image: UIImage) -> Int {
-        let xDimensionCost = image.size.width * image.scale
-        let yDimensionCost = image.size.height * image.scale
-        return Int(xDimensionCost * yDimensionCost)
-    }
-
     private func storeImageInMemoryCache(_ image: UIImage, forKey key: String) {
-        memoryCache.setObject(image, forKey: key as NSString, cost: cost(forImage: image))
+        memoryCache.setObject(image, forKey: key as NSString, cost: image.memoryCost)
     }
 
     private func imageFromMemoryCache(forKey key: String) -> UIImage? {

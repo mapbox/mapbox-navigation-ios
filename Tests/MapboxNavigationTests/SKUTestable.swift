@@ -1,29 +1,29 @@
 #if DEBUG
-import Mapbox
+import MapboxMaps
 import MapboxSpeech
 import MapboxDirections
 import OHHTTPStubs
 
-extension MGLMapView {
+extension MapView {
     
-    @objc class var skuToken: String? {
+    class var skuToken: String? {
         let sema = DispatchSemaphore(value: 0)
         var token: String?
         
-        OHHTTPStubs.stubRequests(passingTest: { (request) -> Bool in
+        HTTPStubs.stubRequests(passingTest: { (request) -> Bool in
             let isMapboxStyleURL = request.url?.isMapboxStyleURL ?? false
             guard isMapboxStyleURL else { return true }
             token = request.url?.queryItem("sku")?.value
             sema.signal()
             return true
-        }) { (_) -> OHHTTPStubsResponse in
-            return OHHTTPStubsResponse(data: "".data(using: .utf8)!, statusCode: 200, headers: [:])
+        }) { (_) -> HTTPStubsResponse in
+            return HTTPStubsResponse(data: "".data(using: .utf8)!, statusCode: 200, headers: [:])
         }
-        _ = MGLMapView(frame: CGRect(origin: .zero, size: CGSize(width: 64, height: 64)))
+        _ = MapView(frame: CGRect(origin: .zero, size: CGSize(width: 64, height: 64)))
         
         _ = sema.wait(timeout: .now() + 2)
         
-        OHHTTPStubs.removeAllStubs()
+        HTTPStubs.removeAllStubs()
         
         return token
     }
@@ -42,8 +42,10 @@ extension SpeechSynthesizer {
 extension Directions {
     
     @objc class var skuToken: String? {
-        let options = RouteOptions(coordinates: [CLLocationCoordinate2D(latitude: 1, longitude: 2),
-                                                 CLLocationCoordinate2D(latitude: 3, longitude: 4)])
+        let options = RouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 1, longitude: 2),
+            CLLocationCoordinate2D(latitude: 3, longitude: 4)
+        ])
         let url = Directions(credentials: DirectionsCredentials(accessToken: "foo")).url(forCalculating: options)
         return url.queryItem("sku")?.value
     }

@@ -1,21 +1,21 @@
 import XCTest
-import FBSnapshotTestCase
+import SnapshotTesting
 import MapboxDirections
+import CoreLocation
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class ManeuverViewTests: FBSnapshotTestCase {
+class ManeuverViewTests: XCTestCase {
     let maneuverView = ManeuverView(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
 
     override func setUp() {
         super.setUp()
         maneuverView.backgroundColor = .white
-        recordMode = false
-        agnosticOptions = [.OS, .device]
-        usesDrawViewHierarchyInRect = true
+        isRecording = false
 
         let window = UIWindow(frame: maneuverView.bounds)
         window.addSubview(maneuverView)
+        DayStyle().apply()
     }
     
     func maneuverInstruction(_ maneuverType: ManeuverType?, _ maneuverDirection: ManeuverDirection?, _ degrees: CLLocationDegrees = 180) -> VisualInstruction {
@@ -25,57 +25,52 @@ class ManeuverViewTests: FBSnapshotTestCase {
 
     func testStraightRoundabout() {
         maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .straightAhead)
-        verify(maneuverView.layer)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
     }
 
     func testTurnRight() {
         maneuverView.visualInstruction = maneuverInstruction(.turn, .right)
-        verify(maneuverView.layer)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
     }
 
     func testTurnSlightRight() {
         maneuverView.visualInstruction = maneuverInstruction(.turn, .slightRight)
-        verify(maneuverView.layer)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
     }
 
     func testMergeRight() {
         maneuverView.visualInstruction = maneuverInstruction(.merge, .right)
-        verify(maneuverView.layer)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
     }
 
     func testRoundaboutTurnLeft() {
         maneuverView.visualInstruction = maneuverInstruction(.takeRoundabout, .right, CLLocationDegrees(270))
-        verify(maneuverView.layer)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
     }
-    
+
     func testArrive() {
         maneuverView.visualInstruction = maneuverInstruction(.arrive, .right)
-        verify(maneuverView.layer)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
     }
-    
+
     func testArriveNone() {
         maneuverView.visualInstruction = maneuverInstruction(.arrive, nil)
-        verify(maneuverView.layer)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
     }
-    
+
     func testLeftUTurn() {
         maneuverView.drivingSide = .right
         maneuverView.visualInstruction = maneuverInstruction(.turn, .uTurn)
-        // Layer transformations are not rendered when snapshotting so we
-        // manually flip the U-turn for right-hand rule of the road in this test.
         let image = UIImage(view: maneuverView)!
         let flipped = UIImage(cgImage: image.cgImage!, scale: UIScreen.main.scale, orientation: .upMirrored)
         let imageView = UIImageView(image: flipped)
-        verify(imageView)
+        assertImageSnapshot(matching: imageView, as: .image(precision: 0.95))
     }
 
     func testRightUTurn() {
         maneuverView.drivingSide = .left
         maneuverView.visualInstruction = maneuverInstruction(.turn, .uTurn)
-        verify(maneuverView.layer)
-        let image = UIImage(view: maneuverView)!
-        let imageView = UIImageView(image: image)
-        verify(imageView)
+        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
     }
 
     func testRoundabout() {
@@ -91,19 +86,23 @@ class ManeuverViewTests: FBSnapshotTestCase {
             views.addSubview(view)
         }
 
-        verify(views.layer)
+        assertImageSnapshot(matching: views.layer, as: .image(precision: 0.95))
     }
 }
 
 extension UIImage {
     convenience init?(view: UIView) {
-        UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.isOpaque, 0)
-        defer { UIGraphicsEndImageContext() }
-        view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
-        
-        guard let image = UIGraphicsGetImageFromCurrentImageContext(),
-            let cgImage = image.cgImage else { return nil }
-        
-        self.init(cgImage: cgImage, scale: UIScreen.main.scale, orientation: .up)
+        let rendererFormat = UIGraphicsImageRendererFormat.default()
+        rendererFormat.opaque = view.isOpaque
+        rendererFormat.scale = 3
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 50, height: 50), format: rendererFormat)
+
+        let snapshotImage = renderer.image { c in
+            view.layer.render(in: c.cgContext)
+        }
+        guard let cgImage = snapshotImage.cgImage else {
+            return nil
+        }
+        self.init(cgImage: cgImage, scale: 3, orientation: .up)        
     }
 }

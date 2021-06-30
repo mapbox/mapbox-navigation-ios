@@ -1,21 +1,7 @@
 import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
-
-/**
- The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
- */
-@available(iOS 12.0, *)
-public enum CarPlayActivity: Int {
-    /// The user is browsing the map or searching for a destination.
-    case browsing
-    /// The user is panning while browsing the map interface.
-    case panningInBrowsingMode
-    /// The user is previewing a route or selecting among multiple routes.
-    case previewing
-    /// The user is actively navigating along a route.
-    case navigating
-}
+import MapboxMaps
 
 /**
  `CarPlayManager` is the main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
@@ -26,7 +12,15 @@ public enum CarPlayActivity: Int {
  */
 @available(iOS 12.0, *)
 public class CarPlayManager: NSObject {
+    
+    /**
+     A controller that manages the templates for constructing a scene’s user interface.
+     */
     public fileprivate(set) var interfaceController: CPInterfaceController?
+    
+    /**
+     Main window for content, presented on the CarPlay screen.
+     */
     public fileprivate(set) var carWindow: UIWindow?
 
     /**
@@ -39,8 +33,6 @@ public class CarPlayManager: NSObject {
      */
     public var simulatesLocations = false
 
-    private weak var navigationService: NavigationService?
-
     /**
      A multiplier to be applied to the user's speed in simulation mode.
      */
@@ -49,26 +41,21 @@ public class CarPlayManager: NSObject {
             navigationService?.simulationSpeedMultiplier = simulatedSpeedMultiplier
         }
     }
-
-    var trackingStateObservation: NSKeyValueObservation?
     
-    deinit {
-        trackingStateObservation = nil
-    }
-    
+    /**
+     A template that displays a navigation overlay on the map.
+     */
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
-    public fileprivate(set) weak var currentNavigator: CarPlayNavigationViewController? {
-        didSet {
-            if let controller = currentNavigator {
-                trackingStateObservation = controller.observe(\.tracksUserCourse) { [weak self] (controller, change) in
-                    let imageName = controller.tracksUserCourse ? "carplay_overview" : "carplay_locate"
-                    self?.userTrackingButton.image = UIImage(named: imageName, in: .mapboxNavigation, compatibleWith: nil)
-                }
-            }
-        }
-    }
-
-    internal var mapTemplateProvider: MapTemplateProvider
+    
+    /**
+     `UIViewController`, which provides a fully-featured turn-by-turn navigation UI for CarPlay.
+     */
+    public fileprivate(set) weak var carPlayNavigationViewController: CarPlayNavigationViewController?
+    
+    /**
+     Property, which contains type of `CarPlayNavigationViewController`.
+     */
+    public let carPlayNavigationViewControllerType: CarPlayNavigationViewController.Type
 
     /**
      A Boolean value indicating whether the phone is connected to CarPlay.
@@ -86,8 +73,6 @@ public class CarPlayManager: NSObject {
      interface.
      */
     public let directions: Directions
-    
-    public let navigationViewControllerType: CarPlayNavigationViewController.Type
 
     /**
      The styles displayed in the CarPlay interface.
@@ -97,7 +82,7 @@ public class CarPlayManager: NSObject {
             if let mapViewController = carPlayMapViewController {
                 mapViewController.styles = styles
             }
-            currentNavigator?.styles = styles
+            carPlayNavigationViewController?.styles = styles
         }
     }
     
@@ -116,9 +101,14 @@ public class CarPlayManager: NSObject {
      */
     public lazy var exitButton: CPBarButton = {
         let exitButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
-            self?.currentNavigator?.exitNavigation(byCanceling: true)
+            self?.carPlayNavigationViewController?.exitNavigation(byCanceling: true)
         }
-        exitButton.title = NSLocalizedString("CARPLAY_END", bundle: .mapboxNavigation, value: "End", comment: "Title for end navigation button")
+        
+        exitButton.title = NSLocalizedString("CARPLAY_END",
+                                             bundle: .mapboxNavigation,
+                                             value: "End",
+                                             comment: "Title for end navigation button")
+        
         return exitButton
     }()
     
@@ -126,14 +116,23 @@ public class CarPlayManager: NSObject {
      The bar button that mutes the voice turn-by-turn instruction announcements during navigation.
      */
     public lazy var muteButton: CPBarButton = {
-        let muteTitle = NSLocalizedString("CARPLAY_MUTE", bundle: .mapboxNavigation, value: "Mute", comment: "Title for mute button")
-        let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE", bundle: .mapboxNavigation, value: "Unmute", comment: "Title for unmute button")
+        let muteTitle = NSLocalizedString("CARPLAY_MUTE",
+                                          bundle: .mapboxNavigation,
+                                          value: "Mute",
+                                          comment: "Title for mute button")
+        
+        let unmuteTitle = NSLocalizedString("CARPLAY_UNMUTE",
+                                            bundle: .mapboxNavigation,
+                                            value: "Unmute",
+                                            comment: "Title for unmute button")
         
         let muteButton = CPBarButton(type: .text) { (button: CPBarButton) in
             NavigationSettings.shared.voiceMuted = !NavigationSettings.shared.voiceMuted
             button.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
         }
+        
         muteButton.title = NavigationSettings.shared.voiceMuted ? unmuteTitle : muteTitle
+        
         return muteButton
     }()
     
@@ -142,9 +141,12 @@ public class CarPlayManager: NSObject {
      */
     public lazy var showFeedbackButton: CPMapButton = {
         let showFeedbackButton = CPMapButton { [weak self] button in
-            self?.currentNavigator?.showFeedback()
+            self?.carPlayNavigationViewController?.showFeedback()
         }
-        showFeedbackButton.image = UIImage(named: "carplay_feedback", in: .mapboxNavigation, compatibleWith: nil)
+        
+        showFeedbackButton.image = UIImage(named: "carplay_feedback",
+                                           in: .mapboxNavigation,
+                                           compatibleWith: nil)
         
         return showFeedbackButton
     }()
@@ -154,29 +156,32 @@ public class CarPlayManager: NSObject {
      */
     public lazy var userTrackingButton: CPMapButton = {
         let userTrackingButton = CPMapButton { [weak self] button in
-            guard let navigationViewController = self?.currentNavigator else {
-                return
+            guard let navigationMapView = self?.carPlayNavigationViewController?.navigationMapView else { return }
+            
+            if navigationMapView.navigationCamera.state == .following {
+                navigationMapView.navigationCamera.moveToOverview()
+            } else {
+                navigationMapView.navigationCamera.follow()
             }
-            navigationViewController.tracksUserCourse = !navigationViewController.tracksUserCourse
         }
         
-        userTrackingButton.image = UIImage(named: "carplay_overview", in: .mapboxNavigation, compatibleWith: nil)
+        userTrackingButton.image = UIImage(named: "carplay_overview",
+                                           in: .mapboxNavigation,
+                                           compatibleWith: nil)
         
         return userTrackingButton
     }()
     
-    @available(*, deprecated, renamed: "trackingStateButton")
-    public var overviewButton: CPMapButton {
-        get { return userTrackingButton }
+    /**
+     The main `NavigationMapView` displayed inside CarPlay.
+     */
+    public var navigationMapView: NavigationMapView? {
+        return carPlayMapViewController?.navigationMapView
     }
     
-    /**
-     The main map view displayed inside CarPlay.
-     */
-    public var mapView: NavigationMapView? {
-        let mapViewController = carPlayMapViewController
-        return mapViewController?.mapView
-    }
+    private weak var navigationService: NavigationService?
+    
+    internal var mapTemplateProvider: MapTemplateProvider
     
     /**
      Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
@@ -191,19 +196,20 @@ public class CarPlayManager: NSObject {
         self.init(styles: styles,
                   directions: directions,
                   eventsManager: eventsManager,
-                  navigationViewControllerClass: nil)
+                  carPlayNavigationViewControllerClass: nil)
     }
     
     internal init(styles: [Style]? = nil,
                   directions: Directions? = nil,
                   eventsManager: NavigationEventsManager? = nil,
-                  navigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
+                  carPlayNavigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
         self.styles = styles ?? [DayStyle(), NightStyle()]
         let mapboxDirections = directions ?? .shared
         self.directions = mapboxDirections
-        self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil, accessToken: mapboxDirections.credentials.accessToken)
+        self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil,
+                                                                      accessToken: mapboxDirections.credentials.accessToken)
         self.mapTemplateProvider = MapTemplateProvider()
-        self.navigationViewControllerType = navigationViewControllerClass ?? CarPlayNavigationViewController.self
+        self.carPlayNavigationViewControllerType = carPlayNavigationViewControllerClass ?? CarPlayNavigationViewController.self
         
         super.init()
         
@@ -217,7 +223,8 @@ public class CarPlayManager: NSObject {
      - parameter navigationService: The service with which to navigation. CarPlayNavigationViewController will observe the progress updates from this service.
      - precondition: The NavigationViewController must be fully presented at the time of this call.
      */
-    public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D, navigationService: NavigationService) {
+    public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D,
+                                           navigationService: NavigationService) {
         let route = navigationService.route
         let routeOptions = navigationService.routeProgress.routeOptions
         
@@ -230,12 +237,47 @@ public class CarPlayManager: NSObject {
             self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
         }
     }
+    
+    func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationCameraStateDidChange(_:)),
+                                               name: .navigationCameraStateDidChange,
+                                               object: carPlayNavigationViewController?.navigationMapView?.navigationCamera)
+    }
+    
+    func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationCameraStateDidChange,
+                                                  object: carPlayNavigationViewController?.navigationMapView?.navigationCamera)
+    }
+    
+    @objc func navigationCameraStateDidChange(_ notification: Notification) {
+        guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
+        switch state {
+        case .idle:
+            break
+        case .transitionToFollowing, .following:
+            userTrackingButton.image = UIImage(named: "carplay_overview",
+                                               in: .mapboxNavigation,
+                                               compatibleWith: nil)
+            break
+        case .transitionToOverview, .overview:
+            userTrackingButton.image = UIImage(named: "carplay_locate",
+                                               in: .mapboxNavigation,
+                                               compatibleWith: nil)
+            break
+        }
+    }
 }
 
-// MARK: CPApplicationDelegate
+// MARK: - CPApplicationDelegate methods
+
 @available(iOS 12.0, *)
 extension CarPlayManager: CPApplicationDelegate {
-    public func application(_ application: UIApplication, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
+    
+    public func application(_ application: UIApplication,
+                            didConnectCarInterfaceController interfaceController: CPInterfaceController,
+                            to window: CPWindow) {
         CarPlayManager.isConnected = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
@@ -255,11 +297,15 @@ extension CarPlayManager: CPApplicationDelegate {
         interfaceController.setRootTemplate(mapTemplate, animated: false)
             
         eventsManager.sendCarPlayConnectEvent()
+        
+        subscribeForNotifications()
     }
 
-    public func application(_ application: UIApplication, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+    public func application(_ application: UIApplication,
+                            didDisconnectCarInterfaceController interfaceController: CPInterfaceController,
+                            from window: CPWindow) {
         CarPlayManager.isConnected = false
-        self.interfaceController = nil        
+        self.interfaceController = nil
         
         window.rootViewController = nil
         window.isHidden = true
@@ -293,15 +339,24 @@ extension CarPlayManager: CPApplicationDelegate {
            
         let traitCollection = mapViewController.traitCollection
         
-        if let leadingButtons = delegate?.carPlayManager(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
+        if let leadingButtons = delegate?.carPlayManager(self,
+                                                         leadingNavigationBarButtonsCompatibleWith: traitCollection,
+                                                         in: mapTemplate,
+                                                         for: .browsing) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
 
-        if let trailingButtons = delegate?.carPlayManager(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
+        if let trailingButtons = delegate?.carPlayManager(self,
+                                                          trailingNavigationBarButtonsCompatibleWith: traitCollection,
+                                                          in: mapTemplate,
+                                                          for: .browsing) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
 
-        if let mapButtons = delegate?.carPlayManager(self, mapButtonsCompatibleWith: traitCollection, in: mapTemplate, for: .browsing) {
+        if let mapButtons = delegate?.carPlayManager(self,
+                                                     mapButtonsCompatibleWith: traitCollection,
+                                                     in: mapTemplate,
+                                                     for: .browsing) {
             mapTemplate.mapButtons = mapButtons
         } else if let mapButtons = self.browsingMapButtons(for: mapTemplate) {
             mapTemplate.mapButtons = mapButtons
@@ -309,8 +364,12 @@ extension CarPlayManager: CPApplicationDelegate {
     }
 
     public func resetPanButtons(_ mapTemplate: CPMapTemplate) {
-        if mapTemplate.isPanningInterfaceVisible, let mapViewController = carPlayMapViewController {
-            if let mapButtons = delegate?.carPlayManager(self, mapButtonsCompatibleWith: mapViewController.traitCollection, in: mapTemplate, for: .browsing) {
+        if mapTemplate.isPanningInterfaceVisible,
+           let carPlayMapViewController = carPlayMapViewController {
+            if let mapButtons = delegate?.carPlayManager(self,
+                                                         mapButtonsCompatibleWith: carPlayMapViewController.traitCollection,
+                                                         in: mapTemplate,
+                                                         for: .browsing) {
                 mapTemplate.mapButtons = mapButtons
             } else if let mapButtons = self.browsingMapButtons(for: mapTemplate) {
                 mapTemplate.mapButtons = mapButtons
@@ -324,9 +383,11 @@ extension CarPlayManager: CPApplicationDelegate {
         guard let mapViewController = carPlayMapViewController else {
             return nil
         }
-        var mapButtons = [mapViewController.recenterButton,
-                          mapViewController.zoomInButton,
-                          mapViewController.zoomOutButton]
+        var mapButtons = [
+            mapViewController.recenterButton,
+            mapViewController.zoomInButton,
+            mapViewController.zoomOutButton
+        ]
         let panMapButton = mapViewController.panMapButton ?? mapViewController.panningInterfaceDisplayButton(for: mapTemplate)
         mapViewController.panMapButton = panMapButton
         mapButtons.insert(panMapButton, at: 1)
@@ -335,52 +396,59 @@ extension CarPlayManager: CPApplicationDelegate {
     }
 }
 
-// MARK: CPInterfaceControllerDelegate
+// MARK: - CPInterfaceControllerDelegate methods
+
 @available(iOS 12.0, *)
 extension CarPlayManager: CPInterfaceControllerDelegate {
+    
     public func templateWillAppear(_ template: CPTemplate, animated: Bool) {
-        if template == interfaceController?.rootTemplate, let mapViewController = carPlayMapViewController {
+        if template == interfaceController?.rootTemplate,
+           let mapViewController = carPlayMapViewController {
             mapViewController.recenterButton.isHidden = true
         }
     }
     
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
-        guard interfaceController?.topTemplate == mainMapTemplate else { return }
-        if template == interfaceController?.rootTemplate, let mapViewController = carPlayMapViewController {
-            let mapView = mapViewController.mapView
-            mapView.removeRoutes()
-            mapView.removeWaypoints()
-            mapView.setUserTrackingMode(.followWithCourse, animated: true, completionHandler: nil)
-        }
+        guard interfaceController?.topTemplate == mainMapTemplate,
+              template == interfaceController?.rootTemplate,
+              let carPlayMapViewController = carPlayMapViewController else { return }
+        
+        let navigationMapView = carPlayMapViewController.navigationMapView
+        navigationMapView.removeRoutes()
+        navigationMapView.removeWaypoints()
     }
+    
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
-        guard let interface = interfaceController else { return }
+        guard let interfaceController = interfaceController,
+              let topTemplate = interfaceController.topTemplate,
+              type(of: topTemplate) == CPSearchTemplate.self ||
+                interfaceController.templates.count == 1 else { return }
         
-        let onFreedriveMapOrNavigating = interface.templates.count == 1
-
-        guard let top = interface.topTemplate,
-            type(of: top) == CPSearchTemplate.self || onFreedriveMapOrNavigating else { return }
-        
-        if onFreedriveMapOrNavigating {
-            carPlayMapViewController?.isOverviewingRoutes = false
-        }
-        
-        carPlayMapViewController?.resetCamera(animated: false)
+        navigationMapView?.navigationCamera.follow()
     }
 }
 
 @available(iOS 12.0, *)
 extension CarPlayManager {
+    
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
         guard let rootViewController = carPlayMapViewController,
-              let userLocation = rootViewController.mapView.userLocation,
-              let location = userLocation.location else {
+              let userLocation = rootViewController.navigationMapView.mapView.location.latestLocation else {
             completionHandler()
             return
         }
         
-        let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION", bundle: .mapboxNavigation, value: "Current Location", comment: "Name of the waypoint associated with the current location")
-        let origin = Waypoint(location: location, heading: userLocation.heading, name: name)
+        let name = NSLocalizedString("CARPLAY_CURRENT_LOCATION",
+                                     bundle: .mapboxNavigation,
+                                     value: "Current Location",
+                                     comment: "Name of the waypoint associated with the current location")
+        
+        let location = CLLocation(latitude: userLocation.coordinate.latitude,
+                                  longitude: userLocation.coordinate.longitude)
+        
+        let origin = Waypoint(location: location,
+                              heading: userLocation.heading,
+                              name: name)
         
         previewRoutes(between: [origin, destination], completionHandler: completionHandler)
     }
@@ -401,10 +469,13 @@ extension CarPlayManager {
     }
     
     internal func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
-        directions.calculate(options, completionHandler: completionHandler)
+        directions.calculateWithCache(options: options, completionHandler: completionHandler)
     }
     
-    internal func didCalculate(_ result: Result<RouteResponse, DirectionsError>,in session: Directions.Session, for routeOptions: RouteOptions, completionHandler: CompletionHandler) {
+    internal func didCalculate(_ result: Result<RouteResponse, DirectionsError>,
+                               in session: Directions.Session,
+                               for routeOptions: RouteOptions,
+                               completionHandler: CompletionHandler) {
         defer {
             completionHandler()
         }
@@ -412,144 +483,170 @@ extension CarPlayManager {
         switch result {
         case let .failure(error):
             guard let delegate = delegate,
-                  let alert = delegate.carPlayManager(self, didFailToFetchRouteBetween: routeOptions.waypoints, options: routeOptions, error: error) else {
+                  let alert = delegate.carPlayManager(self,
+                                                      didFailToFetchRouteBetween: routeOptions.waypoints,
+                                                      options: routeOptions,
+                                                      error: error) else {
                 return
             }
-
+            
             let mapTemplate = interfaceController?.rootTemplate as? CPMapTemplate
             popToRootTemplate(interfaceController: interfaceController, animated: true)
             mapTemplate?.present(navigationAlert: alert, animated: true)
             return
         case let .success(response):
-            guard let routes = response.routes, case let .route(responseOptions) = response.options else { return }
-            let waypoints = responseOptions.waypoints
-            var trip = CPTrip(routes: routes, routeOptions: routeOptions, waypoints: waypoints)
-            trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
+            if let traitCollection = (self.carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
+               let interfaceController = interfaceController {
+                guard let routes = response.routes,
+                      case let .route(responseOptions) = response.options else { return }
+                
+                let waypoints = responseOptions.waypoints
+                var trip = CPTrip(routes: routes, routeOptions: routeOptions, waypoints: waypoints)
+                trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
 
-            var previewText = defaultTripPreviewTextConfiguration()
-
-            if let customPreviewText = delegate?.carPlayManager(self, willPreview: trip, with: previewText) {
-                previewText = customPreviewText
+                let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip,
+                                                                         traitCollection: traitCollection,
+                                                                         mapDelegate: self)
+                
+                var previewText = defaultTripPreviewTextConfiguration()
+                if let customPreviewText = delegate?.carPlayManager(self, willPreview: trip, with: previewText) {
+                    previewText = customPreviewText
+                }
+                
+                previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
+                interfaceController.pushTemplate(previewMapTemplate, animated: true)
             }
-
-            let traitCollection = (self.carWindow?.rootViewController as! CarPlayMapViewController).traitCollection
-            let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip, traitCollection: traitCollection, mapDelegate: self)
-
-            previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
-            
-            guard let interfaceController = interfaceController else {
-                return
-            }
-            interfaceController.pushTemplate(previewMapTemplate, animated: true)
         }
     }
 
     private func defaultTripPreviewTextConfiguration() -> CPTripPreviewTextConfiguration {
-        let goTitle = NSLocalizedString("CARPLAY_GO", bundle: .mapboxNavigation, value: "Go", comment: "Title for start button in CPTripPreviewTextConfiguration")
-        let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES", bundle: .mapboxNavigation, value: "More Routes", comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
-        let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW", bundle: .mapboxNavigation, value: "Overview", comment: "Title for overview button in CPTripPreviewTextConfiguration")
+        let goTitle = NSLocalizedString("CARPLAY_GO",
+                                        bundle: .mapboxNavigation,
+                                        value: "Go",
+                                        comment: "Title for start button in CPTripPreviewTextConfiguration")
+        
+        let alternativeRoutesTitle = NSLocalizedString("CARPLAY_MORE_ROUTES",
+                                                       bundle: .mapboxNavigation,
+                                                       value: "More Routes",
+                                                       comment: "Title for alternative routes in CPTripPreviewTextConfiguration")
+        
+        let overviewTitle = NSLocalizedString("CARPLAY_OVERVIEW",
+                                              bundle: .mapboxNavigation,
+                                              value: "Overview",
+                                              comment: "Title for overview button in CPTripPreviewTextConfiguration")
 
-        let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle, additionalRoutesButtonTitle: alternativeRoutesTitle, overviewButtonTitle: overviewTitle)
+        let defaultPreviewText = CPTripPreviewTextConfiguration(startButtonTitle: goTitle,
+                                                                additionalRoutesButtonTitle: alternativeRoutesTitle,
+                                                                overviewButtonTitle: overviewTitle)
         return defaultPreviewText
     }
 }
 
-// MARK: CPMapTemplateDelegate
+// MARK: - CPMapTemplateDelegate methods
+
 @available(iOS 12.0, *)
 extension CarPlayManager: CPMapTemplateDelegate {
+    
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
-              let carPlayMapViewController = carPlayMapViewController else {
+              let carPlayMapViewController = carPlayMapViewController,
+              let (route, routeIndex, options) = routeChoice.userInfo as? (Route, Int, RouteOptions) else {
             return
         }
 
         mapTemplate.hideTripPreviews()
-
-        let (route, routeIndex, options) = routeChoice.userInfo as! (Route, Int, RouteOptions)
         
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
         
-        let service = navigationService ??
-            delegate?.carPlayManager(self, navigationServiceAlong: route, routeIndex: routeIndex, routeOptions: options, desiredSimulationMode: desiredSimulationMode) ??
-            MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: options, simulating: desiredSimulationMode)
+        let navigationService = self.navigationService ??
+            delegate?.carPlayManager(self, navigationServiceAlong: route,
+                                     routeIndex: routeIndex,
+                                     routeOptions: options,
+                                     desiredSimulationMode: desiredSimulationMode) ??
+            MapboxNavigationService(route: route,
+                                    routeIndex: routeIndex,
+                                    routeOptions: options,
+                                    simulating: desiredSimulationMode)
         
-        navigationService = service //store the service it was newly created/fetched
+        // Store newly created `MapboxNavigationService`.
+        self.navigationService = navigationService
 
         if simulatesLocations == true {
-            service.simulationSpeedMultiplier = simulatedSpeedMultiplier
+            navigationService.simulationSpeedMultiplier = simulatedSpeedMultiplier
         }
         popToRootTemplate(interfaceController: interfaceController, animated: false)
         let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
         interfaceController.setRootTemplate(navigationMapTemplate, animated: true)
 
-        let navigationViewController = navigationViewControllerType.init(navigationService: service,
-                                                                         mapTemplate: navigationMapTemplate,
-                                                                         interfaceController: interfaceController,
-                                                                         manager: self,
-                                                                         styles: styles)
-        navigationViewController.startNavigationSession(for: trip)
-        navigationViewController.carPlayNavigationDelegate = self
-        currentNavigator = navigationViewController
+        let carPlayNavigationViewController = carPlayNavigationViewControllerType.init(navigationService: navigationService,
+                                                                                       mapTemplate: navigationMapTemplate,
+                                                                                       interfaceController: interfaceController,
+                                                                                       manager: self,
+                                                                                       styles: styles)
+        carPlayNavigationViewController.startNavigationSession(for: trip)
+        carPlayNavigationViewController.delegate = self
+        carPlayNavigationViewController.modalPresentationStyle = .fullScreen
+        self.carPlayNavigationViewController = carPlayNavigationViewController
 
-        carPlayMapViewController.isOverviewingRoutes = false
-        navigationViewController.modalPresentationStyle = .fullScreen
-        carPlayMapViewController.present(navigationViewController, animated: true) {
-            self.delegate?.carPlayManager(self, didPresent: navigationViewController)
+        carPlayMapViewController.present(carPlayNavigationViewController, animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.delegate?.carPlayManager(self, didBeginNavigationWith: navigationService)
+            self.delegate?.carPlayManager(self, didPresent: carPlayNavigationViewController)
         }
-
-        let mapView = carPlayMapViewController.mapView
-        mapView.removeRoutes()
-        mapView.removeWaypoints()
-
-        delegate?.carPlayManager(self, didBeginNavigationWith: service)
+        
+        let navigationMapView = carPlayMapViewController.navigationMapView
+        navigationMapView.removeRoutes()
+        navigationMapView.removeWaypoints()
     }
 
     func mapTemplate(forNavigating trip: CPTrip) -> CPMapTemplate {
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
 
-        if let carPlayMapViewController = carPlayMapViewController,
-           let mapButtons = delegate?.carPlayManager(self, mapButtonsCompatibleWith: carPlayMapViewController.traitCollection, in: mapTemplate, for: .navigating) {
+        guard let carPlayMapViewController = carPlayMapViewController else { return mapTemplate }
+        
+        if let mapButtons = delegate?.carPlayManager(self,
+                                                     mapButtonsCompatibleWith: carPlayMapViewController.traitCollection,
+                                                     in: mapTemplate,
+                                                     for: .navigating) {
             mapTemplate.mapButtons = mapButtons
         } else {
             mapTemplate.mapButtons = [userTrackingButton, showFeedbackButton]
         }
 
-        if let rootViewController = carPlayMapViewController,
-           let leadingButtons = delegate?.carPlayManager(self, leadingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
+        if let leadingButtons = delegate?.carPlayManager(self,
+                                                         leadingNavigationBarButtonsCompatibleWith: carPlayMapViewController.traitCollection,
+                                                         in: mapTemplate,
+                                                         for: .navigating) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         } else {
             mapTemplate.leadingNavigationBarButtons.insert(muteButton, at: 0)
         }
         
-        if let rootViewController = carPlayMapViewController,
-           let trailingButtons = delegate?.carPlayManager(self, trailingNavigationBarButtonsCompatibleWith: rootViewController.traitCollection, in: mapTemplate, for: .navigating) {
+        if let trailingButtons = delegate?.carPlayManager(self,
+                                                          trailingNavigationBarButtonsCompatibleWith: carPlayMapViewController.traitCollection,
+                                                          in: mapTemplate,
+                                                          for: .navigating) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         } else {
             mapTemplate.trailingNavigationBarButtons.append(exitButton)
         }
-
+        
         return mapTemplate
     }
 
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
-        carPlayMapViewController.isOverviewingRoutes = true
-        let mapView = carPlayMapViewController.mapView
-        let (route, _, _) = routeChoice.userInfo as! (Route, Int, RouteOptions)
+    public func mapTemplate(_ mapTemplate: CPMapTemplate,
+                            selectedPreviewFor trip: CPTrip,
+                            using routeChoice: CPRouteChoice) {
+        guard let carPlayMapViewController = carPlayMapViewController,
+              let (route, _, _) = routeChoice.userInfo as? (Route, Int, RouteOptions) else { return }
         
         let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)
-
-        //FIXME: Unable to tilt map during route selection -- https://github.com/mapbox/mapbox-gl-native/issues/2259
-        let topDownCamera = mapView.camera
-        topDownCamera.pitch = 0
-        mapView.setCamera(topDownCamera, animated: false)
-
-        mapView.showcase([route])
+        
+        let navigationMapView = carPlayMapViewController.navigationMapView
+        navigationMapView.showcase([route])
         
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
     }
@@ -558,30 +655,23 @@ extension CarPlayManager: CPMapTemplateDelegate {
         guard let carPlayMapViewController = carPlayMapViewController else {
             return
         }
-        let mapView = carPlayMapViewController.mapView
-        mapView.removeRoutes()
-        mapView.removeWaypoints()
+        let navigationMapView = carPlayMapViewController.navigationMapView
+        navigationMapView.removeRoutes()
+        navigationMapView.removeWaypoints()
         delegate?.carPlayManagerDidEndNavigation(self)
-    }
-
-    public func mapTemplateDidBeginPanGesture(_ mapTemplate: CPMapTemplate) {
-        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
-            navigationViewController.beginPanGesture()
-        }
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        if mapTemplate == interfaceController?.rootTemplate, let carPlayMapViewController = carPlayMapViewController {
-            carPlayMapViewController.recenterButton.isHidden = carPlayMapViewController.mapView.userTrackingMode != .none
-        }
+        // TODO: Find a way to control `recenterButton` visibility.
 
-        //We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
+        // We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
         guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
             return
         }
         
         let decelerationRate: CGFloat = 0.9
-        let offset = CGPoint(x: velocity.x * decelerationRate / 4, y: velocity.y * decelerationRate / 4)
+        let offset = CGPoint(x: velocity.x * decelerationRate / 4,
+                             y: velocity.y * decelerationRate / 4)
         updatePan(by: offset, mapTemplate: mapTemplate, animated: true)
     }
     
@@ -590,78 +680,86 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         
-        if let mapButtons = delegate?.carPlayManager(self, mapButtonsCompatibleWith: carPlayMapViewController.traitCollection, in: mapTemplate, for: .panningInBrowsingMode) {
+        if let mapButtons = delegate?.carPlayManager(self,
+                                                     mapButtonsCompatibleWith: carPlayMapViewController.traitCollection,
+                                                     in: mapTemplate,
+                                                     for: .panningInBrowsingMode) {
             mapTemplate.mapButtons = mapButtons
         } else {
-            let closeButton = carPlayMapViewController.dismissPanningButton ?? carPlayMapViewController.panningInterfaceDismissalButton(for: mapTemplate)
+            let closeButton = carPlayMapViewController.dismissPanningButton ??
+                carPlayMapViewController.panningInterfaceDismissalButton(for: mapTemplate)
             carPlayMapViewController.dismissPanningButton = closeButton
             mapTemplate.mapButtons = [closeButton]
         }
     }
     
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
-        
-        let mode = carPlayMapViewController.mapView.userTrackingMode
-        carPlayMapViewController.recenterButton.isHidden = mode != .none
+        // TODO: Find a way to control `recenterButton` visibility.
     }
 
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, didUpdatePanGestureWithTranslation translation: CGPoint, velocity: CGPoint) {
+    public func mapTemplate(_ mapTemplate: CPMapTemplate,
+                            didUpdatePanGestureWithTranslation translation: CGPoint,
+                            velocity: CGPoint) {
         updatePan(by: translation, mapTemplate: mapTemplate, animated: false)
     }
     
     private func updatePan(by offset: CGPoint, mapTemplate: CPMapTemplate, animated: Bool) {
-        let mapView: NavigationMapView
-        if let navigationViewController = currentNavigator, mapTemplate == navigationViewController.mapTemplate {
-            mapView = navigationViewController.mapView!
+        let navigationMapView: NavigationMapView
+        if let carPlayNavigationViewController = carPlayNavigationViewController,
+           let validNavigationMapView = carPlayNavigationViewController.navigationMapView,
+           mapTemplate == carPlayNavigationViewController.mapTemplate {
+            navigationMapView = validNavigationMapView
         } else if let carPlayMapViewController = carPlayMapViewController {
-            mapView = carPlayMapViewController.mapView
+            navigationMapView = carPlayMapViewController.navigationMapView
         } else {
             return
         }
 
-        let coordinate = self.coordinate(of: offset, in: mapView)
-        mapView.setCenter(coordinate, animated: animated)
+        let coordinate = self.coordinate(of: offset, in: navigationMapView)
+        let cameraOptions = CameraOptions(center: coordinate)
+        navigationMapView.mapView.camera.ease(to: cameraOptions, duration: 1.0)
     }
 
-    func coordinate(of offset: CGPoint, in mapView: NavigationMapView) -> CLLocationCoordinate2D {
-        let contentFrame = mapView.bounds.inset(by: mapView.contentInset)
+    func coordinate(of offset: CGPoint, in navigationMapView: NavigationMapView) -> CLLocationCoordinate2D {
+        let contentFrame = navigationMapView.bounds.inset(by: navigationMapView.mapView.safeAreaInsets)
         let centerPoint = CGPoint(x: contentFrame.midX, y: contentFrame.midY)
         let endCameraPoint = CGPoint(x: centerPoint.x - offset.x, y: centerPoint.y - offset.y)
 
-        return mapView.convert(endCameraPoint, toCoordinateFrom: mapView)
+        return navigationMapView.mapView.mapboxMap.coordinate(for: endCameraPoint)
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
+        guard let carPlayMapViewController = carPlayMapViewController else { return }
+        
+        // After `MapView` panning `NavigationCamera` should be moved to idle state to prevent any further changes.
+        navigationMapView?.navigationCamera.stop()
 
         // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
-        let mapView = carPlayMapViewController.mapView
-        let contentFrame = mapView.bounds.inset(by: mapView.contentInset)
-        let increment = min(mapView.bounds.width, mapView.bounds.height) / 2.0
+        let navigationMapView = carPlayMapViewController.navigationMapView
+        let contentFrame = navigationMapView.bounds.inset(by: navigationMapView.mapView.safeAreaInsets)
+        let increment = min(navigationMapView.bounds.width, navigationMapView.bounds.height) / 2.0
         
         // Calculate the distance in physical units from the visual center to where it would be after panning downwards.
         let downshiftedCenter = CGPoint(x: contentFrame.midX, y: contentFrame.midY + increment)
-        let downshiftedCenterCoordinate = mapView.convert(downshiftedCenter, toCoordinateFrom: mapView)
-        let distance = mapView.centerCoordinate.distance(to: downshiftedCenterCoordinate)
+        let downshiftedCenterCoordinate = navigationMapView.mapView.mapboxMap.coordinate(for: downshiftedCenter)
+        let cameraState = navigationMapView.mapView.cameraState
+        let distance = cameraState.center.distance(to: downshiftedCenterCoordinate)
         
         // Shift the center coordinate by that distance in the specified direction.
         guard let relativeDirection = CLLocationDirection(panDirection: direction) else {
             return
         }
-        let shiftedDirection = (mapView.direction + relativeDirection).wrap(min: 0, max: 360)
-        let shiftedCenterCoordinate = mapView.centerCoordinate.coordinate(at: distance, facing: shiftedDirection)
-        mapView.setCenter(shiftedCenterCoordinate, animated: true)
+        let shiftedDirection = (Double(cameraState.bearing) + relativeDirection).wrap(min: 0, max: 360)
+        let shiftedCenterCoordinate = cameraState.center.coordinate(at: distance, facing: shiftedDirection)
+        let cameraOptions = CameraOptions(center: shiftedCenterCoordinate)
+        navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
     }
 
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {
         guard let interfaceController = interfaceController else { return }
         if interfaceController.templates.count > 1 {
-            // TODO: CPInterfaceController.popToRootTemplate(animated:completion:) (available on iOS 14/Xcode 12) should be used after Xcode 11 support is dropped.
+            // TODO: CPInterfaceController.popToRootTemplate(animated:completion:) (available on iOS 14/Xcode 12)
+            // should be used after Xcode 11 support is dropped.
             interfaceController.popToRootTemplate(animated: animated)
         }
     }
@@ -674,14 +772,24 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 }
 
-// MARK: CarPlayNavigationDelegate
+// MARK: - CarPlayNavigationViewControllerDelegate methods
+
 @available(iOS 12.0, *)
-extension CarPlayManager: CarPlayNavigationDelegate {
-    public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
+extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        return delegate?.carPlayManager(self, shouldPresentArrivalUIFor: waypoint) ?? true
+    }
+    
+    public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                          byCanceling canceled: Bool) {
         guard let interfaceController = interfaceController else {
             return
         }
         
+        // Dismiss the template for previous arrival UI when exit the navigation.
+        interfaceController.dismissTemplate(animated: true)
         // Unset existing main map template (fixes an issue with the buttons)
         mainMapTemplate = nil
         
@@ -698,18 +806,34 @@ extension CarPlayManager: CarPlayNavigationDelegate {
 
 @available(iOS 12.0, *)
 extension CarPlayManager: MapTemplateProviderDelegate {
-    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
-        return delegate?.carPlayManager(self, leadingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: activity)
+    
+    func mapTemplateProvider(_ provider: MapTemplateProvider,
+                             mapTemplate: CPMapTemplate,
+                             leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                             for activity: CarPlayActivity) -> [CPBarButton]? {
+        return delegate?.carPlayManager(self,
+                                        leadingNavigationBarButtonsCompatibleWith: traitCollection,
+                                        in: mapTemplate,
+                                        for: activity)
     }
     
-    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]? {
-        return delegate?.carPlayManager(self, trailingNavigationBarButtonsCompatibleWith: traitCollection, in: mapTemplate, for: activity)
+    func mapTemplateProvider(_ provider: MapTemplateProvider,
+                             mapTemplate: CPMapTemplate,
+                             trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                             for activity: CarPlayActivity) -> [CPBarButton]? {
+        return delegate?.carPlayManager(self,
+                                        trailingNavigationBarButtonsCompatibleWith: traitCollection,
+                                        in: mapTemplate,
+                                        for: activity)
     }
 }
 
 @available(iOS 13.0, *)
 extension CarPlayManager {
-    public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didConnectCarInterfaceController interfaceController: CPInterfaceController, to window: CPWindow) {
+    
+    public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
+                                         didConnectCarInterfaceController interfaceController: CPInterfaceController,
+                                         to window: CPWindow) {
         CarPlayManager.isConnected = true
         interfaceController.delegate = self
         self.interfaceController = interfaceController
@@ -722,7 +846,7 @@ extension CarPlayManager {
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
         window.rootViewController = carPlayMapViewController
-        self.carWindow = window
+        carWindow = window
 
         let mapTemplate = self.mapTemplate(for: interfaceController)
         mainMapTemplate = mapTemplate
@@ -731,7 +855,9 @@ extension CarPlayManager {
         eventsManager.sendCarPlayConnectEvent()
     }
 
-    public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didDisconnectCarInterfaceController interfaceController: CPInterfaceController, from window: CPWindow) {
+    public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
+                                         didDisconnectCarInterfaceController interfaceController: CPInterfaceController,
+                                         from window: CPWindow) {
         CarPlayManager.isConnected = false
         self.interfaceController = nil
 
@@ -754,24 +880,40 @@ extension CarPlayManager {
 
 @available(iOS 12.0, *)
 internal protocol MapTemplateProviderDelegate: AnyObject {
-    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
     
-    func mapTemplateProvider(_ provider: MapTemplateProvider, mapTemplate: CPMapTemplate, trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection, for activity: CarPlayActivity) -> [CPBarButton]?
+    func mapTemplateProvider(_ provider: MapTemplateProvider,
+                             mapTemplate: CPMapTemplate,
+                             leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                             for activity: CarPlayActivity) -> [CPBarButton]?
+    
+    func mapTemplateProvider(_ provider: MapTemplateProvider,
+                             mapTemplate: CPMapTemplate,
+                             trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                             for activity: CarPlayActivity) -> [CPBarButton]?
 }
 
 @available(iOS 12.0, *)
 internal class MapTemplateProvider: NSObject {
+    
     weak var delegate: MapTemplateProviderDelegate?
 
-    func mapTemplate(forPreviewing trip: CPTrip, traitCollection: UITraitCollection, mapDelegate: CPMapTemplateDelegate) -> CPMapTemplate {
+    func mapTemplate(forPreviewing trip: CPTrip,
+                     traitCollection: UITraitCollection,
+                     mapDelegate: CPMapTemplateDelegate) -> CPMapTemplate {
         let mapTemplate = createMapTemplate()
         mapTemplate.mapDelegate = mapDelegate
         
-        if let leadingButtons = delegate?.mapTemplateProvider(self, mapTemplate: mapTemplate, leadingNavigationBarButtonsCompatibleWith: traitCollection, for: .previewing) {
+        if let leadingButtons = delegate?.mapTemplateProvider(self,
+                                                              mapTemplate: mapTemplate,
+                                                              leadingNavigationBarButtonsCompatibleWith: traitCollection,
+                                                              for: .previewing) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
         
-        if let trailingButtons = delegate?.mapTemplateProvider(self, mapTemplate: mapTemplate, trailingNavigationBarButtonsCompatibleWith: traitCollection, for: .previewing) {
+        if let trailingButtons = delegate?.mapTemplateProvider(self,
+                                                               mapTemplate: mapTemplate,
+                                                               trailingNavigationBarButtonsCompatibleWith: traitCollection,
+                                                               for: .previewing) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
         

@@ -1,4 +1,5 @@
-import Foundation
+import UIKit
+import MapboxMaps
 
 extension UIColor {
     class var defaultRouteCasing: UIColor { get { return .defaultTintStroke } }
@@ -28,6 +29,11 @@ extension UIColor {
     class var trafficHeavy: UIColor { get { return #colorLiteral(red: 1, green: 0.3019607843, blue: 0.3019607843, alpha: 1) } }
     class var trafficSevere: UIColor { get { return #colorLiteral(red: 0.5607843137, green: 0.1411764706, blue: 0.2784313725, alpha: 1) } }
     
+    class var alternativeTrafficUnknown: UIColor { get { return defaultAlternateLine } }
+    class var alternativeTrafficLow: UIColor { get { return defaultAlternateLine } }
+    class var alternativeTrafficModerate: UIColor { get { return #colorLiteral(red: 0.75, green: 0.63, blue: 0.53, alpha: 1.0) } }
+    class var alternativeTrafficHeavy: UIColor { get { return #colorLiteral(red: 0.71, green: 0.51, blue: 0.51, alpha: 1.0) } }
+    class var alternativeTrafficSevere: UIColor { get { return #colorLiteral(red: 0.71, green: 0.51, blue: 0.51, alpha: 1.0) } }
     class var defaultBuildingColor: UIColor { get { return #colorLiteral(red: 0.9833194452, green: 0.9843137255, blue: 0.9331936657, alpha: 0.8019049658) } }
     class var defaultBuildingHighlightColor: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 0.949406036) } }
 
@@ -50,6 +56,7 @@ extension UIFont {
     // General styling
     fileprivate class var defaultPrimaryText: UIFont { get { return UIFont.systemFont(ofSize: 26) } }
     fileprivate class var defaultSecondaryText: UIFont { get { return UIFont.systemFont(ofSize: 16) } }
+    fileprivate class var defaultNavigationSymbolLayerFontNames: [String] { return ["DIN Pro Medium", "Noto Sans CJK JP Medium", "Arial Unicode MS Regular"] }
 }
 
 /**
@@ -58,7 +65,8 @@ extension UIFont {
 open class DayStyle: Style {
     public required init() {
         super.init()
-        mapStyleURL = MGLStyle.navigationDayStyleURL
+        
+        mapStyleURL = MapboxMaps.Style.navigationDayStyleURL
         previewMapStyleURL = mapStyleURL
         styleType = .day
         statusBarStyle = .default
@@ -160,11 +168,16 @@ open class DayStyle: Style {
         NavigationMapView.appearance().trafficModerateColor = .trafficModerate
         NavigationMapView.appearance().trafficSevereColor = .trafficSevere
         NavigationMapView.appearance().trafficUnknownColor = .trafficUnknown
+        NavigationMapView.appearance().alternativeTrafficHeavyColor = .alternativeTrafficHeavy
+        NavigationMapView.appearance().alternativeTrafficLowColor = .alternativeTrafficLow
+        NavigationMapView.appearance().alternativeTrafficModerateColor = .alternativeTrafficModerate
+        NavigationMapView.appearance().alternativeTrafficSevereColor = .alternativeTrafficSevere
+        NavigationMapView.appearance().alternativeTrafficUnknownColor = .alternativeTrafficUnknown
         NavigationMapView.appearance().buildingDefaultColor = .defaultBuildingColor
         NavigationMapView.appearance().buildingHighlightColor = .defaultBuildingHighlightColor
         NavigationMapView.appearance().routeDurationAnnotationColor = .routeDurationAnnotationColor
         NavigationMapView.appearance().routeDurationAnnotationSelectedColor = .selectedRouteDurationAnnotationColor
-        NavigationMapView.appearance().routeDurationAnnotationFontName = "DIN Pro Medium"
+        NavigationMapView.appearance().routeDurationAnnotationFontNames = UIFont.defaultNavigationSymbolLayerFontNames
         NavigationMapView.appearance().routeDurationAnnotationTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         NavigationMapView.appearance().routeDurationAnnotationSelectedTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         NavigationView.appearance().backgroundColor = #colorLiteral(red: 0.764706, green: 0.752941, blue: 0.733333, alpha: 1)

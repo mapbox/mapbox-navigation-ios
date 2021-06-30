@@ -1,17 +1,11 @@
 import XCTest
 import MapboxDirections
 import Turf
+import MapboxMaps
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
-let jsonFileName = "routeWithInstructions"
-var routeOptions: NavigationRouteOptions {
-    let from = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-    let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-    return NavigationRouteOptions(waypoints: [from, to])
-}
-let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
 let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")
 
 class NavigationViewControllerTests: XCTestCase {
@@ -58,6 +52,13 @@ class NavigationViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
+        ResourceOptionsManager.default.resourceOptions.accessToken = .mocked
+    }
+    
+    func testDefaultUserInterfaceUsage() {
+        let navigationViewController = dependencies.navigationViewController
+        let service = dependencies.navigationService
+        XCTAssertTrue(service.eventsManager.usesDefaultUserInterface, "MapboxNavigationTests should run inside the Example application target.")
     }
     
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
@@ -72,8 +73,8 @@ class NavigationViewControllerTests: XCTestCase {
         customRoadName[taylorStreetLocation.coordinate] = roadName
         
         service.locationManager!(service.locationManager, didUpdateLocations: [taylorStreetLocation])
-        
-        let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
+
+        let wayNameView = navigationViewController.navigationView.wayNameView
         let currentRoadName = wayNameView.text
         XCTAssertEqual(currentRoadName, roadName, "Expected: \(roadName); Actual: \(String(describing: currentRoadName))")
         XCTAssertFalse(wayNameView.isHidden, "WayNameView should be visible.")
@@ -171,7 +172,7 @@ class NavigationViewControllerTests: XCTestCase {
         
         service.locationManager!(service.locationManager, didUpdateLocations: [turkStreetLocation])
         
-        let wayNameView = (navigationViewController.mapViewController?.navigationView.wayNameView)!
+        let wayNameView = navigationViewController.navigationView.wayNameView
         guard let currentRoadName = wayNameView.text else {
             XCTFail("UI Failed to consume progress update. The chain from location update -> progress update generation -> progress update consumption is broken somewhere.")
             return
@@ -188,8 +189,8 @@ class NavigationViewControllerTests: XCTestCase {
         
         // Identify a location without a custom road name.
         let fultonStreetLocation = dependencies.poi[2]
-        
-        navigationViewController.mapViewController!.labelRoadNameCompletionHandler = { (defaultRoadNameAssigned) in
+
+        navigationViewController.ornamentsController!.labelRoadNameCompletionHandler = { (defaultRoadNameAssigned) in
             XCTAssertTrue(defaultRoadNameAssigned, "label road name was not successfully set")
         }
         
@@ -200,31 +201,64 @@ class NavigationViewControllerTests: XCTestCase {
         let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: DirectionsSpy(), simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
-        let styleLoaded = keyValueObservingExpectation(for: navigationViewController, keyPath: "mapView.style", expectedValue: nil)
+        let styleLoadedExpectation = XCTestExpectation(description: "MapView style loading expectation.")
+        navigationViewController.navigationMapView?.mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            styleLoadedExpectation.fulfill()
+        }
         
-        //wait for the style to load -- routes won't show without it.
-        wait(for: [styleLoaded], timeout: 5)
+        // Wait for the style to load - routes won't show without it.
+        wait(for: [styleLoadedExpectation], timeout: 5)
         navigationViewController.indexedRoute = (initialRoute, 0)
 
         runUntil({
-            return !navigationViewController.mapView!.annotations!.isEmpty
+            return !navigationViewController.navigationMapView!.pointAnnotationManager.annotations.annotations.isEmpty
         })
         
-        guard let annotations = navigationViewController.mapView?.annotations?.compactMap({ $0 as? MGLPointAnnotation }) else {
-            return XCTFail("No point annotations found.")
+        let annotations = navigationViewController.navigationMapView!.pointAnnotationManager.annotations.compactMap({ $0.value as? PointAnnotation })
+
+        guard let firstDestination = initialRoute.legs.last?.destination?.coordinate else {
+            return XCTFail("PointAnnotation is not valid.")
         }
         
-        let firstDestination = initialRoute.legs.last!.destination!.coordinate
         XCTAssert(annotations.contains { $0.coordinate.distance(to: firstDestination) < 1 }, "Destination annotation does not exist on map")
         
-        //lets set the second route
+        // Set the second route.
         navigationViewController.indexedRoute = (newRoute, 0)
         
-        guard let newAnnotations = navigationViewController.mapView?.annotations else { return XCTFail("New annotations not found.")}
-        let secondDestination = newRoute.legs.last!.destination!.coordinate
-
-        //do we have a destination on the second route?
+        let newAnnotations = navigationViewController.navigationMapView!.pointAnnotationManager.annotations.compactMap({ $0.value as? PointAnnotation })
+        
+        guard let secondDestination = newRoute.legs.last?.destination?.coordinate else {
+            return XCTFail("PointAnnotation is not valid.")
+        }
+        
+        // Verify that there is a destination on the second route.
         XCTAssert(newAnnotations.contains { $0.coordinate.distance(to: secondDestination) < 1 }, "New destination annotation does not exist on map")
+    }
+    
+    func testPuck3DLayerPosition() {
+        let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: DirectionsSpy(), simulating: .never)
+        let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
+        let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        
+        let model = MapboxMaps.Model()
+        let puck3DConfiguration = Puck3DConfiguration(model: model)
+        navigationViewController.navigationMapView?.userLocation = .puck3D(configuration: puck3DConfiguration)
+        let styleLoadedExpectation = XCTestExpectation(description: "MapView style loading expectation.")
+        navigationViewController.navigationMapView?.mapView.mapboxMap.onNext(.styleLoaded) { _ in
+            styleLoadedExpectation.fulfill()
+        }
+        
+        navigationViewController.navigationMapView?.addArrow(route: initialRoute, legIndex: 0, stepIndex: 0)
+        let allLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
+        let indexOfArrowLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowLayer)
+        let indexOfArrowStrokeLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
+        let indexOfArrowSymbolLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.arrowSymbolLayer)
+        let indexOfPuck3DLayer = allLayerIds.index(of: NavigationMapView.LayerIdentifier.puck3DLayer)
+        
+        XCTAssertNotNil(indexOfArrowStrokeLayer, "Arrow stroke layer failed to be added")
+        XCTAssert(indexOfArrowStrokeLayer < indexOfArrowLayer, "Arrow layer is below arrow stroke layer")
+        XCTAssert(indexOfArrowLayer < indexOfArrowSymbolLayer, "Arrow symbol layer is below arrow layer")
+        XCTAssert(indexOfArrowSymbolLayer < indexOfPuck3DLayer, "Puck 3D layer is below arrow symbol layer")
     }
     
     func testBlankBanner() {
@@ -262,29 +296,31 @@ class NavigationViewControllerTests: XCTestCase {
         
         let top = TopBannerFake(nibName: nil, bundle: nil)
         let bottom = BottomBannerFake(nibName: nil, bundle: nil)
-        
-        let navOptions = NavigationOptions(topBanner: top, bottomBanner: bottom)
-        
-        let options = NavigationRouteOptions(coordinates: [
+
+        let routeOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
-        let route = Fixture.route(from: "DCA-Arboretum", options: options)
-        
-        let subject = NavigationViewController(for: route, routeIndex: 0, routeOptions: options, navigationOptions: navOptions)
+
+        let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
+        let navService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: .mocked)
+        let navOptions = NavigationOptions(navigationService: navService, topBanner: top, bottomBanner: bottom)
+
+        let subject = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navOptions)
         XCTAssert(subject.topViewController == top, "Top banner not injected properly into NVC")
         XCTAssert(subject.bottomViewController == bottom, "Bottom banner not injected properly into NVC")
-        XCTAssert(subject.mapViewController!.children.contains(top), "Top banner not found in child VC heirarchy")
-        XCTAssert(subject.mapViewController!.children.contains(bottom), "Bottom banner not found in child VC heirarchy")
+        XCTAssert(subject.children.contains(top), "Top banner not found in child VC heirarchy")
+        XCTAssert(subject.children.contains(bottom), "Bottom banner not found in child VC heirarchy")
     }
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
-    func location(for styleManager: StyleManager) -> CLLocation? {
+    
+    func location(for styleManager: MapboxNavigation.StyleManager) -> CLLocation? {
         return dependencies.poi.first!
     }
     
-    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
+    func styleManagerDidRefreshAppearance(_ styleManager: MapboxNavigation.StyleManager) {
         updatedStyleNumberOfTimes += 1
     }
     

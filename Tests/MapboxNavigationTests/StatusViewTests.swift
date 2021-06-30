@@ -34,7 +34,7 @@ class StatusViewTests: XCTestCase {
         XCTAssertEqual(statusView.statuses.count, 2)
         let path = #keyPath(UIView.isHidden)
         let expectation = XCTKVOExpectation(keyPath: path, object: statusView, expectedValue: true)
-        self.wait(for: [expectation], timeout: secondStatus().duration + 10.0)
+        self.wait(for: [expectation], timeout: secondStatus().duration + 1)
         XCTAssertTrue(statusView.isHidden)
         XCTAssertEqual(self.statusView.statuses.count, 0)
     }
@@ -45,7 +45,8 @@ class StatusViewTests: XCTestCase {
         XCTAssertEqual(self.statusView.statuses.count, 2)
         let path = #keyPath(UIView.isHidden)
         let expectation = XCTKVOExpectation(keyPath: path, object: statusView, expectedValue: true)
-        XCTWaiter.wait(for: [expectation], timeout: 15.0)
+        let result = XCTWaiter.wait(for: [expectation], timeout: 1)
+        print(result.rawValue)
         XCTAssertFalse(statusView.isHidden)
         XCTAssertEqual(self.statusView.statuses.count, 1)
     }
@@ -55,11 +56,11 @@ extension StatusViewTests {
     
     // define statuses
     func firstStatus() -> StatusView.Status {
-        return StatusView.Status(identifier: "FIRST_TEST_STATUS", title: "first test status", duration: 1, priority: 0)
+        return StatusView.Status(identifier: "FIRST_TEST_STATUS", title: "first test status", duration: 0.1, priority: 0)
     }
     
     func secondStatus() -> StatusView.Status {
-        return StatusView.Status(identifier: "SECOND_TEST_STATUS", title: "second test status", duration: 5, priority: 1)
+        return StatusView.Status(identifier: "SECOND_TEST_STATUS", title: "second test status", duration: 0.1, priority: 1)
     }
     
     func thirdStatus() -> StatusView.Status {

@@ -87,7 +87,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource) {
+    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
         self.directions = directions
         self._routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: options)
         self.dataSource = source
@@ -385,7 +385,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     private func checkForUpdates() {
         #if TARGET_IPHONE_SIMULATOR
         guard (NSClassFromString("XCTestCase") == nil) else { return } // Short-circuit when running unit tests
-            guard let version = Bundle(for: RouteController.self).object(forInfoDictionaryKey: "CFBundleShortVersionString") else { return }
+        guard let version = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else { return }
             let latestVersion = String(describing: version)
             _ = URLSession.shared.dataTask(with: URL(string: "https://docs.mapbox.com/ios/navigation/latest_version.txt")!, completionHandler: { (data, response, error) in
                 if let _ = error { return }
@@ -405,8 +405,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         guard let _ = Bundle.main.bundleIdentifier else {
             return
         }
-        if Bundle.main.locationAlwaysUsageDescription == nil && Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
-            preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
+        if Bundle.main.locationWhenInUseUsageDescription == nil && Bundle.main.locationAlwaysAndWhenInUseUsageDescription == nil {
+            if UserDefaults.standard.object(forKey: "NSLocationWhenInUseUsageDescription") == nil && UserDefaults.standard.object(forKey: "NSLocationAlwaysAndWhenInUseUsageDescription") == nil {
+                        preconditionFailure("This application’s Info.plist file must include a NSLocationWhenInUseUsageDescription. See https://developer.apple.com/documentation/corelocation for more information.")
+            }
         }
     }
 
@@ -569,20 +571,5 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         set {
             fatalError()
         }
-    }
-    
-    /// Required through `Router` protocol. No-op
-    public func enableLocationRecording() {
-        // no-op
-    }
-    /// Required through `Router` protocol. No-op
-
-    public func disableLocationRecording() {
-        // no-op
-    }
-    
-    /// Required through `Router` protocol. No-op
-    public func locationHistory() -> String? {
-        return nil
     }
 }

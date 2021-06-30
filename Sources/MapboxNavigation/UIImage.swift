@@ -1,4 +1,4 @@
-import Foundation
+import UIKit
 
 extension UIImage {
     
@@ -67,5 +67,28 @@ extension UIImage {
         guard let finalImage = UIGraphicsGetImageFromCurrentImageContext() else { return self }
 
         return finalImage
+    }
+
+    /// Returns how much bytes the image takes in the memory.
+    /// - important: Works reliably only for CGImage backed images.
+    var memoryCost: Int {
+        let costPerFrame: Int
+        let framesCount: Int
+
+        if let images = images {
+            framesCount = images.count > 0 ? images.count : 1
+        }
+        else {
+            framesCount = 1
+        }
+
+        if let cgImage = cgImage {
+            costPerFrame = cgImage.bytesPerRow * cgImage.height
+        }
+        else { // fallback to manual estimation
+            costPerFrame = (Int(scale * size.width)) * (Int(scale * size.height)) * 4 // 4 for 4 RGBA colour components.
+        }
+
+        return costPerFrame * framesCount
     }
 }

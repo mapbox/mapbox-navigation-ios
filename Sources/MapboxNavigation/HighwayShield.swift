@@ -1,3 +1,5 @@
+import UIKit
+
 struct HighwayShield {
     enum RoadClass: String {
         case alternate, duplex, business, truck, bypass, b

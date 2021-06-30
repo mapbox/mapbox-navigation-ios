@@ -1,4 +1,5 @@
 import UIKit
+import MapboxMaps
 
 /**
  `Style` is a convenient wrapper for styling the appearance of various interface components throughout the Navigation UI.
@@ -7,7 +8,8 @@ import UIKit
  */
 @objc(MBStyle)
 open class Style: NSObject {
-    // MARK: General styling
+    
+    // MARK: - General styling properties
     
     /**
      Sets the tint color for guidance arrow, highlighted text, progress bar and more.
@@ -33,14 +35,14 @@ open class Style: NSObject {
     /**
      URL of the style to display on the map during turn-by-turn navigation.
      */
-    @objc open var mapStyleURL: URL = MGLStyle.navigationDayStyleURL
+    @objc open var mapStyleURL: URL = MapboxMaps.Style.navigationDayStyleURL
     
     /**
      URL of the style to display on the map when previewing a route, for example on CarPlay or your own route preview map.
      
      Defaults to same style as `mapStyleURL`.
      */
-    @objc open var previewMapStyleURL: URL = MGLStyle.navigationDayStyleURL
+    @objc open var previewMapStyleURL: URL = MapboxMaps.Style.navigationDayStyleURL
     
     /**
      Applies the style for all changed properties.
@@ -405,67 +407,6 @@ open class TitleLabel: StylableLabel { }
 open class SubtitleLabel: StylableLabel { }
 
 /// :nodoc:
-@objc(MBWayNameView)
-open class WayNameView: UIView {
-    private static let textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
-    
-    lazy var label: WayNameLabel = .forAutoLayout()
-    
-    var text: String? {
-        get {
-            return label.text
-        }
-        set {
-            label.text = newValue
-        }
-    }
-    
-    var attributedText: NSAttributedString? {
-        get {
-            return label.attributedText
-        }
-        set {
-            label.attributedText = newValue
-        }
-    }
-    
-    @objc dynamic public var borderColor: UIColor? {
-        get {
-            guard let color = layer.borderColor else { return nil }
-            return UIColor(cgColor: color)
-        }
-        set {
-            layer.borderColor = newValue?.cgColor
-        }
-    }
-    
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
-    
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-    
-    func commonInit() {
-        addSubview(label)
-        layoutMargins = WayNameView.textInsets
-        label.pinInSuperview(respectingMargins: true)
-    }
-    
-    open override func layoutSubviews() {
-        super.layoutSubviews()
-        layer.cornerRadius = bounds.midY
-    }
-}
-
-/// :nodoc:
-@objc(MBWayNameLabel)
-open class WayNameLabel: StylableLabel {}
-
-/// :nodoc:
 @objc(MBProgressBar)
 public class ProgressBar: UIView {
     let bar = UIView()
@@ -593,11 +534,6 @@ open class TopBannerView: UIView { }
 open class BottomBannerView: UIView { }
 
 open class BottomPaddingView: BottomBannerView { }
-
-/**
- `NavigationAnnotation` is an annotation, which is used to mark final destination on `NavigationMapView`.
- */
-public class NavigationAnnotation: MGLPointAnnotation { }
 
 /// :nodoc:
 @objc(MBMarkerView)
