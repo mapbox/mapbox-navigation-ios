@@ -53,7 +53,7 @@ class NavigationViewControllerTests: XCTestCase {
     var customRoadName = [CLLocationCoordinate2D: String?]()
     
     var updatedStyleNumberOfTimes = 0
-    var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController)!
+    var dependencies: (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController)?
     
     var initialRoute: Route!
     
@@ -77,15 +77,27 @@ class NavigationViewControllerTests: XCTestCase {
 
             navigationViewController.delegate = self
             _ = navigationViewController.view // trigger view load
-            let navigationService = navigationViewController.navigationService!
-            let router = navigationService.router!
-            let firstCoord      = router.routeProgress.nearbyShape.coordinates.first!
-            let firstLocation   = location(at: firstCoord)
+            guard let navigationService = navigationViewController.navigationService else {
+                XCTFail("Navigation Service is nil"); return nil
+            }
+            guard let router = navigationService.router else {
+                XCTFail("Router is nil"); return nil
+            }
+            guard let firstCoord = router.routeProgress.nearbyShape.coordinates.first else {
+                XCTFail("First Coordinate is nil"); return nil
+            }
+            let firstLocation = location(at: firstCoord)
 
             var poi = [CLLocation]()
-            let taylorStreetIntersection = router.route.legs.first!.steps.first!.intersections!.first!
-            let turkStreetIntersection   = router.route.legs.first!.steps[3].intersections!.first!
-            let fultonStreetIntersection = router.route.legs.first!.steps[5].intersections!.first!
+            guard let taylorStreetIntersection = router.route.legs.first?.steps.first?.intersections?.first else {
+                XCTFail("Taylor Street Intersection is nil"); return nil
+            }
+            guard let turkStreetIntersection = router.route.legs.first?.steps[3].intersections?.first else {
+                XCTFail("Turk Street Intersection is nil"); return nil
+            }
+            guard let fultonStreetIntersection = router.route.legs.first?.steps[5].intersections?.first else {
+                XCTFail("Fulton Street Intersection is nil"); return nil
+            }
 
             poi.append(location(at: taylorStreetIntersection.location))
             poi.append(location(at: turkStreetIntersection.location))
@@ -107,6 +119,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testDefaultUserInterfaceUsage() {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
         XCTAssertTrue(service.eventsManager.usesDefaultUserInterface, "MapboxNavigationTests should run inside the Example application target.")
@@ -116,6 +129,7 @@ class NavigationViewControllerTests: XCTestCase {
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a road name provided and wayNameView label is visible.
     func testNavigationViewControllerDelegateRoadNameAtLocationImplemented() {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
         
@@ -135,6 +149,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithOneStyle() {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let options = NavigationOptions(styles: [DayStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         let service = dependencies.navigationService
@@ -152,6 +167,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
 
     func testCompleteRoute() {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
         
@@ -177,6 +193,7 @@ class NavigationViewControllerTests: XCTestCase {
     
     // If tunnel flags are enabled and we need to switch styles, we should not force refresh the map style because we have only 1 style.
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceWhenOnlyOneStyle() {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let options = NavigationOptions(styles:[NightStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         let service = dependencies.navigationService
@@ -195,6 +212,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationShouldNotCallStyleManagerDidRefreshAppearanceMoreThanOnceWithTwoStyles() {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let options = NavigationOptions(styles: [DayStyle(), NightStyle()], navigationService: dependencies.navigationService, voiceController: dependencies.voice)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         let service = dependencies.navigationService
@@ -215,6 +233,7 @@ class NavigationViewControllerTests: XCTestCase {
     // Brief: navigationViewController(_:roadNameAt:) delegate method is implemented,
     //        with a blank road name (empty string) provided and wayNameView label is hidden.
     func testNavigationViewControllerDelegateRoadNameAtLocationEmptyString() {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
 
@@ -240,6 +259,7 @@ class NavigationViewControllerTests: XCTestCase {
     }
     
     func testNavigationViewControllerDelegateRoadNameAtLocationUmimplemented() {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let navigationViewController = dependencies.navigationViewController
         _ = navigationViewController.view // trigger view load
         let service = dependencies.navigationService
@@ -276,8 +296,6 @@ class NavigationViewControllerTests: XCTestCase {
         guard let firstDestination = initialRoute.legs.last?.destination?.coordinate else {
             return XCTFail("PointAnnotation is not valid.")
         }
-
-
 
         XCTAssert(annotations
                     .compactMap { $0.feature.geometry.value as? Turf.Point }
@@ -379,6 +397,7 @@ class NavigationViewControllerTests: XCTestCase {
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
     
     func location(for styleManager: MapboxNavigation.StyleManager) -> CLLocation? {
+        guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return nil }
         return dependencies.poi.first!
     }
     
