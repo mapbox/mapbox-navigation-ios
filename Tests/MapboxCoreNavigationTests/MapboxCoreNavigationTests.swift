@@ -116,22 +116,13 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
     }
     
-    func disabled_testNewStep() {
+    func testNewStep() {
         let steps = route.legs[0].steps
         // Create list of coordinates, which includes only first step.
         let coordinates = steps[0].shape?.coordinates ?? []
         
         XCTAssertEqual(coordinates.count, 9, "Incorrect coordinates count.")
-        
-        let currentDate = Date()
-        let locations = coordinates.enumerated().map {
-            CLLocation(coordinate: $0.element,
-                       altitude: -1,
-                       horizontalAccuracy: -1,
-                       verticalAccuracy: -1,
-                       timestamp: currentDate + $0.offset)
-        }
-        
+
         let navigationService = MapboxNavigationService(route: route,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
@@ -156,15 +147,19 @@ class MapboxCoreNavigationTests: XCTestCase {
         }
         
         navigationService.start()
+        let currentDate = Date()
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: -1,
+                       verticalAccuracy: -1,
+                       timestamp: currentDate + $0.offset)
+        }        
         
         // Iterate overal locations in first step with delay of one second.
-        var delay = 0.0
         for location in locations {
-            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + delay) {
-                navigationService.router?.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
-            }
-            
-            delay += 1.0
+            navigationService.router?.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
+            RunLoop.current.run(until: Date().addingTimeInterval(0.01))
         }
         
         wait(for: [expectation], timeout: 10.0)

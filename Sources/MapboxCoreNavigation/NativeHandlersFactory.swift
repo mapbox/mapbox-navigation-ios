@@ -30,7 +30,9 @@ class NativeHandlersFactory {
     // MARK: - Native Handlers
     
     lazy var historyRecorder: HistoryRecorderHandle? = {
-        HistoryRecorderHandle.build(forHistoryDir: historyDirectoryURL?.path ?? "", config: configHandle)
+        historyDirectoryURL.flatMap {
+            HistoryRecorderHandle.build(forHistoryDir: $0.path, config: configHandle)
+        }
     }()
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
