@@ -340,10 +340,7 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
-            switch self.userLocationStyle {
-            case .courseView: self.moveUserLocation(to: location)
-            default: break
-            }
+            self.moveUserLocation(to: location)
             
             if self.simulatesLocation {
                 if let locationProvider = self.mapView.location.locationProvider {
