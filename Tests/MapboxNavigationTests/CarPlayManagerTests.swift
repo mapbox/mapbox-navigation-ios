@@ -195,6 +195,7 @@ class CarPlayManagerTests: XCTestCase {
         manager.carPlayNavigationViewController!.exitNavigation(byCanceling: true)
 
         XCTAssertTrue(exampleDelegate.navigationEnded, "The CarPlayManagerDelegate should have been told that navigation ended.")
+        CarPlayMapViewController.unswizzleMethods()
     }
     
     func testRouteFailure() {
@@ -268,6 +269,10 @@ class CarPlayManagerSpec: QuickSpec {
             manager!.delegate = delegate
 
             simulateCarPlayConnection(manager!)
+        }
+
+        afterEach {
+            CarPlayMapViewController.unswizzleMethods()
         }
 
         //MARK: Previewing Routes
@@ -447,7 +452,16 @@ extension CarPlayMapViewController {
     static func swizzleMethods() {
         guard !swizzled else { return }
         swizzled = true
+        swapMethodsForSwizzling()
+    }
 
+    static func unswizzleMethods() {
+        guard swizzled else { return }
+        swizzled = false
+        swapMethodsForSwizzling()
+    }
+
+    private static func swapMethodsForSwizzling() {
         method_exchangeImplementations(
             class_getInstanceMethod(CarPlayMapViewController.self,
                                     #selector(CarPlayMapViewController.present(_:animated:completion:)))!,
@@ -459,6 +473,8 @@ extension CarPlayMapViewController {
     @objc private func swizzled_present(_ viewControllerToPresent: UIViewController,
                                 animated flag: Bool,
                                 completion: (() -> Void)? = nil) {
+        /// We need to keep strong reference to `viewControllerToPresent` so that it won't be deallocated in some cases.
+        /// This aligns with 
         Self.presentedViewControllers.append(viewControllerToPresent)
         completion?()
     }

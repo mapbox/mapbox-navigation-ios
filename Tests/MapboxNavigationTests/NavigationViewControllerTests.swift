@@ -16,23 +16,32 @@ private let mockedUNUserNotificationCenter: MockedUNUserNotificationCenter = .in
 /// If you see that tests crash due to the unrecognized selector error to MockedUNUserNotificationCenter,
 /// write a mock version of this test and try again.
 @objc private final class MockedUNUserNotificationCenter: NSObject {
+    /// Indicates if `UNUserNotificationCenter` is swapped with this mock.
     fileprivate static var isMocked: Bool = false
     @objc private func removePendingNotificationRequests(withIdentifiers identifiers: [String]) {}
     @objc private func removeDeliveredNotifications(withIdentifiers identifiers: [String]) {}
 }
 
 extension UNUserNotificationCenter {
-    static func mockForTests() {
+    static func replaceWithMock() {
         guard !MockedUNUserNotificationCenter.isMocked else { return }
+        MockedUNUserNotificationCenter.isMocked = true
+        swapMethodsForMock()
+    }
 
+    static func removeMock() {
+        guard MockedUNUserNotificationCenter.isMocked else { return }
+        MockedUNUserNotificationCenter.isMocked = false
+        swapMethodsForMock()
+    }
+
+    private static func swapMethodsForMock() {
         method_exchangeImplementations(
             class_getClassMethod(UNUserNotificationCenter.self,
                                  #selector(UNUserNotificationCenter.current))!,
             class_getClassMethod(UNUserNotificationCenter.self,
                                  #selector(UNUserNotificationCenter.swizzled_current))!
         )
-
-        MockedUNUserNotificationCenter.isMocked = true
     }
 
     @objc static func swizzled_current() -> AnyObject {
@@ -58,7 +67,7 @@ class NavigationViewControllerTests: XCTestCase {
         initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
         newRoute = Fixture.route(from: jsonFileName, options: routeOptions)
         dependencies = {
-            UNUserNotificationCenter.mockForTests()
+            UNUserNotificationCenter.replaceWithMock()
 
             let fakeDirections = DirectionsSpy()
             let fakeService = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions, directions: fakeDirections, locationSource: NavigationLocationManagerStub(), simulating: .never)
@@ -94,6 +103,7 @@ class NavigationViewControllerTests: XCTestCase {
         initialRoute = nil
         dependencies = nil
         Navigator._recreateNavigator()
+        UNUserNotificationCenter.removeMock()
     }
     
     func testDefaultUserInterfaceUsage() {
