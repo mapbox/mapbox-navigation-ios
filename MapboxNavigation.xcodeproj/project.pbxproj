@@ -351,6 +351,8 @@
 		E2C1CDB5265E43D500E158E0 /* Quick.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB4265E43D500E158E0 /* Quick.xcframework */; };
 		E2C1CDB7265E43E100E158E0 /* Nimble.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB6265E43E100E158E0 /* Nimble.xcframework */; };
 		E2C1CDB9265E43EB00E158E0 /* MapboxGeocoder.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDB8265E43EB00E158E0 /* MapboxGeocoder.xcframework */; };
+		E2C9D8A7268DCB7B005D8955 /* XCTestCase++.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C9D8A6268DCB7B005D8955 /* XCTestCase++.swift */; };
+		E2C9D8A9268DCE31005D8955 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C9D8A8268DCE31005D8955 /* XCTest.framework */; };
 		E2CC18F4265FA28900D61CBC /* Cedar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2CC18F3265FA28900D61CBC /* Cedar.framework */; };
 		E2D14952265CF97D008135A3 /* CarPlayTestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = E2D14950265CF97D008135A3 /* CarPlayTestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E2D1495A265CF9D1008135A3 /* CPMapTemplate+MBTestable.mm in Sources */ = {isa = PBXBuildFile; fileRef = E2D14956265CF9D1008135A3 /* CPMapTemplate+MBTestable.mm */; };
@@ -895,6 +897,8 @@
 		E2C1CDB4265E43D500E158E0 /* Quick.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Quick.xcframework; path = Carthage/Build/Quick.xcframework; sourceTree = "<group>"; };
 		E2C1CDB6265E43E100E158E0 /* Nimble.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Nimble.xcframework; path = Carthage/Build/Nimble.xcframework; sourceTree = "<group>"; };
 		E2C1CDB8265E43EB00E158E0 /* MapboxGeocoder.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxGeocoder.xcframework; path = Carthage/Build/MapboxGeocoder.xcframework; sourceTree = "<group>"; };
+		E2C9D8A6268DCB7B005D8955 /* XCTestCase++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "XCTestCase++.swift"; sourceTree = "<group>"; };
+		E2C9D8A8268DCE31005D8955 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		E2CC18F3265FA28900D61CBC /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = "Carthage/Checkouts/mapbox-events-ios/Frameworks/Cedar.framework"; sourceTree = "<group>"; };
 		E2D1494E265CF97D008135A3 /* CarPlayTestHelper.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CarPlayTestHelper.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E2D14950265CF97D008135A3 /* CarPlayTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CarPlayTestHelper.h; sourceTree = "<group>"; };
@@ -960,6 +964,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2C9D8A9268DCE31005D8955 /* XCTest.framework in Frameworks */,
 				E2C1CDB3265E43BC00E158E0 /* MapboxCoreNavigation.framework in Frameworks */,
 				E2C1CDB2265E439300E158E0 /* MapboxMobileEvents.xcframework in Frameworks */,
 				E2C1CDB5265E43D500E158E0 /* Quick.xcframework in Frameworks */,
@@ -1312,6 +1317,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				E2C9D8A8268DCE31005D8955 /* XCTest.framework */,
 				E2CC18F3265FA28900D61CBC /* Cedar.framework */,
 				8D424F26215ECA5D00432491 /* CoreLocation.framework */,
 				E2C1CDA9265E22B900E158E0 /* Polyline.xcframework */,
@@ -1368,6 +1374,7 @@
 				B47C1AD0261FD0A30078546C /* NavigationEventsManagerTestDoubles.swift */,
 				B47C1B01261FD0A30078546C /* NavigationPlotter.swift */,
 				B47C1AE2261FD0A30078546C /* NavigationServiceTestDoubles.swift */,
+				E2C9D8A6268DCB7B005D8955 /* XCTestCase++.swift */,
 				B47C1AFF261FD0A30078546C /* TestHelper.h */,
 			);
 			name = TestHelper;
@@ -2342,6 +2349,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B47C1B62261FD3BD0078546C /* DummyURLSessionDataTask.swift in Sources */,
+				E2C9D8A7268DCB7B005D8955 /* XCTestCase++.swift in Sources */,
 				B47C1B7D261FD3D50078546C /* NavigationEventsManagerTestDoubles.swift in Sources */,
 				B47C1B8F261FD3E70078546C /* NavigationServiceTestDoubles.swift in Sources */,
 				B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */,

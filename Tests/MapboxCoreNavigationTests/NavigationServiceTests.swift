@@ -475,17 +475,20 @@ class NavigationServiceTests: XCTestCase {
         navigation.router!.locationManager!(navigation.locationManager,
                                             didUpdateLocations: [trace.last!.shifted(to: now + (trace.count + 1))])
         
-        waitForNavNativeCallbacks(timeout: 0.5)
-
         // MARK: It queues and flushes a Depart event
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
-
+        expectation(description: "Depart Event Flushed") {
+            eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart)
+        }
         // MARK: When at a valid location just before the last location
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
-
+        expectation(description: "Pre-arrival delegate message fired") {
+            self.delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)")
+        }
         // MARK: It tells the delegate that the user did arrive
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
+        expectation(description: "Arrival delegate message fired") {
+            self.delegate.recentMessages.contains("navigationService(_:didArriveAt:)")
+        }
+        waitForExpectations(timeout: 3.0, handler: nil)
 
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
