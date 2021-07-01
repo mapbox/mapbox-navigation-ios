@@ -442,4 +442,12 @@ class NavigationMapViewTests: XCTestCase {
                        NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation,
                        "Point annotation identifiers should be equal.")
     }
+    
+    func testNavigationMapViewCameraType() {
+        var navigationMapView = NavigationMapView(frame: .zero)
+        XCTAssertEqual(navigationMapView.navigationCamera.type, .mobile)
+        
+        navigationMapView = NavigationMapView(frame: .zero, navigationCameraType: .carPlay)
+        XCTAssertEqual(navigationMapView.navigationCamera.type, .carPlay)
+    }
 }
