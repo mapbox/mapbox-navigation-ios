@@ -313,11 +313,10 @@ class MapboxCoreNavigationTests: XCTestCase {
 
         for location in locations {
             navigation.locationManager(locationManager, didUpdateLocations: [location])
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
         }
 
-        waitForExpectations(timeout: 5) { (error) in
-            XCTAssertNil(error)
-        }
+        waitForExpectations(timeout: 5, handler: nil)
     }
     
     func testOrderOfExecution() {
