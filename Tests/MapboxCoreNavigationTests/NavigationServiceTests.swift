@@ -469,7 +469,10 @@ class NavigationServiceTests: XCTestCase {
 
         let now = Date()
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
-        trace.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+        trace.forEach {
+            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
 
         // TODO: Verify why we need a second location update when routeState == .complete to trigger `MMEEventTypeNavigationArrive`
         navigation.router!.locationManager!(navigation.locationManager,
