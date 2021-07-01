@@ -11,7 +11,7 @@ let otherResponse = Fixture.JSONFromFileNamed(name: "route-for-lane-testing")
 private let mockedUNUserNotificationCenter: MockedUNUserNotificationCenter = .init()
 
 /// `UNUserNotificationCenter.current()` crashes when run from SPM tests.
-/// In order to fix the crash we mock `UNUserNotificationCenter` but swizzling `UNUserNotificationCenter.current()` and
+/// In order to fix the crash we mock `UNUserNotificationCenter` by swizzling `UNUserNotificationCenter.current()` and
 /// return the instance of this class instead.
 /// If you see that tests crash due to the unrecognized selector error to MockedUNUserNotificationCenter,
 /// write a mock version of this test and try again.
@@ -208,7 +208,7 @@ class NavigationViewControllerTests: XCTestCase {
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService
 
-        // Submit nonEmptry road location first to switch wayNameView to visibleState
+        // Submit non-empty road location first to switch wayNameView to visible state
         customRoadName[dependencies.poi[0].coordinate] = "Taylor Swift Street"
         service.locationManager!(service.locationManager, didUpdateLocations: [dependencies.poi[0]])
         expectation {
