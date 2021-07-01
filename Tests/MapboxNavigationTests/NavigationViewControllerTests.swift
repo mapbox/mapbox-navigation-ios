@@ -324,11 +324,10 @@ class NavigationViewControllerTests: XCTestCase {
         let model = MapboxMaps.Model()
         let puck3DConfiguration = Puck3DConfiguration(model: model)
         navigationViewController.navigationMapView?.userLocationStyle = .puck3D(configuration: puck3DConfiguration)
-        let styleLoadedExpectation = expectation(description: "MapView style loading expectation.")
-        navigationViewController.navigationMapView?.mapView.mapboxMap.onNext(.styleLoaded) { _ in
-            styleLoadedExpectation.fulfill()
+        expectation(description: "Puck set up") {
+            navigationViewController.navigationMapView?.mapView.location.options.puckType != nil
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 5, handler: nil)
         
         navigationViewController.navigationMapView?.addArrow(route: initialRoute, legIndex: 0, stepIndex: 0)
         guard let allLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers
