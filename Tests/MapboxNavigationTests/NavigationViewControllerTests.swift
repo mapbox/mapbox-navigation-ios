@@ -278,19 +278,17 @@ class NavigationViewControllerTests: XCTestCase {
         let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: DirectionsSpy(), simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
         let navigationViewController = NavigationViewController(for: initialRoute, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
-        let styleLoadedExpectation = XCTestExpectation(description: "MapView style loading expectation.")
-        navigationViewController.navigationMapView?.mapView.mapboxMap.onNext(.styleLoaded) { _ in
-            styleLoadedExpectation.fulfill()
+        expectation(description: "Style Loaded") {
+            navigationViewController.navigationMapView?.pointAnnotationManager != nil
         }
-        
-        // Wait for the style to load - routes won't show without it.
-        wait(for: [styleLoadedExpectation], timeout: 5)
+        waitForExpectations(timeout: 5, handler: nil)
         navigationViewController.indexedRoute = (initialRoute, 0)
 
-        runUntil({
-            return !navigationViewController.navigationMapView!.pointAnnotationManager!.annotations.isEmpty
-        })
-        
+        expectation(description: "Annotations loaded") {
+            !navigationViewController.navigationMapView!.pointAnnotationManager!.annotations.isEmpty
+        }
+        waitForExpectations(timeout: 5, handler: nil)
+
         let annotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
 
         guard let firstDestination = initialRoute.legs.last?.destination?.coordinate else {
