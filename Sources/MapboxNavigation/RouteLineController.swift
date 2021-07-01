@@ -130,12 +130,16 @@ extension NavigationMapView {
         
         func navigationViewDidLoad(_ view: UIView) {
             navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [self] _ in
-                showRouteIfNeeded()
                 navigationMapView.localizeLabels()
                 navigationMapView.mapView.showsTraffic = false
                 
                 // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
                 // regarding building identification such highlighted building will disappear.
+            }
+            
+            // Route line should be added on `MapView`, when its style changes.
+            navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [self] _ in
+                showRouteIfNeeded()
             }
         }
         
