@@ -504,7 +504,7 @@ class NavigationServiceTests: XCTestCase {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
 
         trace.forEach {
-            navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+            navigation.router.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
             RunLoop.main.run(until: Date().addingTimeInterval(0.01))
         }
         
@@ -527,7 +527,7 @@ class NavigationServiceTests: XCTestCase {
         }
 
         offRouteLocations.forEach {
-            navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+            navigation.router.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
             RunLoop.main.run(until: Date().addingTimeInterval(0.01))
         }
         
