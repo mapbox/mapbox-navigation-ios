@@ -77,12 +77,18 @@ public class CarPlayNavigationViewController: UIViewController {
         }
     }
     
+    /**
+     Controls the styling of CarPlayNavigationViewController and its components.
+
+     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
+     */
+    public private(set) var styleManager: StyleManager?
+
     var carSession: CPNavigationSession!
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
-    var styleManager: StyleManager?
-    
+
     // MARK: - Initialization methods
     
     /**
