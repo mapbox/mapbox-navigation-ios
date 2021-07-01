@@ -147,7 +147,7 @@ public class CarPlayNavigationViewController: UIViewController {
             self?.navigationMapView?.mapView.showsTraffic = false
         }
         
-        // Route line should be added on `MapView`, when its style changes.
+        // Route line should be added to `MapView`, when its style changes.
         navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
             self?.updateRouteOnMap()
         }

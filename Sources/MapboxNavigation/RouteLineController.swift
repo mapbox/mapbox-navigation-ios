@@ -137,7 +137,7 @@ extension NavigationMapView {
                 // regarding building identification such highlighted building will disappear.
             }
             
-            // Route line should be added on `MapView`, when its style changes.
+            // Route line should be added to `MapView`, when its style changes.
             navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [self] _ in
                 showRouteIfNeeded()
             }
