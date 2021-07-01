@@ -503,15 +503,22 @@ class NavigationServiceTests: XCTestCase {
         let now = Date()
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
 
-        trace.forEach { navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+        trace.forEach {
+            navigation.router.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
         
-        waitForNavNativeCallbacks(timeout: 0.5)
-
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        expectation(description: "Depart Event Flushed") {
+            eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart)
+        }
 
         // MARK: It tells the delegate that the user did arrive
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
+        expectation(description: "Arrival delegate message fired") {
+            self.delegate.recentMessages.contains("navigationService(_:didArriveAt:)")
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
 
         // MARK: Continue off route after arrival
         let offRouteCoordinate = trace.map { $0.coordinate }.last!.coordinate(at: 200, facing: 0)
@@ -519,15 +526,22 @@ class NavigationServiceTests: XCTestCase {
             CLLocation(coordinate: offRouteCoordinate, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + trace.count + $0)
         }
 
-        offRouteLocations.forEach { navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+        offRouteLocations.forEach {
+            navigation.router.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
         
-        waitForNavNativeCallbacks()
-
         // Make sure configurable delegate is called
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:shouldPreventReroutesWhenArrivingAt:)"))
+        expectation(description: "Should Prevent Reroutes delegate method called") {
+            self.delegate.recentMessages.contains("navigationService(_:shouldPreventReroutesWhenArrivingAt:)")
+        }
 
         // We should not reroute here because the user has arrived.
-        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:)"))
+        expectation(description: "Reroute delegate method isn't called") {
+            !self.delegate.recentMessages.contains("navigationService(_:didRerouteAlong:)")
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
 
         // It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
