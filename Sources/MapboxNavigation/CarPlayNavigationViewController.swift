@@ -144,8 +144,12 @@ public class CarPlayNavigationViewController: UIViewController {
         
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             self?.navigationMapView?.localizeLabels()
-            self?.updateRouteOnMap()
             self?.navigationMapView?.mapView.showsTraffic = false
+        }
+        
+        // Route line should be added to `MapView`, when its style changes.
+        navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
+            self?.updateRouteOnMap()
         }
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
