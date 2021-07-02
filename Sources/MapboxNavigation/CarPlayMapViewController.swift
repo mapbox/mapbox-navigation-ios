@@ -11,7 +11,12 @@ import CarPlay
 @available(iOS 12.0, *)
 public class CarPlayMapViewController: UIViewController {
     
-    var styleManager: StyleManager?
+    /**
+     Controls the styling of CarPlayMapViewController and its components.
+
+     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
+     */
+    public private(set) var styleManager: StyleManager?
     
     /**
      The interface styles available to `styleManager` for display.
