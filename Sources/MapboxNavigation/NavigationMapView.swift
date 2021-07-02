@@ -177,7 +177,7 @@ open class NavigationMapView: UIView {
     /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
      
-     By default, this property is set to `UserLocationStyle.courseView`.
+     By default, this property is set to `UserLocationStyle.courseView`, the bearing source is location course.
      */
     public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
         didSet {
@@ -262,6 +262,7 @@ open class NavigationMapView: UIView {
                 self.mapView.location.options.puckType = .puck3D(configuration)
             }
         }
+        mapView.location.options.puckBearingSource = .course
     }
     
     deinit {
@@ -330,9 +331,12 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
-            switch self.userLocationStyle {
-            case .courseView: self.moveUserLocation(to: location)
-            default: break
+            self.moveUserLocation(to: location)
+            
+            if self.simulatesLocation {
+                if let locationProvider = self.mapView.location.locationProvider {
+                    self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+                }
             }
         }
         
@@ -463,49 +467,8 @@ open class NavigationMapView: UIView {
                                   direction: cameraOptions.bearing!,
                                   animated: animated,
                                   navigationCameraState: navigationCamera.state)
-        case .puck2D(configuration: _):
-            if simulatesLocation {
-                if !(mapView.location.locationProvider is PassiveLocationProvider) {
-                    mapView.location.locationProvider.stopUpdatingLocation()
-                }
-                if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
-                    let newLocation: [Double] = [
-                        location.coordinate.latitude,
-                        location.coordinate.longitude,
-                        location.altitude
-                    ]
-                    do {
-                        try mapView.mapboxMap.style.setLayerProperties(for: NavigationMapView.LayerIdentifier.puck2DLayer,
-                                                                       properties: [
-                                                                        "location": newLocation,
-                                                                        "bearing": location.course
-                                                                       ])
-                    } catch {
-                        print("Failed to perform operation while updating 2D puck bearing arrow with error: \(error.localizedDescription).")
-                    }
-                }
-            }
-        case .puck3D(configuration: let configuration):
-            if simulatesLocation {
-                if !(mapView.location.locationProvider is PassiveLocationProvider) {
-                    mapView.location.locationProvider.stopUpdatingLocation()
-                }
-                if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.puck3DSource) {
-                    var model = configuration.model
-                    model.position = [location.coordinate.longitude, location.coordinate.latitude]
-                    if var orientation = model.orientation,
-                       orientation.count > 2 {
-                        orientation[2] = orientation[2] + location.course
-                        model.orientation = orientation
-                    }
-                    
-                    let modelSourceCode = [NavigationMapView.ModelKeyIdentifier.modelSouce: model]
-                    if let data = try? JSONEncoder().encode(modelSourceCode),
-                       let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        try? mapView.mapboxMap.style.setSourceProperty(for: NavigationMapView.SourceIdentifier.puck3DSource, property: "models", value: jsonDictionary)
-                    }
-                }
-            }
+            
+        default: break
         }
     }
     
