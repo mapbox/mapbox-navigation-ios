@@ -172,21 +172,12 @@ open class NavigationMapView: UIView {
         }
     }
     
-    var simulatesLocation: Bool = true {
-        didSet {
-            if simulatesLocation {
-                mapView.location.options.puckBearingSource = .course
-                
-            } else {
-                mapView.location.options.puckBearingSource = .heading
-            }
-        }
-    }
+    var simulatesLocation: Bool = true
     
     /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
      
-     By default, this property is set to `UserLocationStyle.courseView`.
+     By default, this property is set to `UserLocationStyle.courseView`, the bearing source is location course.
      */
     public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
         didSet {
@@ -271,7 +262,7 @@ open class NavigationMapView: UIView {
                 self.mapView.location.options.puckType = .puck3D(configuration)
             }
         }
-        mapView.location.options.puckBearingSource = simulatesLocation ? .course : .heading
+        mapView.location.options.puckBearingSource = .course
     }
     
     deinit {
