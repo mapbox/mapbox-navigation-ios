@@ -333,8 +333,13 @@ open class NavigationMapView: UIView {
                   let location = self.mostRecentUserCourseViewLocation else { return }
             self.moveUserLocation(to: location)
             
-            if self.simulatesLocation {
+            switch self.userLocationStyle {
+            case .courseView:
                 if let locationProvider = self.mapView.location.locationProvider {
+                    self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+                }
+            default:
+                if self.simulatesLocation, let locationProvider = self.mapView.location.locationProvider {
                     self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
                 }
             }
