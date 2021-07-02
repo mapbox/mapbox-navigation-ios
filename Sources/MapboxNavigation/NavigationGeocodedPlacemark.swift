@@ -86,6 +86,8 @@ public struct NavigationGeocodedPlacemark: Equatable, Codable {
     /**
      Method, which returns `CPListItem`, which can be later used in list of search results
      inside `CPListTemplate`. `CPListItem` shows destination's title and its address.
+     
+     - returns: A `CPListItem` instance.
      */
     @available(iOS 12.0, *)
     public func listItem() -> CPListItem {
