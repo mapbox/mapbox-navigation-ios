@@ -84,7 +84,15 @@
 * Removed unused `CarPlayNavigationViewController.drivingSide` property. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Added `CarPlayManagerDelegate.carPlayManager(_:shouldPresentArrivalUIFor:)` and `CarPlayNavigationViewController.navigationService(_:didArriveAt:)` to allow developers to determine whether to present Arrival UI for CarPlay. ([#3016](https://github.com/mapbox/mapbox-navigation-ios/pull/3016))
 * Renamed `CarPlayNavigationDelegate` to `CarPlayNavigationViewControllerDelegate` and `CarPlayNavigationViewController.carPlayNavigationDelegate` to `CarPlayNavigationViewController.delegate`. ([#3036](https://github.com/mapbox/mapbox-navigation-ios/pull/3036))
-* Change access level of `styleManager` in `CarPlayNavigationViewController` and `CarPlayMapViewController` from default to `public private(set)` ([#3137](https://github.com/mapbox/mapbox-navigation-ios/pull/3137))
+* Changed access level of `styleManager` in `CarPlayNavigationViewController` and `CarPlayMapViewController` from default to `public private(set)`. ([#3137](https://github.com/mapbox/mapbox-navigation-ios/pull/3137))
+* Removed optional dependency on MapboxGeocoder.swift. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
+* Moved `CarPlaySearchController.searchTemplate(_:updatedSearchText:completionHandler:)`, `CarPlaySearchController.searchTemplate(_:searchTemplate:selectedResult:completionHandler:)` methods to `CarPlaySearchControllerDelegate` protocol. Renamed `resultsOrNoResults(_:limit:)` to `searchResults(with:limit:)`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
+* `CarPlaySearchControllerDelegate` now conforms to `CPSearchTemplateDelegate` protocol. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
+* `AppDelegate` now extends `CarPlaySearchControllerDelegate`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
+* Moved `GeocodedPlacemark` extension from `CarPlaySearchController` to the application level. Removed `GeocodedPlacemark.listItem()`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
+* Added `NavigationGeocodedPlacemark` struct to replace `GeocodedPlacemark` and added `NavigationGeocodedPlacemark.listItem()`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
+* `RecentItem` is now a public struct. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
+* Removed unused `CarPlayManagerDelegate.carPlayManager(_:searchTemplate:updatedSearchText:ompletionHandler:)` and `CarPlayManagerDelegate.carPlayManager(_:carPlayManager:selectedResult:completionHandler:)`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 
 ### Other changes
 

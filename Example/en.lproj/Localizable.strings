@@ -1,8 +1,14 @@
+/* Delimiter between lines in an address when displayed inline */
+"ADDRESS_LINE_SEPARATOR" = ", ";
+
 /* Alert action */
 "ALERT_OK" = "OK";
 
 /* CPAlertTemplate OK button title */
 "CARPLAY_OK" = "OK";
+
+/* Message when search returned zero results in CarPlay */
+"CARPLAY_SEARCH_NO_RESULTS" = "No results";
 
 /* Title of action for dismissing waypoint removal confirmation sheet */
 "REMOVE_WAYPOINT_CONFIRM_CANCEL" = "Cancel";

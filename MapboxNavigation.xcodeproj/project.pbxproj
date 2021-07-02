@@ -101,7 +101,7 @@
 		35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35726EE71F0856E900AFA1B6 /* DayStyle.swift */; };
 		3582A25020EEC46B0029C5DE /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A24F20EEC46B0029C5DE /* Router.swift */; };
 		3582A25220EFA9680029C5DE /* RouterDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3582A25120EFA9680029C5DE /* RouterDelegate.swift */; };
-		358E31D622562698009B3EC2 /* CarPayCompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358E31D522562697009B3EC2 /* CarPayCompassView.swift */; };
+		358E31D622562698009B3EC2 /* CarPlayCompassView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358E31D522562697009B3EC2 /* CarPlayCompassView.swift */; };
 		359574A81F28CC5A00838209 /* CLLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A71F28CC3800838209 /* CLLocation.swift */; };
 		359574AA1F28CCBB00838209 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359574A91F28CCBB00838209 /* LocationTests.swift */; };
 		3595FE48219190400035B765 /* TestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 35CDA85E2190F2A30072B675 /* TestHelper.framework */; };
@@ -159,6 +159,7 @@
 		8A1856752631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1856742631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift */; };
 		8A18568726320B5900F8AE38 /* FollowingCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */; };
 		8A18569926320B8F00F8AE38 /* OverviewCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */; };
+		8A1943A92685DC680066E2F8 /* NavigationGeocodedPlacemark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1943A82685DC680066E2F8 /* NavigationGeocodedPlacemark.swift */; };
 		8A2081CB25E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */; };
 		8A2081CC25E07CED00F9B8A6 /* RouteLineType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */; };
 		8A285E242637859800B11ECD /* OrnamentsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A285E232637859800B11ECD /* OrnamentsController.swift */; };
@@ -564,7 +565,7 @@
 		357F0DF11EB9DAB400A0B53C /* vi */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3582A24F20EEC46B0029C5DE /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
 		3582A25120EFA9680029C5DE /* RouterDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouterDelegate.swift; sourceTree = "<group>"; };
-		358E31D522562697009B3EC2 /* CarPayCompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPayCompassView.swift; sourceTree = "<group>"; };
+		358E31D522562697009B3EC2 /* CarPlayCompassView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayCompassView.swift; sourceTree = "<group>"; };
 		359574A71F28CC3800838209 /* CLLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocation.swift; sourceTree = "<group>"; };
 		359574A91F28CCBB00838209 /* LocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		3597ABCF21553B6F00C12785 /* SimulatedLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedLocationManagerTests.swift; sourceTree = "<group>"; };
@@ -621,6 +622,7 @@
 		8A1856742631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewportDataSourceOptions.swift; sourceTree = "<group>"; };
 		8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingCameraOptions.swift; sourceTree = "<group>"; };
 		8A18569826320B8F00F8AE38 /* OverviewCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OverviewCameraOptions.swift; sourceTree = "<group>"; };
+		8A1943A82685DC680066E2F8 /* NavigationGeocodedPlacemark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationGeocodedPlacemark.swift; sourceTree = "<group>"; };
 		8A2081C925E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationMapViewIdentifiers.swift; sourceTree = "<group>"; };
 		8A2081CA25E07CED00F9B8A6 /* RouteLineType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteLineType.swift; sourceTree = "<group>"; };
 		8A285E232637859800B11ECD /* OrnamentsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrnamentsController.swift; sourceTree = "<group>"; };
@@ -1045,8 +1047,9 @@
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
 				8AEB28AB265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift */,
+				358E31D522562697009B3EC2 /* CarPlayCompassView.swift */,
 				352C35BF2134958F00D77796 /* RecentItem.swift */,
-				358E31D522562697009B3EC2 /* CarPayCompassView.swift */,
+				8A1943A82685DC680066E2F8 /* NavigationGeocodedPlacemark.swift */,
 			);
 			name = CarPlay;
 			sourceTree = "<group>";
@@ -2194,7 +2197,7 @@
 				35726EE81F0856E900AFA1B6 /* DayStyle.swift in Sources */,
 				2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */,
 				AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */,
-				358E31D622562698009B3EC2 /* CarPayCompassView.swift in Sources */,
+				358E31D622562698009B3EC2 /* CarPlayCompassView.swift in Sources */,
 				AE47A33322B1F6AE0096458C /* Constants+InstructionsCard.swift in Sources */,
 				8A1856752631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift in Sources */,
 				8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */,
@@ -2230,6 +2233,7 @@
 				35025F3F1F051DD2002BA3EA /* DialogViewController.swift in Sources */,
 				359A8AEF1FA7B25B00BDB486 /* LanesStyleKit.swift in Sources */,
 				8A285E242637859800B11ECD /* OrnamentsController.swift in Sources */,
+				8A1943A92685DC680066E2F8 /* NavigationGeocodedPlacemark.swift in Sources */,
 				355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */,
 				8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,

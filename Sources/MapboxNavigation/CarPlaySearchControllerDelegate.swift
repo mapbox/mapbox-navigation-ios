@@ -5,7 +5,7 @@ import MapboxDirections
  Delegate, which is used to control behavior based on certain actions from the user when performing search on CarPlay.
  */
 @available(iOS 12.0, *)
-public protocol CarPlaySearchControllerDelegate: AnyObject {
+public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDelegate {
     
     /**
      Method, which is called whenever user selects search result.
@@ -41,4 +41,51 @@ public protocol CarPlaySearchControllerDelegate: AnyObject {
      animated or not.
      */
     func popTemplate(animated: Bool)
+    
+    /**
+     The most recent search results.
+     */
+    var recentSearchItems: [CPListItem]? { get set }
+    
+    /**
+     The most recent search text, which is going to be used as `CPListTemplate` title after
+     performing search.
+     */
+    var recentSearchText: String? { get set }
+    
+    /**
+     Method, which offers the delegate an opportunity to react to updates in the search text.
+     
+     - parameter searchTemplate: The search template currently accepting user input.
+     - parameter searchText: The updated search text in `searchTemplate`.
+     - parameter completionHandler: Called when the search is complete. Accepts a list of search results.
+     
+     - postcondition: You must call `completionHandler` within this method.
+     */
+    func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                        updatedSearchText searchText: String,
+                        completionHandler: @escaping ([CPListItem]) -> Void)
+    
+    /**
+     Method, which offers the delegate an opportunity to react to selection of a search result.
+     
+     - parameter searchTemplate: The search template currently accepting user input.
+     - parameter item: The search result the user has selected.
+     - parameter completionHandler: Called when the delegate is done responding to the selection.
+     
+     - postcondition: You must call `completionHandler` within this method.
+     */
+    func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                        selectedResult item: CPListItem,
+                        completionHandler: @escaping () -> Void)
+    
+    /**
+     Method, which allows to provide list of `CPListItem`s and show them in `CPListTemplate` after
+     performing search.
+     
+     - parameter items: List of `CPListItem`, which will be shown in `CPListTemplate`.
+     - parameter limit: Optional integer, which serves as a limiter for a list of search results.
+     - returns: List of `CPListItem` objects with certain limit (if applicable).
+     */
+    func searchResults(with items: [CPListItem], limit: UInt?) -> [CPListItem]
 }

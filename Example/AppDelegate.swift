@@ -15,6 +15,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 12.0, *)
     lazy var carPlaySearchController: CarPlaySearchController = CarPlaySearchController()
 
+    // `CLLocationManager` instance, which is going to be used to create a location, which is used as a
+    // hint when looking up the specified address in `CarPlaySearchController`.
+    static let coarseLocationManager: CLLocationManager = {
+        let coarseLocationManager = CLLocationManager()
+        coarseLocationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        return coarseLocationManager
+    }()
+    
+    @available(iOS 12.0, *)
+    lazy var recentSearchItems: [CPListItem]? = []
+    var recentItems: [RecentItem] = RecentItem.loadDefaults()
+    var recentSearchText: String? = ""
+    
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         if isRunningTests() {
