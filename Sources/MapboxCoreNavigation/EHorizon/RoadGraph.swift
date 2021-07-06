@@ -12,7 +12,7 @@ public final class RoadGraph {
     /**
      Returns metadata about the edge with the given edge identifier.
      
-     - returns: Metadata about the edge with the given edge identifier, or `nil` if the edge is inaccessible.
+     - returns: Metadata about the edge with the given edge identifier, or `nil` if the edge is not in the cache.
      */
     public func edgeMetadata(edgeIdentifier: Edge.Identifier) -> Edge.Metadata? {
         if let edgeMetadata = native.getEdgeMetadata(forEdgeId: UInt64(edgeIdentifier)) {
@@ -24,7 +24,7 @@ public final class RoadGraph {
     /**
      Returns a line string geometry corresponding to the given edge identifier.
      
-     - returns: A line string corresponding to the given edge identifier, or `nil` if the edge is inaccessible.
+     - returns: A line string corresponding to the given edge identifier, or `nil` if the edge is not in the cache.
      */
     public func edgeShape(edgeIdentifier: Edge.Identifier) -> LineString? {
         guard let locations = native.getEdgeShape(forEdgeId: UInt64(edgeIdentifier)) else {
@@ -36,14 +36,10 @@ public final class RoadGraph {
     /**
      Returns a line string geometry corresponding to the given path.
      
-     - returns: A line string corresponding to the given path, or `nil` if any of path edges is inaccessible.
+     - returns: A line string corresponding to the given path, or `nil` if any of path edges are not in the cache.
      */
     public func shape(of path: Path) -> LineString? {
-        let nativePath = GraphPath(edges: path.edgeIdentifiers.map { NSNumber(value: $0) },
-                                   percentAlongBegin: path.fractionFromStart,
-                                   percentAlongEnd: path.fractionToEnd,
-                                   length: path.length)
-        guard let locations = native.getPathShape(for: nativePath) else {
+        guard let locations = native.getPathShape(for: GraphPath(path)) else {
             return nil
         }
         return LineString(locations.map { $0.coordinate })
@@ -52,11 +48,10 @@ public final class RoadGraph {
     /**
      Returns a point corresponding to the given position.
      
-     - returns: A point corresponding to the given position, or `nil` if the edge is inaccessible.
+     - returns: A point corresponding to the given position, or `nil` if the edge is not in the cache.
      */
     public func shape(of position: Position) -> Point? {
-        let nativePosition = GraphPosition(edgeId: UInt64(position.edgeIdentifier), percentAlong: position.fractionFromStart)
-        guard let location = native.getPositionCoordinate(for: nativePosition) else {
+        guard let location = native.getPositionCoordinate(for: GraphPosition(position)) else {
             return nil
         }
         return Point(location.coordinate)
