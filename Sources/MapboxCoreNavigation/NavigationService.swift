@@ -49,12 +49,12 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      The router object that tracks the user’s progress as they travel along a predetermined route.
      */
-    var router: Router! { get }
+    var router: Router { get }
     
     /**
      The events manager, responsible for all telemetry.
      */
-    var eventsManager: NavigationEventsManager! { get }
+    var eventsManager: NavigationEventsManager { get }
     
     /**
      The route along which the user is expected to travel, plus its index in the `RouteResponse`, if applicable.
@@ -118,7 +118,11 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
  */
 public class MapboxNavigationService: NSObject, NavigationService {
     typealias DefaultRouter = RouteController
-    
+
+    private var _router: Router?
+    private var _eventsManager: NavigationEventsManager?
+    private var _poorGPSTimer: DispatchTimer?
+
     /**
      The default time interval before beginning simulation when the `.onPoorGPS` simulation option is enabled.
      */
@@ -148,12 +152,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
     /**
      The active router. By default, a `RouteController`.
      */
-    public var router: Router!
+    public var router: Router { _router! }
     
     /**
      The events manager. Sends telemetry back to the Mapbox platform.
      */
-    public var eventsManager: NavigationEventsManager!
+    public var eventsManager: NavigationEventsManager { _eventsManager! }
     
     /**
      The `NavigationService` delegate. Wraps `RouterDelegate` messages.
@@ -202,7 +206,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
     }
     
-    var poorGPSTimer: DispatchTimer!
+    var poorGPSTimer: DispatchTimer { _poorGPSTimer! }
     private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
     
@@ -243,17 +247,17 @@ public class MapboxNavigationService: NSObject, NavigationService {
         super.init()
         resumeNotifications()
         
-        poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
+        _poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
             guard let mode = self?.simulationMode, mode == .onPoorGPS else { return }
             self?.simulate(intent: .poorGPS)
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        router = routerType.init(along: route, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self, tileStoreLocation: tileStoreLocation)
+        _router = routerType.init(along: route, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self, tileStoreLocation: tileStoreLocation)
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
-        eventsManager = eventType.init(dataSource: self, accessToken: self.directions.credentials.accessToken)
+        _eventsManager = eventType.init(dataSource: self, accessToken: self.directions.credentials.accessToken)
         locationManager.activityType = routeOptions.activityType
         bootstrapEvents()
         

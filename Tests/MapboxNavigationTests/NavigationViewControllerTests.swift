@@ -80,9 +80,7 @@ class NavigationViewControllerTests: XCTestCase {
             guard let navigationService = navigationViewController.navigationService else {
                 XCTFail("Navigation Service is nil"); return nil
             }
-            guard let router = navigationService.router else {
-                XCTFail("Router is nil"); return nil
-            }
+            let router = navigationService.router
             guard let firstCoord = router.routeProgress.nearbyShape.coordinates.first else {
                 XCTFail("First Coordinate is nil"); return nil
             }

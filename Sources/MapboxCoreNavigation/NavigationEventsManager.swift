@@ -9,7 +9,7 @@ let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
  */
 public protocol EventsManagerDataSource: AnyObject {
     var routeProgress: RouteProgress { get }
-    var router: Router! { get }
+    var router: Router { get }
     var desiredAccuracy: CLLocationAccuracy { get }
     var locationProvider: NavigationLocationManager.Type { get }
 }

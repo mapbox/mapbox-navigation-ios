@@ -567,7 +567,7 @@ public class CarPlayNavigationViewController: UIViewController {
                                               comment: "Title on continue button in CarPlay")
         
         let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
-            self.navigationService.router?.advanceLegIndex()
+            self.navigationService.router.advanceLegIndex()
             self.carInterfaceController.dismissTemplate(animated: true)
             self.updateRouteOnMap()
         }
