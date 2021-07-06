@@ -26,3 +26,10 @@ extension RoadGraph {
         }
     }
 }
+
+extension GraphPosition {
+    convenience init(_ position: RoadGraph.Position) {
+        self.init(edgeId: UInt64(position.edgeIdentifier),
+                  percentAlong: position.fractionFromStart)
+    }
+}
