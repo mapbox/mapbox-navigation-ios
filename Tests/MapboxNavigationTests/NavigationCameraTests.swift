@@ -113,6 +113,38 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertEqual(navigationViewController.navigationMapView?.navigationCamera.state, .following)
     }
     
+    func testNavigationCameraFollowingState() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        navigationMapView.navigationCamera.viewportDataSource = ViewportDataSourceMock(navigationMapView.mapView)
+        navigationMapView.navigationCamera.cameraStateTransition = CameraStateTransitionMock(navigationMapView.mapView)
+        
+        // By default Navigation Camera moves to `NavigationCameraState.following` state.
+        XCTAssertEqual(navigationMapView.navigationCamera.state, .following)
+        
+        // After calling `NavigationCamera.moveToOverview()` camera state should be set
+        // to `NavigationCameraState.transitionToOverview` first, only after finishing transition
+        // to `NavigationCameraState.overview`.
+        navigationMapView.navigationCamera.moveToOverview()
+        XCTAssertEqual(navigationMapView.navigationCamera.state, .transitionToOverview)
+        
+        // Navigation camera transition lasts 0.1 seconds. At the end of transition it is expected
+        // that camera state is `NavigationCameraState.overview`.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
+            
+            // After calling `NavigationCamera.follow()` camera state should be set
+            // to `NavigationCameraState.transitionToFollowing` first, only after finishing transition
+            // to `NavigationCameraState.following`.
+            navigationMapView.navigationCamera.follow()
+            XCTAssertEqual(navigationMapView.navigationCamera.state, .transitionToFollowing)
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                XCTAssertEqual(navigationMapView.navigationCamera.state, .following)
+            }
+        }
+    }
+    
     func testNavigationCameraOverviewState() {
         let navigationMapView = NavigationMapView(frame: .zero)
         
