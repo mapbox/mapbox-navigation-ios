@@ -1,6 +1,8 @@
 import MapboxNavigationNative
 import MapboxDirections
+import Foundation
 
+private let customConfigKey = "com.mapbox.navigation.custom-config"
 
 /// Internal class, designed for handling initialisation of various NavigationNative entities.
 ///
@@ -14,17 +16,20 @@ class NativeHandlersFactory {
     let tilesVersion: String?
     let historyDirectoryURL: URL?
     let targetVersion: String?
+    let configFactoryType: ConfigFactory.Type
     
     init(tileStorePath: String,
          credentials: DirectionsCredentials = Directions.shared.credentials,
          tilesVersion: String? = nil,
          historyDirectoryURL: URL? = nil,
-         targetVersion: String? = nil) {
+         targetVersion: String? = nil,
+         configFactoryType: ConfigFactory.Type = ConfigFactory.self) {
         self.tileStorePath = tileStorePath
         self.credentials = credentials
         self.tilesVersion = tilesVersion
         self.historyDirectoryURL = historyDirectoryURL
         self.targetVersion = targetVersion
+        self.configFactoryType = configFactoryType
     }
     
     // MARK: - Native Handlers
@@ -87,10 +92,13 @@ class NativeHandlersFactory {
             ]
         ]
         
-        var customConfig = ""
-        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: historyAutorecordingConfig, options: []),
+        var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]
+        customConfig.deepMerge(with: historyAutorecordingConfig)
+        
+        var customConfigJSON = ""
+        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: customConfig, options: []),
            let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
-            customConfig = encodedConfig
+            customConfigJSON = encodedConfig
         }
         
         let navigatorConfig = NavigatorConfig(voiceInstructionThreshold: nil,
@@ -99,9 +107,9 @@ class NativeHandlersFactory {
                                               incidentsOptions: nil,
                                               noSignalSimulationEnabled: nil)
         
-        return  ConfigFactory.build(for: settingsProfile,
-                                    config: navigatorConfig,
-                                    customConfig: customConfig)
+        return configFactoryType.build(for: settingsProfile,
+                                       config: navigatorConfig,
+                                       customConfig: customConfigJSON)
     }()
     
     lazy var runloopExecutor: RunLoopExecutorHandle = {
