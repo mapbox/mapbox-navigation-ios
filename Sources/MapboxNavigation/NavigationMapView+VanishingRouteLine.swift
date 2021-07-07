@@ -216,13 +216,13 @@ extension NavigationMapView {
                 try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
                     let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
                                                                         fractionTraveled: fractionTraveledUpdate)
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
+                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor))
                 }
             } else {
                 try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
                     let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveledUpdate)
                     
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
+                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor))
                 }
             }
         } catch {
