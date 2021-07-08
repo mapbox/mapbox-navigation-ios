@@ -107,6 +107,16 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     }
     
     public func updateForFollowing(_ cameraOptions: CameraOptions) {
+        // Check whether the original and target locations and headings are larger than a certain threshold when current camera state is following.
+        guard let mapView = mapView,
+              let center = cameraOptions.center,
+              let zoom = cameraOptions.zoom,
+              let bearing = cameraOptions.bearing else { return }
+
+        let centerUpdateThreshould = baseCenterUpdateThreshould * pow(2, 22.0 - Double(zoom))
+        guard mapView.cameraState.center.distance(to: center) > centerUpdateThreshould,
+              abs(mapView.cameraState.bearing - bearing) > bearingUpdateThreshold else { return }
+        
         update(cameraOptions)
     }
     
@@ -134,13 +144,6 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         if let animatorCenter = animatorCenter, animatorCenter.isRunning {
             animatorCenter.stopAnimation()
         }
-        
-        // Check whether the original and target locations and headings are larger than a certain threshold
-        let currentCenter = mapView.cameraState.center
-        let currentBearing = mapView.cameraState.bearing
-        let centerUpdateThreshould = baseCenterUpdateThreshould * pow(2, 22.0 - Double(zoom))
-        guard currentCenter.distance(to: center) > centerUpdateThreshould,
-              abs(currentBearing - bearing) > bearingUpdateThreshold else { return }
 
         let centerTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
         animatorCenter = mapView.camera.makeAnimator(duration: duration, timingParameters: centerTimingParameters) { (transition) in
