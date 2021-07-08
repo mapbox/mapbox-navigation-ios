@@ -2,7 +2,7 @@ import Foundation
 import MapboxDirections
 import Polyline
 
-class CoreFeedbackEvent: Hashable {
+public class CoreFeedbackEvent: Hashable {
     var id = UUID()
     
     var timestamp: Date
@@ -14,16 +14,16 @@ class CoreFeedbackEvent: Hashable {
         self.eventDictionary = eventDictionary
     }
     
-    func hash(into hasher: inout Hasher) {
+    public func hash(into hasher: inout Hasher) {
         hasher.combine(id.hashValue)
     }
     
-    static func ==(lhs: CoreFeedbackEvent, rhs: CoreFeedbackEvent) -> Bool {
+    public static func ==(lhs: CoreFeedbackEvent, rhs: CoreFeedbackEvent) -> Bool {
         return lhs.id == rhs.id
     }
 }
 
-class FeedbackEvent: CoreFeedbackEvent {
+public class FeedbackEvent: CoreFeedbackEvent {
     func update(type: FeedbackType, source: FeedbackSource, description: String?) {
         eventDictionary["feedbackType"] = type.description
 

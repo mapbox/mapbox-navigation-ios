@@ -46,7 +46,7 @@ extension Directions {
     open func calculateOffline(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
         let directionsUri = url(forCalculating: options)
         
-        Navigator.shared.routerInterface.getRouteForDirectionsUri(directionsUri.absoluteString) { (result) in
+        Navigator.shared.routerInterface.getRouteForDirectionsUri(directionsUri.absoluteString) { (result, _)  in
             let json = result.value as? String
             let data = json?.data(using: .utf8)
             let decoder = JSONDecoder()
