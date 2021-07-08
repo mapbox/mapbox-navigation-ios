@@ -14,6 +14,11 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     var animatorBearing: BasicCameraAnimator?
     var animatorPitch: BasicCameraAnimator?
     
+    // The bearing change threshould to start animation of camera.
+    var bearingUpdateThreshold: CLLocationDirection = 5.0
+    // The pixels threshold on the target camera zoom level to start animation of camera.
+    var baseCenterUpdateThreshould: Double = 5.0
+    
     typealias TransitionParameters = (
         cameraOptions: CameraOptions,
         centerAnimationDuration: TimeInterval,
@@ -130,6 +135,13 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             animatorCenter.stopAnimation()
         }
         
+        // Check whether the original and target locations and headings are larger than a certain threshold
+        let currentCenter = mapView.cameraState.center
+        let currentBearing = mapView.cameraState.bearing
+        let centerUpdateThreshould = baseCenterUpdateThreshould * pow(2, 22.0 - Double(zoom))
+        guard currentCenter.distance(to: center) > centerUpdateThreshould,
+              abs(currentBearing - bearing) > bearingUpdateThreshold else { return }
+
         let centerTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
         animatorCenter = mapView.camera.makeAnimator(duration: duration, timingParameters: centerTimingParameters) { (transition) in
             transition.center.toValue = center
