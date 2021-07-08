@@ -120,8 +120,8 @@
 * Fixed the moment of custom feedback event creation. ([#3049](https://github.com/mapbox/mapbox-navigation-ios/pull/3049))
 * Increased stability of unit tests by addressing sporadic failures. ([#3089](https://github.com/mapbox/mapbox-navigation-ios/pull/3089))([#3072](https://github.com/mapbox/mapbox-navigation-ios/pull/3072))
 * Fixed a retain cycle in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
-* `EventsManagerDataSource.router`, `NavigationService.router`, `NavigationService.eventsManager`, `MapboxNavigationService.router`, `MapboxNavigationService.eventsManager` properties are not longer force unwrapped. ([#3055](https://github.com/mapbox/mapbox-navigation-ios/pull/3055))
-* Disabled the blurring line gradient of route line with hard stops. ([#3153](https://github.com/mapbox/mapbox-navigation-ios/pull/3153))
+* The `EventsManagerDataSource.router`, `NavigationService.router`, `NavigationService.eventsManager`, `MapboxNavigationService.router`, `MapboxNavigationService.eventsManager` properties are no longer force unwrapped. ([#3055](https://github.com/mapbox/mapbox-navigation-ios/pull/3055))
+* Fixed an issue where traffic congestion segments along the route line blurred into each other when the map was zoomed in far enough. ([#3153](https://github.com/mapbox/mapbox-navigation-ios/pull/3153))
 
 ## v1.4.1
 
