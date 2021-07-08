@@ -170,8 +170,8 @@ custom_categories:
     children:
       - ElectronicHorizonOptions
       - RoadGraph
-      - OpenLROprientation
-      - OpenLRStandard
+      - OpenLRIdentifier
+      - OpenLROrientation
       - RoadName
       - RoadObject
       - DistancedRoadObject
