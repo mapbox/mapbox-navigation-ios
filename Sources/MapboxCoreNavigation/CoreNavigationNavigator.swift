@@ -35,12 +35,13 @@ class Navigator {
      - parameter completionHandler: A block object to be executed when history dumping ends.
      */
     func writeHistory(completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder?.dumpHistory { (path) in
+        historyRecorder?.stopRecording { [weak self] (path) in
             if let path = path {
                 completionHandler(URL(fileURLWithPath: path))
             } else {
                 completionHandler(nil)
             }
+            self?.historyRecorder?.startRecording()
         }
     }
     
@@ -142,6 +143,7 @@ class Navigator {
         navigator.setElectronicHorizonObserverFor(self)
         navigator.addObserver(for: self)
         navigator.setFallbackVersionsObserverFor(self)
+        historyRecorder?.startRecording()
     }
     
     private func unsubscribeNavigator() {

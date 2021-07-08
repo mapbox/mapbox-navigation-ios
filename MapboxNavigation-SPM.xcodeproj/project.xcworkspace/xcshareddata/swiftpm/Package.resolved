@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "2d9edcedef9506546fa390c8f7f10de848b2aec2",
-          "version": "2.0.0-beta.5"
+          "revision": "856c7438f98511e91bd1624a707a3174e236c9b8",
+          "version": "2.0.0-beta.6"
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "16b948a84e664d91a0b3c725bcf1f9bb87350964",
-          "version": "55.0.0"
+          "revision": "addf3b65bdbd55342507ed6c91bfbbc342b54d2d",
+          "version": "56.0.0"
         }
       },
       {
