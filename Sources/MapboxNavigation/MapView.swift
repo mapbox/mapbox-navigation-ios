@@ -44,7 +44,7 @@ extension MapView {
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
     func showsTileSet(withIdentifier tileSetIdentifier: String, layerIdentifier: String) -> Bool {
-        let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
+        let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifier)
         
         for layerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
             guard let sourceIdentifier = mapboxMap.style.layerProperty(for: layerIdentifier,
@@ -52,7 +52,7 @@ extension MapView {
                   let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: layerIdentifier,
                                                                             property: "source-layer") as? String else { return false }
             
-            if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
+            if sourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
                 let visibility = mapboxMap.style.layerProperty(for: layerIdentifier, property: "visibility") as? String
                 
                 return visibility == "visible"
@@ -70,7 +70,7 @@ extension MapView {
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
     func setShowsTileSet(_ isVisible: Bool, withIdentifier tileSetIdentifier: String, layerIdentifier: String) {
-        let incidentsSourceIdentifiers = sourceIdentifiers(tileSetIdentifier)
+        let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifier)
         
         for mapViewLayerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
             guard let sourceIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
@@ -78,7 +78,7 @@ extension MapView {
                   let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
                                                                             property: "source-layer") as? String else { return }
             
-            if incidentsSourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
+            if sourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
                 let properties = [
                     "visibility": isVisible ? "visible" : "none"
                 ]
