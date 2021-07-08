@@ -39,7 +39,7 @@ private func RadiansFromDegrees(_ degrees: CLLocationDegrees) -> Double {
     return degrees * Double.pi / 180
 }
 
-private func getMetersPerPixelAtLatitude(_ lat: Double, _ zoom: Double) -> Double {
+func getMetersPerPixelAtLatitude(_ lat: Double, _ zoom: Double) -> Double {
     let constrainedZoom = clamp(zoom, MIN_ZOOM, MAX_ZOOM)
     let constrainedScale = pow(2.0, constrainedZoom)
     let constrainedLatitude = clamp(lat, -LATITUDE_MAX, LATITUDE_MAX)
