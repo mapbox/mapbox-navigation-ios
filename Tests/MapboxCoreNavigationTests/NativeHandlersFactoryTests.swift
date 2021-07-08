@@ -27,13 +27,14 @@ class NativeHandlersFactoryTests: XCTestCase {
     }
     
     func testDefaultCustomConfig() {
-        let expectedCustomConfig = customConfig(from: [
+        let expectedCustomConfig: [String: Any] = [
             "features": [
                 "historyAutorecording": true
             ]
-        ])
+        ]
         _ = handlersFactory.configHandle
-        XCTAssertEqual(ConfigFactorySpy.passedCustomConfig, expectedCustomConfig)
+        let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
+        XCTAssertTrue(config == expectedCustomConfig)
     }
     
     func testCustomConfigFromUserDefatuls() {
@@ -42,14 +43,15 @@ class NativeHandlersFactoryTests: XCTestCase {
                 "custom_feature_key": "custom_feature_value"
             ]
         ], forKey: customConfigKey)
-        let expectedCustomConfig = customConfig(from: [
+        let expectedCustomConfig = [
             "features": [
                 "historyAutorecording": true,
                 "custom_feature_key": "custom_feature_value"
             ]
-        ])
+        ]
         _ = handlersFactory.configHandle
-        XCTAssertEqual(ConfigFactorySpy.passedCustomConfig, expectedCustomConfig)
+        let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
+        XCTAssertTrue(config == expectedCustomConfig)
     }
     
     func testUserDefaultsOverwritesDefaultCustomConfig() {
@@ -58,19 +60,21 @@ class NativeHandlersFactoryTests: XCTestCase {
                 "historyAutorecording": false
             ]
         ], forKey: customConfigKey)
-        let expectedCustomConfig = customConfig(from: [
+        let expectedCustomConfig = [
             "features": [
                 "historyAutorecording": false
             ]
-        ])
+        ]
         _ = handlersFactory.configHandle
-        XCTAssertEqual(ConfigFactorySpy.passedCustomConfig, expectedCustomConfig)
+        let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
+        XCTAssertTrue(config == expectedCustomConfig)
     }
     
     // MARK: Helpers
     
-    private func customConfig(from dictionary: [String: Any]) -> String {
-        let data = (try? JSONSerialization.data(withJSONObject: dictionary, options: [])) ?? Data()
-        return String(data: data, encoding: .utf8) ?? ""
+    private func customConfig(from string: String?) -> [String: Any] {
+        let stringData = string?.data(using: .utf8) ?? Data()
+        let config = try? JSONSerialization.jsonObject(with: stringData, options: []) as? [String: Any]
+        return config ?? [:]
     }
 }

@@ -2,7 +2,8 @@ import MapboxNavigationNative
 import MapboxDirections
 import Foundation
 
-private let customConfigKey = "com.mapbox.navigation.custom-config"
+public let customConfigKey = "com.mapbox.navigation.custom-config"
+public let customConfigFeaturesKey = "features"
 
 /// Internal class, designed for handling initialisation of various NavigationNative entities.
 ///
@@ -87,18 +88,21 @@ class NativeHandlersFactory {
     
     lazy var configHandle: ConfigHandle = {
         let historyAutorecordingConfig = [
-            "features": [
+            customConfigFeaturesKey: [
                 "historyAutorecording": true
             ]
         ]
         
         var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]
-        customConfig.deepMerge(with: historyAutorecordingConfig)
+        customConfig.deepMerge(with: historyAutorecordingConfig, uniquingKeysWith: { first, _ in first })
         
-        var customConfigJSON = ""
+        let customConfigJSON: String
         if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: customConfig, options: []),
            let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
             customConfigJSON = encodedConfig
+        } else {
+            assertionFailure("Custom config can not be serialized")
+            customConfigJSON = ""
         }
         
         let navigatorConfig = NavigatorConfig(voiceInstructionThreshold: nil,

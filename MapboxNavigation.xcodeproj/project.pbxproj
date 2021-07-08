@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		11D1F89E269601150053A93F /* NativeHandlersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */; };
-		11D1F8A02696048D0053A93F /* Dictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89F2696048D0053A93F /* Dictionary.swift */; };
+		11D1F8A02696048D0053A93F /* Dictionary+DeepMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */; };
+		11D1F8A22696EBD40053A93F /* Dictionary+Equality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */; };
 		160D8279205996DA00D278D6 /* DataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D8278205996DA00D278D6 /* DataCache.swift */; };
 		160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D827A2059973C00D278D6 /* DataCacheTests.swift */; };
 		162039CF216C348500875F5C /* NavigationEventsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162039CE216C348500875F5C /* NavigationEventsManagerTests.swift */; };
@@ -458,7 +459,8 @@
 
 /* Begin PBXFileReference section */
 		11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeHandlersFactoryTests.swift; sourceTree = "<group>"; };
-		11D1F89F2696048D0053A93F /* Dictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Dictionary.swift; sourceTree = "<group>"; };
+		11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+DeepMerge.swift"; sourceTree = "<group>"; };
+		11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Equality.swift"; sourceTree = "<group>"; };
 		160D8278205996DA00D278D6 /* DataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCache.swift; sourceTree = "<group>"; };
 		160D827A2059973C00D278D6 /* DataCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCacheTests.swift; sourceTree = "<group>"; };
 		162039CE216C348500875F5C /* NavigationEventsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEventsManagerTests.swift; sourceTree = "<group>"; };
@@ -1160,6 +1162,7 @@
 			isa = PBXGroup;
 			children = (
 				3A163ADF249901C300D66A0D /* RouteStateTests.swift */,
+				11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1519,7 +1522,7 @@
 				C561735A1F182113005954F6 /* RouteStep.swift */,
 				351927351F0FA072003A702D /* ScreenCapture.swift */,
 				3A8187C824BDAE9C00708F19 /* URLSession.swift */,
-				11D1F89F2696048D0053A93F /* Dictionary.swift */,
+				11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2391,6 +2394,7 @@
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
+				11D1F8A22696EBD40053A93F /* Dictionary+Equality.swift in Sources */,
 				354A9BCD20EA9C8100F03325 /* CoreFeedbackEvent.swift in Sources */,
 				2EFAE005264C1F9200B618C4 /* RoadObjectLocation.swift in Sources */,
 				2BE70189253734A000F46E4E /* TollCollection.swift in Sources */,
@@ -2425,7 +2429,7 @@
 				2BBED92F265E2C7D00F90032 /* NativeHandlersFactory.swift in Sources */,
 				4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */,
 				2E6656F9264EC912009463EE /* Result+Expected.swift in Sources */,
-				11D1F8A02696048D0053A93F /* Dictionary.swift in Sources */,
+				11D1F8A02696048D0053A93F /* Dictionary+DeepMerge.swift in Sources */,
 				3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */,
 				DA5F44AA25F07A6800F573EC /* RoadObjectType.swift in Sources */,
 				2E50E0D2264E468B009D3848 /* RoadObjectMatcherError.swift in Sources */,
