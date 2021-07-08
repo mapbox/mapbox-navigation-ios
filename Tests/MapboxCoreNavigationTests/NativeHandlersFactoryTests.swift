@@ -1,5 +1,7 @@
 import XCTest
 import MapboxNavigationNative
+import MapboxDirections
+import TestHelper
 @testable import MapboxCoreNavigation
 
 private let customConfigKey = "com.mapbox.navigation.custom-config"
@@ -23,6 +25,7 @@ class NativeHandlersFactoryTests: XCTestCase {
     override func setUp() {
         UserDefaults.standard.set(nil, forKey: customConfigKey)
         handlersFactory = NativeHandlersFactory(tileStorePath: "tile store path",
+                                                credentials: Fixture.credentials,
                                                 configFactoryType: ConfigFactorySpy.self)
     }
     
