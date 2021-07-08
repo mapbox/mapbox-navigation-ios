@@ -582,13 +582,13 @@ open class NavigationMapView: UIView {
                 let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                 let gradientStops = routeLineGradient(congestionFeatures,
                                                       fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
+                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: trafficUnknownColor)))
             } else {
                 if showsCongestionForAlternativeRoutes {
                     let gradientStops = routeLineGradient(route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
                                                           fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
                                                           isMain: false)
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: trafficUnknownColor)))
                 } else {
                     lineLayer?.lineColor = .constant(.init(color: routeAlternateColor))
                 }
@@ -644,7 +644,7 @@ open class NavigationMapView: UIView {
             
             if isMainRoute {
                 let gradientStops = routeLineGradient(fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
-                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(gradientStops))
+                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
                 lineLayer?.lineColor = .constant(.init(color: routeAlternateCasingColor))
             }
