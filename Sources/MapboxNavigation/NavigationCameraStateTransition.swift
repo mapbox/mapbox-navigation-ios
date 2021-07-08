@@ -15,7 +15,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     var animatorPitch: BasicCameraAnimator?
     
     // The pixel threshold on the target camera zoom level when the location change to start camera animation.
-    var baseCenterUpdateThreshold: Double = 5.0
+    var baseCenterUpdateThreshold: Double = 2.0
     
     typealias TransitionParameters = (
         cameraOptions: CameraOptions,
@@ -104,25 +104,15 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
     }
     
-    public func updateForFollowing(_ cameraOptions: CameraOptions) {
-        update(cameraOptions, state: .following)
-    }
-    
-    public func updateForOverview(_ cameraOptions: CameraOptions) {
-        var cameraOptions = cameraOptions
-        cameraOptions.bearing = 0.0
-        update(cameraOptions, state: .overview)
-    }
-    
     public func cancelPendingTransition() {
         stopAnimators()
     }
     
-    func update(_ cameraOptions: CameraOptions, state: NavigationCameraState) {
+    public func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {
         guard let mapView = mapView,
               let center = cameraOptions.center,
               let zoom = cameraOptions.zoom,
-              let bearing = cameraOptions.bearing,
+              let bearing = (state == .overview) ? 0.0 : cameraOptions.bearing,
               let pitch = cameraOptions.pitch,
               let anchor = cameraOptions.anchor,
               let padding = cameraOptions.padding else { return }
@@ -136,8 +126,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         // Check whether the location change is larger than a certain threshold when current camera state is following.
         var updateCameraCenter: Bool = true
         if state == .following {
-            let metersPerPxiel = getMetersPerPixelAtLatitude(center.latitude, Double(zoom))
-            let centerUpdateThreshold = baseCenterUpdateThreshold * metersPerPxiel
+            let metersPerPixel = getMetersPerPixelAtLatitude(center.latitude, Double(zoom))
+            let centerUpdateThreshold = baseCenterUpdateThreshold * metersPerPixel
             updateCameraCenter = (mapView.cameraState.center.distance(to: center) > centerUpdateThreshold)
         }
         
@@ -166,10 +156,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         
         // Check whether the bearing change is larger than a certain threshold when current camera state is following.
-        var updateCameraBearing: Bool = true
-        if state == .following {
-            updateCameraBearing = (abs(mapView.cameraState.bearing - bearing) >= 1.0)
-        }
+        let updateCameraBearing = (state == .following) ? (abs(mapView.cameraState.bearing - bearing) >= 1.0) : true
         
         if updateCameraBearing {
             let bearingTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
@@ -184,14 +171,19 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             animatorPitch.stopAnimation()
         }
         
-        let pitchTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-        animatorPitch = mapView.camera.makeAnimator(duration: duration, timingParameters: pitchTimingParameters) { (transition) in
-            transition.pitch.toValue = pitch
-            transition.anchor.toValue = anchor
-            transition.padding.toValue = padding
-        }
+        // Check whether the pitch change is larger than a certain threshold when current camera state is following.
+        let updateCameraPitch = (state == .following) ? (abs(mapView.cameraState.pitch - pitch) >= 1.0) : true
         
-        animatorPitch?.startAnimation()
+        if updateCameraPitch {
+            let pitchTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
+            animatorPitch = mapView.camera.makeAnimator(duration: duration, timingParameters: pitchTimingParameters) { (transition) in
+                transition.pitch.toValue = pitch
+                transition.anchor.toValue = anchor
+                transition.padding.toValue = padding
+            }
+            
+            animatorPitch?.startAnimation()
+        }
     }
     
     func stopAnimators() {
