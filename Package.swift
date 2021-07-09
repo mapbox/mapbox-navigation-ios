@@ -109,12 +109,6 @@ let package = Package(
                 "Info.plist",
                 "MapboxNavigationTests-Bridging.h",
                 "__Snapshots__", // Ignore snapshots folder
-            ],
-            resources: [
-                .process("Fixtures"),
-                .process("ReferenceImages"),
-                .process("ReferenceImages_64"),
-                .process("Fixtures.xcassets"),
             ]
         ),
     ]
