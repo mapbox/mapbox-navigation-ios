@@ -204,20 +204,33 @@ open class PassiveLocationManager: NSObject {
     }
     
     /**
+     Starts recording history for debugging purposes.
+     
+     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
+     */
+    public static func startRecordingHistory() {
+        Navigator.shared.startRecordingHistory()
+    }
+    
+    /**
      A closure to be called when history writing ends.
      
      - parameter historyFileURL: A path to file, where history was written to.
      */
-    public typealias WriteHistoryCompletionHandler = (_ historyFileURL: URL?) -> Void
+    public typealias HistoryFileWritingCompletionHandler = (_ historyFileURL: URL?) -> Void
     
     /**
-     Store history to the directory stored in `PassiveLocationManager.historyDirectoryURL` and asynchronously run a callback
-     when writing finishes.
+     Stops recording history, asynchronously writing any recorded history to a file.
      
-     - parameter completion: A block object to be executed when history writing ends.
+     Upon completion, the completion handler is called with the URL to a file in the directory specified by `PassiveLocationManager.historyDirectoryURL`. The file contains details about the passive location manager’s activity that may be useful to include when reporting an issue to Mapbox.
+     
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
+     
+     - parameter completionHandler: A closure to be executed when the history file is ready.
      */
-    public static func writeHistory(completionHandler: @escaping WriteHistoryCompletionHandler) {
-        Navigator.shared.writeHistory(completionHandler: completionHandler)
+    public static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
+        Navigator.shared.stopRecordingHistory(writingFileWith: completionHandler)
     }
 }
 

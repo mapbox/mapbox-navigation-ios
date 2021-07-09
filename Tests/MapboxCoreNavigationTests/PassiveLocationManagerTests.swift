@@ -104,10 +104,11 @@ class PassiveLocationManagerTests: XCTestCase {
     func testNoHistoryRecording() {
         PassiveLocationManager.historyDirectoryURL = nil
         Navigator._recreateNavigator()
+        PassiveLocationManager.startRecordingHistory()
                 
         let noHistoryExpectation = XCTestExpectation(description: "History should not be written on 'nil' path")
         noHistoryExpectation.isInverted = true
-        PassiveLocationManager.writeHistory { _ in
+        PassiveLocationManager.stopRecordingHistory { _ in
             noHistoryExpectation.fulfill()
         }
         wait(for: [noHistoryExpectation], timeout: 3)
@@ -118,9 +119,10 @@ class PassiveLocationManagerTests: XCTestCase {
         
         PassiveLocationManager.historyDirectoryURL = supportDir
         Navigator._recreateNavigator()
+        PassiveLocationManager.startRecordingHistory()
                 
         let historyExpectation = XCTestExpectation(description: "History should be written to '\(supportDir)'")
-        PassiveLocationManager.writeHistory { url in
+        PassiveLocationManager.stopRecordingHistory { url in
             XCTAssertNotNil(url)
             historyExpectation.fulfill()
         }
