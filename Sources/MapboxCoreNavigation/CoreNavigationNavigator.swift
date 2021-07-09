@@ -111,7 +111,6 @@ class Navigator {
         navigator.setElectronicHorizonObserverFor(self)
         navigator.addObserver(for: self)
         navigator.setFallbackVersionsObserverFor(self)
-        historyRecorder?.startRecording()
     }
     
     private func unsubscribeNavigator() {
@@ -132,19 +131,33 @@ class Navigator {
     private(set) var historyRecorder: HistoryRecorderHandle?
     
     /**
-     Store history to the directory stored in `Navigator.historyDirectoryURL` and asynchronously run a callback
-     when writing finishes.
+     Starts recording history for debugging purposes.
      
-     - parameter completionHandler: A block object to be executed when history dumping ends.
+     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
      */
-    func writeHistory(completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder?.stopRecording { [weak self] (path) in
+    func startRecordingHistory() {
+        historyRecorder?.startRecording()
+    }
+    
+    /**
+     Stops recording history, asynchronously writing any recorded history to a file.
+     
+     Upon completion, the completion handler is called with the URL to a file in the directory specified by `Navigator.historyDirectoryURL`.
+     
+     This method immediately stops recording history, though the file may take longer to prepare.
+     
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
+     
+     - parameter completionHandler: A closure to be executed when the history file is ready.
+     */
+    func stopRecordingHistory(writingFileWith completionHandler: @escaping (URL?) -> Void) {
+        historyRecorder?.stopRecording { (path) in
             if let path = path {
                 completionHandler(URL(fileURLWithPath: path))
             } else {
                 completionHandler(nil)
             }
-            self?.historyRecorder?.startRecording()
         }
     }
     
