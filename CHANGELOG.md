@@ -75,6 +75,7 @@
 * Added `NavigationMapView.init(frame:navigationCameraType:)` to be able to provide type of `NavigationCamera`, which should be used for that specific instance of `NavigationMapView` (either iOS or CarPlay). ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
 * Added `NavigationCamera`, `ViewportDataSourceType`, `ViewportDataSourceDelegate`, `NavigationCameraState` Navigation Viewport Camera APIs. By default Navigation SDK for iOS provides default camera behavior via `NavigationViewportDataSource` and `NavigationCameraStateTransition` classes. If you'd like to override current behavior use `ViewportDataSource` and `CameraStateTransition` protocols for custom behavior. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
 * Added `NavigationViewportDataSourceOptions`, which provides the ability to change specific `CameraOptions` of `NavigationViewportDataSource`. ([#2944](https://github.com/mapbox/mapbox-navigation-ios/pull/2944))
+* Added location, bearing and pitch change thresholds based on the zoom level before starting the camera animation under following state, which reduces the power waste by camera animation. Replaced `CameraStateTransition.updateForFollowing(_:)` and `CameraStateTransition.updateForOverview(_:)` with `CameraStateTransition.update(to:state:)`. ([#3155](https://github.com/mapbox/mapbox-navigation-ios/pull/3155))
 
 ### CarPlay
 
