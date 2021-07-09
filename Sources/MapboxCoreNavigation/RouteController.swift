@@ -273,8 +273,11 @@ open class RouteController: NSObject {
         if willReroute {
             reroute(from: location, along: routeProgress)
         }
-        // Check for faster route proactively (if reroutesProactively is enabled)
-        refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
+
+        if status.routeState != .complete {
+            // Check for faster route proactively (if reroutesProactively is enabled)
+            refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
+        }
     }
     
     private func subscribeNotifications() {
