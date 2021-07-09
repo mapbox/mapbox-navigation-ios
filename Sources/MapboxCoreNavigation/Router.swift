@@ -48,9 +48,15 @@ public protocol Router: CLLocationManagerDelegate {
      Details about the user’s progress along the current route, leg, and step.
      */
     var routeProgress: RouteProgress { get }
-    
-    var indexedRoute: IndexedRoute { get set }
-    
+
+    /// The route along which the user is expected to travel, plus its index in the `RouteResponse`, if applicable.
+    ///
+    /// If you want to update the route use `Router.updateRoute(with:routeOptions:)` method.
+    var indexedRoute: IndexedRoute { get }
+
+    /// The route along which the user is expected to travel.
+    ///
+    /// You can update the route using `Router.updateRoute(with:routeOptions:)`.
     var route: Route { get }
     
     /**
@@ -90,6 +96,22 @@ public protocol Router: CLLocationManagerDelegate {
      This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
      */
     func advanceLegIndex()
+
+    /// Replaces currently active route with the provided `IndexedRoute`.
+    ///
+    /// You can use this method to perform manual reroutes. `delegate` will be notified about route change via
+    /// `RouterDelegate.router(router:willRerouteFrom:)` and `RouterDelegate.router(_:didRerouteAlong:at:proactive:)`
+    /// methods.
+    /// - Parameters:
+    ///   - indexedRoute: A new route along with its index in a `MapboxDirections.RouteResponse`.
+    ///   - routeOptions: Route options used to create the route. You can pass nil to reuse the `RouteOptions` from the
+    ///   currently active route. If the new `indexedRoute` is for a different set of waypoints, `routeOptions` are
+    ///   required.
+    ///
+    ///  - Important: This method can interfere with `Route.reroute(from:along:)` method. Before updating the route
+    ///  manually make sure that there is no reroute running by observing `RouterDelegate.router(_:willRerouteFrom:)`
+    ///  and `router(_:didRerouteAlong:at:proactive:)` `delegate` methods.
+    func updateRoute(with indexedRoute: IndexedRoute, routeOptions: RouteOptions?)
 }
 
 protocol InternalRouter: AnyObject {
