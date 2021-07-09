@@ -214,7 +214,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
      
      - parameter route: The route to follow.
-     - parameter routeindex: The index of the route within the original `RouteController` object.
+     - parameter routeIndex: The index of the route within the original `RouteController` object.
      */
     convenience init(route: Route, routeIndex: Int, routeOptions options: RouteOptions) {
         self.init(route: route, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
