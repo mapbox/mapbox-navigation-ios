@@ -63,7 +63,7 @@ class NavigationViewControllerTests: TestCase {
         super.setUp()
         customRoadName.removeAll()
         initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
-        newRoute = Fixture.route(from: jsonFileName, options: routeOptions)
+        newRoute = Fixture.route(from: "route-with-banner-instructions", options: routeOptions)
         dependencies = {
             UNUserNotificationCenter.replaceWithMock()
 
@@ -278,12 +278,14 @@ class NavigationViewControllerTests: TestCase {
             navigationViewController.navigationMapView?.pointAnnotationManager != nil
         }
         waitForExpectations(timeout: 5, handler: nil)
-        navigationViewController.indexedRoute = (initialRoute, 0)
+        navigationViewController.navigationService.router.updateRoute(with: (initialRoute, 0), routeOptions: nil)
 
         expectation(description: "Annotations loaded") {
             !navigationViewController.navigationMapView!.pointAnnotationManager!.annotations.isEmpty
         }
         waitForExpectations(timeout: 5, handler: nil)
+        XCTAssertEqual(navigationViewController.router.routeProgress.route.routeIdentifier, initialRoute.routeIdentifier)
+
 
         let annotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
 
@@ -297,7 +299,7 @@ class NavigationViewControllerTests: TestCase {
                   "Destination annotation does not exist on map")
         
         // Set the second route.
-        navigationViewController.indexedRoute = (newRoute, 0)
+        navigationViewController.navigationService.router.updateRoute(with: (newRoute, 0), routeOptions: nil)
         
         let newAnnotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
         
@@ -310,6 +312,8 @@ class NavigationViewControllerTests: TestCase {
                     .compactMap { $0.feature.geometry.value as? Turf.Point }
                     .contains { $0.coordinates.distance(to: secondDestination) < 1 },
                   "New destination annotation does not exist on map")
+        XCTAssertEqual(navigationViewController.router.routeProgress.route.routeIdentifier,
+                       newRoute.routeIdentifier)
     }
     
     func testPuck3DLayerPosition() {
