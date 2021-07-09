@@ -15,7 +15,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     var animatorPitch: BasicCameraAnimator?
     
     // The pixel threshold on the target camera zoom level when the location change to start camera animation.
-    var baseCenterUpdateThreshold: Double = 2.0
+    var centerUpdatePixelThreshold: Double = 2.0
     
     typealias TransitionParameters = (
         cameraOptions: CameraOptions,
@@ -127,7 +127,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         var updateCameraCenter: Bool = true
         if state == .following {
             let metersPerPixel = getMetersPerPixelAtLatitude(center.latitude, Double(zoom))
-            let centerUpdateThreshold = baseCenterUpdateThreshold * metersPerPixel
+            let centerUpdateThreshold = centerUpdatePixelThreshold * metersPerPixel
             updateCameraCenter = (mapView.cameraState.center.distance(to: center) > centerUpdateThreshold)
         }
         
