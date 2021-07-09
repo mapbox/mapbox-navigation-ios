@@ -5,7 +5,7 @@ import MapboxDirections
  Delegate, which is used to control behavior based on certain actions from the user when performing search on CarPlay.
  */
 @available(iOS 12.0, *)
-public protocol CarPlaySearchControllerDelegate: AnyObject, CPSearchTemplateDelegate {
+public protocol CarPlaySearchControllerDelegate: CPSearchTemplateDelegate {
     
     /**
      Method, which is called whenever user selects search result.
