@@ -11,6 +11,10 @@ extension DirectionsCredentials {
     static var mocked: DirectionsCredentials {
         return .init(accessToken: .mockedAccessToken, host: nil)
     }
+
+    static func injectSharedToken(_ accessToken: String) {
+        UserDefaults.standard.set(accessToken, forKey: "MBXAccessToken")
+    }
 }
 
 extension String {

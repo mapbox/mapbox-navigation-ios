@@ -1,11 +1,11 @@
 import XCTest
 import Quick
 import Nimble
-import MapboxDirections
 import MapboxMaps
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
+@testable import MapboxDirections
 
 class LeaksSpec: QuickSpec {
     lazy var initialRoute: Route = {
@@ -24,6 +24,8 @@ class LeaksSpec: QuickSpec {
     lazy var dummySvc: NavigationService = MapboxNavigationService(route: self.initialRoute, routeIndex: 0, routeOptions: initialOptions, directions: .mocked)
     
     override func spec() {
+        DirectionsCredentials.injectSharedToken(.mockedAccessToken)
+
         describe("RouteVoiceController") {
             let voiceController = LeakTest {
                 return RouteVoiceController(navigationService: self.dummySvc, accessToken: .mockedAccessToken)

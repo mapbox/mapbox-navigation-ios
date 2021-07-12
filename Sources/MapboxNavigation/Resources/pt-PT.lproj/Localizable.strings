@@ -1,6 +1,3 @@
-/* Delimiter between lines in an address when displayed inline */
-"ADDRESS_LINE_SEPARATOR" = ", ";
-
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "Chegou ao destino";
 
@@ -39,9 +36,6 @@
 
 /* Title on rate button in CarPlay */
 "CARPLAY_RATE_TRIP" = "Classificar a sua viagem";
-
-/* Message when search returned zero results in CarPlay */
-"CARPLAY_SEARCH_NO_RESULTS" = "Sem resultados";
 
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "Enviado";

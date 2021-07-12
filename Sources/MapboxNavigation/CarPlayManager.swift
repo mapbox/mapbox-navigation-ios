@@ -228,6 +228,10 @@ public class CarPlayManager: NSObject {
         let route = navigationService.route
         let routeOptions = navigationService.routeProgress.routeOptions
         
+        // Stop the background `PassiveLocationProvider` sending location and heading update `mapView` before turn-by-turn navigation session starts.
+        navigationMapView?.mapView.location.locationProvider.stopUpdatingLocation()
+        navigationMapView?.mapView.location.locationProvider.stopUpdatingHeading()
+        
         var trip = CPTrip(routes: [route], routeOptions: routeOptions, waypoints: routeOptions.waypoints)
         trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
         

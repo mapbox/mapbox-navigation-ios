@@ -92,11 +92,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             switch type {
             case .carPlay:
                 if let followingCarPlayCamera = cameraOptions[CameraOptions.followingCarPlayCamera] {
-                    cameraStateTransition.updateForFollowing(followingCarPlayCamera)
+                    cameraStateTransition.update(to: followingCarPlayCamera, state: .following)
                 }
             case .mobile:
                 if let followingMobileCamera = cameraOptions[CameraOptions.followingMobileCamera] {
-                    cameraStateTransition.updateForFollowing(followingMobileCamera)
+                    cameraStateTransition.update(to: followingMobileCamera, state: .following)
                 }
             }
             break
@@ -105,11 +105,11 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             switch type {
             case .carPlay:
                 if let overviewCarPlayCamera = cameraOptions[CameraOptions.overviewCarPlayCamera] {
-                    cameraStateTransition.updateForOverview(overviewCarPlayCamera)
+                    cameraStateTransition.update(to: overviewCarPlayCamera, state: .overview)
                 }
             case .mobile:
                 if let overviewMobileCamera = cameraOptions[CameraOptions.overviewMobileCamera] {
-                    cameraStateTransition.updateForOverview(overviewMobileCamera)
+                    cameraStateTransition.update(to: overviewMobileCamera, state: .overview)
                 }
             }
             break

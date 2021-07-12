@@ -14,7 +14,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     private var navigationMapView: NavigationMapView {
         return navigationViewData.navigationView.navigationMapView
     }
-    private var router: Router! {
+    private var router: Router {
         navigationViewData.router
     }
     private var topBannerContainerView: BannerContainerView {

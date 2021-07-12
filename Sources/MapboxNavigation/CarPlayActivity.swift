@@ -1,7 +1,6 @@
 /**
  The activity during which a `CPTemplate` is displayed. This enumeration is used to distinguish between different templates during different phases of user interaction.
  */
-@available(iOS 12.0, *)
 public enum CarPlayActivity: Int {
     /**
      The user is browsing the map or searching for a destination.

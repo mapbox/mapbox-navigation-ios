@@ -6,6 +6,20 @@ set -u
 
 function step { >&2 echo -e "\033[1m\033[36m* $@\033[0m"; }
 function finish { >&2 echo -en "\033[0m"; }
+function bump_xcode_proj_versions {
+    xcrun agvtool bump -all
+    xcrun agvtool new-marketing-version "${SHORT_VERSION}"
+}
+function agvtool_on {
+    local PROJ_NAME=$1
+    local TMP_DIR=$(uuidgen)
+    mkdir $TMP_DIR
+    mv *.xcodeproj $TMP_DIR
+    mv $TMP_DIR/$PROJ_NAME ./
+    bump_xcode_proj_versions
+    mv $TMP_DIR/*.xcodeproj ./
+    rm -rf $TMP_DIR
+}
 trap finish EXIT
 
 if [ $# -eq 0 ]; then
@@ -23,8 +37,9 @@ step "Version ${SEM_VERSION}"
 
 step "Updating Xcode targets to version ${SHORT_VERSION}…"
 
-xcrun agvtool bump -all
-xcrun agvtool new-marketing-version "${SHORT_VERSION}"
+# agvtool doesn't work when there are multiple xcodeproj in the directory. So, we temporarily move xcodeproj files aside to fulfill agvtool requirements. 
+agvtool_on MapboxNavigation-SPM.xcodeproj
+agvtool_on MapboxNavigation.xcodeproj
 
 step "Updating CocoaPods podspecs to version ${SEM_VERSION}…"
 

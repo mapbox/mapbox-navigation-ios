@@ -1,11 +1,12 @@
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxMaps
 import CoreLocation
 import UIKit
 
 extension NavigationMapView {
     /// A component meant to assist displaying route line and related items like arrows, waypoints, annotations and other.
-    class RouteOverlayController: NavigationComponent, NavigationComponentDelegate {
+    class RouteOverlayController: NavigationComponent, NavigationComponentDelegate, LocationConsumer {
         
         // MARK: - Properties
         
@@ -20,12 +21,17 @@ extension NavigationMapView {
             navigationViewData.router
         }
         
-        fileprivate var routeLineTracksTraversal: Bool {
+        fileprivate var routeProgress: RouteProgress?
+        
+        var routeLineTracksTraversal: Bool {
             get {
                 navigationMapView.routeLineTracksTraversal
             }
             set {
                 navigationMapView.routeLineTracksTraversal = newValue
+                if newValue {
+                    navigationMapView.mapView.location.addLocationConsumer(newConsumer: self)
+                }
             }
         }
         
@@ -59,6 +65,12 @@ extension NavigationMapView {
             }
         }
         
+        internal func locationUpdate(newLocation: Location) {
+            guard routeLineTracksTraversal, let progress = routeProgress else { return }
+            navigationMapView.updateTraveledRouteLine(newLocation.coordinate)
+            navigationMapView.updateRoute(progress)
+        }
+        
         private func updateMapOverlays(for routeProgress: RouteProgress) {
             if routeProgress.currentLegProgress.followOnStep != nil {
                 navigationMapView.addArrow(route: routeProgress.route,
@@ -75,8 +87,7 @@ extension NavigationMapView {
             navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
             if routeLineTracksTraversal {
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-                navigationMapView.updateTraveledRouteLine(router.location?.coordinate)
-                navigationMapView.updateRoute(routeProgress)
+                self.routeProgress = routeProgress
             }
         }
         
@@ -121,8 +132,7 @@ extension NavigationMapView {
             
             if routeLineTracksTraversal {
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: progress)
-                navigationMapView.updateTraveledRouteLine(location.coordinate)
-                navigationMapView.updateRoute(progress)
+                routeProgress = progress
             }
         }
         
@@ -130,12 +140,16 @@ extension NavigationMapView {
         
         func navigationViewDidLoad(_ view: UIView) {
             navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [self] _ in
-                showRouteIfNeeded()
                 navigationMapView.localizeLabels()
                 navigationMapView.mapView.showsTraffic = false
                 
                 // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
                 // regarding building identification such highlighted building will disappear.
+            }
+            
+            // Route line should be added to `MapView`, when its style changes.
+            navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [self] _ in
+                showRouteIfNeeded()
             }
         }
         

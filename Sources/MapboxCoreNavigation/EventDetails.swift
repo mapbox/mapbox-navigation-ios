@@ -17,6 +17,7 @@ struct PerformanceEventDetails: EventDetails {
     let sessionIdentifier: String
     var counters: [Counter] = []
     var attributes: [Attribute] = []
+    var appMetadata: [String: String?]? = nil
     
     private enum CodingKeys: String, CodingKey {
         case event
@@ -55,16 +56,13 @@ struct PerformanceEventDetails: EventDetails {
 struct NavigationEventDetails: EventDetails {
     let audioType: String = AVAudioSession.sharedInstance().audioType
     let applicationState: UIApplication.State = {
-        var state: UIApplication.State!
         if Thread.isMainThread {
-            state = UIApplication.shared.applicationState
+            return UIApplication.shared.applicationState
         } else {
-            DispatchQueue.main.sync {
-                state = UIApplication.shared.applicationState
+            return DispatchQueue.main.sync {
+                UIApplication.shared.applicationState
             }
         }
-        
-        return state
     }()
     let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
     let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
@@ -116,6 +114,7 @@ struct NavigationEventDetails: EventDetails {
     var rating: Int?
     var comment: String?
     var userId: String?
+    var appMetadata: [String: String?]? = nil
     var feedbackType: String?
     var description: String?
     var screenshot: String?
@@ -126,7 +125,7 @@ struct NavigationEventDetails: EventDetails {
     var totalTimeInForeground: TimeInterval
     var totalTimeInBackground: TimeInterval
     
-    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
+    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool, userInfo: [String: String?]? = nil) {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp ?? nil
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
@@ -136,6 +135,10 @@ struct NavigationEventDetails: EventDetails {
         sessionIdentifier = session.identifier.uuidString
         originalRequestIdentifier = session.originalRoute.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
+        
+        if (userInfo != nil) {
+            appMetadata = userInfo
+        }
                 
         if let location = dataSource.router.rawLocation,
             let coordinates = dataSource.routeProgress.route.shape?.coordinates,
@@ -248,6 +251,7 @@ struct NavigationEventDetails: EventDetails {
         case rating
         case comment
         case userId
+        case appMetadata
         case feedbackType
         case description
         case screenshot
@@ -306,6 +310,7 @@ struct NavigationEventDetails: EventDetails {
         try container.encodeIfPresent(arrivalTimestamp?.ISO8601, forKey: .arrivalTimestamp)
         try container.encodeIfPresent(comment, forKey: .comment)
         try container.encodeIfPresent(userId, forKey: .userId)
+        try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(feedbackType, forKey: .feedbackType)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)

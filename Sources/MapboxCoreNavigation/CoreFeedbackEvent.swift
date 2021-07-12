@@ -9,6 +9,8 @@ class CoreFeedbackEvent: Hashable {
     
     var eventDictionary: [String: Any]
     
+    var appMetadata: [String: String?]? = nil
+    
     init(timestamp: Date, eventDictionary: [String: Any]) {
         self.timestamp = timestamp
         self.eventDictionary = eventDictionary
