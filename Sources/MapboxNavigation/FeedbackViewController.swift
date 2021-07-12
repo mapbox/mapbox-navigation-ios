@@ -138,8 +138,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      Initialize a new FeedbackViewController from a `NavigationEventsManager`.
      */
-    public init(eventsManager: NavigationEventsManager) {
+    public init(eventsManager: NavigationEventsManager, feedbackUUID: UUID? = nil) {
         self.eventsManager = eventsManager
+        self.currentFeedbackUUID = feedbackUUID
         super.init(nibName: nil, bundle: nil)
         commonInit()
     }
@@ -158,7 +159,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         self.modalPresentationStyle = .custom
         self.transitioningDelegate = self
 
-        currentFeedbackUUID = eventsManager?.recordFeedback()
+        if currentFeedbackUUID == nil {
+            currentFeedbackUUID = eventsManager?.recordFeedback()
+        }
     }
     
     override public func viewDidLoad() {
@@ -286,7 +289,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
         let item = sections[indexPath.row]
 
         if detailedFeedbackEnabled, let eventsManager = eventsManager {
-            let feedbackViewController = FeedbackSubtypeViewController(eventsManager: eventsManager, feedbackType: item.feedbackType)
+            let feedbackViewController = FeedbackSubtypeViewController(eventsManager: eventsManager, feedbackType: item.feedbackType, feedbackUUID: currentFeedbackUUID)
 
             guard let parent = presentingViewController else {
                 dismiss(animated: true)

@@ -14,8 +14,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     /**
      Initialize a new FeedbackSubtypeViewController from a `NavigationEventsManager`.
      */
-    public init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType) {
-        super.init(eventsManager: eventsManager)
+    public init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType, feedbackUUID: UUID? = nil) {
+        super.init(eventsManager: eventsManager, feedbackUUID: feedbackUUID)
         self.activeFeedbackType = feedbackType
         reportButton.setBackgroundImage(UIImage(color: #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1)), for: .normal)
         reportButton.layer.cornerRadius = 24
