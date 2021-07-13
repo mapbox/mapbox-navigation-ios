@@ -5,12 +5,20 @@ import MapboxDirections
 extension TilesetDescriptorFactory {
     /**
      Gets TilesetDescriptor which corresponds to current Navigator dataset and the specified `version`.
-     - parameter cacheLocation: A `Location` where cache data is stored.
-     - parameter version: TilesetDescriptor version.
+     - Parameters:
+       - cacheLocation: A `Location` where cache data is stored.
+       - version: TilesetDescriptor version.
+       - completionQueue: A DispatchQueue on which the completion will be called.
+       - completion: A completion that will be used to pass the tileset descriptor.
      */
-    public class func getSpecificVersion(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default, version: String) -> TilesetDescriptor {
+    public class func getSpecificVersion(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default,
+                                         version: String,
+                                         completionQueue: DispatchQueue = .main,
+                                         completion: @escaping (TilesetDescriptor) -> Void) {
         let cacheHandle = NativeHandlersFactory(tileStorePath: cacheLocation.tileStoreURL?.path ?? "").cacheHandle
-        return getSpecificVersion(forCache: cacheHandle, version: version)
+        completionQueue.async {
+            completion(getSpecificVersion(forCache: cacheHandle, version: version))
+        }
     }
 
     /**
