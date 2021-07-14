@@ -62,8 +62,6 @@ class NavigationViewControllerTests: TestCase {
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
-        DirectionsCredentials.injectSharedToken(.mockedAccessToken)
         initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
         newRoute = Fixture.route(from: jsonFileName, options: routeOptions)
         dependencies = {

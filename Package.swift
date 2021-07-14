@@ -73,6 +73,7 @@ let package = Package(
                 "Nimble",
                 "MapboxCoreNavigation",
                 "MapboxNavigation",
+                "MapboxMaps",
             ],
             exclude: ["Info.plist"],
             resources: [

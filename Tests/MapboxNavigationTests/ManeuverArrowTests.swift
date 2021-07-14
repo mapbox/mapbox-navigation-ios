@@ -16,7 +16,6 @@ class ManeuverArrowTests: TestCase {
 
     override func setUp() {
         super.setUp()
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         isRecording = false
         DayStyle().apply()
     }
