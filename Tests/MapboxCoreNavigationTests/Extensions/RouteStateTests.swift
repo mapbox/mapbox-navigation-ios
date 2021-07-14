@@ -1,8 +1,9 @@
 import XCTest
+import TestHelper
 @testable import MapboxNavigationNative
 @testable import MapboxCoreNavigation
 
-class RouteStateTests: XCTestCase {
+class RouteStateTests: TestCase {
     func testDescriptionPropertyReturnsExpectedValue() {
         XCTAssertEqual(RouteState.invalid.description, "invalid")
         XCTAssertEqual(RouteState.initialized.description, "initialized")

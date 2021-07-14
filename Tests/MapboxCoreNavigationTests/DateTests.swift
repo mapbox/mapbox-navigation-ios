@@ -1,7 +1,8 @@
 import XCTest
+import TestHelper
 @testable import MapboxCoreNavigation
 
-class DateTests: XCTestCase {
+class DateTests: TestCase {
     func testISO8601() {
         // https://github.com/mapbox/mapbox-navigation-ios/issues/2327
         let epoch = Date(timeIntervalSinceReferenceDate: 0)

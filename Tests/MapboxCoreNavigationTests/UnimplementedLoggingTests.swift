@@ -1,8 +1,9 @@
 import Foundation
 import XCTest
+import TestHelper
 @testable import MapboxCoreNavigation
 
-final class UnimplementedLoggingTests: XCTestCase {
+final class UnimplementedLoggingTests: TestCase {
     class UnimplementedClass: UnimplementedLogging {
         func func1() {
             logUnimplemented(protocolType: self, level: .default)
