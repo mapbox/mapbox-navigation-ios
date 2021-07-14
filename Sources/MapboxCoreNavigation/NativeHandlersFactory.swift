@@ -78,7 +78,7 @@ class NativeHandlersFactory {
     
     lazy var tilesConfig: TilesConfig = {
         TilesConfig(tilesPath: tileStorePath,
-                    tileStore: TileStore.__create(forPath: tileStorePath),
+                    tileStore: tileStore,
                     inMemoryTileCache: nil,
                     onDiskTileCache: nil,
                     mapMatchingSpatialCache: nil,

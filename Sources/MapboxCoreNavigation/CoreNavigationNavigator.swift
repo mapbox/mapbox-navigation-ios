@@ -84,6 +84,9 @@ class Navigator {
     static var shared: Navigator {
         return _navigator
     }
+
+    /// `True` when `Navigator.shared` requested at least once.
+    static private(set) var isSharedInstanceCreated: Bool = false
     
     // Used in tests to recreate the navigator
     static var _navigator: Navigator = .init()
@@ -108,6 +111,7 @@ class Navigator {
         roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
         
         subscribeNavigator()
+        Self.isSharedInstanceCreated = true
     }
 
     /**
