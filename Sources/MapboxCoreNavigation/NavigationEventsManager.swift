@@ -346,7 +346,7 @@ open class NavigationEventsManager {
         }
     }
     
-    //MARK: - Session State Management
+    // MARK: - Session State Management
     @objc private func didChangeOrientation(_ notification: NSNotification) {
         sessionState?.reportChange(to: UIDevice.current.orientation)
     }
@@ -362,6 +362,7 @@ open class NavigationEventsManager {
         }
         
         sendOutstandingFeedbackEvents(forceAll: true)
+        Thread.sleep(forTimeInterval: 3) // block main thread until queued events are sent to the server
     }
     
     func reportReroute(progress: RouteProgress, proactive: Bool) {
