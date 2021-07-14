@@ -49,7 +49,7 @@ extension UNUserNotificationCenter {
     }
 }
 
-class NavigationViewControllerTests: XCTestCase {
+class NavigationViewControllerTests: TestCase {
     var customRoadName = [CLLocationCoordinate2D: String?]()
     
     var updatedStyleNumberOfTimes = 0

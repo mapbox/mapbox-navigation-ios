@@ -1,4 +1,5 @@
 import XCTest
+import TestHelper
 import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
@@ -21,7 +22,7 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
     return VisualInstructionBanner(distanceAlongStep: 482.803, primary: primary, secondary: secondary, tertiary: nil, quaternary: nil, drivingSide: .right)
 }
 
-class InstructionsBannerViewIntegrationTests: XCTestCase {
+class InstructionsBannerViewIntegrationTests: TestCase {
     private lazy var reverseDelegate = TextReversingDelegate()
     private lazy var silentDelegate = DefaultBehaviorDelegate()
     
