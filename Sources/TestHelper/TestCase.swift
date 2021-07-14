@@ -1,6 +1,9 @@
 import Foundation
 import XCTest
 @testable import MapboxDirections
+#if canImport(MapboxMaps)
+import MapboxMaps
+#endif
 
 /// Base Mapbox XCTestCase class with common setup logic
 open class TestCase: XCTestCase {
@@ -18,6 +21,9 @@ open class TestCase: XCTestCase {
         isInitializationCompleted = true
 
         DirectionsCredentials.injectSharedToken(.mockedAccessToken)
+        #if canImport(MapboxMaps)
+        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
+        #endif
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationWhenInUseUsageDescription")
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationAlwaysAndWhenInUseUsageDescription")
     }

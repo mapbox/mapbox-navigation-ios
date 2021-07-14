@@ -21,8 +21,6 @@ class CarPlayManagerTests: TestCase {
 
     override func setUp() {
         super.setUp()
-        DirectionsCredentials.injectSharedToken(.mockedAccessToken)
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         eventsManagerSpy = NavigationEventsManagerSpy()
         manager = CarPlayManager(directions: .mocked, eventsManager: eventsManagerSpy, carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         searchController = CarPlaySearchController()
@@ -257,7 +255,6 @@ import Nimble
 @available(iOS 12.0, *)
 class CarPlayManagerSpec: QuickSpec {
     override func spec() {
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         var manager: CarPlayManager?
         var delegate: TestCarPlayManagerDelegate?
 

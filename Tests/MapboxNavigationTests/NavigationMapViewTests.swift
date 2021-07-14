@@ -20,7 +20,6 @@ class NavigationMapViewTests: TestCase {
     
     override func setUp() {
         super.setUp()
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
     }
     
