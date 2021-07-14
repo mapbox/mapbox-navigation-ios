@@ -393,20 +393,6 @@ open class NavigationMapView: UIView {
         }
     }
     
-    // MARK: - Overridden methods
-    
-    open override func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        
-        // TODO: Verify that image is correctly drawn when `NavigationMapView` is created in storyboard.
-        let image = UIImage(named: "feedback-map-error", in: .mapboxNavigation, compatibleWith: nil)
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .center
-        imageView.backgroundColor = .gray
-        imageView.frame = bounds
-        addSubview(imageView)
-    }
-    
     @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {
         mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
