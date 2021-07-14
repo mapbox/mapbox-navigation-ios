@@ -1,5 +1,6 @@
 import Foundation
 import XCTest
+import TestHelper
 
 extension XCTestCase {
     enum NavigationTests {
