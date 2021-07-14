@@ -1,9 +1,10 @@
 import XCTest
 import UIKit
+import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class StatusViewTests: XCTestCase {
+class StatusViewTests: TestCase {
     lazy var statusView: StatusView = {
         let view: StatusView = .forAutoLayout()
         view.isHidden = true

@@ -6,7 +6,7 @@ import MapboxCoreNavigation
 import TestHelper
 @testable import MapboxNavigation
 
-class InstructionPresenterTests: XCTestCase {
+class InstructionPresenterTests: TestCase {
     func testExitInstructionProvidesExit() {
         let exitAttribute = VisualInstruction.Component.exit(text: .init(text: "Exit", abbreviation: nil, abbreviationPriority: nil))
         let exitCodeAttribute = VisualInstruction.Component.exitCode(text: .init(text: "123A", abbreviation: nil, abbreviationPriority: nil))

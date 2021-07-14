@@ -14,7 +14,7 @@ import CarPlay
 // This is a bug in XCTest which will hopefully get fixed in an upcoming release.
 
 @available(iOS 12.0, *)
-class CarPlayManagerTests: XCTestCase {
+class CarPlayManagerTests: TestCase {
     var manager: CarPlayManager?
     var searchController: CarPlaySearchController?
     var eventsManagerSpy: NavigationEventsManagerSpy?

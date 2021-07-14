@@ -1,8 +1,9 @@
 import XCTest
 import UIKit
+import TestHelper
 @testable import MapboxNavigation
 
-class UIViewAnimationOptionsTests: XCTestCase {
+class UIViewAnimationOptionsTests: TestCase {
     func testAnimationCurveConversion() {
         let animationCurve = unsafeBitCast(7, to: UIView.AnimationCurve.self)
         let animationOptions = UIView.AnimationOptions(curve: animationCurve)

@@ -1,7 +1,8 @@
 import XCTest
+import TestHelper
 @testable import MapboxNavigation
 
-class ImageCacheTests: XCTestCase {
+class ImageCacheTests: TestCase {
     let cache: ImageCache = ImageCache()
     let asyncTimeout: TimeInterval = 10.0
 
