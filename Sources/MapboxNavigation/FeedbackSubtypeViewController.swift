@@ -15,8 +15,9 @@ class FeedbackSubtypeViewController: FeedbackViewController {
      Initialize a new FeedbackSubtypeViewController from a `NavigationEventsManager`.
      */
     public init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType, feedbackUUID: UUID? = nil) {
-        super.init(eventsManager: eventsManager, feedbackUUID: feedbackUUID)
-        self.activeFeedbackType = feedbackType
+        super.init(eventsManager: eventsManager)
+        activeFeedbackType = feedbackType
+        currentFeedbackUUID = feedbackUUID
         reportButton.setBackgroundImage(UIImage(color: #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1)), for: .normal)
         reportButton.layer.cornerRadius = 24
         reportButton.clipsToBounds = true
@@ -28,6 +29,10 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         reportIssueLabel.text = feedbackType.title
 
         updateButtonTitle()
+    }
+    
+    override func createFeedback() {
+        // do nothing, feedbackUUID should be passed to the initializer
     }
 
     @objc private func reportButtonTapped(_ sender: UIButton) {
