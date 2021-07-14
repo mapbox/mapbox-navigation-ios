@@ -62,7 +62,7 @@ extension NavigationMapView {
 
         public var feature: Turf.Feature? {
             guard let coordinate = annotationPoint else { return nil }
-            var featurePoint = Feature(Point(coordinate))
+            var featurePoint = Turf.Feature(geometry: .point(Point(coordinate)))
             let tailPosition = incidentAngle < 180 ? AnnotationTailPosition.left : AnnotationTailPosition.right
 
             let imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
@@ -105,7 +105,7 @@ extension RouteStep {
     }
 
     var annotationFeature: Turf.Feature {
-        var featurePoint = Feature(Point(maneuverLocation))
+        var featurePoint = Turf.Feature(geometry: .point(Point(maneuverLocation)))
 
         let tailPosition = NavigationMapView.AnnotationTailPosition.center
 

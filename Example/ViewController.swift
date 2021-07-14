@@ -453,7 +453,7 @@ class ViewController: UIViewController {
                                            completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
-        activeNavigationViewController?.navigationMapView?.showIntersectionAnnotations = true
+        activeNavigationViewController?.navigationMapView?.showIntersectionAnnotations = false
         
         present(navigationViewController, animated: true) {
             completion?()

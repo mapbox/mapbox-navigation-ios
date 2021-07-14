@@ -213,6 +213,13 @@ extension AppDelegate: CarPlayManagerDelegate {
             return nil
         }
     }
+
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+
+        if let navigationMapView = navigationViewController.navigationMapView {
+            navigationMapView.showIntersectionAnnotations = true
+        }
+    }
 }
 
 // MARK: - CarPlaySearchControllerDelegate methods

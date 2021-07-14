@@ -1767,14 +1767,14 @@ open class NavigationMapView: UIView {
     }
 }
 
-extension ElectronicHorizon.Edge {
-    var mpp: [ElectronicHorizon.Edge]? {
+extension ElectronicHorizonEdge {
+    var mpp: [ElectronicHorizonEdge]? {
 
         guard level == 0 else { return nil }
 
         var mostProbablePath = [self]
 
-        for child in outletEdges {
+        for child in out {
             if let childMPP = child.mpp {
                 mostProbablePath.append(contentsOf: childMPP)
             }
@@ -1784,9 +1784,9 @@ extension ElectronicHorizon.Edge {
     }
 }
 
-extension ElectronicHorizon.Edge {
+extension ElectronicHorizonEdge {
     func edgeNames(roadGraph: RoadGraph) -> [String] {
-        guard let metadata = roadGraph.edgeMetadata(edgeIdentifier: identifier) else {
+        guard let metadata = roadGraph.edgeMetadata(edgeIdentifier: RoadGraph.Edge.Identifier(id)) else {
             return []
         }
         let names = metadata.names.map { name -> String in
@@ -1807,11 +1807,11 @@ extension ElectronicHorizon.Edge {
 }
 
 struct EdgeIntersection {
-    var root: ElectronicHorizon.Edge
-    var branch: ElectronicHorizon.Edge
-    var rootMetadata: ElectronicHorizon.Edge.Metadata
+    var root: ElectronicHorizonEdge
+    var branch: ElectronicHorizonEdge
+    var rootMetadata: EdgeMetadata
     var rootShape: LineString
-    var branchMetadata: ElectronicHorizon.Edge.Metadata
+    var branchMetadata: EdgeMetadata
     var branchShape: LineString
 
     var coordinate: CLLocationCoordinate2D? {
@@ -1826,24 +1826,10 @@ struct EdgeIntersection {
     }
 
     var wayName: String? {
-        guard let roadName = rootMetadata.names.first else { return nil }
-
-        switch roadName {
-        case .name(let name):
-            return name
-        case .code(let code):
-            return "(\(code))"
-        }
+        return rootMetadata.names.first?.name
     }
     var intersectingWayName: String? {
-        guard let roadName = branchMetadata.names.first else { return nil }
-
-        switch roadName {
-        case .name(let name):
-            return name
-        case .code(let code):
-            return "(\(code))"
-        }
+        return branchMetadata.names.first?.name
     }
 
     var incidentAngle: CLLocationDegrees {
@@ -1865,10 +1851,10 @@ class AnnotationCacheEntry: Equatable, Hashable {
     var wayname: String
     var coordinate: CLLocationCoordinate2D
     var intersection: EdgeIntersection?
-    var feature: Feature
+    var feature: Turf.Feature
     var lastAccessTime: Date
 
-    init(coordinate: CLLocationCoordinate2D, wayname: String, intersection: EdgeIntersection? = nil, feature: Feature) {
+    init(coordinate: CLLocationCoordinate2D, wayname: String, intersection: EdgeIntersection? = nil, feature: Turf.Feature) {
         self.wayname = wayname
         self.coordinate = coordinate
         self.intersection = intersection
@@ -1902,7 +1888,7 @@ class AnnotationCache {
         cachePruningTimer = nil
     }
 
-    func setValue(feature: Feature, coordinate: CLLocationCoordinate2D, intersection: EdgeIntersection?, for wayname: String) {
+    func setValue(feature: Turf.Feature, coordinate: CLLocationCoordinate2D, intersection: EdgeIntersection?, for wayname: String) {
         entries.insert(AnnotationCacheEntry(coordinate: coordinate, wayname: wayname, intersection: intersection, feature: feature))
     }
 
