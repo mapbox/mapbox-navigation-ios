@@ -21,47 +21,15 @@ class Navigator {
      */
     static var tilesURL: URL? = nil
     
-    /**
-     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
-     
-     Setting `nil` disables history recording. Defaults to `nil`.
-     */
-    static var historyDirectoryURL: URL? = nil
-    
-    /**
-     Store history to the directory stored in `Navigator.historyDirectoryURL` and asynchronously run a callback
-     when writing finishes.
-     
-     - parameter completionHandler: A block object to be executed when history dumping ends.
-     */
-    func writeHistory(completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder?.stopRecording { [weak self] (path) in
-            if let path = path {
-                completionHandler(URL(fileURLWithPath: path))
-            } else {
-                completionHandler(nil)
-            }
-            self?.historyRecorder?.startRecording()
-        }
-    }
-    
-    private(set) var historyRecorder: HistoryRecorderHandle?
-    
     private(set) var navigator: MapboxNavigationNative.Navigator
     
     private(set) var cacheHandle: CacheHandle
-    
-    private(set) var roadGraph: RoadGraph
     
     lazy var routerInterface: MapboxNavigationNative.RouterInterface = {
         return MapboxNavigationNative.RouterFactory.build(for: .hybrid,
                                                           cache: cacheHandle,
                                                           historyRecorder: historyRecorder)
     }()
-
-    private(set) var roadObjectStore: RoadObjectStore
-
-    private(set) var roadObjectMatcher: RoadObjectMatcher
 
     private(set) var tileStore: TileStore
     
@@ -155,6 +123,42 @@ class Navigator {
         navigator.removeObserver(for: self)
         navigator.setFallbackVersionsObserverFor(nil)
     }
+    
+    // MARK: History
+    
+    /**
+     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
+     
+     Setting `nil` disables history recording. Defaults to `nil`.
+     */
+    static var historyDirectoryURL: URL? = nil
+    
+    private(set) var historyRecorder: HistoryRecorderHandle?
+    
+    /**
+     Store history to the directory stored in `Navigator.historyDirectoryURL` and asynchronously run a callback
+     when writing finishes.
+     
+     - parameter completionHandler: A block object to be executed when history dumping ends.
+     */
+    func writeHistory(completionHandler: @escaping (URL?) -> Void) {
+        historyRecorder?.stopRecording { [weak self] (path) in
+            if let path = path {
+                completionHandler(URL(fileURLWithPath: path))
+            } else {
+                completionHandler(nil)
+            }
+            self?.historyRecorder?.startRecording()
+        }
+    }
+    
+    // MARK: Electronic horizon
+    
+    private(set) var roadGraph: RoadGraph
+
+    private(set) var roadObjectStore: RoadObjectStore
+
+    private(set) var roadObjectMatcher: RoadObjectMatcher
      
     private func setupElectronicHorizonOptions() {
         let nativeOptions = electronicHorizonOptions.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
