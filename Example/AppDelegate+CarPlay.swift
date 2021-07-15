@@ -55,7 +55,7 @@ extension AppDelegate: CPApplicationDelegate {
 extension AppDelegate: CarPlayManagerDelegate {
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
-                        navigationServiceAlong route: Route,
+                        navigationServiceAlong routeResponse: RouteResponse,
                         routeIndex: Int,
                         routeOptions: RouteOptions,
                         desiredSimulationMode: SimulationMode) -> NavigationService {
@@ -65,7 +65,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             return navigationService
         }
         
-        return MapboxNavigationService(route: route,
+        return MapboxNavigationService(routeResponse: routeResponse,
                                        routeIndex: routeIndex,
                                        routeOptions: routeOptions,
                                        simulating: desiredSimulationMode)

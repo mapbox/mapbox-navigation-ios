@@ -32,18 +32,15 @@ open class RouteController: NSObject {
         return Navigator.shared.tileStore
     }
     
-    public var indexedRoute: IndexedRoute {
-        get {
-            return routeProgress.indexedRoute
-        }
-        set {
-            routeProgress = RouteProgress(route: newValue.0, routeIndex: newValue.1, options: routeProgress.routeOptions)
-            updateNavigator(with: routeProgress)
-        }
+    public var route: Route {
+        return routeProgress.route
     }
     
-    public var route: Route {
-        return indexedRoute.0
+    public var indexedRouteResponse: IndexedRouteResponse {
+        didSet {
+            routeProgress = RouteProgress(route: indexedRouteResponse.routeResponse.routes![indexedRouteResponse.routeIndex], options: routeProgress.routeOptions)
+            updateNavigator(with: routeProgress)
+        }
     }
     
     private var _routeProgress: RouteProgress {
@@ -155,11 +152,12 @@ open class RouteController: NSObject {
         return snappedLocation ?? rawLocation
     }
     
-    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
+    required public init(along routeResponse: RouteResponse, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
         self.directions = directions
         Navigator.credentials = directions.credentials
         Navigator.tilesURL = tileStoreLocation.tileStoreURL
-        self._routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: options)
+        self.indexedRouteResponse = (routeResponse, routeIndex)
+        self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -541,7 +539,7 @@ extension RouteController: Router {
             case let .success(response):
                 guard let route = response.routes?.first else { return }
                 guard case let .route(routeOptions) = response.options else { return } //TODO: Can a match hit this codepoint?
-                strongSelf._routeProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions, legIndex: 0)
+                strongSelf._routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0)
                 strongSelf._routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.announce(reroute: route, at: location, proactive: false)
                 

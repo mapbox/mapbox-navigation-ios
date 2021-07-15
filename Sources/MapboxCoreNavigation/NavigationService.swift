@@ -57,14 +57,14 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     var eventsManager: NavigationEventsManager { get }
     
     /**
-     The route along which the user is expected to travel, plus its index in the `RouteResponse`, if applicable.
-     */
-    var indexedRoute: IndexedRoute { get set }
-    
-    /**
      The route along which the user is expected to travel.
      */
-    var route: Route { get }
+    var route: Route? { get }
+    
+    /**
+     The `RouteResponse` object containing active route, plus its index in this `RouteResponse`, if applicable.
+     */
+    var indexedRouteResponse: IndexedRouteResponse { get set }
     
     /**
      The simulation mode of the service.
@@ -213,17 +213,17 @@ public class MapboxNavigationService: NSObject, NavigationService {
     /**
      Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
      
-     - parameter route: The route to follow.
-     - parameter routeIndex: The index of the route within the original `RouteController` object.
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      */
-    convenience init(route: Route, routeIndex: Int, routeOptions options: RouteOptions) {
-        self.init(route: route, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
+    convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions options: RouteOptions) {
+        self.init(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
     
     /**
      Intializes a new `NavigationService`.
      
-     - parameter route: The route to follow.
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter directions: The Directions object that created `route`.
      - parameter locationSource: An optional override for the default `NaviationLocationManager`.
@@ -232,7 +232,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter routerType: An optional router type to use for traversing the route.
      - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      */
-    required public init(route: Route,
+    required public init(routeResponse: RouteResponse,
                          routeIndex: Int,
                          routeOptions: RouteOptions,
                          directions: Directions? = nil,
@@ -253,7 +253,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        _router = routerType.init(along: route, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self, tileStoreLocation: tileStoreLocation)
+        _router = routerType.init(along: routeResponse, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self, tileStoreLocation: tileStoreLocation)
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
@@ -310,25 +310,25 @@ public class MapboxNavigationService: NSObject, NavigationService {
         simulatedLocationSource = nil
         delegate?.navigationService(self, didEndSimulating: progress, becauseOf: intent)
     }
-    
-    public var indexedRoute: IndexedRoute {
-        get {
-            return router.indexedRoute
-        }
-        set {
-            router.indexedRoute = newValue
-        }
+        
+    public var route: Route? {
+        router.route
     }
     
-    public var route: Route {
-        return indexedRoute.0
+    public var indexedRouteResponse: IndexedRouteResponse {
+        get {
+            router.indexedRouteResponse
+        }
+        set {
+            router.indexedRouteResponse = newValue
+        }
     }
     
     public func start() {
         // Jump to the first coordinate on the route if the location source does
         // not yet have a fixed location.
         if router.location == nil,
-            let coordinate = route.shape?.coordinates.first {
+            let coordinate = route?.shape?.coordinates.first {
             let location = CLLocation(coordinate: coordinate, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, course: -1, speed: 0, timestamp: Date())
             router.locationManager?(nativeLocationSource, didUpdateLocations: [location])
         }
