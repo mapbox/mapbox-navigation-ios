@@ -430,13 +430,10 @@ public class CarPlayNavigationViewController: UIViewController {
             self?.carInterfaceController.popTemplate(animated: true)
             
             // TODO: Fix this Demeter violation with proper encapsulation
-            guard let uuid = self?.navigationService.eventsManager.recordFeedback() else { return }
+            guard let feedback = self?.navigationService.eventsManager.createFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
             guard let feedbackItem = foundItem.first else { return }
-            self?.navigationService.eventsManager.updateFeedback(uuid: uuid,
-                                                                 type: feedbackItem.feedbackType,
-                                                                 source: .user,
-                                                                 description: nil)
+            self?.navigationService.eventsManager.sendFeedback(feedback, type: feedbackItem.feedbackType)
             
             let dismissTitle = NSLocalizedString("CARPLAY_DISMISS",
                                                  bundle: .mapboxNavigation,
