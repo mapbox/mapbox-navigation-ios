@@ -194,6 +194,8 @@ open class NavigationEventsManager {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
         }
         
+        event?.description = description
+        event?.userId = UIDevice.current.identifierForVendor?.uuidString
         event?.feedbackType = type.description
         event?.event = MMEEventTypeNavigationFeedback
         event?.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
