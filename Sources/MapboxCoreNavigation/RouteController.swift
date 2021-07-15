@@ -432,31 +432,7 @@ open class RouteController: NSObject {
         updateRouteLeg(to: routeProgress.legIndex + 1)
     }
     
-    /**
-     Path to the directory where history could be stored when `RouteController.writeHistory(completionHandler:)` is called.
-     */
-    public static var historyDirectoryURL: URL? = nil {
-        didSet {
-            Navigator.historyDirectoryURL = historyDirectoryURL
-        }
-    }
-    
-    /**
-     A closure to be called when history writing ends.
-     
-     - parameter historyFileURL: A path to file, where history was written to.
-     */
-    public typealias WriteHistoryCompletionHandler = (_ historyFileURL: URL?) -> Void
-    
-    /**
-     Store history to the directory stored in `RouteController.historyDirectoryURL` and asynchronously run a callback
-     when writing finishes.
-     
-     - parameter completionHandler: A block object to be executed when history writing ends.
-     */
-    public static func writeHistory(completionHandler: @escaping WriteHistoryCompletionHandler) {
-        Navigator.shared.writeHistory(completionHandler: completionHandler)
-    }
+    // MARK: Accessing Relevant Routing Data
     
     /**
      A custom configuration for electronic horizon observations.
@@ -485,6 +461,34 @@ open class RouteController: NSObject {
     /// The road object matcher that allows to match user-defined road objects.
     public var roadObjectMatcher: RoadObjectMatcher {
         return Navigator.shared.roadObjectMatcher
+    }
+    
+    // MARK: Recording History to Diagnose Problems
+    
+    /**
+     Path to the directory where history could be stored when `RouteController.writeHistory(completionHandler:)` is called.
+     */
+    public static var historyDirectoryURL: URL? = nil {
+        didSet {
+            Navigator.historyDirectoryURL = historyDirectoryURL
+        }
+    }
+    
+    /**
+     A closure to be called when history writing ends.
+     
+     - parameter historyFileURL: A path to file, where history was written to.
+     */
+    public typealias WriteHistoryCompletionHandler = (_ historyFileURL: URL?) -> Void
+    
+    /**
+     Store history to the directory stored in `RouteController.historyDirectoryURL` and asynchronously run a callback
+     when writing finishes.
+     
+     - parameter completionHandler: A block object to be executed when history writing ends.
+     */
+    public static func writeHistory(completionHandler: @escaping WriteHistoryCompletionHandler) {
+        Navigator.shared.writeHistory(completionHandler: completionHandler)
     }
 }
 

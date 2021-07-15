@@ -72,35 +72,6 @@ open class PassiveLocationManager: NSObject {
     public func startUpdatingLocation() {
         systemLocationManager.startUpdatingLocation()
     }
-
-    /**
-     A custom configuration for electronic horizon observations.
-     
-     Set this property to `nil` to use the default configuration.
-     */
-    public var electronicHorizonOptions: ElectronicHorizonOptions? {
-        get {
-            Navigator.shared.electronicHorizonOptions
-        }
-        set {
-            Navigator.shared.electronicHorizonOptions = newValue
-        }
-    }
-    
-    /// The road graph that is updated as the passive location manager tracks the user’s location.
-    public var roadGraph: RoadGraph {
-        return Navigator.shared.roadGraph
-    }
-    
-    /// The road object store that is updated as the passive location manager tracks the user’s location.
-    public var roadObjectStore: RoadObjectStore {
-        return Navigator.shared.roadObjectStore
-    }
-
-    /// The road object matcher that allows to match user-defined road objects.
-    public var roadObjectMatcher: RoadObjectMatcher {
-        return Navigator.shared.roadObjectMatcher
-    }
     
     var lastRawLocation: CLLocation?
     
@@ -189,6 +160,39 @@ open class PassiveLocationManager: NSObject {
     private func unsubscribeNotifications() {
         NotificationCenter.default.removeObserver(self)
     }
+    
+    // MARK: Accessing Relevant Routing Data
+    
+    /**
+     A custom configuration for electronic horizon observations.
+     
+     Set this property to `nil` to use the default configuration.
+     */
+    public var electronicHorizonOptions: ElectronicHorizonOptions? {
+        get {
+            Navigator.shared.electronicHorizonOptions
+        }
+        set {
+            Navigator.shared.electronicHorizonOptions = newValue
+        }
+    }
+    
+    /// The road graph that is updated as the passive location manager tracks the user’s location.
+    public var roadGraph: RoadGraph {
+        return Navigator.shared.roadGraph
+    }
+    
+    /// The road object store that is updated as the passive location manager tracks the user’s location.
+    public var roadObjectStore: RoadObjectStore {
+        return Navigator.shared.roadObjectStore
+    }
+
+    /// The road object matcher that allows to match user-defined road objects.
+    public var roadObjectMatcher: RoadObjectMatcher {
+        return Navigator.shared.roadObjectMatcher
+    }
+    
+    // MARK: Recording History to Diagnose Problems
     
     /**
      Path to the directory where history could be stored when `PassiveLocationManager.writeHistory(completionHandler:)` is called.
