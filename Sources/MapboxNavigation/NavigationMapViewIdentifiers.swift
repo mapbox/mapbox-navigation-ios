@@ -16,6 +16,7 @@ extension NavigationMapView {
         static let buildingExtrusionLayer = "\(identifier)_buildingExtrusionLayer"
         static let routeDurationAnnotationsLayer: String = "\(identifier)_routeDurationAnnotationsLayer"
         static let puck2DLayer: String = "puck"
+        static let puck3DLayer: String = "puck-model-layer"
     }
     
     struct SourceIdentifier {

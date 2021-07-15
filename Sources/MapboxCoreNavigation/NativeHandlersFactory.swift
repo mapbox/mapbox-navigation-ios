@@ -1,6 +1,9 @@
 import MapboxNavigationNative
 import MapboxDirections
+import Foundation
 
+public let customConfigKey = "com.mapbox.navigation.custom-config"
+public let customConfigFeaturesKey = "features"
 
 /// Internal class, designed for handling initialisation of various NavigationNative entities.
 ///
@@ -14,23 +17,28 @@ class NativeHandlersFactory {
     let tilesVersion: String?
     let historyDirectoryURL: URL?
     let targetVersion: String?
+    let configFactoryType: ConfigFactory.Type
     
     init(tileStorePath: String,
          credentials: DirectionsCredentials = Directions.shared.credentials,
          tilesVersion: String? = nil,
          historyDirectoryURL: URL? = nil,
-         targetVersion: String? = nil) {
+         targetVersion: String? = nil,
+         configFactoryType: ConfigFactory.Type = ConfigFactory.self) {
         self.tileStorePath = tileStorePath
         self.credentials = credentials
         self.tilesVersion = tilesVersion
         self.historyDirectoryURL = historyDirectoryURL
         self.targetVersion = targetVersion
+        self.configFactoryType = configFactoryType
     }
     
     // MARK: - Native Handlers
     
     lazy var historyRecorder: HistoryRecorderHandle? = {
-        HistoryRecorderHandle.build(forHistoryDir: historyDirectoryURL?.path ?? "", config: configHandle)
+        historyDirectoryURL.flatMap {
+            HistoryRecorderHandle.build(forHistoryDir: $0.path, config: configHandle)
+        }
     }()
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
@@ -70,7 +78,7 @@ class NativeHandlersFactory {
     
     lazy var tilesConfig: TilesConfig = {
         TilesConfig(tilesPath: tileStorePath,
-                    tileStore: TileStore.__create(forPath: tileStorePath),
+                    tileStore: tileStore,
                     inMemoryTileCache: nil,
                     onDiskTileCache: nil,
                     mapMatchingSpatialCache: nil,
@@ -80,15 +88,21 @@ class NativeHandlersFactory {
     
     lazy var configHandle: ConfigHandle = {
         let historyAutorecordingConfig = [
-            "features": [
+            customConfigFeaturesKey: [
                 "historyAutorecording": true
             ]
         ]
         
-        var customConfig = ""
-        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: historyAutorecordingConfig, options: []),
+        var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]
+        customConfig.deepMerge(with: historyAutorecordingConfig, uniquingKeysWith: { first, _ in first })
+        
+        let customConfigJSON: String
+        if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: customConfig, options: []),
            let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
-            customConfig = encodedConfig
+            customConfigJSON = encodedConfig
+        } else {
+            assertionFailure("Custom config can not be serialized")
+            customConfigJSON = ""
         }
         
         let navigatorConfig = NavigatorConfig(voiceInstructionThreshold: nil,
@@ -97,9 +111,9 @@ class NativeHandlersFactory {
                                               incidentsOptions: nil,
                                               noSignalSimulationEnabled: nil)
         
-        return  ConfigFactory.build(for: settingsProfile,
-                                    config: navigatorConfig,
-                                    customConfig: customConfig)
+        return configFactoryType.build(for: settingsProfile,
+                                       config: navigatorConfig,
+                                       customConfig: customConfigJSON)
     }()
     
     lazy var runloopExecutor: RunLoopExecutorHandle = {

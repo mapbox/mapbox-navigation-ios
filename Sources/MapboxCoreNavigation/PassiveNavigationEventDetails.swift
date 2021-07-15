@@ -1,7 +1,7 @@
 import Foundation
 import CoreLocation
 
-struct FreeDriveEventDetails: NavigationEventDetails {
+struct PassiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?
     let created: Date = Date()
     let sessionIdentifier: String = "session-id" // TODO: create global session

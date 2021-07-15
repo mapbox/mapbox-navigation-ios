@@ -151,6 +151,7 @@ extension NavigationMapView {
      */
     func updateTraveledRouteLine(_ coordinate: CLLocationCoordinate2D?) {
         guard let granularDistances = routeLineGranularDistances,let index = routeRemainingDistancesIndex, let location = coordinate else { return }
+        guard index < granularDistances.distanceArray.endIndex else { return }
         let traveledIndex = granularDistances.distanceArray[index]
         let upcomingPoint = traveledIndex.point
         
@@ -205,27 +206,8 @@ extension NavigationMapView {
         
         let congestionSegments = routeProgress.route.congestionFeatures(legIndex: currentLegIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
         
-        switch userLocationStyle {
-        
-        case .courseView:
-            let startDate = Date()
-            vanishingRouteLineUpdateTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true, block: { timer in
-                let timePassedInMilliseconds = Date().timeIntervalSince(startDate) * 1000
-                // In case if the time was already in the last interval - invalidate the timer and wait for the next routeProgress update.
-                if timePassedInMilliseconds >= 980 {
-                    timer.invalidate()
-                    return
-                }
-                
-                let newFractionTraveled = self.preFractionTraveled + traveledDifference * timePassedInMilliseconds.truncatingRemainder(dividingBy: 1000) / 1000
-                self.updateRouteLine(congestionSegments:congestionSegments, layerIdentifier: mainRouteLayerIdentifier, fractionTraveledUpdate: newFractionTraveled)
-                self.updateRouteLine(layerIdentifier: mainRouteCasingLayerIdentifier, fractionTraveledUpdate: newFractionTraveled)
-            })
-            
-        default:
-            self.updateRouteLine(congestionSegments:congestionSegments, layerIdentifier: mainRouteLayerIdentifier, fractionTraveledUpdate: fractionTraveled)
-            self.updateRouteLine(layerIdentifier: mainRouteCasingLayerIdentifier, fractionTraveledUpdate: fractionTraveled)
-        }
+        updateRouteLine(congestionSegments:congestionSegments, layerIdentifier: mainRouteLayerIdentifier, fractionTraveledUpdate: fractionTraveled)
+        updateRouteLine(layerIdentifier: mainRouteCasingLayerIdentifier, fractionTraveledUpdate: fractionTraveled)
     }
     
     func updateRouteLine(congestionSegments: [Turf.Feature]? = nil, layerIdentifier: String, fractionTraveledUpdate: Double) {
@@ -234,13 +216,13 @@ extension NavigationMapView {
                 try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
                     let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
                                                                         fractionTraveled: fractionTraveledUpdate)
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient))
+                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor))
                 }
             } else {
                 try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
                     let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveledUpdate)
                     
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient))
+                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor))
                 }
             }
         } catch {

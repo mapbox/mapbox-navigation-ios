@@ -3,9 +3,9 @@ import MapboxCoreNavigation
 
 /// Protocol used by `NavigationViewController`'s components to get required data and manipulate it's contents.
 protocol NavigationViewData: AnyObject {
-    var navigationView: NavigationView! { get }
-    var router: Router! { get }
-    var containerViewController: UIViewController! { get }
+    var navigationView: NavigationView { get }
+    var router: Router { get }
+    var containerViewController: UIViewController { get }
 }
 
 /// Protocol for observing basic `ViewController.view` lifecycle events.

@@ -1,6 +1,3 @@
-/* Delimiter between lines in an address when displayed inline */
-"ADDRESS_LINE_SEPARATOR" = "​";
-
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "目的地に到着しました";
 
@@ -39,9 +36,6 @@
 
 /* Title on rate button in CarPlay */
 "CARPLAY_RATE_TRIP" = "乗車の評価を行う";
-
-/* Message when search returned zero results in CarPlay */
-"CARPLAY_SEARCH_NO_RESULTS" = "検索結果がありません";
 
 /* Alert title that shows when feedback has been submitted */
 "CARPLAY_SUBMITTED_FEEDBACK" = "提出済み";

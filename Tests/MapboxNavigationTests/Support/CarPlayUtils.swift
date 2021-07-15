@@ -4,6 +4,7 @@ import CarPlay
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 @testable import MapboxDirections
+import MapboxGeocoder
 import CarPlayTestHelper
 import TestHelper
 
@@ -112,11 +113,14 @@ class CarPlayNavigationViewControllerTestable: CarPlayNavigationViewController {
 }
 
 @available(iOS 12.0, *)
-class TestCarPlaySearchControllerDelegate: CarPlaySearchControllerDelegate {
+class TestCarPlaySearchControllerDelegate: NSObject, CarPlaySearchControllerDelegate {
+    
     public fileprivate(set) var interfaceController: CPInterfaceController?
     public fileprivate(set) var carPlayManager: CarPlayManager?
 
-    func carPlaySearchController(_ searchController: CarPlaySearchController, carPlayManager: CarPlayManager, interfaceController: CPInterfaceController) {
+    func carPlaySearchController(_ searchController: CarPlaySearchController,
+                                 carPlayManager: CarPlayManager,
+                                 interfaceController: CPInterfaceController) {
         self.interfaceController = interfaceController
     }
 
@@ -134,6 +138,26 @@ class TestCarPlaySearchControllerDelegate: CarPlaySearchControllerDelegate {
 
     func popTemplate(animated: Bool) {
         interfaceController?.popTemplate(animated: animated)
+    }
+    
+    var recentSearchItems: [CPListItem]?
+    
+    var recentSearchText: String?
+    
+    func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                        updatedSearchText searchText: String,
+                        completionHandler: @escaping ([CPListItem]) -> Void) {
+        completionHandler([])
+    }
+    
+    func searchTemplate(_ searchTemplate: CPSearchTemplate,
+                        selectedResult item: CPListItem,
+                        completionHandler: @escaping () -> Void) {
+        completionHandler()
+    }
+    
+    func searchResults(with items: [CPListItem], limit: UInt?) -> [CPListItem] {
+        return []
     }
 }
 

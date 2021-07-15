@@ -22,7 +22,7 @@ extension PassiveLocationManager: EventsManagerFreeDriveDataSource {
  */
 public protocol EventsManagerDataSource: AnyObject {
     var routeProgress: RouteProgress { get }
-    var router: Router! { get }
+    var router: Router { get }
     var desiredAccuracy: CLLocationAccuracy { get }
     var locationProvider: NavigationLocationManager.Type { get }
 }
@@ -95,7 +95,7 @@ open class NavigationEventsManager {
         else {
             //we can assert here because if the token was passed in, it would of overriden this closure.
             //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
-            assertionFailure("`accessToken` must be set in the Info.plist as `MGLMapboxAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
+            assertionFailure("`accessToken` must be set in the Info.plist as `MBXAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
             return ""
         }
         return token

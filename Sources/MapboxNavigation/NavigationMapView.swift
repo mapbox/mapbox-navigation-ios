@@ -126,9 +126,49 @@ open class NavigationMapView: UIView {
     public var pointAnnotationManager: PointAnnotationManager?
     
     /**
+     A `UserCourseView` used to indicate the user’s location and course on the map.
+     
+     The `UserCourseView`'s `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
+     */
+    public var userCourseView: UserCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0)) {
+        didSet {
+            oldValue.removeFromSuperview()
+            installUserCourseView()
+        }
+    }
+    
+    /**
+     Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
+     
+     By default, this property is set to `UserLocationStyle.courseView`, the bearing source is location course.
+     */
+    public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
+        didSet {
+            setupUserLocation()
+        }
+    }
+    
+    /**
+     A `TileStore` instance used by map view.
+     */
+    open var mapTileStore: TileStore? {
+        mapView.mapboxMap.resourceOptions.tileStore
+    }
+    
+    /**
      Most recent user location, which is used to place `UserCourseView`.
      */
     var mostRecentUserCourseViewLocation: CLLocation?
+    
+    /**
+     `PointAnnotation`, which should be added to the `MapView` when `PointAnnotationManager` becomes
+     available. Since `PointAnnotationManager` is created only after loading `MapView` style, there
+     is a chance that due to a race condition during `NavigationViewController` creation
+     `NavigationMapView.showWaypoints(on:legIndex:)` will be called before loading style. In such case
+     final destination `PointAnnotation` will be stored in this property and added to the `MapView`
+     later on.
+     */
+    var finalDestinationAnnotation: PointAnnotation? = nil
     
     var routes: [Route]?
     var routePoints: RoutePoints?
@@ -160,42 +200,12 @@ open class NavigationMapView: UIView {
         }
     }
     
-    /**
-     A `UserCourseView` used to indicate the user’s location and course on the map.
-     
-     The `UserCourseView`'s `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
-     */
-    public var userCourseView: UserCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0)) {
-        didSet {
-            oldValue.removeFromSuperview()
-            installUserCourseView()
-        }
-    }
-    
     var simulatesLocation: Bool = true
-    
-    /**
-     Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
-     
-     By default, this property is set to `UserLocationStyle.courseView`.
-     */
-    public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
-        didSet {
-            setupUserLocation()
-        }
-    }
     
     /**
      A manager object, used to init and maintain predictive caching.
      */
     private(set) var predictiveCacheManager: PredictiveCacheManager?
-    
-    /**
-     A `TileStore` instance used by map view.
-     */
-    open var mapTileStore: TileStore? {
-        mapView.mapboxMap.resourceOptions.tileStore
-    }
     
     /**
      Initializes a newly allocated `NavigationMapView` object with the specified frame rectangle.
@@ -262,6 +272,7 @@ open class NavigationMapView: UIView {
                 self.mapView.location.options.puckType = .puck3D(configuration)
             }
         }
+        mapView.location.options.puckBearingSource = .course
     }
     
     deinit {
@@ -330,15 +341,33 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
+            self.moveUserLocation(to: location)
+            
             switch self.userLocationStyle {
-            case .courseView: self.moveUserLocation(to: location)
-            default: break
+            case .courseView:
+                if let locationProvider = self.mapView.location.locationProvider {
+                    self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+                }
+            default:
+                if self.simulatesLocation, let locationProvider = self.mapView.location.locationProvider {
+                    self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+                }
             }
         }
         
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
+            
+            if let finalDestinationAnnotation = self.finalDestinationAnnotation,
+               let pointAnnotationManager = self.pointAnnotationManager {
+                pointAnnotationManager.syncAnnotations([finalDestinationAnnotation])
+                self.delegate?.navigationMapView(self,
+                                                 didAdd: finalDestinationAnnotation,
+                                                 pointAnnotationManager: pointAnnotationManager)
+                
+                self.finalDestinationAnnotation = nil
+            }
         }
         
         addSubview(mapView)
@@ -382,20 +411,6 @@ open class NavigationMapView: UIView {
             predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
                                                             mapOptions: mapOptions)
         }
-    }
-    
-    // MARK: - Overridden methods
-    
-    open override func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        
-        // TODO: Verify that image is correctly drawn when `NavigationMapView` is created in storyboard.
-        let image = UIImage(named: "feedback-map-error", in: .mapboxNavigation, compatibleWith: nil)
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .center
-        imageView.backgroundColor = .gray
-        imageView.frame = bounds
-        addSubview(imageView)
     }
     
     @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {
@@ -463,49 +478,8 @@ open class NavigationMapView: UIView {
                                   direction: cameraOptions.bearing!,
                                   animated: animated,
                                   navigationCameraState: navigationCamera.state)
-        case .puck2D(configuration: _):
-            if simulatesLocation {
-                if !(mapView.location.locationProvider is PassiveLocationProvider) {
-                    mapView.location.locationProvider.stopUpdatingLocation()
-                }
-                if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.puck2DLayer) {
-                    let newLocation: [Double] = [
-                        location.coordinate.latitude,
-                        location.coordinate.longitude,
-                        location.altitude
-                    ]
-                    do {
-                        try mapView.mapboxMap.style.setLayerProperties(for: NavigationMapView.LayerIdentifier.puck2DLayer,
-                                                                       properties: [
-                                                                        "location": newLocation,
-                                                                        "bearing": location.course
-                                                                       ])
-                    } catch {
-                        print("Failed to perform operation while updating 2D puck bearing arrow with error: \(error.localizedDescription).")
-                    }
-                }
-            }
-        case .puck3D(configuration: let configuration):
-            if simulatesLocation {
-                if !(mapView.location.locationProvider is PassiveLocationProvider) {
-                    mapView.location.locationProvider.stopUpdatingLocation()
-                }
-                if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.puck3DSource) {
-                    var model = configuration.model
-                    model.position = [location.coordinate.longitude, location.coordinate.latitude]
-                    if var orientation = model.orientation,
-                       orientation.count > 2 {
-                        orientation[2] = orientation[2] + location.course
-                        model.orientation = orientation
-                    }
-                    
-                    let modelSourceCode = [NavigationMapView.ModelKeyIdentifier.modelSouce: model]
-                    if let data = try? JSONEncoder().encode(modelSourceCode),
-                       let jsonDictionary = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                        try? mapView.mapboxMap.style.setSourceProperty(for: NavigationMapView.SourceIdentifier.puck3DSource, property: "models", value: jsonDictionary)
-                    }
-                }
-            }
+            
+        default: break
         }
     }
     
@@ -614,13 +588,13 @@ open class NavigationMapView: UIView {
                 let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                 let gradientStops = routeLineGradient(congestionFeatures,
                                                       fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
+                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: trafficUnknownColor)))
             } else {
                 if showsCongestionForAlternativeRoutes {
                     let gradientStops = routeLineGradient(route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
                                                           fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
                                                           isMain: false)
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops)))
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: trafficUnknownColor)))
                 } else {
                     lineLayer?.lineColor = .constant(.init(color: routeAlternateColor))
                 }
@@ -676,7 +650,7 @@ open class NavigationMapView: UIView {
             
             if isMainRoute {
                 let gradientStops = routeLineGradient(fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
-                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(gradientStops))
+                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
                 lineLayer?.lineColor = .constant(.init(color: routeAlternateCasingColor))
             }
@@ -764,14 +738,21 @@ open class NavigationMapView: UIView {
         }
 
         if let lastLeg = route.legs.last,
-           let destinationCoordinate = lastLeg.destination?.coordinate,
-           let pointAnnotationManager = pointAnnotationManager {
+           let destinationCoordinate = lastLeg.destination?.coordinate {
             let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
             var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
             destinationAnnotation.image = .default
-            pointAnnotationManager.syncAnnotations([destinationAnnotation])
             
-            delegate?.navigationMapView(self, didAdd: destinationAnnotation, pointAnnotationManager: pointAnnotationManager)
+            // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
+            // and add it only after fully loading `MapView` style.
+            if let pointAnnotationManager = pointAnnotationManager {
+                pointAnnotationManager.syncAnnotations([destinationAnnotation])
+                delegate?.navigationMapView(self,
+                                            didAdd: destinationAnnotation,
+                                            pointAnnotationManager: pointAnnotationManager)
+            } else {
+                finalDestinationAnnotation = destinationAnnotation
+            }
         }
     }
     
@@ -884,7 +865,17 @@ open class NavigationMapView: UIView {
             let shaftLength = max(min(30 * mapView.metersPerPointAtLatitude(latitude: maneuverCoordinate.latitude), 30), 10)
             let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             
+            var puckLayerIdentifier: String?
+            switch userLocationStyle {
+            case .puck2D(configuration: _):
+                puckLayerIdentifier = NavigationMapView.LayerIdentifier.puck2DLayer
+            case .puck3D(configuration: _):
+                puckLayerIdentifier = NavigationMapView.LayerIdentifier.puck3DLayer
+            default: break
+            }
+            
             if shaftPolyline.coordinates.count > 1 {
+                let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
                 let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
                 let minimumZoomLevel: Double = 14.5
                 let shaftStrokeCoordinates = shaftPolyline.coordinates
@@ -906,7 +897,9 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
-                    if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
+                    if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(puckLayer))
+                    } else if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
                         try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
                     } else {
                         try mapView.mapboxMap.style.addLayer(arrowLayer)
@@ -929,7 +922,9 @@ open class NavigationMapView: UIView {
                     
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
-                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: .above(mainRouteLayerIdentifier))
+                    
+                    let arrowStrokeLayerPsoition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
+                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPsoition)
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
@@ -972,7 +967,11 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
-                    try mapView.mapboxMap.style.addLayer(arrowSymbolLayer)
+                    if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
+                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer, layerPosition: .below(puckLayer))
+                    } else {
+                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer)
+                    }
                     try mapView.mapboxMap.style.addLayer(arrowSymbolCasingLayer,
                                                          layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }

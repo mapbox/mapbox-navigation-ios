@@ -1,4 +1,5 @@
 #import "CPMapTemplate+MBTestable.h"
+#import "CPNavigationSessionFake.h"
 #import <objc/runtime.h>
 
 #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 120000
@@ -15,8 +16,7 @@
 #pragma clang diagnostic ignored "-Wobjc-protocol-method-implementation"
 
 - (CPNavigationSession *)startNavigationSessionForTrip:(CPTrip *)trip {
-    NSAssert(FALSE, @"Reimplement without Cedar");
-    return nil;
+    return (id)[[CPNavigationSessionFake alloc] initWithManeuvers:@[]];
 }
 
 #pragma clang diagnostic pop

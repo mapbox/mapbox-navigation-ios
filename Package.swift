@@ -23,11 +23,11 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .exact("2.0.0-beta.5")),
+        .package(name: "MapboxDirections", url: "https://github.com/mapbox/mapbox-directions-swift.git", .exact("2.0.0-beta.6")),
         .package(name: "MapboxGeocoder", url: "https://github.com/mapbox/MapboxGeocoder.swift.git", from: "0.14.0"),
         .package(name: "MapboxMobileEvents", url: "https://github.com/mapbox/mapbox-events-ios.git", from: "1.0.0"),
-        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "54.0.0"),
-        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", .exact("10.0.0-rc.2")),
+        .package(name: "MapboxNavigationNative", url: "https://github.com/mapbox/mapbox-navigation-native-ios.git", from: "56.0.0"),
+        .package(name: "MapboxMaps", url: "https://github.com/mapbox/mapbox-maps-ios.git", .exact("10.0.0-rc.3")),
         .package(name: "Solar", url: "https://github.com/ceeK/Solar.git", from: "2.2.0"),
         .package(name: "MapboxSpeech", url: "https://github.com/mapbox/mapbox-speech-swift.git", from: "2.0.0-alpha.1"),
         .package(name: "Quick", url: "https://github.com/Quick/Quick.git", from: "3.1.2"),
@@ -61,7 +61,10 @@ let package = Package(
             resources: [.copy("MBXInfo.plist")]),
         .target(
             name: "CTestHelper",
-            dependencies: ["MapboxMobileEvents"]),
+            dependencies: [
+                "MapboxMobileEvents",
+                "MapboxCoreNavigation",
+            ]),
         .target(
             name: "TestHelper",
             dependencies: [
@@ -105,16 +108,7 @@ let package = Package(
             exclude: [
                 "Info.plist",
                 "MapboxNavigationTests-Bridging.h",
-                "NavigationViewControllerTests.swift", // Crash on `UNUserNotificationCenter.current()`. This API doesn't work in SPM.
-                "CarPlayManagerTests.swift", // There are issues with setting accessToken
-                "LeaksSpec.swift", // Crash on `UNUserNotificationCenter.current()`. This API doesn't work in SPM.
                 "__Snapshots__", // Ignore snapshots folder
-            ],
-            resources: [
-                .process("Fixtures"),
-                .process("ReferenceImages"),
-                .process("ReferenceImages_64"),
-                .process("Fixtures.xcassets"),
             ]
         ),
     ]

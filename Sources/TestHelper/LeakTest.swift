@@ -11,7 +11,7 @@ public struct LeakTest {
         self.constructor = constructor
     }
     
-    internal func isLeaking() -> Bool {
+    public func isLeaking() -> Bool {
         weak var leaked : AnyObject? = nil
         
         autoreleasepool {

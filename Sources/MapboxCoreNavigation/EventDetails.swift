@@ -70,10 +70,10 @@ extension NavigationEventDetails {
     var applicationState: UIApplication.State {
         var state: UIApplication.State!
         if Thread.isMainThread {
-            state = UIApplication.shared.applicationState
+            return UIApplication.shared.applicationState
         } else {
-            DispatchQueue.main.sync {
-                state = UIApplication.shared.applicationState
+            return DispatchQueue.main.sync {
+                UIApplication.shared.applicationState
             }
         }
 

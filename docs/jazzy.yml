@@ -109,7 +109,10 @@ custom_categories:
       - CarPlayCompassView
       - CarPlayMapViewController
       - CarPlaySearchController
+      - CarPlaySearchControllerDelegate
       - CarPlayConnectionObserver
+      - RecentItem
+      - NavigationGeocodedPlacemark
   - name: Configuration
     children:
       - RouteControllerDeadReckoningTimeInterval
@@ -167,8 +170,8 @@ custom_categories:
     children:
       - ElectronicHorizonOptions
       - RoadGraph
-      - OpenLROprientation
-      - OpenLRStandard
+      - OpenLRIdentifier
+      - OpenLROrientation
       - RoadName
       - RoadObject
       - DistancedRoadObject

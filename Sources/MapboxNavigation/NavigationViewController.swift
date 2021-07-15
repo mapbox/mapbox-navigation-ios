@@ -195,6 +195,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         set {
             navigationMapView?.routeLineTracksTraversal = newValue
+            routeOverlayController?.routeLineTracksTraversal = newValue
         }
     }
 
@@ -319,15 +320,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     // MARK: - NavigationViewData implementation
         
-    var navigationView: NavigationView! {
+    var navigationView: NavigationView {
         return (view as! NavigationView)
     }
     
-    var router: Router! {
+    var router: Router {
         navigationService.router
     }
     
-    var containerViewController: UIViewController! {
+    var containerViewController: UIViewController {
         return self
     }
     
@@ -836,19 +837,24 @@ extension NavigationViewController: NavigationServiceDelegate {
         for component in navigationComponents {
             component.navigationService(service, didBeginSimulating: progress, becauseOf: reason)
         }
+        let simulatedLocationProvider = NavigationLocationProvider(locationManager: SimulatedLocationManager(routeProgress: progress))
+        navigationMapView?.mapView.location.overrideLocationProvider(with: simulatedLocationProvider)
     }
     
     public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         for component in navigationComponents {
             component.navigationService(service, willEndSimulating: progress, becauseOf: reason)
         }
-        navigationMapView?.simulatesLocation = true
+        navigationMapView?.simulatesLocation = false
     }
     
     public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         for component in navigationComponents {
             component.navigationService(service, didEndSimulating: progress, becauseOf: reason)
         }
+        navigationMapView?.mapView.location.overrideLocationProvider(with: AppleLocationProvider())
+        navigationMapView?.mapView.location.locationProvider.startUpdatingHeading()
+        navigationMapView?.mapView.location.locationProvider.startUpdatingLocation()
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
@@ -958,7 +964,10 @@ extension NavigationViewController: StyleManagerDelegate {
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
-        // TODO: Implement the ability to reload style.
+        guard let mapboxMap = navigationMapView?.mapView.mapboxMap,
+              let styleURI = mapboxMap.style.uri else { return }
+
+        mapboxMap.loadStyleURI(styleURI)
     }
 }
 

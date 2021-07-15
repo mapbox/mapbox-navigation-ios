@@ -10,10 +10,10 @@ extension Expression {
         }
     }
     
-    static func routeLineGradientExpression(_ gradientStops: [Double: UIColor]) -> Expression {
-        return Exp(.interpolate) {
-            Exp(.linear)
+    static func routeLineGradientExpression(_ gradientStops: [Double: UIColor], lineBaseColor: UIColor) -> Expression {
+        return Exp(.step) {
             Exp(.lineProgress)
+            lineBaseColor
             gradientStops
         }
     }
