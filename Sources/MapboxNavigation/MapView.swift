@@ -38,7 +38,7 @@ extension MapView {
      */
     func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
         if sourceType == "vector" {
-            return self.tileSetIdentifiers(sourceIdentifier)
+            return tileSetIdentifiers(sourceIdentifier)
         }
         
         return []
@@ -54,7 +54,7 @@ extension MapView {
         return Set(mapboxMap.style.allSourceIdentifiers.filter {
             $0.type.rawValue == "vector"
         }.filter {
-            return self.tileSetIdentifiers($0.id).contains(tileSetIdentifier)
+            tileSetIdentifiers($0.id).contains(tileSetIdentifier)
         }.map {
             $0.id
         })
