@@ -486,7 +486,7 @@ open class RouteController: NSObject {
     /**
      A closure to be called when history writing ends.
      
-     - parameter historyFileURL: A path to file, where history was written to.
+     - parameter historyFileURL: A URL to the file that contains history data. This argument is `nil` if no history data has been written because history recording has not yet begun. Use the `startRecordingHistory()` method to begin recording before attempting to write a history file.
      */
     public typealias HistoryFileWritingCompletionHandler = (_ historyFileURL: URL?) -> Void
     
