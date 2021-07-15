@@ -8,25 +8,15 @@ import MapboxCoreNavigation
  An extension on `MapView` that allows for toggling traffic on a map style that contains a [Mapbox Traffic source](https://docs.mapbox.com/vector-tiles/mapbox-traffic-v1/).
  */
 extension MapView {
-    /**
-     Returns a set of source identifiers for tilesets that are or include the Mapbox Incidents source.
-     */
-    func sourceIdentifiers(_ tileSetIdentifier: String) -> Set<String> {
-        return Set(mapboxMap.style.allSourceIdentifiers.filter {
-            $0.type.rawValue == "vector"
-        }.map {
-            $0.id
-        })
-    }
     
     /**
-     Method, which returns identifiers of the tile sets that make up specific source.
+     Returns a list of tile set identifiers for specific `sourceIdentifier`.
      
-     This array contains multiple entries for a composited source. This property is empty for non-Mapbox-hosted tile sets and sources with type other than `vector`.
+     - parameter sourceIdentifier: Identifier of the source, which will be searched for in current style of the `MapView`.
+     - returns: List of tile set identifiers.
      */
-    func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
-        if sourceType == "vector",
-           let properties = try? mapboxMap.style.sourceProperties(for: sourceIdentifier),
+    func tileSetIdentifiers(_ sourceIdentifier: String) -> [String] {
+        if let properties = try? mapboxMap.style.sourceProperties(for: sourceIdentifier),
            let url = properties["url"] as? String,
            let configurationURL = URL(string: url),
            configurationURL.scheme == "mapbox",
@@ -35,6 +25,39 @@ extension MapView {
         }
         
         return []
+    }
+    
+    /**
+     Returns a list of identifiers of the tile sets that make up specific source type.
+     
+     This array contains multiple entries for a composited source. This property is empty for non-Mapbox-hosted tile sets and sources with type other than `vector`.
+     
+     - parameter sourceIdentifier: Identifier of the source.
+     - parameter sourceType: Type of the source (e.g. `vector`).
+     - returns: List of tile set identifiers.
+     */
+    func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
+        if sourceType == "vector" {
+            return self.tileSetIdentifiers(sourceIdentifier)
+        }
+        
+        return []
+    }
+    
+    /**
+     Returns a set of source identifiers for tilesets that are or include the Mapbox Incidents source.
+     
+     - parameter tileSetIdentifier: Identifier of the tile set in the form `user.tileset`.
+     - returns: Set of source identifiers.
+     */
+    func sourceIdentifiers(_ tileSetIdentifier: String) -> Set<String> {
+        return Set(mapboxMap.style.allSourceIdentifiers.filter {
+            $0.type.rawValue == "vector"
+        }.filter {
+            return self.tileSetIdentifiers($0.id).contains(tileSetIdentifier)
+        }.map {
+            $0.id
+        })
     }
     
     /**
