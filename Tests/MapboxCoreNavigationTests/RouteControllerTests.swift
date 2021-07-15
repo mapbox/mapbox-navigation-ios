@@ -35,14 +35,14 @@ class RouteControllerTests: TestCase {
             .init(latitude: 59.33865, longitude: 18.074935),
         ]
         let options = NavigationMatchOptions(coordinates: coordinates)
-        let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: options)![0]
+        let routeResponse = Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options)
         
         let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay")
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
         locationManager.startDate = Date()
         let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
-        let routeController = RouteController(along: route, routeIndex: 0, options: equivalentRouteOptions, directions: DirectionsSpy(), dataSource: self)
+        let routeController = RouteController(along: routeResponse, routeIndex: 0, options: equivalentRouteOptions, directions: DirectionsSpy(), dataSource: self)
         locationManager.delegate = routeController
         
         var testCoordinates = [CLLocationCoordinate2D]()

@@ -25,8 +25,7 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  */
 open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData {
     /**
-     A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with its
-     index in a `RouteResponse`.
+     A `RouteResponse` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with route index in it.
      
      In cases where you need to update the route after navigation has started, you can set a new route using
      `Router.updateRoute(with:routeOptions:)` method in `NavigationViewController.navigationService.router` and
@@ -35,51 +34,48 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      For example:
      - If you update route with the same waypoints as the current one:
      ```swift
-     navigationViewController.navigationService.router.updateRoute(with: indexedRoute, routeOptions: nil)
+     navigationViewController.navigationService.router.updateRoute(with: indexedRouteResponse, routeOptions: nil)
      ```
      - In case you update route with different set of waypoints:
      ```swift
-     navigationViewController.navigationService.router.updateRoute(with: indexedRoute, routeOptions: newRouteOptions)
+     navigationViewController.navigationService.router.updateRoute(with: indexedRouteResponse, routeOptions: newRouteOptions)
      ```
      */
-    public var indexedRoute: IndexedRoute {
-        navigationService.indexedRoute
+    public var indexedRouteResponse: IndexedRouteResponse {
+        navigationService.indexedRouteResponse
     }
     
-    var _route: Route?
+    var _routeIndex: Int?
+    var _routeResponse: RouteResponse?
+    var _routeOptions: RouteOptions?
     
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
      */
     public var route: Route? {
-        get {
-            return navigationService.indexedRoute.0
-        }
-        
-        set {
-            _route = newValue
-        }
+        navigationService.route
     }
-    
-    var _routeOptions: RouteOptions?
     
     /**
      The route options used to get the route.
      */
     public var routeOptions: RouteOptions? {
-        get {
-            return navigationService.routeProgress.routeOptions
-        }
-        
-        set {
-            _routeOptions = newValue
-        }
+        navigationService.routeProgress.routeOptions
+    }
+    
+    /**
+     Current `RouteResponse` object, as provided by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/).
+     */
+    public var routeResponse: RouteResponse {
+        indexedRouteResponse.routeResponse
     }
     
     /**
      The index of the route within the original `RouteResponse` object.
      */
-    public var routeIndex: Int?
+    public var routeIndex: Int? {
+        indexedRouteResponse.routeIndex
+    }
     
     /**
      The `NavigationOptions` object, which is used for the navigation session.
@@ -347,35 +343,35 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
      The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
      
-     - parameter route: The route to navigate along.
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeOptions: The route options used to get the route.
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
-    required public init(for route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
+    required public init(for routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
         if let options = navigationOptions {
             mapTileStore = options.tileStoreConfiguration.mapLocation
         }
         
-        super.init(nibName: nil, bundle: nil)
         
-        self.route = route
-        self.routeIndex = routeIndex
-        self.routeOptions = routeOptions
+        super.init(nibName: nil, bundle: nil)
+        self._routeResponse = routeResponse
+        self._routeIndex = routeIndex
+        self._routeOptions = routeOptions
         self.navigationOptions = navigationOptions
     }
     
     /**
      Initializes a `NavigationViewController` with the given route and navigation service.
      
-     - parameter route: The route to navigate along.
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeOptions: the options object used to generate the route.
      - parameter navigationService: The navigation service that manages navigation along the route.
      */
-    convenience init(route: Route, routeIndex: Int, routeOptions: RouteOptions, navigationService service: NavigationService) {
+    convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationService service: NavigationService) {
         let navigationOptions = NavigationOptions(navigationService: service)
-        self.init(for: route,
+        self.init(for: routeResponse,
                   routeIndex: routeIndex,
                   routeOptions: routeOptions,
                   navigationOptions: navigationOptions)
@@ -388,8 +384,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     // MARK: - Setting-up methods
     
     func setupNavigationService() {
-        guard let route = _route,
-              let routeIndex = routeIndex,
+        guard let routeResponse = _routeResponse,
+              let routeIndex = _routeIndex,
               let routeOptions = _routeOptions else {
             fatalError("`route`, `routeIndex` and `routeOptions` must be valid to create an instance of `NavigationViewController`.")
         }
@@ -399,7 +395,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         
         let tileStoreLocation = navigationOptions?.tileStoreConfiguration.navigatorLocation ?? .default
-        let defaultNavigationService = MapboxNavigationService(route: route,
+        let defaultNavigationService = MapboxNavigationService(routeResponse: routeResponse,
                                                                routeIndex: routeIndex,
                                                                routeOptions: routeOptions,
                                                                tileStoreLocation: tileStoreLocation)

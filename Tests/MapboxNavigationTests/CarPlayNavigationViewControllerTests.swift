@@ -42,8 +42,8 @@ class CarPlayNavigationViewControllerTests: TestCase {
             CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
         ])
-        let route = Fixture.route(from: "multileg-route", options: options)
-        let navService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: .mocked)
+        let routeResponse = Fixture.routeResponse(from: "multileg-route", options: options)
+        let navService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: options, directions: .mocked)
         let interface = FakeCPInterfaceController(context: "test estimates display")
         let mapSpy = MapTemplateSpy()
         let trip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])

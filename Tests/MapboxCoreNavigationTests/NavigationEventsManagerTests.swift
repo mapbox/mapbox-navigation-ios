@@ -20,18 +20,20 @@ class NavigationEventsManagerTests: TestCase {
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
         let firstRoute = Fixture.route(from: "DCA-Arboretum", options: firstRouteOptions)
+        let firstRouteResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: firstRouteOptions)
         
         let secondRouteOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 42.361634, longitude: -71.12852),
             CLLocationCoordinate2D(latitude: 42.352396, longitude: -71.068719),
         ])
         let secondRoute = Fixture.route(from: "PipeFittersUnion-FourSeasonsBoston", options: secondRouteOptions)
+        let secondRouteResponse = Fixture.routeResponse(from: "PipeFittersUnion-FourSeasonsBoston", options: secondRouteOptions)
         
         let firstTrace = Array<CLLocation>(Fixture.generateTrace(for: firstRoute).prefix(upTo: firstRoute.shape!.coordinates.count / 2)).shiftedToPresent().qualified()
         let secondTrace = Fixture.generateTrace(for: secondRoute).shifted(to: firstTrace.last!.timestamp + 1).qualified()
         
         let locationManager = NavigationLocationManager()
-        let service = MapboxNavigationService(route: firstRoute, routeIndex: 0,
+        let service = MapboxNavigationService(routeResponse: firstRouteResponse, routeIndex: 0,
                                               routeOptions: firstRouteOptions,
                                               directions: directions,
                                               locationSource: locationManager,
@@ -43,7 +45,7 @@ class NavigationEventsManagerTests: TestCase {
             service.router.locationManager!(locationManager, didUpdateLocations: [location])
         }
 
-        service.router.updateRoute(with: (secondRoute, 0), routeOptions: nil)
+        service.router.updateRoute(with: (secondRouteResponse, 0), routeOptions: nil)
         
         for location in secondTrace {
             service.router.locationManager!(locationManager, didUpdateLocations: [location])
@@ -79,7 +81,8 @@ class NavigationEventsManagerTests: TestCase {
         ])
         let eventTimeout = 0.3
         let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
-        let dataSource = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .onPoorGPS)
+        let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: routeOptions)
+        let dataSource = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .onPoorGPS)
         let sessionState = SessionState(currentRoute: route, originalRoute: route)
         
         // Attempt to create NavigationEventDetails object from global queue, no errors from Main Thread Checker

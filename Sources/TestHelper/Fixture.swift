@@ -83,7 +83,16 @@ public class Fixture: NSObject {
             let decoder = JSONDecoder()
             decoder.userInfo[.options] = options
             decoder.userInfo[.credentials] = Fixture.credentials
-            return try decoder.decode(RouteResponse.self, from: responseData)
+            let response = try decoder.decode(RouteResponse.self, from: responseData)
+            
+            // Like `Directions.postprocess(_:fetchStartDate:uuid:)`
+            response.routes?.forEach {
+                $0.routeIdentifier = response.identifier
+                let fetchStartDate = Date(timeIntervalSince1970: 3600)
+                $0.fetchStartDate = fetchStartDate
+                $0.responseEndDate = Date(timeInterval: 1, since: fetchStartDate)
+            }
+            return response
         } catch {
             preconditionFailure("Unable to decode JSON fixture: \(error)")
         }
@@ -101,17 +110,17 @@ public class Fixture: NSObject {
         }
     }
     
+    public class func routeResponseFromMatches(at filePath: String, options: MatchOptions) -> RouteResponse {
+        options.shapeFormat = .polyline
+        let response = mapMatchingResponse(from: filePath, options: options)
+        return try! RouteResponse(matching: response, options: options, credentials: Fixture.credentials)
+    }
+    
     public class func route(from jsonFile: String, options: RouteOptions) -> Route {
         let response = routeResponse(from: jsonFile, options: options)
         guard let route = response.routes?.first else {
             preconditionFailure("No routes")
         }
-        
-        // Like `Directions.postprocess(_:fetchStartDate:uuid:)`
-        route.routeIdentifier = response.identifier
-        let fetchStartDate = Date(timeIntervalSince1970: 3600)
-        route.fetchStartDate = fetchStartDate
-        route.responseEndDate = Date(timeInterval: 1, since: fetchStartDate)
         
         return route
     }
@@ -126,9 +135,7 @@ public class Fixture: NSObject {
     
     // Returns `Route` objects from a match response
     public class func routesFromMatches(at filePath: String, options: MatchOptions) -> [Route]? {
-        options.shapeFormat = .polyline
-        let response = mapMatchingResponse(from: filePath, options: options)
-        let routeResponse = try! RouteResponse(matching: response, options: options, credentials: Fixture.credentials)
+        let routeResponse = routeResponseFromMatches(at: filePath, options: options)
         guard let routes = routeResponse.routes else {
             preconditionFailure("No routes")
         }

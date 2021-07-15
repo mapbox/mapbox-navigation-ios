@@ -16,7 +16,8 @@ class CustomViewController: UIViewController {
     
     var simulateLocation = false
 
-    var userIndexedRoute: IndexedRoute?
+    var userRouteResponse: RouteResponse?
+    var userRouteIndex: Int?
     
     var userRouteOptions: RouteOptions?
     
@@ -44,9 +45,9 @@ class CustomViewController: UIViewController {
         navigationMapView.mapView.mapboxMap.style.uri = StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")
         navigationMapView.userCourseView.isHidden = false
         
-        let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(route: userIndexedRoute!.0,
-                                                    routeIndex: userIndexedRoute!.1,
+        let locationManager = simulateLocation ? SimulatedLocationManager(route: userRouteResponse!.routes!.first!) : NavigationLocationManager()
+        navigationService = MapboxNavigationService(routeResponse:userRouteResponse!, //userIndexedRoute!.0,
+                                                    routeIndex: userRouteIndex!, //userIndexedRoute!.1,
                                                     routeOptions: userRouteOptions!,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .onPoorGPS)
@@ -144,7 +145,9 @@ class CustomViewController: UIViewController {
     // Update the route on the map.
     @objc func rerouted(_ notification: NSNotification) {
         self.navigationMapView.removeWaypoints()
-        self.navigationMapView.show([navigationService.route])
+        if let route = navigationService.route {
+            self.navigationMapView.show([route])
+        }
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {
@@ -187,10 +190,9 @@ class CustomViewController: UIViewController {
     }
     
     func addPreviewInstructions(step: RouteStep) {
-        let route = navigationService.route
-        
         // find the leg that contains the step, legIndex, and stepIndex
-        guard let leg = route.legs.first(where: { $0.steps.contains(step) }),
+        guard let route = navigationService.route,
+              let leg = route.legs.first(where: { $0.steps.contains(step) }),
             let legIndex = route.legs.firstIndex(of: leg),
             let stepIndex = leg.steps.firstIndex(of: step) else {
             return

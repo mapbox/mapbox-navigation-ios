@@ -51,19 +51,21 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             movementsAwayFromRoute = 0
         }
     }
-    
-    public var indexedRoute: IndexedRoute {
-        routeProgress.indexedRoute
-    }
 
-    public func updateRoute(with indexedRoute: IndexedRoute, routeOptions: RouteOptions?) {
+    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
+        guard let routes = indexedRouteResponse.routeResponse.routes, routes.count > indexedRouteResponse.routeIndex else {
+            preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
+        }
         let routeOptions = routeOptions ?? routeProgress.routeOptions
-        routeProgress = RouteProgress(route: indexedRoute.0, routeIndex: indexedRoute.1, options: routeOptions)
+        routeProgress = RouteProgress(route: routes[indexedRouteResponse.routeIndex], options: routeOptions)
+        self.indexedRouteResponse = indexedRouteResponse
     }
     
     public var route: Route {
-        return indexedRoute.0
+        routeProgress.route
     }
+    
+    public internal(set) var indexedRouteResponse: IndexedRouteResponse
 
     var isRerouting = false
     var isRefreshing = false
@@ -82,9 +84,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
+    required public init(along routeResponse: RouteResponse, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
         self.directions = directions
-        self._routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: options)
+        self.indexedRouteResponse = (routeResponse, routeIndex)
+        self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -366,10 +369,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                  ])
                  return
             case let .success(response):
-                guard case let .route(options) = response.options, let route = response.routes?.first else {
+                guard case let .route(options) = response.options, !(response.routes?.isEmpty ?? true) else {
                     return
                 }
-                strongSelf.updateRoute(with: (route, 0), routeOptions: options) // unconditionally getting the first route above
+                strongSelf.updateRoute(with: (response, 0), routeOptions: options) // unconditionally getting the first route above
             }
         }
     }

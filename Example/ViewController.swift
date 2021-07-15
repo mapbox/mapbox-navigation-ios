@@ -251,10 +251,10 @@ class ViewController: UIViewController {
     // MARK: - Active guidance navigation methods.
     
     func startNavigation(styles: [MapboxNavigation.Style]) {
-        guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
+        guard let response = response, case let .route(routeOptions) = response.options else { return }
         
-        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
-        let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(response: response, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
+        let navigationViewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
         // Example of building highlighting in 2D.
@@ -264,9 +264,9 @@ class ViewController: UIViewController {
     }
     
     func startBasicNavigation() {
-        guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
+        guard let response = response, case let .route(routeOptions) = response.options else { return }
         
-        let service = navigationService(route: route, routeIndex: 0, options: routeOptions)
+        let service = navigationService(response: response, routeIndex: 0, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
@@ -290,7 +290,8 @@ class ViewController: UIViewController {
               case let .route(routeOptions) = responseOptions,
               let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
 
-        customViewController.userIndexedRoute = (route, 0)
+        customViewController.userRouteResponse = response
+        customViewController.userRouteIndex = 0
         customViewController.userRouteOptions = routeOptions
         customViewController.simulateLocation = simulationButton.isSelected
         
@@ -304,24 +305,24 @@ class ViewController: UIViewController {
     }
 
     func startStyledNavigation() {
-        guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
+        guard let response = response, case let .route(routeOptions) = response.options else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
-        let options = NavigationOptions(styles: styles, navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
-        let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(response: response, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
+        let navigationViewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
     func startGuidanceCardsNavigation() {
-        guard let response = response, let route = response.routes?.first, case let .route(routeOptions) = response.options else { return }
+        guard let response = response, case let .route(routeOptions) = response.options else { return }
         
         let instructionsCardCollection = InstructionsCardViewController()
         instructionsCardCollection.cardCollectionDelegate = self
         
-        let options = NavigationOptions(navigationService: navigationService(route: route, routeIndex: 0, options: routeOptions), topBanner: instructionsCardCollection, predictiveCacheOptions: PredictiveCacheOptions())
-        let navigationViewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(navigationService: navigationService(response: response, routeIndex: 0, options: routeOptions), topBanner: instructionsCardCollection, predictiveCacheOptions: PredictiveCacheOptions())
+        let navigationViewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
@@ -462,9 +463,10 @@ class ViewController: UIViewController {
     
     func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
         let navigationOptions = NavigationOptions(navigationService: navigationService, predictiveCacheOptions: PredictiveCacheOptions())
+        let (routeResponse, routeIndex) = navigationService.indexedRouteResponse
         
-        let navigationViewController = NavigationViewController(for: navigationService.route,
-                                                                routeIndex: navigationService.indexedRoute.1,
+        let navigationViewController = NavigationViewController(for: routeResponse,
+                                                                routeIndex: routeIndex,
                                                                 routeOptions: navigationService.routeProgress.routeOptions,
                                                                 navigationOptions: navigationOptions)
         navigationViewController.delegate = self
@@ -495,10 +497,10 @@ class ViewController: UIViewController {
         }
     }
 
-    func navigationService(route: Route, routeIndex: Int, options: RouteOptions) -> NavigationService {
+    func navigationService(response: RouteResponse, routeIndex: Int, options: RouteOptions) -> NavigationService {
         let mode: SimulationMode = simulationButton.isSelected ? .always : .onPoorGPS
         
-        return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: options, simulating: mode)
+        return MapboxNavigationService(routeResponse: response, routeIndex: routeIndex, routeOptions: options, simulating: mode)
     }
     
     // MARK: - Utility methods

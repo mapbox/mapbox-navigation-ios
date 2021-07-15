@@ -225,14 +225,15 @@ public class CarPlayManager: NSObject {
      */
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D,
                                            navigationService: NavigationService) {
-        let route = navigationService.route
         let routeOptions = navigationService.routeProgress.routeOptions
         
         // Stop the background `PassiveLocationProvider` sending location and heading update `mapView` before turn-by-turn navigation session starts.
         navigationMapView?.mapView.location.locationProvider.stopUpdatingLocation()
         navigationMapView?.mapView.location.locationProvider.stopUpdatingHeading()
         
-        var trip = CPTrip(routes: [route], routeOptions: routeOptions, waypoints: routeOptions.waypoints)
+        var trip = CPTrip(routeResponse: navigationService.indexedRouteResponse.routeResponse,
+                          routeOptions: routeOptions,
+                          waypoints: routeOptions.waypoints)
         trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
         
         self.navigationService = navigationService
@@ -502,11 +503,10 @@ extension CarPlayManager {
         case let .success(response):
             if let traitCollection = (self.carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
                let interfaceController = interfaceController {
-                guard let routes = response.routes,
-                      case let .route(responseOptions) = response.options else { return }
+                guard case let .route(responseOptions) = response.options else { return }
                 
                 let waypoints = responseOptions.waypoints
-                var trip = CPTrip(routes: routes, routeOptions: routeOptions, waypoints: waypoints)
+                var trip = CPTrip(routeResponse: response, routeOptions: routeOptions, waypoints: waypoints)
                 trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
 
                 let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip,
@@ -555,7 +555,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
               let carPlayMapViewController = carPlayMapViewController,
-              let (route, routeIndex, options) = routeChoice.userInfo as? (Route, Int, RouteOptions) else {
+              let (routeResponse, routeIndex, options) = routeChoice.userInfo as? (RouteResponse, Int, RouteOptions)else {
             return
         }
 
@@ -565,11 +565,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         let navigationService = self.navigationService ??
             delegate?.carPlayManager(self,
-                                     navigationServiceAlong: route,
-                                     routeIndex: routeIndex,
+                                     alongRouteAtIndex: routeIndex,
+                                     in: routeResponse,
                                      routeOptions: options,
                                      desiredSimulationMode: desiredSimulationMode) ??
-            MapboxNavigationService(route: route,
+            MapboxNavigationService(routeResponse: routeResponse,
                                     routeIndex: routeIndex,
                                     routeOptions: options,
                                     simulating: desiredSimulationMode)

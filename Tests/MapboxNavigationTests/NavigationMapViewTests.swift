@@ -120,7 +120,7 @@ class NavigationMapViewTests: TestCase {
             preconditionFailure("Granular distances are invalid")
         }
 
-        let testRouteProgress: RouteProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
+        let testRouteProgress: RouteProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
         testRouteProgress.currentLegProgress = RouteLegProgress(leg: route.legs[0], stepIndex: 1, spokenInstructionIndex: 0)
         testRouteProgress.currentLegProgress.currentStepProgress = RouteStepProgress(step: route.legs[0].steps[1], spokenInstructionIndex: 0)
         testRouteProgress.currentLegProgress.currentStepProgress.distanceTraveled = stepTraveledDistanceSep

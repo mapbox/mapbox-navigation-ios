@@ -9,14 +9,10 @@ import Turf
 open class RouteProgress: Codable {
     private static let reroutingAccuracy: CLLocationAccuracy = 90
     
-    var indexedRoute: IndexedRoute
-
     /**
      Returns the current `Route`.
      */
-    public var route: Route {
-        return indexedRoute.0
-    }
+    public var route: Route
     
     public let routeOptions: RouteOptions
 
@@ -189,8 +185,8 @@ open class RouteProgress: Codable {
      - parameter routeIndex: The index of the route in the `RouteResponse`. By default, the route is the first route in the response.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
-    public init(route: Route, routeIndex: Int, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
-        self.indexedRoute = (route, routeIndex)
+    public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+        self.route = route
         self.routeOptions = options
         self.legIndex = legIndex
         self.currentLegProgress = RouteLegProgress(leg: route.legs[legIndex], stepIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
@@ -338,8 +334,7 @@ open class RouteProgress: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         let route = try container.decode(Route.self, forKey: .indexedRoute)
-        let routeIndex = try container.decode(Int.self, forKey: .indexedRouteIndex)
-        self.indexedRoute = (route, routeIndex)
+        self.route = route
         self.routeOptions = try container.decode(RouteOptions.self, forKey: .routeOptions)
         self.legIndex = try container.decode(Int.self, forKey: .legIndex)
         self.currentLegProgress = try container.decode(RouteLegProgress.self, forKey: .currentLegProgress)
@@ -350,8 +345,7 @@ open class RouteProgress: Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         
-        try container.encode(indexedRoute.0, forKey: .indexedRoute)
-        try container.encode(indexedRoute.1, forKey: .indexedRouteIndex)
+        try container.encode(route, forKey: .indexedRoute)
         try container.encode(routeOptions, forKey: .routeOptions)
         try container.encode(legIndex, forKey: .legIndex)
         try container.encode(currentLegProgress, forKey: .currentLegProgress)

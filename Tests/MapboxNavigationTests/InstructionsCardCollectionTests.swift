@@ -7,8 +7,8 @@ import CoreLocation
 
 /// :nodoc:
 class InstructionsCardCollectionTests: TestCase {
-    lazy var initialRoute: Route = {
-        return Fixture.route(from: jsonFileName, options: routeOptions)
+    lazy var initialRouteResponse: RouteResponse = {
+        return Fixture.routeResponse(from: jsonFileName, options: routeOptions)
     }()
     
     lazy var instructionsCardCollectionDataSource: (collection: InstructionsCardViewController, progress: RouteProgress, service: MapboxNavigationService, delegate: InstructionsCardCollectionDelegateSpy) = {
@@ -32,8 +32,8 @@ class InstructionsCardCollectionTests: TestCase {
         ])
         let fakeRoute = Fixture.route(from: "route-with-banner-instructions", options: fakeOptions)
         
-        let service = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: fakeOptions, directions: DirectionsSpy(), simulating: .never)
-        let routeProgress = RouteProgress(route: fakeRoute, routeIndex: 0, options: fakeOptions)
+        let service = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: fakeOptions, directions: DirectionsSpy(), simulating: .never)
+        let routeProgress = RouteProgress(route: fakeRoute, options: fakeOptions)
         subject.routeProgress = routeProgress
         
         return (collection: subject, progress: routeProgress, service: service, delegate: delegate)
