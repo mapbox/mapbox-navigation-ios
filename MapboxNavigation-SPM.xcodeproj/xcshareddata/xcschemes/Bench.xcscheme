@@ -17,7 +17,7 @@
                BlueprintIdentifier = "35CDA80521908F2F0072B675"
                BuildableName = "Bench.app"
                BlueprintName = "Bench"
-               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+               ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,7 +33,7 @@
             BlueprintIdentifier = "35CDA80521908F2F0072B675"
             BuildableName = "Bench.app"
             BlueprintName = "Bench"
-            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <Testables>
@@ -44,7 +44,7 @@
                BlueprintIdentifier = "35CDA81821908F320072B675"
                BuildableName = "BenchTests.xctest"
                BlueprintName = "BenchTests"
-               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+               ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -66,7 +66,7 @@
             BlueprintIdentifier = "35CDA80521908F2F0072B675"
             BuildableName = "Bench.app"
             BlueprintName = "Bench"
-            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -83,7 +83,7 @@
             BlueprintIdentifier = "35CDA80521908F2F0072B675"
             BuildableName = "Bench.app"
             BlueprintName = "Bench"
-            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+            ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

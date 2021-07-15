@@ -123,12 +123,12 @@ open class WayNameView: UIView {
     }
     
     private func roadShieldAttributedText(for text: String, textColor: UIColor, style: MapboxMaps.Style?, imageName: String) -> NSAttributedString? {
-        guard let image = style?.image(withId: imageName)?.cgImage else { return nil }
+        guard let image = style?.image(withId: imageName) else { return nil }
         let attachment = ShieldAttachment()
-        attachment.image = UIImage(cgImage: image).withCenteredText(text,
-                                                                    color: textColor,
-                                                                    font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
-                                                                    scale: UIScreen.main.scale)
+        attachment.image = image.withCenteredText(text,
+                                                  color: textColor,
+                                                  font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
+                                                  scale: UIScreen.main.scale)
         return NSAttributedString(attachment: attachment)
     }
 }

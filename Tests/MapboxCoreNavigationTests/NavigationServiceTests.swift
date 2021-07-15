@@ -96,7 +96,7 @@ class NavigationServiceTests: XCTestCase {
         
         // Iterate over each location on the route and simulate location update
         locationsOnRoute.forEach {
-            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+            navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
             
             waitForNavNativeCallbacks()
             
@@ -120,7 +120,7 @@ class NavigationServiceTests: XCTestCase {
         // Even though first location is off the route as per navigation native logic it sometimes can return tracking route state
         // even if location is visually off-route.
         locationsOffRoute.enumerated().forEach {
-            navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0.element])
+            navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0.element])
             
             waitForNavNativeCallbacks()
             
@@ -328,7 +328,7 @@ class NavigationServiceTests: XCTestCase {
         ])
         let route = Fixture.route(from: "straight-line", options: options)
         let navigationService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: DirectionsSpy())
-        let router = navigationService.router!
+        let router = navigationService.router
         let firstCoordinate = router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
         let coordinateNearStart = router.routeProgress.nearbyShape.coordinateFromStart(distance: 10)!
@@ -388,7 +388,7 @@ class NavigationServiceTests: XCTestCase {
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
         let navigationService = MapboxNavigationService(route: initialRoute, routeIndex: 0, routeOptions: routeOptions,  directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .always)
         navigationService.delegate = delegate
-        let router = navigationService.router!
+        let router = navigationService.router
 
         navigationService.eventsManager.delaysEventFlushing = false
         navigationService.start()
@@ -405,7 +405,7 @@ class NavigationServiceTests: XCTestCase {
 
     func testReroutingFromALocationSendsEvents() {
         let navigationService = dependencies.navigationService
-        let router = navigationService.router!
+        let router = navigationService.router
         let testLocation = dependencies.routeLocations.firstLocation
 
         navigationService.eventsManager.delaysEventFlushing = false
@@ -469,23 +469,29 @@ class NavigationServiceTests: XCTestCase {
 
         let now = Date()
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
-        trace.forEach { navigation.router!.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+        trace.forEach {
+            navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
 
         // TODO: Verify why we need a second location update when routeState == .complete to trigger `MMEEventTypeNavigationArrive`
-        navigation.router!.locationManager!(navigation.locationManager,
+        navigation.router.locationManager!(navigation.locationManager,
                                             didUpdateLocations: [trace.last!.shifted(to: now + (trace.count + 1))])
         
-        waitForNavNativeCallbacks(timeout: 0.5)
-
         // MARK: It queues and flushes a Depart event
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
-
+        expectation(description: "Depart Event Flushed") {
+            eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart)
+        }
         // MARK: When at a valid location just before the last location
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
-
+        expectation(description: "Pre-arrival delegate message fired") {
+            self.delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)")
+        }
         // MARK: It tells the delegate that the user did arrive
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
+        expectation(description: "Arrival delegate message fired") {
+            self.delegate.recentMessages.contains("navigationService(_:didArriveAt:)")
+        }
+        waitForExpectations(timeout: 3.0, handler: nil)
 
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
@@ -500,15 +506,22 @@ class NavigationServiceTests: XCTestCase {
         let now = Date()
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
 
-        trace.forEach { navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+        trace.forEach {
+            navigation.router.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
         
-        waitForNavNativeCallbacks(timeout: 0.5)
-
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        expectation(description: "Depart Event Flushed") {
+            eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart)
+        }
 
         // MARK: It tells the delegate that the user did arrive
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
+        expectation(description: "Arrival delegate message fired") {
+            self.delegate.recentMessages.contains("navigationService(_:didArriveAt:)")
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
 
         // MARK: Continue off route after arrival
         let offRouteCoordinate = trace.map { $0.coordinate }.last!.coordinate(at: 200, facing: 0)
@@ -516,15 +529,22 @@ class NavigationServiceTests: XCTestCase {
             CLLocation(coordinate: offRouteCoordinate, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + trace.count + $0)
         }
 
-        offRouteLocations.forEach { navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0]) }
+        offRouteLocations.forEach {
+            navigation.router.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
+            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        }
         
-        waitForNavNativeCallbacks()
-
         // Make sure configurable delegate is called
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:shouldPreventReroutesWhenArrivingAt:)"))
+        expectation(description: "Should Prevent Reroutes delegate method called") {
+            self.delegate.recentMessages.contains("navigationService(_:shouldPreventReroutesWhenArrivingAt:)")
+        }
 
         // We should not reroute here because the user has arrived.
-        XCTAssertFalse(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:)"))
+        expectation(description: "Reroute delegate method isn't called") {
+            !self.delegate.recentMessages.contains("navigationService(_:didRerouteAlong:)")
+        }
+
+        waitForExpectations(timeout: 5, handler: nil)
 
         // It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
@@ -624,7 +644,7 @@ class NavigationServiceTests: XCTestCase {
         let directions = DirectionsSpy()
         let service = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: directions)
         service.delegate = delegate
-        let router = service.router!
+        let router = service.router
         let locationManager = NavigationLocationManager()
 
         let didRerouteExpectation = expectation(forNotification: .routeControllerDidReroute, object: router) { (notification) -> Bool in
@@ -634,11 +654,11 @@ class NavigationServiceTests: XCTestCase {
         let rerouteExpectation = expectation(description: "Proactive reroute should trigger")
 
         for location in trace {
-            service.router!.locationManager!(locationManager, didUpdateLocations: [location])
+            service.router.locationManager!(locationManager, didUpdateLocations: [location])
             
             waitForNavNativeCallbacks()
 
-            let router = service.router! as! RouterComposition
+            let router = service.router as! RouterComposition
 
             if router.lastRerouteLocation != nil {
                 rerouteExpectation.fulfill()
@@ -664,39 +684,28 @@ class NavigationServiceTests: XCTestCase {
 
     func testUnimplementedLogging() {
         _unimplementedLoggingState.clear()
-
-        let options =  NavigationRouteOptions(coordinates: [
-                   CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
-                   CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
-               ])
-        let route = Fixture.route(from: "DCA-Arboretum", options: options)
-        let directions = Directions(credentials: Fixture.credentials)
-        let locationManager = DummyLocationManager()
-        let trace = Fixture.generateTrace(for: route, speedMultiplier: 2).shiftedToPresent()
-
-        let service = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: options, directions: directions, locationSource: locationManager, eventsManagerType: nil)
-
-        let spy = EmptyNavigationServiceDelegate()
-        service.delegate = spy
-        service.start()
-
-        for location in trace {
-            service.locationManager(locationManager, didUpdateLocations: [location])
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 0)
+        struct DummyType: UnimplementedLogging {
+            func method1() {
+                logUnimplemented(protocolType: DummyType.self, level: .debug)
+            }
+            func method2() {
+                logUnimplemented(protocolType: DummyType.self, level: .debug)
+            }
+            func method3() {
+                logUnimplemented(protocolType: DummyType.self, level: .debug)
+            }
         }
-        
-        let waitExpectation = expectation(description: "Waiting for NavNative callbacks")
-        _ = XCTWaiter.wait(for: [waitExpectation], timeout: 1)
-        
-        let numberOfCallbacks = _unimplementedLoggingState.countWarned(forTypeDescription: "EmptyNavigationServiceDelegate")
-        var expectedNumberOfCallback = 7
-        
-        if #available(iOS 14.0, *) {
-            // On iOS 14+ there is a new callback navigationServiceDidChangeAuthorization, bc we run tests on iOS 13 too
-            expectedNumberOfCallback += 1
-        }
-        
-        XCTAssertEqual(numberOfCallbacks, expectedNumberOfCallback, "Expected logs to be populated and expected number of messages sent")
-    }    
+        let type = DummyType()
+        type.method1()
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 1)
+        type.method2()
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 2)
+        type.method2()
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 2)
+        type.method3()
+        XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 3)
+    }
     
     func waitForNavNativeCallbacks(timeout: TimeInterval = 0.1) {
         let waitExpectation = expectation(description: "Waiting for the NatNative callback")

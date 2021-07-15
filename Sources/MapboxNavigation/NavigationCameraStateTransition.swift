@@ -13,6 +13,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     var animatorZoom: BasicCameraAnimator?
     var animatorBearing: BasicCameraAnimator?
     var animatorPitch: BasicCameraAnimator?
+    var animatorAnchor: BasicCameraAnimator?
+    var animatorPadding: BasicCameraAnimator?
+    
+    var previousAnchor: CGPoint = .zero
     
     typealias TransitionParameters = (
         cameraOptions: CameraOptions,
@@ -101,76 +105,117 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
     }
     
-    public func updateForFollowing(_ cameraOptions: CameraOptions) {
-        update(cameraOptions)
-    }
-    
-    public func updateForOverview(_ cameraOptions: CameraOptions) {
-        var cameraOptions = cameraOptions
-        cameraOptions.bearing = 0.0
-        update(cameraOptions)
-    }
-    
     public func cancelPendingTransition() {
         stopAnimators()
     }
     
-    func update(_ cameraOptions: CameraOptions) {
+    public func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {
         guard let mapView = mapView,
               let center = cameraOptions.center,
               let zoom = cameraOptions.zoom,
-              let bearing = cameraOptions.bearing,
+              let bearing = (state == .overview) ? 0.0 : cameraOptions.bearing,
               let pitch = cameraOptions.pitch,
               let anchor = cameraOptions.anchor,
               let padding = cameraOptions.padding else { return }
         
         let duration = 1.0
+        let minimumCenterCoordinatePixelThreshold: Double = 2.0
+        let minimumPitchThreshold: CGFloat = 1.0
+        let minimumBearingThreshold: CLLocationDirection = 1.0
+        let timingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0),
+                                                       controlPoint2: CGPoint(x: 1.0, y: 1.0))
         
-        if let animatorCenter = animatorCenter, animatorCenter.isRunning {
-            animatorCenter.stopAnimation()
+        // Check whether the location change is larger than a certain threshold when current camera state is following.
+        var updateCameraCenter: Bool = true
+        if state == .following {
+            let metersPerPixel = getMetersPerPixelAtLatitude(center.latitude, Double(zoom))
+            let centerUpdateThreshold = minimumCenterCoordinatePixelThreshold * metersPerPixel
+            updateCameraCenter = (mapView.cameraState.center.distance(to: center) > centerUpdateThreshold)
         }
         
-        let centerTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-        animatorCenter = mapView.camera.makeAnimator(duration: duration, timingParameters: centerTimingParameters) { (transition) in
-            transition.center.toValue = center
+        if updateCameraCenter {
+            if let animatorCenter = animatorCenter, animatorCenter.isRunning {
+                animatorCenter.stopAnimation()
+            }
+            
+            animatorCenter = mapView.camera.makeAnimator(duration: duration,
+                                                         timingParameters: timingParameters) { (transition) in
+                transition.center.toValue = center
+            }
+            
+            animatorCenter?.startAnimation()
         }
-        
-        animatorCenter?.startAnimation()
         
         if let animatorZoom = animatorZoom, animatorZoom.isRunning {
             animatorZoom.stopAnimation()
         }
         
-        let zoomTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-        animatorZoom = mapView.camera.makeAnimator(duration: duration, timingParameters: zoomTimingParameters) { (transition) in
+        animatorZoom = mapView.camera.makeAnimator(duration: duration,
+                                                   timingParameters: timingParameters) { (transition) in
             transition.zoom.toValue = zoom
         }
         
         animatorZoom?.startAnimation()
         
-        if let animatorBearing = animatorBearing, animatorBearing.isRunning {
-            animatorBearing.stopAnimation()
+        // Check whether the bearing change is larger than a certain threshold when current camera state is following.
+        let updateCameraBearing = (state == .following) ? (abs(mapView.cameraState.bearing - bearing) >= minimumBearingThreshold) : true
+        
+        if updateCameraBearing {
+            if let animatorBearing = animatorBearing, animatorBearing.isRunning {
+                animatorBearing.stopAnimation()
+            }
+            
+            animatorBearing = mapView.camera.makeAnimator(duration: duration,
+                                                          timingParameters: timingParameters) { (transition) in
+                transition.bearing.toValue = bearing
+            }
+            
+            animatorBearing?.startAnimation()
         }
         
-        let bearingTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-        animatorBearing = mapView.camera.makeAnimator(duration: duration, timingParameters: bearingTimingParameters) { (transition) in
-            transition.bearing.toValue = bearing
+        // Check whether the pitch change is larger than a certain threshold when current camera state is following.
+        let updateCameraPitch = (state == .following) ? (abs(mapView.cameraState.pitch - pitch) >= minimumPitchThreshold) : true
+        
+        if updateCameraPitch {
+            if let animatorPitch = animatorPitch, animatorPitch.isRunning {
+                animatorPitch.stopAnimation()
+            }
+            
+            animatorPitch = mapView.camera.makeAnimator(duration: duration,
+                                                        timingParameters: timingParameters) { (transition) in
+                transition.pitch.toValue = pitch
+            }
+            
+            animatorPitch?.startAnimation()
         }
         
-        animatorBearing?.startAnimation()
+        // In case if anchor did not change - do not perform animation.
+        let updateCameraAnchor = previousAnchor != anchor
+        previousAnchor = anchor
         
-        if let animatorPitch = animatorPitch, animatorPitch.isRunning {
-            animatorPitch.stopAnimation()
+        if updateCameraAnchor {
+            if let animatorAnchor = animatorAnchor, animatorAnchor.isRunning {
+                animatorAnchor.stopAnimation()
+            }
+            
+            animatorAnchor = mapView.camera.makeAnimator(duration: duration,
+                                                         timingParameters: timingParameters) { (transition) in
+                transition.anchor.toValue = anchor
+            }
+            
+            animatorAnchor?.startAnimation()
         }
         
-        let pitchTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0), controlPoint2: CGPoint(x: 1.0, y: 1.0))
-        animatorPitch = mapView.camera.makeAnimator(duration: duration, timingParameters: pitchTimingParameters) { (transition) in
-            transition.pitch.toValue = pitch
-            transition.anchor.toValue = anchor
+        if let animatorPadding = animatorPadding, animatorPadding.isRunning {
+            animatorPadding.stopAnimation()
+        }
+        
+        animatorPadding = mapView.camera.makeAnimator(duration: duration,
+                                                      timingParameters: timingParameters) { (transition) in
             transition.padding.toValue = padding
         }
         
-        animatorPitch?.startAnimation()
+        animatorPadding?.startAnimation()
     }
     
     func stopAnimators() {
@@ -178,7 +223,9 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             animatorCenter,
             animatorZoom,
             animatorBearing,
-            animatorPitch
+            animatorPitch,
+            animatorAnchor,
+            animatorPadding
         ]
         
         animators.forEach {

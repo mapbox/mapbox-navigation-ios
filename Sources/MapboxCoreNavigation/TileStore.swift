@@ -19,42 +19,43 @@ extension TileStore {
      */
     public func containsLatestNavigationTiles(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default,
                                               completion: @escaping ContainsCompletion) {
-        let descriptors = [TilesetDescriptorFactory.getLatest(forCacheLocation: cacheLocation)]
-        
-        __getAllTileRegions { expected in
-            if expected.isValue(), let regions = expected.value as? Array<TileRegion> {
-                let lock = NSLock()
-                var count = regions.count
-                var result: Bool? = true
+        TilesetDescriptorFactory.getLatest(forCacheLocation: cacheLocation,
+                                           completionQueue: .main) { latestTilesetDescriptor in
+            self.__getAllTileRegions { expected in
+                if expected.isValue(), let regions = expected.value as? Array<TileRegion> {
+                    let lock = NSLock()
+                    var count = regions.count
+                    var result: Bool? = true
 
-                for region in regions {
-                    self.__tileRegionContainsDescriptors(forId: region.id,
-                                                         descriptors: descriptors,
-                                                         callback: { expected in
-                                                            lock.lock()
-                                                            
-                                                            if expected.isValue(),
-                                                               let value = expected.value as? NSNumber {
-                                                                result = result.map { $0 && value.boolValue }
-                                                            } else if expected.isError() {
-                                                                result = nil
-                                                            } else {
-                                                                assertionFailure("Unexpected value or error: \(String(describing: expected)), expected: \(NSNumber.self)")
-                                                                result = nil
-                                                            }
-                                                            
-                                                            count -= 1
-                                                            if count == 0 {
-                                                                completion(result)
-                                                            }
-                                                            lock.unlock()
-                                                         })
+                    for region in regions {
+                        self.__tileRegionContainsDescriptors(forId: region.id,
+                                                             descriptors: [latestTilesetDescriptor],
+                                                             callback: { expected in
+                            lock.lock()
+
+                            if expected.isValue(),
+                               let value = expected.value as? NSNumber {
+                                result = result.map { $0 && value.boolValue }
+                            } else if expected.isError() {
+                                result = nil
+                            } else {
+                                assertionFailure("Unexpected value or error: \(String(describing: expected)), expected: \(NSNumber.self)")
+                                result = nil
+                            }
+
+                            count -= 1
+                            if count == 0 {
+                                completion(result)
+                            }
+                            lock.unlock()
+                        })
+                    }
+                } else if expected.isError() {
+                    completion(nil)
+                } else {
+                    assertionFailure("Unexpected value or error: \(expected), expected: \(Array<TileRegion>.self)")
+                    completion(nil)
                 }
-            } else if expected.isError() {
-                completion(nil)
-            } else {
-                assertionFailure("Unexpected value or error: \(expected), expected: \(Array<TileRegion>.self)")
-                completion(nil)
             }
         }
     }
@@ -74,20 +75,21 @@ extension TileStore {
     public func tileRegionContainsLatestNavigationTiles(forId regionId: String,
                                                         cacheLocation: TileStoreConfiguration.Location = .default,
                                                         completion: @escaping ContainsCompletion) {
-        let descriptors = [TilesetDescriptorFactory.getLatest(forCacheLocation: cacheLocation)]
-        
-        __tileRegionContainsDescriptors(forId: regionId,
-                                        descriptors: descriptors,
-                                        callback: { expected in
-                                            if expected.isValue(),
-                                               let value = expected.value as? NSNumber {
-                                                completion(value.boolValue)
-                                            } else if expected.isError() {
-                                                completion(nil)
-                                            } else {
-                                                assertionFailure("Unexpected value or error: \(expected), expected: \(NSNumber.self)")
-                                                completion(nil)
-                                            }
-                                        })
+        TilesetDescriptorFactory.getLatest(forCacheLocation: cacheLocation,
+                                           completionQueue: .main) { latestTilesetDescriptor in
+            self.__tileRegionContainsDescriptors(forId: regionId,
+                                                 descriptors: [latestTilesetDescriptor],
+                                                 callback: { expected in
+                if expected.isValue(),
+                   let value = expected.value as? NSNumber {
+                    completion(value.boolValue)
+                } else if expected.isError() {
+                    completion(nil)
+                } else {
+                    assertionFailure("Unexpected value or error: \(expected), expected: \(NSNumber.self)")
+                    completion(nil)
+                }
+            })
+        }
     }
 }

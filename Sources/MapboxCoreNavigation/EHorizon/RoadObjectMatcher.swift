@@ -33,12 +33,18 @@ final public class RoadObjectMatcher {
      Matches given OpenLR object to the graph.
 
      - parameter location: OpenLR location of the road object, encoded in a base64 string.
-     - parameter standard: Standard used to encode OpenLR location.
      - parameter identifier: Unique identifier of the object.
      */
-    public func matchOpenLR(location: String, standard: OpenLRStandard, identifier: RoadObjectIdentifier) {
-        let nativeStandard = MapboxNavigationNative.OpenLRStandard(standard)
-        let openLR = MatchableOpenLr(base64Encoded: location, standard: nativeStandard, id: identifier)
+    public func matchOpenLR(location: String, identifier: OpenLRIdentifier) {
+        let standard = MapboxNavigationNative.OpenLRStandard(identifier: identifier)
+        let reference: RoadObjectIdentifier
+        switch identifier {
+        case .tomTom(let ref):
+            reference = ref
+        case .tpeg(let ref):
+            reference = ref
+        }
+        let openLR = MatchableOpenLr(base64Encoded: location, standard: standard, id: reference)
         native.matchOpenLRs(for: [openLR], useOnlyPreloadedTiles: false)
     }
 

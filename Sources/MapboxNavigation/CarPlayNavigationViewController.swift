@@ -77,12 +77,18 @@ public class CarPlayNavigationViewController: UIViewController {
         }
     }
     
+    /**
+     Controls the styling of CarPlayNavigationViewController and its components.
+
+     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
+     */
+    public private(set) var styleManager: StyleManager?
+
     var carSession: CPNavigationSession!
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
-    var styleManager: StyleManager?
-    
+
     // MARK: - Initialization methods
     
     /**
@@ -144,8 +150,12 @@ public class CarPlayNavigationViewController: UIViewController {
         
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             self?.navigationMapView?.localizeLabels()
-            self?.updateRouteOnMap()
             self?.navigationMapView?.mapView.showsTraffic = false
+        }
+        
+        // Route line should be added to `MapView`, when its style changes.
+        navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
+            self?.updateRouteOnMap()
         }
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
@@ -557,7 +567,7 @@ public class CarPlayNavigationViewController: UIViewController {
                                               comment: "Title on continue button in CarPlay")
         
         let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
-            self.navigationService.router?.advanceLegIndex()
+            self.navigationService.router.advanceLegIndex()
             self.carInterfaceController.dismissTemplate(animated: true)
             self.updateRouteOnMap()
         }
@@ -590,7 +600,10 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
-        // TODO: Implement the ability to reload style.
+        guard let mapboxMap = navigationMapView?.mapView.mapboxMap,
+              let styleURI = mapboxMap.style.uri else { return }
+        
+        mapboxMap.loadStyleURI(styleURI)
     }
 }
 

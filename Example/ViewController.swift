@@ -26,7 +26,7 @@ class ViewController: UIViewController {
     var rawTrackStyledFeature: StyledFeature!
     var speedLimitView: SpeedLimitView!
     var passiveLocationManager: PassiveLocationManager!
-    var eventsManager: FreeDriveNavigationEventsManager!
+    var eventsManager: NavigationEventsManager!
     
     var currentEdgeIdentifier: RoadGraph.Edge.Identifier?
     var nextEdgeIdentifier: RoadGraph.Edge.Identifier?
@@ -131,7 +131,6 @@ class ViewController: UIViewController {
         
         if navigationMapView == nil {
             navigationMapView = NavigationMapView(frame: view.bounds)
-            eventsManager = FreeDriveNavigationEventsManager(freeDriveDataSource: passiveLocationManager)
         }
     }
     

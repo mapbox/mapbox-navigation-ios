@@ -129,14 +129,14 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
     
     private func initTimer() {
         staleTimer = Timer(timeInterval: staleRefreshInterval,
-                           target: self,
-                           selector: #selector(refreshPuckStaleState),
-                           userInfo: nil,
-                           repeats: true)
+                           repeats: true,
+                           block: { [weak self] _ in
+            self?.refreshPuckStaleState()
+        })
         RunLoop.current.add(staleTimer, forMode: .common)
     }
-    
-    @objc func refreshPuckStaleState() {
+
+    private func refreshPuckStaleState() {
         if let lastUpdate = lastLocationUpdate {
             let ratio = CGFloat(Date().timeIntervalSince(lastUpdate) / staleInterval)
             puckView.staleRatio = max(0.0, min(1.0, ratio))

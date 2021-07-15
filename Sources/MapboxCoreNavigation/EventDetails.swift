@@ -4,17 +4,18 @@ import Polyline
 import UIKit
 import AVFoundation
 import MapboxDirections
+import MapboxMobileEvents
 
 protocol EventDetails: Encodable {
-    var event: String? { get }
+    var event: String? { get set }
     var created: Date { get }
     var sessionIdentifier: String { get }
 }
 
 struct PerformanceEventDetails: EventDetails {
-    let event: String?
     let created: Date
     let sessionIdentifier: String
+    var event: String?
     var counters: [Counter] = []
     var attributes: [Attribute] = []
     
@@ -36,7 +37,7 @@ struct PerformanceEventDetails: EventDetails {
         let value: String
     }
     
-    init(event: String?, session: SessionState, createdOn created: Date?) {
+    init(event: String, session: SessionState, createdOn created: Date?) {
         self.event = event
         sessionIdentifier = session.identifier.uuidString
         self.created = created ?? Date()
@@ -63,21 +64,20 @@ protocol NavigationEventDetails: EventDetails {
     var sdkVersion: String { get }
     var screenBrightness: Int { get }
     var volumeLevel: Int { get }
+    var screenshot: String? { get set }
+    var feedbackType: String? { get set }
+    var description: String? { get set }
+    var driverMode: String { get }
 }
 
 extension NavigationEventDetails {
     var audioType: String { AVAudioSession.sharedInstance().audioType }
     var applicationState: UIApplication.State {
-        var state: UIApplication.State!
         if Thread.isMainThread {
-            state = UIApplication.shared.applicationState
+            return UIApplication.shared.applicationState
         } else {
-            DispatchQueue.main.sync {
-                state = UIApplication.shared.applicationState
-            }
+            return DispatchQueue.main.sync { UIApplication.shared.applicationState }
         }
-
-        return state
     }
     var batteryLevel: Int { UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1 }
     var batteryPluggedIn: Bool { [.charging, .full].contains(UIDevice.current.batteryState) }
@@ -94,7 +94,7 @@ extension NavigationEventDetails {
     var volumeLevel: Int { Int(AVAudioSession.sharedInstance().outputVolume * 100) }
 }
 
-struct ActiveGuidanceEventDetails: NavigationEventDetails {
+struct ActiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?
     let distance: CLLocationDistance?
     let distanceCompleted: CLLocationDistance
@@ -118,6 +118,7 @@ struct ActiveGuidanceEventDetails: NavigationEventDetails {
     let startTimestamp: Date?
     let sdkIdentifier: String
     let userAbsoluteDistanceToDestination: CLLocationDistance?
+    let driverMode = "activeGuidance"
     
     let stepIndex: Int
     let stepCount: Int
@@ -274,6 +275,7 @@ struct ActiveGuidanceEventDetails: NavigationEventDetails {
         case routeLegProgress = "step"
         case totalTimeInForeground
         case totalTimeInBackground
+        case driverMode
     }
     
     func encode(to encoder: Encoder) throws {
@@ -331,6 +333,7 @@ struct ActiveGuidanceEventDetails: NavigationEventDetails {
         try container.encode(totalTimeInForeground, forKey: .totalTimeInForeground)
         try container.encode(totalTimeInBackground, forKey: .totalTimeInBackground)
         try container.encodeIfPresent(rating, forKey: .rating)
+        try container.encode(driverMode, forKey: .driverMode)
     }
 }
 

@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C53F2EDE20EBC95600D9798F"
+               BlueprintIdentifier = "358D14621E5E3B7700ADE590"
                BuildableName = "Example.app"
-               BlueprintName = "Example-CarPlay"
-               ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+               BlueprintName = "Example"
+               ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -26,16 +26,28 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "NO">
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C53F2EDE20EBC95600D9798F"
+            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
             BuildableName = "Example.app"
-            BlueprintName = "Example-CarPlay"
-            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+            BlueprintName = "Example"
+            ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
+      <EnvironmentVariables>
+         <EnvironmentVariable
+            key = "IMAGE_DIFF_DIR"
+            value = "$(SOURCE_ROOT)/$(PROJECT_NAME)Tests/FailureDiffs"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "FB_REFERENCE_IMAGE_DIR"
+            value = "$(SOURCE_ROOT)/$(PROJECT_NAME)Tests/ReferenceImages"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+      </EnvironmentVariables>
       <Testables>
       </Testables>
    </TestAction>
@@ -53,10 +65,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C53F2EDE20EBC95600D9798F"
+            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
             BuildableName = "Example.app"
-            BlueprintName = "Example-CarPlay"
-            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+            BlueprintName = "Example"
+            ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -70,10 +82,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C53F2EDE20EBC95600D9798F"
+            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
             BuildableName = "Example.app"
-            BlueprintName = "Example-CarPlay"
-            ReferencedContainer = "container:MapboxNavigation.xcodeproj">
+            BlueprintName = "Example"
+            ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

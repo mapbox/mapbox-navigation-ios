@@ -14,6 +14,7 @@ extension ViewController {
         setupFreeDriveStyledFeatures()
 
         passiveLocationManager = PassiveLocationManager()
+        eventsManager = NavigationEventsManager(passiveNavigationDataSource: passiveLocationManager)
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
         
@@ -43,7 +44,6 @@ extension ViewController {
         
         if let location = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {
             trackStyledFeature.lineString.coordinates.append(contentsOf: [location.coordinate])
-            navigationMapView.moveUserLocation(to: location)
         }
         
         if let rawLocation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.rawLocationKey] as? CLLocation {

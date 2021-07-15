@@ -206,7 +206,7 @@ public class CarPlayManager: NSObject {
         self.styles = styles ?? [DayStyle(), NightStyle()]
         let mapboxDirections = directions ?? .shared
         self.directions = mapboxDirections
-        self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil,
+        self.eventsManager = eventsManager ?? NavigationEventsManager(activeNavigationDataSource: nil,
                                                                       accessToken: mapboxDirections.credentials.accessToken)
         self.mapTemplateProvider = MapTemplateProvider()
         self.carPlayNavigationViewControllerType = carPlayNavigationViewControllerClass ?? CarPlayNavigationViewController.self
@@ -227,6 +227,10 @@ public class CarPlayManager: NSObject {
                                            navigationService: NavigationService) {
         let route = navigationService.route
         let routeOptions = navigationService.routeProgress.routeOptions
+        
+        // Stop the background `PassiveLocationProvider` sending location and heading update `mapView` before turn-by-turn navigation session starts.
+        navigationMapView?.mapView.location.locationProvider.stopUpdatingLocation()
+        navigationMapView?.mapView.location.locationProvider.stopUpdatingHeading()
         
         var trip = CPTrip(routes: [route], routeOptions: routeOptions, waypoints: routeOptions.waypoints)
         trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip

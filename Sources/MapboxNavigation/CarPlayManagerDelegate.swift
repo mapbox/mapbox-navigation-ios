@@ -65,30 +65,6 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService
     
     /**
-     Offers the delegate an opportunity to react to updates in the search text.
-     
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter searchTemplate: The search template currently accepting user input.
-     - parameter searchText: The updated search text in `searchTemplate`.
-     - parameter completionHandler: Called when the search is complete. Accepts a list of search results.
-     
-     - postcondition: You must call `completionHandler` within this method.
-     */
-    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void)
-    
-    /**
-     Offers the delegate an opportunity to react to selection of a search result.
-     
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter searchTemplate: The search template currently accepting user input.
-     - parameter item: The search result the user has selected.
-     - parameter completionHandler: Called when the delegate is done responding to the selection.
-     
-     - postcondition: You must call `completionHandler` within this method.
-     */
-    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void)
-    
-    /**
      Called when the CarPlay manager fails to fetch a route.
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter waypoints: the waypoints for which a route could not be retrieved.
@@ -197,20 +173,6 @@ public extension CarPlayManagerDelegate {
     func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, updatedSearchText searchText: String, completionHandler: @escaping ([CPListItem]) -> Void) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func carPlayManager(_ carPlayManager: CarPlayManager, searchTemplate: CPSearchTemplate, selectedResult item: CPListItem, completionHandler: @escaping () -> Void) {
-        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
     /**
