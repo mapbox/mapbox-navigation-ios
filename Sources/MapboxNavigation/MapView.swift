@@ -69,14 +69,14 @@ extension MapView {
     func showsTileSet(withIdentifier tileSetIdentifier: String, layerIdentifier: String) -> Bool {
         let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifier)
         
-        for layerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
-            guard let sourceIdentifier = mapboxMap.style.layerProperty(for: layerIdentifier,
+        for mapViewLayerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
+            guard let sourceIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
                                                                        property: "source") as? String,
-                  let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: layerIdentifier,
+                  let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
                                                                             property: "source-layer") as? String else { return false }
             
             if sourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
-                let visibility = mapboxMap.style.layerProperty(for: layerIdentifier, property: "visibility") as? String
+                let visibility = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier, property: "visibility") as? String
                 
                 return visibility == "visible"
             }
