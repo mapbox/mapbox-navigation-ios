@@ -131,7 +131,6 @@ class ViewController: UIViewController {
         
         if navigationMapView == nil {
             navigationMapView = NavigationMapView(frame: view.bounds)
-            eventsManager = NavigationEventsManager(passiveNavigationDataSource: passiveLocationManager)
         }
     }
     

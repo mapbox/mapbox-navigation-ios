@@ -3,8 +3,9 @@ import CoreLocation
 
 struct PassiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?
-    let created: Date = Date()
-    let sessionIdentifier: String = "session-id" // TODO: create global session
+    let created = Date()
+    let sessionIdentifier = "session-id" // TODO: create global session
+    let driverMode = "freeDrive"
     
     var event: String?
     var userId: String?
@@ -18,8 +19,8 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     }
     
     private enum CodingKeys: String, CodingKey {
-        case latitude
-        case longitude
+        case latitude = "lat"
+        case longitude = "lng"
         case userId
         case feedbackType
         case description
@@ -34,6 +35,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         case sdkVersion
         case screenBrightness
         case volumeLevel
+        case driverMode
     }
     
     func encode(to encoder: Encoder) throws {
@@ -54,5 +56,6 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encode(sdkVersion, forKey: .sdkVersion)
         try container.encode(screenBrightness, forKey: .screenBrightness)
         try container.encode(volumeLevel, forKey: .volumeLevel)
+        try container.encode(driverMode, forKey: .driverMode)
     }
 }

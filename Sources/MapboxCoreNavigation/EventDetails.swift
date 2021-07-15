@@ -67,6 +67,7 @@ protocol NavigationEventDetails: EventDetails {
     var screenshot: String? { get set }
     var feedbackType: String? { get set }
     var description: String? { get set }
+    var driverMode: String { get }
 }
 
 extension NavigationEventDetails {
@@ -117,6 +118,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     let startTimestamp: Date?
     let sdkIdentifier: String
     let userAbsoluteDistanceToDestination: CLLocationDistance?
+    let driverMode = "activeGuidance"
     
     let stepIndex: Int
     let stepCount: Int
@@ -273,6 +275,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         case routeLegProgress = "step"
         case totalTimeInForeground
         case totalTimeInBackground
+        case driverMode
     }
     
     func encode(to encoder: Encoder) throws {
@@ -330,6 +333,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         try container.encode(totalTimeInForeground, forKey: .totalTimeInForeground)
         try container.encode(totalTimeInBackground, forKey: .totalTimeInBackground)
         try container.encodeIfPresent(rating, forKey: .rating)
+        try container.encode(driverMode, forKey: .driverMode)
     }
 }
 
