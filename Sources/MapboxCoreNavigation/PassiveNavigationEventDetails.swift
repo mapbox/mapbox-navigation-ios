@@ -13,7 +13,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     var screenshot: String?
     // TODO: add time in foreground and background
     
-    init(dataSource: EventsManagerFreeDriveDataSource) {
+    init(dataSource: PassiveNavigationEventsManagerDataSource) {
         coordinate = dataSource.rawLocation?.coordinate
     }
     

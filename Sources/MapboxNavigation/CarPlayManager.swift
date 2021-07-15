@@ -206,7 +206,7 @@ public class CarPlayManager: NSObject {
         self.styles = styles ?? [DayStyle(), NightStyle()]
         let mapboxDirections = directions ?? .shared
         self.directions = mapboxDirections
-        self.eventsManager = eventsManager ?? NavigationEventsManager(dataSource: nil,
+        self.eventsManager = eventsManager ?? NavigationEventsManager(activeNavigationDataSource: nil,
                                                                       accessToken: mapboxDirections.credentials.accessToken)
         self.mapTemplateProvider = MapTemplateProvider()
         self.carPlayNavigationViewControllerType = carPlayNavigationViewControllerClass ?? CarPlayNavigationViewController.self

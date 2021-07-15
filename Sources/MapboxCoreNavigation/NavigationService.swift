@@ -257,7 +257,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
-        _eventsManager = eventType.init(dataSource: self, accessToken: self.directions.credentials.accessToken)
+        _eventsManager = eventType.init(activeNavigationDataSource: self,
+                                        accessToken: self.directions.credentials.accessToken)
         locationManager.activityType = routeOptions.activityType
         bootstrapEvents()
         

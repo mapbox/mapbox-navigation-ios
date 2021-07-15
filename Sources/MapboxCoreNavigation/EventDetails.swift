@@ -4,17 +4,18 @@ import Polyline
 import UIKit
 import AVFoundation
 import MapboxDirections
+import MapboxMobileEvents
 
 protocol EventDetails: Encodable {
-    var event: String? { get }
+    var event: String? { get set }
     var created: Date { get }
     var sessionIdentifier: String { get }
 }
 
 struct PerformanceEventDetails: EventDetails {
-    let event: String?
     let created: Date
     let sessionIdentifier: String
+    var event: String?
     var counters: [Counter] = []
     var attributes: [Attribute] = []
     
@@ -36,7 +37,7 @@ struct PerformanceEventDetails: EventDetails {
         let value: String
     }
     
-    init(event: String?, session: SessionState, createdOn created: Date?) {
+    init(event: String, session: SessionState, createdOn created: Date?) {
         self.event = event
         sessionIdentifier = session.identifier.uuidString
         self.created = created ?? Date()
@@ -63,21 +64,19 @@ protocol NavigationEventDetails: EventDetails {
     var sdkVersion: String { get }
     var screenBrightness: Int { get }
     var volumeLevel: Int { get }
+    var screenshot: String? { get set }
+    var feedbackType: String? { get set }
+    var description: String? { get set }
 }
 
 extension NavigationEventDetails {
     var audioType: String { AVAudioSession.sharedInstance().audioType }
     var applicationState: UIApplication.State {
-        var state: UIApplication.State!
         if Thread.isMainThread {
             return UIApplication.shared.applicationState
         } else {
-            return DispatchQueue.main.sync {
-                UIApplication.shared.applicationState
-            }
+            return DispatchQueue.main.sync { UIApplication.shared.applicationState }
         }
-
-        return state
     }
     var batteryLevel: Int { UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1 }
     var batteryPluggedIn: Bool { [.charging, .full].contains(UIDevice.current.batteryState) }
@@ -94,7 +93,7 @@ extension NavigationEventDetails {
     var volumeLevel: Int { Int(AVAudioSession.sharedInstance().outputVolume * 100) }
 }
 
-struct ActiveGuidanceEventDetails: NavigationEventDetails {
+struct ActiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?
     let distance: CLLocationDistance?
     let distanceCompleted: CLLocationDistance
