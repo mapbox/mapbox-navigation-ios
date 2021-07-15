@@ -190,7 +190,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         
         // In case if anchor did not change - do not perform animation.
-        let updateCameraAnchor = previousAnchor == anchor
+        let updateCameraAnchor = previousAnchor != anchor
         previousAnchor = anchor
         
         if updateCameraAnchor {
