@@ -16,6 +16,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     var animatorAnchor: BasicCameraAnimator?
     var animatorPadding: BasicCameraAnimator?
     
+    var previousAnchor: CGPoint = .zero
+    
     typealias TransitionParameters = (
         cameraOptions: CameraOptions,
         centerAnimationDuration: TimeInterval,
@@ -117,9 +119,9 @@ public class NavigationCameraStateTransition: CameraStateTransition {
               let padding = cameraOptions.padding else { return }
         
         let duration = 1.0
-        let centerCoordinatePixelThreshold = 2.0
-        let pitchThreshold = 1.0
-        let bearingThreshold = 1.0
+        let minimumCenterCoordinatePixelThreshold: Double = 2.0
+        let minimumPitchThreshold: CGFloat = 1.0
+        let minimumBearingThreshold: CLLocationDirection = 1.0
         let timingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.0, y: 0.0),
                                                        controlPoint2: CGPoint(x: 1.0, y: 1.0))
         
@@ -131,7 +133,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         var updateCameraCenter: Bool = true
         if state == .following {
             let metersPerPixel = getMetersPerPixelAtLatitude(center.latitude, Double(zoom))
-            let centerUpdateThreshold = centerCoordinatePixelThreshold * metersPerPixel
+            let centerUpdateThreshold = minimumCenterCoordinatePixelThreshold * metersPerPixel
             updateCameraCenter = (mapView.cameraState.center.distance(to: center) > centerUpdateThreshold)
         }
         
@@ -158,7 +160,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         
         // Check whether the bearing change is larger than a certain threshold when current camera state is following.
-        let updateCameraBearing = (state == .following) ? (abs(mapView.cameraState.bearing - bearing) >= bearingThreshold) : true
+        let updateCameraBearing = (state == .following) ? (abs(mapView.cameraState.bearing - bearing) >= minimumBearingThreshold) : true
         
         if updateCameraBearing {
             animatorBearing = mapView.camera.makeAnimator(duration: duration, timingParameters: timingParameters) { (transition) in
@@ -173,7 +175,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
         
         // Check whether the pitch change is larger than a certain threshold when current camera state is following.
-        let updateCameraPitch = (state == .following) ? (abs(mapView.cameraState.pitch - pitch) >= CGFloat(pitchThreshold)) : true
+        let updateCameraPitch = (state == .following) ? (abs(mapView.cameraState.pitch - pitch) >= minimumPitchThreshold) : true
         
         if updateCameraPitch {
             animatorPitch = mapView.camera.makeAnimator(duration: duration, timingParameters: timingParameters) { (transition) in
@@ -187,11 +189,17 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             animatorAnchor.stopAnimation()
         }
         
-        animatorAnchor = mapView.camera.makeAnimator(duration: duration, timingParameters: timingParameters) { (transition) in
-            transition.anchor.toValue = anchor
-        }
+        // In case if anchor did not change - do not perform animation.
+        let updateCameraAnchor = previousAnchor == anchor
+        previousAnchor = anchor
         
-        animatorAnchor?.startAnimation()
+        if updateCameraAnchor {
+            animatorAnchor = mapView.camera.makeAnimator(duration: duration, timingParameters: timingParameters) { (transition) in
+                transition.anchor.toValue = anchor
+            }
+            
+            animatorAnchor?.startAnimation()
+        }
         
         if let animatorPadding = animatorPadding, animatorPadding.isRunning {
             animatorPadding.stopAnimation()
