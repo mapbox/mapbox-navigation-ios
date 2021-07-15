@@ -67,6 +67,7 @@ protocol NavigationEventDetails: EventDetails {
     var screenshot: String? { get set }
     var feedbackType: String? { get set }
     var description: String? { get set }
+    var userId: String? { get set }
     var driverMode: String { get }
 }
 
