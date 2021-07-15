@@ -2,8 +2,8 @@ import Foundation
 import MapboxDirections
 import Polyline
 
-public class CoreFeedbackEvent: Hashable {
-    var id = UUID()
+public class CoreFeedbackEvent: Hashable, Codable {
+    public var id = UUID()
     
     var timestamp: Date
     
@@ -20,6 +20,28 @@ public class CoreFeedbackEvent: Hashable {
     
     public static func ==(lhs: CoreFeedbackEvent, rhs: CoreFeedbackEvent) -> Bool {
         return lhs.id == rhs.id
+    }
+    
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case timestamp
+        case eventDictionaryData
+    }
+    
+    public required init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(UUID.self, forKey: .id)
+        timestamp = try container.decode(Date.self, forKey: .timestamp)
+        let eventDictionaryData = try container.decode(Data.self, forKey: .eventDictionaryData)
+        eventDictionary = try JSONSerialization.jsonObject(with: eventDictionaryData) as? [String: Any] ?? [:]
+    }
+    
+    public func encode(to encoder: Encoder) throws {
+        var containter = encoder.container(keyedBy: CodingKeys.self)
+        try containter.encode(id, forKey: .id)
+        try containter.encode(timestamp, forKey: .timestamp)
+        let eventDictionaryData = try JSONSerialization.data(withJSONObject: eventDictionary)
+        try containter.encode(eventDictionaryData, forKey: .eventDictionaryData)
     }
 }
 

@@ -27,7 +27,7 @@ public protocol FeedbackViewControllerDelegate: AnyObject, UnimplementedLogging 
     /**
      Called when the user submits a feedback event.
      */
-    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, uuid: UUID)
+    func feedbackViewController(_ feedbackViewController: FeedbackViewController, didSend feedbackItem: FeedbackItem, feedback: FeedbackEvent)
     
     /**
      Called when a `FeedbackViewController` is dismissed for any reason without giving explicit feedback.
@@ -131,9 +131,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     public weak var eventsManager: NavigationEventsManager?
     
     /**
-     Current feedback's UUID.
+     Current feedback.
      */
-    var currentFeedbackUUID: UUID?
+    var currentFeedback: FeedbackEvent?
     
     /**
      Initialize a new FeedbackViewController from a `NavigationEventsManager`.
@@ -158,7 +158,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         self.modalPresentationStyle = .custom
         self.transitioningDelegate = self
 
-        currentFeedbackUUID = eventsManager?.recordFeedback()
+        currentFeedback = eventsManager?.createFeedback()
     }
     
     override public func viewDidLoad() {
@@ -236,9 +236,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     func send(_ item: FeedbackItem) {
-        if let uuid = currentFeedbackUUID {
-            delegate?.feedbackViewController(self, didSend: item, uuid: uuid)
-            eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
+        if let feedback = currentFeedback {
+            delegate?.feedbackViewController(self, didSend: item, feedback: feedback)
+            eventsManager?.sendFeedback(feedback, type: item.feedbackType)
         }
         
         guard let parent = presentingViewController else {
@@ -253,9 +253,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     func dismissFeedbackItem() {
         delegate?.feedbackViewControllerDidCancel(self)
-        if let uuid = currentFeedbackUUID {
-            eventsManager?.cancelFeedback(uuid: uuid)
-        }
+        currentFeedback = nil
         dismiss(animated: true, completion: nil)
     }
 }

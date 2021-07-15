@@ -182,10 +182,9 @@ open class NavigationEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> NavigationEventDetails? {
+    func navigationFeedbackEvent() -> NavigationEventDetails? {
         var event: NavigationEventDetails?
         
-        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         if let activeNavigationDataSource = dataSource, let sessionState = sessionState {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
                                                  session: sessionState, defaultInterface: usesDefaultUserInterface)
@@ -195,9 +194,7 @@ open class NavigationEventsManager {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
         }
         
-        event?.description = description
         event?.userId = UIDevice.current.identifierForVendor?.uuidString
-        event?.feedbackType = type.description
         event?.event = MMEEventTypeNavigationFeedback
         event?.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
@@ -356,8 +353,8 @@ open class NavigationEventsManager {
      @param source A `FeedbackSource` used to specify the source of feedback.
      @param description A custom string used to describe the problem in detail.
      */
-    public func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackType, source: FeedbackSource, description: String?) {
-        feedback.update(type: type, source: source, description: description)
+    public func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
+        feedback.update(type: type, source: .user, description: description)
         sendFeedbackEvents([feedback])
     }
     
