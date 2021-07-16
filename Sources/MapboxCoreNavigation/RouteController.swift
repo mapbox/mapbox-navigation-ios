@@ -312,11 +312,14 @@ open class RouteController: NSObject {
         let newStepIndex = Int(status.stepIndex)
         let newIntersectionIndex = Int(status.intersectionIndex)
         
+        let oldLegIndex = progress.legIndex
         if newLegIndex != progress.legIndex {
             progress.legIndex = newLegIndex
         }
+        
+        if newStepIndex != progress.currentLegProgress.stepIndex {
+            precondition(progress.currentLegProgress.leg.steps.indices.contains(newStepIndex), "The stepIndex: \(newStepIndex) is higher than steps count: \(progress.currentLegProgress.leg.steps.count) of the leg :\(newLegIndex) or not included. The old leg index: \(oldLegIndex) will not be updated in this case.")
 
-        if (newStepIndex != progress.currentLegProgress.stepIndex) && (newStepIndex < progress.currentLeg.steps.endIndex) {
             progress.currentLegProgress.stepIndex = newStepIndex
         }
         
