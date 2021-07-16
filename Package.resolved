@@ -83,15 +83,6 @@
         }
       },
       {
-        "package": "MapboxGeocoder",
-        "repositoryURL": "https://github.com/mapbox/MapboxGeocoder.swift.git",
-        "state": {
-          "branch": null,
-          "revision": "91fb908bb57c0fcddc0062b5d64ea2002e0ea789",
-          "version": "0.14.0"
-        }
-      },
-      {
         "package": "Nimble",
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {

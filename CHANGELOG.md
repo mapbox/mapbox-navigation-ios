@@ -16,6 +16,7 @@
 * Xcode 12.4 or above is now required for building this SDK from source.
 * Carthage v0.38 or above is now required for installing this SDK if you use Carthage. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
 * You can fully build this SDK on Macs with Apple Silicon. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
+* Removed the optional dependency on MapboxGeocoder.swift. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999), [#3183](https://github.com/mapbox/mapbox-navigation-ios/issues/3183])
 
 ### Map
 
@@ -86,7 +87,6 @@
 * Added `CarPlayManagerDelegate.carPlayManager(_:shouldPresentArrivalUIFor:)` and `CarPlayNavigationViewController.navigationService(_:didArriveAt:)` to allow developers to determine whether to present Arrival UI for CarPlay. ([#3016](https://github.com/mapbox/mapbox-navigation-ios/pull/3016))
 * Renamed `CarPlayNavigationDelegate` to `CarPlayNavigationViewControllerDelegate` and `CarPlayNavigationViewController.carPlayNavigationDelegate` to `CarPlayNavigationViewController.delegate`. ([#3036](https://github.com/mapbox/mapbox-navigation-ios/pull/3036))
 * Changed access level of `styleManager` in `CarPlayNavigationViewController` and `CarPlayMapViewController` from default to `public private(set)`. ([#3137](https://github.com/mapbox/mapbox-navigation-ios/pull/3137))
-* Removed optional dependency on MapboxGeocoder.swift. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * Moved `CarPlaySearchController.searchTemplate(_:updatedSearchText:completionHandler:)`, `CarPlaySearchController.searchTemplate(_:searchTemplate:selectedResult:completionHandler:)` methods to `CarPlaySearchControllerDelegate` protocol. Renamed `resultsOrNoResults(_:limit:)` to `searchResults(with:limit:)`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * `CarPlaySearchControllerDelegate` now conforms to `CPSearchTemplateDelegate` protocol. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * `AppDelegate` now extends `CarPlaySearchControllerDelegate`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))

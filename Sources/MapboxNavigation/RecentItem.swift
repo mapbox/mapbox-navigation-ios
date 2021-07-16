@@ -55,7 +55,7 @@ public struct RecentItem: Equatable, Codable {
      */
     public func matches(_ searchText: String) -> Bool {
         return navigationGeocodedPlacemark.title.contains(searchText) ||
-            navigationGeocodedPlacemark.address?.contains(searchText) ?? false
+            navigationGeocodedPlacemark.subtitle?.contains(searchText) ?? false
     }
     
     public static func ==(lhs: RecentItem, rhs: RecentItem) -> Bool {
