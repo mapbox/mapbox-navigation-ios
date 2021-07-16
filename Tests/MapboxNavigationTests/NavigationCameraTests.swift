@@ -43,44 +43,28 @@ class CameraStateTransitionMock: CameraStateTransition {
     
     weak var mapView: MapView?
     
-    let duration = 0.1
-    
-    let curve: UIView.AnimationCurve = .linear
-    
     required init(_ mapView: MapView) {
         self.mapView = mapView
     }
     
     func transitionToFollowing(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
-        mapView?.camera.ease(to: cameraOptions,
-                             duration: duration,
-                             curve: curve,
-                             completion: { _ in
-                                completion()
-                             })
+        // Delay is used to be able to verify whether `NavigationCameraState` changes from
+        // `NavigationCameraState.transitionToFollowing` to `NavigationCameraState.following`.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            completion()
+        }
     }
     
     func transitionToOverview(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
-        mapView?.camera.ease(to: cameraOptions,
-                             duration: duration,
-                             curve: curve,
-                             completion: { _ in
-                                completion()
-                             })
+        // Delay is used to be able to verify whether `NavigationCameraState` changes from
+        // `NavigationCameraState.transitionToOverview` to `NavigationCameraState.overview`.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            completion()
+        }
     }
     
-    func updateForFollowing(_ cameraOptions: CameraOptions) {
-        mapView?.camera.ease(to: cameraOptions,
-                             duration: duration,
-                             curve: curve,
-                             completion: nil)
-    }
-    
-    func updateForOverview(_ cameraOptions: CameraOptions) {
-        mapView?.camera.ease(to: cameraOptions,
-                             duration: duration,
-                             curve: curve,
-                             completion: nil)
+    func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {
+
     }
     
     func cancelPendingTransition() {
@@ -96,6 +80,14 @@ class NavigationCameraTests: XCTestCase {
     
     override func tearDown() {
         super.tearDown()
+    }
+    
+    func testNavigationMapViewCameraType() {
+        var navigationMapView = NavigationMapView(frame: .zero)
+        XCTAssertEqual(navigationMapView.navigationCamera.type, .mobile)
+        
+        navigationMapView = NavigationMapView(frame: .zero, navigationCameraType: .carPlay)
+        XCTAssertEqual(navigationMapView.navigationCamera.type, .carPlay)
     }
     
     func testNavigationCameraDefaultState() {
@@ -122,30 +114,38 @@ class NavigationCameraTests: XCTestCase {
         // By default Navigation Camera moves to `NavigationCameraState.following` state.
         XCTAssertEqual(navigationMapView.navigationCamera.state, .following)
         
+        let overviewExpectation = expectation(description: "Overview camera expectation.")
+        
         // After calling `NavigationCamera.moveToOverview()` camera state should be set
         // to `NavigationCameraState.transitionToOverview` first, only after finishing transition
         // to `NavigationCameraState.overview`.
-        navigationMapView.navigationCamera.moveToOverview()
+        navigationMapView.navigationCamera.moveToOverview {
+            overviewExpectation.fulfill()
+        }
         XCTAssertEqual(navigationMapView.navigationCamera.state, .transitionToOverview)
         
+        wait(for: [overviewExpectation], timeout: 1.0)
+
         // Navigation camera transition lasts 0.1 seconds. At the end of transition it is expected
         // that camera state is `NavigationCameraState.overview`.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
-            
-            // After calling `NavigationCamera.follow()` camera state should be set
-            // to `NavigationCameraState.transitionToFollowing` first, only after finishing transition
-            // to `NavigationCameraState.following`.
-            navigationMapView.navigationCamera.follow()
-            XCTAssertEqual(navigationMapView.navigationCamera.state, .transitionToFollowing)
-            
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                XCTAssertEqual(navigationMapView.navigationCamera.state, .following)
-            }
+        XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
+        
+        let followingExpectation = expectation(description: "Following camera expectation.")
+        
+        // After calling `NavigationCamera.follow()` camera state should be set
+        // to `NavigationCameraState.transitionToFollowing` first, only after finishing transition
+        // to `NavigationCameraState.following`.
+        navigationMapView.navigationCamera.follow {
+            followingExpectation.fulfill()
         }
+        XCTAssertEqual(navigationMapView.navigationCamera.state, .transitionToFollowing)
+        
+        wait(for: [followingExpectation], timeout: 1.0)
+        
+        XCTAssertEqual(navigationMapView.navigationCamera.state, .following)
     }
     
-    func testNavigationCameraOverviewState() {
+    func testNavigationCameraOverviewStateDoesntChange() {
         let navigationMapView = NavigationMapView(frame: .zero)
         
         navigationMapView.navigationCamera.viewportDataSource = ViewportDataSourceMock(navigationMapView.mapView)
@@ -154,19 +154,25 @@ class NavigationCameraTests: XCTestCase {
         // By default Navigation Camera moves to `NavigationCameraState.following` state.
         XCTAssertEqual(navigationMapView.navigationCamera.state, .following)
         
+        let overviewExpectation = expectation(description: "Overview camera expectation.")
+        
         // After calling `NavigationCamera.moveToOverview()` camera state should be set
         // to `NavigationCameraState.transitionToOverview` first, only after finishing transition
         // to `NavigationCameraState.overview`.
-        navigationMapView.navigationCamera.moveToOverview()
+        navigationMapView.navigationCamera.moveToOverview {
+            overviewExpectation.fulfill()
+        }
         XCTAssertEqual(navigationMapView.navigationCamera.state, .transitionToOverview)
+        
+        wait(for: [overviewExpectation], timeout: 1.0)
         
         // Navigation camera transition lasts 0.1 seconds. At the end of transition it is expected
         // that camera state is `NavigationCameraState.overview`.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
-            
-            // All further calls to `NavigationCamera.moveToOverview()` should not change camera state.
-            navigationMapView.navigationCamera.moveToOverview()
+        XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
+        
+        // All further calls to `NavigationCamera.moveToOverview()` should not change camera state and
+        // will be executed right away.
+        navigationMapView.navigationCamera.moveToOverview {
             XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
         }
     }
