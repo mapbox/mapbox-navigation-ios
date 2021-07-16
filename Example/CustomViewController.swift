@@ -46,8 +46,8 @@ class CustomViewController: UIViewController {
         navigationMapView.userCourseView.isHidden = false
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: userRouteResponse!.routes!.first!) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(routeResponse:userRouteResponse!, //userIndexedRoute!.0,
-                                                    routeIndex: userRouteIndex!, //userIndexedRoute!.1,
+        navigationService = MapboxNavigationService(routeResponse:userRouteResponse!,
+                                                    routeIndex: userRouteIndex!,
                                                     routeOptions: userRouteOptions!,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .onPoorGPS)
