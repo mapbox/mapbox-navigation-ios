@@ -83,7 +83,7 @@ class NavigationEventsManagerTests: TestCase {
         let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
         let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: routeOptions)
         let dataSource = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: routeOptions, directions: directions, simulating: .onPoorGPS)
-        let sessionState = SessionState(currentRoute: route, originalRoute: route)
+        let sessionState = SessionState(currentRoute: route, originalRoute: route, routeIdentifier: routeResponse.identifier)
         
         // Attempt to create NavigationEventDetails object from global queue, no errors from Main Thread Checker
         // are expected.
