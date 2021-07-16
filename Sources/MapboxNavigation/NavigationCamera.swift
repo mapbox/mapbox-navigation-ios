@@ -126,9 +126,10 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      When started, state will first change to `NavigationCameraState.transitionToFollowing` and then
      to the final `NavigationCameraState.following` when ended.
      */
-    public func follow() {
+    public func follow(_ completion: (() -> Void)? = nil) {
         switch state {
         case .transitionToFollowing, .following:
+            completion?()
             return
             
         case .idle, .transitionToOverview, .overview:
@@ -144,6 +145,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             
             cameraStateTransition.transitionToFollowing(cameraOptions) { 
                 self.state = .following
+                completion?()
             }
             
             break
@@ -155,9 +157,10 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      When started, state will first change to `NavigationCameraState.transitionToOverview` and then
      to the final `NavigationCameraState.overview` when ended.
      */
-    public func moveToOverview() {
+    public func moveToOverview(_ completion: (() -> Void)? = nil) {
         switch state {
         case .transitionToOverview, .overview:
+            completion?()
             return
             
         case .idle, .transitionToFollowing, .following:
@@ -173,6 +176,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             
             cameraStateTransition.transitionToOverview(cameraOptions) { 
                 self.state = .overview
+                completion?()
             }
             
             break
