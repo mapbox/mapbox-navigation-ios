@@ -8,7 +8,7 @@ import MapboxCommon_Private
 
 class SKUTests: TestCase {
     func testDirectionsSKU() {
-        billingServiceMock.onGetSKUTokenIfValid = {
+        billingServiceMock.onGetSKUTokenIfValid = { _ in
             TokenGenerator.getSKUToken(for: .nav2SesTrip)
         }
         let directionsSkuToken = Directions.skuToken
@@ -19,7 +19,7 @@ class SKUTests: TestCase {
     }
     
     func testSpeechSynthesizerSKU() {
-        billingServiceMock.onGetSKUTokenIfValid = {
+        billingServiceMock.onGetSKUTokenIfValid = { _ in
             TokenGenerator.getSKUToken(for: .nav2SesTrip)
         }
 
@@ -32,7 +32,7 @@ class SKUTests: TestCase {
 
     func testSKUTokensMatch() {
         let skuToken = TokenGenerator.getSKUToken(for: .nav2SesTrip)
-        billingServiceMock.onGetSKUTokenIfValid = { skuToken }
+        billingServiceMock.onGetSKUTokenIfValid = { _ in skuToken }
 
         let viewController = TokenTestViewController()
         let tokenExpectation = XCTestExpectation(description: "All tokens should be fetched")
@@ -47,6 +47,5 @@ class SKUTests: TestCase {
         XCTAssertNotEqual(viewController.mapViewToken, viewController.speechSynthesizerToken)
         XCTAssertEqual(viewController.speechSynthesizerToken, skuToken)
         XCTAssertEqual(viewController.directionsToken, skuToken)
-
     }
 }

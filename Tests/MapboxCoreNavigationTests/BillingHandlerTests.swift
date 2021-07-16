@@ -27,13 +27,13 @@ final class BillingHandlerUnitTests: TestCase {
         billingService.onTriggerBillingEvent = { _ in
             billingEventTriggered.fulfill()
         }
-        billingService.onStopBillingSession = {
+        billingService.onStopBillingSession = { _ in
             cancelSessionCalled.fulfill()
         }
 
         XCTAssertEqual(handler.sessionState, .stopped)
 
-        handler.beginBillingSession(type: .activeGuidance)
+        handler.beginBillingSession(for: .activeGuidance)
 
         DispatchQueue.main.async() { [unowned self] in
             handler.stopBillingSession()
@@ -47,7 +47,7 @@ final class BillingHandlerUnitTests: TestCase {
         let expectedSessionType = BillingHandler.SessionType.activeGuidance
         let billingEventTriggered = expectation(description: "Billing event triggered")
         let beginSessionTriggered = expectation(description: "Beging session triggered")
-        billingService.onStopBillingSession = {
+        billingService.onStopBillingSession = { _ in
             XCTFail("Cancel shouldn't be called")
         }
         billingService.onBeginBillingSession = { sessionType, _ in
@@ -59,7 +59,7 @@ final class BillingHandlerUnitTests: TestCase {
             billingEventTriggered.fulfill()
         }
 
-        handler.beginBillingSession(type: expectedSessionType)
+        handler.beginBillingSession(for: expectedSessionType)
         XCTAssertEqual(handler.sessionState, .running)
         waitForExpectations(timeout: 1, handler: nil)
     }
@@ -70,16 +70,16 @@ final class BillingHandlerUnitTests: TestCase {
         billingService.onBeginBillingSession = { _, _ in
             sessionStarted.fulfill()
         }
-        billingService.onPauseBillingSession = {
+        billingService.onPauseBillingSession = { _ in
             sessionPaused.fulfill()
         }
 
-        handler.beginBillingSession(type: .freeDrive)
+        handler.beginBillingSession(for: .freeDrive)
         handler.pauseBillingSession()
         waitForExpectations(timeout: 1, handler: nil)
         XCTAssertEqual(handler.sessionState, .paused)
         let billingSessionResumed = expectation(description: "Billing session resumed")
-        billingService.onResumeBillingSession = { _ in
+        billingService.onResumeBillingSession = { _, _ in
             billingSessionResumed.fulfill()
         }
 
@@ -96,12 +96,12 @@ final class BillingHandlerUnitTests: TestCase {
             sessionStarted.fulfill()
             XCTAssertEqual(sessionType, expectedSessionType)
         }
-        billingService.onResumeBillingSession = { onError in
+        billingService.onResumeBillingSession = { _, onError in
             DispatchQueue.global().async {
                 onError(.resumeFailed)
             }
         }
-        handler.beginBillingSession(type: expectedSessionType)
+        handler.beginBillingSession(for: expectedSessionType)
         handler.pauseBillingSession()
         handler.resumeBillingSession()
         waitForExpectations(timeout: 1, handler: nil)
@@ -116,7 +116,7 @@ final class BillingHandlerUnitTests: TestCase {
                 sessionFailed.fulfill()
             }
         }
-        handler.beginBillingSession(type: .activeGuidance)
+        handler.beginBillingSession(for: .activeGuidance)
         XCTAssertEqual(handler.sessionState, .running)
         waitForExpectations(timeout: 1, handler: nil)
         XCTAssertEqual(handler.sessionState, .stopped)
@@ -130,7 +130,7 @@ final class BillingHandlerUnitTests: TestCase {
                 billingEventTriggered.fulfill()
             }
         }
-        handler.beginBillingSession(type: .activeGuidance)
+        handler.beginBillingSession(for: .activeGuidance)
         waitForExpectations(timeout: 1, handler: nil)
         XCTAssertEqual(handler.sessionState, .running)
     }
@@ -142,15 +142,15 @@ final class BillingHandlerUnitTests: TestCase {
         billingService.onBeginBillingSession = { _, _ in
             billingSessionStarted.fulfill()
         }
-        billingService.onStopBillingSession = {
+        billingService.onStopBillingSession = { _ in
             XCTFail("Shouldn't stop")
         }
         let queue = DispatchQueue(label: "")
         queue.async {
-            self.handler.beginBillingSession(type: .freeDrive)
+            self.handler.beginBillingSession(for: .freeDrive)
         }
         queue.async {
-            self.handler.beginBillingSession(type: .activeGuidance)
+            self.handler.beginBillingSession(for: .activeGuidance)
             queue.async {
                 self.handler.stopBillingSession()
             }
@@ -166,20 +166,20 @@ final class BillingHandlerUnitTests: TestCase {
         billingService.onBeginBillingSession = { _, onError in
             sessionStarted.fulfill()
         }
-        billingService.onStopBillingSession = {
+        billingService.onStopBillingSession = { _ in
             sessionStopped.fulfill()
         }
-        billingService.onResumeBillingSession = { onError in
+        billingService.onResumeBillingSession = { _, onError in
             DispatchQueue.global().async {
                 onError(.resumeFailed)
             }
         }
         let queue = DispatchQueue(label: "")
         queue.async {
-            self.handler.beginBillingSession(type: .freeDrive)
+            self.handler.beginBillingSession(for: .freeDrive)
         }
         queue.async {
-            self.handler.beginBillingSession(type: .activeGuidance)
+            self.handler.beginBillingSession(for: .activeGuidance)
         }
         queue.async {
             self.handler.pauseBillingSession()
@@ -231,5 +231,22 @@ final class BillingHandlerUnitTests: TestCase {
         locationManager.tick()
 
         RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+    }
+
+    func testTokens() {
+        let freeRideToken = UUID().uuidString
+        let activeGuidanceToken = UUID().uuidString
+
+        billingService.onGetSKUTokenIfValid = { sessionType in
+            switch sessionType {
+            case .activeGuidance: return activeGuidanceToken
+            case .freeDrive: return freeRideToken
+            }
+        }
+
+        handler.beginBillingSession(for: .freeDrive)
+        XCTAssertEqual(handler.sessionToken, freeRideToken)
+        handler.beginBillingSession(for: .activeGuidance)
+        XCTAssertEqual(handler.sessionToken, activeGuidanceToken)
     }
 }

@@ -32,7 +32,7 @@ open class PassiveLocationManager: NSObject {
 
         subscribeNotifications()
         
-        BillingHandler.shared.beginBillingSession(type: .freeDrive)
+        BillingHandler.shared.beginBillingSession(for: .freeDrive)
     }
     
     deinit {

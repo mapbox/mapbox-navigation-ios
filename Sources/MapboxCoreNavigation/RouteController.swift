@@ -165,7 +165,7 @@ open class RouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
-        BillingHandler.shared.beginBillingSession(type: .activeGuidance)
+        BillingHandler.shared.beginBillingSession(for: .activeGuidance)
 
         subscribeNotifications()
         updateNavigator(with: _routeProgress)
