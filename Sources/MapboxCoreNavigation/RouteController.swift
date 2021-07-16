@@ -20,6 +20,8 @@ open class RouteController: NSObject {
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
+
+    private let sessionUUID: UUID = .init()
     
     var navigator: MapboxNavigationNative.Navigator {
         return Navigator.shared.navigator
@@ -165,7 +167,7 @@ open class RouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
-        BillingHandler.shared.beginBillingSession(for: .activeGuidance)
+        BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
         updateNavigator(with: _routeProgress)
@@ -173,7 +175,7 @@ open class RouteController: NSObject {
     }
     
     deinit {
-        BillingHandler.shared.stopBillingSession()
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
         
         resetObservation(for: _routeProgress)
         unsubscribeNotifications()

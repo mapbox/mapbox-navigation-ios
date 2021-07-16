@@ -44,6 +44,7 @@ protocol BillingService {
                               onError: @escaping (BillingServiceError) -> Void)
     func stopBillingSession(for sessionType: BillingHandler.SessionType)
     func triggerBillingEvent(onError: @escaping (BillingServiceError) -> Void)
+    func getSessionStatus(for sessionType: BillingHandler.SessionType) -> BillingHandler.SessionState
 }
 
 /// Implementation of `BillingService` protocol which uses `BillingServiceNative`.
@@ -54,6 +55,8 @@ private final class ProductionBillingService: BillingService {
     private let userAgent: String
     /// `SKUIdentifier` which is used for navigation MAU billing events.
     private let mauSku: SKUIdentifier = .nav2SesMAU
+
+    private var sessionState: [SKUIdentifier: BillingHandler.SessionState] = [:]
 
     init(accessToken: String, userAgent: String) {
         self.accessToken = accessToken
@@ -66,31 +69,40 @@ private final class ProductionBillingService: BillingService {
 
     func beginBillingSession(for sessionType: BillingHandler.SessionType,
                              onError: @escaping (BillingServiceError) -> Void) {
+        let skuToken = tripSku(for: sessionType)
+        sessionState[skuToken] = .running
         print(">>>> Beging Billing Session: \(sessionType)")
         BillingServiceNative.beginBillingSession(forAccessToken: accessToken,
                                                  userAgent: userAgent,
-                                                 skuIdentifier: tripSku(for: sessionType),
-                                                 callback: { nativeBillingServiceError in
+                                                 skuIdentifier: skuToken,
+                                                 callback: { [weak self] nativeBillingServiceError in
+                                                    self?.sessionState[skuToken] = .stopped
                                                     onError(BillingServiceError(nativeBillingServiceError))
                                                  }, validity: sessionType.maxSessionInterval)
     }
 
     func pauseBillingSession(for sessionType: BillingHandler.SessionType) {
         print(">>>> Pause Billing Session")
-        BillingServiceNative.pauseBillingSession(for: tripSku(for: sessionType))
+        let skuToken = tripSku(for: sessionType)
+        sessionState[skuToken] = .paused
+        BillingServiceNative.pauseBillingSession(for: skuToken)
     }
 
     func resumeBillingSession(for sessionType: BillingHandler.SessionType,
                               onError: @escaping (BillingServiceError) -> Void) {
-        BillingServiceNative.resumeBillingSession(for: tripSku(for: sessionType)) { nativeBillingServiceError in
+        let skuToken = tripSku(for: sessionType)
+        BillingServiceNative.resumeBillingSession(for: skuToken) { [weak self] nativeBillingServiceError in
+            self?.sessionState[skuToken] = .stopped
             onError(BillingServiceError(nativeBillingServiceError))
         }
         print(">>>> Resume Billing Session")
     }
 
     func stopBillingSession(for sessionType: BillingHandler.SessionType) {
+        let skuToken = tripSku(for: sessionType)
+        sessionState[skuToken] = .stopped
         print(">>>> Stop Billing Session")
-        BillingServiceNative.stopBillingSession(for: tripSku(for: sessionType))
+        BillingServiceNative.stopBillingSession(for: skuToken)
     }
 
     func triggerBillingEvent(onError: @escaping (BillingServiceError) -> Void) {
@@ -100,6 +112,10 @@ private final class ProductionBillingService: BillingService {
                                                  skuIdentifier: mauSku) { nativeBillingServiceError in
             onError(BillingServiceError(nativeBillingServiceError))
         }
+    }
+
+    func getSessionStatus(for sessionType: BillingHandler.SessionType) -> BillingHandler.SessionState {
+        return sessionState[tripSku(for: sessionType)] ?? .stopped
     }
 
     private func tripSku(for sessionType: BillingHandler.SessionType) -> SKUIdentifier {
@@ -116,6 +132,11 @@ private final class ProductionBillingService: BillingService {
 ///
 /// State of the billing sessions can be obtained using `BillingHandler.sessionState` property.
 final class BillingHandler {
+    private struct Session {
+        let type: SessionType
+        var isPaused: Bool
+    }
+
     /// The state of the billing session
     enum SessionState: Equatable {
         /// Indicates that there is no active billing session.
@@ -151,104 +172,168 @@ final class BillingHandler {
 
     private let billingService: BillingService
 
-    /// A lock which serialize access to variables with underscore: `_startedSessionCount`, `_sessionState` etc.
+    /// A lock which serialize access to variables with underscore: `_sessions` etc.
+    /// As a convention, all class-level identifiers that starts with `_` should be executed with locked `lock`.
     private let lock: NSLock = .init()
-    private var _startedSessionCount: Int = 0
-    private var _sessionState: SessionState
-    private var _sessionType: SessionType
+
+    /// All currently active sessions. Running or paused. When session is stopped, it is removed from this variable.
+    private var _sessions: [UUID: Session] = [:]
 
     /// The session state of the `BillingService`.
     ///
     /// This variable is safe to use from any thread.
     /// Currently the state is managed on the NavSDK side, but will be replace with `MapboxCommon` implementation once
     /// available.
-    var sessionState: SessionState {
+    /// - parameter uuid: Session UUID which is provided in ???
+    #warning("uuid parameter doc finish")
+    func sessionState(uuid: UUID) -> SessionState {
         lock.lock(); defer {
             lock.unlock()
         }
 
-        return _sessionState
+        guard let session = _sessions[uuid] else {
+            return .stopped
+        }
+
+        if session.isPaused {
+            return .paused
+        }
+        else {
+            return .running
+        }
     }
 
     var sessionToken: String {
-        lock.lock(); defer {
-            lock.unlock()
+        lock.lock()
+        let sessionType = _sessionTypeForRequests()
+        lock.unlock()
+        
+        if let sessionType = sessionType {
+            return billingService.getSKUTokenIfValid(for: sessionType)
         }
-        return billingService.getSKUTokenIfValid(for: _sessionType)
+        else {
+            return ""
+        }
     }
     
     private init(service: BillingService) {
         self.billingService = service
-        self._sessionState = .stopped
-        self._sessionType = .freeDrive
     }
     
-    func beginBillingSession(for sessionType: SessionType) {
-        beginBillingSession(for: sessionType, increaseCount: true)
-    }
-
-    private func beginBillingSession(for sesionType: SessionType, increaseCount: Bool) {
+    func beginBillingSession(for sessionType: SessionType, uuid: UUID) {
         lock.lock()
-        _sessionState = .running
-        _sessionType = sesionType
-        if increaseCount {
-            _startedSessionCount += 1
+
+        if var existingSession = _sessions[uuid] {
+            existingSession.isPaused = false
+            _sessions[uuid] = existingSession
+        }
+        else {
+            let session = Session(type: sessionType, isPaused: false)
+            _sessions[uuid] = session
         }
         lock.unlock()
 
-        billingService.triggerBillingEvent(onError: { error in
-            print(error)
-        })
-        billingService.beginBillingSession(for: sesionType, onError: { [weak self] error in
-            self?.failedToBeginBillingSession(with: error)
-        })
+        let triggerBillingServiceEvents = billingService.getSessionStatus(for: sessionType) != .running
+        if triggerBillingServiceEvents {
+            billingService.triggerBillingEvent(onError: { error in
+                print(error)
+            })
+            billingService.beginBillingSession(for: sessionType, onError: { [weak self] error in
+                self?.failedToBeginBillingSession(with: uuid, with: error)
+            })
+        }
     }
     
-    func stopBillingSession() {
+    func stopBillingSession(with uuid: UUID) {
         lock.lock()
-        _startedSessionCount -= 1
-        guard _startedSessionCount == 0 else {
+        guard let session = _sessions[uuid] else {
+            assertionFailure("Trying to stop non started session.");
             lock.unlock(); return
         }
-        _sessionState = .stopped
-        let sessionType = _sessionType
+        _sessions[uuid] = nil
+
+        if !_hasSession(with: session.type) && billingService.getSessionStatus(for: session.type) != .stopped {
+            billingService.stopBillingSession(for: session.type)
+        }
         lock.unlock()
-        billingService.stopBillingSession(for: sessionType)
     }
     
-    func pauseBillingSession() {
+    func pauseBillingSession(with uuid: UUID) {
         lock.lock()
-        _sessionState = .paused
-        let sessionType = _sessionType
-        lock.unlock()
-        billingService.pauseBillingSession(for: sessionType)
-    }
+        guard var session = _sessions[uuid] else {
+            assertionFailure("Trying to pause non-existing session.")
+            lock.unlock(); return
+        }
+        session.isPaused = true
+        _sessions[uuid] = session
 
-    func resumeBillingSession() {
-        lock.lock()
-        _sessionState = .running
-        let sessionType = _sessionType
+
+        let triggerBillingServiceEvent = !_hasSession(with: session.type, isPaused: false)
+            && billingService.getSessionStatus(for: session.type) == .running
         lock.unlock()
 
-        billingService.resumeBillingSession(for: sessionType) { _ in
-            self.failedToResumeBillingSession()
+        if triggerBillingServiceEvent {
+            billingService.pauseBillingSession(for: session.type)
         }
     }
 
-    private func failedToBeginBillingSession(with error: Error) {
+    func resumeBillingSession(with uuid: UUID) {
+        lock.lock()
+        guard var session = _sessions[uuid] else {
+            assertionFailure("Trying to pause non-existing session.")
+            lock.unlock(); return
+        }
+        session.isPaused = false
+        _sessions[uuid] = session
+        let triggerBillingServiceEvent = billingService.getSessionStatus(for: session.type) == .paused
+        lock.unlock()
+
+        if triggerBillingServiceEvent {
+            billingService.resumeBillingSession(for: session.type) { _ in
+                self.failedToResumeBillingSession(with: uuid)
+            }
+        }
+    }
+
+    private func failedToBeginBillingSession(with uuid: UUID, with error: Error) {
         lock.lock(); defer {
             lock.unlock()
         }
-        _sessionState = .stopped
+        _sessions[uuid] = nil
     }
 
-    private func failedToResumeBillingSession() {
+    private func failedToResumeBillingSession(with uuid: UUID) {
         lock.lock()
-        _sessionState = .stopped
-        let sessionType = _sessionType
+        guard let session = _sessions[uuid] else {
+            lock.unlock(); return
+        }
+        _sessions[uuid] = nil
         lock.unlock()
+        beginBillingSession(for: session.type, uuid: uuid)
+    }
 
-        beginBillingSession(for: sessionType, increaseCount: false)
+    private func _sessionTypeForRequests() -> SessionType? {
+        for session in _sessions.values {
+            if session.type == .activeGuidance {
+                return .activeGuidance
+            }
+        }
+        if _sessions.isEmpty {
+            return nil
+        }
+        else {
+            return .freeDrive
+        }
+    }
+
+    private func _hasSession(with type: SessionType) -> Bool {
+        return _sessions.contains(where: { $0.value.type == type })
+    }
+
+    private func _hasSession(with type: SessionType, isPaused: Bool) -> Bool {
+        return _sessions.values.contains { session in
+            session.type == type && session.isPaused == isPaused
+        }
     }
 }
 

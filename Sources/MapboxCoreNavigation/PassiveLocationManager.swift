@@ -10,6 +10,8 @@ import MapboxDirections
  To find out when the user’s location changes, implement the `PassiveLocationManagerDelegate` protocol, or observe `Notification.Name.passiveLocationManagerDidUpdate` notifications for more detailed information.
  */
 open class PassiveLocationManager: NSObject {
+    private let sessionUUID: UUID = .init()
+
     /**
      Initializes the location manager with the given directions service.
      
@@ -32,11 +34,11 @@ open class PassiveLocationManager: NSObject {
 
         subscribeNotifications()
         
-        BillingHandler.shared.beginBillingSession(for: .freeDrive)
+        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
     }
     
     deinit {
-        BillingHandler.shared.stopBillingSession()
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
         
         unsubscribeNotifications()
     }
@@ -132,20 +134,20 @@ open class PassiveLocationManager: NSObject {
     ///
     /// Use this method when you no longer need to receive updates of location status to preserve existing billing session.
     public func pauseDriveSession() {
-        BillingHandler.shared.pauseBillingSession()
+        BillingHandler.shared.pauseBillingSession(with: sessionUUID)
     }
 
     /// Resumes the driving session.
     ///
     /// Resumes location updates and billing session.
     public func resumeDriveSession() {
-        BillingHandler.shared.resumeBillingSession()
+        BillingHandler.shared.resumeBillingSession(with: sessionUUID)
     }    
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus,
-              BillingHandler.shared.sessionState == .running else { return }
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
         DispatchQueue.main.async { [weak self] in
             self?.update(to: status)
         }

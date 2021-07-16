@@ -8,11 +8,19 @@ import MapboxNavigationNative
 final class BillingHandlerUnitTests: TestCase {
     private var billingService: BillingServiceMock!
     private var handler: BillingHandler!
+    private let freeRideToken = UUID().uuidString
+    private let activeGuidanceToken = UUID().uuidString
 
     override func setUp() {
         super.setUp()
         billingService = .init()
         handler = BillingHandler.__createMockedHandler(with: billingService)
+        billingService.onGetSKUTokenIfValid = { [unowned self] sessionType in
+            switch sessionType {
+            case .activeGuidance: return activeGuidanceToken
+            case .freeDrive: return freeRideToken
+            }
+        }
     }
 
     override func tearDown() {
@@ -31,16 +39,22 @@ final class BillingHandlerUnitTests: TestCase {
             cancelSessionCalled.fulfill()
         }
 
-        XCTAssertEqual(handler.sessionState, .stopped)
+        let sessionUUID = UUID()
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .stopped)
 
-        handler.beginBillingSession(for: .activeGuidance)
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         DispatchQueue.main.async() { [unowned self] in
-            handler.stopBillingSession()
+            handler.stopBillingSession(with: sessionUUID)
         }
 
         waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState, .stopped)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .stopped)
+
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance),
+        ])
     }
 
     func testSessionStart() {
@@ -59,9 +73,14 @@ final class BillingHandlerUnitTests: TestCase {
             billingEventTriggered.fulfill()
         }
 
-        handler.beginBillingSession(for: expectedSessionType)
-        XCTAssertEqual(handler.sessionState, .running)
+        let sessionUUID = UUID()
+        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUUID)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .running)
         waitForExpectations(timeout: 1, handler: nil)
+
+        billingService.assertEvents([
+            .beginBillingSession(expectedSessionType),
+        ])
     }
 
     func testSessionPause() {
@@ -74,18 +93,26 @@ final class BillingHandlerUnitTests: TestCase {
             sessionPaused.fulfill()
         }
 
-        handler.beginBillingSession(for: .freeDrive)
-        handler.pauseBillingSession()
+        let sessionUUID = UUID()
+        handler.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
+        handler.pauseBillingSession(with: sessionUUID)
         waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState, .paused)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .paused)
         let billingSessionResumed = expectation(description: "Billing session resumed")
         billingService.onResumeBillingSession = { _, _ in
             billingSessionResumed.fulfill()
         }
 
-        handler.resumeBillingSession()
+        handler.resumeBillingSession(with: sessionUUID)
         waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState, .running)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .running)
+
+
+        billingService.assertEvents([
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
+            .resumeBillingSession(.freeDrive),
+        ])
     }
 
     func testSessionResumeFailed() {
@@ -101,11 +128,21 @@ final class BillingHandlerUnitTests: TestCase {
                 onError(.resumeFailed)
             }
         }
-        handler.beginBillingSession(for: expectedSessionType)
-        handler.pauseBillingSession()
-        handler.resumeBillingSession()
+
+        let sessionUUID = UUID()
+        handler.beginBillingSession(for: expectedSessionType, uuid: sessionUUID)
+        handler.pauseBillingSession(with: sessionUUID)
+        handler.resumeBillingSession(with: sessionUUID)
         waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState, .running)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .running)
+
+
+        billingService.assertEvents([
+            .beginBillingSession(expectedSessionType),
+            .pauseBillingSession(expectedSessionType),
+            .resumeBillingSession(expectedSessionType),
+            .beginBillingSession(expectedSessionType),
+        ])
     }
 
     func testSessionBeginFailed() {
@@ -116,53 +153,69 @@ final class BillingHandlerUnitTests: TestCase {
                 sessionFailed.fulfill()
             }
         }
-        handler.beginBillingSession(for: .activeGuidance)
-        XCTAssertEqual(handler.sessionState, .running)
+        let sessionUUID = UUID()
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .running)
         waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState, .stopped)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .stopped)
+
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+        ])
     }
 
     func testFailedMauBillingDoNotStopSession() {
         let billingEventTriggered = expectation(description: "Billing event triggered")
+        let beginSessionTriggered = expectation(description: "Begin session triggered")
         billingService.onTriggerBillingEvent = { onError in
             DispatchQueue.global().async {
                 onError(.tokenValidationFailed)
                 billingEventTriggered.fulfill()
             }
         }
-        handler.beginBillingSession(for: .activeGuidance)
+        billingService.onBeginBillingSession = { _, _ in
+            beginSessionTriggered.fulfill()
+        }
+        let sessionUUID = UUID()
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
         waitForExpectations(timeout: 1, handler: nil)
-        XCTAssertEqual(handler.sessionState, .running)
+        XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .running)
+
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+        ])
     }
 
     /// If two sessions starts, one after another, and then the first one stopped, the billing session should continue.
     func testTwoSessionsWithOneStopped() {
-        let billingSessionStarted = expectation(description: "Billing session started")
-        billingSessionStarted.expectedFulfillmentCount = 2
-        billingService.onBeginBillingSession = { _, _ in
-            billingSessionStarted.fulfill()
-        }
-        billingService.onStopBillingSession = { _ in
-            XCTFail("Shouldn't stop")
-        }
+        let finished = expectation(description: "Finished")
         let queue = DispatchQueue(label: "")
         queue.async {
-            self.handler.beginBillingSession(for: .freeDrive)
+            self.handler.beginBillingSession(for: .freeDrive, uuid: UUID())
         }
         queue.async {
-            self.handler.beginBillingSession(for: .activeGuidance)
+            let sessionUUID = UUID()
+
+            self.handler.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
             queue.async {
-                self.handler.stopBillingSession()
+                self.handler.stopBillingSession(with: sessionUUID)
+                finished.fulfill()
             }
         }
         waitForExpectations(timeout: 1, handler: nil)
-        RunLoop.main.run(until: Date().addingTimeInterval(1)) // Make sure stop isn't called
+
+        billingService.assertEvents([
+            .beginBillingSession(.freeDrive),
+            .beginBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance)
+        ])
     }
 
     func testTwoSessionsWithResumeFailed() {
         let sessionStarted = expectation(description: "Session started")
         let sessionStopped = expectation(description: "Session stopped")
         sessionStarted.expectedFulfillmentCount = 3
+        sessionStopped.expectedFulfillmentCount = 2
         billingService.onBeginBillingSession = { _, onError in
             sessionStarted.fulfill()
         }
@@ -170,30 +223,40 @@ final class BillingHandlerUnitTests: TestCase {
             sessionStopped.fulfill()
         }
         billingService.onResumeBillingSession = { _, onError in
-            DispatchQueue.global().async {
-                onError(.resumeFailed)
-            }
+            onError(.resumeFailed)
         }
         let queue = DispatchQueue(label: "")
+        let freeDriveSessionUUID = UUID()
+        let activeGuidanceSessionUUID = UUID()
+
         queue.async {
-            self.handler.beginBillingSession(for: .freeDrive)
+            self.handler.beginBillingSession(for: .freeDrive, uuid: freeDriveSessionUUID)
         }
         queue.async {
-            self.handler.beginBillingSession(for: .activeGuidance)
+            self.handler.beginBillingSession(for: .activeGuidance, uuid: activeGuidanceSessionUUID)
         }
         queue.async {
-            self.handler.pauseBillingSession()
+            self.handler.pauseBillingSession(with: activeGuidanceSessionUUID)
         }
         queue.async {
-            self.handler.resumeBillingSession()
+            self.handler.resumeBillingSession(with: activeGuidanceSessionUUID)
         }
         queue.async {
-            self.handler.stopBillingSession()
+            self.handler.stopBillingSession(with: activeGuidanceSessionUUID)
         }
         queue.async {
-            self.handler.stopBillingSession()
+            self.handler.stopBillingSession(with: freeDriveSessionUUID)
         }
         waitForExpectations(timeout: 1, handler: nil)
+        billingService.assertEvents([
+            .beginBillingSession(.freeDrive),
+            .beginBillingSession(.activeGuidance),
+            .pauseBillingSession(.activeGuidance),
+            .resumeBillingSession(.activeGuidance),
+            .beginBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance),
+            .stopBillingSession(.freeDrive),
+        ])
     }
 
     func testPausedPassiveLocationManagerDoNotUpdateStatus() {
@@ -231,22 +294,108 @@ final class BillingHandlerUnitTests: TestCase {
         locationManager.tick()
 
         RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+
+        billingServiceMock.assertEvents([
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive)
+        ])
     }
 
     func testTokens() {
-        let freeRideToken = UUID().uuidString
-        let activeGuidanceToken = UUID().uuidString
-
-        billingService.onGetSKUTokenIfValid = { sessionType in
-            switch sessionType {
-            case .activeGuidance: return activeGuidanceToken
-            case .freeDrive: return freeRideToken
-            }
-        }
-
-        handler.beginBillingSession(for: .freeDrive)
+        handler.beginBillingSession(for: .freeDrive, uuid: .init())
         XCTAssertEqual(handler.sessionToken, freeRideToken)
-        handler.beginBillingSession(for: .activeGuidance)
+        handler.beginBillingSession(for: .activeGuidance, uuid: .init())
         XCTAssertEqual(handler.sessionToken, activeGuidanceToken)
+    }
+
+    func testStartingFreeRideAfterActiveGuidance() {
+        handler.beginBillingSession(for: .activeGuidance, uuid: .init())
+        XCTAssertEqual(handler.sessionToken, activeGuidanceToken)
+        handler.beginBillingSession(for: .freeDrive, uuid: .init())
+        XCTAssertEqual(handler.sessionToken, activeGuidanceToken)
+    }
+
+    func testSessionStoppedForNonExistingUUID() {
+        XCTAssertEqual(billingService.getSessionStatus(for: .activeGuidance), .stopped)
+        XCTAssertEqual(handler.sessionState(uuid: UUID()), .stopped)
+    }
+
+    func testOneBillingSessionForTwoSameRideSession() {
+        let session1UUID = UUID()
+        let session2UUID = UUID()
+        handler.beginBillingSession(for: .activeGuidance, uuid: session1UUID)
+        handler.beginBillingSession(for: .activeGuidance, uuid: session2UUID)
+        XCTAssertEqual(billingService.getSessionStatus(for: .activeGuidance), .running)
+        handler.stopBillingSession(with: session1UUID)
+        XCTAssertEqual(handler.sessionState(uuid: session1UUID), .stopped)
+        XCTAssertEqual(handler.sessionState(uuid: session2UUID), .running)
+        XCTAssertEqual(billingService.getSessionStatus(for: .activeGuidance), .running)
+        handler.stopBillingSession(with: session2UUID)
+        XCTAssertEqual(handler.sessionState(uuid: session2UUID), .stopped)
+        XCTAssertEqual(billingService.getSessionStatus(for: .activeGuidance), .stopped)
+
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .stopBillingSession(.activeGuidance)
+        ])
+    }
+
+    func testTwoBillingSessionForTwoSameRideSession() {
+        let activeGuidanceSession1UUID = UUID()
+        let activeGuidanceSession2UUID = UUID()
+        let freeRideSession1UUID = UUID()
+        let freeRideSession2UUID = UUID()
+
+        handler.beginBillingSession(for: .activeGuidance, uuid: activeGuidanceSession1UUID)
+        handler.beginBillingSession(for: .activeGuidance, uuid: activeGuidanceSession2UUID)
+        handler.beginBillingSession(for: .freeDrive, uuid: freeRideSession1UUID)
+        handler.beginBillingSession(for: .freeDrive, uuid: freeRideSession2UUID)
+        handler.stopBillingSession(with: activeGuidanceSession1UUID)
+        handler.stopBillingSession(with: activeGuidanceSession2UUID)
+        handler.stopBillingSession(with: freeRideSession2UUID)
+        handler.stopBillingSession(with: freeRideSession1UUID)
+
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .beginBillingSession(.freeDrive),
+            .stopBillingSession(.activeGuidance),
+            .stopBillingSession(.freeDrive)
+        ])
+    }
+
+    /// A test case with quite complex configuration
+    func testComplexUsecase() {
+        let activeGuidanceSession1UUID = UUID()
+        let activeGuidanceSession2UUID = UUID()
+        let freeRideSession1UUID = UUID()
+        let freeRideSession2UUID = UUID()
+
+        handler.beginBillingSession(for: .activeGuidance, uuid: activeGuidanceSession1UUID)
+        handler.beginBillingSession(for: .freeDrive, uuid: freeRideSession1UUID)
+        handler.beginBillingSession(for: .activeGuidance, uuid: activeGuidanceSession2UUID)
+        handler.beginBillingSession(for: .freeDrive, uuid: freeRideSession2UUID)
+        handler.pauseBillingSession(with: freeRideSession1UUID)
+        handler.pauseBillingSession(with: activeGuidanceSession1UUID)
+        handler.resumeBillingSession(with: activeGuidanceSession1UUID)
+        handler.resumeBillingSession(with: freeRideSession1UUID)
+        handler.pauseBillingSession(with: freeRideSession1UUID)
+        handler.pauseBillingSession(with: freeRideSession2UUID)
+        handler.resumeBillingSession(with: freeRideSession1UUID)
+        handler.stopBillingSession(with: activeGuidanceSession1UUID)
+        handler.stopBillingSession(with: activeGuidanceSession2UUID)
+        handler.pauseBillingSession(with: freeRideSession1UUID)
+        handler.pauseBillingSession(with: freeRideSession2UUID)
+        handler.stopBillingSession(with: freeRideSession2UUID)
+        handler.stopBillingSession(with: freeRideSession1UUID)
+
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
+            .resumeBillingSession(.freeDrive),
+            .stopBillingSession(.activeGuidance),
+            .pauseBillingSession(.freeDrive),
+            .stopBillingSession(.freeDrive),
+        ])
     }
 }
