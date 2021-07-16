@@ -14,7 +14,7 @@ fileprivate let distanceThreshold: CLLocationDistance = 2
 // minimum threshold for both latitude and longitude between two coordinates
 fileprivate let coordinateThreshold: CLLocationDistance = 0.0005
 
-class NavigationServiceTests: XCTestCase {
+class NavigationServiceTests: TestCase {
     var eventsManagerSpy: NavigationEventsManagerSpy!
     let directionsClientSpy = DirectionsSpy()
     let delegate = NavigationServiceDelegateSpy()

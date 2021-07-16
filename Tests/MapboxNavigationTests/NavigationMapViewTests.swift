@@ -6,7 +6,7 @@ import MapboxMaps
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class NavigationMapViewTests: XCTestCase {
+class NavigationMapViewTests: TestCase {
     let response = Fixture.routeResponse(from: "route-with-instructions", options: NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
         CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
@@ -20,7 +20,6 @@ class NavigationMapViewTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
     }
     

@@ -6,7 +6,7 @@ import SnapshotTesting
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class BottomBannerSnapshotTests: XCTestCase {
+class BottomBannerSnapshotTests: TestCase {
     override func setUp() {
         super.setUp()
         isRecording = false

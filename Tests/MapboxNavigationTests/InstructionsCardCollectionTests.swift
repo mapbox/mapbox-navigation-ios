@@ -6,7 +6,7 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 
 /// :nodoc:
-class InstructionsCardCollectionTests: XCTestCase {
+class InstructionsCardCollectionTests: TestCase {
     lazy var initialRoute: Route = {
         return Fixture.route(from: jsonFileName, options: routeOptions)
     }()

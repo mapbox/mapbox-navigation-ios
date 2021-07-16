@@ -49,7 +49,7 @@ extension UNUserNotificationCenter {
     }
 }
 
-class NavigationViewControllerTests: XCTestCase {
+class NavigationViewControllerTests: TestCase {
     var customRoadName = [CLLocationCoordinate2D: String?]()
     
     var updatedStyleNumberOfTimes = 0
@@ -62,8 +62,6 @@ class NavigationViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
-        DirectionsCredentials.injectSharedToken(.mockedAccessToken)
         initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
         newRoute = Fixture.route(from: jsonFileName, options: routeOptions)
         dependencies = {
@@ -165,6 +163,13 @@ class NavigationViewControllerTests: XCTestCase {
     }
 
     func testCompleteRoute() {
+        DispatchQueue.global().async {
+            while true {
+                print(">>> Status: \(BillingHandler.shared.sessionState)")
+                Thread.sleep(forTimeInterval: 0.1)
+            }
+        }
+
         guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService

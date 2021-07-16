@@ -10,6 +10,8 @@ import MapboxDirections
  To find out when the user’s location changes, implement the `PassiveLocationManagerDelegate` protocol, or observe `Notification.Name.passiveLocationManagerDidUpdate` notifications for more detailed information.
  */
 open class PassiveLocationManager: NSObject {
+    private let sessionUUID: UUID = .init()
+
     /**
      Initializes the location manager with the given directions service.
      
@@ -31,12 +33,16 @@ open class PassiveLocationManager: NSObject {
         self.systemLocationManager.delegate = self
 
         subscribeNotifications()
+        
+        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
     }
     
     deinit {
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+        
         unsubscribeNotifications()
     }
-    
+
     /**
      The directions service that allows the location manager to access road network data.
      */
@@ -94,10 +100,25 @@ open class PassiveLocationManager: NSObject {
 
         lastRawLocation = locations.last
     }
+
+    /// Suspends the driving session.
+    ///
+    /// Use this method when you no longer need to receive updates of location status to preserve existing billing session.
+    public func pauseDriveSession() {
+        BillingHandler.shared.pauseBillingSession(with: sessionUUID)
+    }
+
+    /// Resumes the driving session.
+    ///
+    /// Resumes location updates and billing session.
+    public func resumeDriveSession() {
+        BillingHandler.shared.resumeBillingSession(with: sessionUUID)
+    }    
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
-              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
+              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus,
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
         DispatchQueue.main.async { [weak self] in
             self?.update(to: status)
         }

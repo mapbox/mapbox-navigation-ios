@@ -3,7 +3,7 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 @testable import TestHelper
 
-class LocationTests: XCTestCase {
+class LocationTests: TestCase {
     var setup: (progress: RouteProgress, firstLocation: CLLocation) {
         let progress = RouteProgress(route: route, routeIndex: 0, options: routeOptions)
         let firstCoord = progress.nearbyShape.coordinates.first!
