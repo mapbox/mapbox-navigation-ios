@@ -131,7 +131,7 @@ open class NavigationEventsManager {
         var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute.responseEndDate)
         event.counters.append(PerformanceEventDetails.Counter(name: "elapsed_time",
                                                               value: responseEndDate.timeIntervalSince(fetchStartDate)))
-        if let routeIdentifier = sessionState.currentRoute.routeIdentifier {
+        if let routeIdentifier = sessionState.routeIdentifier {
             event.attributes.append(PerformanceEventDetails.Attribute(name: "route_uuid", value: routeIdentifier))
         }
         return event
@@ -276,7 +276,7 @@ open class NavigationEventsManager {
         guard let dataSource = dataSource else { return }
 
         let route = dataSource.routeProgress.route
-        sessionState = SessionState(currentRoute: route, originalRoute: route)
+        sessionState = SessionState(currentRoute: route, originalRoute: route, routeIdentifier: dataSource.router.indexedRouteResponse.routeResponse.identifier)
     }
 
     func enqueueFoundFasterRouteEvent() {
