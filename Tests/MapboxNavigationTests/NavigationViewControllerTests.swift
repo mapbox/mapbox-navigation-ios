@@ -163,6 +163,13 @@ class NavigationViewControllerTests: TestCase {
     }
 
     func testCompleteRoute() {
+        DispatchQueue.global().async {
+            while true {
+                print(">>> Status: \(BillingHandler.shared.sessionState)")
+                Thread.sleep(forTimeInterval: 0.1)
+            }
+        }
+
         guard let dependencies = dependencies else { XCTFail("Dependencies are nil"); return }
         let navigationViewController = dependencies.navigationViewController
         let service = dependencies.navigationService

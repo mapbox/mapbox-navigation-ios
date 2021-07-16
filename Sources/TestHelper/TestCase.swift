@@ -1,12 +1,15 @@
 import Foundation
 import XCTest
 @testable import MapboxDirections
+@testable import MapboxCoreNavigation
 #if canImport(MapboxMaps)
 import MapboxMaps
 #endif
 
 /// Base Mapbox XCTestCase class with common setup logic
 open class TestCase: XCTestCase {
+    public var billingServiceMock: BillingServiceMock!
+
     /// Inidicates whether one time initialization completed in ``initializeIfNeeded`` method.
     private static var isInitializationCompleted: Bool = false
 
@@ -26,5 +29,11 @@ open class TestCase: XCTestCase {
         #endif
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationWhenInUseUsageDescription")
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationAlwaysAndWhenInUseUsageDescription")
+    }
+
+    open override func setUp() {
+        super.setUp()
+        billingServiceMock = .init()
+        BillingHandler.__replaceShareInstance(with: BillingHandler.__createMockedHandler(with: billingServiceMock))
     }
 }

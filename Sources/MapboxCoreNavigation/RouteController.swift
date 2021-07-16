@@ -261,8 +261,7 @@ open class RouteController: NSObject {
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
-              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus,
-              BillingHandler.shared.sessionState == .running else {
+              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else {
                   return
               }
         DispatchQueue.main.async { [weak self] in
@@ -492,20 +491,6 @@ open class RouteController: NSObject {
     public var roadObjectMatcher: RoadObjectMatcher {
         return Navigator.shared.roadObjectMatcher
     }
-
-    /// Suspends the driving session.
-    ///
-    /// Use this method when you no longer need to receive updates of location status to preserve existing billing session.
-    public func pauseDriveSession() {
-        BillingHandler.shared.pauseBillingSession()
-    }
-
-    /// Resumes the driving session.
-    ///
-    /// Resumes location updates and billing session.
-    public func resumeDriveSession() {
-        BillingHandler.shared.resumeBillingSession()
-    }    
 }
 
 extension RouteController: Router {

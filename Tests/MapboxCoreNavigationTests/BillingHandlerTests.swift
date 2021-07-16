@@ -5,52 +5,14 @@ import TestHelper
 import MapboxNavigationNative
 @testable import MapboxCoreNavigation
 
-final class BillingServiceMock: BillingService {
-    var onBeginBillingSession: ((_ sessionType: BillingHandler.SessionType,
-                                 _ callback: @escaping (Error) -> Void) -> Void)?
-    var onGetSKUTokenIfValid: (() -> String)?
-    var onStopBillingSession: (() -> Void)?
-    var onTriggerBillingEvent: ((_ onError: @escaping (Error) -> Void) -> Void)?
-    var onPauseBillingSession: (() -> Void)?
-    var onResumeBillingSession: ((_ onError: @escaping (Error) -> Void) -> Void)?
-
-    func getSKUTokenIfValid() -> String {
-        onGetSKUTokenIfValid?() ?? ""
-    }
-
-    func stopBillingSession() {
-        onStopBillingSession?()
-    }
-
-    func triggerBillingEvent(onError: @escaping (Error) -> Void) {
-        onTriggerBillingEvent?(onError)
-    }
-
-    func beginBillingSession(sessionType: BillingHandler.SessionType, onError: @escaping (Error) -> Void) {
-        onBeginBillingSession?(sessionType, onError)
-    }
-
-    func pauseBillingSession() {
-        onPauseBillingSession?()
-    }
-
-    func resumeBillingSession(onError: @escaping (Error) -> Void) {
-        onResumeBillingSession?(onError)
-    }
-}
-
-final class BillingHandlerUnitTests: XCTestCase {
-    private enum AnError: Error {
-        case any
-    }
-
+final class BillingHandlerUnitTests: TestCase {
     private var billingService: BillingServiceMock!
     private var handler: BillingHandler!
 
     override func setUp() {
         super.setUp()
         billingService = .init()
-        handler = BillingHandler(service: billingService)
+        handler = BillingHandler.__createMockedHandler(with: billingService)
     }
 
     override func tearDown() {
@@ -136,7 +98,7 @@ final class BillingHandlerUnitTests: XCTestCase {
         }
         billingService.onResumeBillingSession = { onError in
             DispatchQueue.global().async {
-                onError(AnError.any)
+                onError(.resumeFailed)
             }
         }
         handler.beginBillingSession(type: expectedSessionType)
@@ -150,7 +112,7 @@ final class BillingHandlerUnitTests: XCTestCase {
         let sessionFailed = expectation(description: "Session Failed")
         billingService.onBeginBillingSession = { _, onError in
             DispatchQueue.global().async {
-                onError(AnError.any)
+                onError(.tokenValidationFailed)
                 sessionFailed.fulfill()
             }
         }
@@ -164,7 +126,7 @@ final class BillingHandlerUnitTests: XCTestCase {
         let billingEventTriggered = expectation(description: "Billing event triggered")
         billingService.onTriggerBillingEvent = { onError in
             DispatchQueue.global().async {
-                onError(AnError.any)
+                onError(.tokenValidationFailed)
                 billingEventTriggered.fulfill()
             }
         }
@@ -209,7 +171,7 @@ final class BillingHandlerUnitTests: XCTestCase {
         }
         billingService.onResumeBillingSession = { onError in
             DispatchQueue.global().async {
-                onError(AnError.any)
+                onError(.resumeFailed)
             }
         }
         let queue = DispatchQueue(label: "")
@@ -232,52 +194,6 @@ final class BillingHandlerUnitTests: XCTestCase {
             self.handler.stopBillingSession()
         }
         waitForExpectations(timeout: 1, handler: nil)
-    }
-
-    func testPausedRouteControllerDoNotUpdateStatus() {
-        class DummyRouterDatesource: RouterDataSource {
-            var locationProvider: NavigationLocationManager.Type {
-                NavigationLocationManager.self
-            }
-        }
-        class RouterDelegateSpy: RouterDelegate {
-            var onProgressUpdate: (() -> Void)?
-
-            func router(_ router: MapboxCoreNavigation.Router, didRefresh routeProgress: RouteProgress) {}
-
-            func router(_ router: MapboxCoreNavigation.Router,
-                        didUpdate progress: RouteProgress,
-                        with location: CLLocation, rawLocation: CLLocation) {
-                onProgressUpdate?()
-            }
-        }
-
-        let routerDateSource = DummyRouterDatesource()
-        let routerDelegate = RouterDelegateSpy()
-        routerDelegate.onProgressUpdate = {
-            XCTFail("Updated on paused session isn't allowed")
-        }
-
-        let coordinates:[CLLocationCoordinate2D] = [
-            .init(latitude: 59.337928, longitude: 18.076841),
-        ]
-        let options = NavigationMatchOptions(coordinates: coordinates)
-        let route = Fixture.routesFromMatches(at: "sthlm-double-back", options: options)![0]
-        let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
-        let routeController = RouteController(along: route,
-                                              routeIndex: 0,
-                                              options: equivalentRouteOptions,
-                                              directions: DirectionsSpy(),
-                                              dataSource: routerDateSource)
-        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay")
-        let locationManager = ReplayLocationManager(locations: locations)
-        locationManager.startDate = Date()
-        locationManager.delegate = routeController
-        routeController.delegate = routerDelegate
-        routeController.pauseDriveSession()
-        locationManager.tick()
-
-        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
     }
 
     func testPausedPassiveLocationManagerDoNotUpdateStatus() {

@@ -10,5 +10,6 @@ enum SkuID: String {
     case mapsUser = "00"
     case navigationSession = "03"
     case navigationUser = "08"
+    case nav2SesTrip = "0a"
 }
 #endif
