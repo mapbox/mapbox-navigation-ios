@@ -7,6 +7,21 @@ import MapboxDirections
 
 let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 
+extension NavigationGeocodedPlacemark {
+    /**
+     Initializes a newly created `NavigationGeocodedPlacemark` object with a `GeocodedPlacemark`
+     instance and an optional subtitle.
+     
+     - parameter geocodedPlacemark: A `GeocodedPlacemark` instance, properties of which will be used in
+     `NavigationGeocodedPlacemark`.
+     - parameter subtitle: Subtitle, which can contain additional information regarding placemark
+     (e.g. address).
+     */
+    init(geocodedPlacemark: GeocodedPlacemark, subtitle: String?) {
+        self.init(title: geocodedPlacemark.formattedName, subtitle: subtitle, location: geocodedPlacemark.location, routableLocations: geocodedPlacemark.routableLocations)
+    }
+}
+
 // MARK: - CPApplicationDelegate methods
 
 /**
@@ -317,7 +332,7 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
                 }
                 
                 let navigationGeocodedPlacemarks = placemarks.map {
-                    NavigationGeocodedPlacemark(from: $0, subtitle: $0.subtitle)
+                    NavigationGeocodedPlacemark(geocodedPlacemark: $0, subtitle: $0.subtitle)
                 }
                 
                 let results = navigationGeocodedPlacemarks.map { $0.listItem() }
