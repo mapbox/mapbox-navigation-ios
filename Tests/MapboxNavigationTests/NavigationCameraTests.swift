@@ -1,6 +1,8 @@
 import XCTest
 import Turf
 import MapboxMaps
+import MapboxDirections
+
 @testable import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
@@ -62,7 +64,7 @@ class CameraStateTransitionMock: CameraStateTransition {
     }
     
     func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {
-
+        
     }
     
     func cancelPendingTransition() {
@@ -270,5 +272,58 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertNil(overviewCarPlayCameraOptions?.padding, "Padding should be nil.")
         XCTAssertNil(overviewCarPlayCameraOptions?.bearing, "Bearing should be nil.")
         XCTAssertNil(overviewCarPlayCameraOptions?.zoom, "Zoom should be nil.")
+    }
+    
+    func testViewportDataSourceDelegateForActiveGuidance() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        // Create new `NavigationViewportDataSource` instance, which listens to the
+        // `Notification.Name.routeControllerProgressDidChange` notification, which is sent during
+        // active guidance navigation.
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                        viewportDataSourceType: .active)
+        
+        let viewportDataSourceDelegateMock = ViewportDataSourceDelegateMock()
+        navigationViewportDataSource.delegate = viewportDataSourceDelegateMock
+        
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        
+        let expectation = self.expectation(forNotification: .routeControllerProgressDidChange,
+                                           object: self) { _ in
+            return true
+        }
+        
+        let origin = CLLocationCoordinate2DMake(37.765469, -122.415279)
+        let destination = CLLocationCoordinate2DMake(37.774865799742784, -122.41017207408589)
+        let routeOptions = NavigationRouteOptions(coordinates: [origin, destination])
+        
+        // Load previously serialized `Route` object in JSON format and deserialize it.
+        let routeData = Fixture.JSONFromFileNamed(name: "route-for-navigation-camera")
+        let decoder = JSONDecoder()
+        decoder.userInfo[.options] = routeOptions
+        
+        guard let route = try? decoder.decode(Route.self, from: routeData) else {
+            XCTFail("Route should be valid.")
+            return
+        }
+        
+        let routeProgress = RouteProgress(route: route,
+                                          routeIndex: 0,
+                                          options: routeOptions)
+        
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        let rawLocation = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        
+        let userInfo: [RouteController.NotificationUserInfoKey: Any] = [
+            .routeProgressKey: routeProgress,
+            .locationKey: location,
+            .rawLocationKey: rawLocation
+        ]
+        
+        NotificationCenter.default.post(name: .routeControllerProgressDidChange,
+                                        object: self,
+                                        userInfo: userInfo)
+        
+        wait(for: [expectation], timeout: 1.0)
     }
 }
