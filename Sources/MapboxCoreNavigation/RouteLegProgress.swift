@@ -16,7 +16,7 @@ open class RouteLegProgress: Codable {
      */
     public var stepIndex: Int {
         didSet {
-            assert(stepIndex >= 0 && stepIndex < leg.steps.endIndex)
+            precondition(leg.steps.indices.contains(stepIndex), "It's not possible to set the stepIndex: \(stepIndex) when it's higher than steps count \(leg.steps.count) or not included.")
             currentStepProgress = RouteStepProgress(step: currentStep)
         }
     }
@@ -141,10 +141,10 @@ open class RouteLegProgress: Codable {
      - parameter stepIndex: Current step the user is on.
      */
     public init(leg: RouteLeg, stepIndex: Int = 0, spokenInstructionIndex: Int = 0) {
+        precondition(leg.steps.indices.contains(stepIndex), "It's not possible to set the stepIndex: \(stepIndex) when it's higher than steps count \(leg.steps.count) or not included.")
+        
         self.leg = leg
         self.stepIndex = stepIndex
-        
-        precondition(leg.steps.indices.contains(stepIndex), "It's not possible to create RouteLegProgress without any steps or when stepIndex is higher than steps count.")
         
         currentStepProgress = RouteStepProgress(step: leg.steps[stepIndex], spokenInstructionIndex: spokenInstructionIndex)
     }
