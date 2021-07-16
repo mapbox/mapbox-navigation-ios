@@ -1,10 +1,7 @@
 import XCTest
 import Turf
 import MapboxMaps
-
-@testable import MapboxDirections
 @testable import TestHelper
-@testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
 class ViewportDataSourceMock: ViewportDataSource {
