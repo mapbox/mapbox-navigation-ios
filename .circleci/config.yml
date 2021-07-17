@@ -24,19 +24,144 @@ commands:
             template: basic_fail_1   
             branch_pattern: main
             mentions: '@here'
+  restore-carthage-cache:
+    parameters:
+      xcode:
+        type: string
+    steps:
+      - restore_cache:
+          key: carthage-cache-v1-{{ checksum "Cartfile.resolved" }}-<< parameters.xcode >>
+  save-carthage-cache:
+    parameters:
+      xcode:
+        type: string
+    steps:
+      - save_cache:
+          key: carthage-cache-v1-{{ checksum "Cartfile.resolved" }}-<< parameters.xcode >>
+          paths:
+            - Carthage
+
+  save-api-diff-cache:
+    parameters:
+      key:
+        type: string    
+      is_template:
+        type: boolean
+        default: false
+    steps:
+      - when:
+          condition: << parameters.is_template >>
+          steps: 
+            - save_cache:
+                key: nav-sdk-diff-cache-v5-{{ << parameters.key >> }}
+                paths:
+                  - api_logs
+      - unless:
+          condition: << parameters.is_template >>
+          steps:
+            - save_cache:
+                key: nav-sdk-diff-cache-v5-<< parameters.key >>
+                paths:
+                  - api_logs
+
+  restore-api-diff-cache:
+    parameters:
+      key:
+        type: string
+      is_template:
+        type: boolean
+        default: false
+    steps:
+      - when:
+          condition: << parameters.is_template >>
+          steps: 
+            - restore_cache:
+                key: nav-sdk-diff-cache-v5-{{ << parameters.key >> }}
+      - unless:
+          condition: << parameters.is_template >>
+          steps:
+            - restore_cache:
+                key: nav-sdk-diff-cache-v5-<< parameters.key >>
+
+  build-api-diff-cli-tool:
+    description: "Builds CLI tool which produce diff reports"
+    parameters:
+      sourcekitten-version:
+        type: string
+        default: "0.31.0"
+      swift-api-diff-version:
+        type: string
+        default: v1.0.0
+    steps:
+      - restore-sourcekitten-cache:
+          version: << parameters.sourcekitten-version >>
+      - run:
+          name: Install Sourcekitten
+          command: if [ ! -d /usr/local/Cellar/sourcekitten/<< parameters.sourcekitten-version >> ]; then brew update && brew install sourcekitten; fi
+      - save-sourcekitten-cache:
+          version: << parameters.sourcekitten-version >>      
+      - add_ssh_keys:
+          fingerprints:
+            - "8c:24:d5:99:22:42:45:8f:16:6f:8d:24:ee:08:97:13"
+      - run:
+          name: Checkout swift-api-diff CLI
+          command: cd Scripts && git clone git@github.com:mapbox/swift-api-diff.git --branch <<parameters.swift-api-diff-version>> --depth 1
+      - restore_cache:
+          key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
+      - run:
+          name: Building API Diff Report
+          command: if [ ! -f "scripts/swift-api-diff/.build/release/swift-api-diff" ]; then cd scripts/swift-api-diff && swift build --configuration release; fi
+      - save_cache:
+          key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
+          paths:
+            - scripts/swift-api-diff/.build/release/swift-api-diff
+
+  save-sourcekitten-cache:
+    description: "Save sourcekitten binary"
+    parameters:
+      version: 
+        type: string
+    steps:
+      - save_cache:
+          key: sourcekitten-v2-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-<< parameters.version >>
+          paths:
+            - /usr/local/Cellar/sourcekitten/<< parameters.version >>
+            - /usr/local/bin/sourcekitten
+
+  restore-sourcekitten-cache:    
+    description: "Restore sourcekitten binary"
+    parameters:
+      version: 
+        type: string
+    steps:
+      - restore_cache:
+          key: sourcekitten-v2-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-<< parameters.version >>
+
+  run_api_log_in_current_env:
+    parameters:
+      iOS:
+        type: string
+      device:
+        type: string
+    steps:
+      - run:
+          name: Generating MapboxCoreNavigation API Log
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff log ./ $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+      - run:
+          name: Generating MapboxNavigation API Log
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff log ./ $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+
+  carthage-bootstrap:
+    steps:
+      - run:
+          name: Install Dependencies
+          command: carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
 
 step-library:
   - &restore-cache
       restore_cache:
         keys:
           - nav-cache-v{{ .Environment.CARTHAGE_CACHE_VERSION }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-
-  - &save-cache
-      save_cache:
-        key: nav-cache-v{{ .Environment.CARTHAGE_CACHE_VERSION }}-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Cartfile.resolved" }}
-        paths:
-          - Carthage
-
   - &restore-cache-cocoapods
       restore_cache:
         keys:
@@ -110,16 +235,6 @@ step-library:
         name: Add GitHub to known hosts
         command: |
           for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
-
-  - &install-dependencies
-      when:
-        condition:
-          not: << parameters.spm >>
-        steps:
-          run:
-            name: Install Dependencies
-            command: |
-              carthage bootstrap --platform ios --cache-builds --configuration Debug --use-netrc --use-xcframeworks
 
   - &build-Example
       run:
@@ -212,9 +327,9 @@ jobs:
       codecoverage:
         type: boolean
         default: false
-      delete_private_deps:
+      verify_localization:
         type: boolean
-        default: false
+        default: true
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -226,23 +341,27 @@ jobs:
       - run:
           name: Install prerequisites
           command: if [ $(xcversion simulators | grep -cF "iOS << parameters.iOS >> Simulator (installed)") -eq 0 ]; then xcversion simulators --install="iOS << parameters.iOS >>" || true; fi
-      - run:
-          name: pre-start simulator
-          command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
-      - *verify-missing-localizable-strings
+      - when: # Simulator is needed only for tests
+          condition: << parameters.test >>
+          steps:
+            - run:          
+                name: pre-start simulator
+                command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
+      - when:
+          condition: << parameters.verify_localization >>
+          steps:
+            - *verify-missing-localizable-strings
       - *add-github-to-known-hosts
       - when:
           condition:
             not: << parameters.spm >>
           steps:
             - *update-carthage-version
-            - *restore-cache
-            - when:
-                condition: << parameters.delete_private_deps >>
-                steps:
-                  - run: rm -rf Cartfile.private && rm -rf Cartfile.resolved
-            - *install-dependencies
-            - *save-cache
+            - restore-carthage-cache:
+                xcode: << parameters.xcode >>
+            - carthage-bootstrap
+            - save-carthage-cache:
+                xcode: << parameters.xcode >>
             - run:
                 name: MapboxCoreNavigation
                 command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
@@ -328,6 +447,129 @@ jobs:
       - notify-build-finished:
           notify_success: << parameters.notify_success >>
 
+  get-api-log-job:
+    parameters:
+      xcode:
+        type: string
+        default: "12.4.0"
+      device:
+        type: string
+        default: "iPhone 12 Pro Max"
+      iOS:
+        type: string
+        default: "14.4"
+      is_base_api:
+        type: boolean
+        default: false
+      commit_hash: 
+        description: "git hash of the commit to be used for generating logs in api_logs folder"
+        type: string        
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1        
+    steps:     
+      - checkout
+      - when:
+          condition: << parameters.is_base_api >>
+          steps:
+            - restore-api-diff-cache:
+                is_template: true
+                key: checksum ".base_api"
+      - unless:
+          condition: << parameters.is_base_api >>
+          steps:
+            - restore-api-diff-cache:
+                key: << parameters.commit_hash >>
+      - run:
+          name: "Check if cache already exists"
+          command: |
+            API_LOGS_DIR=api_logs
+            if test -d "$API_LOGS_DIR"; then
+                echo "API logs cache at $API_LOGS_DIR exist. Finishing job."
+                circleci step halt
+            else
+                echo "API logs cache at $API_LOGS_DIR doesnt exist. Building from scratch."
+            fi
+      - *add-github-to-known-hosts
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *update-carthage-version
+      - when:
+          condition: << parameters.is_base_api >>
+          steps:
+            - run:
+                name: Checking out base api
+                command: mv .base_api .base_api_keep && git checkout $(cat .base_api_keep)
+      - unless:
+          condition: << parameters.is_base_api >>
+          steps:
+            - run:
+                name: Checking out commit
+                command: git checkout << parameters.commit_hash >>      
+      - restore-carthage-cache:
+          xcode: << parameters.xcode >>
+      - carthage-bootstrap
+      - save-carthage-cache:
+          xcode: << parameters.xcode >>
+      - build-api-diff-cli-tool
+      - run:
+          name: Move Xcode project aside
+          command: rm -rf *.xcodeproj
+      - run_api_log_in_current_env:
+          iOS: << parameters.iOS >>
+          device: << parameters.device >>
+      - when:
+          condition: << parameters.is_base_api >>
+          steps:
+            - save-api-diff-cache:
+                is_template: true
+                key: checksum ".base_api_keep"
+      - unless:
+          condition: << parameters.is_base_api >>
+          steps:
+            - save-api-diff-cache:
+                key: << parameters.commit_hash >>
+
+  api-diff-job:
+    parameters:
+      xcode:
+        type: string
+        default: "12.4.0"
+      device:
+        type: string
+        default: "iPhone 12 Pro Max"
+      iOS:
+        type: string
+        default: "14.4"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *add-github-to-known-hosts
+      - build-api-diff-cli-tool
+      - restore-api-diff-cache:
+          key: .Environment.CIRCLE_SHA1
+          is_template: true
+      - run:
+          name: Pick current API
+          command: mv api_logs new_api
+      - restore-api-diff-cache:
+          is_template: true
+          key: checksum ".base_api"
+      - run:
+          name: Pick old API
+          command: mv api_logs old_api
+      - run:
+          name: Generating MapboxCoreNavigation API Diff
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff diff $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json
+      - run:
+          name: Generating MapboxNavigation API Diff
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff diff $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json
+      
+
 workflows:
   extended-workflow:
     jobs:
@@ -352,6 +594,20 @@ workflows:
              branches:
                only:
                  - main
+  api-diff-workflow:
+    jobs:
+      - get-api-log-job:
+          name: "Get old API logs"
+          is_base_api: true
+          commit_hash: ""
+      - get-api-log-job:
+          name: "Get new API logs"
+          commit_hash: << pipeline.git.revision >>
+      - api-diff-job:
+          name: "Verify no breaking API changes introduced"
+          requires:
+            - "Get old API logs"
+            - "Get new API logs"
   main-workflow:
     jobs:
       - build-job:
