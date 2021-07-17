@@ -4,17 +4,18 @@ import Polyline
 import UIKit
 import AVFoundation
 import MapboxDirections
+import MapboxMobileEvents
 
 protocol EventDetails: Encodable {
-    var event: String? { get }
+    var event: String? { get set }
     var created: Date { get }
     var sessionIdentifier: String { get }
 }
 
 struct PerformanceEventDetails: EventDetails {
-    let event: String?
     let created: Date
     let sessionIdentifier: String
+    var event: String?
     var counters: [Counter] = []
     var attributes: [Attribute] = []
     
@@ -36,7 +37,7 @@ struct PerformanceEventDetails: EventDetails {
         let value: String
     }
     
-    init(event: String?, session: SessionState, createdOn created: Date?) {
+    init(event: String, session: SessionState, createdOn created: Date?) {
         self.event = event
         sessionIdentifier = session.identifier.uuidString
         self.created = created ?? Date()
@@ -52,21 +53,50 @@ struct PerformanceEventDetails: EventDetails {
     }
 }
 
-struct NavigationEventDetails: EventDetails {
-    let audioType: String = AVAudioSession.sharedInstance().audioType
-    let applicationState: UIApplication.State = {
+protocol NavigationEventDetails: EventDetails {
+    var audioType: String { get }
+    var applicationState: UIApplication.State { get }
+    var batteryLevel: Int { get }
+    var batteryPluggedIn: Bool { get }
+    var device: String { get }
+    var operatingSystem: String { get }
+    var platform: String { get }
+    var sdkVersion: String { get }
+    var screenBrightness: Int { get }
+    var volumeLevel: Int { get }
+    var screenshot: String? { get set }
+    var feedbackType: String? { get set }
+    var description: String? { get set }
+    var userId: String? { get set }
+    var driverMode: String { get }
+}
+
+extension NavigationEventDetails {
+    var audioType: String { AVAudioSession.sharedInstance().audioType }
+    var applicationState: UIApplication.State {
         if Thread.isMainThread {
             return UIApplication.shared.applicationState
         } else {
-            return DispatchQueue.main.sync {
-                UIApplication.shared.applicationState
-            }
+            return DispatchQueue.main.sync { UIApplication.shared.applicationState }
         }
-    }()
-    let batteryLevel: Int = UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1
-    let batteryPluggedIn: Bool = [.charging, .full].contains(UIDevice.current.batteryState)
+    }
+    var batteryLevel: Int { UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1 }
+    var batteryPluggedIn: Bool { [.charging, .full].contains(UIDevice.current.batteryState) }
+    var device: String { UIDevice.current.machine }
+    var operatingSystem: String { "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)" }
+    var platform: String { ProcessInfo.systemName }
+    var sdkVersion: String {
+        guard let stringForShortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
+            preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
+        }
+        return stringForShortVersion
+    }
+    var screenBrightness: Int { Int(UIScreen.main.brightness * 100) }
+    var volumeLevel: Int { Int(AVAudioSession.sharedInstance().outputVolume * 100) }
+}
+
+struct ActiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?
-    let device: String = UIDevice.current.machine
     let distance: CLLocationDistance?
     let distanceCompleted: CLLocationDistance
     let distanceRemaining: CLLocationDistance
@@ -75,31 +105,21 @@ struct NavigationEventDetails: EventDetails {
     let geometry: Polyline?
     let locationEngine: String?
     let locationManagerDesiredAccuracy: CLLocationAccuracy?
-    let operatingSystem: String = "\(ProcessInfo.systemName) \(ProcessInfo.systemVersion)"
     let originalDistance: CLLocationDistance?
     let originalEstimatedDuration: TimeInterval?
     let originalGeometry: Polyline?
     let originalRequestIdentifier: String?
     let originalStepCount: Int?
     let profile: String
-    let platform: String = ProcessInfo.systemName
     let percentTimeInPortrait: Int
-    let percentTimeInForeground: Int
     let requestIdentifier: String?
     let rerouteCount: Int
-    let screenBrightness: Int = Int(UIScreen.main.brightness * 100)
     let sessionIdentifier: String
     let simulation: Bool
     let startTimestamp: Date?
     let sdkIdentifier: String
-    var sdkVersion: String {
-        guard let stringForShortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
-            preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
-        }
-        return stringForShortVersion
-    }
     let userAbsoluteDistanceToDestination: CLLocationDistance?
-    let volumeLevel: Int = Int(AVAudioSession.sharedInstance().outputVolume * 100)
+    let driverMode = "activeGuidance"
     
     let stepIndex: Int
     let stepCount: Int
@@ -122,6 +142,7 @@ struct NavigationEventDetails: EventDetails {
     var newGeometry: String?
     var totalTimeInForeground: TimeInterval
     var totalTimeInBackground: TimeInterval
+    var percentTimeInForeground: Int = 0
     
     init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
         coordinate = dataSource.router.rawLocation?.coordinate
@@ -182,6 +203,12 @@ struct NavigationEventDetails: EventDetails {
         }
         percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)) * 100)
         
+        stepIndex = dataSource.routeProgress.currentLegProgress.stepIndex
+        stepCount = dataSource.routeProgress.currentLeg.steps.count
+        legIndex = dataSource.routeProgress.legIndex
+        legCount = dataSource.routeProgress.route.legs.count
+        totalStepCount = dataSource.routeProgress.route.legs.map { $0.steps.count }.reduce(0, +)
+        
         totalTimeInForeground = session.timeSpentInForeground
         totalTimeInBackground = session.timeSpentInBackground
         if applicationState == .active {
@@ -190,12 +217,6 @@ struct NavigationEventDetails: EventDetails {
             totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
         }
         percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
-        
-        stepIndex = dataSource.routeProgress.currentLegProgress.stepIndex
-        stepCount = dataSource.routeProgress.currentLeg.steps.count
-        legIndex = dataSource.routeProgress.legIndex
-        legCount = dataSource.routeProgress.route.legs.count
-        totalStepCount = dataSource.routeProgress.route.legs.map { $0.steps.count }.reduce(0, +)
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -255,6 +276,7 @@ struct NavigationEventDetails: EventDetails {
         case routeLegProgress = "step"
         case totalTimeInForeground
         case totalTimeInBackground
+        case driverMode
     }
     
     func encode(to encoder: Encoder) throws {
@@ -312,6 +334,7 @@ struct NavigationEventDetails: EventDetails {
         try container.encode(totalTimeInForeground, forKey: .totalTimeInForeground)
         try container.encode(totalTimeInBackground, forKey: .totalTimeInBackground)
         try container.encodeIfPresent(rating, forKey: .rating)
+        try container.encode(driverMode, forKey: .driverMode)
     }
 }
 

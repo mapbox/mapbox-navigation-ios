@@ -5,6 +5,19 @@ import MapboxDirections
 let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
 
 /**
+ The `PassiveNavigationEventsManagerDataSource` protocol declares values required for recording passive location events.
+ */
+public protocol PassiveNavigationEventsManagerDataSource: AnyObject {
+    var rawLocation: CLLocation? { get }
+}
+
+extension PassiveLocationManager: PassiveNavigationEventsManagerDataSource {
+    public var rawLocation: CLLocation? {
+        return self.lastRawLocation
+    }
+}
+
+/**
  The `EventsManagerDataSource` protocol declares values required for recording route following events.
  */
 public protocol EventsManagerDataSource: AnyObject {
@@ -30,6 +43,7 @@ open class NavigationEventsManager {
     
     private var backupDataSource: EventsManagerDataSource?
     private weak var _dataSource: EventsManagerDataSource?
+    private weak var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
     var dataSource: EventsManagerDataSource?
     {
         get {
@@ -39,6 +53,7 @@ open class NavigationEventsManager {
             _dataSource = newValue
         }
     }
+    
     
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
@@ -51,9 +66,9 @@ open class NavigationEventsManager {
     private var mobileEventsManager: MMEEventsManager!
 
     lazy var accessToken: String = {
-        guard let path = Bundle.main.path(forResource: "Info", ofType: "plist"),
-        let dict = NSDictionary(contentsOfFile: path) as? [String: AnyObject],
-        let token = dict["MBXAccessToken"] as? String ?? dict["MGLMapboxAccessToken"] as? String else {
+        guard let token = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ??
+                Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAccessToken") as? String
+        else {
             //we can assert here because if the token was passed in, it would of overriden this closure.
             //we return an empty string so we don't crash in production (in keeping with behavior of `assert`)
             assertionFailure("`accessToken` must be set in the Info.plist as `MBXAccessToken` or the `Route` passed into the `NavigationService` must have the `accessToken` property set.")
@@ -62,8 +77,12 @@ open class NavigationEventsManager {
         return token
     }()
     
-    public required init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String? = nil, mobileEventsManager: MMEEventsManager = .shared()) {
-        dataSource = source
+    public required init(activeNavigationDataSource: EventsManagerDataSource? = nil,
+                         passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
+                         accessToken possibleToken: String? = nil,
+                         mobileEventsManager: MMEEventsManager = .shared()) {
+        dataSource = activeNavigationDataSource
+        self.passiveNavigationDataSource = passiveNavigationDataSource
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
         }
@@ -103,11 +122,11 @@ open class NavigationEventsManager {
         mobileEventsManager.sendTurnstileEvent()
     }
     
-    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> NavigationEventDetails? {
+    func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> ActiveNavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
         
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState.arrivalTimestamp
         
@@ -137,18 +156,18 @@ open class NavigationEventsManager {
         return event
     }
     
-    func navigationDepartEvent() -> NavigationEventDetails? {
+    func navigationDepartEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
         return event
     }
     
-    func navigationArriveEvent() -> NavigationEventDetails? {
+    func navigationArriveEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
         
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
@@ -164,26 +183,32 @@ open class NavigationEventsManager {
     }
     
     func navigationFeedbackEvent(type: FeedbackType, description: String?) -> NavigationEventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
-
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
-        event.event = MMEEventTypeNavigationFeedback
+        var event: NavigationEventDetails?
         
-        event.userId = UIDevice.current.identifierForVendor?.uuidString
-        event.feedbackType = type.description
-        event.description = description
+        if let activeNavigationDataSource = dataSource, let sessionState = sessionState {
+            event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
+                                                 session: sessionState, defaultInterface: usesDefaultUserInterface)
+        } else if let passiveNavigationDataSource = passiveNavigationDataSource {
+            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource)
+        } else {
+            assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
+        }
         
-        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        event?.description = description
+        event?.userId = UIDevice.current.identifierForVendor?.uuidString
+        event?.feedbackType = type.description
+        event?.event = MMEEventTypeNavigationFeedback
+        event?.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
         return event
     }
     
-    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> NavigationEventDetails? {
+    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> ActiveNavigationEventDetails? {
         guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
-        var event = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = eventType
         event.created = timestamp
         
@@ -254,7 +279,8 @@ open class NavigationEventsManager {
     }
     
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID? {
-        guard let eventDictionary = (try? navigationFeedbackEvent(type: type, description: description)?.asDictionary()) as [String: Any]?? else { return nil }
+        guard let feedbackEvent = navigationFeedbackEvent(type: type, description: description) else { return nil }
+        let eventDictionary = try? feedbackEvent.asDictionary()
         let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
         outstandingFeedbackEvents.append(event)
         return event.id
