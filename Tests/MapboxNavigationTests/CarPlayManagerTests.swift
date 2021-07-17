@@ -14,15 +14,13 @@ import CarPlay
 // This is a bug in XCTest which will hopefully get fixed in an upcoming release.
 
 @available(iOS 12.0, *)
-class CarPlayManagerTests: XCTestCase {
+class CarPlayManagerTests: TestCase {
     var manager: CarPlayManager?
     var searchController: CarPlaySearchController?
     var eventsManagerSpy: NavigationEventsManagerSpy?
 
     override func setUp() {
         super.setUp()
-        DirectionsCredentials.injectSharedToken(.mockedAccessToken)
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         eventsManagerSpy = NavigationEventsManagerSpy()
         manager = CarPlayManager(directions: .mocked, eventsManager: eventsManagerSpy, carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         searchController = CarPlaySearchController()
@@ -257,7 +255,6 @@ import Nimble
 @available(iOS 12.0, *)
 class CarPlayManagerSpec: QuickSpec {
     override func spec() {
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         var manager: CarPlayManager?
         var delegate: TestCarPlayManagerDelegate?
 

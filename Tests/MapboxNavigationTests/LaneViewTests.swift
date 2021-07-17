@@ -1,8 +1,9 @@
 import XCTest
 import MapboxDirections
+import TestHelper
 @testable import MapboxNavigation
 
-class LaneViewTests: XCTestCase {
+class LaneViewTests: TestCase {
     func testRankedIndications() {
         XCTAssertEqual(LaneIndication.straightAhead.ranked(favoring: nil),
                        .init(primary: .straightAhead, secondary: nil, tertiary: nil))

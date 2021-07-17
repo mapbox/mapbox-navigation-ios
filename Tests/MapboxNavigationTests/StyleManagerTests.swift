@@ -1,6 +1,7 @@
 import XCTest
 import Solar
 import CoreLocation
+import TestHelper
 @testable import MapboxNavigation
 
 struct Location {
@@ -9,7 +10,7 @@ struct Location {
     static let paris = CLLocation(latitude: 48.85, longitude: 2.35)
 }
 
-class StyleManagerTests: XCTestCase {
+class StyleManagerTests: TestCase {
     var location = Location.london
     var styleManager: StyleManager!
     

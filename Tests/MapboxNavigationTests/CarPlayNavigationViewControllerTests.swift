@@ -32,7 +32,7 @@ fileprivate class CPManeuverFake: CPManeuver {
 }
 
 @available(iOS 12.0, *)
-class CarPlayNavigationViewControllerTests: XCTestCase {
+class CarPlayNavigationViewControllerTests: TestCase {
     func testCarplayDisplaysCorrectEstimates() {
         //set up the litany of dependancies
         let directions = Directions(credentials: Fixture.credentials)

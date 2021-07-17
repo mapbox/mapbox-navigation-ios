@@ -1,10 +1,11 @@
 import XCTest
+import TestHelper
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
 import MapboxNavigation
 
-class SKUTests: XCTestCase {
+class SKUTests: TestCase {
     
     // Billing per monthly active user (MAU), the default, corresponds to `MBXAccountsSKUID.navigationUser`.
     

@@ -2,10 +2,11 @@ import XCTest
 import SnapshotTesting
 import MapboxDirections
 import CoreLocation
+import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class ManeuverViewTests: XCTestCase {
+class ManeuverViewTests: TestCase {
     let maneuverView = ManeuverView(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
 
     override func setUp() {

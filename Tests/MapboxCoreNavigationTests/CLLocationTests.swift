@@ -1,9 +1,10 @@
 import XCTest
 import CoreLocation
+import TestHelper
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigationNative
 
-class CLLocationTests: XCTestCase {
+class CLLocationTests: TestCase {
     func testFixLocationToCLLocation() {
         let coordinate = CLLocationCoordinate2D(latitude: 0, longitude: 1)
         let timestamp = Date()

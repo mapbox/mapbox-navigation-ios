@@ -5,11 +5,7 @@ import TestHelper
 import MapboxDirections
 @testable import MapboxCoreNavigation
 
-final class TilesetDescriptorFactoryTests: XCTestCase {
-    override func setUp() {
-        DirectionsCredentials.injectSharedToken(.mockedAccessToken)
-    }
-
+final class TilesetDescriptorFactoryTests: TestCase {
     func testGetLatestDescriptorForNonNavigatorTilesPath() {
         Navigator.tilesURL = FileManager.default.temporaryDirectory
         let tilesetReceived = expectation(description: "Tileset received")

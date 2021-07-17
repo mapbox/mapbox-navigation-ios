@@ -19,7 +19,7 @@ let route: Route = {
 
 let waitForInterval: TimeInterval = 5
 
-class MapboxCoreNavigationTests: XCTestCase {
+class MapboxCoreNavigationTests: TestCase {
     var navigation: MapboxNavigationService!
     
     override func setUp() {

@@ -3,7 +3,7 @@ import XCTest
 @testable import MapboxNavigation
 import TestHelper
 
-final class LeaksTests: XCTestCase {
+final class LeaksTests: TestCase {
     func testUserCourseViewLeak() {
         let leakTester = LeakTest {
             UserPuckCourseView(frame: .zero)

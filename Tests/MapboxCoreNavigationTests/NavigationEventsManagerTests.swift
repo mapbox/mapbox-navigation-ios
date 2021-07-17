@@ -3,7 +3,7 @@ import MapboxMobileEvents
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
-class NavigationEventsManagerTests: XCTestCase {
+class NavigationEventsManagerTests: TestCase {
     func testMobileEventsManagerIsInitializedImmediately() {
         let mobileEventsManagerSpy = MMEEventsManagerSpy()
         let _ = NavigationEventsManager(dataSource: nil, accessToken: "example token", mobileEventsManager: mobileEventsManagerSpy)

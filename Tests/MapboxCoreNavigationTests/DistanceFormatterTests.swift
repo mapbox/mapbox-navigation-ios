@@ -1,8 +1,9 @@
 import XCTest
 import CoreLocation
+import TestHelper
 @testable import MapboxCoreNavigation
 
-class DistanceFormatterTests: XCTestCase {
+class DistanceFormatterTests: TestCase {
     var distanceFormatter = DistanceFormatter()
     
     override func setUp() {
