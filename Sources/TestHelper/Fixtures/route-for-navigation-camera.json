@@ -1,0 +1,507 @@
+{
+    "weight_typical": 76.963,
+    "duration_typical": 54.734,
+    "weight_name": "auto",
+    "weight": 71.891,
+    "duration": 50.594,
+    "distance": 347.756,
+    "legs": [
+        {
+            "admins": [
+                {
+                    "iso_3166_1_alpha3": "USA",
+                    "iso_3166_1": "US"
+                }
+            ],
+            "annotation": {
+                "maxspeed": [
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    }
+                ],
+                "congestion": [
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "low",
+                    "low"
+                ],
+                "duration": [
+                    1.03,
+                    0.105,
+                    0.289,
+                    4.579,
+                    11.487,
+                    0.788,
+                    1.985,
+                    12.566,
+                    2.621,
+                    7.012,
+                    3.944
+                ]
+            },
+            "weight_typical": 76.963,
+            "duration_typical": 54.734,
+            "weight": 71.891,
+            "duration": 50.594,
+            "steps": [
+                {
+                    "voiceInstructions": [
+                        {
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Drive north on Folsom Street. Then Turn right onto 15th Street.</prosody></amazon:effect></speak>",
+                            "announcement": "Drive north on Folsom Street. Then Turn right onto 15th Street.",
+                            "distanceAlongGeometry": 164.377
+                        },
+                        {
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Turn right onto 15th Street.</prosody></amazon:effect></speak>",
+                            "announcement": "Turn right onto 15th Street.",
+                            "distanceAlongGeometry": 66.667
+                        }
+                    ],
+                    "intersections": [
+                        {
+                            "entry": [
+                                true
+                            ],
+                            "bearings": [
+                                355
+                            ],
+                            "duration": 1.061,
+                            "mapbox_streets_v8": {
+                                "class": "tertiary"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 1.3,
+                            "geometry_index": 0,
+                            "location": [
+                                -122.415336,
+                                37.765465
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                175,
+                                356
+                            ],
+                            "duration": 0.078,
+                            "turn_weight": 0.5,
+                            "mapbox_streets_v8": {
+                                "class": "tertiary"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 0.596,
+                            "geometry_index": 1,
+                            "location": [
+                                -122.415347,
+                                37.765573
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                176,
+                                355
+                            ],
+                            "duration": 4.871,
+                            "turn_weight": 0.5,
+                            "turn_duration": 0.019,
+                            "mapbox_streets_v8": {
+                                "class": "tertiary"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 6.444,
+                            "geometry_index": 2,
+                            "location": [
+                                -122.415348,
+                                37.765585
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                176,
+                                356
+                            ],
+                            "duration": 11.499,
+                            "turn_weight": 0.5,
+                            "turn_duration": 0.007,
+                            "mapbox_streets_v8": {
+                                "class": "tertiary"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 14.578,
+                            "geometry_index": 4,
+                            "location": [
+                                -122.415403,
+                                37.766142
+                            ]
+                        },
+                        {
+                            "bearings": [
+                                176,
+                                356
+                            ],
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "turn_weight": 2,
+                            "turn_duration": 0.007,
+                            "mapbox_streets_v8": {
+                                "class": "tertiary"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "geometry_index": 5,
+                            "location": [
+                                -122.415476,
+                                37.766885
+                            ]
+                        }
+                    ],
+                    "bannerInstructions": [
+                        {
+                            "primary": {
+                                "components": [
+                                    {
+                                        "type": "text",
+                                        "text": "15th Street"
+                                    }
+                                ],
+                                "type": "turn",
+                                "modifier": "right",
+                                "text": "15th Street"
+                            },
+                            "distanceAlongGeometry": 164.377
+                        }
+                    ],
+                    "speedLimitUnit": "mph",
+                    "maneuver": {
+                        "type": "depart",
+                        "instruction": "Drive north on Folsom Street.",
+                        "bearing_after": 355,
+                        "bearing_before": 0,
+                        "location": [
+                            -122.415336,
+                            37.765465
+                        ]
+                    },
+                    "speedLimitSign": "mutcd",
+                    "name": "Folsom Street",
+                    "weight_typical": 31.007,
+                    "duration_typical": 22.488,
+                    "duration": 18.347,
+                    "distance": 164.377,
+                    "driving_side": "right",
+                    "weight": 25.935,
+                    "mode": "driving",
+                    "geometry": "qt_`gAnmsnhFwETW@aAFw_@dBmm@pCeBH"
+                },
+                {
+                    "voiceInstructions": [
+                        {
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">In 600 feet, Your destination will be on the left.</prosody></amazon:effect></speak>",
+                            "announcement": "In 600 feet, Your destination will be on the left.",
+                            "distanceAlongGeometry": 173.379
+                        },
+                        {
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Your destination is on the left.</prosody></amazon:effect></speak>",
+                            "announcement": "Your destination is on the left.",
+                            "distanceAlongGeometry": 41.667
+                        }
+                    ],
+                    "intersections": [
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                86,
+                                176
+                            ],
+                            "duration": 6.085,
+                            "turn_weight": 8,
+                            "turn_duration": 4.105,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 10.425,
+                            "geometry_index": 6,
+                            "location": [
+                                -122.415481,
+                                37.766936
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                86,
+                                266
+                            ],
+                            "duration": 12.607,
+                            "turn_weight": 2,
+                            "turn_duration": 0.007,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 17.435,
+                            "geometry_index": 7,
+                            "location": [
+                                -122.415356,
+                                37.766943
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                86,
+                                266
+                            ],
+                            "duration": 2.7,
+                            "turn_weight": 0.5,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 3.807,
+                            "geometry_index": 8,
+                            "location": [
+                                -122.414565,
+                                37.766991
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                86,
+                                266
+                            ],
+                            "duration": 6.959,
+                            "turn_weight": 0.5,
+                            "turn_duration": 0.007,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 9.016,
+                            "geometry_index": 9,
+                            "location": [
+                                -122.4144,
+                                37.767001
+                            ]
+                        },
+                        {
+                            "bearings": [
+                                86,
+                                266
+                            ],
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "turn_weight": 0.5,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "geometry_index": 10,
+                            "location": [
+                                -122.41376,
+                                37.76704
+                            ]
+                        }
+                    ],
+                    "bannerInstructions": [
+                        {
+                            "primary": {
+                                "components": [
+                                    {
+                                        "type": "text",
+                                        "text": "Your destination will be on the left"
+                                    }
+                                ],
+                                "type": "arrive",
+                                "modifier": "left",
+                                "text": "Your destination will be on the left"
+                            },
+                            "distanceAlongGeometry": 183.379
+                        },
+                        {
+                            "primary": {
+                                "components": [
+                                    {
+                                        "type": "text",
+                                        "text": "Your destination is on the left"
+                                    }
+                                ],
+                                "type": "arrive",
+                                "modifier": "left",
+                                "text": "Your destination is on the left"
+                            },
+                            "distanceAlongGeometry": 41.667
+                        }
+                    ],
+                    "speedLimitUnit": "mph",
+                    "maneuver": {
+                        "type": "turn",
+                        "instruction": "Turn right onto 15th Street.",
+                        "modifier": "right",
+                        "bearing_after": 86,
+                        "bearing_before": 356,
+                        "location": [
+                            -122.415481,
+                            37.766936
+                        ]
+                    },
+                    "speedLimitSign": "mutcd",
+                    "name": "15th Street",
+                    "weight_typical": 45.956,
+                    "duration_typical": 32.246,
+                    "duration": 32.246,
+                    "distance": 183.379,
+                    "driving_side": "right",
+                    "weight": 45.956,
+                    "mode": "driving",
+                    "geometry": "opb`gApvsnhFMyF_Bmp@SiImA_g@i@oU"
+                },
+                {
+                    "voiceInstructions": [
+                        
+                    ],
+                    "intersections": [
+                        {
+                            "bearings": [
+                                266
+                            ],
+                            "entry": [
+                                true
+                            ],
+                            "in": 0,
+                            "admin_index": 0,
+                            "geometry_index": 11,
+                            "location": [
+                                -122.4134,
+                                37.767061
+                            ]
+                        }
+                    ],
+                    "bannerInstructions": [
+                        
+                    ],
+                    "speedLimitUnit": "mph",
+                    "maneuver": {
+                        "type": "arrive",
+                        "instruction": "Your destination is on the left.",
+                        "modifier": "left",
+                        "bearing_after": 0,
+                        "bearing_before": 86,
+                        "location": [
+                            -122.4134,
+                            37.767061
+                        ]
+                    },
+                    "speedLimitSign": "mutcd",
+                    "name": "15th Street",
+                    "weight_typical": 0,
+                    "duration_typical": 0,
+                    "duration": 0,
+                    "distance": 0,
+                    "driving_side": "right",
+                    "weight": 0,
+                    "mode": "driving",
+                    "geometry": "ixb`gAntonhF??"
+                }
+            ],
+            "distance": 347.756,
+            "summary": "Folsom Street, 15th Street"
+        }
+    ],
+    "geometry": "qt_`gAnmsnhFwETW@aAFw_@dBmm@pCeBHMyF_Bmp@SiImA_g@i@oU",
+    "voiceLocale": "en-US"
+}

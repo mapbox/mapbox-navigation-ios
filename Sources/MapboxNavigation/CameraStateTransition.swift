@@ -35,7 +35,7 @@ public protocol CameraStateTransition: AnyObject {
     func transitionToOverview(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void))
     
     /**
-     Method, which performs camera update, when already in the `NavigationCameraState.overview` state or  `NavigationCameraState.following` state.
+     Method, which performs camera update, when already in the `NavigationCameraState.overview` state or `NavigationCameraState.following` state.
      
      - parameter cameraOptions: Instance of `CameraOptions`, which describes viewpoint of the `MapView`.
      - parameter state: Instance of `NavigationCameraState`, which describes the current state of `NavigationCamera`.
