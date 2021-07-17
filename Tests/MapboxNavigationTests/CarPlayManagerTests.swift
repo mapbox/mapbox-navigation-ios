@@ -180,7 +180,7 @@ class CarPlayManagerTests: XCTestCase {
             CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
             CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
         ])
-        choice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), 0, options)
+        choice.userInfo = (Fixture.routeResponse(from: "route-with-banner-instructions", options: options), 0, options)
         CarPlayMapViewController.swizzleMethods()
         manager.mapTemplate(mapTemplate, startedTrip: CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [choice]), using: choice)
 
@@ -365,7 +365,7 @@ class CarPlayManagerSpec: QuickSpec {
                     CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
                     CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
                 ])
-                fakeRouteChoice.userInfo = (Fixture.route(from: "route-with-banner-instructions", options: options), 0, options)
+                fakeRouteChoice.userInfo = (Fixture.routeResponse(from: "route-with-banner-instructions", options: options), 0, options)
                 let fakeTrip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [fakeRouteChoice])
 
                 //simulate starting a fake trip
@@ -429,9 +429,9 @@ class CarPlayManagerSpec: QuickSpec {
         }
         
         //TODO: ADD OPTIONS TO THIS DELEGATE METHOD
-        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
             let directionsFake = Directions(credentials: Fixture.credentials)
-            return MapboxNavigationService(route: route, routeIndex: routeIndex, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
+            return MapboxNavigationService(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
         }
 
         func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {

@@ -8,11 +8,6 @@ import MapboxMaps
 @testable import MapboxDirections
 
 class LeaksSpec: QuickSpec {
-    lazy var initialRoute: Route = {
-        let route = response.routes!.first!
-        
-        return route
-    }()
     
     lazy var initialOptions: RouteOptions = {
         guard case let .route(options) = response.options else {
@@ -21,7 +16,7 @@ class LeaksSpec: QuickSpec {
         return options
     }()
     
-    lazy var dummySvc: NavigationService = MapboxNavigationService(route: self.initialRoute, routeIndex: 0, routeOptions: initialOptions, directions: .mocked)
+    lazy var dummySvc: NavigationService = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: initialOptions, directions: .mocked)
     
     override func spec() {
         DirectionsCredentials.injectSharedToken(.mockedAccessToken)
@@ -41,16 +36,15 @@ class LeaksSpec: QuickSpec {
         }
         
         describe("NavigationViewController") {
-            let route = initialRoute
             ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
 
             let navigationViewController = LeakTest {
                 let directions = DirectionsSpy(credentials: Fixture.credentials)
-                let service = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: self.initialOptions, directions: directions, eventsManagerType: NavigationEventsManagerSpy.self)
+                let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: self.initialOptions, directions: directions, eventsManagerType: NavigationEventsManagerSpy.self)
                 let navOptions = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub(navigationService: self.dummySvc))
                 
 
-                return NavigationViewController(for: route, routeIndex: 0, routeOptions: self.initialOptions, navigationOptions: navOptions)
+                return NavigationViewController(for: response, routeIndex: 0, routeOptions: self.initialOptions, navigationOptions: navOptions)
             }
             
             it("must not leak") {

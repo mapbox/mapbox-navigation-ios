@@ -3,8 +3,8 @@ import CarPlay
 
 @available(iOS 12.0, *)
 extension CPTrip {
-    convenience init(routes: [Route], routeOptions: RouteOptions, waypoints: [Waypoint]) {
-        let routeChoices = routes.enumerated().map { (routeIndex, route) -> CPRouteChoice in
+    convenience init(routeResponse: RouteResponse, routeOptions: RouteOptions, waypoints: [Waypoint]) {
+        let routeChoices = routeResponse.routes?.enumerated().map { (routeIndex, route) -> CPRouteChoice in
             let summaryVariants = [
                 DateComponentsFormatter.fullDateComponentsFormatter.string(from: route.expectedTravelTime)!,
                 DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime)!,
@@ -13,10 +13,10 @@ extension CPTrip {
             let routeChoice = CPRouteChoice(summaryVariants: summaryVariants,
                                             additionalInformationVariants: [route.description],
                                             selectionSummaryVariants: [route.description])
-            let info: (Route, Int, RouteOptions) = (route: route, routeIndex: routeIndex, options: routeOptions)
+            let info: (RouteResponse, Int, RouteOptions) = (routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: routeOptions)
             routeChoice.userInfo = info
             return routeChoice
-        }
+        } ?? []
         
         let waypoints = routeOptions.waypoints
         let origin = MKMapItem(placemark: MKPlacemark(coordinate: waypoints.first!.coordinate))

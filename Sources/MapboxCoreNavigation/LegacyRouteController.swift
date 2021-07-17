@@ -57,18 +57,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         }
     }
     
-    public var indexedRoute: IndexedRoute {
-        get {
-            return routeProgress.indexedRoute
-        }
-        set {
-            routeProgress.indexedRoute = newValue
-        }
+    public var route: Route {
+        routeProgress.route
     }
     
-    public var route: Route {
-        return indexedRoute.0
-    }
+    public var indexedRouteResponse: IndexedRouteResponse
 
     var isRerouting = false
     var isRefreshing = false
@@ -87,9 +80,10 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    required public init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
+    required public init(along routeResponse: RouteResponse, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
         self.directions = directions
-        self._routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: options)
+        self.indexedRouteResponse = (routeResponse, routeIndex)
+        self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -374,8 +368,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 guard case let .route(options) = response.options, let route = response.routes?.first else {
                     return
                 }
-                strongSelf.indexedRoute = (route, 0) // unconditionally getting the first route above
-                strongSelf._routeProgress = RouteProgress(route: route, routeIndex: 0, options: options, legIndex: 0)
+                strongSelf.indexedRouteResponse = (response, 0) // unconditionally getting the first route above
+                strongSelf._routeProgress = RouteProgress(route: route, options: options, legIndex: 0)
                 strongSelf._routeProgress.currentLegProgress.stepIndex = 0
                 strongSelf.announce(reroute: route, at: location, proactive: false)
             }

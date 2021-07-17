@@ -13,9 +13,9 @@ public protocol RouterDataSource: AnyObject {
 }
 
 /**
- A route and its index in a `RouteResponse` that sorts routes from most optimal to least optimal.
+ A `RouteResponse` object that sorts routes from most optimal to least optimal and selected route index in it.
  */
-public typealias IndexedRoute = (Route, Int)
+public typealias IndexedRouteResponse = (routeResponse: RouteResponse, routeIndex: Int)
 
 /**
  A class conforming to the `Router` protocol tracks the user’s progress as they travel along a predetermined route. It calls methods on its `delegate`, which conforms to the `RouterDelegate` protocol, whenever significant events or decision points occur along the route. Despite its name, this protocol does not define the interface of a routing engine.
@@ -42,16 +42,16 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter source: The data source for the RouteController.
      - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      */
-    init(along route: Route, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location)
+    init(along routeResponse: RouteResponse, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
     var routeProgress: RouteProgress { get }
     
-    var indexedRoute: IndexedRoute { get set }
-    
     var route: Route { get }
+    
+    var indexedRouteResponse: IndexedRouteResponse { get set }
     
     /**
      Given a users current location, returns a Boolean whether they are currently on the route.
@@ -103,7 +103,7 @@ protocol InternalRouter: AnyObject {
     
     var lastRerouteLocation: CLLocation? { get set }
     
-    func setRoute(route: Route, routeIndex: Int, proactive: Bool)
+    func setRoute(route: Route, proactive: Bool)
     
     var isRerouting: Bool { get set }
     
@@ -127,7 +127,7 @@ extension InternalRouter where Self: Router {
     }
     
     func refreshRoute(from location: CLLocation, legIndex: Int, completion: @escaping ()->()) {
-        guard refreshesRoute, let routeIdentifier = route.routeIdentifier else {
+        guard refreshesRoute, let routeIdentifier = indexedRouteResponse.routeResponse.identifier else {
             completion()
             return
         }
@@ -149,7 +149,7 @@ extension InternalRouter where Self: Router {
         }
         isRefreshing = true
         
-        directions.refreshRoute(responseIdentifier: routeIdentifier, routeIndex: indexedRoute.1, fromLegAtIndex: legIndex) { [weak self] (session, result) in
+        directions.refreshRoute(responseIdentifier: routeIdentifier, routeIndex: indexedRouteResponse.routeIndex, fromLegAtIndex: legIndex) { [weak self] (session, result) in
             defer {
                 self?.isRefreshing = false
                 self?.lastRouteRefresh = nil
@@ -216,7 +216,7 @@ extension InternalRouter where Self: Router {
                 currentUpcomingManeuver == firstLeg.steps[1] && route.expectedTravelTime <= 0.9 * durationRemaining
             
             if routeIsFaster {
-                self?.setRoute(route: route, routeIndex: 0, proactive: true)
+                self?.setRoute(route: route, proactive: true)
             }
         }
     }
@@ -245,7 +245,7 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func setRoute(route: Route, routeIndex: Int, proactive: Bool) {
+    func setRoute(route: Route, proactive: Bool) {
         let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
         
         if proactive {
@@ -255,7 +255,7 @@ extension InternalRouter where Self: Router {
             didFindFasterRoute = false
         }
         
-        routeProgress = RouteProgress(route: route, routeIndex: routeIndex, options: routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+        routeProgress = RouteProgress(route: route, options: routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {

@@ -62,7 +62,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter desiredSimulationMode: The desired simulation mode to use.
      - returns: A navigation service that manages location updates along `route`.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService
     
     /**
      Called when the CarPlay manager fails to fetch a route.

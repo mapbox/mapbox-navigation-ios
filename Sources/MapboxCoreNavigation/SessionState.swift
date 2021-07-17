@@ -16,6 +16,7 @@ struct SessionState {
     var numberOfReroutes = 0
     var lastRerouteDate: Date?
     
+    var routeIdentifier: String?
     var currentRoute: Route
     var originalRoute: Route
     
@@ -37,9 +38,10 @@ struct SessionState {
     
     var pastLocations = FixedLengthQueue<CLLocation>(length: 40)
     
-    init(currentRoute: Route, originalRoute: Route) {
+    init(currentRoute: Route, originalRoute: Route, routeIdentifier: String?) {
         self.currentRoute = currentRoute
         self.originalRoute = originalRoute
+        self.routeIdentifier = routeIdentifier
     }
     
     public mutating func reportChange(to orientation: UIDeviceOrientation) {
