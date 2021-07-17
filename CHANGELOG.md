@@ -123,6 +123,7 @@
 * Fixed a retain cycle in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
 * The `EventsManagerDataSource.router`, `NavigationService.router`, `NavigationService.eventsManager`, `MapboxNavigationService.router`, `MapboxNavigationService.eventsManager` properties are no longer force unwrapped. ([#3055](https://github.com/mapbox/mapbox-navigation-ios/pull/3055))
 * Fixed an issue where traffic congestion segments along the route line blurred into each other when the map was zoomed in far enough. ([#3153](https://github.com/mapbox/mapbox-navigation-ios/pull/3153))
+* `NavigationViewController.indexedRouter`, `NavigationService.indexedRouter` and `Router.indexedRouter` properties are readonly now. Use dedicated `Router.updateRoute(with:routeOptions:)` method to update the route. ([#3159](https://github.com/mapbox/mapbox-navigation-ios/pull/#3159))
 
 ## v1.4.1
 
