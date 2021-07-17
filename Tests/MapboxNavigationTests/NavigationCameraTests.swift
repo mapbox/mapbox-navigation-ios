@@ -238,6 +238,7 @@ class NavigationCameraTests: XCTestCase {
         let expectedPadding: UIEdgeInsets = .zero
         let expectedAltitude = 4000.0
         let expectedBearing: Double = 0.0
+        let expectedPitch: CGFloat = 0.0
         let expectedZoomLevel = CGFloat(ZoomLevelForAltitude(expectedAltitude,
                                                              navigationMapView.mapView.cameraState.pitch,
                                                              location.coordinate.latitude,
@@ -249,6 +250,7 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertEqual(followingMobileCameraOptions?.padding, expectedPadding, "Paddings should be equal.")
         XCTAssertEqual(followingMobileCameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
         XCTAssertEqual(followingMobileCameraOptions?.zoom, expectedZoomLevel, "Zooms should be equal.")
+        XCTAssertEqual(followingMobileCameraOptions?.pitch, expectedPitch, "Pitches should be equal.")
         
         let followingCarPlayCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingCarPlayCamera]
         XCTAssertEqual(followingCarPlayCameraOptions?.center, expectedCoordinate, "Center coordinates should be equal.")
@@ -256,6 +258,7 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertEqual(followingCarPlayCameraOptions?.padding, expectedPadding, "Paddings should be equal.")
         XCTAssertEqual(followingCarPlayCameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
         XCTAssertEqual(followingCarPlayCameraOptions?.zoom, expectedZoomLevel, "Zooms should be equal.")
+        XCTAssertEqual(followingCarPlayCameraOptions?.pitch, expectedPitch, "Pitches should be equal.")
         
         // In `NavigationCameraState.overview` state during free-drive navigation all properties of
         // `CameraOptions` should be `nil`.
@@ -265,6 +268,7 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertNil(overviewMobileCameraOptions?.padding, "Padding should be nil.")
         XCTAssertNil(overviewMobileCameraOptions?.bearing, "Bearing should be nil.")
         XCTAssertNil(overviewMobileCameraOptions?.zoom, "Zoom should be nil.")
+        XCTAssertNil(overviewMobileCameraOptions?.pitch, "Pitch should be nil.")
         
         let overviewCarPlayCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.overviewCarPlayCamera]
         XCTAssertNil(overviewCarPlayCameraOptions?.center, "Center should be nil.")
@@ -272,6 +276,7 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertNil(overviewCarPlayCameraOptions?.padding, "Padding should be nil.")
         XCTAssertNil(overviewCarPlayCameraOptions?.bearing, "Bearing should be nil.")
         XCTAssertNil(overviewCarPlayCameraOptions?.zoom, "Zoom should be nil.")
+        XCTAssertNil(overviewCarPlayCameraOptions?.pitch, "Pitch should be nil.")
     }
     
     func testViewportDataSourceDelegateForActiveGuidance() {
@@ -283,18 +288,13 @@ class NavigationCameraTests: XCTestCase {
         let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                         viewportDataSourceType: .active)
         
-        let viewportDataSourceDelegateMock = ViewportDataSourceDelegateMock()
-        navigationViewportDataSource.delegate = viewportDataSourceDelegateMock
-        
         navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
         
-        let expectation = self.expectation(forNotification: .routeControllerProgressDidChange,
-                                           object: self) { _ in
-            return true
-        }
+        let viewportDataSourceDelegateMock = ViewportDataSourceDelegateMock()
+        navigationMapView.navigationCamera.viewportDataSource.delegate = viewportDataSourceDelegateMock
         
         let origin = CLLocationCoordinate2DMake(37.765469, -122.415279)
-        let destination = CLLocationCoordinate2DMake(37.774865799742784, -122.41017207408589)
+        let destination = CLLocationCoordinate2DMake(37.767071968183814, -122.41340145370796)
         let routeOptions = NavigationRouteOptions(coordinates: [origin, destination])
         
         // Load previously serialized `Route` object in JSON format and deserialize it.
@@ -312,18 +312,35 @@ class NavigationCameraTests: XCTestCase {
                                           options: routeOptions)
         
         let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
-        let rawLocation = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        
+        // Since second `stepIndex` is right after sharp maneuver default navigation camera behavior
+        // will change `CameraOptions.pitch` to `FollowingCameraOptions.defaultPitch`.
+        routeProgress.currentLegProgress.stepIndex = 1
         
         let userInfo: [RouteController.NotificationUserInfoKey: Any] = [
             .routeProgressKey: routeProgress,
             .locationKey: location,
-            .rawLocationKey: rawLocation
         ]
+        
+        let expectation = self.expectation(forNotification: .routeControllerProgressDidChange,
+                                           object: self) { _ in
+            return true
+        }
         
         NotificationCenter.default.post(name: .routeControllerProgressDidChange,
                                         object: self,
                                         userInfo: userInfo)
         
         wait(for: [expectation], timeout: 1.0)
+        
+        guard let temporaryPitch = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingMobileCamera]?.pitch else {
+            XCTFail("Pitch should be valid.")
+            return
+        }
+        
+        let pitch = Double(temporaryPitch)
+        XCTAssertEqual(pitch,
+                       navigationViewportDataSource.options.followingCameraOptions.defaultPitch,
+                       "Pitches should be equal.")
     }
 }
