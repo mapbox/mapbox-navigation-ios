@@ -42,6 +42,7 @@
 		DA303CA421B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
 		DA303CA521B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
+		DAF5BE4A26A1FD1200DD3F2B /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = DAF5BE4926A1FD1200DD3F2B /* MapboxGeocoder */; };
 		E27A2204265674E400AA935F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E27A2202265674E400AA935F /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -155,6 +156,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DA2157C525E093920086B294 /* MapboxNavigation in Frameworks */,
+				DAF5BE4A26A1FD1200DD3F2B /* MapboxGeocoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -345,6 +347,7 @@
 			name = "Example-CarPlay";
 			packageProductDependencies = (
 				DA2157C425E093920086B294 /* MapboxNavigation */,
+				DAF5BE4926A1FD1200DD3F2B /* MapboxGeocoder */,
 			);
 			productName = "Example-Swift";
 			productReference = C53F2F0720EBC95600D9798F /* Example.app */;
@@ -429,6 +432,7 @@
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			packageReferences = (
+				DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */,
 			);
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
 			projectDirPath = "";
@@ -934,7 +938,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -999,7 +1003,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 61;
+				CURRENT_PROJECT_VERSION = 62;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1074,6 +1078,17 @@
 		};
 /* End XCConfigurationList section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mapbox/MapboxGeocoder.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
 		DA1A1B0325E087A20097BBD7 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1086,6 +1101,11 @@
 		DA2157EA25E094D00086B294 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigation;
+		};
+		DAF5BE4926A1FD1200DD3F2B /* MapboxGeocoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */;
+			productName = MapboxGeocoder;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

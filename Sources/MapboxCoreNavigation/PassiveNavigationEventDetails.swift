@@ -4,24 +4,32 @@ import CoreLocation
 struct PassiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?
     let created = Date()
-    let sessionIdentifier = "session-id" // TODO: create global session
+    let sessionIdentifier: String
+    let startTimestamp: Date?
     let driverMode = "freeDrive"
     
     var event: String?
-    var userId: String?
-    var feedbackType: String?
+    var userIdentifier: String?
+    var feedbackType: FeedbackType?
     var description: String?
     var screenshot: String?
-    // TODO: add time in foreground and background
     
-    init(dataSource: PassiveNavigationEventsManagerDataSource) {
+    var percentTimeInPortrait: Int = 0
+    var percentTimeInForeground: Int = 0
+    var totalTimeInForeground: TimeInterval = 0
+    var totalTimeInBackground: TimeInterval = 0
+    
+    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState) {
         coordinate = dataSource.rawLocation?.coordinate
+        sessionIdentifier = sessionState.identifier.uuidString
+        startTimestamp = sessionState.departureTimestamp
+        updateApplicationStatePercentages(sessionState)
     }
     
     private enum CodingKeys: String, CodingKey {
         case latitude = "lat"
         case longitude = "lng"
-        case userId
+        case userIdentifier = "userId"
         case feedbackType
         case description
         case screenshot
@@ -42,8 +50,8 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encodeIfPresent(coordinate?.latitude, forKey: .latitude)
         try container.encodeIfPresent(coordinate?.longitude, forKey: .longitude)
-        try container.encodeIfPresent(userId, forKey: .userId)
-        try container.encodeIfPresent(feedbackType, forKey: .feedbackType)
+        try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
+        try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
         try container.encode(audioType, forKey: .audioType)

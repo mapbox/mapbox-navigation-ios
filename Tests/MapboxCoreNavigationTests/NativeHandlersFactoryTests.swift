@@ -18,14 +18,13 @@ class ConfigFactorySpy: ConfigFactory {
     }
 }
 
-class NativeHandlersFactoryTests: XCTestCase {
+class NativeHandlersFactoryTests: TestCase {
     
     var handlersFactory: NativeHandlersFactory!
     
     override func setUp() {
         UserDefaults.standard.set(nil, forKey: customConfigKey)
         handlersFactory = NativeHandlersFactory(tileStorePath: "tile store path",
-                                                credentials: Fixture.credentials,
                                                 configFactoryType: ConfigFactorySpy.self)
     }
     

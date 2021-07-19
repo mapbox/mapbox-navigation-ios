@@ -31,7 +31,7 @@ public protocol EventsManagerDataSource: AnyObject {
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */
 open class NavigationEventsManager {
-    var sessionState: SessionState?
+    private var sessionState = SessionState()
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
@@ -53,7 +53,6 @@ open class NavigationEventsManager {
             _dataSource = newValue
         }
     }
-    
     
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
@@ -93,7 +92,6 @@ open class NavigationEventsManager {
     
     deinit {
         suspendNotifications()
-        sessionState = nil
     }
     
     private func resumeNotifications() {
@@ -123,7 +121,7 @@ open class NavigationEventsManager {
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> ActiveNavigationEventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = dataSource else { return nil }
         
         let rating = potentialRating ?? MMEEventsManager.unrated
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
@@ -141,23 +139,22 @@ open class NavigationEventsManager {
     }
     
     func navigationRouteRetrievalEvent() -> PerformanceEventDetails? {
-        guard let sessionState = sessionState,
-            let responseEndDate = sessionState.currentRoute.responseEndDate,
-            let fetchStartDate = sessionState.currentRoute.fetchStartDate else {
+        guard let responseEndDate = sessionState.currentRoute?.responseEndDate,
+            let fetchStartDate = sessionState.currentRoute?.fetchStartDate else {
             return nil
         }
 
-        var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute.responseEndDate)
+        var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute?.responseEndDate)
         event.counters.append(PerformanceEventDetails.Counter(name: "elapsed_time",
                                                               value: responseEndDate.timeIntervalSince(fetchStartDate)))
-        if let routeIdentifier = sessionState.currentRoute.routeIdentifier {
+        if let routeIdentifier = sessionState.currentRoute?.routeIdentifier {
             event.attributes.append(PerformanceEventDetails.Attribute(name: "route_uuid", value: routeIdentifier))
         }
         return event
     }
     
     func navigationDepartEvent() -> ActiveNavigationEventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = dataSource else { return nil }
 
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
@@ -165,7 +162,7 @@ open class NavigationEventsManager {
     }
     
     func navigationArriveEvent() -> ActiveNavigationEventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = dataSource else { return nil }
 
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
@@ -177,24 +174,24 @@ open class NavigationEventsManager {
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
         eventDictionary["feedbackId"] = event.id.uuidString
-        eventDictionary["locationsBefore"] = sessionState?.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
-        eventDictionary["locationsAfter"] = sessionState?.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
+        eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
+        eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
         return eventDictionary
     }
     
     func navigationFeedbackEvent() -> NavigationEventDetails? {
         var event: NavigationEventDetails?
         
-        if let activeNavigationDataSource = dataSource, let sessionState = sessionState {
+        if let activeNavigationDataSource = dataSource {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
                                                  session: sessionState, defaultInterface: usesDefaultUserInterface)
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
-            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource)
+            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState)
         } else {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
         }
         
-        event?.userId = UIDevice.current.identifierForVendor?.uuidString
+        event?.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
         event?.event = MMEEventTypeNavigationFeedback
         event?.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
@@ -202,7 +199,7 @@ open class NavigationEventsManager {
     }
     
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> ActiveNavigationEventDetails? {
-        guard let dataSource = dataSource, let sessionState = sessionState else { return nil }
+        guard let dataSource = dataSource else { return nil }
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
@@ -280,8 +277,8 @@ open class NavigationEventsManager {
         guard let eventDictionary = (try? navigationRerouteEvent()?.asDictionary()) as [String: Any]?? else { return }
         let timestamp = dataSource?.router.location?.timestamp ?? Date()
         
-        sessionState?.lastRerouteDate = timestamp
-        sessionState?.numberOfReroutes += 1
+        sessionState.lastRerouteDate = timestamp
+        sessionState.numberOfReroutes += 1
         
         let event = RerouteEvent(timestamp: timestamp, eventDictionary: eventDictionary ?? [:])
         
@@ -299,7 +296,7 @@ open class NavigationEventsManager {
         guard let eventDictionary = (try? navigationRerouteEvent(eventType: FasterRouteFoundEvent)?.asDictionary()) as [String: Any]?? else { return }
 
         let timestamp = Date()
-        sessionState?.lastRerouteDate = timestamp
+        sessionState.lastRerouteDate = timestamp
         
         let event = RerouteEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
         
@@ -360,17 +357,17 @@ open class NavigationEventsManager {
     
     //MARK: - Session State Management
     @objc private func didChangeOrientation(_ notification: NSNotification) {
-        sessionState?.reportChange(to: UIDevice.current.orientation)
+        sessionState.reportChange(to: UIDevice.current.orientation)
     }
     
     @objc private func didChangeApplicationState(_ notification: NSNotification) {
-        sessionState?.reportChange(to: UIApplication.shared.applicationState)
+        sessionState.reportChange(to: UIApplication.shared.applicationState)
     }
     
     @objc private func applicationWillTerminate(_ notification: NSNotification) {
-        if sessionState?.terminated == false {
+        if sessionState.terminated == false {
             sendCancelEvent(rating: nil, comment: nil)
-            sessionState?.terminated = true
+            sessionState.terminated = true
         }
         
         sendOutstandingFeedbackEvents(forceAll: true)
@@ -380,10 +377,10 @@ open class NavigationEventsManager {
         let route = progress.route
         
         // if the user has already arrived and a new route has been set, restart the navigation session
-        if sessionState?.arrivalTimestamp != nil {
+        if sessionState.arrivalTimestamp != nil {
             resetSession()
         } else {
-            sessionState?.currentRoute = route
+            sessionState.currentRoute = route
         }
         
         if (proactive) {
@@ -399,17 +396,30 @@ open class NavigationEventsManager {
             sendOutstandingFeedbackEvents(forceAll: false)
         }
         
-        if sessionState?.arrivalTimestamp == nil,
+        if sessionState.arrivalTimestamp == nil,
             progress.currentLegProgress.userHasArrivedAtWaypoint {
-            sessionState?.arrivalTimestamp = dataSource?.router.location?.timestamp ?? Date()
+            sessionState.arrivalTimestamp = dataSource?.router.location?.timestamp ?? Date()
             sendArriveEvent()
             
             return
         }
         
-        if sessionState?.departureTimestamp == nil {
-            sessionState?.departureTimestamp = dataSource?.router.location?.timestamp ?? Date()
+        if sessionState.departureTimestamp == nil {
+            sessionState.departureTimestamp = dataSource?.router.location?.timestamp ?? Date()
             sendDepartEvent()
         }
+    }
+    
+    func incrementDistanceTraveled(by distance: CLLocationDistance) {
+        sessionState.totalDistanceCompleted += distance
+    }
+    
+    func arriveAtWaypoint() {
+        sessionState.departureTimestamp = nil
+        sessionState.arrivalTimestamp = nil
+    }
+    
+    func record(locations: [CLLocation]) {
+        locations.forEach(sessionState.pastLocations.push(_:))
     }
 }

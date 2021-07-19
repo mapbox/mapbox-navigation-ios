@@ -1,10 +1,11 @@
 import XCTest
+import TestHelper
 import SnapshotTesting
 import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class InstructionsBannerViewSnapshotTests: XCTestCase {
+class InstructionsBannerViewSnapshotTests: TestCase {
     let imageRepository: ImageRepository = ImageRepository.shared
 
     let asyncTimeout: TimeInterval = 2.0

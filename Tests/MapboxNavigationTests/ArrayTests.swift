@@ -1,8 +1,9 @@
 import Foundation
 import XCTest
+import TestHelper
 @testable import MapboxNavigation
 
-final class ArrayTests: XCTestCase {
+final class ArrayTests: TestCase {
     static let largePointsArray: [CGPoint] = {
         var points: [CGPoint] = []
         for _ in 0..<100000 {

@@ -65,10 +65,16 @@ protocol NavigationEventDetails: EventDetails {
     var screenBrightness: Int { get }
     var volumeLevel: Int { get }
     var screenshot: String? { get set }
-    var feedbackType: String? { get set }
+    var feedbackType: FeedbackType? { get set }
     var description: String? { get set }
-    var userId: String? { get set }
+    var userIdentifier: String? { get set }
     var driverMode: String { get }
+    var sessionIdentifier: String { get }
+    var startTimestamp: Date? { get }
+    var percentTimeInPortrait: Int { get set }
+    var percentTimeInForeground: Int { get set }
+    var totalTimeInForeground: TimeInterval { get set }
+    var totalTimeInBackground: TimeInterval { get set }
 }
 
 extension NavigationEventDetails {
@@ -93,6 +99,26 @@ extension NavigationEventDetails {
     }
     var screenBrightness: Int { Int(UIScreen.main.brightness * 100) }
     var volumeLevel: Int { Int(AVAudioSession.sharedInstance().outputVolume * 100) }
+    
+    mutating func updateApplicationStatePercentages(_ session: SessionState) {
+        var totalTimeInPortrait = session.timeSpentInPortrait
+        var totalTimeInLandscape = session.timeSpentInLandscape
+        if UIDevice.current.orientation.isPortrait {
+            totalTimeInPortrait += abs(session.lastTimeInPortrait.timeIntervalSinceNow)
+        } else if UIDevice.current.orientation.isLandscape {
+            totalTimeInLandscape += abs(session.lastTimeInLandscape.timeIntervalSinceNow)
+        }
+        percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)) * 100)
+        
+        totalTimeInForeground = session.timeSpentInForeground
+        totalTimeInBackground = session.timeSpentInBackground
+        if applicationState == .active {
+            totalTimeInForeground += abs(session.lastTimeInForeground.timeIntervalSinceNow)
+        } else {
+            totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
+        }
+        percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
+    }
 }
 
 struct ActiveNavigationEventDetails: NavigationEventDetails {
@@ -111,7 +137,6 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     let originalRequestIdentifier: String?
     let originalStepCount: Int?
     let profile: String
-    let percentTimeInPortrait: Int
     let requestIdentifier: String?
     let rerouteCount: Int
     let sessionIdentifier: String
@@ -132,27 +157,28 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var arrivalTimestamp: Date?
     var rating: Int?
     var comment: String?
-    var userId: String?
-    var feedbackType: String?
+    var userIdentifier: String?
+    var feedbackType: FeedbackType?
     var description: String?
     var screenshot: String?
     var secondsSinceLastReroute: TimeInterval?
     var newDistanceRemaining: CLLocationDistance?
     var newDurationRemaining: TimeInterval?
     var newGeometry: String?
-    var totalTimeInForeground: TimeInterval
-    var totalTimeInBackground: TimeInterval
+    var totalTimeInForeground: TimeInterval = 0
+    var totalTimeInBackground: TimeInterval = 0
     var percentTimeInForeground: Int = 0
+    var percentTimeInPortrait: Int = 0
     
     init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
         coordinate = dataSource.router.rawLocation?.coordinate
-        startTimestamp = session.departureTimestamp ?? nil
+        startTimestamp = session.departureTimestamp
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         profile = dataSource.routeProgress.routeOptions.profileIdentifier.rawValue
         simulation = dataSource.locationProvider is SimulatedLocationManager.Type
         
         sessionIdentifier = session.identifier.uuidString
-        originalRequestIdentifier = session.originalRoute.routeIdentifier
+        originalRequestIdentifier = session.originalRoute?.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
         if let location = dataSource.router.rawLocation,
@@ -163,11 +189,11 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
             userAbsoluteDistanceToDestination = nil
         }
         
-        if let shape = session.originalRoute.shape {
+        if let originalRoute = session.originalRoute, let shape = originalRoute.shape {
             originalGeometry = Polyline(coordinates: shape.coordinates)
-            originalDistance = round(session.originalRoute.distance)
-            originalEstimatedDuration = round(session.originalRoute.expectedTravelTime)
-            originalStepCount = session.originalRoute.legs.map({$0.steps.count}).reduce(0, +)
+            originalDistance = round(originalRoute.distance)
+            originalEstimatedDuration = round(originalRoute.expectedTravelTime)
+            originalStepCount = originalRoute.legs.map({$0.steps.count}).reduce(0, +)
         } else {
             originalGeometry = nil
             originalDistance = nil
@@ -175,10 +201,10 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
             originalStepCount = nil
         }
         
-        if let shape = session.currentRoute.shape {
+        if let currentRoute = session.currentRoute, let shape = currentRoute.shape {
             self.geometry = Polyline(coordinates: shape.coordinates)
-            distance = round(session.currentRoute.distance)
-            estimatedDuration = round(session.currentRoute.expectedTravelTime)
+            distance = round(currentRoute.distance)
+            estimatedDuration = round(currentRoute.expectedTravelTime)
         } else {
             self.geometry = nil
             distance = nil
@@ -194,29 +220,13 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         locationEngine = String(describing: dataSource.locationProvider)
         locationManagerDesiredAccuracy = dataSource.desiredAccuracy
         
-        var totalTimeInPortrait = session.timeSpentInPortrait
-        var totalTimeInLandscape = session.timeSpentInLandscape
-        if UIDevice.current.orientation.isPortrait {
-            totalTimeInPortrait += abs(session.lastTimeInPortrait.timeIntervalSinceNow)
-        } else if UIDevice.current.orientation.isLandscape {
-            totalTimeInLandscape += abs(session.lastTimeInLandscape.timeIntervalSinceNow)
-        }
-        percentTimeInPortrait = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape)) * 100)
+        
         
         stepIndex = dataSource.routeProgress.currentLegProgress.stepIndex
         stepCount = dataSource.routeProgress.currentLeg.steps.count
         legIndex = dataSource.routeProgress.legIndex
         legCount = dataSource.routeProgress.route.legs.count
         totalStepCount = dataSource.routeProgress.route.legs.map { $0.steps.count }.reduce(0, +)
-        
-        totalTimeInForeground = session.timeSpentInForeground
-        totalTimeInBackground = session.timeSpentInBackground
-        if applicationState == .active {
-            totalTimeInForeground += abs(session.lastTimeInForeground.timeIntervalSinceNow)
-        } else {
-            totalTimeInBackground += abs(session.lastTimeInBackground.timeIntervalSinceNow)
-        }
-        percentTimeInForeground = totalTimeInPortrait + totalTimeInLandscape == 0 ? 100 : Int((totalTimeInPortrait / (totalTimeInPortrait + totalTimeInLandscape) * 100))
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -265,7 +275,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         case arrivalTimestamp
         case rating
         case comment
-        case userId
+        case userIdentifier = "userId"
         case feedbackType
         case description
         case screenshot
@@ -324,8 +334,8 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(event, forKey: .event)
         try container.encodeIfPresent(arrivalTimestamp?.ISO8601, forKey: .arrivalTimestamp)
         try container.encodeIfPresent(comment, forKey: .comment)
-        try container.encodeIfPresent(userId, forKey: .userId)
-        try container.encodeIfPresent(feedbackType, forKey: .feedbackType)
+        try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
+        try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
         try container.encodeIfPresent(secondsSinceLastReroute, forKey: .secondsSinceLastReroute)

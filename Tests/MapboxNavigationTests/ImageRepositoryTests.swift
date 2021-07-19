@@ -1,7 +1,8 @@
 import XCTest
+import TestHelper
 @testable import MapboxNavigation
 
-class ImageRepositoryTests: XCTestCase {
+class ImageRepositoryTests: TestCase {
     lazy var repository: ImageRepository = {
         let repo = ImageRepository.shared
         let config = URLSessionConfiguration.default
