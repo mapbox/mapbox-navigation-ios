@@ -144,7 +144,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     let startTimestamp: Date?
     let sdkIdentifier: String
     let userAbsoluteDistanceToDestination: CLLocationDistance?
-    let driverMode = "activeGuidance"
+    let driverMode = "trip"
     
     let stepIndex: Int
     let stepCount: Int
