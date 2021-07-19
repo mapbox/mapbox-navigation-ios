@@ -4,6 +4,9 @@
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "Was möchtest du machen?";
 
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continue";
+
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Aktuelle Position";
 
