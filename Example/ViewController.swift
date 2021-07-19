@@ -25,7 +25,6 @@ class ViewController: UIViewController {
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
     var speedLimitView: SpeedLimitView!
-    var passiveLocationManager: PassiveLocationManager!
     var eventsManager: NavigationEventsManager!
     
     var currentEdgeIdentifier: RoadGraph.Edge.Identifier?

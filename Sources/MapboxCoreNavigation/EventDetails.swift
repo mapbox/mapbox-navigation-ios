@@ -189,11 +189,11 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
             userAbsoluteDistanceToDestination = nil
         }
         
-        if let shape = session.originalRoute?.shape {
+        if let original = session.originalRoute, let shape = originalRoute.shape {
             originalGeometry = Polyline(coordinates: shape.coordinates)
-            originalDistance = round(session.originalRoute?.distance ?? 0)
-            originalEstimatedDuration = round(session.originalRoute?.expectedTravelTime ?? 0)
-            originalStepCount = session.originalRoute?.legs.map({$0.steps.count}).reduce(0, +)
+            originalDistance = round(originalRoute.distance)
+            originalEstimatedDuration = round(originalRoute.expectedTravelTime)
+            originalStepCount = originalRoute.legs.map({$0.steps.count}).reduce(0, +)
         } else {
             originalGeometry = nil
             originalDistance = nil
@@ -201,10 +201,10 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
             originalStepCount = nil
         }
         
-        if let shape = session.currentRoute?.shape {
+        if let currentRoute = session.currentRoute, let shape = currentRoute.shape {
             self.geometry = Polyline(coordinates: shape.coordinates)
-            distance = round(session.currentRoute?.distance ?? 0)
-            estimatedDuration = round(session.currentRoute?.expectedTravelTime ?? 0)
+            distance = round(currentRoute.distance)
+            estimatedDuration = round(currentRoute.expectedTravelTime)
         } else {
             self.geometry = nil
             distance = nil

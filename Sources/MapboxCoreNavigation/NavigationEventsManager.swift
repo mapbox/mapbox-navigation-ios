@@ -54,7 +54,6 @@ open class NavigationEventsManager {
         }
     }
     
-    
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
      */
