@@ -237,6 +237,14 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
+    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return false
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return false

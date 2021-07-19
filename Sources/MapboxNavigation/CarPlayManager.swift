@@ -90,8 +90,8 @@ public class CarPlayManager: NSObject {
      The view controller for orchestrating the Mapbox map, the interface styles and the map template buttons on CarPlay.
      */
     public var carPlayMapViewController: CarPlayMapViewController? {
-        if let mapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
-            return mapViewController
+        if let carPlayMapViewController = carWindow?.rootViewController as? CarPlayMapViewController {
+            return carPlayMapViewController
         }
         return nil
     }
