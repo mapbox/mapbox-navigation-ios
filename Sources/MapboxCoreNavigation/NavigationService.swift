@@ -539,22 +539,6 @@ extension MapboxNavigationService {
     }
 }
 
-fileprivate extension NavigationEventsManager {
-    func incrementDistanceTraveled(by distance: CLLocationDistance) {
-        sessionState?.totalDistanceCompleted += distance
-    }
-    
-    func arriveAtWaypoint() {
-        sessionState?.departureTimestamp = nil
-        sessionState?.arrivalTimestamp = nil
-    }
-    
-    func record(locations: [CLLocation]) {
-        guard let state = sessionState else { return }
-        locations.forEach(state.pastLocations.push(_:))
-    }
-}
-
 private extension Double {
     var dispatchInterval: DispatchTimeInterval {
         let milliseconds = self * 1000.0 //milliseconds per second
