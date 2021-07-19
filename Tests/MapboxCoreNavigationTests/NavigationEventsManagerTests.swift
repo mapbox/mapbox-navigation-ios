@@ -6,7 +6,7 @@ import MapboxMobileEvents
 class NavigationEventsManagerTests: TestCase {
     func testMobileEventsManagerIsInitializedImmediately() {
         let mobileEventsManagerSpy = MMEEventsManagerSpy()
-        let _ = NavigationEventsManager(dataSource: nil, accessToken: "example token", mobileEventsManager: mobileEventsManagerSpy)
+        let _ = NavigationEventsManager(accessToken: "example token", mobileEventsManager: mobileEventsManagerSpy)
 
         let config = UserDefaults.mme_configuration()
         let token = config.mme_accessToken
@@ -56,7 +56,9 @@ class NavigationEventsManagerTests: TestCase {
         
         guard let departEvent = events.filter({ $0.event == MMEEventTypeNavigationDepart }).first else { XCTFail(); return }
         guard let rerouteEvent = events.filter({ $0.event == MMEEventTypeNavigationReroute }).first else { XCTFail(); return }
-        guard let arriveEvent = events.filter({ $0.event == MMEEventTypeNavigationArrive }).first else { XCTFail(); return }
+        guard let arriveEvent = events
+                .filter({ $0.event == MMEEventTypeNavigationArrive })
+                .first as? ActiveNavigationEventDetails else { XCTFail(); return }
         
         let durationBetweenDepartAndArrive = arriveEvent.arrivalTimestamp!.timeIntervalSince(departEvent.startTimestamp!)
         let durationBetweenDepartAndReroute = rerouteEvent.created.timeIntervalSince(departEvent.startTimestamp!)
@@ -84,13 +86,13 @@ class NavigationEventsManagerTests: TestCase {
         // are expected.
         let expectation = XCTestExpectation()
         DispatchQueue.global().async {
-            let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
+            let _ = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
             expectation.fulfill()
         }
         
         wait(for: [expectation], timeout: eventTimeout)
         
         // Sanity check to verify that no issues occur when creating NavigationEventDetails from main queue.
-        let _ = NavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
+        let _ = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: false)
     }
 }

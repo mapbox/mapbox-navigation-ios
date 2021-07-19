@@ -7,10 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		110766AD26A5A64000832F01 /* PassiveNavigationEventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */; };
 		11D1F89E269601150053A93F /* NativeHandlersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */; };
 		11D1F8A02696048D0053A93F /* Dictionary+DeepMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */; };
 		11D1F8A22696EBD40053A93F /* Dictionary+Equality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */; };
-		1177B5C1268A0899001DBF1E /* FreeDriveEventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1177B5C0268A0899001DBF1E /* FreeDriveEventDetails.swift */; };
 		160D8279205996DA00D278D6 /* DataCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D8278205996DA00D278D6 /* DataCache.swift */; };
 		160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 160D827A2059973C00D278D6 /* DataCacheTests.swift */; };
 		162039CF216C348500875F5C /* NavigationEventsManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 162039CE216C348500875F5C /* NavigationEventsManagerTests.swift */; };
@@ -463,11 +463,10 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PassiveNavigationEventDetails.swift; sourceTree = "<group>"; };
 		11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeHandlersFactoryTests.swift; sourceTree = "<group>"; };
 		11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+DeepMerge.swift"; sourceTree = "<group>"; };
 		11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Equality.swift"; sourceTree = "<group>"; };
-		1177B5C0268A0899001DBF1E /* FreeDriveEventDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FreeDriveEventDetails.swift; sourceTree = "<group>"; };
-		1603C890214351EE00167D95 /* Cedar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cedar.framework; path = Carthage/Build/iOS/Cedar.framework; sourceTree = "<group>"; };
 		160D8278205996DA00D278D6 /* DataCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCache.swift; sourceTree = "<group>"; };
 		160D827A2059973C00D278D6 /* DataCacheTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCacheTests.swift; sourceTree = "<group>"; };
 		162039CE216C348500875F5C /* NavigationEventsManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEventsManagerTests.swift; sourceTree = "<group>"; };
@@ -1122,7 +1121,7 @@
 			children = (
 				354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */,
 				354A9BCA20EA9BDA00F03325 /* EventDetails.swift */,
-				1177B5C0268A0899001DBF1E /* FreeDriveEventDetails.swift */,
+				110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */,
 				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				352F464C20EB74C200147886 /* NavigationEventsManager.swift */,
 				354A9BC520EA991900F03325 /* SessionState.swift */,
@@ -2438,6 +2437,7 @@
 				DAF27248264E028B00C0AC37 /* Geometry.swift in Sources */,
 				8DCE1050210FC5880048B0FB /* EndOfRouteFeedback.swift in Sources */,
 				35C98731212E02B500808B82 /* RouteController.swift in Sources */,
+				110766AD26A5A64000832F01 /* PassiveNavigationEventDetails.swift in Sources */,
 				351927361F0FA072003A702D /* ScreenCapture.swift in Sources */,
 				2BBEEDA72508E1E300C8DA4A /* RouteStepProgress.swift in Sources */,
 				35F3387C2232AEBF0071DB5C /* MinimumEditDistance.swift in Sources */,
@@ -2450,7 +2450,6 @@
 				2E6656F9264EC912009463EE /* Result+Expected.swift in Sources */,
 				11D1F8A02696048D0053A93F /* Dictionary+DeepMerge.swift in Sources */,
 				3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */,
-				1177B5C1268A0899001DBF1E /* FreeDriveEventDetails.swift in Sources */,
 				DA5F44AA25F07A6800F573EC /* RoadObjectType.swift in Sources */,
 				2E50E0D2264E468B009D3848 /* RoadObjectMatcherError.swift in Sources */,
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,

@@ -21,10 +21,13 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
 
     required public init() {
         mobileEventsManagerSpy = MMEEventsManagerSpy.testableInstance()
-        super.init(dataSource: nil, accessToken: "fake token", mobileEventsManager: mobileEventsManagerSpy)
+        super.init(activeNavigationDataSource: nil, accessToken: "fake token", mobileEventsManager: mobileEventsManagerSpy)
     }
-
-    required convenience public init(dataSource source: EventsManagerDataSource?, accessToken possibleToken: String?, mobileEventsManager: MMEEventsManager) {
+    
+    required convenience init(activeNavigationDataSource: EventsManagerDataSource? = nil,
+                  passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
+                  accessToken possibleToken: String? = nil,
+                  mobileEventsManager: MMEEventsManager = .shared()) {
         self.init()
     }
 
@@ -48,7 +51,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         return mobileEventsManagerSpy.flushedEventCount(with: eventName)
     }
     
-    override public func navigationDepartEvent() -> NavigationEventDetails? {
+    override public func navigationDepartEvent() -> ActiveNavigationEventDetails? {
         if let event = super.navigationDepartEvent() {
             debuggableEvents.append(event)
             return event
@@ -56,7 +59,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         return nil
     }
     
-    override public func navigationArriveEvent() -> NavigationEventDetails? {
+    override public func navigationArriveEvent() -> ActiveNavigationEventDetails? {
         if let event = super.navigationArriveEvent() {
             debuggableEvents.append(event)
             return event
@@ -64,7 +67,9 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         return nil
     }
     
-    override public func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> NavigationEventDetails? {
+    override public func navigationRerouteEvent(
+        eventType: String = MMEEventTypeNavigationReroute
+    ) -> ActiveNavigationEventDetails? {
         if let event = super.navigationRerouteEvent() {
             debuggableEvents.append(event)
             return event
