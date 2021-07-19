@@ -884,6 +884,10 @@
 		DA73F87820BF851B0067649B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = de; path = Resources/de.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA754E1723AC56E5007E16B5 /* MBXAccountsLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MBXAccountsLoader.m; path = include/MBXAccountsLoader.m; sourceTree = "<group>"; };
 		DA7A97CE26A7613C001B6A9A /* RouteOptionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteOptionsTests.swift; sourceTree = "<group>"; };
+		DA75C2C426A602A100BAD63D /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/Navigation.strings"; sourceTree = "<group>"; };
+		DA75C2C526A602CF00BAD63D /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		DA75C2C626A602E300BAD63D /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		DA75C2C726A602FF00BAD63D /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "es-ES"; path = "Resources/es-ES.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
 		DA8264871F2AADC200454B24 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Navigation.strings"; sourceTree = "<group>"; };
 		DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneViewTests.swift; sourceTree = "<group>"; };
 		DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedLimitView.swift; sourceTree = "<group>"; };
@@ -2139,6 +2143,7 @@
 				yo,
 				el,
 				tr,
+				"es-ES",
 			);
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			packageReferences = (
@@ -2712,6 +2717,7 @@
 				DA9059B3223B1769006E8B46 /* ja */,
 				8B808F862487CFEC00EEE453 /* el */,
 				DA6C925A24C60C92003A0AD6 /* tr */,
+				DA75C2C426A602A100BAD63D /* es-ES */,
 			);
 			name = Navigation.storyboard;
 			path = Resources;
@@ -2743,6 +2749,7 @@
 				DA6C925424C604B7003A0AD6 /* uk */,
 				DA6C925724C6078B003A0AD6 /* tr */,
 				E27A21FD265672D500AA935F /* en */,
+				DA75C2C526A602CF00BAD63D /* es-ES */,
 			);
 			name = Localizable.strings;
 			path = Resources;
@@ -2769,6 +2776,7 @@
 				8B808F982487D2BE00EEE453 /* el */,
 				DA6C925924C60A43003A0AD6 /* tr */,
 				DA0DBA2125FC4CC200E86BDF /* ca */,
+				DA75C2C726A602FF00BAD63D /* es-ES */,
 			);
 			name = Localizable.stringsdict;
 			sourceTree = "<group>";
@@ -2799,6 +2807,7 @@
 				8B808F972487D2B900EEE453 /* el */,
 				DA6C925824C60A3D003A0AD6 /* tr */,
 				E27A21F22654FB6800AA935F /* en */,
+				DA75C2C626A602E300BAD63D /* es-ES */,
 			);
 			name = Localizable.strings;
 			path = Resources;
