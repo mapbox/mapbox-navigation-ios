@@ -1,8 +1,14 @@
 /* Delimiter between lines in an address when displayed inline */
 "ADDRESS_LINE_SEPARATOR" = ", ";
 
-/* Alert action */
-"ALERT_OK" = "OK";
+/* CPBarButton title, which allows to disable location simulation */
+"CARPLAY_DISABLE_SIMULATION" = "Disable Simulation";
+
+/* CPBarButton title, which allows to enable location simulation */
+"CARPLAY_ENABLE_SIMULATION" = "Enable Simulation";
+
+/* CPListTemplate title, which shows list of favorite destinations */
+"CARPLAY_FAVORITES_LIST" = "Favorites List";
 
 /* CPAlertTemplate OK button title */
 "CARPLAY_OK" = "OK";
@@ -22,11 +28,3 @@
 /* Title of alert confirming waypoint removal */
 "REMOVE_WAYPOINT_CONFIRM_TITLE" = "Remove Waypoint?";
 
-/* CPBarButton title, which allows to disable location simulation */
-"CARPLAY_DISABLE_SIMULATION" = "Disable Simulation";
-
-/* CPBarButton title, which allows to enable location simulation */
-"CARPLAY_ENABLE_SIMULATION" = "Enable Simulation";
-
-/* CPListTemplate title, which shows list of favorite destinations */
-"CARPLAY_FAVORITES_LIST" = "Favorites List";
