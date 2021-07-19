@@ -123,6 +123,7 @@
 * Fixed a retain cycle in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
 * The `EventsManagerDataSource.router`, `NavigationService.router`, `NavigationService.eventsManager`, `MapboxNavigationService.router`, `MapboxNavigationService.eventsManager` properties are no longer force unwrapped. ([#3055](https://github.com/mapbox/mapbox-navigation-ios/pull/3055))
 * Fixed an issue where traffic congestion segments along the route line blurred into each other when the map was zoomed in far enough. ([#3153](https://github.com/mapbox/mapbox-navigation-ios/pull/3153))
+* Supported feedbacks during passive navigation. Set `PassiveLocationManager` as a data source for `NavigationEventsManager` and then use this class to create and send user feedbacks. `FeedbackViewController` provides drop-in feedback screen and can be used during both passive and active navigation. ([#3122](https://github.com/mapbox/mapbox-navigation-ios/pull/3122))
 
 ## v1.4.1
 
