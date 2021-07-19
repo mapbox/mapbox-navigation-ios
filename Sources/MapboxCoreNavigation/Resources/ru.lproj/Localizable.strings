@@ -1,3 +1,24 @@
+/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
+"CONTINUE" = "Продолжайте %@";
+
+/* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
+"CONTINUE_ON_ROAD" = "Продолжите %2$@ на %1$@";
+
+/* Format string for less than; 1 = duration remaining */
+"LESS_THAN" = "%@";
+
+/* Format for speech string; 1 = current instruction; 2 = the following linked instruction */
+"LINKED_UTTERANCE_FORMAT" = "%1$@, потом %2$@";
+
+/* Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction */
+"LINKED_WITH_DISTANCE_UTTERANCE_FORMAT" = "%1$@, потом через %2$@, %3$@";
+
+/* Format for speech string; 1 = way name; 2 = way route number */
+"NAME_AND_REF" = "%1$@ (%2$@)";
+
+/* Format for speech string; 1 = formatted distance; 2 = instruction */
+"WITH_DISTANCE_UTTERANCE_FORMAT" = "Через %1$@, %2$@";
+
 /* Error message when an offline route request returns a response that can’t be deserialized */
 "OFFLINE_CORRUPT_DATA" = "Получен неверный маршрут без интернета.";
 
