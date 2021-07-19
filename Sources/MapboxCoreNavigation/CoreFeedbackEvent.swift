@@ -2,8 +2,16 @@ import Foundation
 import MapboxDirections
 import Polyline
 
+/**
+ Feedback event that can be created using `NavigationEventsManager.createFeedback()`.
+ Use `NavigationEventsManager.sendFeedback(_:type:description:) to send it to the server.`
+ Conforms to the `Codable` protocol, so the application can store the event persistently.
+ */
 public class CoreFeedbackEvent: Hashable, Codable {
-    public var id = UUID()
+    /**
+     Unique identifier of the feedback.
+     */
+    public var identifier = UUID()
     
     var timestamp: Date
     
@@ -15,11 +23,11 @@ public class CoreFeedbackEvent: Hashable, Codable {
     }
     
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(id.hashValue)
+        hasher.combine(identifier.hashValue)
     }
     
     public static func ==(lhs: CoreFeedbackEvent, rhs: CoreFeedbackEvent) -> Bool {
-        return lhs.id == rhs.id
+        return lhs.identifier == rhs.identifier
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -30,7 +38,7 @@ public class CoreFeedbackEvent: Hashable, Codable {
     
     public required init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decode(UUID.self, forKey: .id)
+        identifier = try container.decode(UUID.self, forKey: .id)
         timestamp = try container.decode(Date.self, forKey: .timestamp)
         let eventDictionaryData = try container.decode(Data.self, forKey: .eventDictionaryData)
         eventDictionary = try JSONSerialization.jsonObject(with: eventDictionaryData) as? [String: Any] ?? [:]
@@ -38,7 +46,7 @@ public class CoreFeedbackEvent: Hashable, Codable {
     
     public func encode(to encoder: Encoder) throws {
         var containter = encoder.container(keyedBy: CodingKeys.self)
-        try containter.encode(id, forKey: .id)
+        try containter.encode(identifier, forKey: .id)
         try containter.encode(timestamp, forKey: .timestamp)
         let eventDictionaryData = try JSONSerialization.data(withJSONObject: eventDictionary)
         try containter.encode(eventDictionaryData, forKey: .eventDictionaryData)

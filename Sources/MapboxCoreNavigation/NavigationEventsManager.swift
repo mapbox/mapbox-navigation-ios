@@ -173,7 +173,7 @@ open class NavigationEventsManager {
     
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
-        eventDictionary["feedbackId"] = event.id.uuidString
+        eventDictionary["feedbackId"] = event.identifier.uuidString
         eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
         eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
         return eventDictionary
@@ -331,7 +331,8 @@ open class NavigationEventsManager {
      
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
      
-     You can then call `sendFeedback(_:type:source:description:)` with the returned feedback to attach any additional metadata to the feedback and send it.
+     - Postcondition:
+     Call `sendFeedback(_:type:source:description:)` with the returned feedback to attach additional metadata to the feedback and send it.
      */
     public func createFeedback() -> FeedbackEvent? {
         guard let feedbackEvent = navigationFeedbackEvent() else { return nil }
