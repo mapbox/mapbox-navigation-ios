@@ -2,11 +2,12 @@ import Foundation
 import XCTest
 import CoreLocation
 import MapboxDirections
+import TestHelper
 import struct Polyline.Polyline
 import Turf
 @testable import MapboxCoreNavigation
 
-class RouteProgressTests: XCTestCase {
+class RouteProgressTests: TestCase {
 
     func testRouteProgress() {
         let routeProgress = RouteProgress(route: route, routeIndex: 0, options: routeOptions)

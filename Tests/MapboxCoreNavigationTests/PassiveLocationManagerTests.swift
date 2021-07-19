@@ -34,7 +34,7 @@ extension CLLocationCoordinate2D {
     }
 }
 
-class PassiveLocationManagerTests: XCTestCase {
+class PassiveLocationManagerTests: TestCase {
     class Delegate: PassiveLocationManagerDelegate {
         let road: Road
         let locationUpdateExpectation: XCTestExpectation
@@ -64,8 +64,6 @@ class PassiveLocationManagerTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         
-        Navigator.credentials = directions.credentials
-
         let bundle = Bundle(for: Fixture.self)
         let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
         Navigator.tilesURL = filePathURL

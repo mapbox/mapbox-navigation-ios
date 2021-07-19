@@ -19,7 +19,7 @@ var tunnelRoute: Route {
     return tunnelResponse.routes!.first!
 }
 
-class TunnelAuthorityTests: XCTestCase {
+class TunnelAuthorityTests: TestCase {
     lazy var locationManager = NavigationLocationManager()
     
     func testUserWithinTunnelEntranceRadius() {

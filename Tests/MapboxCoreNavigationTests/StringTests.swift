@@ -1,7 +1,8 @@
 import XCTest
+import TestHelper
 @testable import MapboxCoreNavigation
 
-class StringTests: XCTestCase {
+class StringTests: TestCase {
     func testMinimumEditDistance() {
         let fromString = "hello this is a test"
         let toString = "hello"
