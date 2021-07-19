@@ -4,6 +4,9 @@
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "Que us agradaria fer? ";
 
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continua";
+
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Posició actual";
 
@@ -80,7 +83,7 @@
 "FEEDBACK_THANK_YOU" = "Gràcies pel vostre informe!";
 
 /* Title of view controller for sending feedback */
-"FEEDBACK_TITLE" = "Informar d'un problema";
+"FEEDBACK_TITLE" = "Informar d’un problema";
 
 /* Specific route feedback that a illegal route problem was encountered but not listed as a choice. */
 "ILLEGAL_ROUTE_OTHER_FEEDBACK" = "Altres";
