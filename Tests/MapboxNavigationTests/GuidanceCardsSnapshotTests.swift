@@ -9,7 +9,7 @@ import CoreLocation
 
 @available(iOS 11.0, *)
 /// :nodoc:
-class GuidanceCardsSnapshotTests: XCTestCase {
+class GuidanceCardsSnapshotTests: TestCase {
     let tertiaryRouteOptions = NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 39.749216, longitude: -105.008272),
         CLLocationCoordinate2D(latitude: 39.694833, longitude: -104.976949),

@@ -5,7 +5,7 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 @testable import MapboxNavigation
 
-class StepsViewControllerTests: XCTestCase {
+class StepsViewControllerTests: TestCase {
     struct Constants {
         static let route = response.routes!.first!
         static let options = routeOptions

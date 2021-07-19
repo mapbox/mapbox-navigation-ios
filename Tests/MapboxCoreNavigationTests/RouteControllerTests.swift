@@ -6,7 +6,7 @@ import CoreLocation
 import TestHelper
 import MapboxNavigationNative
 
-class RouteControllerTests: XCTestCase {
+class RouteControllerTests: TestCase {
     var replayManager: ReplayLocationManager?
 
     override func setUp() {

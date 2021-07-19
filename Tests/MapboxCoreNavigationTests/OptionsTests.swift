@@ -1,9 +1,10 @@
 import XCTest
 import CoreLocation
 import MapboxDirections
+import TestHelper
 @testable import MapboxCoreNavigation
 
-class OptionsTests: XCTestCase {
+class OptionsTests: TestCase {
     let coordinates = [CLLocationCoordinate2D(latitude: 0, longitude: 1), CLLocationCoordinate2D(latitude: 2, longitude: 3)]
     
     func testNavigationRouteOptions() {

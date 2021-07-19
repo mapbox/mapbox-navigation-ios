@@ -16,6 +16,7 @@
 * Xcode 12.4 or above is now required for building this SDK from source.
 * Carthage v0.38 or above is now required for installing this SDK if you use Carthage. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
 * You can fully build this SDK on Macs with Apple Silicon. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
+* Removed the optional dependency on MapboxGeocoder.swift. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999), [#3183](https://github.com/mapbox/mapbox-navigation-ios/issues/3183])
 
 ### Map
 
@@ -50,7 +51,7 @@
 * Fixed an issue where `RouteController` or `PassiveLocationManager` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationProvider.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
-* Added the `RouteController.historyDirectoryURL` property and `RouteController.writeHistory(completionHandler:)` method for recording details about a trip for debugging purposes. ([#2930](https://github.com/mapbox/mapbox-navigation-ios/pull/2930))
+* Added the `RouteController.startRecordingHistory()`, `RouteController.stopRecordingHistory(completionHandler:)`, `PassiveLocationManager.startRecordingHistory()`, and `PassiveLocationManager.stopRecordingHistory(completionHandler:)` methods for recording details about a trip for debugging purposes. ([#3157](https://github.com/mapbox/mapbox-navigation-ios/pull/3157))
 
 ### Electronic horizon
 
@@ -86,7 +87,6 @@
 * Added `CarPlayManagerDelegate.carPlayManager(_:shouldPresentArrivalUIFor:)` and `CarPlayNavigationViewController.navigationService(_:didArriveAt:)` to allow developers to determine whether to present Arrival UI for CarPlay. ([#3016](https://github.com/mapbox/mapbox-navigation-ios/pull/3016))
 * Renamed `CarPlayNavigationDelegate` to `CarPlayNavigationViewControllerDelegate` and `CarPlayNavigationViewController.carPlayNavigationDelegate` to `CarPlayNavigationViewController.delegate`. ([#3036](https://github.com/mapbox/mapbox-navigation-ios/pull/3036))
 * Changed access level of `styleManager` in `CarPlayNavigationViewController` and `CarPlayMapViewController` from default to `public private(set)`. ([#3137](https://github.com/mapbox/mapbox-navigation-ios/pull/3137))
-* Removed optional dependency on MapboxGeocoder.swift. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * Moved `CarPlaySearchController.searchTemplate(_:updatedSearchText:completionHandler:)`, `CarPlaySearchController.searchTemplate(_:searchTemplate:selectedResult:completionHandler:)` methods to `CarPlaySearchControllerDelegate` protocol. Renamed `resultsOrNoResults(_:limit:)` to `searchResults(with:limit:)`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * `CarPlaySearchControllerDelegate` now conforms to `CPSearchTemplateDelegate` protocol. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * `AppDelegate` now extends `CarPlaySearchControllerDelegate`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))

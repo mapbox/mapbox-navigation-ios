@@ -72,35 +72,6 @@ open class PassiveLocationManager: NSObject {
     public func startUpdatingLocation() {
         systemLocationManager.startUpdatingLocation()
     }
-
-    /**
-     A custom configuration for electronic horizon observations.
-     
-     Set this property to `nil` to use the default configuration.
-     */
-    public var electronicHorizonOptions: ElectronicHorizonOptions? {
-        get {
-            Navigator.shared.electronicHorizonOptions
-        }
-        set {
-            Navigator.shared.electronicHorizonOptions = newValue
-        }
-    }
-    
-    /// The road graph that is updated as the passive location manager tracks the user’s location.
-    public var roadGraph: RoadGraph {
-        return Navigator.shared.roadGraph
-    }
-    
-    /// The road object store that is updated as the passive location manager tracks the user’s location.
-    public var roadObjectStore: RoadObjectStore {
-        return Navigator.shared.roadObjectStore
-    }
-
-    /// The road object matcher that allows to match user-defined road objects.
-    public var roadObjectMatcher: RoadObjectMatcher {
-        return Navigator.shared.roadObjectMatcher
-    }
     
     var lastRawLocation: CLLocation?
     
@@ -190,6 +161,39 @@ open class PassiveLocationManager: NSObject {
         NotificationCenter.default.removeObserver(self)
     }
     
+    // MARK: Accessing Relevant Routing Data
+    
+    /**
+     A custom configuration for electronic horizon observations.
+     
+     Set this property to `nil` to use the default configuration.
+     */
+    public var electronicHorizonOptions: ElectronicHorizonOptions? {
+        get {
+            Navigator.shared.electronicHorizonOptions
+        }
+        set {
+            Navigator.shared.electronicHorizonOptions = newValue
+        }
+    }
+    
+    /// The road graph that is updated as the passive location manager tracks the user’s location.
+    public var roadGraph: RoadGraph {
+        return Navigator.shared.roadGraph
+    }
+    
+    /// The road object store that is updated as the passive location manager tracks the user’s location.
+    public var roadObjectStore: RoadObjectStore {
+        return Navigator.shared.roadObjectStore
+    }
+
+    /// The road object matcher that allows to match user-defined road objects.
+    public var roadObjectMatcher: RoadObjectMatcher {
+        return Navigator.shared.roadObjectMatcher
+    }
+    
+    // MARK: Recording History to Diagnose Problems
+    
     /**
      Path to the directory where history could be stored when `PassiveLocationManager.writeHistory(completionHandler:)` is called.
      */
@@ -200,20 +204,33 @@ open class PassiveLocationManager: NSObject {
     }
     
     /**
-     A closure to be called when history writing ends.
+     Starts recording history for debugging purposes.
      
-     - parameter historyFileURL: A path to file, where history was written to.
+     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
      */
-    public typealias WriteHistoryCompletionHandler = (_ historyFileURL: URL?) -> Void
+    public static func startRecordingHistory() {
+        Navigator.shared.startRecordingHistory()
+    }
     
     /**
-     Store history to the directory stored in `PassiveLocationManager.historyDirectoryURL` and asynchronously run a callback
-     when writing finishes.
+     A closure to be called when history writing ends.
      
-     - parameter completion: A block object to be executed when history writing ends.
+     - parameter historyFileURL: A URL to the file that contains history data. This argument is `nil` if no history data has been written because history recording has not yet begun. Use the `startRecordingHistory()` method to begin recording before attempting to write a history file.
      */
-    public static func writeHistory(completionHandler: @escaping WriteHistoryCompletionHandler) {
-        Navigator.shared.writeHistory(completionHandler: completionHandler)
+    public typealias HistoryFileWritingCompletionHandler = (_ historyFileURL: URL?) -> Void
+    
+    /**
+     Stops recording history, asynchronously writing any recorded history to a file.
+     
+     Upon completion, the completion handler is called with the URL to a file in the directory specified by `PassiveLocationManager.historyDirectoryURL`. The file contains details about the passive location manager’s activity that may be useful to include when reporting an issue to Mapbox.
+     
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
+     
+     - parameter completionHandler: A closure to be executed when the history file is ready.
+     */
+    public static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
+        Navigator.shared.stopRecordingHistory(writingFileWith: completionHandler)
     }
 }
 

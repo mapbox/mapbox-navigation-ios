@@ -2,7 +2,7 @@ import XCTest
 import TestHelper
 @testable import MapboxNavigation
 
-class StringTests: XCTestCase {
+class StringTests: TestCase {
     func testMD5() {
         XCTAssertEqual("hello".md5,
                        "5d41402abc4b2a76b9719d911017c592")

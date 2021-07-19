@@ -1,10 +1,8 @@
-import MapboxGeocoder
 import CoreLocation
 import CarPlay
 
 /**
- Struct, which represents result of a geocoding request, and contains additional navigation related
- information like title, address, location and routable locations.
+ A struct that represents the result of a geocoding request, containing information for display to the user and locations for navigation.
  */
 public struct NavigationGeocodedPlacemark: Equatable, Codable {
     
@@ -14,9 +12,9 @@ public struct NavigationGeocodedPlacemark: Equatable, Codable {
     public var title: String
     
     /**
-     The placemark’s address.
+     The placemark’s subtitle, such as its formatted address.
      */
-    public var address: String?
+    public var subtitle: String?
     
     /**
      The placemark’s geographic center.
@@ -37,31 +35,30 @@ public struct NavigationGeocodedPlacemark: Equatable, Codable {
     
     enum CodingKeys: String, CodingKey {
         case title
-        case address = "subtitle"
+        case subtitle
         case location
         case routableLocations
     }
     
     /**
-     Initializes a newly created `NavigationGeocodedPlacemark` object with a `GeocodedPlacemark`
-     instance and an optional subtitle.
+     Creates a geocoded placemark with the given titles and locations.
      
-     - parameter geocodedPlacemark: A `GeocodedPlacemark` instance, properties of which will be used in
-     `NavigationGeocodedPlacemark`.
-     - parameter subtitle: Subtitle, which can contain additional information regarding placemark
-     (e.g. address).
+     - parameter title: The title of the placemark.
+     - parameter subtitle: A subtitle with additional information about the placemark, such as its formatted address.
+     - parameter location: The location of the placemark.
+     - parameter routableLocations: The locations to which the user should travel to arrive at the placemark.
      */
-    public init(from geocodedPlacemark: GeocodedPlacemark, subtitle: String?) {
-        title = geocodedPlacemark.formattedName
-        location = geocodedPlacemark.location
-        routableLocations = geocodedPlacemark.routableLocations
-        address = subtitle
+    public init(title: String, subtitle: String?, location: CLLocation?, routableLocations: [CLLocation]?) {
+        self.title = title
+        self.location = location
+        self.routableLocations = routableLocations
+        self.subtitle = subtitle
     }
     
     public init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         title = try container.decode(String.self, forKey: .title)
-        address = try container.decode(String.self, forKey: .address)
+        subtitle = try container.decode(String.self, forKey: .subtitle)
         if let locationHolder = try container.decodeIfPresent(CLLocationModel.self, forKey: .location) {
             location = CLLocation(model: locationHolder)
         }
@@ -73,26 +70,26 @@ public struct NavigationGeocodedPlacemark: Equatable, Codable {
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(title, forKey: .title)
-        try container.encodeIfPresent(address, forKey: .address)
+        try container.encodeIfPresent(subtitle, forKey: .subtitle)
         try container.encodeIfPresent(location, forKey: .location)
         try container.encodeIfPresent(routableLocations, forKey: .routableLocations)
     }
     
     public static func ==(lhs: NavigationGeocodedPlacemark, rhs: NavigationGeocodedPlacemark) -> Bool {
         return lhs.title == rhs.title &&
-            lhs.address == rhs.address
+            lhs.subtitle == rhs.subtitle
     }
     
     /**
      Method, which returns `CPListItem`, which can be later used in list of search results
-     inside `CPListTemplate`. `CPListItem` shows destination's title and its address.
+     inside `CPListTemplate`. `CPListItem` shows destination's title and its subtitle.
      
      - returns: A `CPListItem` instance.
      */
     @available(iOS 12.0, *)
     public func listItem() -> CPListItem {
         let item = CPListItem(text: title,
-                              detailText: address,
+                              detailText: subtitle,
                               image: nil,
                               showsDisclosureIndicator: true)
         

@@ -47,7 +47,7 @@ class SystemSpeechSynthMock: SystemSpeechSynthesizer {
     }
 }
 
-class SpeechSynthesizersControllerTests: XCTestCase {
+class SpeechSynthesizersControllerTests: TestCase {
     
     var delegateErrorBlock: ((SpeechError) -> ())?
     var synthesizers: [SpeechSynthesizing] = []

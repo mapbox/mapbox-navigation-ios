@@ -21,47 +21,15 @@ class Navigator {
      */
     static var tilesURL: URL? = nil
     
-    /**
-     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
-     
-     Setting `nil` disables history recording. Defaults to `nil`.
-     */
-    static var historyDirectoryURL: URL? = nil
-    
-    /**
-     Store history to the directory stored in `Navigator.historyDirectoryURL` and asynchronously run a callback
-     when writing finishes.
-     
-     - parameter completionHandler: A block object to be executed when history dumping ends.
-     */
-    func writeHistory(completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder?.stopRecording { [weak self] (path) in
-            if let path = path {
-                completionHandler(URL(fileURLWithPath: path))
-            } else {
-                completionHandler(nil)
-            }
-            self?.historyRecorder?.startRecording()
-        }
-    }
-    
-    private(set) var historyRecorder: HistoryRecorderHandle?
-    
     private(set) var navigator: MapboxNavigationNative.Navigator
     
     private(set) var cacheHandle: CacheHandle
-    
-    private(set) var roadGraph: RoadGraph
     
     lazy var routerInterface: MapboxNavigationNative.RouterInterface = {
         return MapboxNavigationNative.RouterFactory.build(for: .hybrid,
                                                           cache: cacheHandle,
                                                           historyRecorder: historyRecorder)
     }()
-
-    private(set) var roadObjectStore: RoadObjectStore
-
-    private(set) var roadObjectMatcher: RoadObjectMatcher
 
     private(set) var tileStore: TileStore
     
@@ -147,7 +115,6 @@ class Navigator {
         navigator.setElectronicHorizonObserverFor(self)
         navigator.addObserver(for: self)
         navigator.setFallbackVersionsObserverFor(self)
-        historyRecorder?.startRecording()
     }
     
     private func unsubscribeNavigator() {
@@ -155,6 +122,56 @@ class Navigator {
         navigator.removeObserver(for: self)
         navigator.setFallbackVersionsObserverFor(nil)
     }
+    
+    // MARK: History
+    
+    /**
+     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
+     
+     Setting `nil` disables history recording. Defaults to `nil`.
+     */
+    static var historyDirectoryURL: URL? = nil
+    
+    private(set) var historyRecorder: HistoryRecorderHandle?
+    
+    /**
+     Starts recording history for debugging purposes.
+     
+     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
+     */
+    func startRecordingHistory() {
+        historyRecorder?.startRecording()
+    }
+    
+    /**
+     Stops recording history, asynchronously writing any recorded history to a file.
+     
+     Upon completion, the completion handler is called with the URL to a file in the directory specified by `Navigator.historyDirectoryURL`.
+     
+     This method immediately stops recording history, though the file may take longer to prepare.
+     
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
+     
+     - parameter completionHandler: A closure to be executed when the history file is ready.
+     */
+    func stopRecordingHistory(writingFileWith completionHandler: @escaping (URL?) -> Void) {
+        historyRecorder?.stopRecording { (path) in
+            if let path = path {
+                completionHandler(URL(fileURLWithPath: path))
+            } else {
+                completionHandler(nil)
+            }
+        }
+    }
+    
+    // MARK: Electronic horizon
+    
+    private(set) var roadGraph: RoadGraph
+
+    private(set) var roadObjectStore: RoadObjectStore
+
+    private(set) var roadObjectMatcher: RoadObjectMatcher
      
     private func setupElectronicHorizonOptions() {
         let nativeOptions = electronicHorizonOptions.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
