@@ -189,7 +189,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
             userAbsoluteDistanceToDestination = nil
         }
         
-        if let original = session.originalRoute, let shape = originalRoute.shape {
+        if let originalRoute = session.originalRoute, let shape = originalRoute.shape {
             originalGeometry = Polyline(coordinates: shape.coordinates)
             originalDistance = round(originalRoute.distance)
             originalEstimatedDuration = round(originalRoute.expectedTravelTime)
