@@ -675,8 +675,7 @@
 
 <p>where <em>PRIVATE_MAPBOX_API_TOKEN</em> is your Mapbox API token with the <code>DOWNLOADS:READ</code> scope. </p></li>
 <li><p>Create a <a href="https://guides.cocoapods.org/syntax/podfile.html">Podfile</a> with the following specification:</p>
-<pre class="highlight ruby"><code><span class="n">pod</span> <span class="s1">'MapboxCoreNavigation'</span><span class="p">,</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">'https://github.com/mapbox/mapbox-navigation-ios.git'</span><span class="p">,</span> <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="s1">'1.4'</span>
-<span class="n">pod</span> <span class="s1">'MapboxNavigation'</span><span class="p">,</span> <span class="ss">:git</span> <span class="o">=&gt;</span> <span class="s1">'https://github.com/mapbox/mapbox-navigation-ios.git'</span><span class="p">,</span> <span class="ss">:tag</span> <span class="o">=&gt;</span> <span class="s1">'1.4'</span>
+<pre class="highlight ruby"><code><span class="n">pod</span> <span class="s1">'MapboxNavigation'</span><span class="p">,</span> <span class="s1">'~> 1.4'</span>
 </code></pre></li>
 <li><p>Run <code>pod repo update &amp;&amp; pod install</code> and open the resulting Xcode workspace.</p></li>
 </ol>
@@ -696,7 +695,7 @@
 <pre class="highlight shell"><code><span class="nb">rm</span> <span class="nt">-rf</span> ~/Library/Caches/carthage/ ~/Library/Caches/org.carthage.CarthageKit/binaries/<span class="o">{</span>MapboxAccounts,MapboxCommon-ios,MapboxNavigationNative,mapbox-ios-sdk-dynamic<span class="o">}</span>
 </code></pre></li>
 <li><p>Create a <a href="https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories">Cartfile</a> with the following dependency:</p>
-<pre class="highlight plaintext"><code>github "mapbox/mapbox-navigation-ios" "1.4"
+<pre class="highlight plaintext"><code>github "mapbox/mapbox-navigation-ios" ~> 1.4
 </code></pre></li>
 </ol>
 <h2 id='configuration' class='heading'>Configuration</h2>
