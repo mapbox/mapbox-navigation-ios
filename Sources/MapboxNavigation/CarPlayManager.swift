@@ -293,6 +293,7 @@ extension CarPlayManager: CPApplicationDelegate {
         }
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
+        carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
         self.carWindow = window
 
@@ -806,6 +807,30 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
 
         delegate?.carPlayManagerDidEndNavigation(self)
     }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                didAdd finalDestinationAnnotation: PointAnnotation,
+                                                pointAnnotationManager: PointAnnotationManager) {
+        delegate?.carPlayManager(self,
+                                 didAdd: finalDestinationAnnotation,
+                                 to: carPlayNavigationViewController,
+                                 pointAnnotationManager: pointAnnotationManager)
+    }
+}
+
+// MARK: - CarPlayMapViewControllerDelegate methods
+
+@available(iOS 12.0, *)
+extension CarPlayManager: CarPlayMapViewControllerDelegate {
+    
+    public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
+                                         didAdd finalDestinationAnnotation: PointAnnotation,
+                                         pointAnnotationManager: PointAnnotationManager) {
+        delegate?.carPlayManager(self,
+                                 didAdd: finalDestinationAnnotation,
+                                 to: carPlayMapViewController,
+                                 pointAnnotationManager: pointAnnotationManager)
+    }
 }
 
 @available(iOS 12.0, *)
@@ -849,6 +874,7 @@ extension CarPlayManager {
         }
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
+        carPlayMapViewController.delegate = self
         window.rootViewController = carPlayMapViewController
         carWindow = window
 

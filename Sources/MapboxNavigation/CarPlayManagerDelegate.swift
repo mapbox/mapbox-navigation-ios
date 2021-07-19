@@ -2,6 +2,7 @@ import CarPlay
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMaps
 
 /**
  `CarPlayManagerDelegate` is the main integration point for Mapbox CarPlay support.
@@ -147,6 +148,19 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter navigationViewController: The CarPlayNavigationViewController that was presented on the CarPlay display.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) -> ()
+    
+    /**
+     Tells the receiver that the final destination `PointAnnotation` was added to either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter finalDestinationAnnotation: `PointAnnotation`, which was added to the `MapView`.
+     - parameter parentViewController: `UIViewController`, which contains `MapView` instance. Can be either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     - parameter pointAnnotationManager: `PointAnnotationManager` instance, which is responsible for `PointAnnotation`s management in the `NavigationMapView`.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didAdd finalDestinationAnnotation: PointAnnotation,
+                        to parentViewController: UIViewController,
+                        pointAnnotationManager: PointAnnotationManager)
 }
 
 @available(iOS 12.0, *)
@@ -232,6 +246,16 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didAdd finalDestinationAnnotation: PointAnnotation,
+                        to parentViewController: UIViewController,
+                        pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
 }

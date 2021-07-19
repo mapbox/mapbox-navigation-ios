@@ -140,10 +140,41 @@ public class CarPlayNavigationViewController: UIViewController {
         suspendNotifications()
     }
     
+    // MARK: - Public API methods
+    
+    /**
+     Begins a navigation session along the given trip.
+     
+     - parameter trip: The trip to begin navigating along.
+     */
+    public func startNavigationSession(for trip: CPTrip) {
+        carSession = mapTemplate.startNavigationSession(for: trip)
+    }
+    
+    /**
+     Ends the current navigation session.
+     
+     - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
+     */
+    public func exitNavigation(byCanceling canceled: Bool = false) {
+        carSession.finishTrip()
+        dismiss(animated: true) {
+            self.delegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
+        }
+    }
+    
+    /**
+     Shows the interface for providing feedback about the route.
+     */
+    public func showFeedback() {
+        carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
+    }
+    
     // MARK: - Setting-up methods
     
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: view.bounds, navigationCameraType: .carPlay)
+        navigationMapView.delegate = self
         navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                                              viewportDataSourceType: .active)
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
@@ -230,34 +261,6 @@ public class CarPlayNavigationViewController: UIViewController {
         NotificationCenter.default.removeObserver(self,
                                                   name: .routeControllerDidPassVisualInstructionPoint,
                                                   object: nil)
-    }
-    
-    /**
-     Begins a navigation session along the given trip.
-     
-     - parameter trip: The trip to begin navigating along.
-     */
-    public func startNavigationSession(for trip: CPTrip) {
-        carSession = mapTemplate.startNavigationSession(for: trip)
-    }
-    
-    /**
-     Ends the current navigation session.
-     
-     - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
-     */
-    public func exitNavigation(byCanceling canceled: Bool = false) {
-        carSession.finishTrip()
-        dismiss(animated: true) {
-            self.delegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
-        }
-    }
-    
-    /**
-     Shows the interface for providing feedback about the route.
-     */
-    public func showFeedback() {
-        carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {
@@ -607,6 +610,8 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
 }
 
+// MARK: - NavigationServiceDelegate methods
+
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
     
@@ -621,4 +626,19 @@ extension CarPlayNavigationViewController: NavigationServiceDelegate {
         return true
     }
 }
+
+// MARK: - NavigationMapViewDelegate methods
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: NavigationMapViewDelegate {
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  didAdd finalDestinationAnnotation: PointAnnotation,
+                                  pointAnnotationManager: PointAnnotationManager) {
+        delegate?.carPlayNavigationViewController(self,
+                                                  didAdd: finalDestinationAnnotation,
+                                                  pointAnnotationManager: pointAnnotationManager)
+    }
+}
+
 #endif
