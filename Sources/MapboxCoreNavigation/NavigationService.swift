@@ -364,7 +364,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
 
     private func bootstrapEvents() {
-        eventsManager.dataSource = self
+        eventsManager.activeNavigationDataSource = self
         eventsManager.resetSession()
     }
 

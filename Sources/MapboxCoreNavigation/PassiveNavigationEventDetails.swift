@@ -23,7 +23,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         coordinate = dataSource.rawLocation?.coordinate
         sessionIdentifier = sessionState.identifier.uuidString
         startTimestamp = sessionState.departureTimestamp
-        updateApplicationStatePercentages(sessionState)
+        updateTimeState(session: sessionState)
     }
     
     private enum CodingKeys: String, CodingKey {
@@ -44,6 +44,8 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         case screenBrightness
         case volumeLevel
         case driverMode
+        case tripSessionIdentifier = "tripSessionId"
+        case appSessionIdentifier = "navigatorSessionId"
     }
     
     func encode(to encoder: Encoder) throws {
@@ -65,5 +67,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encode(screenBrightness, forKey: .screenBrightness)
         try container.encode(volumeLevel, forKey: .volumeLevel)
         try container.encode(driverMode, forKey: .driverMode)
+        try container.encode(sessionIdentifier, forKey: .tripSessionIdentifier)
+        try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .appSessionIdentifier)
     }
 }

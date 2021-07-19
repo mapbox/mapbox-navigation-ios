@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		110766AD26A5A64000832F01 /* PassiveNavigationEventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */; };
+		11B3D6D626A60EBD0057C6F4 /* ActiveNavigationEventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11B3D6D526A60EBD0057C6F4 /* ActiveNavigationEventDetails.swift */; };
 		11D1F89E269601150053A93F /* NativeHandlersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */; };
 		11D1F8A02696048D0053A93F /* Dictionary+DeepMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */; };
 		11D1F8A22696EBD40053A93F /* Dictionary+Equality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */; };
@@ -464,6 +465,7 @@
 
 /* Begin PBXFileReference section */
 		110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PassiveNavigationEventDetails.swift; sourceTree = "<group>"; };
+		11B3D6D526A60EBD0057C6F4 /* ActiveNavigationEventDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActiveNavigationEventDetails.swift; sourceTree = "<group>"; };
 		11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeHandlersFactoryTests.swift; sourceTree = "<group>"; };
 		11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+DeepMerge.swift"; sourceTree = "<group>"; };
 		11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Equality.swift"; sourceTree = "<group>"; };
@@ -1121,6 +1123,7 @@
 			children = (
 				354A9BCC20EA9C8100F03325 /* CoreFeedbackEvent.swift */,
 				354A9BCA20EA9BDA00F03325 /* EventDetails.swift */,
+				11B3D6D526A60EBD0057C6F4 /* ActiveNavigationEventDetails.swift */,
 				110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */,
 				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				352F464C20EB74C200147886 /* NavigationEventsManager.swift */,
@@ -2469,6 +2472,7 @@
 				2BE701352535948100F46E4E /* RestStop.swift in Sources */,
 				8D4CF9C621349FFB009C3FEE /* NavigationServiceDelegate.swift in Sources */,
 				C5CFE4881EF2FD4C006F48E8 /* MMEEventsManager.swift in Sources */,
+				11B3D6D626A60EBD0057C6F4 /* ActiveNavigationEventDetails.swift in Sources */,
 				C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */,
 				2B42586E2657BF9100B487C3 /* TileStore.swift in Sources */,
 				64847A041F04629D003F3A69 /* Feedback.swift in Sources */,

@@ -121,7 +121,7 @@ class ViewController: UIViewController {
     func setupFeedbackButton() {
         view.addSubview(feedbackButton)
         feedbackButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12).isActive = true
-        feedbackButton.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -12).isActive = true
+        feedbackButton.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -12).isActive = true
         feedbackButton.addTarget(self, action: #selector(feedback(_:)), for: .touchUpInside)
     }
     
