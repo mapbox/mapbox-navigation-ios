@@ -8,8 +8,6 @@ import CarPlayTestHelper
 @testable import TestHelper
 @testable import MapboxNavigation
 
-import CarPlay
-
 // For some reason XCTest bundles ignore @available annotations and these tests are run on iOS < 12 :(
 // This is a bug in XCTest which will hopefully get fixed in an upcoming release.
 
