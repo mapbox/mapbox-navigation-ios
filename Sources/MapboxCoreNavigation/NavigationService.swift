@@ -404,7 +404,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         if simulationMode == .always, manager != simulatedLocationSource { return }
         
         //update the events manager with the received locations
-        eventsManager.record(locations: locations)
+        eventsManager.record(locations)
         
         //sanity check: make sure the update actually contains a location
         guard let location = locations.last else { return }

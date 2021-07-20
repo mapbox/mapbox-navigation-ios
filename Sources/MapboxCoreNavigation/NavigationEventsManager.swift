@@ -5,7 +5,7 @@ import MapboxDirections
 let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
 
 /**
- The `PassiveNavigationEventsManagerDataSource` protocol declares values required for recording passive location events.
+ A data source that declares values required for recording passive location events.
  */
 public protocol PassiveNavigationEventsManagerDataSource: AnyObject {
     var rawLocation: CLLocation? { get }
@@ -181,7 +181,7 @@ open class NavigationEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent(type: FeedbackType, description: String?) -> NavigationEventDetails? {
+    func navigationFeedbackEventDetails(type: FeedbackType, description: String?) -> NavigationEventDetails? {
         var event: NavigationEventDetails
         
         if let activeNavigationDataSource = activeNavigationDataSource {
@@ -279,9 +279,10 @@ open class NavigationEventsManager {
     }
     
     func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID? {
-        guard let feedbackEvent = navigationFeedbackEvent(type: type, description: description) else { return nil }
-        let eventDictionary = try? feedbackEvent.asDictionary()
-        let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
+        guard let eventDetails = navigationFeedbackEventDetails(type: type, description: description) else {
+            return nil
+        }
+        let event = FeedbackEvent(eventDetails: eventDetails)
         outstandingFeedbackEvents.append(event)
         return event.id
     }
@@ -436,7 +437,7 @@ open class NavigationEventsManager {
         sessionState.arrivalTimestamp = nil
     }
     
-    func record(locations: [CLLocation]) {
+    func record(_ locations: [CLLocation]) {
         locations.forEach(sessionState.pastLocations.push(_:))
     }
 }

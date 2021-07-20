@@ -104,8 +104,6 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         locationEngine = String(describing: dataSource.locationProvider)
         locationManagerDesiredAccuracy = dataSource.desiredAccuracy
         
-        
-        
         stepIndex = dataSource.routeProgress.currentLegProgress.stepIndex
         stepCount = dataSource.routeProgress.currentLeg.steps.count
         legIndex = dataSource.routeProgress.legIndex

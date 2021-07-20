@@ -3,10 +3,9 @@ import MapboxDirections
 import Polyline
 
 class CoreFeedbackEvent: Hashable {
-    var id = UUID()
-    
-    var timestamp: Date
-    
+    let id = UUID()
+    let timestamp: Date
+
     var eventDictionary: [String: Any]
     
     init(timestamp: Date, eventDictionary: [String: Any]) {
@@ -24,6 +23,12 @@ class CoreFeedbackEvent: Hashable {
 }
 
 class FeedbackEvent: CoreFeedbackEvent {
+    
+    convenience init(eventDetails: NavigationEventDetails) {
+        let eventDictionary = (try? eventDetails.asDictionary()) ?? [:]
+        self.init(timestamp: Date(), eventDictionary: eventDictionary)
+    }
+    
     func update(type: FeedbackType, source: FeedbackSource, description: String?) {
         eventDictionary["feedbackType"] = type.description
 
