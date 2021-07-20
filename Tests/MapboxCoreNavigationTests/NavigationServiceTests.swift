@@ -14,7 +14,7 @@ fileprivate let distanceThreshold: CLLocationDistance = 2
 // minimum threshold for both latitude and longitude between two coordinates
 fileprivate let coordinateThreshold: CLLocationDistance = 0.0005
 
-class NavigationServiceTests: XCTestCase {
+class NavigationServiceTests: TestCase {
     var eventsManagerSpy: NavigationEventsManagerSpy!
     let directionsClientSpy = DirectionsSpy()
     let delegate = NavigationServiceDelegateSpy()
@@ -396,7 +396,7 @@ class NavigationServiceTests: XCTestCase {
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: NavigationEventTypeRouteRetrieval))
 
-        router.indexedRoute = (alternateRoute, 0)
+        router.updateRoute(with: (alternateRoute, 0), routeOptions: nil)
 
         let simulatedLocationManager = navigationService.locationManager as! SimulatedLocationManager
 
@@ -607,7 +607,7 @@ class NavigationServiceTests: XCTestCase {
 
         let navigationService = dependencies.navigationService
         let routeController = navigationService.router as! RouteController
-        routeController.indexedRoute = (route, 0)
+        routeController.updateRoute(with: (route, 0), routeOptions: nil)
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         
         for (index, location) in trace.enumerated() {

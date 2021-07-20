@@ -41,3 +41,12 @@ extension RoadGraph {
         }
     }
 }
+
+extension GraphPath {
+    convenience init(_ path: RoadGraph.Path) {
+        self.init(edges: path.edgeIdentifiers.map { NSNumber(value: $0) },
+                  percentAlongBegin: path.fractionFromStart,
+                  percentAlongEnd: path.fractionToEnd,
+                  length: path.length)
+    }
+}

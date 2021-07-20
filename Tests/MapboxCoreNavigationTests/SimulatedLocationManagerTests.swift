@@ -5,7 +5,7 @@ import CoreLocation
 @testable import MapboxCoreNavigation
 import TestHelper
 
-class SimulatedLocationManagerTests: XCTestCase {
+class SimulatedLocationManagerTests: TestCase {
     override func setUp() {
         super.setUp()
     }

@@ -14,10 +14,10 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     /**
      Initialize a new FeedbackSubtypeViewController from a `NavigationEventsManager`.
      */
-    public init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType, feedbackUUID: UUID? = nil) {
+    public init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType, feedback: FeedbackEvent) {
         super.init(eventsManager: eventsManager)
         activeFeedbackType = feedbackType
-        currentFeedbackUUID = feedbackUUID
+        currentFeedback = feedback
         reportButton.setBackgroundImage(UIImage(color: #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1)), for: .normal)
         reportButton.layer.cornerRadius = 24
         reportButton.clipsToBounds = true
@@ -166,10 +166,10 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     private func sendReport() {
         if selectedItems.count > 0 {
-            if let uuid = self.currentFeedbackUUID {
+            if let feedback = self.currentFeedback {
                 for item in selectedItems {
-                    delegate?.feedbackViewController(self, didSend: item, uuid: uuid)
-                    eventsManager?.updateFeedback(uuid: uuid, type: item.feedbackType, source: .user, description: nil)
+                    delegate?.feedbackViewController(self, didSend: item, feedback: feedback)
+                    eventsManager?.sendFeedback(feedback, type: item.feedbackType, description: nil)
                 }
             }
 

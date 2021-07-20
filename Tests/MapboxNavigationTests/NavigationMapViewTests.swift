@@ -6,7 +6,7 @@ import MapboxMaps
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class NavigationMapViewTests: XCTestCase {
+class NavigationMapViewTests: TestCase {
     let response = Fixture.routeResponse(from: "route-with-instructions", options: NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
         CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
@@ -20,7 +20,6 @@ class NavigationMapViewTests: XCTestCase {
     
     override func setUp() {
         super.setUp()
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
     }
     
@@ -382,5 +381,64 @@ class NavigationMapViewTests: XCTestCase {
         })
         
         wait(for: [featureQueryExpectation], timeout: 5.0)
+    }
+    
+    func testFinalDestinationAnnotationIsPresent() {
+        
+        class NavigationMapViewDelegateMock: NavigationMapViewDelegate {
+            
+            var didAddFinalDestinationAnnotation = false
+            
+            func navigationMapView(_ navigationMapView: NavigationMapView,
+                                   didAdd finalDestinationAnnotation: PointAnnotation,
+                                   pointAnnotationManager: PointAnnotationManager) {
+                didAddFinalDestinationAnnotation = true
+            }
+        }
+        
+        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds)
+        
+        let navigationMapViewDelegateMock = NavigationMapViewDelegateMock()
+        navigationMapView.delegate = navigationMapViewDelegateMock
+        
+        navigationMapView.showWaypoints(on: route)
+        
+        // Right after calling `NavigationMapView.showWaypoints(on:legIndex:)` and before loading actual
+        // `MapView` style it is expected that `NavigationMapView.finalDestinationAnnotation` is assigned
+        // to non-nil value.
+        XCTAssertNotNil(navigationMapView.finalDestinationAnnotation, "Final destination annotation should not be nil.")
+        XCTAssertNil(navigationMapView.pointAnnotationManager, "Point annotation manager should be nil.")
+        
+        let styleJSONObject: [String: Any] = [
+            "version": 1,
+            "center": [
+                37.763330, -122.385563
+            ],
+            "zoom": 15,
+            "sources": [],
+            "layers": []
+        ]
+        
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+        
+        let didAddFinalDestinationAnnotationExpectation = self.expectation {
+            return navigationMapViewDelegateMock.didAddFinalDestinationAnnotation
+        }
+        
+        navigationMapView.mapView.mapboxMap.loadStyleJSON(styleJSON)
+        
+        wait(for: [didAddFinalDestinationAnnotationExpectation], timeout: 5.0)
+        
+        // After fully loading style `NavigationMapView.finalDestinationAnnotation` should be assigned to nil and
+        // `NavigationMapView.pointAnnotationManager` must become valid.
+        XCTAssertNil(navigationMapView.finalDestinationAnnotation, "Final destination annotation should be nil.")
+        XCTAssertNotNil(navigationMapView.pointAnnotationManager, "Point annotation manager should not be nil.")
+        XCTAssertEqual(navigationMapView.pointAnnotationManager?.annotations.count,
+                       1,
+                       "Only final destination annotation should be present.")
+        XCTAssertEqual(navigationMapView.pointAnnotationManager?.annotations.first?.id,
+                       NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation,
+                       "Point annotation identifiers should be equal.")
     }
 }

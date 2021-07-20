@@ -78,6 +78,13 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     /**
+     Provides methods for creating and sending user feedback.
+     */
+    public var eventsManager: NavigationEventsManager {
+        return navigationService.eventsManager
+    }
+    
+    /**
      Controls the styling of CarPlayNavigationViewController and its components.
 
      The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
@@ -429,14 +436,10 @@ public class CarPlayNavigationViewController: UIViewController {
         let feedbackButtonHandler: (_ : CPGridButton) -> Void = { [weak self] (button) in
             self?.carInterfaceController.popTemplate(animated: true)
             
-            // TODO: Fix this Demeter violation with proper encapsulation
-            guard let uuid = self?.navigationService.eventsManager.recordFeedback() else { return }
+            guard let feedback = self?.eventsManager.createFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
             guard let feedbackItem = foundItem.first else { return }
-            self?.navigationService.eventsManager.updateFeedback(uuid: uuid,
-                                                                 type: feedbackItem.feedbackType,
-                                                                 source: .user,
-                                                                 description: nil)
+            self?.eventsManager.sendFeedback(feedback, type: feedbackItem.feedbackType)
             
             let dismissTitle = NSLocalizedString("CARPLAY_DISMISS",
                                                  bundle: .mapboxNavigation,
@@ -600,7 +603,10 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
-        // TODO: Implement the ability to reload style.
+        guard let mapboxMap = navigationMapView?.mapView.mapboxMap,
+              let styleURI = mapboxMap.style.uri else { return }
+        
+        mapboxMap.loadStyleURI(styleURI)
     }
 }
 

@@ -58,11 +58,15 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     
     /**
      The route along which the user is expected to travel, plus its index in the `RouteResponse`, if applicable.
+
+     If you want to update the route, use `Router.updateRoute(with:routeOptions:)` method from `router`.
      */
-    var indexedRoute: IndexedRoute { get set }
-    
+    var indexedRoute: IndexedRoute { get }
+
     /**
      The route along which the user is expected to travel.
+
+     If you want to update the route, use `Router.updateRoute(with:routeOptions:)` method from `router`.
      */
     var route: Route { get }
     
@@ -257,7 +261,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
-        _eventsManager = eventType.init(dataSource: self, accessToken: self.directions.credentials.accessToken)
+        _eventsManager = eventType.init(activeNavigationDataSource: self,
+                                        accessToken: self.directions.credentials.accessToken)
         locationManager.activityType = routeOptions.activityType
         bootstrapEvents()
         
@@ -312,12 +317,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     public var indexedRoute: IndexedRoute {
-        get {
-            return router.indexedRoute
-        }
-        set {
-            router.indexedRoute = newValue
-        }
+        router.indexedRoute
     }
     
     public var route: Route {
@@ -362,8 +362,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
         stop()
     }
 
+    public func updateRoute(with indexedRoute: IndexedRoute, routeOptions: RouteOptions?) {
+        router.updateRoute(with: indexedRoute, routeOptions: routeOptions)
+    }
+
     private func bootstrapEvents() {
-        eventsManager.dataSource = self
+        eventsManager.activeNavigationDataSource = self
         eventsManager.resetSession()
     }
 
@@ -403,7 +407,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         if simulationMode == .always, manager != simulatedLocationSource { return }
         
         //update the events manager with the received locations
-        eventsManager.record(locations: locations)
+        eventsManager.record(locations)
         
         //sanity check: make sure the update actually contains a location
         guard let location = locations.last else { return }
@@ -523,11 +527,11 @@ extension MapboxNavigationService: RouterDelegate {
 //MARK: EventsManagerDataSource Logic
 extension MapboxNavigationService {
     public var routeProgress: RouteProgress {
-        return self.router.routeProgress
+        return router.routeProgress
     }
     
     public var desiredAccuracy: CLLocationAccuracy {
-        return self.locationManager.desiredAccuracy
+        return locationManager.desiredAccuracy
     }
 }
 
@@ -535,22 +539,6 @@ extension MapboxNavigationService {
 extension MapboxNavigationService {
     public var locationProvider: NavigationLocationManager.Type {
         return type(of: locationManager)
-    }
-}
-
-fileprivate extension NavigationEventsManager {
-    func incrementDistanceTraveled(by distance: CLLocationDistance) {
-        sessionState?.totalDistanceCompleted += distance
-    }
-    
-    func arriveAtWaypoint() {
-        sessionState?.departureTimestamp = nil
-        sessionState?.arrivalTimestamp = nil
-    }
-    
-    func record(locations: [CLLocation]) {
-        guard let state = sessionState else { return }
-        locations.forEach(state.pastLocations.push(_:))
     }
 }
 

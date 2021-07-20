@@ -253,7 +253,10 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
-        // TODO: Implement the ability to reload style.
+        guard let mapboxMap = navigationMapView.mapView.mapboxMap,
+              let styleURI = mapboxMap.style.uri else { return }
+        
+        mapboxMap.loadStyleURI(styleURI)
     }
 }
 #endif

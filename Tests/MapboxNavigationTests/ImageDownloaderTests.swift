@@ -2,7 +2,7 @@ import XCTest
 @testable import MapboxNavigation
 import TestHelper
 
-class ImageDownloaderTests: XCTestCase {
+class ImageDownloaderTests: TestCase {
     lazy var sessionConfig: URLSessionConfiguration = {
         let config = URLSessionConfiguration.default
         config.protocolClasses = [ImageLoadingURLProtocolSpy.self]

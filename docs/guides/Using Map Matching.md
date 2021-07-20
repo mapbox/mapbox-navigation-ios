@@ -22,14 +22,14 @@ It is up to you to listen in on reroutes and:
 
 1. Fetch a new route from your server.
 1. Make a map matching request against the Mapbox Map Matching appropriate.
-1. Update the `RouteProgress` with a the new route (covered below).
+1. Update the `Router` with a the new route (covered below).
 
-### Update the RouteProgress
+### Update the Router
 
 Once you have a fresh route after rerouting, you need to tell the UI to update according to this new route.
 
 ```
-yourNavigationViewController.route = route
+yourNavigationViewController.navigationService.router.updateRoute(with: (route, 0), routeOptions: nil)
 ```
 
 This will cause a waterfall effect, everything downstream should react to the addition of a new route.

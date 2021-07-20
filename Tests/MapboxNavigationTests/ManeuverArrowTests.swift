@@ -7,7 +7,7 @@ import MapboxMaps
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class ManeuverArrowTests: XCTestCase {
+class ManeuverArrowTests: TestCase {
     let waypointRoute = Fixture.route(from: "waypoint-after-turn", options: NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 37.787358, longitude: -122.408231),
         CLLocationCoordinate2D(latitude: 37.790177, longitude: -122.408687),
@@ -16,7 +16,6 @@ class ManeuverArrowTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         isRecording = false
         DayStyle().apply()
     }

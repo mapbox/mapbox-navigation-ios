@@ -49,7 +49,7 @@ extension UNUserNotificationCenter {
     }
 }
 
-class NavigationViewControllerTests: XCTestCase {
+class NavigationViewControllerTests: TestCase {
     var customRoadName = [CLLocationCoordinate2D: String?]()
     
     var updatedStyleNumberOfTimes = 0
@@ -62,10 +62,8 @@ class NavigationViewControllerTests: XCTestCase {
     override func setUp() {
         super.setUp()
         customRoadName.removeAll()
-        ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
-        DirectionsCredentials.injectSharedToken(.mockedAccessToken)
         initialRoute = Fixture.route(from: jsonFileName, options: routeOptions)
-        newRoute = Fixture.route(from: jsonFileName, options: routeOptions)
+        newRoute = Fixture.route(from: "route-with-banner-instructions", options: routeOptions)
         dependencies = {
             UNUserNotificationCenter.replaceWithMock()
 
@@ -280,12 +278,14 @@ class NavigationViewControllerTests: XCTestCase {
             navigationViewController.navigationMapView?.pointAnnotationManager != nil
         }
         waitForExpectations(timeout: 5, handler: nil)
-        navigationViewController.indexedRoute = (initialRoute, 0)
+        navigationViewController.navigationService.router.updateRoute(with: (initialRoute, 0), routeOptions: nil)
 
         expectation(description: "Annotations loaded") {
             !navigationViewController.navigationMapView!.pointAnnotationManager!.annotations.isEmpty
         }
         waitForExpectations(timeout: 5, handler: nil)
+        XCTAssertEqual(navigationViewController.router.routeProgress.route.routeIdentifier, initialRoute.routeIdentifier)
+
 
         let annotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
 
@@ -299,7 +299,7 @@ class NavigationViewControllerTests: XCTestCase {
                   "Destination annotation does not exist on map")
         
         // Set the second route.
-        navigationViewController.indexedRoute = (newRoute, 0)
+        navigationViewController.navigationService.router.updateRoute(with: (newRoute, 0), routeOptions: nil)
         
         let newAnnotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
         
@@ -312,6 +312,8 @@ class NavigationViewControllerTests: XCTestCase {
                     .compactMap { $0.feature.geometry.value as? Turf.Point }
                     .contains { $0.coordinates.distance(to: secondDestination) < 1 },
                   "New destination annotation does not exist on map")
+        XCTAssertEqual(navigationViewController.router.routeProgress.route.routeIdentifier,
+                       newRoute.routeIdentifier)
     }
     
     func testPuck3DLayerPosition() {
@@ -386,6 +388,27 @@ class NavigationViewControllerTests: XCTestCase {
         XCTAssert(subject.bottomViewController == bottom, "Bottom banner not injected properly into NVC")
         XCTAssert(subject.children.contains(top), "Top banner not found in child VC heirarchy")
         XCTAssert(subject.children.contains(bottom), "Bottom banner not found in child VC heirarchy")
+    }
+    
+    func testNavigationMapViewInjection() {
+        class CustomNavigationMapView: NavigationMapView { }
+        
+        let injected = CustomNavigationMapView()
+        
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+
+        let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
+        let navService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: .mocked)
+        let navOptions = NavigationOptions(navigationService: navService, navigationMapView: injected)
+
+        let subject = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navOptions)
+        _ = subject.view // trigger view load
+        
+        XCTAssert(subject.navigationMapView == injected, "NavigtionMapView not injected properly.")
+        XCTAssert(subject.view.subviews.contains(injected), "NavigtionMapView not injected in view hierarchy.")
     }
 }
 

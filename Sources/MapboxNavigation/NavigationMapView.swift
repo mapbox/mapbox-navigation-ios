@@ -126,9 +126,49 @@ open class NavigationMapView: UIView {
     public var pointAnnotationManager: PointAnnotationManager?
     
     /**
+     A `UserCourseView` used to indicate the user’s location and course on the map.
+     
+     The `UserCourseView`'s `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
+     */
+    public var userCourseView: UserCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0)) {
+        didSet {
+            oldValue.removeFromSuperview()
+            installUserCourseView()
+        }
+    }
+    
+    /**
+     Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
+     
+     By default, this property is set to `UserLocationStyle.courseView`, the bearing source is location course.
+     */
+    public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
+        didSet {
+            setupUserLocation()
+        }
+    }
+    
+    /**
+     A `TileStore` instance used by map view.
+     */
+    open var mapTileStore: TileStore? {
+        mapView.mapboxMap.resourceOptions.tileStore
+    }
+    
+    /**
      Most recent user location, which is used to place `UserCourseView`.
      */
     var mostRecentUserCourseViewLocation: CLLocation?
+    
+    /**
+     `PointAnnotation`, which should be added to the `MapView` when `PointAnnotationManager` becomes
+     available. Since `PointAnnotationManager` is created only after loading `MapView` style, there
+     is a chance that due to a race condition during `NavigationViewController` creation
+     `NavigationMapView.showWaypoints(on:legIndex:)` will be called before loading style. In such case
+     final destination `PointAnnotation` will be stored in this property and added to the `MapView`
+     later on.
+     */
+    var finalDestinationAnnotation: PointAnnotation? = nil
     
     var routes: [Route]?
     var routePoints: RoutePoints?
@@ -160,42 +200,12 @@ open class NavigationMapView: UIView {
         }
     }
     
-    /**
-     A `UserCourseView` used to indicate the user’s location and course on the map.
-     
-     The `UserCourseView`'s `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
-     */
-    public var userCourseView: UserCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0)) {
-        didSet {
-            oldValue.removeFromSuperview()
-            installUserCourseView()
-        }
-    }
-    
     var simulatesLocation: Bool = true
-    
-    /**
-     Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
-     
-     By default, this property is set to `UserLocationStyle.courseView`, the bearing source is location course.
-     */
-    public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
-        didSet {
-            setupUserLocation()
-        }
-    }
     
     /**
      A manager object, used to init and maintain predictive caching.
      */
     private(set) var predictiveCacheManager: PredictiveCacheManager?
-    
-    /**
-     A `TileStore` instance used by map view.
-     */
-    open var mapTileStore: TileStore? {
-        mapView.mapboxMap.resourceOptions.tileStore
-    }
     
     /**
      Initializes a newly allocated `NavigationMapView` object with the specified frame rectangle.
@@ -348,6 +358,16 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.pointAnnotationManager = self.mapView.annotations.makePointAnnotationManager()
+            
+            if let finalDestinationAnnotation = self.finalDestinationAnnotation,
+               let pointAnnotationManager = self.pointAnnotationManager {
+                pointAnnotationManager.syncAnnotations([finalDestinationAnnotation])
+                self.delegate?.navigationMapView(self,
+                                                 didAdd: finalDestinationAnnotation,
+                                                 pointAnnotationManager: pointAnnotationManager)
+                
+                self.finalDestinationAnnotation = nil
+            }
         }
         
         addSubview(mapView)
@@ -391,20 +411,6 @@ open class NavigationMapView: UIView {
             predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
                                                             mapOptions: mapOptions)
         }
-    }
-    
-    // MARK: - Overridden methods
-    
-    open override func prepareForInterfaceBuilder() {
-        super.prepareForInterfaceBuilder()
-        
-        // TODO: Verify that image is correctly drawn when `NavigationMapView` is created in storyboard.
-        let image = UIImage(named: "feedback-map-error", in: .mapboxNavigation, compatibleWith: nil)
-        let imageView = UIImageView(image: image)
-        imageView.contentMode = .center
-        imageView.backgroundColor = .gray
-        imageView.frame = bounds
-        addSubview(imageView)
     }
     
     @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {
@@ -732,14 +738,21 @@ open class NavigationMapView: UIView {
         }
 
         if let lastLeg = route.legs.last,
-           let destinationCoordinate = lastLeg.destination?.coordinate,
-           let pointAnnotationManager = pointAnnotationManager {
+           let destinationCoordinate = lastLeg.destination?.coordinate {
             let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
             var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
             destinationAnnotation.image = .default
-            pointAnnotationManager.syncAnnotations([destinationAnnotation])
             
-            delegate?.navigationMapView(self, didAdd: destinationAnnotation, pointAnnotationManager: pointAnnotationManager)
+            // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
+            // and add it only after fully loading `MapView` style.
+            if let pointAnnotationManager = pointAnnotationManager {
+                pointAnnotationManager.syncAnnotations([destinationAnnotation])
+                delegate?.navigationMapView(self,
+                                            didAdd: destinationAnnotation,
+                                            pointAnnotationManager: pointAnnotationManager)
+            } else {
+                finalDestinationAnnotation = destinationAnnotation
+            }
         }
     }
     
