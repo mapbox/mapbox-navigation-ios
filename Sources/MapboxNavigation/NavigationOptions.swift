@@ -55,7 +55,7 @@ open class NavigationOptions: NavigationCustomizable {
     /**
      Custom `NavigationMapView` instance to be embedded in navigation UI.
      
-     If set to `nil` - new `NavigationMapView` instance will be created. When setting a custom instance, `NavigationView` will update it's delegate and camera's `viewportDatasource` to function correctly. You may want to use this property for customization or optimization purposes.
+     If set to `nil`, a default `NavigationMapView` instance will be created. When a custom instance is set, `NavigationView` will update its delegate and camera's `viewportDatasource` to function correctly. You may want to use this property for customization or optimization purposes.
      */
     open var navigationMapView: NavigationMapView?
     

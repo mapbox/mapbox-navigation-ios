@@ -39,7 +39,7 @@
 * Added the `NavigationMapView.userLocationStyle` property to customize how the user’s current location is displayed on the map. Set this property to `UserLocationStyle.puck2D(configuration:)` or `UserLocationStyle.puck3D(configuration:)` to use the [location indicator layer](https://docs.mapbox.com/ios/maps/api/10.0.0-beta.21/Enums/LayerType.html#/s:10MapboxMaps9LayerTypeO17locationIndicatoryA2CmF) powered by the Mapbox Maps SDK instead of the default view-backed implementation specified by the `NavigationMapView.userCourseView` property. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
 * If you need to customize the appearance of the user location indicator, you can subclass `UserPuckCourseView` and `UserHaloCourseView` as a starting point. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
 * Fixed an issue where route line disappears when changing `MapView` style. ([#3136](https://github.com/mapbox/mapbox-navigation-ios/pull/3136))
-* Added `NavigationOptions.navigationMapView` property to allow customization or reusing options for `NavigationViewController.navigationMapView` ([#3186](https://github.com/mapbox/mapbox-navigation-ios/pull/3186)).
+* Added `NavigationOptions.navigationMapView` property to allow customization or reusing possibilities for `NavigationViewController.navigationMapView` ([#3186](https://github.com/mapbox/mapbox-navigation-ios/pull/3186)).
 
 ### Location tracking
 
