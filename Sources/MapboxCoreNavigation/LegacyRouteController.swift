@@ -58,12 +58,12 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
     
     public var indexedRoute: IndexedRoute {
-        get {
-            return routeProgress.indexedRoute
-        }
-        set {
-            routeProgress.indexedRoute = newValue
-        }
+        routeProgress.indexedRoute
+    }
+
+    public func updateRoute(with indexedRoute: IndexedRoute, routeOptions: RouteOptions?) {
+        let routeOptions = routeOptions ?? routeProgress.routeOptions
+        routeProgress = RouteProgress(route: indexedRoute.0, routeIndex: indexedRoute.1, options: routeOptions)
     }
     
     public var route: Route {
@@ -374,10 +374,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 guard case let .route(options) = response.options, let route = response.routes?.first else {
                     return
                 }
-                strongSelf.indexedRoute = (route, 0) // unconditionally getting the first route above
-                strongSelf._routeProgress = RouteProgress(route: route, routeIndex: 0, options: options, legIndex: 0)
-                strongSelf._routeProgress.currentLegProgress.stepIndex = 0
-                strongSelf.announce(reroute: route, at: location, proactive: false)
+                strongSelf.updateRoute(with: (route, 0), routeOptions: options) // unconditionally getting the first route above
             }
         }
     }

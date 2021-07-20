@@ -58,11 +58,15 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     
     /**
      The route along which the user is expected to travel, plus its index in the `RouteResponse`, if applicable.
+
+     If you want to update the route, use `Router.updateRoute(with:routeOptions:)` method from `router`.
      */
-    var indexedRoute: IndexedRoute { get set }
-    
+    var indexedRoute: IndexedRoute { get }
+
     /**
      The route along which the user is expected to travel.
+
+     If you want to update the route, use `Router.updateRoute(with:routeOptions:)` method from `router`.
      */
     var route: Route { get }
     
@@ -313,12 +317,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     public var indexedRoute: IndexedRoute {
-        get {
-            return router.indexedRoute
-        }
-        set {
-            router.indexedRoute = newValue
-        }
+        router.indexedRoute
     }
     
     public var route: Route {
@@ -361,6 +360,10 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
         eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
         stop()
+    }
+
+    public func updateRoute(with indexedRoute: IndexedRoute, routeOptions: RouteOptions?) {
+        router.updateRoute(with: indexedRoute, routeOptions: routeOptions)
     }
 
     private func bootstrapEvents() {

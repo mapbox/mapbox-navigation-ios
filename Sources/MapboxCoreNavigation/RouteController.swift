@@ -33,13 +33,7 @@ open class RouteController: NSObject {
     }
     
     public var indexedRoute: IndexedRoute {
-        get {
-            return routeProgress.indexedRoute
-        }
-        set {
-            routeProgress = RouteProgress(route: newValue.0, routeIndex: newValue.1, options: routeProgress.routeOptions)
-            updateNavigator(with: routeProgress)
-        }
+        routeProgress.indexedRoute
     }
     
     public var route: Route {
@@ -570,6 +564,12 @@ extension RouteController: Router {
                 return
             }
         }
+    }
+
+    public func updateRoute(with indexedRoute: IndexedRoute, routeOptions: RouteOptions?) {
+        let routeOptions = routeOptions ?? routeProgress.routeOptions
+        routeProgress = RouteProgress(route: indexedRoute.0, routeIndex: indexedRoute.1, options: routeOptions)
+        updateNavigator(with: routeProgress)
     }
 }
 
