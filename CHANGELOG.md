@@ -94,9 +94,8 @@
 * Moved `GeocodedPlacemark` extension from `CarPlaySearchController` to the application level. Removed `GeocodedPlacemark.listItem()`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * Added `NavigationGeocodedPlacemark` struct to replace `GeocodedPlacemark` and added `NavigationGeocodedPlacemark.listItem()`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
 * `RecentItem` is now a public struct. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
-* Removed unused `CarPlayManagerDelegate.carPlayManager(_:searchTemplate:updatedSearchText:ompletionHandler:)` and `CarPlayManagerDelegate.carPlayManager(_:carPlayManager:selectedResult:completionHandler:)`. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999))
-* Added the `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:didAdd:pointAnnotationManager:)`, `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:didAdd:pointAnnotationManager:)` and `CarPlayManager.carPlayManager(_:didAdd:to:pointAnnotationManager:)` delegate methods, which will be called whenever final destination `PointAnnotation` is added to `CarPlayMapViewController`, `CarPlayNavigationViewController` and `CarPlayManager` respectively. ([#3190](https://github.com/mapbox/mapbox-navigation-ios/pull/3190))
 * Added the `CarPlayMapViewControllerDelegate` public protocol, which provides methods for reacting to events during free-drive navigation or route previewing. ([#3190](https://github.com/mapbox/mapbox-navigation-ios/pull/3190))
+* Added the `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:didAdd:pointAnnotationManager:)`, `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:didAdd:pointAnnotationManager:)` and `CarPlayManager.carPlayManager(_:didAdd:to:pointAnnotationManager:)` delegate methods, which will be called whenever the `PointAnnotation` representing the final destination is added to `CarPlayMapViewController`, `CarPlayNavigationViewController` and `CarPlayManager`, respectively. ([#3190](https://github.com/mapbox/mapbox-navigation-ios/pull/3190))
 
 ### Other changes
 

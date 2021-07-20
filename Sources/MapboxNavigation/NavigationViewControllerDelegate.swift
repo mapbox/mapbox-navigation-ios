@@ -191,8 +191,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      Tells the receiver that the final destination `PointAnnotation` was added to the `NavigationViewController`.
      
      - parameter navigationViewController: The `NavigationViewController` object.
-     - parameter finalDestinationAnnotation: `PointAnnotation`, which was added to the `MapView`.
-     - parameter pointAnnotationManager: `PointAnnotationManager` instance, which is responsible for `PointAnnotation`s management in the `NavigationMapView`.
+     - parameter finalDestinationAnnotation: The point annotation that was added to the map view.
+     - parameter pointAnnotationManager: The object that manages the point annotation in the map view.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager)
 }

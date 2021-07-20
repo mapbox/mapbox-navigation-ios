@@ -150,12 +150,12 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) -> ()
     
     /**
-     Tells the receiver that the final destination `PointAnnotation` was added to either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     Tells the receiver that the `PointAnnotation` representing the final destination was added to either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
      
      - parameter carPlayManager: The `CarPlayManager` object.
-     - parameter finalDestinationAnnotation: `PointAnnotation`, which was added to the `MapView`.
-     - parameter parentViewController: `UIViewController`, which contains `MapView` instance. Can be either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
-     - parameter pointAnnotationManager: `PointAnnotationManager` instance, which is responsible for `PointAnnotation`s management in the `NavigationMapView`.
+     - parameter finalDestinationAnnotation: The point annotation that was added to the map view.
+     - parameter parentViewController: The view controller that contains the map view, which is an instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     - parameter pointAnnotationManager: The object that manages the point annotation in the map view.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         didAdd finalDestinationAnnotation: PointAnnotation,
