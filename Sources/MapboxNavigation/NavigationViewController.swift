@@ -531,7 +531,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     open override func loadView() {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
-        view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore)
+        view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore, navigationMapView: self.navigationOptions?.navigationMapView)
     }
     
     /**

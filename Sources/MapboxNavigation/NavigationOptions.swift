@@ -52,6 +52,12 @@ open class NavigationOptions: NavigationCustomizable {
      */
     open var tileStoreConfiguration: TileStoreConfiguration = .default
     
+    /**
+     Custom `NavigationMapView` instance to be embedded in navigation UI.
+     
+     If set to `nil`, a default `NavigationMapView` instance will be created. When a custom instance is set, `NavigationView` will update its delegate and camera's `viewportDatasource` to function correctly. You may want to use this property for customization or optimization purposes.
+     */
+    open var navigationMapView: NavigationMapView?
     
     // This makes the compiler happy.
     required public init() {
@@ -68,8 +74,9 @@ open class NavigationOptions: NavigationCustomizable {
      - parameter bottomBanner: The container view controller that presents the bottom banner.
      - parameter predictiveCacheOptions: Configuration for predictive caching. These options control how the `PredictiveCacheManager` will try to proactively fetch data related to the route. A `nil` value disables the feature.
      - parameter tileStoreConfiguration: Configuration of `TileStore` location, where Map and Navigation tiles are stored.
+     - parameter navigationMapView: Custom `NavigationMapView` instance to supersede the default one.
      */
-    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, tileStoreConfiguration: TileStoreConfiguration = .default) {
+    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, tileStoreConfiguration: TileStoreConfiguration = .default, navigationMapView: NavigationMapView? = nil) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
@@ -78,6 +85,7 @@ open class NavigationOptions: NavigationCustomizable {
         self.bottomBanner = bottomBanner
         self.predictiveCacheOptions = predictiveCacheOptions
         self.tileStoreConfiguration = tileStoreConfiguration
+        self.navigationMapView = navigationMapView
     }
     
     /**

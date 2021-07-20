@@ -385,6 +385,27 @@ class NavigationViewControllerTests: TestCase {
         XCTAssert(subject.children.contains(top), "Top banner not found in child VC heirarchy")
         XCTAssert(subject.children.contains(bottom), "Bottom banner not found in child VC heirarchy")
     }
+    
+    func testNavigationMapViewInjection() {
+        class CustomNavigationMapView: NavigationMapView { }
+        
+        let injected = CustomNavigationMapView()
+        
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+
+        let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
+        let navService = MapboxNavigationService(route: route, routeIndex: 0, routeOptions: routeOptions, directions: .mocked)
+        let navOptions = NavigationOptions(navigationService: navService, navigationMapView: injected)
+
+        let subject = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navOptions)
+        _ = subject.view // trigger view load
+        
+        XCTAssert(subject.navigationMapView == injected, "NavigtionMapView not injected properly.")
+        XCTAssert(subject.view.subviews.contains(injected), "NavigtionMapView not injected in view hierarchy.")
+    }
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
