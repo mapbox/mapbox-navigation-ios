@@ -23,19 +23,13 @@ class ViewportDataSourceMock: ViewportDataSource {
     
     public required init(_ mapView: MapView) {
         self.mapView = mapView
-        
-        followingMobileCamera.center = CLLocationCoordinate2D(latitude: 37.788443,
-                                                              longitude: -122.4020258)
-        followingMobileCamera.bearing = 0.0
-        followingMobileCamera.padding = .zero
-        followingMobileCamera.zoom = 15.0
-        followingMobileCamera.pitch = 45.0
-        
-        let cameraOptions = [
-            CameraOptions.followingMobileCamera: followingMobileCamera
-        ]
-        
-        delegate?.viewportDataSource(self, didUpdate: cameraOptions)
+    }
+    
+    func update(to cameraOptions: CameraOptions) {
+        followingMobileCamera = cameraOptions
+        followingCarPlayCamera = cameraOptions
+        overviewMobileCamera = cameraOptions
+        overviewCarPlayCamera = cameraOptions
     }
 }
 
@@ -64,11 +58,11 @@ class CameraStateTransitionMock: CameraStateTransition {
     }
     
     func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {
-        
+        // No-op
     }
     
     func cancelPendingTransition() {
-        mapView?.camera.cancelAnimations()
+        // No-op
     }
 }
 
@@ -117,7 +111,6 @@ class NavigationCameraTests: XCTestCase {
     func testNavigationCameraFollowingState() {
         let navigationMapView = NavigationMapView(frame: .zero)
         
-        navigationMapView.navigationCamera.viewportDataSource = ViewportDataSourceMock(navigationMapView.mapView)
         navigationMapView.navigationCamera.cameraStateTransition = CameraStateTransitionMock(navigationMapView.mapView)
         
         // By default Navigation Camera moves to `NavigationCameraState.following` state.
@@ -157,7 +150,6 @@ class NavigationCameraTests: XCTestCase {
     func testNavigationCameraOverviewStateDoesntChange() {
         let navigationMapView = NavigationMapView(frame: .zero)
         
-        navigationMapView.navigationCamera.viewportDataSource = ViewportDataSourceMock(navigationMapView.mapView)
         navigationMapView.navigationCamera.cameraStateTransition = CameraStateTransitionMock(navigationMapView.mapView)
         
         // By default Navigation Camera moves to `NavigationCameraState.following` state.
@@ -184,6 +176,30 @@ class NavigationCameraTests: XCTestCase {
         navigationMapView.navigationCamera.moveToOverview {
             XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
         }
+    }
+    
+    func testCustomViewportDataSource() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        let viewportDataSourceMock = ViewportDataSourceMock(navigationMapView.mapView)
+        XCTAssertEqual(viewportDataSourceMock.mapView, navigationMapView.mapView, "MapView instances should be equal.")
+        
+        // It should be possible to override default `ViewportDataSource` implementation and provide
+        // own data provider.
+        navigationMapView.navigationCamera.viewportDataSource = viewportDataSourceMock
+        XCTAssertTrue(navigationMapView.navigationCamera.viewportDataSource is ViewportDataSourceMock, "ViewportDataSource should have correct type.")
+        
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.788443,
+                                                                         longitude: -122.4020258),
+                                          padding: .zero,
+                                          anchor: .zero,
+                                          zoom: 15.0,
+                                          bearing: 0.0,
+                                          pitch: 45.0)
+        
+        viewportDataSourceMock.update(to: cameraOptions)
+        
+        XCTAssertEqual(viewportDataSourceMock.followingMobileCamera, cameraOptions, "CameraOptions should be equal.")
     }
     
     func testNavigationCameraIdleState() {
