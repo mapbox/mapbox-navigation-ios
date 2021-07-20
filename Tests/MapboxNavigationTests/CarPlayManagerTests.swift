@@ -333,6 +333,8 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(carPlayManagerDelegateMock.parentViewController,
                        carPlayManager.carPlayMapViewController,
                        "UIViewControllers should be equal.")
+        
+        simulateCarPlayDisconnection()
     }
 }
 
