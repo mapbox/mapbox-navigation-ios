@@ -58,8 +58,10 @@ open class NavigationView: UIView {
     lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
     var tileStoreLocation: TileStoreConfiguration.Location? = .default
+    private var _navigationMapView: NavigationMapView? = nil
     lazy var navigationMapView: NavigationMapView = {
-        let navigationMapView = NavigationMapView(frame: self.bounds, tileStoreLocation: tileStoreLocation)
+        _navigationMapView?.frame = self.bounds
+        let navigationMapView = _navigationMapView ?? NavigationMapView(frame: self.bounds, tileStoreLocation: tileStoreLocation)
         navigationMapView.isHidden = false
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -129,8 +131,8 @@ open class NavigationView: UIView {
     
     // MARK: - Initialization methods
     
-    convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
-        self.init(frame: frame, tileStoreLocation: tileStoreLocation)
+    convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero, tileStoreLocation: TileStoreConfiguration.Location? = .default, navigationMapView: NavigationMapView? = nil) {
+        self.init(frame: frame, tileStoreLocation: tileStoreLocation, navigationMapView: navigationMapView)
         self.delegate = delegate
         updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
     }
@@ -142,8 +144,9 @@ open class NavigationView: UIView {
     }
     
     // TODO: Refine public APIs, which are exposed by `NavigationView`.
-    public init(frame: CGRect, tileStoreLocation: TileStoreConfiguration.Location? = .default) {
+    public init(frame: CGRect, tileStoreLocation: TileStoreConfiguration.Location? = .default, navigationMapView: NavigationMapView? = nil) {
         self.tileStoreLocation = tileStoreLocation
+        self._navigationMapView = navigationMapView
         super.init(frame: frame)
         commonInit()
     }

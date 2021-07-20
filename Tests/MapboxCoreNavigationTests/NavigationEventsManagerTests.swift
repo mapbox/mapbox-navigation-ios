@@ -42,8 +42,8 @@ class NavigationEventsManagerTests: TestCase {
         for location in firstTrace {
             service.router.locationManager!(locationManager, didUpdateLocations: [location])
         }
-        
-        service.indexedRoute = (secondRoute, 0)
+
+        service.router.updateRoute(with: (secondRoute, 0), routeOptions: nil)
         
         for location in secondTrace {
             service.router.locationManager!(locationManager, didUpdateLocations: [location])

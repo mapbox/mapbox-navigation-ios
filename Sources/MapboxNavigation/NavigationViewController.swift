@@ -25,21 +25,25 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  */
 open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData {
     /**
-     A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with its index in a `RouteResponse`.
+     A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with its
+     index in a `RouteResponse`.
      
-     In cases where you need to update the route after navigation has started, you can set a new route here and `NavigationViewController` will update its UI accordingly.
+     In cases where you need to update the route after navigation has started, you can set a new route using
+     `Router.updateRoute(with:routeOptions:)` method in `NavigationViewController.navigationService.router` and
+     `NavigationViewController` will update its UI accordingly.
+
+     For example:
+     - If you update route with the same waypoints as the current one:
+     ```swift
+     navigationViewController.navigationService.router.updateRoute(with: indexedRoute, routeOptions: nil)
+     ```
+     - In case you update route with different set of waypoints:
+     ```swift
+     navigationViewController.navigationService.router.updateRoute(with: indexedRoute, routeOptions: newRouteOptions)
+     ```
      */
     public var indexedRoute: IndexedRoute {
-        get {
-            return navigationService.indexedRoute
-        }
-        set {
-            navigationService.indexedRoute = newValue
-            
-            for component in navigationComponents {
-                component.navigationService(navigationService, didRerouteAlong: newValue.0, at: nil, proactive: false)
-            }
-        }
+        navigationService.indexedRoute
     }
     
     var _route: Route?
@@ -531,7 +535,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     open override func loadView() {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
-        view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore)
+        view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore, navigationMapView: self.navigationOptions?.navigationMapView)
     }
     
     /**

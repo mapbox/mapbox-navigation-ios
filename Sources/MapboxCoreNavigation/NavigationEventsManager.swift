@@ -5,7 +5,7 @@ import MapboxDirections
 let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
 
 /**
- The `PassiveNavigationEventsManagerDataSource` protocol declares values required for recording passive location events.
+ A data source that declares values required for recording passive location events.
  */
 public protocol PassiveNavigationEventsManagerDataSource: AnyObject {
     var rawLocation: CLLocation? { get }
@@ -31,6 +31,8 @@ public protocol EventsManagerDataSource: AnyObject {
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */
 open class NavigationEventsManager {
+    static let applicationSessionIdentifier = UUID()
+    
     private var sessionState = SessionState()
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
@@ -42,15 +44,15 @@ open class NavigationEventsManager {
     }
     
     private var backupDataSource: EventsManagerDataSource?
-    private weak var _dataSource: EventsManagerDataSource?
+    private weak var _activeNavigationDataSource: EventsManagerDataSource?
     private weak var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
-    var dataSource: EventsManagerDataSource?
+    var activeNavigationDataSource: EventsManagerDataSource?
     {
         get {
-            return _dataSource ?? backupDataSource
+            return _activeNavigationDataSource ?? backupDataSource
         }
         set {
-            _dataSource = newValue
+            _activeNavigationDataSource = newValue
         }
     }
     
@@ -80,7 +82,7 @@ open class NavigationEventsManager {
                          passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
                          accessToken possibleToken: String? = nil,
                          mobileEventsManager: MMEEventsManager = .shared()) {
-        dataSource = activeNavigationDataSource
+        self.activeNavigationDataSource = activeNavigationDataSource
         self.passiveNavigationDataSource = passiveNavigationDataSource
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
@@ -121,7 +123,7 @@ open class NavigationEventsManager {
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> ActiveNavigationEventDetails? {
-        guard let dataSource = dataSource else { return nil }
+        guard let dataSource = activeNavigationDataSource else { return nil }
         
         let rating = potentialRating ?? MMEEventsManager.unrated
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
@@ -154,7 +156,7 @@ open class NavigationEventsManager {
     }
     
     func navigationDepartEvent() -> ActiveNavigationEventDetails? {
-        guard let dataSource = dataSource else { return nil }
+        guard let dataSource = activeNavigationDataSource else { return nil }
 
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationDepart
@@ -162,7 +164,7 @@ open class NavigationEventsManager {
     }
     
     func navigationArriveEvent() -> ActiveNavigationEventDetails? {
-        guard let dataSource = dataSource else { return nil }
+        guard let dataSource = activeNavigationDataSource else { return nil }
 
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
         event.event = MMEEventTypeNavigationArrive
@@ -180,26 +182,26 @@ open class NavigationEventsManager {
     }
     
     func navigationFeedbackEvent() -> NavigationEventDetails? {
-        var event: NavigationEventDetails?
-        
-        if let activeNavigationDataSource = dataSource {
+        var event: NavigationEventDetails
+        if let activeNavigationDataSource = activeNavigationDataSource {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
                                                  session: sessionState, defaultInterface: usesDefaultUserInterface)
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
             event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState)
         } else {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
+            return nil
         }
         
-        event?.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
-        event?.event = MMEEventTypeNavigationFeedback
-        event?.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
+        event.event = MMEEventTypeNavigationFeedback
+        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
         return event
     }
     
     func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> ActiveNavigationEventDetails? {
-        guard let dataSource = dataSource else { return nil }
+        guard let dataSource = activeNavigationDataSource else { return nil }
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
@@ -275,7 +277,7 @@ open class NavigationEventsManager {
 
     func enqueueRerouteEvent() {
         guard let eventDictionary = (try? navigationRerouteEvent()?.asDictionary()) as [String: Any]?? else { return }
-        let timestamp = dataSource?.router.location?.timestamp ?? Date()
+        let timestamp = activeNavigationDataSource?.router.location?.timestamp ?? Date()
         
         sessionState.lastRerouteDate = timestamp
         sessionState.numberOfReroutes += 1
@@ -286,7 +288,7 @@ open class NavigationEventsManager {
     }
     
     func resetSession() {
-        guard let dataSource = dataSource else { return }
+        guard let dataSource = activeNavigationDataSource else { return }
 
         let route = dataSource.routeProgress.route
         sessionState = SessionState(currentRoute: route, originalRoute: route)
@@ -397,14 +399,14 @@ open class NavigationEventsManager {
         
         if sessionState.arrivalTimestamp == nil,
             progress.currentLegProgress.userHasArrivedAtWaypoint {
-            sessionState.arrivalTimestamp = dataSource?.router.location?.timestamp ?? Date()
+            sessionState.arrivalTimestamp = activeNavigationDataSource?.router.location?.timestamp ?? Date()
             sendArriveEvent()
             
             return
         }
         
         if sessionState.departureTimestamp == nil {
-            sessionState.departureTimestamp = dataSource?.router.location?.timestamp ?? Date()
+            sessionState.departureTimestamp = activeNavigationDataSource?.router.location?.timestamp ?? Date()
             sendDepartEvent()
         }
     }
@@ -418,7 +420,7 @@ open class NavigationEventsManager {
         sessionState.arrivalTimestamp = nil
     }
     
-    func record(locations: [CLLocation]) {
+    func record(_ locations: [CLLocation]) {
         locations.forEach(sessionState.pastLocations.push(_:))
     }
 }
