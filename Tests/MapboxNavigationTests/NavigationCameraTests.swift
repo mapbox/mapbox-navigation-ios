@@ -359,4 +359,89 @@ class NavigationCameraTests: XCTestCase {
                        navigationViewportDataSource.options.followingCameraOptions.defaultPitch,
                        "Pitches should be equal.")
     }
+    
+    func testFollowingCameraOptions() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        // Create new `NavigationViewportDataSource` instance, which listens to the
+        // `Notification.Name.routeControllerProgressDidChange` notification, which is sent during
+        // active guidance navigation.
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                        viewportDataSourceType: .active)
+        
+        // Prevent any camera related modifications, which could be done by `NavigationViewportDataSource`.
+        navigationViewportDataSource.options.followingCameraOptions.centerUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.zoomUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
+        
+        let expectedCenterCoordinate = CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0)
+        navigationViewportDataSource.followingMobileCamera.center = expectedCenterCoordinate
+        
+        let expectedZoom: CGFloat = 11.1
+        navigationViewportDataSource.followingMobileCamera.zoom = expectedZoom
+        
+        let expectedBearing = 22.2
+        navigationViewportDataSource.followingMobileCamera.bearing = expectedBearing
+        
+        let expectedPitch: CGFloat = 33.3
+        navigationViewportDataSource.followingMobileCamera.pitch = expectedPitch
+        
+        let expectedPadding = UIEdgeInsets(top: 1.0, left: 2.0, bottom: 3.0, right: 4.0)
+        navigationViewportDataSource.followingMobileCamera.padding = expectedPadding
+        
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        
+        let viewportDataSourceDelegateMock = ViewportDataSourceDelegateMock()
+        navigationMapView.navigationCamera.viewportDataSource.delegate = viewportDataSourceDelegateMock
+        
+        let origin = CLLocationCoordinate2DMake(37.765469, -122.415279)
+        let destination = CLLocationCoordinate2DMake(37.767071968183814, -122.41340145370796)
+        let routeOptions = NavigationRouteOptions(coordinates: [origin, destination])
+        
+        // Load previously serialized `Route` object in JSON format and deserialize it.
+        let routeData = Fixture.JSONFromFileNamed(name: "route-for-navigation-camera")
+        let decoder = JSONDecoder()
+        decoder.userInfo[.options] = routeOptions
+        
+        guard let route = try? decoder.decode(Route.self, from: routeData) else {
+            XCTFail("Route should be valid.")
+            return
+        }
+        
+        let routeProgress = RouteProgress(route: route,
+                                          routeIndex: 0,
+                                          options: routeOptions)
+        
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        
+        // Change `stepdIndex` to simulate `CameraOptions` change. Since update to all `CameraOptions`
+        // parameters is not allowed, this change will have no effect.
+        routeProgress.currentLegProgress.stepIndex = 1
+        
+        let userInfo: [RouteController.NotificationUserInfoKey: Any] = [
+            .routeProgressKey: routeProgress,
+            .locationKey: location,
+        ]
+        
+        let expectation = self.expectation(forNotification: .routeControllerProgressDidChange,
+                                           object: self) { _ in
+            return true
+        }
+        
+        NotificationCenter.default.post(name: .routeControllerProgressDidChange,
+                                        object: self,
+                                        userInfo: userInfo)
+        
+        wait(for: [expectation], timeout: 1.0)
+        
+        let cameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingMobileCamera]
+        
+        XCTAssertEqual(cameraOptions?.center, expectedCenterCoordinate, "Center coordinates should be equal.")
+        XCTAssertEqual(cameraOptions?.zoom, expectedZoom, "Zooms should be equal.")
+        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
+        XCTAssertEqual(cameraOptions?.pitch, expectedPitch, "Pitches should be equal.")
+        XCTAssertEqual(cameraOptions?.padding, expectedPadding, "Paddings should be equal.")
+    }
 }
