@@ -45,7 +45,7 @@ extension RouteOptions: NSCopying {
      - parameter waypoint: the Waypoint to exclude.
      - returns: a copy of self excluding the specified waypoint.
      */
-    public func without(waypoint: Waypoint) -> RouteOptions {
+    public func without(_ waypoint: Waypoint) -> RouteOptions {
         let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
         let copy = self.copy() as! RouteOptions
         copy.waypoints = waypointsWithoutSpecified

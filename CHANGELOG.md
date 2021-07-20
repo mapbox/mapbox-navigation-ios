@@ -127,6 +127,7 @@
 * Supported feedbacks during passive navigation. Set `PassiveLocationManager` as a data source for `NavigationEventsManager` and then use this class to create and send user feedbacks. `FeedbackViewController` provides drop-in feedback screen and can be used during both passive and active navigation. ([#3122](https://github.com/mapbox/mapbox-navigation-ios/pull/3122))
 * `NavigationViewController.indexedRoute`, `NavigationService.indexedRoute` and `Router.indexedRoute` properties are readonly now. Use dedicated `Router.updateRoute(with:routeOptions:)` method to update the route. ([#3159](https://github.com/mapbox/mapbox-navigation-ios/pull/#3159))
 * Fixed an issue where a subclass of `NavigationRouteOptions` would turn into an ordinary `RouteOptions` when rerouting the user. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
+* Renamed `RouteOptions.without(waypoint:)` to `RouteOptions.without(_:)`. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
 
 ## v1.4.1
 
