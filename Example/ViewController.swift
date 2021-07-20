@@ -519,7 +519,7 @@ extension ViewController: NavigationMapViewDelegate {
     
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
         guard let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
-        let modifiedOptions = routeOptions.without(waypoint: waypoint)
+        let modifiedOptions = routeOptions.without(waypoint)
 
         presentWaypointRemovalAlert { _ in
             self.requestRoute(with:modifiedOptions, success: self.defaultSuccess, failure: self.defaultFailure)
