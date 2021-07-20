@@ -393,6 +393,7 @@
 		DA754E1823AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = DA754E1623AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DA754E1923AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DA754E1723AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m */; };
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
+        DA7A97CF26A7613D001B6A9A /* RouteOptionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA7A97CE26A7613C001B6A9A /* RouteOptionsTests.swift */; };
 		DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */; };
 		DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7723B5DB7900B56786 /* SpeedLimitStyleKit.swift */; };
 		DAA96D18215A961D00BEF703 /* route-doubling-back.json in Resources */ = {isa = PBXBuildFile; fileRef = DAA96D17215A961D00BEF703 /* route-doubling-back.json */; };
@@ -1001,6 +1002,7 @@
 		DA73F87820BF851B0067649B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = de; path = Resources/de.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA754E1623AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MBXAccounts+CoreNavigationAdditions.h"; sourceTree = "<group>"; };
 		DA754E1723AC56E5007E16B5 /* MBXAccounts+CoreNavigationAdditions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "MBXAccounts+CoreNavigationAdditions.m"; sourceTree = "<group>"; };
+        DA7A97CE26A7613C001B6A9A /* RouteOptionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteOptionsTests.swift; sourceTree = "<group>"; };
 		DA8264851F2AAD8400454B24 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Main.strings"; sourceTree = "<group>"; };
 		DA8264871F2AADC200454B24 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Navigation.strings"; sourceTree = "<group>"; };
 		DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedLimitView.swift; sourceTree = "<group>"; };
@@ -1475,6 +1477,7 @@
 		3A163AE1249901D000D66A0D /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+                DA7A97CE26A7613C001B6A9A /* RouteOptionsTests.swift */,
 				3A163ADF249901C300D66A0D /* RouteStateTests.swift */,
 			);
 			path = Extensions;
@@ -2837,6 +2840,7 @@
 				C582BA2C2073E77E00647DAA /* StringTests.swift in Sources */,
 				3557506B21A826C600AEF9B6 /* OfflineRoutingTests.swift in Sources */,
 				352762A4225B751A0015B632 /* OptionsTests.swift in Sources */,
+				DA7A97CF26A7613D001B6A9A /* RouteOptionsTests.swift in Sources */,
 				8DB7EF6A2176674800DA83A3 /* MapboxNavigationServiceSpec.swift in Sources */,
 				5A8DB89624DE16A10041F863 /* SkuTokenProviderTests.swift in Sources */,
 				35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */,

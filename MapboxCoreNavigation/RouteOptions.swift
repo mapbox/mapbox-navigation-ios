@@ -32,9 +32,9 @@ extension RouteOptions: NSCopying {
     public func copy(with zone: NSZone? = nil) -> Any {
         do {
             let encodedOptions = try JSONEncoder().encode(self)
-            return try JSONDecoder().decode(RouteOptions.self, from: encodedOptions)
+            return try JSONDecoder().decode(type(of: self), from: encodedOptions)
         } catch {
-            preconditionFailure("Unable to copy RouteOptions by round-tripping it through JSON")
+            preconditionFailure("Unable to copy \(type(of: self)) by round-tripping it through JSON: \(error)")
         }
     }
     

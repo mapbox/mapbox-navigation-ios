@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v1.2.2
+
+* Fixed an issue where a subclass of `NavigationRouteOptions` would turn into an ordinary `RouteOptions` when rerouting the user. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
+
 ## v1.2.1
 
 * Increased the minimum versions of `MapboxNavigationNative` to v30.0 and `MapboxCommon` to v9.2.0. ([#2793](https://github.com/mapbox/mapbox-navigation-ios/pull/2793))
