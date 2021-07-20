@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v1.4.2
+
+* Fixed an issue where a subclass of `NavigationRouteOptions` would turn into an ordinary `RouteOptions` when rerouting the user. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
+
 ## v1.4.1
 
 * Fixed the moment of custom feedback event creation. ([#2495](https://github.com/mapbox/mapbox-navigation-ios/pull/2495))
