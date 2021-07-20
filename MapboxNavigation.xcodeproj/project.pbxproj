@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		110766AD26A5A64000832F01 /* PassiveNavigationEventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */; };
+		1144426C26A73FBA00B0CECE /* FeedbackEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1144426B26A73FBA00B0CECE /* FeedbackEvent.swift */; };
 		11D1F89E269601150053A93F /* NativeHandlersFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */; };
 		11D1F8A02696048D0053A93F /* Dictionary+DeepMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */; };
 		11D1F8A22696EBD40053A93F /* Dictionary+Equality.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */; };
@@ -464,6 +465,7 @@
 
 /* Begin PBXFileReference section */
 		110766AC26A5A64000832F01 /* PassiveNavigationEventDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PassiveNavigationEventDetails.swift; sourceTree = "<group>"; };
+		1144426B26A73FBA00B0CECE /* FeedbackEvent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackEvent.swift; sourceTree = "<group>"; };
 		11D1F89D269601150053A93F /* NativeHandlersFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeHandlersFactoryTests.swift; sourceTree = "<group>"; };
 		11D1F89F2696048D0053A93F /* Dictionary+DeepMerge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+DeepMerge.swift"; sourceTree = "<group>"; };
 		11D1F8A12696EBD40053A93F /* Dictionary+Equality.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Equality.swift"; sourceTree = "<group>"; };
@@ -1125,6 +1127,7 @@
 				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				352F464C20EB74C200147886 /* NavigationEventsManager.swift */,
 				354A9BC520EA991900F03325 /* SessionState.swift */,
+				1144426B26A73FBA00B0CECE /* FeedbackEvent.swift */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -2425,6 +2428,7 @@
 				2B871272263966F0001082A9 /* TileStoreConfiguration.swift in Sources */,
 				2EFADFFD264C1F9200B618C4 /* OpenLROrientation.swift in Sources */,
 				351174F41EF1C0530065E248 /* ReplayLocationManager.swift in Sources */,
+				1144426C26A73FBA00B0CECE /* FeedbackEvent.swift in Sources */,
 				2BE701172535940D00F46E4E /* Tunnel.swift in Sources */,
 				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
 				2E50E0DC264E49C8009D3848 /* RoadObjectMatcherDelegate.swift in Sources */,

@@ -327,18 +327,17 @@ open class NavigationEventsManager {
      
      You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
      
-     @return Returns a feedback event
+     - returns: Returns a feedback event.
      
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
+     Alternatively, you can use `FeedbackViewContoller` which handles feedback lifecycle internally.
      
      - Postcondition:
      Call `sendFeedback(_:type:source:description:)` with the returned feedback to attach additional metadata to the feedback and send it.
      */
     public func createFeedback() -> FeedbackEvent? {
-        guard let feedbackEvent = navigationFeedbackEvent() else { return nil }
-        let eventDictionary = try? feedbackEvent.asDictionary()
-        let event = FeedbackEvent(timestamp: Date(), eventDictionary: eventDictionary ?? [:])
-        return event
+        guard let eventDetails = navigationFeedbackEvent() else { return nil }
+        return FeedbackEvent(eventDetails: eventDetails)
     }
     
     /**
@@ -346,14 +345,13 @@ open class NavigationEventsManager {
      
      You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
      
-     @param feedback A `FeedbackEvent` created with `createFeedback()` method.
-     @param type A `FeedbackType` used to specify the type of feedback
-     @param source A `FeedbackSource` used to specify the source of feedback.
-     @param description A custom string used to describe the problem in detail.
+     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
+     - parameter type: A `FeedbackType` used to specify the type of feedback.
+     - parameter description: A custom string used to describe the problem in detail.
      */
     public func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
         feedback.update(type: type, source: .user, description: description)
-        sendFeedbackEvents([feedback])
+        sendFeedbackEvents([feedback.coreEvent])
     }
     
     //MARK: - Session State Management

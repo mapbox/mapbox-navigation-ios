@@ -78,7 +78,7 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     /**
-     Provides methods for creating and sending user feedbacks.
+     Provides methods for creating and sending user feedback.
      */
     public var eventsManager: NavigationEventsManager {
         return navigationService.eventsManager
