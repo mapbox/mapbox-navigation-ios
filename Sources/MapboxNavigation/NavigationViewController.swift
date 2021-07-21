@@ -799,16 +799,20 @@ extension NavigationViewController: NavigationServiceDelegate {
         guard let destination = progress.currentLeg.destination else {
             preconditionFailure("Current leg has no destination")
         }
-        let shouldPrevent = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
-        let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
-        
-        if snapsUserLocationAnnotationToRoute, userHasArrivedAndShouldPreventRerouting {
+        let preventRerouting = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
+        let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint
+
+        if snapsUserLocationAnnotationToRoute && (!userArrivedAtWaypoint || preventRerouting) {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation), for: location)
-            navigationMapView?.moveUserLocation(to: location, animated: true)
         } else  {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation))
         }
-        
+
+        let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
+        if movePuckToCurrentLocation {
+            navigationMapView?.moveUserLocation(to: location, animated: true)
+        }
+
         attemptToHighlightBuildings(progress, with: location)
         
         // Finally, pass the message onto the `NavigationViewControllerDelegate`.
