@@ -42,7 +42,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var rating: Int?
     var comment: String?
     var userIdentifier: String?
-    var appMetadata: [String: String?]? = nil
+    var appMetadata: [String: String?]?
     var name: String?
     var version: String?
     var feedbackType: FeedbackType?
@@ -68,9 +68,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         originalRequestIdentifier = session.originalRoute?.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
-        if (userInfo != nil) {
-            appMetadata = userInfo
-        }
+        appMetadata = userInfo
         
         if let location = dataSource.router.rawLocation,
             let coordinates = dataSource.routeProgress.route.shape?.coordinates,

@@ -26,9 +26,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         startTimestamp = sessionState.departureTimestamp
         updateTimeState(session: sessionState)
         
-        if (userInfo != nil) {
-            appMetadata = userInfo
-        }
+        appMetadata = userInfo
     }
     
     private enum CodingKeys: String, CodingKey {

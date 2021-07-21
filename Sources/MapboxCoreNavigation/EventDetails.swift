@@ -18,7 +18,7 @@ struct PerformanceEventDetails: EventDetails {
     var event: String?
     var counters: [Counter] = []
     var attributes: [Attribute] = []
-    var appMetadata: [String: String?]? = nil
+    var appMetadata: [String: String?]?
     
     private enum CodingKeys: String, CodingKey {
         case event

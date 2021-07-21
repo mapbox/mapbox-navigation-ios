@@ -196,9 +196,9 @@ open class NavigationEventsManager {
     
         if let activeNavigationDataSource = activeNavigationDataSource {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
-    session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
+    session: sessionState, defaultInterface: usesDefaultUserInterface)
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
-            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState, userInfo)
+            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState)
         } else {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
             return nil
@@ -365,12 +365,6 @@ open class NavigationEventsManager {
     public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID? {
         return enqueueFeedbackEvent(type: type, description: description)
     }
-//    public func recordFeedback(type: FeedbackType = .general, description: String? = nil, userInfo: [String: String?]? = nil) -> UUID? {
-//        if (userInfo != nil) {
-//            self.userInfo = userInfo
-//        }
-//        return enqueueFeedbackEvent(type: type, description: description)
-//    }
     
     /**
      Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
