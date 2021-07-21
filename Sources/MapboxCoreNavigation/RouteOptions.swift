@@ -30,7 +30,7 @@ extension RouteOptions {
 }
 
 extension RouteOptions: NSCopying {
-    public func copy(with zone: NSZone? = nil) -> Any {
+    open func copy(with zone: NSZone? = nil) -> Any {
         do {
             let encodedOptions = try JSONEncoder().encode(self)
             return try JSONDecoder().decode(type(of: self), from: encodedOptions)
