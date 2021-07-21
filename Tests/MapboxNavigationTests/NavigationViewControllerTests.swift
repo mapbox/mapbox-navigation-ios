@@ -286,7 +286,7 @@ class NavigationViewControllerTests: TestCase {
             navigationViewController.navigationMapView?.pointAnnotationManager != nil
         }
         waitForExpectations(timeout: 5, handler: nil)
-        navigationViewController.navigationService.router.updateRoute(with: (initialRouteResponse, 0), routeOptions: nil)
+        navigationViewController.navigationService.router.updateRoute(with: .init(routeResponse: initialRouteResponse, routeIndex: 0), routeOptions: nil)
         expectation(description: "Annotations loaded") {
             !navigationViewController.navigationMapView!.pointAnnotationManager!.annotations.isEmpty
         }
@@ -306,7 +306,7 @@ class NavigationViewControllerTests: TestCase {
                   "Destination annotation does not exist on map")
         
         // Set the second route.
-        navigationViewController.navigationService.router.updateRoute(with: (newRouteResponse, 0), routeOptions: nil)
+        navigationViewController.navigationService.router.updateRoute(with: .init(routeResponse: newRouteResponse, routeIndex: 0), routeOptions: nil)
         
         let newAnnotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
         

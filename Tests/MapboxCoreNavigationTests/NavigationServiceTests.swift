@@ -397,7 +397,7 @@ class NavigationServiceTests: TestCase {
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: NavigationEventTypeRouteRetrieval))
 
-        router.updateRoute(with: (alternateRouteResponse, 0), routeOptions: nil)
+        router.updateRoute(with: .init(routeResponse: alternateRouteResponse, routeIndex: 0), routeOptions: nil)
 
         let simulatedLocationManager = navigationService.locationManager as! SimulatedLocationManager
 
@@ -610,7 +610,7 @@ class NavigationServiceTests: TestCase {
 
         let navigationService = dependencies.navigationService
         let routeController = navigationService.router as! RouteController
-        routeController.updateRoute(with: (routeResponse, 0), routeOptions: nil)
+        routeController.updateRoute(with: .init(routeResponse: routeResponse, routeIndex: 0), routeOptions: nil)
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         
         for (index, location) in trace.enumerated() {

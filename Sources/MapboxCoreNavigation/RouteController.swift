@@ -151,7 +151,7 @@ open class RouteController: NSObject {
         self.directions = directions
         Navigator.credentials = directions.credentials
         Navigator.tilesURL = tileStoreLocation.tileStoreURL
-        self.indexedRouteResponse = (routeResponse, routeIndex)
+        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled

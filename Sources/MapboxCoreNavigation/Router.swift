@@ -15,7 +15,10 @@ public protocol RouterDataSource: AnyObject {
 /**
  A `RouteResponse` object that sorts routes from most optimal to least optimal and selected route index in it.
  */
-public typealias IndexedRouteResponse = (routeResponse: RouteResponse, routeIndex: Int)
+public struct IndexedRouteResponse {
+    public let routeResponse: RouteResponse
+    public let routeIndex: Int
+}
 
 /**
  A class conforming to the `Router` protocol tracks the user’s progress as they travel along a predetermined route. It calls methods on its `delegate`, which conforms to the `RouterDelegate` protocol, whenever significant events or decision points occur along the route. Despite its name, this protocol does not define the interface of a routing engine.
@@ -245,7 +248,7 @@ extension InternalRouter where Self: Router {
                     routeOptions = options
                 }
                 
-                self?.indexedRouteResponse = (response, 0)
+                self?.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
                 self?.setRoute(route: route, proactive: true, routeOptions: routeOptions)
             }
         }

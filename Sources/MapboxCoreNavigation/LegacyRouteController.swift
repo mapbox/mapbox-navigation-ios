@@ -86,7 +86,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     required public init(along routeResponse: RouteResponse, routeIndex: Int, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
         self.directions = directions
-        self.indexedRouteResponse = (routeResponse, routeIndex)
+        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
@@ -372,7 +372,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                 guard case let .route(options) = response.options, !(response.routes?.isEmpty ?? true) else {
                     return
                 }
-                strongSelf.updateRoute(with: (response, 0), routeOptions: options) // unconditionally getting the first route above
+                strongSelf.updateRoute(with: .init(routeResponse: response, routeIndex: 0), routeOptions: options) // unconditionally getting the first route above
             }
         }
     }

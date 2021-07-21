@@ -463,10 +463,9 @@ class ViewController: UIViewController {
     
     func navigationViewController(navigationService: NavigationService) -> NavigationViewController {
         let navigationOptions = NavigationOptions(navigationService: navigationService, predictiveCacheOptions: PredictiveCacheOptions())
-        let (routeResponse, routeIndex) = navigationService.indexedRouteResponse
         
-        let navigationViewController = NavigationViewController(for: routeResponse,
-                                                                routeIndex: routeIndex,
+        let navigationViewController = NavigationViewController(for: navigationService.indexedRouteResponse.routeResponse,
+                                                                routeIndex: navigationService.indexedRouteResponse.routeIndex,
                                                                 routeOptions: navigationService.routeProgress.routeOptions,
                                                                 navigationOptions: navigationOptions)
         navigationViewController.delegate = self
