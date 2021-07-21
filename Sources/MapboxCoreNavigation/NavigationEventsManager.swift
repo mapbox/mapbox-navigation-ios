@@ -191,20 +191,21 @@ open class NavigationEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEventDetails(type: FeedbackType, description: String?, userInfo: [String:String?]? = nil) -> NavigationEventDetails? {
+    func navigationFeedbackEventDetails(type: FeedbackType, description: String?) -> NavigationEventDetails? {
         var event: NavigationEventDetails
     
         if let activeNavigationDataSource = activeNavigationDataSource {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
     session: sessionState, defaultInterface: usesDefaultUserInterface)
+            event.appMetadata = userInfo
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
             event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState)
+            event.appMetadata = userInfo
         } else {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
             return nil
         }
         
-        event.appMetadata = userInfo
         event.description = description
         event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
         event.feedbackType = type
@@ -290,8 +291,8 @@ open class NavigationEventsManager {
         mobileEventsManager.flush()
     }
     
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?, userInfo: [String: String?]? = nil) -> UUID? {
-        guard let eventDetails = navigationFeedbackEventDetails(type: type, description: description, userInfo: userInfo) else {
+    func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID? {
+        guard let eventDetails = navigationFeedbackEventDetails(type: type, description: description) else {
             return nil
         }
         let event = FeedbackEvent(eventDetails: eventDetails)
