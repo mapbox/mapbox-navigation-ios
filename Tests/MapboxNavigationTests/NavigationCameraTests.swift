@@ -68,10 +68,87 @@ class CameraStateTransitionMock: CameraStateTransition {
 
 class ViewportDataSourceDelegateMock: ViewportDataSourceDelegate {
     
-    var cameraOptions: [String: CameraOptions]?
+    var cameraOptions: [String: CameraOptions]? = nil
     
     func viewportDataSource(_ dataSource: ViewportDataSource, didUpdate cameraOptions: [String: CameraOptions]) {
         self.cameraOptions = cameraOptions
+    }
+}
+
+class LocationProviderMock: LocationProvider {
+    
+    var locationProviderOptions: LocationOptions
+    
+    var authorizationStatus: CLAuthorizationStatus
+    
+    var accuracyAuthorization: CLAccuracyAuthorization
+    
+    var headingOrientation: CLDeviceOrientation
+    
+    var heading: CLHeading?
+    
+    weak var delegate: LocationProviderDelegate?
+    
+    init() {
+        locationProviderOptions = LocationOptions()
+        authorizationStatus = .denied
+        accuracyAuthorization = .reducedAccuracy
+        headingOrientation = .unknown
+    }
+    
+    func setDelegate(_ delegate: LocationProviderDelegate) {
+        self.delegate = delegate
+    }
+    
+    func requestAlwaysAuthorization() {
+        // No-op
+    }
+    
+    func requestWhenInUseAuthorization() {
+        // No-op
+    }
+    
+    func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
+        // No-op
+    }
+    
+    func startUpdatingLocation() {
+        // No-op
+    }
+    
+    func stopUpdatingLocation() {
+        // No-op
+    }
+    
+    func startUpdatingHeading() {
+        // No-op
+    }
+    
+    func stopUpdatingHeading() {
+        // No-op
+    }
+    
+    func dismissHeadingCalibrationDisplay() {
+        // No-op
+    }
+}
+
+extension LocationProviderMock: LocationProviderDelegate {
+    
+    func locationProvider(_ provider: LocationProvider, didUpdateLocations locations: [CLLocation]) {
+        delegate?.locationProvider(provider, didUpdateLocations: locations)
+    }
+    
+    func locationProvider(_ provider: LocationProvider, didUpdateHeading newHeading: CLHeading) {
+        // No-op
+    }
+    
+    func locationProvider(_ provider: LocationProvider, didFailWithError error: Error) {
+        // No-op
+    }
+    
+    func locationProviderDidChangeAuthorization(_ provider: LocationProvider) {
+        // No-op
     }
 }
 
@@ -242,32 +319,24 @@ class NavigationCameraTests: XCTestCase {
         
         // It is expected that `NavigationViewportDataSource` uses default values for `CameraOptions`
         // during free-drive. Location, snapped to the road network should be used instead of raw one.
-        let expectedCoordinate = location.coordinate
-        let expectedAnchor: CGPoint = .zero
-        let expectedPadding: UIEdgeInsets = .zero
         let expectedAltitude = 4000.0
-        let expectedBearing: Double = 0.0
-        let expectedPitch: CGFloat = 0.0
         let expectedZoomLevel = CGFloat(ZoomLevelForAltitude(expectedAltitude,
                                                              navigationMapView.mapView.cameraState.pitch,
                                                              location.coordinate.latitude,
                                                              navigationMapView.mapView.bounds.size))
         
+        let expectedCameraOptions = CameraOptions(center: location.coordinate,
+                                                  padding: .zero,
+                                                  anchor: .zero,
+                                                  zoom: expectedZoomLevel,
+                                                  bearing: 0.0,
+                                                  pitch: 0.0)
+        
         let followingMobileCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingMobileCamera]
-        XCTAssertEqual(followingMobileCameraOptions?.center, expectedCoordinate, "Center coordinates should be equal.")
-        XCTAssertEqual(followingMobileCameraOptions?.anchor, expectedAnchor, "Anchors should be equal.")
-        XCTAssertEqual(followingMobileCameraOptions?.padding, expectedPadding, "Paddings should be equal.")
-        XCTAssertEqual(followingMobileCameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
-        XCTAssertEqual(followingMobileCameraOptions?.zoom, expectedZoomLevel, "Zooms should be equal.")
-        XCTAssertEqual(followingMobileCameraOptions?.pitch, expectedPitch, "Pitches should be equal.")
+        verifyCameraOptions(followingMobileCameraOptions, expectedCameraOptions: expectedCameraOptions)
         
         let followingCarPlayCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingCarPlayCamera]
-        XCTAssertEqual(followingCarPlayCameraOptions?.center, expectedCoordinate, "Center coordinates should be equal.")
-        XCTAssertEqual(followingCarPlayCameraOptions?.anchor, expectedAnchor, "Anchors should be equal.")
-        XCTAssertEqual(followingCarPlayCameraOptions?.padding, expectedPadding, "Paddings should be equal.")
-        XCTAssertEqual(followingCarPlayCameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
-        XCTAssertEqual(followingCarPlayCameraOptions?.zoom, expectedZoomLevel, "Zooms should be equal.")
-        XCTAssertEqual(followingCarPlayCameraOptions?.pitch, expectedPitch, "Pitches should be equal.")
+        verifyCameraOptions(followingCarPlayCameraOptions, expectedCameraOptions: expectedCameraOptions)
         
         // In `NavigationCameraState.overview` state during free-drive navigation all properties of
         // `CameraOptions` should be `nil`.
@@ -335,6 +404,52 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertEqual(pitch,
                        navigationViewportDataSource.options.followingCameraOptions.defaultPitch,
                        "Pitches should be equal.")
+    }
+    
+    func testViewportDataSourceDelegateForLocationProvider() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        let locationProviderMock = LocationProviderMock()
+        navigationMapView.mapView.location.overrideLocationProvider(with: locationProviderMock)
+        
+        // Create `NavigationViewportDataSource` instance, which listens to the raw locations updates.
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                        viewportDataSourceType: .raw)
+        
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        
+        let viewportDataSourceDelegateMock = ViewportDataSourceDelegateMock()
+        navigationMapView.navigationCamera.viewportDataSource.delegate = viewportDataSourceDelegateMock
+        
+        let didUpdateCameraOptionsExpectation = self.expectation {
+            return viewportDataSourceDelegateMock.cameraOptions != nil
+        }
+        
+        let location = CLLocation(latitude: 0.0, longitude: 0.0)
+        locationProviderMock.locationProvider(locationProviderMock, didUpdateLocations: [location])
+        
+        wait(for: [didUpdateCameraOptionsExpectation], timeout: 5.0)
+        
+        // It is expected that `NavigationViewportDataSource` uses default values for `CameraOptions`
+        // in case if raw locations are consumed.
+        let expectedAltitude = 4000.0
+        let expectedZoomLevel = CGFloat(ZoomLevelForAltitude(expectedAltitude,
+                                                             navigationMapView.mapView.cameraState.pitch,
+                                                             location.coordinate.latitude,
+                                                             navigationMapView.mapView.bounds.size))
+        
+        let expectedCameraOptions = CameraOptions(center: location.coordinate,
+                                                  padding: .zero,
+                                                  anchor: .zero,
+                                                  zoom: expectedZoomLevel,
+                                                  bearing: 0.0,
+                                                  pitch: 0.0)
+        
+        let followingMobileCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingMobileCamera]
+        verifyCameraOptions(followingMobileCameraOptions, expectedCameraOptions: expectedCameraOptions)
+        
+        let followingCarPlayCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingCarPlayCamera]
+        verifyCameraOptions(followingCarPlayCameraOptions, expectedCameraOptions: expectedCameraOptions)
     }
     
     func testFollowingCameraOptions() {
@@ -494,5 +609,14 @@ class NavigationCameraTests: XCTestCase {
         NotificationCenter.default.post(name: .routeControllerProgressDidChange,
                                         object: self,
                                         userInfo: userInfo)
+    }
+    
+    func verifyCameraOptions(_ givenCameraOptions: CameraOptions?, expectedCameraOptions: CameraOptions?) {
+        XCTAssertEqual(givenCameraOptions?.center, expectedCameraOptions?.center, "Center coordinates should be equal.")
+        XCTAssertEqual(givenCameraOptions?.anchor, expectedCameraOptions?.anchor, "Anchors should be equal.")
+        XCTAssertEqual(givenCameraOptions?.padding, expectedCameraOptions?.padding, "Paddings should be equal.")
+        XCTAssertEqual(givenCameraOptions?.bearing, expectedCameraOptions?.bearing, "Bearings should be equal.")
+        XCTAssertEqual(givenCameraOptions?.zoom, expectedCameraOptions?.zoom, "Zooms should be equal.")
+        XCTAssertEqual(givenCameraOptions?.pitch, expectedCameraOptions?.pitch, "Pitches should be equal.")
     }
 }
