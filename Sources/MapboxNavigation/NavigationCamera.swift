@@ -125,10 +125,15 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      Call to this method executes a transition to `NavigationCameraState.following` state.
      When started, state will first change to `NavigationCameraState.transitionToFollowing` and then
      to the final `NavigationCameraState.following` when ended.
+     
+     - parameter completion: Completion handler, which is called whenever transition ends or doesn't
+     occur at all (e.g. in case if already in `NavigationCameraState.transitionToFollowing` or
+     `NavigationCameraState.following` state).
      */
-    public func follow() {
+    public func follow(_ completion: (() -> Void)? = nil) {
         switch state {
         case .transitionToFollowing, .following:
+            completion?()
             return
             
         case .idle, .transitionToOverview, .overview:
@@ -144,6 +149,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             
             cameraStateTransition.transitionToFollowing(cameraOptions) { 
                 self.state = .following
+                completion?()
             }
             
             break
@@ -154,10 +160,15 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      Call to this method executes a transition to `NavigationCameraState.overview` state.
      When started, state will first change to `NavigationCameraState.transitionToOverview` and then
      to the final `NavigationCameraState.overview` when ended.
+     
+     - parameter completion: Completion handler, which is called whenever transition ends or doesn't
+     occur at all (e.g. in case if already in `NavigationCameraState.transitionToOverview` or
+     `NavigationCameraState.overview` state).
      */
-    public func moveToOverview() {
+    public func moveToOverview(_ completion: (() -> Void)? = nil) {
         switch state {
         case .transitionToOverview, .overview:
+            completion?()
             return
             
         case .idle, .transitionToFollowing, .following:
@@ -173,6 +184,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             
             cameraStateTransition.transitionToOverview(cameraOptions) { 
                 self.state = .overview
+                completion?()
             }
             
             break
