@@ -307,13 +307,9 @@ class NavigationCameraTests: XCTestCase {
             return
         }
         
-        let origin = CLLocationCoordinate2DMake(37.765469, -122.415279)
-        let destination = CLLocationCoordinate2DMake(37.767071968183814, -122.41340145370796)
-        let navigationRouteOptions = NavigationRouteOptions(coordinates: [origin, destination])
-        
         let routeProgress = RouteProgress(route: route,
                                           routeIndex: 0,
-                                          options: navigationRouteOptions)
+                                          options: NavigationRouteOptions(coordinates: []))
         
         // Since second `stepIndex` is right after sharp maneuver default navigation camera behavior
         // will change `CameraOptions.pitch` to `FollowingCameraOptions.defaultPitch`.
@@ -382,13 +378,9 @@ class NavigationCameraTests: XCTestCase {
             return
         }
         
-        let origin = CLLocationCoordinate2DMake(37.765469, -122.415279)
-        let destination = CLLocationCoordinate2DMake(37.767071968183814, -122.41340145370796)
-        let navigationRouteOptions = NavigationRouteOptions(coordinates: [origin, destination])
-        
         let routeProgress = RouteProgress(route: route,
                                           routeIndex: 0,
-                                          options: navigationRouteOptions)
+                                          options: NavigationRouteOptions(coordinates: []))
         
         // Change `stepIndex` to simulate `CameraOptions` change. Since update to all `CameraOptions`
         // parameters is not allowed, this change will have no effect.
@@ -412,6 +404,58 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
         XCTAssertEqual(cameraOptions?.pitch, expectedPitch, "Pitches should be equal.")
         XCTAssertEqual(cameraOptions?.padding, expectedPadding, "Paddings should be equal.")
+    }
+    
+    func testBearingSmoothingIsDisabled() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        // Create new `NavigationViewportDataSource` instance, which listens to the
+        // `Notification.Name.routeControllerProgressDidChange` notification, which is sent during
+        // active guidance navigation.
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                        viewportDataSourceType: .active)
+        
+        // Make sure that bearing smoothing is enabled by default.
+        XCTAssertTrue(navigationViewportDataSource.options.followingCameraOptions.bearingSmoothing.enabled, "Bearing smoothing should be enabled by default.")
+        
+        navigationViewportDataSource.options.followingCameraOptions.bearingSmoothing.enabled = false
+        
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        
+        let viewportDataSourceDelegateMock = ViewportDataSourceDelegateMock()
+        navigationMapView.navigationCamera.viewportDataSource.delegate = viewportDataSourceDelegateMock
+        
+        guard let route = self.route(from: "route-for-navigation-camera-bearing-smoothing") else {
+            XCTFail("Route should be valid.")
+            return
+        }
+        
+        let routeProgress = RouteProgress(route: route,
+                                          routeIndex: 0,
+                                          options: NavigationRouteOptions(coordinates: []))
+        
+        let expectation = self.expectation(forNotification: .routeControllerProgressDidChange,
+                                           object: self) { _ in
+            return true
+        }
+        
+        // Since bearing smoothing is disabled it is expected that `CameraOptions.bearing`, which was
+        // returned from the `ViewportDataSourceDelegateMock` will be `123.0`.
+        let expectedBearing = 123.0
+        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.769595, longitude: -122.442412),
+                                  altitude: 0.0,
+                                  horizontalAccuracy: 0.0,
+                                  verticalAccuracy: 0.0,
+                                  course: expectedBearing,
+                                  speed: 0.0,
+                                  timestamp: Date())
+        
+        sendRouteControllerProgressDidChangeNotification(routeProgress, location: location)
+        
+        wait(for: [expectation], timeout: 1.0)
+        
+        let cameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingMobileCamera]
+        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
     }
     
     // MARK: - Helper methods

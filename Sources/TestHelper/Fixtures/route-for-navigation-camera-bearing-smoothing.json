@@ -1,0 +1,964 @@
+{
+    "weight_typical": 163.253,
+    "duration_typical": 117.189,
+    "weight_name": "auto",
+    "weight": 163.253,
+    "duration": 117.189,
+    "distance": 930.928,
+    "legs": [
+        {
+            "via_waypoints": [
+                
+            ],
+            "admins": [
+                {
+                    "iso_3166_1_alpha3": "USA",
+                    "iso_3166_1": "US"
+                }
+            ],
+            "annotation": {
+                "maxspeed": [
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    }
+                ],
+                "congestion": [
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "unknown",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "low",
+                    "unknown"
+                ],
+                "duration": [
+                    0.21,
+                    0.656,
+                    0.382,
+                    0.393,
+                    12.586,
+                    2.135,
+                    0.26,
+                    1.246,
+                    1.279,
+                    1.112,
+                    4.143,
+                    3.847,
+                    5.78,
+                    2.279,
+                    0.431,
+                    0.478,
+                    0.429,
+                    0.29,
+                    4.727,
+                    0.969,
+                    1.005,
+                    0.955,
+                    1.173,
+                    2.253,
+                    1.643,
+                    1.623,
+                    1.766,
+                    2.325,
+                    1.309,
+                    1.023,
+                    1.145,
+                    1.566,
+                    1.816,
+                    1.302,
+                    1.74,
+                    1.703,
+                    1.115,
+                    0.763,
+                    1.239,
+                    1.054,
+                    1.956,
+                    1.472,
+                    0.964,
+                    6.184,
+                    3.296,
+                    3.546,
+                    2.812,
+                    1.956,
+                    0.717,
+                    1.106,
+                    3.091,
+                    2.72,
+                    2.152,
+                    0.555,
+                    0.23,
+                    0.833,
+                    1.438,
+                    0.613,
+                    2.015,
+                    0.441,
+                    2.969,
+                    0.845,
+                    0.37,
+                    2.39
+                ]
+            },
+            "weight_typical": 163.253,
+            "duration_typical": 117.189,
+            "weight": 163.253,
+            "duration": 117.189,
+            "steps": [
+                {
+                    "voiceInstructions": [
+                        {
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Drive south on Buena Vista Avenue West for a half mile.</prosody></amazon:effect></speak>",
+                            "announcement": "Drive south on Buena Vista Avenue West for a half mile.",
+                            "distanceAlongGeometry": 930.928
+                        },
+                        {
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">In a quarter mile, Your destination will be on the left.</prosody></amazon:effect></speak>",
+                            "announcement": "In a quarter mile, Your destination will be on the left.",
+                            "distanceAlongGeometry": 402.336
+                        },
+                        {
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Your destination is on the left.</prosody></amazon:effect></speak>",
+                            "announcement": "Your destination is on the left.",
+                            "distanceAlongGeometry": 55.556
+                        }
+                    ],
+                    "intersections": [
+                        {
+                            "entry": [
+                                true
+                            ],
+                            "bearings": [
+                                189
+                            ],
+                            "duration": 1.642,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 1.93,
+                            "geometry_index": 0,
+                            "location": [
+                                -122.442412,
+                                37.769595
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                9,
+                                233
+                            ],
+                            "duration": 14.727,
+                            "turn_weight": 3,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 20.305,
+                            "geometry_index": 4,
+                            "location": [
+                                -122.442429,
+                                37.769509
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                53,
+                                228
+                            ],
+                            "duration": 1.499,
+                            "turn_weight": 2,
+                            "turn_duration": 0.026,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 3.73,
+                            "geometry_index": 6,
+                            "location": [
+                                -122.443242,
+                                37.769019
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                48,
+                                211
+                            ],
+                            "duration": 6.569,
+                            "turn_weight": 0.75,
+                            "turn_duration": 0.066,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 8.391,
+                            "geometry_index": 8,
+                            "location": [
+                                -122.44332,
+                                37.768964
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                16,
+                                196
+                            ],
+                            "duration": 12.317,
+                            "turn_weight": 0.5,
+                            "turn_duration": 0.007,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 14.964,
+                            "geometry_index": 11,
+                            "location": [
+                                -122.443542,
+                                37.768494
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                14,
+                                180
+                            ],
+                            "duration": 0.517,
+                            "turn_weight": 2,
+                            "turn_duration": 0.052,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 2.546,
+                            "geometry_index": 15,
+                            "location": [
+                                -122.443866,
+                                37.767575
+                            ]
+                        },
+                        {
+                            "entry": [
+                                false,
+                                true
+                            ],
+                            "in": 0,
+                            "bearings": [
+                                0,
+                                179
+                            ],
+                            "duration": 0.392,
+                            "turn_weight": 0.5,
+                            "turn_duration": 0.019,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 1,
+                            "weight": 0.938,
+                            "geometry_index": 16,
+                            "location": [
+                                -122.443866,
+                                37.767538
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                171,
+                                359
+                            ],
+                            "duration": 7.98,
+                            "turn_weight": 2,
+                            "turn_duration": 0.036,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 11.335,
+                            "geometry_index": 17,
+                            "location": [
+                                -122.443865,
+                                37.767507
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                158,
+                                343
+                            ],
+                            "duration": 10.828,
+                            "turn_weight": 2,
+                            "turn_duration": 0.028,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 14.69,
+                            "geometry_index": 22,
+                            "location": [
+                                -122.443716,
+                                37.766945
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                139,
+                                306
+                            ],
+                            "duration": 11.599,
+                            "turn_weight": 0.75,
+                            "turn_duration": 0.017,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 14.36,
+                            "geometry_index": 28,
+                            "location": [
+                                -122.443224,
+                                37.766488
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                110,
+                                302
+                            ],
+                            "duration": 1.144,
+                            "turn_weight": 0.75,
+                            "turn_duration": 0.048,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 2.037,
+                            "geometry_index": 36,
+                            "location": [
+                                -122.44274,
+                                37.765975
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                106,
+                                290
+                            ],
+                            "duration": 0.812,
+                            "turn_weight": 0.5,
+                            "turn_duration": 0.024,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 1.425,
+                            "geometry_index": 37,
+                            "location": [
+                                -122.442664,
+                                37.765953
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                104,
+                                286
+                            ],
+                            "duration": 25.221,
+                            "turn_weight": 2,
+                            "turn_duration": 0.021,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 31.61,
+                            "geometry_index": 38,
+                            "location": [
+                                -122.44259,
+                                37.765936
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                26,
+                                216
+                            ],
+                            "duration": 9.713,
+                            "turn_weight": 2,
+                            "turn_duration": 0.038,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 13.368,
+                            "geometry_index": 49,
+                            "location": [
+                                -122.440638,
+                                37.767011
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                42,
+                                213
+                            ],
+                            "duration": 5.188,
+                            "turn_weight": 2,
+                            "turn_duration": 0.013,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 8.21,
+                            "geometry_index": 54,
+                            "location": [
+                                -122.440205,
+                                37.767697
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                60,
+                                241
+                            ],
+                            "duration": 3.427,
+                            "turn_weight": 0.5,
+                            "turn_duration": 0.007,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 4.604,
+                            "geometry_index": 59,
+                            "location": [
+                                -122.439801,
+                                37.767945
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                59,
+                                239
+                            ],
+                            "duration": 0.817,
+                            "turn_weight": 2,
+                            "turn_duration": 0.007,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 2.972,
+                            "geometry_index": 61,
+                            "location": [
+                                -122.439431,
+                                37.768119
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "bearings": [
+                                59,
+                                239
+                            ],
+                            "duration": 0.367,
+                            "turn_weight": 2,
+                            "turn_duration": 0.007,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "weight": 2.432,
+                            "geometry_index": 62,
+                            "location": [
+                                -122.43934,
+                                37.768163
+                            ]
+                        },
+                        {
+                            "bearings": [
+                                62,
+                                239
+                            ],
+                            "entry": [
+                                true,
+                                false
+                            ],
+                            "in": 1,
+                            "turn_weight": 0.5,
+                            "turn_duration": 0.008,
+                            "mapbox_streets_v8": {
+                                "class": "street"
+                            },
+                            "is_urban": true,
+                            "admin_index": 0,
+                            "out": 0,
+                            "geometry_index": 63,
+                            "location": [
+                                -122.4393,
+                                37.768182
+                            ]
+                        }
+                    ],
+                    "bannerInstructions": [
+                        {
+                            "primary": {
+                                "components": [
+                                    {
+                                        "type": "text",
+                                        "text": "Your destination will be on the left"
+                                    }
+                                ],
+                                "type": "arrive",
+                                "modifier": "left",
+                                "text": "Your destination will be on the left"
+                            },
+                            "distanceAlongGeometry": 930.928
+                        },
+                        {
+                            "primary": {
+                                "components": [
+                                    {
+                                        "type": "text",
+                                        "text": "Your destination is on the left"
+                                    }
+                                ],
+                                "type": "arrive",
+                                "modifier": "left",
+                                "text": "Your destination is on the left"
+                            },
+                            "distanceAlongGeometry": 55.556
+                        }
+                    ],
+                    "speedLimitUnit": "mph",
+                    "maneuver": {
+                        "type": "depart",
+                        "instruction": "Drive south on Buena Vista Avenue West.",
+                        "bearing_after": 189,
+                        "bearing_before": 0,
+                        "location": [
+                            -122.442412,
+                            37.769595
+                        ]
+                    },
+                    "speedLimitSign": "mutcd",
+                    "name": "Buena Vista Avenue West",
+                    "weight_typical": 163.253,
+                    "duration_typical": 117.189,
+                    "duration": 117.189,
+                    "distance": 930.928,
+                    "driving_side": "right",
+                    "weight": 163.253,
+                    "mode": "driving",
+                    "geometry": "uvg`gAvihphFTKfABf@Nd@XdYlj@lCjFPZzA~BbDjC~CnAfR~EzPnEzYtHrItB`AJhA?|@Ah@A~SaDhC_@jCq@bCs@|B{@lF_CzCeCxBqDpBsE|CoG`BoCbBmA~Be@jDaAzDqBtBsBzBeE`BuEj@wC`@sCv@oFNsEViKs@aHmAgDgTi[oJ{M_LeNaIkKcFmGeBaA}CcB_MeGmK{EkHsEcAgA[]eBkBaDmEo@kB{CcJi@aBqHaSwAuDe@oAoEkN"
+                },
+                {
+                    "voiceInstructions": [
+                        
+                    ],
+                    "intersections": [
+                        {
+                            "bearings": [
+                                242
+                            ],
+                            "entry": [
+                                true
+                            ],
+                            "in": 0,
+                            "admin_index": 0,
+                            "geometry_index": 64,
+                            "location": [
+                                -122.439054,
+                                37.768286
+                            ]
+                        }
+                    ],
+                    "bannerInstructions": [
+                        
+                    ],
+                    "speedLimitUnit": "mph",
+                    "maneuver": {
+                        "type": "arrive",
+                        "instruction": "Your destination is on the left.",
+                        "modifier": "left",
+                        "bearing_after": 0,
+                        "bearing_before": 62,
+                        "location": [
+                            -122.439054,
+                            37.768286
+                        ]
+                    },
+                    "speedLimitSign": "mutcd",
+                    "name": "Buena Vista Avenue West",
+                    "weight_typical": 0,
+                    "duration_typical": 0,
+                    "duration": 0,
+                    "distance": 0,
+                    "driving_side": "right",
+                    "weight": 0,
+                    "mode": "driving",
+                    "geometry": "{de`gAzwaphF??"
+                }
+            ],
+            "distance": 930.928,
+            "summary": "Buena Vista Avenue West"
+        }
+    ],
+    "geometry": "uvg`gAvihphFTKfABf@Nd@XdYlj@lCjFPZzA~BbDjC~CnAfR~EzPnEzYtHrItB`AJhA?|@Ah@A~SaDhC_@jCq@bCs@|B{@lF_CzCeCxBqDpBsE|CoG`BoCbBmA~Be@jDaAzDqBtBsBzBeE`BuEj@wC`@sCv@oFNsEViKs@aHmAgDgTi[oJ{M_LeNaIkKcFmGeBaA}CcB_MeGmK{EkHsEcAgA[]eBkBaDmEo@kB{CcJi@aBqHaSwAuDe@oAoEkN",
+    "voiceLocale": "en-US"
+}
