@@ -205,8 +205,7 @@ class NavigationCameraTests: XCTestCase {
         
         wait(for: [overviewExpectation], timeout: 1.0)
         
-        // Navigation camera transition lasts 0.1 seconds. At the end of transition it is expected
-        // that camera state is `NavigationCameraState.overview`.
+        // At the end of transition it is expected that camera state is `NavigationCameraState.overview`.
         XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
         
         let followingExpectation = expectation(description: "Following camera expectation.")
@@ -244,8 +243,7 @@ class NavigationCameraTests: XCTestCase {
         
         wait(for: [overviewExpectation], timeout: 1.0)
         
-        // Navigation camera transition lasts 0.1 seconds. At the end of transition it is expected
-        // that camera state is `NavigationCameraState.overview`.
+        // At the end of transition it is expected that camera state is `NavigationCameraState.overview`.
         XCTAssertEqual(navigationMapView.navigationCamera.state, .overview)
         
         // All further calls to `NavigationCamera.moveToOverview()` should not change camera state and
