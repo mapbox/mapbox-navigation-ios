@@ -158,6 +158,10 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         self.modalPresentationStyle = .custom
         self.transitioningDelegate = self
 
+        createFeedback()
+    }
+    
+    func createFeedback() {
         currentFeedback = eventsManager?.createFeedback()
     }
     
@@ -283,8 +287,10 @@ extension FeedbackViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = sections[indexPath.row]
 
-        if detailedFeedbackEnabled, let eventsManager = eventsManager {
-            let feedbackViewController = FeedbackSubtypeViewController(eventsManager: eventsManager, feedbackType: item.feedbackType)
+        if detailedFeedbackEnabled, let eventsManager = eventsManager, let feedback = currentFeedback {
+            let feedbackViewController = FeedbackSubtypeViewController(eventsManager: eventsManager,
+                                                                       feedbackType: item.feedbackType,
+                                                                       feedback: feedback)
 
             guard let parent = presentingViewController else {
                 dismiss(animated: true)
