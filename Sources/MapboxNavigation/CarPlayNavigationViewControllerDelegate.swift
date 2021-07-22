@@ -1,5 +1,6 @@
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMaps
 
 /**
  The `CarPlayNavigationViewControllerDelegate` protocol provides methods for reacting to significant events during turn-by-turn navigation with `CarPlayNavigationViewController`.
@@ -23,6 +24,17 @@ public protocol CarPlayNavigationViewControllerDelegate: AnyObject, Unimplemente
      - returns: A boolean value indicating whether to show an arrival UI.
      */
     func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool
+    
+    /**
+     Tells the receiver that the final destination `PointAnnotation` was added to the `CarPlayNavigationViewController`.
+     
+     - parameter carPlayNavigationViewController: The `CarPlayNavigationViewController` object.
+     - parameter finalDestinationAnnotation: The point annotation that was added to the map view.
+     - parameter pointAnnotationManager: The object that manages the point annotation in the map view.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         didAdd finalDestinationAnnotation: PointAnnotation,
+                                         pointAnnotationManager: PointAnnotationManager)
 }
 
 @available(iOS 12.0, *)
@@ -32,6 +44,15 @@ public extension CarPlayNavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController, byCanceling canceled: Bool) {
+        logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         didAdd finalDestinationAnnotation: PointAnnotation,
+                                         pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
     }
 }

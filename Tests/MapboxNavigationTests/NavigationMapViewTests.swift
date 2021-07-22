@@ -410,9 +410,9 @@ class NavigationMapViewTests: TestCase {
         XCTAssertNil(navigationMapView.pointAnnotationManager, "Point annotation manager should be nil.")
         
         let styleJSONObject: [String: Any] = [
-            "version": 1,
+            "version": 8,
             "center": [
-                37.763330, -122.385563
+                -122.385563, 37.763330
             ],
             "zoom": 15,
             "sources": [],
