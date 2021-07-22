@@ -130,6 +130,7 @@
 * `NavigationViewController.indexedRoute`, `NavigationService.indexedRoute` and `Router.indexedRoute` properties are readonly now. Use dedicated `Router.updateRoute(with:routeOptions:)` method to update the route. ([#3159](https://github.com/mapbox/mapbox-navigation-ios/pull/#3159))
 * Fixed an issue where a subclass of `NavigationRouteOptions` would turn into an ordinary `RouteOptions` when rerouting the user. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
 * Renamed `RouteOptions.without(waypoint:)` to `RouteOptions.without(_:)`. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
+* Added optional `NavigationEventsManager.userInfo` property that can be sent with all navigation events. The new optional property contains application metadata, such as the application name and version, that is included in each event to help Mapbox triage and diagnose unexpected behavior. ([#3007](https://github.com/mapbox/mapbox-navigation-ios/pull/3007)).
 
 ## v1.4.1
 
