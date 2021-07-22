@@ -180,6 +180,7 @@
 		8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A446644260A7B24008BA55E /* BoundingBox.swift */; };
 		8A8C3D98260175D20071D274 /* CLLocationDirection+Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3D97260175D20071D274 /* CLLocationDirection+Camera.swift */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
+		8AAE94A126A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */; };
 		8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3965225DC66570027A035 /* NavigationCameraType.swift */; };
 		8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */; };
 		8AD866F725CA1BF10019A638 /* NavigationCameraStateTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */; };
@@ -652,6 +653,7 @@
 		8A446644260A7B24008BA55E /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
 		8A8C3D97260175D20071D274 /* CLLocationDirection+Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationDirection+Camera.swift"; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
+		8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8AC3965225DC66570027A035 /* NavigationCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraType.swift; sourceTree = "<group>"; };
 		8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCamera.swift; sourceTree = "<group>"; };
 		8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraStateTransition.swift; sourceTree = "<group>"; };
@@ -1062,6 +1064,7 @@
 				8AEB28A9265FF39E00EC7892 /* CarPlaySearchControllerDelegate.swift */,
 				AE7DE6C521A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift */,
 				16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */,
+				8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
 				8AEB28AB265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift */,
 				358E31D522562697009B3EC2 /* CarPlayCompassView.swift */,
@@ -2231,6 +2234,7 @@
 				AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */,
 				DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */,
 				8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */,
+				8AAE94A126A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift in Sources */,
 				8AEB28AA265FF39E00EC7892 /* CarPlaySearchControllerDelegate.swift in Sources */,
 				8A41F5EC25BF624900BD6FCF /* MapOrnamentPosition.swift in Sources */,
 				359D1B281FFE70D30052FA42 /* NavigationView.swift in Sources */,
