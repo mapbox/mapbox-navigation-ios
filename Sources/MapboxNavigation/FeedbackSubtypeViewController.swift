@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 
 class FeedbackSubtypeViewController: FeedbackViewController {
 
-    public var activeFeedbackType: FeedbackType?
+    var activeFeedbackType: FeedbackType?
 
     private let reportButtonContainer = UIView()
     private let reportButtonSeparator = UIView()
@@ -14,7 +14,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     /**
      Initialize a new FeedbackSubtypeViewController from a `NavigationEventsManager`.
      */
-    public init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType, feedback: FeedbackEvent) {
+    init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType, feedback: FeedbackEvent) {
         super.init(eventsManager: eventsManager)
         activeFeedbackType = feedbackType
         currentFeedback = feedback
@@ -32,18 +32,18 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     }
     
     override func createFeedback() {
-        // do nothing, feedbackUUID should be passed to the initializer
+        // do nothing, feedback should be passed to the initializer
     }
 
     @objc private func reportButtonTapped(_ sender: UIButton) {
         sendReport()
     }
 
-    required public init?(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    public override var sections: [FeedbackItem] {
+    override var sections: [FeedbackItem] {
         get {
             guard let activeFeedbackType = activeFeedbackType else { return [] }
             switch activeFeedbackType {
@@ -92,7 +92,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         return UIScreen.main.bounds.height - UIApplication.shared.statusBarFrame.size.height
     }
 
-    public override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+    override func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         var availableWidth = collectionView.bounds.width
         
         if #available(iOS 11.0, *), let keyWindow = UIApplication.shared.keyWindow {
@@ -102,7 +102,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         return CGSize(width: availableWidth, height: 80)
     }
 
-    public override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackSubtypeCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackSubtypeCollectionViewCell
         let item = sections[indexPath.row]
 
@@ -121,7 +121,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         return cell
     }
 
-    public override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
         if #available(iOS 13.0, *) {
@@ -137,7 +137,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         updateButtonTitle()
     }
 
-    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
         if #available(iOS 13.0, *) {
             cell.circleColor = .systemBackground
@@ -186,7 +186,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         }
     }
 
-    internal override func setupViews() {
+    override func setupViews() {
         super.setupViews()
         reportButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         reportButton.translatesAutoresizingMaskIntoConstraints = false
@@ -201,7 +201,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         view.addSubview(reportButtonContainer)
     }
 
-    internal override func setupConstraints() {
+    override func setupConstraints() {
         let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
         let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: FeedbackViewController.titleHeaderHeight)
         let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
