@@ -55,7 +55,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var percentTimeInForeground: Int = 0
     var percentTimeInPortrait: Int = 0
     
-    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool, userInfo: [String: String?]? = nil) {
+    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool, appMetadata: [String: String?]? = nil) {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
@@ -66,7 +66,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         originalRequestIdentifier = session.originalRoute?.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
-        appMetadata = userInfo
+        self.appMetadata = appMetadata
         
         if let location = dataSource.router.rawLocation,
             let coordinates = dataSource.routeProgress.route.shape?.coordinates,

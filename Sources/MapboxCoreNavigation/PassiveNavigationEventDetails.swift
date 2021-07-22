@@ -20,12 +20,12 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     var totalTimeInForeground: TimeInterval = 0
     var totalTimeInBackground: TimeInterval = 0
     
-    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, userInfo: [String: String?]? = nil) {
+    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, appMetadata: [String: String?]? = nil) {
         coordinate = dataSource.rawLocation?.coordinate
         sessionIdentifier = sessionState.identifier.uuidString
         startTimestamp = sessionState.departureTimestamp
         updateTimeState(session: sessionState)
-        appMetadata = userInfo
+        self.appMetadata = appMetadata
     }
     
     private enum CodingKeys: String, CodingKey {

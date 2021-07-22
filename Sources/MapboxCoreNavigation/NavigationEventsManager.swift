@@ -59,6 +59,7 @@ open class NavigationEventsManager {
     /**
      Optional application metadata that that can help Mapbox more reliably diagnose problems that occur in the SDK.
      For example, you can provide your application’s name and version, a unique identifier for the end user, and a session identifier.
+     To include this information, use the following keys: "name", "version", "userId", and "sessionId".
     */
     public var userInfo: [String: String?]? = nil
     
@@ -132,7 +133,7 @@ open class NavigationEventsManager {
         guard let dataSource = activeNavigationDataSource else { return nil }
         
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState.arrivalTimestamp
         
@@ -152,7 +153,7 @@ open class NavigationEventsManager {
             return nil
         }
 
-        var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute?.responseEndDate, userInfo: userInfo)
+        var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute?.responseEndDate, appMetadata: userInfo)
         event.counters.append(PerformanceEventDetails.Counter(name: "elapsed_time",
                                                               value: responseEndDate.timeIntervalSince(fetchStartDate)))
 
@@ -165,7 +166,7 @@ open class NavigationEventsManager {
     func navigationDepartEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
         event.event = MMEEventTypeNavigationDepart
         return event
     }
@@ -173,7 +174,7 @@ open class NavigationEventsManager {
     func navigationArriveEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
         event.event = MMEEventTypeNavigationArrive
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
 
@@ -193,9 +194,9 @@ open class NavigationEventsManager {
     
         if let activeNavigationDataSource = activeNavigationDataSource {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
-                                                 session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
+                                                 session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
-            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState, userInfo: userInfo)
+            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState, appMetadata: userInfo)
         } else {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
             return nil
@@ -215,7 +216,7 @@ open class NavigationEventsManager {
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
         event.event = eventType
         event.created = timestamp
         
@@ -350,7 +351,6 @@ open class NavigationEventsManager {
      
      @param type A `FeedbackType` used to specify the type of feedback
      @param description A custom string used to describe the problem in detail.
-     @param userInfo An optional dictionary used to include application metadata.
      @return Returns a UUID used to identify the feedback event.
      
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
