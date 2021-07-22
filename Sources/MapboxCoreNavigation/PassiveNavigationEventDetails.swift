@@ -10,6 +10,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     
     var event: String?
     var userIdentifier: String?
+    var appMetadata: [String: String?]? = nil
     var feedbackType: FeedbackType?
     var description: String?
     var screenshot: String?
@@ -19,17 +20,19 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     var totalTimeInForeground: TimeInterval = 0
     var totalTimeInBackground: TimeInterval = 0
     
-    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState) {
+    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, appMetadata: [String: String?]? = nil) {
         coordinate = dataSource.rawLocation?.coordinate
         sessionIdentifier = sessionState.identifier.uuidString
         startTimestamp = sessionState.departureTimestamp
         updateTimeState(session: sessionState)
+        self.appMetadata = appMetadata
     }
     
     private enum CodingKeys: String, CodingKey {
         case latitude = "lat"
         case longitude = "lng"
         case userIdentifier = "userId"
+        case appMetadata
         case feedbackType
         case description
         case screenshot
@@ -53,6 +56,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(coordinate?.latitude, forKey: .latitude)
         try container.encodeIfPresent(coordinate?.longitude, forKey: .longitude)
         try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
+        try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
