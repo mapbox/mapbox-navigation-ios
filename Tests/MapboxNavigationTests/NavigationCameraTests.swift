@@ -37,6 +37,8 @@ class CameraStateTransitionMock: CameraStateTransition {
     
     weak var mapView: MapView?
     
+    let transitionDuration = 0.1
+    
     required init(_ mapView: MapView) {
         self.mapView = mapView
     }
@@ -44,7 +46,7 @@ class CameraStateTransitionMock: CameraStateTransition {
     func transitionToFollowing(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
         // Delay is used to be able to verify whether `NavigationCameraState` changes from
         // `NavigationCameraState.transitionToFollowing` to `NavigationCameraState.following`.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + transitionDuration) {
             completion()
         }
     }
@@ -52,7 +54,7 @@ class CameraStateTransitionMock: CameraStateTransition {
     func transitionToOverview(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
         // Delay is used to be able to verify whether `NavigationCameraState` changes from
         // `NavigationCameraState.transitionToOverview` to `NavigationCameraState.overview`.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + transitionDuration) {
             completion()
         }
     }
@@ -331,28 +333,18 @@ class NavigationCameraTests: XCTestCase {
                                                   pitch: 0.0)
         
         let followingMobileCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingMobileCamera]
-        verifyCameraOptions(followingMobileCameraOptions, expectedCameraOptions: expectedCameraOptions)
+        verifyCameraOptionsAreEqual(followingMobileCameraOptions, expectedCameraOptions: expectedCameraOptions)
         
         let followingCarPlayCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingCarPlayCamera]
-        verifyCameraOptions(followingCarPlayCameraOptions, expectedCameraOptions: expectedCameraOptions)
+        verifyCameraOptionsAreEqual(followingCarPlayCameraOptions, expectedCameraOptions: expectedCameraOptions)
         
         // In `NavigationCameraState.overview` state during free-drive navigation all properties of
         // `CameraOptions` should be `nil`.
         let overviewMobileCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.overviewMobileCamera]
-        XCTAssertNil(overviewMobileCameraOptions?.center, "Center should be nil.")
-        XCTAssertNil(overviewMobileCameraOptions?.anchor, "Anchor should be nil.")
-        XCTAssertNil(overviewMobileCameraOptions?.padding, "Padding should be nil.")
-        XCTAssertNil(overviewMobileCameraOptions?.bearing, "Bearing should be nil.")
-        XCTAssertNil(overviewMobileCameraOptions?.zoom, "Zoom should be nil.")
-        XCTAssertNil(overviewMobileCameraOptions?.pitch, "Pitch should be nil.")
+        verifyCameraOptionsAreNil(overviewMobileCameraOptions)
         
         let overviewCarPlayCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.overviewCarPlayCamera]
-        XCTAssertNil(overviewCarPlayCameraOptions?.center, "Center should be nil.")
-        XCTAssertNil(overviewCarPlayCameraOptions?.anchor, "Anchor should be nil.")
-        XCTAssertNil(overviewCarPlayCameraOptions?.padding, "Padding should be nil.")
-        XCTAssertNil(overviewCarPlayCameraOptions?.bearing, "Bearing should be nil.")
-        XCTAssertNil(overviewCarPlayCameraOptions?.zoom, "Zoom should be nil.")
-        XCTAssertNil(overviewCarPlayCameraOptions?.pitch, "Pitch should be nil.")
+        verifyCameraOptionsAreNil(overviewCarPlayCameraOptions)
     }
     
     func testViewportDataSourceDelegateForActiveGuidance() {
@@ -444,10 +436,10 @@ class NavigationCameraTests: XCTestCase {
                                                   pitch: 0.0)
         
         let followingMobileCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingMobileCamera]
-        verifyCameraOptions(followingMobileCameraOptions, expectedCameraOptions: expectedCameraOptions)
+        verifyCameraOptionsAreEqual(followingMobileCameraOptions, expectedCameraOptions: expectedCameraOptions)
         
         let followingCarPlayCameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingCarPlayCamera]
-        verifyCameraOptions(followingCarPlayCameraOptions, expectedCameraOptions: expectedCameraOptions)
+        verifyCameraOptionsAreEqual(followingCarPlayCameraOptions, expectedCameraOptions: expectedCameraOptions)
     }
     
     func testFollowingCameraOptions() {
@@ -609,12 +601,21 @@ class NavigationCameraTests: XCTestCase {
                                         userInfo: userInfo)
     }
     
-    func verifyCameraOptions(_ givenCameraOptions: CameraOptions?, expectedCameraOptions: CameraOptions?) {
+    func verifyCameraOptionsAreEqual(_ givenCameraOptions: CameraOptions?, expectedCameraOptions: CameraOptions?) {
         XCTAssertEqual(givenCameraOptions?.center, expectedCameraOptions?.center, "Center coordinates should be equal.")
         XCTAssertEqual(givenCameraOptions?.anchor, expectedCameraOptions?.anchor, "Anchors should be equal.")
         XCTAssertEqual(givenCameraOptions?.padding, expectedCameraOptions?.padding, "Paddings should be equal.")
         XCTAssertEqual(givenCameraOptions?.bearing, expectedCameraOptions?.bearing, "Bearings should be equal.")
         XCTAssertEqual(givenCameraOptions?.zoom, expectedCameraOptions?.zoom, "Zooms should be equal.")
         XCTAssertEqual(givenCameraOptions?.pitch, expectedCameraOptions?.pitch, "Pitches should be equal.")
+    }
+    
+    func verifyCameraOptionsAreNil(_ cameraOptions: CameraOptions?) {
+        XCTAssertNil(cameraOptions?.center, "Center should be nil.")
+        XCTAssertNil(cameraOptions?.anchor, "Anchor should be nil.")
+        XCTAssertNil(cameraOptions?.padding, "Padding should be nil.")
+        XCTAssertNil(cameraOptions?.bearing, "Bearing should be nil.")
+        XCTAssertNil(cameraOptions?.zoom, "Zoom should be nil.")
+        XCTAssertNil(cameraOptions?.pitch, "Pitch should be nil.")
     }
 }
