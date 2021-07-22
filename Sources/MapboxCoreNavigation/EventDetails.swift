@@ -18,6 +18,7 @@ struct PerformanceEventDetails: EventDetails {
     var event: String?
     var counters: [Counter] = []
     var attributes: [Attribute] = []
+    var appMetadata: [String: String?]?
     
     private enum CodingKeys: String, CodingKey {
         case event
@@ -25,6 +26,7 @@ struct PerformanceEventDetails: EventDetails {
         case sessionIdentifier = "sessionId"
         case counters
         case attributes
+        case appMetadata
     }
     
     struct Counter: Encodable {
@@ -37,10 +39,11 @@ struct PerformanceEventDetails: EventDetails {
         let value: String
     }
     
-    init(event: String, session: SessionState, createdOn created: Date?) {
+    init(event: String, session: SessionState, createdOn created: Date?, appMetadata: [String:String?]? = nil) {
         self.event = event
         sessionIdentifier = session.identifier.uuidString
         self.created = created ?? Date()
+        self.appMetadata = appMetadata
     }
     
     func encode(to encoder: Encoder) throws {
@@ -50,6 +53,7 @@ struct PerformanceEventDetails: EventDetails {
         try container.encode(sessionIdentifier, forKey: .sessionIdentifier)
         try container.encode(counters, forKey: .counters)
         try container.encode(attributes, forKey: .attributes)
+        try container.encode(appMetadata, forKey: .appMetadata)
     }
 }
 
@@ -68,6 +72,7 @@ protocol NavigationEventDetails: EventDetails {
     var feedbackType: FeedbackType? { get set }
     var description: String? { get set }
     var userIdentifier: String? { get set }
+    var appMetadata: [String:String?]? { get set }
     var driverMode: String { get }
     var sessionIdentifier: String { get }
     var startTimestamp: Date? { get }

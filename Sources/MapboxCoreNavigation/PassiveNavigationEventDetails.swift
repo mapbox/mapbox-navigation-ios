@@ -10,6 +10,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     
     var event: String?
     var userIdentifier: String?
+    var appMetadata: [String: String?]? = nil
     var feedbackType: FeedbackType?
     var description: String?
     var screenshot: String?
@@ -19,17 +20,19 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
     var totalTimeInForeground: TimeInterval = 0
     var totalTimeInBackground: TimeInterval = 0
     
-    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState) {
+    init(dataSource: PassiveNavigationEventsManagerDataSource, sessionState: SessionState, appMetadata: [String: String?]? = nil) {
         coordinate = dataSource.rawLocation?.coordinate
         sessionIdentifier = sessionState.identifier.uuidString
         startTimestamp = sessionState.departureTimestamp
         updateTimeState(session: sessionState)
+        self.appMetadata = appMetadata
     }
     
     private enum CodingKeys: String, CodingKey {
         case latitude = "lat"
         case longitude = "lng"
         case userIdentifier = "userId"
+        case appMetadata
         case event
         case feedbackType
         case description
@@ -45,8 +48,8 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         case screenBrightness
         case volumeLevel
         case driverMode
-        case tripSessionIdentifier = "tripSessionId"
-        case appSessionIdentifier = "navigatorSessionId"
+        case sessionIdentifier
+        case navigatorSessionIdentifier
     }
     
     func encode(to encoder: Encoder) throws {
@@ -54,6 +57,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(coordinate?.latitude, forKey: .latitude)
         try container.encodeIfPresent(coordinate?.longitude, forKey: .longitude)
         try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
+        try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
         try container.encodeIfPresent(event, forKey: .event)
         try container.encodeIfPresent(description, forKey: .description)
@@ -69,7 +73,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encode(screenBrightness, forKey: .screenBrightness)
         try container.encode(volumeLevel, forKey: .volumeLevel)
         try container.encode(driverMode, forKey: .driverMode)
-        try container.encode(sessionIdentifier, forKey: .tripSessionIdentifier)
-        try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .appSessionIdentifier)
+        try container.encode(sessionIdentifier, forKey: .sessionIdentifier)
+        try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .navigatorSessionIdentifier)
     }
 }

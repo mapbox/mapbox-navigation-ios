@@ -2,6 +2,7 @@ import CarPlay
 import Turf
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMaps
 
 /**
  `CarPlayManagerDelegate` is the main integration point for Mapbox CarPlay support.
@@ -147,6 +148,19 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter navigationViewController: The CarPlayNavigationViewController that was presented on the CarPlay display.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) -> ()
+    
+    /**
+     Tells the receiver that the `PointAnnotation` representing the final destination was added to either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter finalDestinationAnnotation: The point annotation that was added to the map view.
+     - parameter parentViewController: The view controller that contains the map view, which is an instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     - parameter pointAnnotationManager: The object that manages the point annotation in the map view.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didAdd finalDestinationAnnotation: PointAnnotation,
+                        to parentViewController: UIViewController,
+                        pointAnnotationManager: PointAnnotationManager)
 }
 
 @available(iOS 12.0, *)
@@ -223,6 +237,14 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
+    func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return false
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return false
@@ -232,6 +254,16 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        didAdd finalDestinationAnnotation: PointAnnotation,
+                        to parentViewController: UIViewController,
+                        pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
 }

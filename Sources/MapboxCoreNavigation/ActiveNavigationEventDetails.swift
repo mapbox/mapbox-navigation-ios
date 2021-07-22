@@ -42,6 +42,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var rating: Int?
     var comment: String?
     var userIdentifier: String?
+    var appMetadata: [String: String?]?
     var feedbackType: FeedbackType?
     var description: String?
     var screenshot: String?
@@ -54,7 +55,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var percentTimeInForeground: Int = 0
     var percentTimeInPortrait: Int = 0
     
-    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool) {
+    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool, appMetadata: [String: String?]? = nil) {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
@@ -65,6 +66,8 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         originalRequestIdentifier = session.originalRoute?.routeIdentifier
         requestIdentifier = dataSource.routeProgress.route.routeIdentifier
                 
+        self.appMetadata = appMetadata
+        
         if let location = dataSource.router.rawLocation,
             let coordinates = dataSource.routeProgress.route.shape?.coordinates,
             let lastCoord = coordinates.last {
@@ -158,6 +161,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         case rating
         case comment
         case userIdentifier = "userId"
+        case appMetadata
         case feedbackType
         case description
         case screenshot
@@ -169,6 +173,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         case totalTimeInForeground
         case totalTimeInBackground
         case driverMode
+        case navigatorSessionIdentifier
     }
     
     func encode(to encoder: Encoder) throws {
@@ -217,6 +222,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(arrivalTimestamp?.ISO8601, forKey: .arrivalTimestamp)
         try container.encodeIfPresent(comment, forKey: .comment)
         try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
+        try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
@@ -227,5 +233,6 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         try container.encode(totalTimeInBackground, forKey: .totalTimeInBackground)
         try container.encodeIfPresent(rating, forKey: .rating)
         try container.encode(driverMode, forKey: .driverMode)
+        try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .navigatorSessionIdentifier)
     }
 }

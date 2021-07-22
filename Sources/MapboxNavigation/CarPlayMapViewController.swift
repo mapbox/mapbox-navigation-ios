@@ -12,6 +12,11 @@ import CarPlay
 public class CarPlayMapViewController: UIViewController {
     
     /**
+     The view controller’s delegate.
+     */
+    public weak var delegate: CarPlayMapViewControllerDelegate?
+    
+    /**
      Controls the styling of CarPlayMapViewController and its components.
 
      The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
@@ -166,6 +171,7 @@ public class CarPlayMapViewController: UIViewController {
     
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
+        navigationMapView.delegate = self
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
         }
@@ -259,5 +265,18 @@ extension CarPlayMapViewController: StyleManagerDelegate {
         mapboxMap.loadStyleURI(styleURI)
     }
 }
-#endif
 
+// MARK: - NavigationMapViewDelegate methods
+
+@available(iOS 12.0, *)
+extension CarPlayMapViewController: NavigationMapViewDelegate {
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  didAdd finalDestinationAnnotation: PointAnnotation,
+                                  pointAnnotationManager: PointAnnotationManager) {
+        delegate?.carPlayMapViewController(self,
+                                           didAdd: finalDestinationAnnotation,
+                                           pointAnnotationManager: pointAnnotationManager)
+    }
+}
+#endif

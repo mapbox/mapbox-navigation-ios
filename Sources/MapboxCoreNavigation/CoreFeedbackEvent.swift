@@ -3,14 +3,17 @@ import MapboxDirections
 import Polyline
 
 class CoreFeedbackEvent: Hashable, Codable {
-    var identifier = UUID()
+    let identifier: UUID
     var timestamp: Date
     
     var eventDictionary: [String: Any]
     
+    var appMetadata: [String: String?]? = nil
+    
     init(timestamp: Date, eventDictionary: [String: Any]) {
         self.timestamp = timestamp
         self.eventDictionary = eventDictionary
+        identifier = UUID()
     }
     
     func hash(into hasher: inout Hasher) {
