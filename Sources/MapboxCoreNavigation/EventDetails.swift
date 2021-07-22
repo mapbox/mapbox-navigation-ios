@@ -43,7 +43,7 @@ struct PerformanceEventDetails: EventDetails {
         self.event = event
         sessionIdentifier = session.identifier.uuidString
         self.created = created ?? Date()
-        self.appMetadata = userInfo
+        self.appMetadata = appMetadata
     }
     
     func encode(to encoder: Encoder) throws {
