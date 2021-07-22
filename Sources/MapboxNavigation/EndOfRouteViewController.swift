@@ -144,9 +144,9 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func setupHeight(for containerHeight: ContainerHeight) {
-        let height = height(for: containerHeight)
-        preferredContentSize.height = height
-        heightConstraint.constant = height
+        let contentHeight = height(for: containerHeight)
+        preferredContentSize.height = contentHeight
+        heightConstraint.constant = contentHeight
     }
     
     private func updateInterface() {
