@@ -148,6 +148,10 @@ public class CarPlayMapViewController: UIViewController {
         aCoder.encode(styles, forKey: "styles")
     }
     
+    deinit {
+        unsubscribeFromFreeDriveNotifications()
+    }
+    
     // MARK: - UIViewController lifecycle methods
     
     override public func loadView() {
