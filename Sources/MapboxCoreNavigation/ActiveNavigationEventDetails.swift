@@ -169,6 +169,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         case totalTimeInForeground
         case totalTimeInBackground
         case driverMode
+        case navigatorSessionIdentifier
     }
     
     func encode(to encoder: Encoder) throws {
@@ -227,5 +228,6 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         try container.encode(totalTimeInBackground, forKey: .totalTimeInBackground)
         try container.encodeIfPresent(rating, forKey: .rating)
         try container.encode(driverMode, forKey: .driverMode)
+        try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .navigatorSessionIdentifier)
     }
 }
