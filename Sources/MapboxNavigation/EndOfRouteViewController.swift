@@ -58,6 +58,12 @@ class EndOfRouteViewController: UIViewController {
         }
     }
 
+    private lazy var heightConstraint: NSLayoutConstraint = {
+        let constraint = view.heightAnchor.constraint(equalToConstant: ContainerHeight.normal.rawValue)
+        constraint.isActive = true
+        return constraint
+    }()
+    
     // MARK: - Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,7 +77,7 @@ class EndOfRouteViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        preferredContentSize.height = height(for: .normal)
+        setupHeight(for: .normal)
         updateInterface()
     }
 
@@ -100,7 +106,7 @@ class EndOfRouteViewController: UIViewController {
         showCommentView.isActive = true
         hideCommentView.isActive = false
         ratingCommentsSpacing.constant = ConstraintSpacing.closer.rawValue
-        preferredContentSize.height = height(for: .commentShowing)
+        setupHeight(for: .commentShowing)
 
         let animate = {
             self.view.layoutIfNeeded()
@@ -118,7 +124,7 @@ class EndOfRouteViewController: UIViewController {
         showCommentView.isActive = false
         hideCommentView.isActive = true
         ratingCommentsSpacing.constant = ConstraintSpacing.further.rawValue
-        preferredContentSize.height = height(for: .normal)
+        setupHeight(for: .normal)
         
         let animate = {
             self.view.layoutIfNeeded()
@@ -135,6 +141,12 @@ class EndOfRouteViewController: UIViewController {
         let window = UIApplication.shared.keyWindow
         let bottomMargin = window!.safeArea.bottom
         return height.rawValue + bottomMargin
+    }
+    
+    private func setupHeight(for containerHeight: ContainerHeight) {
+        let height = height(for: containerHeight)
+        preferredContentSize.height = height
+        heightConstraint.constant = height
     }
     
     private func updateInterface() {

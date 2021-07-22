@@ -40,7 +40,6 @@ import MapboxCoreNavigation
 open class NavigationView: UIView {
     
     private enum Constants {
-        static let endOfRouteHeight: CGFloat = 260.0
         static let buttonSpacing: CGFloat = 8.0
     }
     
@@ -50,12 +49,6 @@ open class NavigationView: UIView {
         static let volumeOff = UIImage(named: "volume_off", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
         static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     }
-    
-    lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
-    
-    lazy var endOfRouteHideConstraint: NSLayoutConstraint? = self.endOfRouteView?.topAnchor.constraint(equalTo: self.bottomAnchor)
-    
-    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
     var tileStoreLocation: TileStoreConfiguration.Location? = .default
     private var _navigationMapView: NavigationMapView? = nil
@@ -114,18 +107,6 @@ open class NavigationView: UIView {
     weak var delegate: NavigationViewDelegate? {
         didSet {
             updateDelegates()
-        }
-    }
-    
-    var endOfRouteView: UIView? {
-        didSet {
-            if let active: [NSLayoutConstraint] = constraints(affecting: oldValue) {
-                NSLayoutConstraint.deactivate(active)
-            }
-            
-            oldValue?.removeFromSuperview()
-            if let eor = endOfRouteView { addSubview(eor) }
-            endOfRouteView?.translatesAutoresizingMaskIntoConstraints = false
         }
     }
     
@@ -242,15 +223,6 @@ extension NavigationView {
             floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
             speedLimitView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
         }
-    }
-
-    func constrainEndOfRoute() {
-        self.endOfRouteHideConstraint?.isActive = true
-        
-        endOfRouteView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        
-        self.endOfRouteHeightConstraint?.isActive = true
     }
     
     func reinstallConstraints() {

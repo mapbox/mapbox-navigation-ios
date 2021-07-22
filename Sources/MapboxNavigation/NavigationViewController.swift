@@ -141,14 +141,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      
      Defaults to `true.`
      */
-    public var showsEndOfRouteFeedback: Bool {
-        get {
-            arrivalController?.showsEndOfRoute ?? false
-        }
-        set {
-            arrivalController?.showsEndOfRoute = newValue
-        }
-    }
+    public var showsEndOfRouteFeedback: Bool = true
     
     /**
      Shows the current speed limit on the map view.
@@ -303,11 +296,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      The navigation service that coordinates the view controller’s nonvisual components, tracking the user’s location as they proceed along the route.
      */
-    private(set) public var navigationService: NavigationService! {
-        didSet {
-            arrivalController?.destination = route?.legs.last?.destination
-        }
-    }
+    private(set) public var navigationService: NavigationService!
     
     private var traversingTunnel = false
     private var approachingDestinationThreshold: CLLocationDistance = 250.0
@@ -315,7 +304,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     private var currentLeg: RouteLeg?
     private var foundAllBuildings = false
     
-    var arrivalController: ArrivalController?
     var cameraController: CameraController?
     var ornamentsController: NavigationMapView.OrnamentsController?
     var routeOverlayController: NavigationMapView.RouteOverlayController?
@@ -451,7 +439,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     func setupControllers(_ navigationOptions: NavigationOptions?) {
-        arrivalController = ArrivalController(self)
         routeOverlayController = NavigationMapView.RouteOverlayController(self)
         cameraController = CameraController(self)
         ornamentsController = NavigationMapView.OrnamentsController(self, eventsManager: navigationService.eventsManager)
@@ -459,8 +446,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         viewObservers = [
             routeOverlayController,
             cameraController,
-            ornamentsController,
-            arrivalController
+            ornamentsController
         ]
         
         subviewInits.append { [weak self] in
@@ -483,7 +469,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         subviewInits.removeAll()
         
-        arrivalController?.destination = route?.legs.last?.destination
         ornamentsController?.reportButton.isHidden = !showsReportFeedback
     }
     
@@ -603,10 +588,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         viewObservers.forEach {
             $0?.navigationViewDidLayoutSubviews()
         }
-    }
-    
-    open override func preferredContentSizeDidChange(forChildContentContainer container: UIContentContainer) {
-        arrivalController?.updatePreferredContentSize(container.preferredContentSize)
     }
     
     func notifyUserAboutLowVolumeIfNeeded() {
@@ -821,12 +802,33 @@ extension NavigationViewController: NavigationServiceDelegate {
         let componentsWantAdvance = navigationComponents.allSatisfy { $0.navigationService(service, didArriveAt: waypoint) }
         let advancesToNextLeg = componentsWantAdvance && (delegate?.navigationViewController(self, didArriveAt: waypoint) ?? defaultBehavior)
         
-        arrivalController?.showEndOfRouteIfNeeded(self,
-                                                  advancesToNextLeg: advancesToNextLeg,
-                                                  onDismiss: { [weak self] in
-                                                    self?.navigationService.endNavigation(feedback: $0)
-                                                    self?.handleCancelAction()
-                                                  })
+        if advancesToNextLeg &&
+            router.routeProgress.isFinalLeg &&
+            showsEndOfRouteFeedback {
+            let destination = route?.legs.last?.destination
+            let controller = showEndOfRouteFeedbackCollection(destination: destination,
+                                                              onDismiss: { [weak self] in
+                                                                self?.navigationService.endNavigation(feedback: $0)
+                                                                self?.handleCancelAction()
+                                                              })
+            
+            navigationMapView?.navigationCamera.stop()
+            
+            let height: CGFloat = controller.view.bounds.height
+            navigationView.floatingStackView.alpha = 0.0
+            var cameraOptions = CameraOptions(cameraState: navigationMapView!.mapView.cameraState)
+            // Since `padding` is not an animatable property `zoom` is increased to cover up abrupt camera change.
+            if let zoom = cameraOptions.zoom {
+                cameraOptions.zoom = zoom + 1.0
+            }
+            cameraOptions.padding = UIEdgeInsets(top: navigationView.topBannerContainerView.bounds.height,
+                                                 left: 20,
+                                                 bottom: height + 20,
+                                                 right: 20)
+            cameraOptions.center = destination?.coordinate
+            cameraOptions.pitch = 0
+            navigationMapView?.mapView.camera.ease(to: cameraOptions, duration: 1.0)
+        }
         return advancesToNextLeg
     }
 
@@ -1136,3 +1138,5 @@ extension NavigationViewController: NavigationMapViewDelegate {
         delegate?.navigationViewController(self, didAdd: finalDestinationAnnotation, pointAnnotationManager: pointAnnotationManager)
     }
 }
+
+extension NavigationViewController: EndOfRouteFeedbackCollecting {}
