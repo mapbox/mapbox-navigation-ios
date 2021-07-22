@@ -43,13 +43,10 @@ open class RouteController: NSObject {
             resetObservation(for: _routeProgress)
         }
         didSet {
-            movementsAwayFromRoute = 0
             updateNavigator(with: _routeProgress)
             updateObservation(for: _routeProgress)
         }
     }
-    
-    var movementsAwayFromRoute = 0
     
     var routeTask: URLSessionDataTask?
     
@@ -524,8 +521,32 @@ extension RouteController: Router {
         
         // If we still wait for the first status from NavNative, there is no need to reroute
         guard let status = status ?? navigator.getStatus() else { return true }
-        let offRoute = status.routeState == .offRoute || status.routeState == .invalid
-        return !offRoute
+
+        /// NavNative doesn't support reroutes after arrival.
+        /// The code below is a port of logic from LegacyRouteController
+        /// This should be removed once NavNative adds support for reroutes after arrival. 
+        if status.routeState == .complete {
+            // If the user has arrived and reroutes after arrival should be prevented, do not continue monitor
+            // reroutes, step progress, etc
+            if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
+                (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: destination) ??
+                    RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
+                return true
+            }
+
+            func userIsWithinRadiusOfDestination(location: CLLocation) -> Bool {
+                let lastStep = routeProgress.currentLegProgress.currentStep
+                let isCloseToFinalStep = location.isWithin(RouteControllerMaximumDistanceBeforeRecalculating,
+                                                           of: lastStep)
+                return isCloseToFinalStep
+            }
+
+            return userIsWithinRadiusOfDestination(location: location)
+        }
+        else {
+            let offRoute = status.routeState == .offRoute || status.routeState == .invalid
+            return !offRoute
+        }
     }
     
     public func reroute(from location: CLLocation, along progress: RouteProgress) {
