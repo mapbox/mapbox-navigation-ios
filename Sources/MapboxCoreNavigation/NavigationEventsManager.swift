@@ -183,13 +183,13 @@ open class NavigationEventsManager {
     
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
-        eventDictionary["feedbackId"] = event.id.uuidString
+        eventDictionary["feedbackId"] = event.identifier.uuidString
         eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
         eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
         return eventDictionary
     }
     
-    func navigationFeedbackEventDetails(type: FeedbackType, description: String?) -> NavigationEventDetails? {
+    func navigationFeedbackEvent() -> NavigationEventDetails? {
         var event: NavigationEventDetails
     
         if let activeNavigationDataSource = activeNavigationDataSource {
@@ -202,9 +202,7 @@ open class NavigationEventsManager {
             return nil
         }
         
-        event.description = description
         event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
-        event.feedbackType = type
         event.event = MMEEventTypeNavigationFeedback
         event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
         
@@ -285,15 +283,6 @@ open class NavigationEventsManager {
         }
         mobileEventsManager.flush()
     }
-    
-    func enqueueFeedbackEvent(type: FeedbackType, description: String?) -> UUID? {
-        guard let eventDetails = navigationFeedbackEventDetails(type: type, description: description) else {
-            return nil
-        }
-        let event = FeedbackEvent(eventDetails: eventDetails)
-        outstandingFeedbackEvents.append(event)
-        return event.id
-    }
 
     func enqueueRerouteEvent() {
         guard let eventDictionary = (try? navigationRerouteEvent()?.asDictionary()) as [String: Any]?? else { return }
@@ -345,40 +334,35 @@ open class NavigationEventsManager {
     }
     
     /**
-     Send feedback about the current road segment/maneuver to the Mapbox data team.
+     Create feedback about the current road segment/maneuver to be sent to the Mapbox data team.
      
      You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
      
-     @param type A `FeedbackType` used to specify the type of feedback
-     @param description A custom string used to describe the problem in detail.
-     @return Returns a UUID used to identify the feedback event.
+     - returns: Returns a feedback event.
      
      If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
+     Alternatively, you can use `FeedbackViewContoller` which handles feedback lifecycle internally.
      
-     You can then call `updateFeedback(uuid:type:source:description:)` with the returned feedback UUID to attach any additional metadata to the feedback.
+     - Postcondition:
+     Call `sendFeedback(_:type:source:description:)` with the returned feedback to attach additional metadata to the feedback and send it.
      */
-    public func recordFeedback(type: FeedbackType = .general, description: String? = nil) -> UUID? {
-        return enqueueFeedbackEvent(type: type, description: description)
+    public func createFeedback() -> FeedbackEvent? {
+        guard let eventDetails = navigationFeedbackEvent() else { return nil }
+        return FeedbackEvent(eventDetails: eventDetails)
     }
     
     /**
-     Update the feedback event with a specific feedback identifier. If you implement a custom feedback UI that lets a user elaborate on an issue, you can use this to update the metadata.
+     Send feedback to the Mapbox data team.
      
-     Note that feedback is sent 20 seconds after being recorded, so you should promptly update the feedback metadata after the user discards any feedback UI.
+     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
+     
+     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
+     - parameter type: A `FeedbackType` used to specify the type of feedback.
+     - parameter description: A custom string used to describe the problem in detail.
      */
-    public func updateFeedback(uuid: UUID, type: FeedbackType, source: FeedbackSource, description: String?) {
-        if let lastFeedback = outstandingFeedbackEvents.first(where: { $0.id == uuid}) as? FeedbackEvent {
-            lastFeedback.update(type: type, source: source, description: description)
-        }
-    }
-    
-    /**
-     Discard a recorded feedback event, for example if you have a custom feedback UI and the user canceled feedback.
-     */
-    public func cancelFeedback(uuid: UUID) {
-        if let index = outstandingFeedbackEvents.firstIndex(where: {$0.id == uuid}) {
-            outstandingFeedbackEvents.remove(at: index)
-        }
+    public func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
+        feedback.update(type: type, source: .user, description: description)
+        sendFeedbackEvents([feedback.coreEvent])
     }
     
     //MARK: - Session State Management

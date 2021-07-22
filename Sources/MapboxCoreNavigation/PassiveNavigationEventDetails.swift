@@ -33,6 +33,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         case longitude = "lng"
         case userIdentifier = "userId"
         case appMetadata
+        case event
         case feedbackType
         case description
         case screenshot
@@ -47,8 +48,8 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         case screenBrightness
         case volumeLevel
         case driverMode
-        case tripSessionIdentifier = "tripSessionId"
-        case appSessionIdentifier = "navigatorSessionId"
+        case sessionIdentifier
+        case navigatorSessionIdentifier
     }
     
     func encode(to encoder: Encoder) throws {
@@ -58,6 +59,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
         try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
+        try container.encodeIfPresent(event, forKey: .event)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
         try container.encode(audioType, forKey: .audioType)
@@ -71,7 +73,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encode(screenBrightness, forKey: .screenBrightness)
         try container.encode(volumeLevel, forKey: .volumeLevel)
         try container.encode(driverMode, forKey: .driverMode)
-        try container.encode(sessionIdentifier, forKey: .tripSessionIdentifier)
-        try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .appSessionIdentifier)
+        try container.encode(sessionIdentifier, forKey: .sessionIdentifier)
+        try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .navigatorSessionIdentifier)
     }
 }
