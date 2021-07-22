@@ -18,9 +18,9 @@ class MapViewTests: XCTestCase {
         let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
         
         let styleJSONObject: [String: Any] = [
-            "version": 1,
+            "version": 8,
             "center": [
-                37.763330, -122.385563
+                -122.385563, 37.763330
             ],
             "zoom": 15,
             "sources": [
@@ -85,9 +85,9 @@ class MapViewTests: XCTestCase {
         let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
         
         let styleJSONObject: [String: Any] = [
-            "version": 1,
+            "version": 8,
             "center": [
-                37.763330, -122.385563
+                -122.385563, 37.763330
             ],
             "zoom": 15,
             "sources": [
