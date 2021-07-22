@@ -132,10 +132,9 @@ open class NavigationEventsManager {
         guard let dataSource = activeNavigationDataSource else { return nil }
         
         let rating = potentialRating ?? MMEEventsManager.unrated
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
         event.event = MMEEventTypeNavigationCancel
         event.arrivalTimestamp = sessionState.arrivalTimestamp
-        event.appMetadata = userInfo
         
         let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
         assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
@@ -153,10 +152,10 @@ open class NavigationEventsManager {
             return nil
         }
 
-        var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute?.responseEndDate)
+        var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute?.responseEndDate, userInfo: userInfo)
         event.counters.append(PerformanceEventDetails.Counter(name: "elapsed_time",
                                                               value: responseEndDate.timeIntervalSince(fetchStartDate)))
-        event.appMetadata = userInfo
+
         if let routeIdentifier = sessionState.currentRoute?.routeIdentifier {
             event.attributes.append(PerformanceEventDetails.Attribute(name: "route_uuid", value: routeIdentifier))
         }
@@ -166,19 +165,17 @@ open class NavigationEventsManager {
     func navigationDepartEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
         event.event = MMEEventTypeNavigationDepart
-        event.appMetadata = userInfo
         return event
     }
     
     func navigationArriveEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
         event.event = MMEEventTypeNavigationArrive
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
-        event.appMetadata = userInfo
 
         return event
     }
@@ -196,11 +193,9 @@ open class NavigationEventsManager {
     
         if let activeNavigationDataSource = activeNavigationDataSource {
             event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
-    session: sessionState, defaultInterface: usesDefaultUserInterface)
-            event.appMetadata = userInfo
+                                                 session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
-            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState)
-            event.appMetadata = userInfo
+            event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState, userInfo: userInfo)
         } else {
             assertionFailure("NavigationEventsManager is unable to create feedbacks without a datasource.")
             return nil
@@ -220,10 +215,9 @@ open class NavigationEventsManager {
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, userInfo: userInfo)
         event.event = eventType
         event.created = timestamp
-        event.appMetadata = userInfo
         
         if let lastRerouteDate = sessionState.lastRerouteDate {
             event.secondsSinceLastReroute = round(timestamp.timeIntervalSince(lastRerouteDate))

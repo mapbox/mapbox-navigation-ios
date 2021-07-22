@@ -39,10 +39,11 @@ struct PerformanceEventDetails: EventDetails {
         let value: String
     }
     
-    init(event: String, session: SessionState, createdOn created: Date?) {
+    init(event: String, session: SessionState, createdOn created: Date?, userInfo: [String:String?]? = nil) {
         self.event = event
         sessionIdentifier = session.identifier.uuidString
         self.created = created ?? Date()
+        appMetadata = userInfo
     }
     
     func encode(to encoder: Encoder) throws {

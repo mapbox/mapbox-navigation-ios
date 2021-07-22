@@ -25,7 +25,6 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         sessionIdentifier = sessionState.identifier.uuidString
         startTimestamp = sessionState.departureTimestamp
         updateTimeState(session: sessionState)
-        
         appMetadata = userInfo
     }
     
