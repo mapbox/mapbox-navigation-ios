@@ -437,12 +437,13 @@ public class CarPlayNavigationViewController: UIViewController {
         ].map { $0.generateFeedbackItem() }
         
         let feedbackButtonHandler: (_ : CPGridButton) -> Void = { [weak self] (button) in
-            self?.carInterfaceController.popTemplate(animated: true)
+            guard let self = self else { return }
+            self.carInterfaceController.popTemplate(animated: true)
             
-            guard let feedback = self?.eventsManager.createFeedback() else { return }
+            guard let feedback = self.eventsManager.createFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
             guard let feedbackItem = foundItem.first else { return }
-            self?.eventsManager.sendFeedback(feedback, type: feedbackItem.feedbackType)
+            self.eventsManager.sendFeedback(feedback, type: feedbackItem.feedbackType)
             
             let dismissTitle = NSLocalizedString("CARPLAY_DISMISS",
                                                  bundle: .mapboxNavigation,
@@ -465,7 +466,7 @@ public class CarPlayNavigationViewController: UIViewController {
                                           secondaryAction: nil,
                                           duration: 2.5)
             
-            self?.mapTemplate.present(navigationAlert: alert, animated: true)
+            self.mapTemplate.present(navigationAlert: alert, animated: true)
         }
         
         let buttons: [CPGridButton] = feedbackItems.map {

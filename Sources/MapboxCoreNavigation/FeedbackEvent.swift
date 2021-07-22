@@ -10,23 +10,25 @@ public class FeedbackEvent: Codable {
     
     init(eventDetails: NavigationEventDetails) {
         let dictionary = try? eventDetails.asDictionary()
+        if dictionary == nil { assertionFailure("NavigationEventDetails can not be serialized") }
         coreEvent = CoreFeedbackEvent(timestamp: Date(), eventDictionary: dictionary ?? [:])
     }
     
     func update(type: FeedbackType, source: FeedbackSource, description: String?) {
+        let feedbackSubTypeKey = "feedbackSubType"
         coreEvent.eventDictionary["feedbackType"] = type.description
 
         // if there is a subtype for this event then append the subtype description to our list for this type of feedback
         if let subtypeDescription = type.subtypeDescription {
             var subtypeList = [String]()
-            if let existingSubtypeList = coreEvent.eventDictionary["feedbackSubType"] as? [String] {
+            if let existingSubtypeList = coreEvent.eventDictionary[feedbackSubTypeKey] as? [String] {
                 subtypeList.append(contentsOf: existingSubtypeList)
             }
 
             if !subtypeList.contains(subtypeDescription) {
                 subtypeList.append(subtypeDescription)
             }
-            coreEvent.eventDictionary["feedbackSubType"] = subtypeList
+            coreEvent.eventDictionary[feedbackSubTypeKey] = subtypeList
         }
         coreEvent.eventDictionary["source"] = source.description
         coreEvent.eventDictionary["description"] = description
