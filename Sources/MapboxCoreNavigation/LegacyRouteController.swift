@@ -5,11 +5,6 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
-protocol RouteControllerDataSource: AnyObject {
-    var location: CLLocation? { get }
-    var locationProvider: NavigationLocationManager.Type { get }
-}
-
 @available(*, deprecated, renamed: "RouteController")
 open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {
     
