@@ -10,7 +10,7 @@ public class RouteControllerDataSourceFake: RouterDataSource {
         return manager.location
     }
 
-    public var locationProvider: NavigationLocationManager.Type {
+    public var locationManagerType: NavigationLocationManager.Type {
         return type(of: manager)
     }
 }

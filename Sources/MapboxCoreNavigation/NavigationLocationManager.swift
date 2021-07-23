@@ -26,7 +26,7 @@ open class NavigationLocationManager: CLLocationManager {
 }
 
 extension NavigationLocationManager: RouterDataSource {
-    public var locationProvider: NavigationLocationManager.Type {
+    public var locationManagerType: NavigationLocationManager.Type {
         return type(of: self)
     }
 }
