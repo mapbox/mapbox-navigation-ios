@@ -290,7 +290,6 @@ class RouteProgressTests: TestCase {
         XCTAssertEqual(routeProgress.route.speechLocale, decoded.route.speechLocale)
         XCTAssertEqual(routeProgress.route.shape, decoded.route.shape)
         XCTAssertEqual(routeProgress.route.expectedTravelTime, decoded.route.expectedTravelTime)
-        XCTAssertEqual(routeProgress.route.routeIdentifier, decoded.route.routeIdentifier)
         XCTAssertEqual(routeProgress.routeOptions, decoded.routeOptions)
         XCTAssertEqual(routeProgress.legIndex, decoded.legIndex)
         XCTAssertEqual(routeProgress.currentLegProgress.leg.source, decoded.currentLegProgress.leg.source)
