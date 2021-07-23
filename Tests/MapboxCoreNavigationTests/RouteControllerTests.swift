@@ -73,7 +73,7 @@ extension RouteControllerTests: RouterDataSource {
         return replayManager?.location
     }
     
-    var locationProvider: NavigationLocationManager.Type {
+    var locationManagerType: NavigationLocationManager.Type {
         return NavigationLocationManager.self
     }
 }

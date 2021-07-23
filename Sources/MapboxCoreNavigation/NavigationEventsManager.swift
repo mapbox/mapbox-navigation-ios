@@ -24,7 +24,7 @@ public protocol EventsManagerDataSource: AnyObject {
     var routeProgress: RouteProgress { get }
     var router: Router { get }
     var desiredAccuracy: CLLocationAccuracy { get }
-    var locationProvider: NavigationLocationManager.Type { get }
+    var locationManagerType: NavigationLocationManager.Type { get }
 }
 
 /**

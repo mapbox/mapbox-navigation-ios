@@ -9,7 +9,7 @@ public protocol RouterDataSource: AnyObject {
     /**
      The location provider for the `Router.` This class is designated as the object that will provide location updates when requested.
      */
-    var locationProvider: NavigationLocationManager.Type { get }
+    var locationManagerType: NavigationLocationManager.Type { get }
 }
 
 /**

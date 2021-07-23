@@ -60,7 +60,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         startTimestamp = session.departureTimestamp
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
         profile = dataSource.routeProgress.routeOptions.profileIdentifier.rawValue
-        simulation = dataSource.locationProvider is SimulatedLocationManager.Type
+        simulation = dataSource.locationManagerType is SimulatedLocationManager.Type
         
         sessionIdentifier = session.identifier.uuidString
         originalRequestIdentifier = session.originalRoute?.routeIdentifier
@@ -104,7 +104,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         
         rerouteCount = session.numberOfReroutes
         
-        locationEngine = String(describing: dataSource.locationProvider)
+        locationEngine = String(describing: dataSource.locationManagerType)
         locationManagerDesiredAccuracy = dataSource.desiredAccuracy
         
         stepIndex = dataSource.routeProgress.currentLegProgress.stepIndex

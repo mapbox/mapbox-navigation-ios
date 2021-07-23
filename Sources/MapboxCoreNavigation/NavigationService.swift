@@ -537,7 +537,7 @@ extension MapboxNavigationService {
 
 //MARK: RouterDataSource
 extension MapboxNavigationService {
-    public var locationProvider: NavigationLocationManager.Type {
+    public var locationManagerType: NavigationLocationManager.Type {
         return type(of: locationManager)
     }
 }
