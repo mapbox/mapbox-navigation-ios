@@ -36,7 +36,7 @@ To install the MapboxCoreNavigation framework in an application using [Swift Pac
 To install the MapboxCoreNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
 
 ```swift
-.package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.0.0-beta.18"))
+.package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.0.0-beta.19"))
 ```
 
 ### Using CocoaPods
@@ -53,7 +53,7 @@ To install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.18'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.0.0-beta.19'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -77,7 +77,7 @@ To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Cartha
 
 1. Create a [Cartfile](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#github-repositories) with the following dependency:
    ```cartfile
-   github "mapbox/mapbox-navigation-ios" "v2.0.0-beta.18"
+   github "mapbox/mapbox-navigation-ios" "v2.0.0-beta.19"
    ```
 
 1. Run `carthage bootstrap --platform iOS --use-xcframeworks --cache-builds --use-netrc`.
