@@ -1,6 +1,7 @@
 import Foundation
 import MapboxMaps
 import MapboxCoreNavigation
+import MapboxDirections
 
 #if canImport(CarPlay)
 import CarPlay
@@ -22,6 +23,11 @@ public class CarPlayMapViewController: UIViewController {
      The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
      */
     public private(set) var styleManager: StyleManager?
+    
+    /**
+     A view that displays the current speed limit.
+     */
+    public weak var speedLimitView: SpeedLimitView!
     
     /**
      The interface styles available to `styleManager` for display.
@@ -114,6 +120,8 @@ public class CarPlayMapViewController: UIViewController {
      */
     internal(set) public var dismissPanningButton: CPMapButton?
     
+    // MARK: - Initialization methods
+    
     /**
      Initializes a new CarPlay map view controller.
      
@@ -140,6 +148,12 @@ public class CarPlayMapViewController: UIViewController {
         aCoder.encode(styles, forKey: "styles")
     }
     
+    deinit {
+        unsubscribeFromFreeDriveNotifications()
+    }
+    
+    // MARK: - UIViewController lifecycle methods
+    
     override public func loadView() {
         setupNavigationMapView()
         setupPassiveLocationProvider()
@@ -149,6 +163,7 @@ public class CarPlayMapViewController: UIViewController {
         super.viewDidLoad()
         
         setupStyleManager()
+        setupSpeedLimitView()
         navigationMapView.navigationCamera.follow()
     }
     
@@ -168,6 +183,8 @@ public class CarPlayMapViewController: UIViewController {
             navigationMapView.fitCamera(to: activeRoute)
         }
     }
+    
+    // MARK: - Setting-up methods
     
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
@@ -190,16 +207,52 @@ public class CarPlayMapViewController: UIViewController {
         styleManager?.styles = styles
     }
     
+    func setupSpeedLimitView() {
+        let speedLimitView = SpeedLimitView()
+        speedLimitView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(speedLimitView)
+        
+        speedLimitView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8).isActive = true
+        speedLimitView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.speedLimitView = speedLimitView
+    }
+    
     func setupPassiveLocationProvider() {
         let passiveLocationManager = PassiveLocationManager()
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
+        
+        subscribeForFreeDriveNotifications()
+    }
+    
+    // MARK: - Notifications observer methods
+    
+    func subscribeForFreeDriveNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didUpdatePassiveLocation),
+                                               name: .passiveLocationManagerDidUpdate,
+                                               object: nil)
+    }
+    
+    func unsubscribeFromFreeDriveNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .passiveLocationManagerDidUpdate,
+                                                  object: nil)
+    }
+    
+    @objc func didUpdatePassiveLocation(_ notification: Notification) {
+        speedLimitView.signStandard = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
+        speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
     }
     
     /**
      Creates a new pan map button for the CarPlay map view controller.
      
      - parameter mapTemplate: The map template available to the pan map button for display.
+     - returns: `CPMapButton` instance.
      */
     @discardableResult public func panningInterfaceDisplayButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
         let panButton = CPMapButton { [weak mapTemplate] _ in
@@ -219,6 +272,7 @@ public class CarPlayMapViewController: UIViewController {
      Creates a new close button to dismiss the visible panning buttons on the map.
      
      - parameter mapTemplate: The map template available to the pan map button for display.
+     - returns: `CPMapButton` instance.
      */
     @discardableResult public func panningInterfaceDismissalButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
         let defaultButtons = mapTemplate.mapButtons
