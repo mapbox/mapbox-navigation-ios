@@ -47,9 +47,9 @@ sed -n -e '/^## /{' -e ':a' -e 'n' -e '/^## /q' -e 'p' -e 'ba' -e '}' CHANGELOG.
 # Blow away any includes of MapboxCoreNavigation, because
 # MapboxNavigation-Documentation.podspec gloms the two targets into one.
 # https://github.com/mapbox/mapbox-navigation-ios/issues/2363
-find Sources/Mapbox{Core,}Navigation/ -name '*.swift' -exec \
+find Mapbox{Core,}Navigation/ -name '*.swift' -exec \
     perl -pi -e 's/\bMapboxCoreNavigation\b/MapboxNavigation/' {} \;
-find Sources/Mapbox{Core,}Navigation/ -name '*.[hm]' -exec \
+find Mapbox{Core,}Navigation/ -name '*.[hm]' -exec \
     perl -pi -e 's/([<"])MapboxCoreNavigation\b/$1MapboxNavigation/' {} \;
 
 jazzy \
