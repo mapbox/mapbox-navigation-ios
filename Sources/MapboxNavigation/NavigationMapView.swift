@@ -1237,66 +1237,32 @@ open class NavigationMapView: UIView {
         shapeLayer.textJustify = .constant(TextJustify.left)
         shapeLayer.symbolZOrder = .constant(SymbolZOrder.auto)
         shapeLayer.textFont = .constant(self.routeDurationAnnotationFontNames)
-
-        try style.addLayer(shapeLayer)
-
-        let symbolSortKeyString =
-        """
-        ["get", "sortOrder"]
-        """
-
-        if let expressionData = symbolSortKeyString.data(using: .utf8),
-           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-            let property = "symbol-sort-key"
-            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
-                                       property: property,
-                                       value: expJSONObject)
-        }
-
-        let expressionString =
-        """
-        [
-          "match",
-          ["get", "tailPosition"],
-          [0],
-          "bottom-left",
-          [1],
-          "bottom-right",
-          "center"
-        ]
-        """
-
-        if let expressionData = expressionString.data(using: .utf8),
-           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
-                                       property: "icon-anchor",
-                                       value: expJSONObject)
-            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
-                                       property: "text-anchor",
-                                       value: expJSONObject)
-        }
-
-        let offsetExpressionString =
-            """
-        [
-          "match",
-          ["get", "tailPosition"],
-          [0],
-          ["literal", [0.5, -1]],
-          ["literal", [-0.5, -1]]
-        ]
-        """
         
-        if let expressionData = offsetExpressionString.data(using: .utf8),
-           let expJSONObject = try? JSONSerialization.jsonObject(with: expressionData, options: []) {
-            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
-                                       property: "icon-offset",
-                                       value: expJSONObject)
-            
-            try style.setLayerProperty(for: routeDurationAnnotationsLayerIdentifier,
-                                       property: "text-offset",
-                                       value: expJSONObject)
+        shapeLayer.symbolSortKey = .expression(Exp(.get) {
+            "sortOrder"
+        })
+
+        let anchorExpression = Exp(.match) {
+            Exp(.get) { "tailPosition" }
+            0
+            "bottom-left"
+            1
+            "bottom-right"
+            "center"
         }
+        shapeLayer.iconAnchor = .expression(anchorExpression)
+        shapeLayer.textAnchor = .expression(anchorExpression)
+        
+        let offsetExpression = Exp(.match) {
+            Exp(.get) { "tailPosition" }
+            0
+            Exp(.literal) { [0.5, -1.0] }
+            Exp(.literal) { [-0.5, -1.0] }
+        }
+        shapeLayer.iconOffset = .expression(offsetExpression)
+        shapeLayer.textOffset = .expression(offsetExpression)
+        
+        try style.addLayer(shapeLayer)
     }
 
     /**
