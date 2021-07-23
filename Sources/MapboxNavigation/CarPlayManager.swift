@@ -564,9 +564,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
         
         let navigationService = self.navigationService ??
-            delegate?.carPlayManager(self,
-                                     alongRouteAtIndex: routeIndex,
-                                     in: routeResponse,
+            delegate?.carPlayManager(self, navigationServiceFor: routeResponse,
+                                     routeIndex: routeIndex,
                                      routeOptions: options,
                                      desiredSimulationMode: desiredSimulationMode) ??
             MapboxNavigationService(routeResponse: routeResponse,

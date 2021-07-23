@@ -285,13 +285,12 @@ class ViewController: UIViewController {
     }
     
     func startCustomNavigation() {
-        guard let route = response?.routes?.first,
-              let responseOptions = response?.options,
-              case let .route(routeOptions) = responseOptions,
+        guard let response = response,
+              let route = response.routes?.first,
+              case let .route(routeOptions) = response.options,
               let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
 
-        customViewController.userRouteResponse = response
-        customViewController.userRouteIndex = 0
+        customViewController.indexedUserRouteResponse = .init(routeResponse: response, routeIndex: 0)
         customViewController.userRouteOptions = routeOptions
         customViewController.simulateLocation = simulationButton.isSelected
         

@@ -18,6 +18,11 @@ public protocol RouterDataSource: AnyObject {
 public struct IndexedRouteResponse {
     public let routeResponse: RouteResponse
     public let routeIndex: Int
+    
+    public init(routeResponse: RouteResponse, routeIndex: Int) {
+        self.routeResponse = routeResponse
+        self.routeIndex = routeIndex
+    }
 }
 
 /**

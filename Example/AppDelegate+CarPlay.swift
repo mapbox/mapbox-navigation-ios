@@ -70,8 +70,8 @@ extension AppDelegate: CPApplicationDelegate {
 extension AppDelegate: CarPlayManagerDelegate {
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
-                        alongRouteAtIndex routeIndex: Int,
-                        in routeResponse: RouteResponse,
+                        navigationServiceFor routeResponse: RouteResponse,
+                        routeIndex: Int,
                         routeOptions: RouteOptions,
                         desiredSimulationMode: SimulationMode) -> NavigationService? {
         if let navigationViewController = self.window?.rootViewController?.presentedViewController as? NavigationViewController,

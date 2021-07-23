@@ -16,9 +16,8 @@ class CustomViewController: UIViewController {
     
     var simulateLocation = false
 
-    var userRouteResponse: RouteResponse?
-    var userRouteIndex: Int?
-    
+    var indexedUserRouteResponse: IndexedRouteResponse?
+        
     var userRouteOptions: RouteOptions?
     
     var stepsViewController: StepsViewController?
@@ -45,9 +44,9 @@ class CustomViewController: UIViewController {
         navigationMapView.mapView.mapboxMap.style.uri = StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")
         navigationMapView.userCourseView.isHidden = false
         
-        let locationManager = simulateLocation ? SimulatedLocationManager(route: userRouteResponse!.routes!.first!) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(routeResponse:userRouteResponse!,
-                                                    routeIndex: userRouteIndex!,
+        let locationManager = simulateLocation ? SimulatedLocationManager(route: indexedUserRouteResponse!.routeResponse.routes!.first!) : NavigationLocationManager()
+        navigationService = MapboxNavigationService(routeResponse: indexedUserRouteResponse!.routeResponse,
+                                                    routeIndex: indexedUserRouteResponse!.routeIndex,
                                                     routeOptions: userRouteOptions!,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .onPoorGPS)
@@ -145,9 +144,7 @@ class CustomViewController: UIViewController {
     // Update the route on the map.
     @objc func rerouted(_ notification: NSNotification) {
         self.navigationMapView.removeWaypoints()
-        if let route = navigationService.route {
-            self.navigationMapView.show([route])
-        }
+        self.navigationMapView.show([navigationService.route])
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {
@@ -190,9 +187,9 @@ class CustomViewController: UIViewController {
     }
     
     func addPreviewInstructions(step: RouteStep) {
+        let route = navigationService.route
         // find the leg that contains the step, legIndex, and stepIndex
-        guard let route = navigationService.route,
-              let leg = route.legs.first(where: { $0.steps.contains(step) }),
+        guard let leg = route.legs.first(where: { $0.steps.contains(step) }),
               let legIndex = route.legs.firstIndex(of: leg),
               let stepIndex = leg.steps.firstIndex(of: step) else {
             return

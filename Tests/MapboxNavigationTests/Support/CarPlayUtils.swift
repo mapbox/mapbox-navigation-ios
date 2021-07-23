@@ -28,7 +28,7 @@ class CarPlayManagerFailureDelegateSpy: CarPlayManagerDelegate {
         return nil
     }
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
         fatalError("This is an empty stub.")
     }
 
@@ -63,7 +63,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public var trailingBarButtons: [CPBarButton]?
     public var mapButtons: [CPMapButton]?
 
-    func carPlayManager(_ carPlayManager: CarPlayManager, alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
         let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
         let directionsClientSpy = DirectionsSpy()
         let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)

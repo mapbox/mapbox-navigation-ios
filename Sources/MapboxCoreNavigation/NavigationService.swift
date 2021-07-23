@@ -61,11 +61,11 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 
      If you want to update the route, use `Router.updateRoute(with:routeOptions:)` method from `router`.
      */
-    var route: Route? { get }
+    var route: Route { get }
     
     /**
      The `RouteResponse` object containing active route, plus its index in this `RouteResponse`, if applicable.
-     
+
      If you want to update the route, use `Router.updateRoute(with:routeOptions:)` method from `router`.
      */
     var indexedRouteResponse: IndexedRouteResponse { get }
@@ -315,8 +315,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
         simulatedLocationSource = nil
         delegate?.navigationService(self, didEndSimulating: progress, becauseOf: intent)
     }
-        
-    public var route: Route? {
+    
+    public var route: Route {
         router.route
     }
     
@@ -328,7 +328,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         // Jump to the first coordinate on the route if the location source does
         // not yet have a fixed location.
         if router.location == nil,
-            let coordinate = route?.shape?.coordinates.first {
+            let coordinate = route.shape?.coordinates.first {
             let location = CLLocation(coordinate: coordinate, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, course: -1, speed: 0, timestamp: Date())
             router.locationManager?(nativeLocationSource, didUpdateLocations: [location])
         }

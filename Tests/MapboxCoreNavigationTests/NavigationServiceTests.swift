@@ -80,7 +80,7 @@ class NavigationServiceTests: TestCase {
 
     func testUserIsOffRoute() {
         let navigation = dependencies.navigationService
-        let route = navigation.route!
+        let route = navigation.route
         
         // Create list of 3 coordinates which are located on actual route
         let coordinatesOnRoute = route.shape!.coordinates.prefix(3)
@@ -135,7 +135,7 @@ class NavigationServiceTests: TestCase {
 
     func disabled_testNotReroutingForAllSteps() {
         let navigationService = dependencies.navigationService
-        let route = navigationService.route!
+        let route = navigationService.route
         
         var offset = 0
         let currentDate = Date()

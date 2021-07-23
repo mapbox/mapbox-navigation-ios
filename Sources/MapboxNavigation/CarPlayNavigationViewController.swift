@@ -593,7 +593,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     public func location(for styleManager: StyleManager) -> CLLocation? {
         if let location = navigationService.router.location {
             return location
-        } else if let origin = navigationService.route?.shape?.coordinates.first {
+        } else if let origin = navigationService.route.shape?.coordinates.first {
             return CLLocation(latitude: origin.latitude, longitude: origin.longitude)
         } else {
             return nil

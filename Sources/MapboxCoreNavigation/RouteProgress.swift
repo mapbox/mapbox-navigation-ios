@@ -324,7 +324,6 @@ open class RouteProgress: Codable {
     
     private enum CodingKeys: String, CodingKey {
         case indexedRoute
-        case indexedRouteIndex
         case routeOptions
         case legIndex
         case currentLegProgress
