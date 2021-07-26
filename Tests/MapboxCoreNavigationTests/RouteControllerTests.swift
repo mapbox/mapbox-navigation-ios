@@ -42,7 +42,7 @@ class RouteControllerTests: TestCase {
         replayManager = locationManager
         locationManager.startDate = Date()
         let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
-        let routeController = RouteController(along: routeResponse, routeIndex: 0, options: equivalentRouteOptions, directions: DirectionsSpy(), dataSource: self)
+        let routeController = RouteController(alongRouteAtIndex: 0, in: routeResponse, options: equivalentRouteOptions, directions: DirectionsSpy(), dataSource: self)
         locationManager.delegate = routeController
         
         var testCoordinates = [CLLocationCoordinate2D]()

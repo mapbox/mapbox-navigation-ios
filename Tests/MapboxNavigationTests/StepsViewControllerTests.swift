@@ -17,7 +17,7 @@ class StepsViewControllerTests: TestCase {
         let directions = Directions(credentials: Fixture.credentials)
         let dataSource = RouteControllerDataSourceFake()
         
-        let routeController = RouteController(along: response, routeIndex: 0, options: Constants.options, directions: directions, dataSource: dataSource)
+        let routeController = RouteController(alongRouteAtIndex: 0, in: response, options: Constants.options, directions: directions, dataSource: dataSource)
         
         let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
         

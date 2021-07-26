@@ -558,7 +558,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(along: initialRouteResponse, routeIndex: 0, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
+            let routeController = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -570,7 +570,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(along: initialRouteResponse, routeIndex: 0, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
+            let routeController = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions,  directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -582,7 +582,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            _ = RouteController(along: initialRouteResponse, routeIndex: 0, options: routeOptions, directions: directionsClientSpy, dataSource: fakeDataSource)
+            _ = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, directions: directionsClientSpy, dataSource: fakeDataSource)
             subject = fakeDataSource
         }
 

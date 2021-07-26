@@ -364,15 +364,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      Initializes a `NavigationViewController` with the given route and navigation service.
      
-     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
-     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
-     - parameter routeOptions: the options object used to generate the route.
-     - parameter navigationService: The navigation service that manages navigation along the route.
+     - parameter navigationService: The navigation service that manages navigation along the route. Route data and options will be extracted from this instance.
      */
-    convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationService service: NavigationService) {
+    convenience init(navigationService service: NavigationService) {
+        guard case let .route(routeOptions) = service.indexedRouteResponse.routeResponse.options else {
+            preconditionFailure("NavigationViewController(navigationService:) must recieve `navigationService` created with `RouteOptions`.")
+        }
         let navigationOptions = NavigationOptions(navigationService: service)
-        self.init(for: routeResponse,
-                  routeIndex: routeIndex,
+        self.init(for: service.indexedRouteResponse.routeResponse,
+                  routeIndex: service.indexedRouteResponse.routeIndex,
                   routeOptions: routeOptions,
                   navigationOptions: navigationOptions)
     }

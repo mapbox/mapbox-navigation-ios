@@ -219,6 +219,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
      */
     convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions options: RouteOptions) {
         self.init(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
@@ -229,6 +230,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
      - parameter directions: The Directions object that created `route`.
      - parameter locationSource: An optional override for the default `NaviationLocationManager`.
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
@@ -257,7 +259,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        _router = routerType.init(along: routeResponse, routeIndex: routeIndex, options: routeOptions, directions: self.directions, dataSource: self, tileStoreLocation: tileStoreLocation)
+        _router = routerType.init(alongRouteAtIndex: routeIndex, in: routeResponse, options: routeOptions, directions: self.directions, dataSource: self, tileStoreLocation: tileStoreLocation)
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self

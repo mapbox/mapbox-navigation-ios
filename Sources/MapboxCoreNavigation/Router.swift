@@ -16,9 +16,21 @@ public protocol RouterDataSource: AnyObject {
  A `RouteResponse` object that sorts routes from most optimal to least optimal and selected route index in it.
  */
 public struct IndexedRouteResponse {
+    /**
+     `RouteResponse` object, containing selection of routes to follow.
+     */
     public let routeResponse: RouteResponse
+    /**
+     The index of the selected route within the `routeResponse`.
+     */
     public let routeIndex: Int
     
+    /**
+     Initializes a new `IndexedRouteResponse` object.
+     
+     - parameter routeResponse: `RouteResponse` object, containing routes and other related info.
+     - parameter routeIndex: Selected route index in an array.
+     */
     public init(routeResponse: RouteResponse, routeIndex: Int) {
         self.routeResponse = routeResponse
         self.routeIndex = routeIndex
@@ -44,13 +56,13 @@ public protocol Router: CLLocationManagerDelegate {
     /**
      Intializes a new `RouteController`.
      
-     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
      - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      */
-    init(along routeResponse: RouteResponse, routeIndex: Int, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location)
+    init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -133,7 +145,7 @@ protocol InternalRouter: AnyObject {
     
     var lastRerouteLocation: CLLocation? { get set }
     
-    func setRoute(route: Route, proactive: Bool, routeOptions: RouteOptions?)
+    func setRoute(_ route: Route, proactive: Bool, routeOptions: RouteOptions?)
     
     var isRerouting: Bool { get set }
     
@@ -254,7 +266,7 @@ extension InternalRouter where Self: Router {
                 }
                 
                 self?.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
-                self?.setRoute(route: route, proactive: true, routeOptions: routeOptions)
+                self?.setRoute(route, proactive: true, routeOptions: routeOptions)
             }
         }
     }
@@ -283,7 +295,7 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func setRoute(route: Route, proactive: Bool, routeOptions: RouteOptions?) {
+    func setRoute(_ route: Route, proactive: Bool, routeOptions: RouteOptions?) {
         let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
         
         if proactive {
