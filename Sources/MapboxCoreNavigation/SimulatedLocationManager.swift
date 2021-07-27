@@ -29,8 +29,8 @@ fileprivate class SimulatedLocation: CLLocation {
  The route will be replaced upon a `RouteControllerDidReroute` notification.
  */
 open class SimulatedLocationManager: NavigationLocationManager {
-    internal var currentDistance: CLLocationDistance = 0
-    private var currentSpeed: CLLocationSpeed = 30
+    internal var currentDistance: CLLocationDistance
+    private var currentSpeed: CLLocationSpeed
     private let accuracy: DispatchTimeInterval = .milliseconds(50)
     private let updateInterval: DispatchTimeInterval = .milliseconds(1000)
     private var timer: DispatchTimer!
@@ -53,17 +53,15 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
     }
     
-    var route: Route? {
+    var route: Route {
         didSet {
             reset()
         }
     }
     
     open override func copy() -> Any {
-        let copy = SimulatedLocationManager(route: route!)
-        copy.currentDistance = currentDistance
+        let copy = SimulatedLocationManager(route: route, currentDistance: currentDistance, currentSpeed: currentSpeed)
         copy.simulatedLocation = simulatedLocation
-        copy.currentSpeed = currentSpeed
         copy.locations = locations
         copy.routeShape = routeShape
         copy.speedMultiplier = speedMultiplier
@@ -83,9 +81,8 @@ open class SimulatedLocationManager: NavigationLocationManager {
      - parameter route: The initial route.
      - returns: A `SimulatedLocationManager`
      */
-    public init(route: Route) {
-        super.init()
-        commonInit(for: route, currentDistance: 0, currentSpeed: 30)
+    public convenience init(route: Route) {
+        self.init(route: route, currentDistance: 0, currentSpeed: 30)
     }
 
     /**
@@ -94,17 +91,25 @@ open class SimulatedLocationManager: NavigationLocationManager {
      - parameter routeProgress: The routeProgress of the current route.
      - returns: A `SimulatedLocationManager`
      */
-    public init(routeProgress: RouteProgress) {
-        super.init()
-        let currentDistance = calculateCurrentDistance(routeProgress.distanceTraveled)
-        commonInit(for: routeProgress.route, currentDistance: currentDistance, currentSpeed: 0)
+    public convenience init(routeProgress: RouteProgress) {
+        let currentSpeed: CLLocationSpeed = 0
+        let currentDistance = Self.calculateCurrentDistance(routeProgress.distanceTraveled,
+                                                            currentSpeed: currentSpeed,
+                                                            speedMultiplier: 1)
+        self.init(route: routeProgress.route, currentDistance: currentDistance, currentSpeed: currentSpeed)
     }
 
-    private func commonInit(for route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
-        self.currentSpeed = currentSpeed
-        self.currentDistance = currentDistance
+    public init(route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
         self.route = route
+        self.currentDistance = currentDistance
+        self.currentSpeed = currentSpeed
+        super.init()
+        postInit()
+    }
 
+    private func postInit() {
+        reset()
+        
         self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: .main) { [weak self] in
             self?.tick()
         }
@@ -114,13 +119,14 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     private func reset() {
-        if let shape = route?.shape {
-            routeShape = shape
-            locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
-        }
+        guard let shape = route.shape else { return }
+        routeShape = shape
+        locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
     }
     
-    private func calculateCurrentDistance(_ distance: CLLocationDistance) -> CLLocationDistance {
+    private static func calculateCurrentDistance(_ distance: CLLocationDistance,
+                                                 currentSpeed: CLLocationSpeed,
+                                                 speedMultiplier: Double) -> CLLocationDistance {
         return distance + (currentSpeed * speedMultiplier)
     }
     
@@ -133,7 +139,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
             return
         }
 
-        self.currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled)
+        self.currentDistance = Self.calculateCurrentDistance(router.routeProgress.distanceTraveled,
+                                                             currentSpeed: currentSpeed,
+                                                             speedMultiplier: speedMultiplier)
         routeProgress = router.routeProgress
         route = router.routeProgress.route
     }
@@ -189,7 +197,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.simulatedLocation = location
         
         delegate?.locationManager?(self, didUpdateLocations: [location])
-        currentDistance = calculateCurrentDistance(currentDistance)
+        currentDistance = Self.calculateCurrentDistance(currentDistance,
+                                                        currentSpeed: currentSpeed,
+                                                        speedMultiplier: speedMultiplier)
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
