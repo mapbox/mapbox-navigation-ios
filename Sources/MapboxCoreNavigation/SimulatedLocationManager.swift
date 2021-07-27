@@ -109,13 +109,18 @@ open class SimulatedLocationManager: NavigationLocationManager {
 
     private func postInit() {
         reset()
-        
-        self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: .main) { [weak self] in
+
+        self.timer = DispatchTimer(countdown: .milliseconds(0),
+                                   repeating: updateInterval,
+                                   accuracy: accuracy,
+                                   executingOn: .main) { [weak self] in
             self?.tick()
         }
         
-        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)), name: .routeControllerDidReroute, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(didReroute(_:)),
+                                               name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)),
+                                               name: .routeControllerProgressDidChange, object: nil)
     }
     
     private func reset() {
@@ -183,7 +188,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
             let distance = shape.coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
             currentSpeed =  max(distance / time, 2)
         } else {
-            currentSpeed = calculateCurrentSpeed(distance: distance, coordinatesNearby: coordinatesNearby, closestLocation: closestLocation)
+            currentSpeed = calculateCurrentSpeed(distance: distance,
+                                                 coordinatesNearby: coordinatesNearby,
+                                                 closestLocation: closestLocation)
         }
         
         let location = CLLocation(coordinate: newCoordinate,
@@ -202,7 +209,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
                                                         speedMultiplier: speedMultiplier)
     }
     
-    private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
+    private func calculateCurrentSpeed(distance: CLLocationDistance,
+                                       coordinatesNearby: [CLLocationCoordinate2D]? = nil,
+                                       closestLocation: SimulatedLocation) -> CLLocationSpeed {
         // More than 10 nearby coordinates indicates that we are in a roundabout or similar complex shape.
         if let coordinatesNearby = coordinatesNearby, coordinatesNearby.count >= 10 {
             return minimumSpeed
@@ -214,7 +223,10 @@ open class SimulatedLocationManager: NavigationLocationManager {
         // Base speed on previous or upcoming turn penalty
         else {
             let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
-            return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
+            return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty,
+                                             maximumIn: maximumTurnPenalty,
+                                             minimumOut: minimumSpeed,
+                                             maximumOut: maximumSpeed)
         }
     }
 }
@@ -261,7 +273,9 @@ extension Array where Element == CLLocationCoordinate2D {
         for (coordinate, nextCoordinate) in zip(prefix(upTo: endIndex - 1), suffix(from: 1)) {
             let currentCoordinate = locations.isEmpty ? first! : coordinate
             let course = coordinate.direction(to: nextCoordinate).wrap(min: 0, max: 360)
-            let turnPenalty = currentCoordinate.direction(to: coordinate).difference(from: coordinate.direction(to: nextCoordinate))
+            let turnPenalty = currentCoordinate
+                .direction(to: coordinate)
+                .difference(from: coordinate.direction(to: nextCoordinate))
             let location = SimulatedLocation(coordinate: coordinate,
                                              altitude: 0,
                                              horizontalAccuracy: horizontalAccuracy,
