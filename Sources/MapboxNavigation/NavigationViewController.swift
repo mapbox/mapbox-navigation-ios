@@ -17,7 +17,9 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
 /**
  `NavigationViewController` is a fully-featured user interface for turn-by-turn navigation. Do not confuse it with the `NavigationController` class in UIKit.
  
- You initialize a navigation view controller based on a predefined `Route` and `NavigationOptions`. As the user progresses along the route, the navigation view controller shows their surroundings and the route line on a map. Banners above and below the map display key information pertaining to the route. A list of steps and a feedback mechanism are accessible via the navigation view controller.
+ You initialize a navigation view controller based on a predefined `RouteResponse` and `NavigationOptions`. As the user progresses along the route, the navigation view controller shows their surroundings and the route line on a map. Banners above and below the map display key information pertaining to the route. A list of steps and a feedback mechanism are accessible via the navigation view controller.
+ 
+ Route initialization should be configured before view controller's `view` is loaded. Usually, that is automatically done during any of the `init`s, but you may also change this settings via `prepareViewLoading(routeResponse:, routeIndex:, routeOptions:, navigationOptions:)` methods. For example that could be handy while configuring a ViewController for a `UIStoryboardSegue`.
  
  To be informed of significant events and decision points as the user progresses along the route, set the `NavigationService.delegate` property of the `NavigationService` that you provide when creating the navigation options.
  
@@ -355,10 +357,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         
         super.init(nibName: nil, bundle: nil)
-        self._routeResponse = routeResponse
-        self._routeIndex = routeIndex
-        self._routeOptions = routeOptions
-        self.navigationOptions = navigationOptions
+        _ = prepareViewLoading(routeResponse: routeResponse,
+                               routeIndex: routeIndex,
+                               routeOptions: routeOptions,
+                               navigationOptions: navigationOptions)
     }
     
     /**
@@ -382,6 +384,34 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     // MARK: - Setting-up methods
+    
+    /**
+     Updates key settings before loading the view.
+     
+     This method basically re-runs the setup which takes place in `init`. It could be useful if some of the attribtues have changed before `NavigationViewController` did load it's view, or if you did not have access to initializing logic. For example, as a part of `UIStoryboardSegue` configuration.
+     
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter navigationOptions: The navigation options to use for the navigation session.
+     - returns `True` if setup was successful, `False` if `view` is already loaded and settings did not apply.
+     */
+    public func prepareViewLoading(routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) -> Bool {
+        guard !isViewLoaded else {
+            return false
+        }
+        
+        if let options = navigationOptions {
+            self.mapTileStore = options.tileStoreConfiguration.mapLocation
+        }
+        
+        self._routeResponse = routeResponse
+        self._routeIndex = routeIndex
+        self._routeOptions = routeOptions
+        self.navigationOptions = navigationOptions
+        
+        return true
+    }
     
     func setupNavigationService() {
         guard let routeResponse = _routeResponse,
