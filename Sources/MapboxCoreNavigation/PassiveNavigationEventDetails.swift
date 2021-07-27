@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 
+@available(iOSApplicationExtension, unavailable)
 struct PassiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?
     let created = Date()

@@ -82,6 +82,7 @@ protocol NavigationEventDetails: EventDetails {
     var totalTimeInBackground: TimeInterval { get set }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationEventDetails {
     var audioType: String { AVAudioSession.sharedInstance().audioType }
     var applicationState: UIApplication.State {

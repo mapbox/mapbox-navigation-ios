@@ -15,6 +15,7 @@ import os.log
  - seealso: NavigationViewControllerDelegate
  - seealso: RouterDelegate
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Returns whether the navigation service should be allowed to calculate a new route.
@@ -204,6 +205,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent)
 }
 
+@available(iOSApplicationExtension, unavailable)
 public extension NavigationServiceDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.

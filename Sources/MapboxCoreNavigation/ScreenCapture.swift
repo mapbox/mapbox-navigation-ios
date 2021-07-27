@@ -36,6 +36,7 @@ extension UIImage {
 
 #endif
 
+@available(iOSApplicationExtension, unavailable)
 func captureScreen(scaledToFit width: CGFloat) -> Data? {
     #if os(iOS)
         guard let image = UIApplication.shared.keyWindow?.capture()?.scaled(toFit: width) else { return nil }
