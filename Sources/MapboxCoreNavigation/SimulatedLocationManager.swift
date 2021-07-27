@@ -30,19 +30,20 @@ fileprivate class SimulatedLocation: CLLocation {
  */
 open class SimulatedLocationManager: NavigationLocationManager {
     internal var currentDistance: CLLocationDistance = 0
-    fileprivate var currentSpeed: CLLocationSpeed = 30
-    fileprivate let accuracy: DispatchTimeInterval = .milliseconds(50)
-    let updateInterval: DispatchTimeInterval = .milliseconds(1000)
-    fileprivate var timer: DispatchTimer!
+    private var currentSpeed: CLLocationSpeed = 30
+    private let accuracy: DispatchTimeInterval = .milliseconds(50)
+    private let updateInterval: DispatchTimeInterval = .milliseconds(1000)
+    private var timer: DispatchTimer!
     
-    fileprivate var locations: [SimulatedLocation]!
-    fileprivate var routeShape: LineString!
+    private var locations: [SimulatedLocation] = []
+    private var routeShape: LineString?
     
     /**
      Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.
      */
     public var speedMultiplier: Double = 1
-    fileprivate var simulatedLocation: CLLocation?
+    private var simulatedLocation: CLLocation?
+    
     override open var location: CLLocation? {
         get {
             return simulatedLocation
