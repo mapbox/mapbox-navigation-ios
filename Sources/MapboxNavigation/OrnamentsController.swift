@@ -354,7 +354,7 @@ extension NavigationMapView {
          */
         private func updateMapViewOrnaments() {
             let bottomBannerHeight = navigationViewData.navigationView.bottomBannerContainerView.bounds.height
-            let bottomBannerVerticalOffset = UIScreen.main.bounds.height - bottomBannerHeight - navigationViewData.navigationView.bottomBannerContainerView.frame.origin.y
+            let bottomBannerVerticalOffset = navigationViewData.navigationView.bounds.height - bottomBannerHeight - navigationViewData.navigationView.bottomBannerContainerView.frame.origin.y
             let defaultOffset: CGFloat = 10.0
             let x: CGFloat = defaultOffset
             let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
