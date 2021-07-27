@@ -30,6 +30,7 @@ public protocol EventsManagerDataSource: AnyObject {
 /**
  The `NavigationEventsManager` is responsible for being the liaison between MapboxCoreNavigation and the Mapbox telemetry framework.
  */
+@available(iOSApplicationExtension, unavailable)
 open class NavigationEventsManager {
     static let applicationSessionIdentifier = UUID()
     

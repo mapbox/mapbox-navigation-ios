@@ -35,6 +35,7 @@ public enum SimulationMode: Int {
  
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
     /**
      The location manager for the service. This will be the object responsible for notifying the service of GPS updates.
@@ -120,6 +121,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
  
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
+@available(iOSApplicationExtension, unavailable)
 public class MapboxNavigationService: NSObject, NavigationService {
     typealias DefaultRouter = RouteController
 
@@ -397,6 +399,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension MapboxNavigationService: CLLocationManagerDelegate {
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         router.locationManager?(manager, didUpdateHeading: newHeading)
@@ -444,6 +447,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
 }
 
 //MARK: - RouteControllerDelegate
+@available(iOSApplicationExtension, unavailable)
 extension MapboxNavigationService: RouterDelegate {
     typealias Default = RouteController.DefaultBehavior
     
@@ -525,6 +529,8 @@ extension MapboxNavigationService: RouterDelegate {
 }
 
 //MARK: EventsManagerDataSource Logic
+
+@available(iOSApplicationExtension, unavailable)
 extension MapboxNavigationService {
     public var routeProgress: RouteProgress {
         return router.routeProgress
@@ -536,6 +542,8 @@ extension MapboxNavigationService {
 }
 
 //MARK: RouterDataSource
+
+@available(iOSApplicationExtension, unavailable)
 extension MapboxNavigationService {
     public var locationManagerType: NavigationLocationManager.Type {
         return type(of: locationManager)

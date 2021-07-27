@@ -5,6 +5,7 @@ import Polyline
 import MapboxMobileEvents
 import Turf
 
+@available(iOSApplicationExtension, unavailable)
 @available(*, deprecated, renamed: "RouteController")
 open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationManagerDelegate {
     

@@ -287,6 +287,7 @@ extension PassiveLocationManager {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension MapboxNavigationService {
     /**
      Keys in the user info dictionaries of various notifications posted by instances of `NavigationService`.

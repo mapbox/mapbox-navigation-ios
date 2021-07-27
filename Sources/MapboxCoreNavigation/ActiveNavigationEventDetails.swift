@@ -5,6 +5,7 @@ import AVFoundation
 import MapboxDirections
 import MapboxMobileEvents
 
+@available(iOSApplicationExtension, unavailable)
 struct ActiveNavigationEventDetails: NavigationEventDetails {
     let coordinate: CLLocationCoordinate2D?
     let distance: CLLocationDistance?
