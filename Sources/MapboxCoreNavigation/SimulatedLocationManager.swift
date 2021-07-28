@@ -103,6 +103,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
      Initalizes a new `SimulatedLocationManager` with the given route.
      
      - parameter route: The initial route.
+     - parameter queue: A GCD queue which is used to calculate simulated locations.
      - returns: A `SimulatedLocationManager`
      */
     public convenience init(route: Route, configuration: Configuration = .default, queue: DispatchQueue = defaultQueue) {
@@ -113,6 +114,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
      Initalizes a new `SimulatedLocationManager` with the given routeProgress.
      
      - parameter routeProgress: The routeProgress of the current route.
+     - parameter queue: A GCD queue which is used to calculate simulated locations.
      - returns: A `SimulatedLocationManager`
      */
     public convenience init(routeProgress: RouteProgress, configuration: Configuration = .default, queue: DispatchQueue = defaultQueue) {
@@ -123,6 +125,14 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.init(route: routeProgress.route, currentDistance: currentDistance, currentSpeed: currentSpeed, configuration: configuration, queue: queue)
     }
 
+    /**
+     Initalizes a new `SimulatedLocationManager` instance with the given route and initial state.
+     - Parameters:
+       - route: The initial route.
+       - currentDistance: The initial distance from the beginning of the route.
+       - currentSpeed: The initial speed of the simulation.
+       - queue: A GCD queue which is used to calculate simulated locations.
+     */
     public init(route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed, configuration: Configuration = .default, queue: DispatchQueue = defaultQueue) {
         self.route = route
         self.currentDistance = currentDistance
