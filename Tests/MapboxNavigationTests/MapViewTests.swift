@@ -39,7 +39,7 @@ class MapViewTests: XCTestCase {
         let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
         
-        let mapLoadingErrorExpectation = expectation(description: "Style loaded expectation")
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         
         mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()
@@ -109,7 +109,7 @@ class MapViewTests: XCTestCase {
         let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
         
-        let mapLoadingErrorExpectation = expectation(description: "Style loaded expectation")
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         
         mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()
@@ -117,7 +117,7 @@ class MapViewTests: XCTestCase {
         
         mapView.mapboxMap.loadStyleJSON(styleJSON)
         
-        wait(for: [mapLoadingErrorExpectation], timeout: 1.0)
+        wait(for: [mapLoadingErrorExpectation], timeout: 10.0)
         
         XCTAssertEqual(mapView.mapboxMap.style.allSourceIdentifiers.count,
                        1,
