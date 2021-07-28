@@ -708,8 +708,7 @@ class NavigationServiceTests: TestCase {
     }
     
     func waitForNavNativeCallbacks(timeout: TimeInterval = 0.1) {
-        let waitExpectation = expectation(description: "Waiting for the NatNative callback")
-        _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
+        RunLoop.current.run(until: Date() + timeout)
     }
 }
 
