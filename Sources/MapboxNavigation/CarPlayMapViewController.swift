@@ -191,6 +191,7 @@ public class CarPlayMapViewController: UIViewController {
         navigationMapView.delegate = self
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             navigationMapView.localizeLabels()
+            navigationMapView.mapView.showsTraffic = false
         }
         
         navigationMapView.userLocationStyle = .puck2D()
