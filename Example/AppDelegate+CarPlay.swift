@@ -73,7 +73,7 @@ extension AppDelegate: CarPlayManagerDelegate {
                         navigationServiceAlong route: Route,
                         routeIndex: Int,
                         routeOptions: RouteOptions,
-                        desiredSimulationMode: SimulationMode) -> NavigationService {
+                        desiredSimulationMode: SimulationMode) -> NavigationService? {
         if let navigationViewController = self.window?.rootViewController?.presentedViewController as? NavigationViewController,
            let navigationService = navigationViewController.navigationService {
             // Do not set simulation mode if we already have an active navigation session.
