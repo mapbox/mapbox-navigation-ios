@@ -53,10 +53,10 @@ open class SimulatedLocationManager: NavigationLocationManager {
     private let configuration: Configuration
 
     internal var currentDistance: CLLocationDistance
+    private let queue: DispatchQueue
     private var currentSpeed: CLLocationSpeed
     private let accuracy: DispatchTimeInterval = .milliseconds(50)
     private let updateInterval: DispatchTimeInterval = .milliseconds(1000)
-    private let queue: DispatchQueue
     private var timer: DispatchTimer!
     
     private var locations: [SimulatedLocation] = []
@@ -201,7 +201,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     internal func tick() {
-        let (routeShape, currentDistance, shape, expectedSegmentTravelTimes, speedMultiplier, configuration) = DispatchQueue.main.sync {
+        let (routeShape, currentDistance, shape, expectedSegmentTravelTimes, speedMultiplier, configuration) = onMainQueueSync {
                     (
                         self.routeShape,
                         self.currentDistance,
@@ -221,7 +221,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: currentDistance + 10) else { return }
         guard let closestCoordinate = polyline.closestCoordinate(to: newCoordinate) else { return }
         
-        let closestLocation = DispatchQueue.main.sync { self.locations[closestCoordinate.index] }
+        let closestLocation = onMainQueueSync { self.locations[closestCoordinate.index] }
         let distanceToClosest = closestLocation.distance(from: CLLocation(newCoordinate))
         
         let distance = min(max(distanceToClosest, 10), configuration.safeDistance)
@@ -243,7 +243,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         }
 
         let course = newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360)
-        DispatchQueue.main.async {
+        onMainQueueSync {
             let location = CLLocation(coordinate: newCoordinate,
                                       altitude: 0,
                                       horizontalAccuracy: configuration.horizontalAccuracy,
