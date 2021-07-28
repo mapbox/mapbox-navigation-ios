@@ -29,10 +29,14 @@ fileprivate class SimulatedLocation: CLLocation {
  The route will be replaced upon a `RouteControllerDidReroute` notification.
  */
 open class SimulatedLocationManager: NavigationLocationManager {
+    public static var defaultQueue: DispatchQueue {
+        .init(label: "com.mapbox.SimulatedLocationManager", target: .global())
+    }
     internal var currentDistance: CLLocationDistance
     private var currentSpeed: CLLocationSpeed
     private let accuracy: DispatchTimeInterval = .milliseconds(50)
     private let updateInterval: DispatchTimeInterval = .milliseconds(1000)
+    private let queue: DispatchQueue
     private var timer: DispatchTimer!
     
     private var locations: [SimulatedLocation] = []
@@ -52,7 +56,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
             simulatedLocation = newValue
         }
     }
-    
+
     var route: Route {
         didSet {
             reset()
@@ -81,8 +85,8 @@ open class SimulatedLocationManager: NavigationLocationManager {
      - parameter route: The initial route.
      - returns: A `SimulatedLocationManager`
      */
-    public convenience init(route: Route) {
-        self.init(route: route, currentDistance: 0, currentSpeed: 30)
+    public convenience init(route: Route, queue: DispatchQueue = defaultQueue) {
+        self.init(route: route, currentDistance: 0, currentSpeed: 30, queue: queue)
     }
 
     /**
@@ -91,18 +95,19 @@ open class SimulatedLocationManager: NavigationLocationManager {
      - parameter routeProgress: The routeProgress of the current route.
      - returns: A `SimulatedLocationManager`
      */
-    public convenience init(routeProgress: RouteProgress) {
+    public convenience init(routeProgress: RouteProgress, queue: DispatchQueue = defaultQueue) {
         let currentSpeed: CLLocationSpeed = 0
         let currentDistance = Self.calculateCurrentDistance(routeProgress.distanceTraveled,
                                                             currentSpeed: currentSpeed,
                                                             speedMultiplier: 1)
-        self.init(route: routeProgress.route, currentDistance: currentDistance, currentSpeed: currentSpeed)
+        self.init(route: routeProgress.route, currentDistance: currentDistance, currentSpeed: currentSpeed, queue: queue)
     }
 
-    public init(route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed) {
+    public init(route: Route, currentDistance: CLLocationDistance, currentSpeed: CLLocationSpeed, queue: DispatchQueue = defaultQueue) {
         self.route = route
         self.currentDistance = currentDistance
         self.currentSpeed = currentSpeed
+        self.queue = queue
         super.init()
         postInit()
     }
@@ -113,7 +118,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.timer = DispatchTimer(countdown: .milliseconds(0),
                                    repeating: updateInterval,
                                    accuracy: accuracy,
-                                   executingOn: .main) { [weak self] in
+                                   executingOn: queue) { [weak self] in
             self?.tick()
         }
         
@@ -165,7 +170,18 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     internal func tick() {
-        guard let polyline = routeShape, let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
+        let (routeShape, currentDistance, shape, expectedSegmentTravelTimes, speedMultiplier) = DispatchQueue.main.sync {
+                    (
+                        self.routeShape,
+                        self.currentDistance,
+                        self.routeProgress?.route.shape,
+                        routeProgress?.currentLeg.expectedSegmentTravelTimes,
+                        self.speedMultiplier
+                    )
+                }
+
+        guard let polyline = routeShape,
+              let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
             return
         }
         
@@ -173,15 +189,16 @@ open class SimulatedLocationManager: NavigationLocationManager {
         guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: currentDistance + 10) else { return }
         guard let closestCoordinate = polyline.closestCoordinate(to: newCoordinate) else { return }
         
-        let closestLocation = locations[closestCoordinate.index]
+        let closestLocation = DispatchQueue.main.sync { self.locations[closestCoordinate.index] }
         let distanceToClosest = closestLocation.distance(from: CLLocation(newCoordinate))
         
         let distance = min(max(distanceToClosest, 10), safeDistance)
         let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100)!.coordinates
-        
+
+        let currentSpeed: CLLocationSpeed
         // Simulate speed based on expected segment travel time
-        if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
-            let shape = routeProgress?.route.shape,
+        if let expectedSegmentTravelTimes = expectedSegmentTravelTimes,
+            let shape = shape,
             let closestCoordinateOnRoute = shape.closestCoordinate(to: newCoordinate),
             let nextCoordinateOnRoute = shape.coordinates.after(element: shape.coordinates[closestCoordinateOnRoute.index]),
             let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRoute.index] {
@@ -192,21 +209,23 @@ open class SimulatedLocationManager: NavigationLocationManager {
                                                  coordinatesNearby: coordinatesNearby,
                                                  closestLocation: closestLocation)
         }
-        
-        let location = CLLocation(coordinate: newCoordinate,
-                                  altitude: 0,
-                                  horizontalAccuracy: horizontalAccuracy,
-                                  verticalAccuracy: verticalAccuracy,
-                                  course: newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360),
-                                  speed: currentSpeed,
-                                  timestamp: Date())
-        
-        self.simulatedLocation = location
-        
-        delegate?.locationManager?(self, didUpdateLocations: [location])
-        currentDistance = Self.calculateCurrentDistance(currentDistance,
-                                                        currentSpeed: currentSpeed,
-                                                        speedMultiplier: speedMultiplier)
+
+        let course = newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360)
+        DispatchQueue.main.async {
+            let location = CLLocation(coordinate: newCoordinate,
+                                      altitude: 0,
+                                      horizontalAccuracy: horizontalAccuracy,
+                                      verticalAccuracy: verticalAccuracy,
+                                      course: course,
+                                      speed: currentSpeed,
+                                      timestamp: Date())
+            self.currentSpeed = currentSpeed
+            self.simulatedLocation = location
+            self.delegate?.locationManager?(self, didUpdateLocations: [location])
+            self.currentDistance = Self.calculateCurrentDistance(currentDistance,
+                                                                 currentSpeed: currentSpeed,
+                                                                 speedMultiplier: speedMultiplier)
+        }
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance,
