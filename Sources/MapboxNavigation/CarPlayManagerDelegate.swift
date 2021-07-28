@@ -84,7 +84,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter trip: The trip that will be previewed.
      - returns: The actual trip to be previewed. This can be the same trip or a new/alternate trip if desired.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip)
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> CPTrip
 
     /**
      Offers the delegate the opportunity to customize a trip preview text configuration for a given trip.
@@ -94,7 +94,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter previewTextConfiguration: The trip preview text configuration that will be presented alongside the trip.
      - returns: The actual preview text configuration to be presented alongside the trip.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration)
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> CPTripPreviewTextConfiguration
 
     /**
      Offers the delegate the opportunity to react to selection of a trip. Certain trips may have alternate route(s).
@@ -103,7 +103,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter trip: The trip to begin navigating along.
      - parameter routeChoice: The possible route for the chosen trip.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice) -> ()
+    func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice)
     
     /**
      Called when navigation begins so that the containing app can update accordingly.
@@ -111,14 +111,14 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter service: The navigation service that has begun managing location updates for a navigation session.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) -> ()
+    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService)
     
     /**
      Called when navigation ends so that the containing app can update accordingly.
      
      - parameter carPlayManager: The CarPlay manager instance.
      */
-    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) -> ()
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager)
     
     /**
      Called when the CarPlayManager detects the user arrives at the destination waypoint for a route leg.
@@ -147,7 +147,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter carPlayManager: The CarPlay manager instance.
      - parameter navigationViewController: The CarPlayNavigationViewController that was presented on the CarPlay display.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) -> ()
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController)
     
     /**
      Tells the receiver that the `PointAnnotation` representing the final destination was added to either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
@@ -207,7 +207,7 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip) {
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> CPTrip {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return trip
     }
@@ -215,7 +215,7 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration) {
+    func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> CPTripPreviewTextConfiguration {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return previewTextConfiguration
     }
