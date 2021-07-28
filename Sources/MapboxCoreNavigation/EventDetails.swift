@@ -85,10 +85,8 @@ protocol NavigationEventDetails: EventDetails {
 extension NavigationEventDetails {
     var audioType: String { AVAudioSession.sharedInstance().audioType }
     var applicationState: UIApplication.State {
-        if Thread.isMainThread {
-            return UIApplication.shared.applicationState
-        } else {
-            return DispatchQueue.main.sync { UIApplication.shared.applicationState }
+        onMainQueueSync {
+            UIApplication.shared.applicationState
         }
     }
     var batteryLevel: Int { UIDevice.current.batteryLevel >= 0 ? Int(UIDevice.current.batteryLevel * 100) : -1 }
