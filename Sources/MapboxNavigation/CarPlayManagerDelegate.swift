@@ -9,7 +9,7 @@ import MapboxMaps
  
  Implement this protocol and assign an instance to the `delegate` property of the shared instance of `CarPlayManager`.
  
- If no delegate is set, a default built-in MapboxNavigationService will be created and used when a trip begins.
+ If no delegate is set, a default built-in `MapboxNavigationService` will be created and used when a trip begins.
  */
 @available(iOS 12.0, *)
 public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
@@ -63,7 +63,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter desiredSimulationMode: The desired simulation mode to use.
      - returns: A navigation service that manages location updates along `route`.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService?
     
     /**
      Called when the CarPlay manager fails to fetch a route.
@@ -137,7 +137,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter carPlayManager: The CarPlay manager instance.
      - returns: A Boolean value indicating whether to disable idle timer when carplay is connected and enable when disconnected.
      */
-    func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
+    func carPlayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool
 
     /**
      Called when the CarPlayManager presents a new CarPlayNavigationViewController upon start of a navigation session.
@@ -186,6 +186,13 @@ public extension CarPlayManagerDelegate {
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
         return nil
     }
     
@@ -245,7 +252,7 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carplayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool {
+    func carPlayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return false
     }
