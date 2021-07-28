@@ -30,6 +30,8 @@ extension Incident {
             incidentType = .roadHazard
         case .weather:
             incidentType = .weather
+        @unknown default:
+            fatalError("Unknown IncidentInfo type.")
         }
         
         self.init(identifier: incidentInfo.id,
@@ -60,6 +62,8 @@ extension Incident.Impact {
             self = .minor
         case .low:
             self = .low
+        @unknown default:
+            fatalError("Unknown IncidentImpact value.")
         }
     }
 }

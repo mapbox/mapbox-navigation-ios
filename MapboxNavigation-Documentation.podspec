@@ -46,7 +46,7 @@ Pod::Spec.new do |s|
   s.frameworks = ['CarPlay']
 
   s.dependency "MapboxDirections-pre", "2.0.0-beta.6"
-  s.dependency "MapboxMaps", "10.0.0-rc.4"
+  s.dependency "MapboxMaps", "10.0.0-rc.5"
   s.dependency "MapboxMobileEvents", "~> 1.0.0"
   s.dependency "MapboxNavigationNative", "~> 56.0"
   s.dependency "Solar-dev", "~> 3.0"

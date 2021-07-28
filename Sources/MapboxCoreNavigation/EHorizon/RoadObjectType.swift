@@ -47,6 +47,8 @@ public enum RoadObjectType {
             self = .bridge
         case .custom:
             self = .userDefined
+        @unknown default:
+            fatalError("Unknown RoadObjectType value.")
         }
     }
 
@@ -68,6 +70,8 @@ public enum RoadObjectType {
             self = .bridge
         case .custom:
             self = .userDefined
+        @unknown default:
+            fatalError("Unknown RoadObjectType value.")
         }
     }
 }
