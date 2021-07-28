@@ -54,6 +54,7 @@
 * Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationProvider.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
 * Added the `RouteController.startRecordingHistory()`, `RouteController.stopRecordingHistory(completionHandler:)`, `PassiveLocationManager.startRecordingHistory()`, and `PassiveLocationManager.stopRecordingHistory(completionHandler:)` methods for recording details about a trip for debugging purposes. ([#3157](https://github.com/mapbox/mapbox-navigation-ios/pull/3157))
 * Renamed `RouterDataSource.locationProvider` and `EventsManagerDataSource.locationProvider` properties to `RouterDataSource.locationManagerType` and `EventsManagerDataSource.locationManagerType` respectively. ([#3199](https://github.com/mapbox/mapbox-navigation-ios/pull/3199))
+* `SimulatedLocationManager` consumes less CPU on the main thread. You can specify a GCD queue that will be used for location calculations in the initializer. 
 
 ### Electronic horizon
 
