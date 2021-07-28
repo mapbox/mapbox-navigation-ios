@@ -98,6 +98,8 @@
 * Added the `CarPlayMapViewControllerDelegate` public protocol, which provides methods for reacting to events during free-drive navigation or route previewing. ([#3190](https://github.com/mapbox/mapbox-navigation-ios/pull/3190))
 * Added the `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:didAdd:pointAnnotationManager:)`, `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:didAdd:pointAnnotationManager:)` and `CarPlayManager.carPlayManager(_:didAdd:to:pointAnnotationManager:)` delegate methods, which will be called whenever the `PointAnnotation` representing the final destination is added to `CarPlayMapViewController`, `CarPlayNavigationViewController` and `CarPlayManager`, respectively. ([#3190](https://github.com/mapbox/mapbox-navigation-ios/pull/3190))
 * Added the ability to show speed limit indicator on CarPlay during free-drive. ([#3197](https://github.com/mapbox/mapbox-navigation-ios/pull/3197))
+* `CarPlayManagerDelegate.carPlayManager(_:navigationServiceAlong:routeIndex:routeOptions:desiredSimulationMode:)` now requires optional `NavigationService`. In case if `NavigationService` was not provided `MapboxNavigationService` will be used by default. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
+* `CarPlayManagerDelegate.carplayManagerShouldDisableIdleTimer(_:)` was renamed to `CarPlayManagerDelegate.carPlayManagerShouldDisableIdleTimer(_:)`. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
 
 ### Other changes
 

@@ -286,7 +286,7 @@ extension CarPlayManager: CPApplicationDelegate {
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
-        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer(self) {
+        if let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) {
             UIApplication.shared.isIdleTimerDisabled = shouldDisableIdleTimer
         } else {
             UIApplication.shared.isIdleTimerDisabled = true
@@ -321,7 +321,7 @@ extension CarPlayManager: CPApplicationDelegate {
 
         eventsManager.sendCarPlayDisconnectEvent()
 
-        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer(self) {
+        if let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) {
             UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
         } else {
             UIApplication.shared.isIdleTimerDisabled = false
@@ -564,7 +564,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
         
         let navigationService = self.navigationService ??
-            delegate?.carPlayManager(self, navigationServiceAlong: route,
+            delegate?.carPlayManager(self,
+                                     navigationServiceAlong: route,
                                      routeIndex: routeIndex,
                                      routeOptions: options,
                                      desiredSimulationMode: desiredSimulationMode) ??
@@ -576,7 +577,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         // Store newly created `MapboxNavigationService`.
         self.navigationService = navigationService
 
-        if simulatesLocations == true {
+        if simulatesLocations {
             navigationService.simulationSpeedMultiplier = simulatedSpeedMultiplier
         }
         popToRootTemplate(interfaceController: interfaceController, animated: false)
@@ -867,7 +868,7 @@ extension CarPlayManager {
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
-        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer(self) {
+        if let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) {
             UIApplication.shared.isIdleTimerDisabled = shouldDisableIdleTimer
         } else {
             UIApplication.shared.isIdleTimerDisabled = true
@@ -900,7 +901,7 @@ extension CarPlayManager {
 
         eventsManager.sendCarPlayDisconnectEvent()
 
-        if let shouldDisableIdleTimer = delegate?.carplayManagerShouldDisableIdleTimer(self) {
+        if let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) {
             UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
         } else {
             UIApplication.shared.isIdleTimerDisabled = false
