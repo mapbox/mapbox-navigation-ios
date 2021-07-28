@@ -10,6 +10,8 @@ extension RestStop {
             self.init(type: .restArea)
         case .serviceArea:
             self.init(type: .serviceArea)
+        @unknown default:
+            fatalError("Unknown ServiceAreaInfo type.")
         }
     }
 }

@@ -108,15 +108,15 @@ public enum DistancedRoadObject {
             let info = native.distanceInfo.getPolygonDistanceInfo()
             self = .polygon(identifier: native.roadObjectId,
                             type: RoadObjectType(native.type),
-                            distanceToNearestEntry: info.distanceToNearestEntry,
-                            distanceToNearestExit: info.distanceToNearestExit,
+                            distanceToNearestEntry: info.entrances.first?.distance ?? -1.0,
+                            distanceToNearestExit: info.exits.first?.distance ?? -1.0,
                             isInside: info.isInside)
         } else if native.distanceInfo.isSubGraphDistanceInfo() {
             let info = native.distanceInfo.getSubGraphDistanceInfo()
             self = .subgraph(identifier: native.roadObjectId,
                              type: RoadObjectType(native.type),
-                             distanceToNearestEntry: info.distanceToNearestEntry,
-                             distanceToNearestExit: info.distanceToNearestExit,
+                             distanceToNearestEntry: info.entrances.first?.distance ?? -1.0,
+                             distanceToNearestExit: info.exits.first?.distance ?? -1.0,
                              isInside: info.isInside)
         } else if native.distanceInfo.isLineDistanceInfo() {
             let info = native.distanceInfo.getLineDistanceInfo()

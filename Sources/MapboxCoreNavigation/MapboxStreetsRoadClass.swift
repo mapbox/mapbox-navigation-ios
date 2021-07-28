@@ -25,6 +25,8 @@ extension MapboxStreetsRoadClass {
             self = .street
         case .serviceOther:
             self = .service
+        @unknown default:
+            fatalError("Unknown FunctionalRoadClass value.")
         }
     }
 }

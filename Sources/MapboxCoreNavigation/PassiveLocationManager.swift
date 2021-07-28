@@ -117,11 +117,13 @@ open class PassiveLocationManager: NSObject {
 
         switch status.speedLimit?.localeSign {
         case .mutcd:
-            signStandard  = .mutcd
+            signStandard = .mutcd
         case .vienna:
             signStandard = .viennaConvention
         case .none:
             signStandard = nil
+        case .some(_):
+            break
         }
 
         if let speed = status.speedLimit?.speedKmph as? Double {
@@ -132,6 +134,8 @@ open class PassiveLocationManager: NSObject {
                 speedLimit = Measurement(value: speed, unit: .kilometersPerHour)
             case .none:
                 speedLimit = nil
+            case .some(_):
+                break
             }
         }
         

@@ -1,5 +1,5 @@
 binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.json" ~> 14.0.0
-binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" ~> 59.0
+binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" ~> 60.0
 github "mapbox/mapbox-directions-swift" "v2.0.0-beta.6"
 github "mapbox/turf-swift" "v2.0.0-beta.1"
 github "mapbox/mapbox-events-ios" ~> 1.0.0

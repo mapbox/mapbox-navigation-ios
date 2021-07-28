@@ -10,6 +10,8 @@ extension TollCollection {
             self.init(type: .booth)
         case .tollGantry:
             self.init(type: .gantry)
+        @unknown default:
+            fatalError("Unknown TollCollectionInfo type.")
         }
     }
 }
