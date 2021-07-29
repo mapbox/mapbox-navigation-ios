@@ -1,7 +1,10 @@
+import Combine
 import UIKit
 import MapboxNavigation
+import MapboxCoreNavigation
 import CarPlay
 import MultipeerKit
+import MapboxNavigationRemoteKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -27,6 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     lazy var recentSearchItems: [CPListItem]? = []
     var recentItems: [RecentItem] = RecentItem.loadDefaults()
     var recentSearchText: String? = ""
+
+    private var subscriptions: [AnyCancellable] = []
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -36,9 +41,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             window?.rootViewController = UIViewController()
         }
-        
+        PassiveLocationManager.historyDirectoryURL = Current.historyUrl
         listMapboxFrameworks()
         Current.setupRemoteCli()
+
+        Current.actions.listHistoryFiles
+            .receive(on: DispatchQueue.main)
+            .sink { peerPayload in
+                do {
+                    let historyFileUrls = try FileManager.default
+                        .contentsOfDirectory(at: Current.historyUrl,
+                                             includingPropertiesForKeys: [.creationDateKey],
+                                             options: [.skipsHiddenFiles])
+                    Current.transceiver.send(HistoryFilesResponse(files: historyFileUrls.map(HistoryFile.init(_:))),
+                                             to: [peerPayload.sender])
+                }
+                catch {
+                    print(error)
+                }
+            }
+            .store(in: &subscriptions)
+
+        Current.actions.downloadHistoryFile
+            .receive(on: DispatchQueue.main)
+            .sink { peerPayload in
+                do {
+                    let fileData = try Data(contentsOf: URL(fileURLWithPath: peerPayload.payload.historyFile.path))
+                    let response = DownloadHistoryFileResponse(name: peerPayload.payload.historyFile.name,
+                                                               data: fileData)
+                    Current.transceiver.send(response, to: [peerPayload.sender])
+                }
+                catch {
+                    print(error)
+                }
+            }
+            .store(in: &subscriptions)
         
         return true
     }

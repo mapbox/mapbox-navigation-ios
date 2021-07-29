@@ -61,6 +61,9 @@
 		E22E6D3E26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3D26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit */; };
 		E22E6D4026B2A4CF00033DF2 /* MultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3F26B2A4CF00033DF2 /* MultipeerKit */; };
 		E22E6D4226B2BA2F00033DF2 /* PeersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D4126B2BA2F00033DF2 /* PeersListView.swift */; };
+		E26AD10126B2D6F30074E303 /* HistoryRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26AD10026B2D6F30074E303 /* HistoryRecorderView.swift */; };
+		E26AD10326B2D8F10074E303 /* HistoryFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26AD10226B2D8F10074E303 /* HistoryFilesView.swift */; };
+		E26AD10526B2DEED0074E303 /* HistoryFileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26AD10426B2DEED0074E303 /* HistoryFileView.swift */; };
 		E27A2204265674E400AA935F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E27A2202265674E400AA935F /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -168,6 +171,9 @@
 		E22E6D3626B29DCC00033DF2 /* StartNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationView.swift; sourceTree = "<group>"; };
 		E22E6D3826B2A22500033DF2 /* CurrentLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationView.swift; sourceTree = "<group>"; };
 		E22E6D4126B2BA2F00033DF2 /* PeersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeersListView.swift; sourceTree = "<group>"; };
+		E26AD10026B2D6F30074E303 /* HistoryRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryRecorderView.swift; sourceTree = "<group>"; };
+		E26AD10226B2D8F10074E303 /* HistoryFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryFilesView.swift; sourceTree = "<group>"; };
+		E26AD10426B2DEED0074E303 /* HistoryFileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryFileView.swift; sourceTree = "<group>"; };
 		E27A2203265674E400AA935F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -338,6 +344,9 @@
 				E22E6D4126B2BA2F00033DF2 /* PeersListView.swift */,
 				E22E6D3626B29DCC00033DF2 /* StartNavigationView.swift */,
 				E22E6D3826B2A22500033DF2 /* CurrentLocationView.swift */,
+				E26AD10026B2D6F30074E303 /* HistoryRecorderView.swift */,
+				E26AD10226B2D8F10074E303 /* HistoryFilesView.swift */,
+				E26AD10426B2DEED0074E303 /* HistoryFileView.swift */,
 				E22E6D2E26B293EA00033DF2 /* World.swift */,
 				E22E6D2426B2932800033DF2 /* Assets.xcassets */,
 				E22E6D2626B2932900033DF2 /* Preview Content */,
@@ -744,9 +753,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E22E6D2F26B293EA00033DF2 /* World.swift in Sources */,
+				E26AD10326B2D8F10074E303 /* HistoryFilesView.swift in Sources */,
+				E26AD10126B2D6F30074E303 /* HistoryRecorderView.swift in Sources */,
 				E22E6D3726B29DCC00033DF2 /* StartNavigationView.swift in Sources */,
 				E22E6D2326B2932700033DF2 /* ContentView.swift in Sources */,
 				E22E6D2126B2932700033DF2 /* MapboxNavigationRemoteApp.swift in Sources */,
+				E26AD10526B2DEED0074E303 /* HistoryFileView.swift in Sources */,
 				E22E6D4226B2BA2F00033DF2 /* PeersListView.swift in Sources */,
 				E22E6D3A26B2A2DA00033DF2 /* CurrentLocationView.swift in Sources */,
 			);

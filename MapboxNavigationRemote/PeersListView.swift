@@ -55,11 +55,17 @@ struct PeersListView: View {
                 NavigationLink("Start Navigation") {
                     StartNavigationView()
                         .navigationTitle("Start Navigation")
+                        .padding()
                 }
                 NavigationLink("Current Locations") {
                     CurrentLocationView()
+                        .padding()
                         .navigationTitle("Current Location")
-
+                }
+                NavigationLink("History Recorder") {
+                    HistoryRecorderView()
+                        .padding()
+                        .navigationTitle("History Recorder")
                 }
             }
         }

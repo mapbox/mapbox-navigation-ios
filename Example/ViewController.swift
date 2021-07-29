@@ -634,5 +634,21 @@ extension ViewController {
                 Current.transceiver.send(CurrentLocationResponse(location: coordinate), to: [peerPayload.sender])
             }
             .store(in: &remoteActionSubscriptions)
-    }
+
+        Current.actions.startHistoryRecording
+            .receive(on: DispatchQueue.main)
+            .sink { peerPayload in
+                PassiveLocationManager.startRecordingHistory()
+                Current.transceiver.send(StartHistoryRecordingResponse(), to: [peerPayload.sender])
+            }
+            .store(in: &remoteActionSubscriptions)
+        Current.actions.stopHistoryRecording
+            .receive(on: DispatchQueue.main)
+            .sink { peerPayload in
+                PassiveLocationManager.stopRecordingHistory { historyFileURL in
+                    let historyFile = historyFileURL.map(HistoryFile.init)
+                    Current.transceiver.send(StopHistoryRecordingResponse(file: historyFile), to: [peerPayload.sender])
+                }
+            }
+            .store(in: &remoteActionSubscriptions)    }
 }

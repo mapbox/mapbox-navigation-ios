@@ -19,7 +19,6 @@ struct StartNavigationView: View {
                                          to: Current.peers)
             }
         }
-        .padding()
     }
 
     private func parseDestination() -> CLLocationCoordinate2D? {

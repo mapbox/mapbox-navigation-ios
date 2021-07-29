@@ -39,11 +39,11 @@ struct CurrentLocationView: View {
                         .textSelection(.enabled)
                 }
             }
+            .listStyle(.bordered)
             Button("Request Current Location") {
                 Current.transceiver.send(CurrentLocationRequest(), to: Current.peers)
             }
         }
-        .padding()
         .onAppear {
             vm.startIfNeeded()
         }
