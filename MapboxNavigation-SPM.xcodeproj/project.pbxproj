@@ -43,6 +43,24 @@
 		DA303CA521B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		DAF5BE4A26A1FD1200DD3F2B /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = DAF5BE4926A1FD1200DD3F2B /* MapboxGeocoder */; };
+		E22E6D1526B28EFB00033DF2 /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D1426B28EFB00033DF2 /* World.swift */; };
+		E22E6D1626B28EFB00033DF2 /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D1426B28EFB00033DF2 /* World.swift */; };
+		E22E6D1826B2901300033DF2 /* Communication.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D1726B2901300033DF2 /* Communication.swift */; };
+		E22E6D1926B2901300033DF2 /* Communication.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D1726B2901300033DF2 /* Communication.swift */; };
+		E22E6D2126B2932700033DF2 /* MapboxNavigationRemoteApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D2026B2932700033DF2 /* MapboxNavigationRemoteApp.swift */; };
+		E22E6D2326B2932700033DF2 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D2226B2932700033DF2 /* ContentView.swift */; };
+		E22E6D2526B2932800033DF2 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E22E6D2426B2932800033DF2 /* Assets.xcassets */; };
+		E22E6D2826B2932900033DF2 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E22E6D2726B2932900033DF2 /* Preview Assets.xcassets */; };
+		E22E6D2D26B2936D00033DF2 /* MultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D2C26B2936D00033DF2 /* MultipeerKit */; };
+		E22E6D2F26B293EA00033DF2 /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D2E26B293EA00033DF2 /* World.swift */; };
+		E22E6D3326B297C500033DF2 /* MapboxNavigationRemoteKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3226B297C500033DF2 /* MapboxNavigationRemoteKit */; };
+		E22E6D3526B298BA00033DF2 /* MapboxNavigationRemoteKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3426B298BA00033DF2 /* MapboxNavigationRemoteKit */; };
+		E22E6D3726B29DCC00033DF2 /* StartNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D3626B29DCC00033DF2 /* StartNavigationView.swift */; };
+		E22E6D3A26B2A2DA00033DF2 /* CurrentLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D3826B2A22500033DF2 /* CurrentLocationView.swift */; };
+		E22E6D3C26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3B26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit */; };
+		E22E6D3E26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3D26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit */; };
+		E22E6D4026B2A4CF00033DF2 /* MultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3F26B2A4CF00033DF2 /* MultipeerKit */; };
+		E22E6D4226B2BA2F00033DF2 /* PeersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D4126B2BA2F00033DF2 /* PeersListView.swift */; };
 		E27A2204265674E400AA935F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E27A2202265674E400AA935F /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +73,19 @@
 			remoteInfo = Bench;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		E22E6D1326B28E2600033DF2 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -124,6 +155,19 @@
 		DAE26B1A20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE26B20206441D8001D6E1F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Main.strings"; sourceTree = "<group>"; };
 		DAE7114C1F22E94E009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
+		E22E6D1426B28EFB00033DF2 /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
+		E22E6D1726B2901300033DF2 /* Communication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Communication.swift; sourceTree = "<group>"; };
+		E22E6D1E26B2932700033DF2 /* MapboxNavigationRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxNavigationRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E22E6D2026B2932700033DF2 /* MapboxNavigationRemoteApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationRemoteApp.swift; sourceTree = "<group>"; };
+		E22E6D2226B2932700033DF2 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		E22E6D2426B2932800033DF2 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E22E6D2726B2932900033DF2 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		E22E6D2E26B293EA00033DF2 /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
+		E22E6D3026B2959100033DF2 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		E22E6D3126B2967800033DF2 /* MapboxNavigationRemoteKit */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MapboxNavigationRemoteKit; sourceTree = "<group>"; };
+		E22E6D3626B29DCC00033DF2 /* StartNavigationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartNavigationView.swift; sourceTree = "<group>"; };
+		E22E6D3826B2A22500033DF2 /* CurrentLocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationView.swift; sourceTree = "<group>"; };
+		E22E6D4126B2BA2F00033DF2 /* PeersListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeersListView.swift; sourceTree = "<group>"; };
 		E27A2203265674E400AA935F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -132,7 +176,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E22E6D3E26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */,
 				DA1A1B0425E087A20097BBD7 /* MapboxNavigation in Frameworks */,
+				E22E6D3526B298BA00033DF2 /* MapboxNavigationRemoteKit in Frameworks */,
+				E22E6D4026B2A4CF00033DF2 /* MultipeerKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -157,6 +204,16 @@
 			files = (
 				DA2157C525E093920086B294 /* MapboxNavigation in Frameworks */,
 				DAF5BE4A26A1FD1200DD3F2B /* MapboxGeocoder in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E22E6D1B26B2932700033DF2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E22E6D3C26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */,
+				E22E6D3326B297C500033DF2 /* MapboxNavigationRemoteKit in Frameworks */,
+				E22E6D2D26B2936D00033DF2 /* MultipeerKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -192,6 +249,8 @@
 				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
 				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
 				8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */,
+				E22E6D1426B28EFB00033DF2 /* World.swift */,
+				E22E6D1726B2901300033DF2 /* Communication.swift */,
 			);
 			name = Example;
 			sourceTree = "<group>";
@@ -246,11 +305,13 @@
 		C5ADFBBF1DDCC7840011824B = {
 			isa = PBXGroup;
 			children = (
+				E22E6D3126B2967800033DF2 /* MapboxNavigationRemoteKit */,
 				8DF8E4DD2202694100B29FEF /* Documents */,
 				35B711DB1E5E7B70001EDA8D /* Example */,
 				DA1A1AFC25E085D40097BBD7 /*  */,
 				35CDA80721908F2F0072B675 /* Bench */,
 				35CDA81C21908F320072B675 /* BenchTests */,
+				E22E6D1F26B2932700033DF2 /* MapboxNavigationRemote */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
 			);
@@ -263,8 +324,33 @@
 				C53F2F0720EBC95600D9798F /* Example.app */,
 				35CDA80621908F2F0072B675 /* Bench.app */,
 				35CDA81921908F320072B675 /* BenchTests.xctest */,
+				E22E6D1E26B2932700033DF2 /* MapboxNavigationRemote.app */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		E22E6D1F26B2932700033DF2 /* MapboxNavigationRemote */ = {
+			isa = PBXGroup;
+			children = (
+				E22E6D3026B2959100033DF2 /* Info.plist */,
+				E22E6D2026B2932700033DF2 /* MapboxNavigationRemoteApp.swift */,
+				E22E6D2226B2932700033DF2 /* ContentView.swift */,
+				E22E6D4126B2BA2F00033DF2 /* PeersListView.swift */,
+				E22E6D3626B29DCC00033DF2 /* StartNavigationView.swift */,
+				E22E6D3826B2A22500033DF2 /* CurrentLocationView.swift */,
+				E22E6D2E26B293EA00033DF2 /* World.swift */,
+				E22E6D2426B2932800033DF2 /* Assets.xcassets */,
+				E22E6D2626B2932900033DF2 /* Preview Content */,
+			);
+			path = MapboxNavigationRemote;
+			sourceTree = "<group>";
+		};
+		E22E6D2626B2932900033DF2 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				E22E6D2726B2932900033DF2 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -278,6 +364,7 @@
 				358D14601E5E3B7700ADE590 /* Frameworks */,
 				358D14611E5E3B7700ADE590 /* Resources */,
 				DA408F661FB3CA3C004D9661 /* Apply Mapbox Access Token */,
+				E22E6D1326B28E2600033DF2 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -286,6 +373,9 @@
 			name = Example;
 			packageProductDependencies = (
 				DA1A1B0325E087A20097BBD7 /* MapboxNavigation */,
+				E22E6D3426B298BA00033DF2 /* MapboxNavigationRemoteKit */,
+				E22E6D3D26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit */,
+				E22E6D3F26B2A4CF00033DF2 /* MultipeerKit */,
 			);
 			productName = "Example-Swift";
 			productReference = 358D14631E5E3B7700ADE590 /* Example.app */;
@@ -353,6 +443,28 @@
 			productReference = C53F2F0720EBC95600D9798F /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
+		E22E6D1D26B2932700033DF2 /* MapboxNavigationRemote */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = E22E6D2926B2932900033DF2 /* Build configuration list for PBXNativeTarget "MapboxNavigationRemote" */;
+			buildPhases = (
+				E22E6D1A26B2932700033DF2 /* Sources */,
+				E22E6D1B26B2932700033DF2 /* Frameworks */,
+				E22E6D1C26B2932700033DF2 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MapboxNavigationRemote;
+			packageProductDependencies = (
+				E22E6D2C26B2936D00033DF2 /* MultipeerKit */,
+				E22E6D3226B297C500033DF2 /* MapboxNavigationRemoteKit */,
+				E22E6D3B26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit */,
+			);
+			productName = MapboxNavigationRemote;
+			productReference = E22E6D1E26B2932700033DF2 /* MapboxNavigationRemote.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -362,8 +474,8 @@
 				KnownAssetTags = (
 					New,
 				);
-				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1250;
+				LastSwiftUpdateCheck = 1300;
+				LastUpgradeCheck = 1300;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					358D14621E5E3B7700ADE590 = {
@@ -392,6 +504,9 @@
 						DevelopmentTeam = GJZR2MEM28;
 						LastSwiftMigration = 1030;
 						ProvisioningStyle = Manual;
+					};
+					E22E6D1D26B2932700033DF2 = {
+						CreatedOnToolsVersion = 13.0;
 					};
 				};
 			};
@@ -433,6 +548,7 @@
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			packageReferences = (
 				DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */,
+				E22E6D0F26B28E1C00033DF2 /* XCRemoteSwiftPackageReference "MultipeerKit" */,
 			);
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
 			projectDirPath = "";
@@ -442,6 +558,7 @@
 				C53F2EDE20EBC95600D9798F /* Example-CarPlay */,
 				35CDA80521908F2F0072B675 /* Bench */,
 				35CDA81821908F320072B675 /* BenchTests */,
+				E22E6D1D26B2932700033DF2 /* MapboxNavigationRemote */,
 			);
 		};
 /* End PBXProject section */
@@ -484,6 +601,15 @@
 				C53F2EF620EBC95600D9798F /* Assets.xcassets in Resources */,
 				DA303CA021B76B5C00F921DC /* LaunchScreen.storyboard in Resources */,
 				DA303CA521B76CB000F921DC /* Localizable.stringsdict in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E22E6D1C26B2932700033DF2 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E22E6D2826B2932900033DF2 /* Preview Assets.xcassets in Resources */,
+				E22E6D2526B2932800033DF2 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,10 +692,12 @@
 			files = (
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
+				E22E6D1826B2901300033DF2 /* Communication.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+GuidanceCards.swift in Sources */,
 				8A092F9B25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */,
+				E22E6D1526B28EFB00033DF2 /* World.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -601,11 +729,26 @@
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
 				8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */,
+				E22E6D1626B28EFB00033DF2 /* World.swift in Sources */,
 				DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */,
 				8A092F9C25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */,
 				35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */,
+				E22E6D1926B2901300033DF2 /* Communication.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E22E6D1A26B2932700033DF2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E22E6D2F26B293EA00033DF2 /* World.swift in Sources */,
+				E22E6D3726B29DCC00033DF2 /* StartNavigationView.swift in Sources */,
+				E22E6D2326B2932700033DF2 /* ContentView.swift in Sources */,
+				E22E6D2126B2932700033DF2 /* MapboxNavigationRemoteApp.swift in Sources */,
+				E22E6D4226B2BA2F00033DF2 /* PeersListView.swift in Sources */,
+				E22E6D3A26B2A2DA00033DF2 /* CurrentLocationView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -700,6 +843,7 @@
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Example/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -719,6 +863,7 @@
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Example/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -956,7 +1101,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -1015,7 +1160,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1025,6 +1170,82 @@
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
+		};
+		E22E6D2A26B2932900033DF2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_ASSET_PATHS = "\"MapboxNavigationRemote/Preview Content\"";
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MapboxNavigationRemote/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Mapbox. All rights reserved.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = Mapbox.MapboxNavigationRemote;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		E22E6D2B26B2932900033DF2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MapboxNavigationRemote/Preview Content\"";
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				ENABLE_APP_SANDBOX = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_PREVIEWS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MapboxNavigationRemote/Info.plist;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2021 Mapbox. All rights reserved.";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = Mapbox.MapboxNavigationRemote;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -1076,6 +1297,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		E22E6D2926B2932900033DF2 /* Build configuration list for PBXNativeTarget "MapboxNavigationRemote" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E22E6D2A26B2932900033DF2 /* Debug */,
+				E22E6D2B26B2932900033DF2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -1085,6 +1315,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.14.0;
+			};
+		};
+		E22E6D0F26B28E1C00033DF2 /* XCRemoteSwiftPackageReference "MultipeerKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/insidegui/MultipeerKit.git";
+			requirement = {
+				branch = main;
+				kind = branch;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1106,6 +1344,32 @@
 			isa = XCSwiftPackageProductDependency;
 			package = DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */;
 			productName = MapboxGeocoder;
+		};
+		E22E6D2C26B2936D00033DF2 /* MultipeerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E22E6D0F26B28E1C00033DF2 /* XCRemoteSwiftPackageReference "MultipeerKit" */;
+			productName = MultipeerKit;
+		};
+		E22E6D3226B297C500033DF2 /* MapboxNavigationRemoteKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationRemoteKit;
+		};
+		E22E6D3426B298BA00033DF2 /* MapboxNavigationRemoteKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationRemoteKit;
+		};
+		E22E6D3B26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationRemoteMultipeerKit;
+		};
+		E22E6D3D26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationRemoteMultipeerKit;
+		};
+		E22E6D3F26B2A4CF00033DF2 /* MultipeerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E22E6D0F26B28E1C00033DF2 /* XCRemoteSwiftPackageReference "MultipeerKit" */;
+			productName = MultipeerKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

@@ -6,6 +6,8 @@ import MapboxCoreNavigation
 import MapboxMaps
 import MapboxCoreMaps
 import MapboxNavigation
+import Combine
+import MapboxNavigationRemoteKit
 
 class ViewController: UIViewController {
     
@@ -72,6 +74,8 @@ class ViewController: UIViewController {
     }
     
     weak var activeNavigationViewController: NavigationViewController?
+
+    private var remoteActionSubscriptions: [AnyCancellable] = []
     
     // MARK: - Initializer methods
     
@@ -104,6 +108,8 @@ class ViewController: UIViewController {
         setupSpeedLimitView()
         view.addSubview(speedLimitView)
         setupFeedbackButton()
+
+        setupRemoteCli()
     }
     
     func setupSpeedLimitView() {
@@ -408,7 +414,7 @@ class ViewController: UIViewController {
         navigationMapView.navigationCamera.stop()
     }
     
-    func requestRoute() {
+    func requestRoute(onSuccess: ((RouteResponse) -> Void)? = nil) {
         guard waypoints.count > 0 else { return }
         guard let coordinate = navigationMapView.mapView.location.latestLocation?.coordinate else {
             print("User location is not valid. Make sure to enable Location Services.")
@@ -425,7 +431,11 @@ class ViewController: UIViewController {
         // Get periodic updates regarding changes in estimated arrival time and traffic congestion segments along the route line.
         RouteControllerProactiveReroutingInterval = 30
 
-        requestRoute(with: navigationRouteOptions, success: defaultSuccess, failure: defaultFailure)
+
+        requestRoute(with: navigationRouteOptions, success: { response in
+            self.defaultSuccess(response)
+            onSuccess?(response)
+        }, failure: defaultFailure)
     }
         
     fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (response) in
@@ -584,5 +594,45 @@ extension ViewController: NavigationViewControllerDelegate {
         endCarPlayNavigation(canceled: canceled)
         dismissActiveNavigationViewController()
         clearNavigationMapView()
+    }
+}
+
+extension ViewController {
+    private func setupRemoteCli() {
+        Current.actions.startNavigation
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] startNavigation in
+                guard let self = self else { return }
+                guard self.activeNavigationViewController == nil else { return }
+
+                self.waypoints.removeAll()
+                let destination = startNavigation.payload.destination
+                // Note: The destination name can be modified. The value is used in the top banner when arriving at a destination.
+                let waypoint = Waypoint(coordinate: destination,
+                                        name: "Remote Start")
+                // Example of building highlighting. `targetCoordinate`, in this example,
+                // is used implicitly by NavigationViewController to determine which buildings to highlight.
+                waypoint.targetCoordinate = destination
+                self.waypoints.append(waypoint)
+
+                // Example of highlighting buildings in 3d and directly using the API on NavigationMapView.
+                let buildingHighlightCoordinates = self.waypoints.compactMap { $0.targetCoordinate }
+                self.navigationMapView.highlightBuildings(at: buildingHighlightCoordinates)
+
+                self.requestRoute { _ in
+                    self.startBasicNavigation()
+                }
+            }
+            .store(in: &remoteActionSubscriptions)
+
+        Current.actions.currentLocation
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] peerPayload in
+                guard let coordinate = self?.navigationMapView.mapView.location.latestLocation?.coordinate else {
+                    return
+                }
+                Current.transceiver.send(CurrentLocationResponse(location: coordinate), to: [peerPayload.sender])
+            }
+            .store(in: &remoteActionSubscriptions)
     }
 }

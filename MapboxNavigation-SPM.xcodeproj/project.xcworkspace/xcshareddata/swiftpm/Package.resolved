@@ -92,6 +92,15 @@
         }
       },
       {
+        "package": "MultipeerKit",
+        "repositoryURL": "https://github.com/insidegui/MultipeerKit.git",
+        "state": {
+          "branch": "main",
+          "revision": "ee013fd04f20166ea40ff456a67058c040289c1c",
+          "version": null
+        }
+      },
+      {
         "package": "Nimble",
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {

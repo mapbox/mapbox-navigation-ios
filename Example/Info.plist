@@ -92,5 +92,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Remote control</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_MKSVC._tcp</string>
+	</array>
 </dict>
 </plist>

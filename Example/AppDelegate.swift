@@ -1,10 +1,10 @@
 import UIKit
 import MapboxNavigation
 import CarPlay
+import MultipeerKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-    
     weak var currentAppRootViewController: ViewController?
     
     var window: UIWindow?
@@ -38,6 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         listMapboxFrameworks()
+        Current.setupRemoteCli()
         
         return true
     }
