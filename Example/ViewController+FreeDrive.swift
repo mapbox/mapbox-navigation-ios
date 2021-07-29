@@ -127,7 +127,7 @@ extension ViewController {
             return
         }
         
-        // Print the current road and upcoming road.
+        // Identify the current road and upcoming road.
         var statusString = "Currently on \(edgeNames(identifier: currentEdgeIdentifier).joined(separator: " / ")), approaching \(edgeNames(identifier: nextEdgeIdentifier).joined(separator: " / "))"
         
         // If there is an upcoming intersection, include the names of the cross streets.
@@ -136,6 +136,9 @@ extension ViewController {
             let branchNames = branchEdgeIdentifiers.flatMap { edgeNames(identifier: $0) }
             statusString += " at \(branchNames.joined(separator: ", "))"
         }
+        
+        // Print the current road, upcoming road, and cross streets.
+        print(statusString)
     }
     
     func edgeNames(identifier: RoadGraph.Edge.Identifier) -> [String] {
