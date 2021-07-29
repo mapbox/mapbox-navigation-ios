@@ -6,6 +6,7 @@ import MapboxDirections
 /**
  Class, which conforms to `ViewportDataSource` protocol and provides default implementation of it.
  */
+@available(iOSApplicationExtension, unavailable)
 public class NavigationViewportDataSource: ViewportDataSource {
     
     /**
@@ -471,6 +472,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
 
 // MARK: - LocationConsumer delegate
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewportDataSource: LocationConsumer {
     
     public var shouldTrackLocation: Bool {

@@ -12,6 +12,7 @@ import CarPlay
  - seealso: `NavigationViewController`
  */
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public class CarPlayNavigationViewController: UIViewController {
     
     /**
@@ -588,6 +589,7 @@ public class CarPlayNavigationViewController: UIViewController {
 // MARK: - StyleManagerDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayNavigationViewController: StyleManagerDelegate {
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
@@ -617,6 +619,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
 // MARK: - NavigationServiceDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
     
     public func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool {
@@ -634,6 +637,7 @@ extension CarPlayNavigationViewController: NavigationServiceDelegate {
 // MARK: - NavigationMapViewDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,

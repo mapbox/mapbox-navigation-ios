@@ -365,10 +365,12 @@ open class DistanceLabel: StylableLabel {
 
 /// :nodoc:
 @objc(MBPrimaryLabel)
+@available(iOSApplicationExtension, unavailable)
 open class PrimaryLabel: InstructionLabel { }
 
 /// :nodoc:
 @objc(MBSecondaryLabel)
+@available(iOSApplicationExtension, unavailable)
 open class SecondaryLabel: InstructionLabel { }
 
 /// :nodoc:
@@ -408,6 +410,7 @@ open class SubtitleLabel: StylableLabel { }
 
 /// :nodoc:
 @objc(MBProgressBar)
+@available(iOSApplicationExtension, unavailable)
 public class ProgressBar: UIView {
     let bar = UIView()
     

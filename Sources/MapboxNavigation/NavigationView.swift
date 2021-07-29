@@ -37,6 +37,7 @@ import MapboxCoreNavigation
  ```
  */
 @IBDesignable
+@available(iOSApplicationExtension, unavailable)
 open class NavigationView: UIView {
     
     private enum Constants {
@@ -202,10 +203,12 @@ open class NavigationView: UIView {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 protocol NavigationViewDelegate: NavigationMapViewDelegate, InstructionsBannerViewDelegate, VisualInstructionDelegate {
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton)
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationView {
     
     func setupConstraints() {

@@ -12,6 +12,7 @@ import MapboxMaps
  If no delegate is set, a default built-in `MapboxNavigationService` will be created and used when a trip begins.
  */
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     /**
      Offers the delegate an opportunity to provide a customized list of leading bar buttons at the root of the template stack for the given activity.
@@ -164,6 +165,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
 }
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.

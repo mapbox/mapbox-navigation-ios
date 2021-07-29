@@ -26,6 +26,7 @@ open class EndOfRouteCommentView: StylableTextView {}
 /// :nodoc:
 open class EndOfRouteButton: StylableButton {}
 
+@available(iOSApplicationExtension, unavailable)
 class EndOfRouteViewController: UIViewController {
     // MARK: - IBOutlets
     @IBOutlet weak var labelContainer: UIView!
@@ -158,6 +159,7 @@ class EndOfRouteViewController: UIViewController {
 }
 
 // MARK: - UITextViewDelegate
+@available(iOSApplicationExtension, unavailable)
 extension EndOfRouteViewController: UITextViewDelegate {
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         guard text.count == 1, text.rangeOfCharacter(from: CharacterSet.newlines) != nil else { return true }

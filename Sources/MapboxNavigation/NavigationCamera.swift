@@ -6,6 +6,7 @@ import MapboxMaps
  and transitions in a typical navigation scenarios. It's fed with `CameraOptions` via the `ViewportDataSource`
  protocol and executes transitions using `CameraStateTransition` protocol.
  */
+@available(iOSApplicationExtension, unavailable)
 public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
     /**

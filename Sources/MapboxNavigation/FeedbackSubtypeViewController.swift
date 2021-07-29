@@ -1,6 +1,7 @@
 import UIKit
 import MapboxCoreNavigation
 
+@available(iOSApplicationExtension, unavailable)
 class FeedbackSubtypeViewController: FeedbackViewController {
 
     var activeFeedbackType: FeedbackType?

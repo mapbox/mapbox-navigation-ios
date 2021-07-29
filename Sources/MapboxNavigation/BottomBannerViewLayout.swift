@@ -1,5 +1,6 @@
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 extension BottomBannerViewController {
     func setupRootViews() {
         let children = [bottomBannerView, bottomPaddingView]

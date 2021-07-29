@@ -4,6 +4,7 @@ import MapboxMaps
 import CoreLocation
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationMapView {
     /// A component meant to assist displaying route line and related items like arrows, waypoints, annotations and other.
     class RouteOverlayController: NavigationComponent, NavigationComponentDelegate, LocationConsumer {

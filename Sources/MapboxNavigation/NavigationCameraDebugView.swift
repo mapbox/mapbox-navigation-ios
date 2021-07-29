@@ -7,6 +7,7 @@ import MapboxMaps
  
  Such `UIView` is useful for debugging purposes (especially when debugging camera behavior on CarPlay).
  */
+@available(iOSApplicationExtension, unavailable)
 class NavigationCameraDebugView: UIView {
     
     weak var mapView: MapView?

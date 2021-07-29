@@ -1,5 +1,6 @@
 import UIKit
 
+@available(iOSApplicationExtension, unavailable)
 enum ExitSide: String {
     case left, right
     
@@ -8,6 +9,7 @@ enum ExitSide: String {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 public class ExitView: StylableView {
     static let leftExitImage = UIImage(named: "exit-left", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     static let rightExitImage = UIImage(named: "exit-right", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)

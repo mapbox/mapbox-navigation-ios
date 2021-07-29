@@ -10,6 +10,7 @@ import CarPlay
  `CarPlayMapViewController` is responsible for administering the Mapbox map, the interface styles and the map template buttons to display on CarPlay.
  */
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public class CarPlayMapViewController: UIViewController {
     
     /**
@@ -291,6 +292,7 @@ public class CarPlayMapViewController: UIViewController {
 // MARK: - StyleManagerDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayMapViewController: StyleManagerDelegate {
     
     public func location(for styleManager: StyleManager) -> CLLocation? {
@@ -323,6 +325,7 @@ extension CarPlayMapViewController: StyleManagerDelegate {
 // MARK: - NavigationMapViewDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayMapViewController: NavigationMapViewDelegate {
     
     public func navigationMapView(_ navigationMapView: NavigationMapView,

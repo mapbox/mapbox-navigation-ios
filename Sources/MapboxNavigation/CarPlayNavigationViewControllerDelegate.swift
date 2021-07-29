@@ -6,6 +6,7 @@ import MapboxMaps
  The `CarPlayNavigationViewControllerDelegate` protocol provides methods for reacting to significant events during turn-by-turn navigation with `CarPlayNavigationViewController`.
  */
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public protocol CarPlayNavigationViewControllerDelegate: AnyObject, UnimplementedLogging {
     
     /**
@@ -38,6 +39,7 @@ public protocol CarPlayNavigationViewControllerDelegate: AnyObject, Unimplemente
 }
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public extension CarPlayNavigationViewControllerDelegate {
     
     /**

@@ -3,10 +3,12 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 open class NextInstructionLabel: InstructionLabel {}
 
 /// :nodoc:
 @IBDesignable
+@available(iOSApplicationExtension, unavailable)
 open class NextBannerView: UIView, NavigationComponent {
     weak var maneuverView: ManeuverView!
     weak var instructionLabel: NextInstructionLabel!

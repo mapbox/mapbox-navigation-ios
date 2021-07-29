@@ -4,6 +4,7 @@ import MapboxDirections
 
 /// :nodoc:
 @IBDesignable
+@available(iOSApplicationExtension, unavailable)
 open class LanesView: UIView, NavigationComponent {
     weak var stackView: UIStackView!
     weak var separatorView: SeparatorView!

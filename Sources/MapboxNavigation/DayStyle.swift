@@ -62,6 +62,7 @@ extension UIFont {
 /**
  `DefaultStyle` is default style for Mapbox Navigation SDK.
  */
+@available(iOSApplicationExtension, unavailable)
 open class DayStyle: Style {
     public required init() {
         super.init()

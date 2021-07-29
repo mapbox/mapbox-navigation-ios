@@ -2,6 +2,7 @@ import UIKit
 import MapboxCoreNavigation
 
 /// Protocol used by `NavigationViewController`'s components to get required data and manipulate it's contents.
+@available(iOSApplicationExtension, unavailable)
 protocol NavigationViewData: AnyObject {
     var navigationView: NavigationView { get }
     var router: Router { get }

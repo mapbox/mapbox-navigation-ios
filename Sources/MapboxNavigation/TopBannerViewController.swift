@@ -4,6 +4,7 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
+@available(iOSApplicationExtension, unavailable)
 public protocol TopBannerViewControllerDelegate: AnyObject, UnimplementedLogging {
     func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
     
@@ -18,6 +19,7 @@ public protocol TopBannerViewControllerDelegate: AnyObject, UnimplementedLogging
     func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
 }
 
+@available(iOSApplicationExtension, unavailable)
 public extension TopBannerViewControllerDelegate {
     func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
         logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
@@ -49,6 +51,7 @@ public extension TopBannerViewControllerDelegate {
  
  This class is the default top banner view controller used by `NavigationOptions` and `NavigationViewController`. `InstructionsCardViewController` provides an alternative, user notification–like interface.
  */
+@available(iOSApplicationExtension, unavailable)
 open class TopBannerViewController: UIViewController {
     weak var delegate: TopBannerViewControllerDelegate? = nil
     
@@ -368,6 +371,7 @@ open class TopBannerViewController: UIViewController {
 }
 
 // MARK: - NavigationComponent Conformance
+@available(iOSApplicationExtension, unavailable)
 extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
@@ -431,6 +435,7 @@ extension TopBannerViewController: NavigationComponent {
 }
 
 // MARK: InstructionsBannerViewDelegate Conformance
+@available(iOSApplicationExtension, unavailable)
 extension TopBannerViewController: InstructionsBannerViewDelegate {
     public func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         if isDisplayingSteps {
@@ -445,6 +450,7 @@ extension TopBannerViewController: InstructionsBannerViewDelegate {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension TopBannerViewController: StepsViewControllerDelegate {
     public func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         delegate?.topBanner(self, didSelect: legIndex, stepIndex: stepIndex, cell: cell)
@@ -456,6 +462,7 @@ extension TopBannerViewController: StepsViewControllerDelegate {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension TopBannerViewController: CarPlayConnectionObserver {
     public func didConnectToCarPlay() {
         displayStepsTable()
@@ -466,6 +473,7 @@ extension TopBannerViewController: CarPlayConnectionObserver {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension TopBannerViewController: NavigationStatusPresenter {
     public func show(_ status: StatusView.Status) {
         statusView.show(status)
@@ -476,6 +484,7 @@ extension TopBannerViewController: NavigationStatusPresenter {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension TopBannerViewController: NavigationMapInteractionObserver {
     public func navigationViewController(didCenterOn location: CLLocation) {
         stopPreviewing()

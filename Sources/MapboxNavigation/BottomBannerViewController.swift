@@ -18,6 +18,7 @@ public protocol BottomBannerViewControllerDelegate: AnyObject {
  A user interface element designed to display the estimated arrival time, distance, and time remaining, as well as give the user a control the cancel the navigation session.
  */
 @IBDesignable
+@available(iOSApplicationExtension, unavailable)
 open class BottomBannerViewController: UIViewController, NavigationComponent {
     /**
      A padded spacer view that covers the bottom safe area of the device, if any.

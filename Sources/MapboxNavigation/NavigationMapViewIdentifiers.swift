@@ -1,5 +1,6 @@
 import Foundation
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationMapView {
     
     static let identifier = Bundle.mapboxNavigation.bundleIdentifier ?? ""

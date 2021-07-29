@@ -5,6 +5,7 @@ import MapboxMaps
 /// A component to ease camera manipulation logic.
 ///
 /// This class manages various scenarious from moving camera to a specific region on demand and handling device rotation, up to reacting to active guidance events.
+@available(iOSApplicationExtension, unavailable)
 class CameraController: NavigationComponent, NavigationComponentDelegate {
     
     // MARK: - Properties

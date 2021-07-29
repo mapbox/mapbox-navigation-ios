@@ -5,6 +5,7 @@ import MapboxMaps
 import Turf
 import CoreLocation
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationMapView {
     /// A components, designed to help manage `NavigationMapView` ornaments logic.
     class OrnamentsController: NavigationComponent, NavigationComponentDelegate {

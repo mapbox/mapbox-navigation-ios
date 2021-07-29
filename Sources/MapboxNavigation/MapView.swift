@@ -7,6 +7,7 @@ import MapboxCoreNavigation
 /**
  An extension on `MapView` that allows for toggling traffic on a map style that contains a [Mapbox Traffic source](https://docs.mapbox.com/vector-tiles/mapbox-traffic-v1/).
  */
+@available(iOSApplicationExtension, unavailable)
 extension MapView {
     
     /**

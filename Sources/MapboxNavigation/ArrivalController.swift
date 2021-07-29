@@ -5,6 +5,7 @@ import MapboxMobileEvents
 import MapboxMaps
 
 /// A component to encapsulate `EndOfRouteViewController` presenting logic such as enabling/disabling, handling autolayout, keyboard, positioning camera, etc.
+@available(iOSApplicationExtension, unavailable)
 class ArrivalController: NavigationComponentDelegate {
     
     typealias EndOfRouteDismissalHandler = (EndOfRouteFeedback?) -> ()

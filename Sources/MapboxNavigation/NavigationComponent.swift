@@ -5,6 +5,7 @@ import CoreLocation
 /**
  A navigation component is a member of the navigation UI view hierarchy that responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol NavigationComponent: NavigationServiceDelegate {}
 
 /**
@@ -35,6 +36,7 @@ public protocol CarPlayConnectionObserver: AnyObject {
 /**
  This protocol defines a UI Component that is capable of presenting a status message.
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol NavigationStatusPresenter: AnyObject {
     /**
      Shows a Status for a specified amount of time.

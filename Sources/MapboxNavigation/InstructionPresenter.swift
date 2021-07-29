@@ -24,6 +24,7 @@ extension NSAttributedString.Key {
     static let abbreviationPriority = NSAttributedString.Key(rawValue: "MBVisualInstructionComponentAbbreviationPriority")
 }
 
+@available(iOSApplicationExtension, unavailable)
 class InstructionPresenter {
     private let instruction: VisualInstruction
     private weak var dataSource: DataSource?

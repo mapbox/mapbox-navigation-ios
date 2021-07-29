@@ -4,6 +4,7 @@ import UIKit
 /**
  `GenericRouteShield` is a class to render routes that do not have route-shields.
  */
+@available(iOSApplicationExtension, unavailable)
 public class GenericRouteShield: StylableView {
     static let labelFontSizeScaleFactor: CGFloat = 2.0/3.0
     

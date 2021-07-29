@@ -5,6 +5,7 @@ import MapboxCoreNavigation
  The `CarPlayMapViewControllerDelegate` protocol provides methods for reacting to events during free-drive navigation or route previewing in `CarPlayMapViewController`.
  */
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public protocol CarPlayMapViewControllerDelegate: AnyObject, UnimplementedLogging {
     
     /**
@@ -20,6 +21,7 @@ public protocol CarPlayMapViewControllerDelegate: AnyObject, UnimplementedLoggin
 }
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public extension CarPlayMapViewControllerDelegate {
     
     /**

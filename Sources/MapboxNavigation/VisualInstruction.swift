@@ -1,6 +1,7 @@
 import MapboxDirections
 import CarPlay
 
+@available(iOSApplicationExtension, unavailable)
 extension VisualInstruction {
     var laneComponents: [Component] {
         return components.filter { component -> Bool in

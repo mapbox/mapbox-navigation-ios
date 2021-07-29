@@ -2,6 +2,7 @@ import CoreLocation
 import MapboxMaps
 import Turf
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationMapView {
     
     // MARK: - Building Extrusion Highlighting methods

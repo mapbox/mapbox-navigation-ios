@@ -1,6 +1,7 @@
 import UIKit
 
 extension UIFont {
+    @available(iOSApplicationExtension, unavailable)
     var fontSizeMultiplier: CGFloat {
         get {
             switch UIApplication.shared.preferredContentSizeCategory {
@@ -24,11 +25,13 @@ extension UIFont {
     /**
      Returns an adjusted font for the `preferredContentSizeCategory`.
      */
+    @available(iOSApplicationExtension, unavailable)
     public var adjustedFont: UIFont {
         let font = with(multiplier: fontSizeMultiplier)
         return font
     }
     
+    @available(iOSApplicationExtension, unavailable)
     func with(multiplier: CGFloat) -> UIFont {
         let font = UIFont(descriptor: fontDescriptor, size: pointSize * multiplier)
         return font

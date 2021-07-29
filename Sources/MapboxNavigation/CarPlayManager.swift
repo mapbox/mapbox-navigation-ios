@@ -11,6 +11,7 @@ import MapboxMaps
  - note: It is very important you have a single `CarPlayManager` instance at any given time. This should be managed by your `UIApplicationDelegate` class if you choose to supply your `accessToken` to the `CarPlayManager.eventsManager` via `NavigationEventsManager` initializer, instead of the Info.plist.
  */
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 public class CarPlayManager: NSObject {
     
     /**
@@ -277,6 +278,7 @@ public class CarPlayManager: NSObject {
 // MARK: - CPApplicationDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayManager: CPApplicationDelegate {
     
     public func application(_ application: UIApplication,
@@ -404,6 +406,7 @@ extension CarPlayManager: CPApplicationDelegate {
 // MARK: - CPInterfaceControllerDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayManager: CPInterfaceControllerDelegate {
     
     public func templateWillAppear(_ template: CPTemplate, animated: Bool) {
@@ -434,6 +437,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
 }
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayManager {
     
     public func previewRoutes(to destination: Waypoint, completionHandler: @escaping CompletionHandler) {
@@ -550,6 +554,7 @@ extension CarPlayManager {
 // MARK: - CPMapTemplateDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayManager: CPMapTemplateDelegate {
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
@@ -781,6 +786,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 // MARK: - CarPlayNavigationViewControllerDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
     
     public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
@@ -822,6 +828,7 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
 // MARK: - CarPlayMapViewControllerDelegate methods
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayManager: CarPlayMapViewControllerDelegate {
     
     public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
@@ -835,6 +842,7 @@ extension CarPlayManager: CarPlayMapViewControllerDelegate {
 }
 
 @available(iOS 12.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayManager: MapTemplateProviderDelegate {
     
     func mapTemplateProvider(_ provider: MapTemplateProvider,
@@ -859,6 +867,7 @@ extension CarPlayManager: MapTemplateProviderDelegate {
 }
 
 @available(iOS 13.0, *)
+@available(iOSApplicationExtension, unavailable)
 extension CarPlayManager {
     
     public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,

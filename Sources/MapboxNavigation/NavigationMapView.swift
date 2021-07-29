@@ -13,6 +13,7 @@ private enum RouteDurationAnnotationTailPosition: Int {
 /**
  `NavigationMapView` is a subclass of `UIView`, which draws `MapView` on its surface and provides convenience functions for adding `Route` lines to a map.
  */
+@available(iOSApplicationExtension, unavailable)
 open class NavigationMapView: UIView {
     
     // MARK: Class constants
@@ -1453,6 +1454,7 @@ open class NavigationMapView: UIView {
 
 // MARK: - UIGestureRecognizerDelegate methods
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationMapView: UIGestureRecognizerDelegate {
     
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {

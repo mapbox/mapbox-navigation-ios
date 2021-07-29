@@ -55,6 +55,7 @@ extension SpokenInstruction {
  
  You can also subclass `RouteVoiceController` to implement you own mechanism of monitoring navgiation events and calling `speechSynthesizer`.
  */
+@available(iOSApplicationExtension, unavailable)
 open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     typealias AudioControlFailureHandler = (SpeechError) -> Void
     
@@ -195,6 +196,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
 /**
  The `RouteVoiceControllerDelegate` protocol defines methods that allow an object to respond to significant events related to route vocalization
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol RouteVoiceControllerDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the route voice controller reports an error
@@ -205,6 +207,7 @@ public protocol RouteVoiceControllerDelegate: AnyObject, UnimplementedLogging {
     func routeVoiceController(_ routeVoiceController: RouteVoiceController, encountered error: SpeechError)
 }
 
+@available(iOSApplicationExtension, unavailable)
 public extension RouteVoiceControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.

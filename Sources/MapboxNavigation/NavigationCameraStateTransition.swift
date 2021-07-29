@@ -5,6 +5,7 @@ import Turf
  Class, which conforms to `CameraStateTransition` protocol and provides default implementation of
  camera related transitions by using `CameraAnimator` functionality provided by Mapbox Maps SDK.
  */
+@available(iOSApplicationExtension, unavailable)
 public class NavigationCameraStateTransition: CameraStateTransition {
 
     public weak var mapView: MapView?

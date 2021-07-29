@@ -6,6 +6,7 @@ import UIKit
  A translucent bar that responds to tap and swipe gestures, similar to a scrubber or stepper control, and expands and collapses to maximize screen real estate.
  */
 @IBDesignable
+@available(iOSApplicationExtension, unavailable)
 public class StatusView: UIControl {
     weak var activityIndicatorView: UIActivityIndicatorView!
     weak var textLabel: UILabel!

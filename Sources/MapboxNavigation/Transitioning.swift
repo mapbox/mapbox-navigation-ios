@@ -32,6 +32,7 @@ extension DismissAnimator: UIViewControllerAnimatedTransitioning {
 
 class PresentAnimator: NSObject { }
 
+@available(iOSApplicationExtension, unavailable)
 extension PresentAnimator: UIViewControllerAnimatedTransitioning {
     
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {

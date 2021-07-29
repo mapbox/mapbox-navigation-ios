@@ -12,6 +12,7 @@ import Turf
 /**
  A container view controller is a view controller that behaves as a navigation component; that is, it responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
  */
+@available(iOSApplicationExtension, unavailable)
 public typealias ContainerViewController = UIViewController & NavigationComponent
 
 /**
@@ -23,6 +24,7 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  
  `CarPlayNavigationViewController` manages the corresponding user interface on a CarPlay screen.
  */
+@available(iOSApplicationExtension, unavailable)
 open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData {
     /**
      A `Route` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with its
@@ -710,6 +712,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewController: NavigationViewDelegate {
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
         handleCancelAction()
@@ -718,6 +721,7 @@ extension NavigationViewController: NavigationViewDelegate {
 
 // MARK: - NavigationServiceDelegate methods
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewController: NavigationServiceDelegate {
     
     public func navigationService(_ service: NavigationService, shouldRerouteFrom location: CLLocation) -> Bool {
@@ -935,6 +939,7 @@ extension NavigationViewController: NavigationServiceDelegate {
 
 // MARK: - StyleManagerDelegate
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewController: StyleManagerDelegate {
     
     func roadName(at location: CLLocation) -> String? {
@@ -977,6 +982,7 @@ extension NavigationViewController: StyleManagerDelegate {
 
 // MARK: - TopBannerViewController methods
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewController {
 
     // MARK: StatusView action related methods
@@ -991,6 +997,7 @@ extension NavigationViewController {
 
 // MARK: - TopBannerViewControllerDelegate methods
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewController: TopBannerViewControllerDelegate {
     
     public func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
@@ -1083,6 +1090,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
 
 // MARK: - BottomBannerViewControllerDelegate methods
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewController: BottomBannerViewControllerDelegate {
     
     // Handle cancel action in new Bottom Banner container.
@@ -1093,6 +1101,7 @@ extension NavigationViewController: BottomBannerViewControllerDelegate {
 
 // MARK: - CarPlayConnectionObserver methods
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewController: CarPlayConnectionObserver {
     
     public func didConnectToCarPlay() {
@@ -1110,6 +1119,7 @@ extension NavigationViewController: CarPlayConnectionObserver {
 
 // MARK: - NavigationMapViewDelegate methods
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationViewController: NavigationMapViewDelegate {
     
     public func navigationMapView(_ navigationMapView: NavigationMapView, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {

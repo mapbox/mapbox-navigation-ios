@@ -9,6 +9,7 @@ open class StepsBackgroundView: UIView { }
 /**
  `StepsViewControllerDelegate` provides methods for user interactions in a `StepsViewController`.
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol StepsViewControllerDelegate: AnyObject {
     /**
      Called when the user selects a step in a `StepsViewController`.
@@ -22,6 +23,7 @@ public protocol StepsViewControllerDelegate: AnyObject {
 }
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 public class StepsViewController: UIViewController {
     weak var tableView: UITableView!
     weak var backgroundView: UIView!
@@ -189,6 +191,7 @@ public class StepsViewController: UIViewController {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension StepsViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
@@ -207,6 +210,7 @@ extension StepsViewController: UITableViewDelegate {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension StepsViewController: UITableViewDataSource {
     public func numberOfSections(in tableView: UITableView) -> Int {
         return sections.count
@@ -271,9 +275,11 @@ extension StepsViewController: UITableViewDataSource {
 }
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 open class StepInstructionsView: BaseInstructionsBannerView { }
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 open class StepTableViewCell: UITableViewCell {
     weak var instructionsView: StepInstructionsView!
     weak var separatorView: SeparatorView!

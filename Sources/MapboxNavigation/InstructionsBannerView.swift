@@ -6,6 +6,7 @@ import MapboxDirections
 /**
  `InstructionsBannerViewDelegate` provides methods for reacting to user interactions in `InstructionsBannerView`.
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol InstructionsBannerViewDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the user taps the `InstructionsBannerView`.
@@ -18,6 +19,7 @@ public protocol InstructionsBannerViewDelegate: AnyObject, UnimplementedLogging 
     func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
 }
 
+@available(iOSApplicationExtension, unavailable)
 public extension InstructionsBannerViewDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
@@ -36,6 +38,7 @@ public extension InstructionsBannerViewDelegate {
 
 /// :nodoc:
 @IBDesignable
+@available(iOSApplicationExtension, unavailable)
 open class InstructionsBannerView: BaseInstructionsBannerView, NavigationComponent {
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
@@ -43,6 +46,7 @@ open class InstructionsBannerView: BaseInstructionsBannerView, NavigationCompone
 }
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 open class BaseInstructionsBannerView: UIControl {
     public weak var maneuverView: ManeuverView!
     public weak var primaryLabel: PrimaryLabel!

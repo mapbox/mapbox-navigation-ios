@@ -3,6 +3,7 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
@@ -51,6 +52,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
 /**
  The `VisualInstructionDelegate` protocol defines a method that allows an object to customize presented visual instructions.
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol VisualInstructionDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when an InstructionLabel will present a visual instruction.
@@ -63,6 +65,7 @@ public protocol VisualInstructionDelegate: AnyObject, UnimplementedLogging {
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
 }
 
+@available(iOSApplicationExtension, unavailable)
 public extension VisualInstructionDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.

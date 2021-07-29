@@ -5,6 +5,7 @@ import MapboxCoreNavigation
 import Turf
 import MapboxMaps
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationMapView {
 
     struct RoutePoints {

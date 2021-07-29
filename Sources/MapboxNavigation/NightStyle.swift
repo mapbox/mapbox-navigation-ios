@@ -4,6 +4,7 @@ import MapboxMaps
 /**
  `NightStyle` is the default night style for Mapbox Navigation SDK. Only will be applied when necessary and if `automaticallyAdjustStyleForSunPosition`.
  */
+@available(iOSApplicationExtension, unavailable)
 open class NightStyle: DayStyle {
     public required init() {
         super.init()

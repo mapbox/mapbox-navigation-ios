@@ -2,6 +2,7 @@ import MapboxDirections
 import UIKit
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerViewDelegate {
     /**
      Called when previewing the steps on the current route.
@@ -22,6 +23,7 @@ public protocol InstructionsCardCollectionDelegate: InstructionsCardContainerVie
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, cardSizeFor traitCollection: UITraitCollection) -> CGSize?
 }
 
+@available(iOSApplicationExtension, unavailable)
 public extension InstructionsCardCollectionDelegate {
     func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {
         logUnimplemented(protocolType: InstructionsCardCollectionDelegate.self, level: .debug)

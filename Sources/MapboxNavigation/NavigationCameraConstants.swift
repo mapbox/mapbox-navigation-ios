@@ -50,6 +50,7 @@ extension Notification.Name {
     public static let navigationCameraViewportDidChange: Notification.Name = .init(rawValue: "NavigationViewportDidChange")
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension NavigationCamera {
 
     public struct NotificationUserInfoKey: Hashable, Equatable, RawRepresentable {

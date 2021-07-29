@@ -3,6 +3,7 @@ import UIKit
 import MapboxDirections
 
 /// :nodoc:
+@available(iOSApplicationExtension, unavailable)
 public class InstructionsCardView: BaseInstructionsBannerView {
     
     var step: RouteStep! {

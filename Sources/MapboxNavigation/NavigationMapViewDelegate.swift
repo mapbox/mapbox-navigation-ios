@@ -8,6 +8,7 @@ import Turf
 /**
  The `NavigationMapViewDelegate` provides methods for configuring the `NavigationMapView`, as well as responding to events triggered by the `NavigationMapView`.
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     
     /**
@@ -110,6 +111,7 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager)
 }
 
+@available(iOSApplicationExtension, unavailable)
 public extension NavigationMapViewDelegate {
     
     /**

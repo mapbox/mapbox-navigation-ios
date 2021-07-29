@@ -1,6 +1,7 @@
 import UIKit
 import MapboxCoreNavigation
 
+@available(iOSApplicationExtension, unavailable)
 extension FeedbackViewController: UIViewControllerTransitioningDelegate {
     public func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return DismissAnimator()
@@ -18,6 +19,7 @@ extension FeedbackViewController: UIViewControllerTransitioningDelegate {
 /**
  The `FeedbackViewControllerDelegate` protocol provides methods for responding to feedback events.
  */
+@available(iOSApplicationExtension, unavailable)
 public protocol FeedbackViewControllerDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the user opens the feedback form.
@@ -35,6 +37,7 @@ public protocol FeedbackViewControllerDelegate: AnyObject, UnimplementedLogging 
     func feedbackViewControllerDidCancel(_ feedbackViewController: FeedbackViewController)
 }
 
+@available(iOSApplicationExtension, unavailable)
 public extension FeedbackViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
@@ -61,6 +64,7 @@ public extension FeedbackViewControllerDelegate {
 /**
  A view controller containing a grid of buttons the user can use to denote an issue their current navigation experience.
  */
+@available(iOSApplicationExtension, unavailable)
 public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
     static let sceneTitle = NSLocalizedString("FEEDBACK_TITLE", value: "Report Problem", comment: "Title of view controller for sending feedback")
     static let cellReuseIdentifier = "collectionViewCellId"
@@ -262,6 +266,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension FeedbackViewController: UICollectionViewDataSource {
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FeedbackCollectionViewCell.defaultIdentifier, for: indexPath) as! FeedbackCollectionViewCell
@@ -283,6 +288,7 @@ extension FeedbackViewController: UICollectionViewDataSource {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension FeedbackViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = sections[indexPath.row]
@@ -306,6 +312,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
     }
 }
 
+@available(iOSApplicationExtension, unavailable)
 extension FeedbackViewController: UICollectionViewDelegateFlowLayout {
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         let availableWidth = collectionView.bounds.width
