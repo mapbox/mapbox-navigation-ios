@@ -59,9 +59,9 @@
         "package": "MapboxMaps",
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
-          "branch": null,
-          "revision": "f809dd694b789a56ad2b99956cf124e1f633ab43",
-          "version": "10.0.0-rc.5"
+          "branch": "s2ler/hackday",
+          "revision": "8493fb1835bbe369f1a36842c837e420f168a5d0",
+          "version": null
         }
       },
       {
