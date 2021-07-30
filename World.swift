@@ -22,6 +22,8 @@ struct World {
         let stopHistoryRecording: PassthroughSubject<PeerPayload<StopHistoryRecordingAction>, Never> = .init()
         let listHistoryFiles: PassthroughSubject<PeerPayload<HistoryFilesRequest>, Never> = .init()
         let downloadHistoryFile: PassthroughSubject<PeerPayload<DownloadHistoryFileRequest>, Never> = .init()
+        let downloadGpxHistoryFile: PassthroughSubject<PeerPayload<DownloadGpxHistoryFileRequest>, Never> = .init()
+        let simulateLocation: PassthroughSubject<PeerPayload<SimulateLocationAction>, Never> = .init()
     }
 
     func setupRemoteCli() {
@@ -42,6 +44,12 @@ struct World {
         }
         transceiver.receive(DownloadHistoryFileRequest.self) { payload, sender in
             Current.actions.downloadHistoryFile.send(.init(payload: payload, sender: sender))
+        }
+        transceiver.receive(DownloadGpxHistoryFileRequest.self) { payload, sender in
+            Current.actions.downloadGpxHistoryFile.send(.init(payload: payload, sender: sender))
+        }
+        transceiver.receive(SimulateLocationAction.self) { payload, sender in
+            Current.actions.simulateLocation.send(.init(payload: payload, sender: sender))
         }
         transceiver.resume()
     }

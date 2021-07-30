@@ -34,7 +34,7 @@ struct CurrentLocationView: View {
                     Text(locationPayload.sender.name)
                     Text(locationPayload.payload.location.latitude.description)
                         .textSelection(.enabled)
-                    Text(" - ")
+                    Text(";")
                     Text(locationPayload.payload.location.longitude.description)
                         .textSelection(.enabled)
                 }

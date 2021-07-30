@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "CoreGPX",
+        "repositoryURL": "https://github.com/vincentneo/CoreGPX.git",
+        "state": {
+          "branch": "master",
+          "revision": "b69cedbbbaed6a1f0a0e3d8075eda0c405ea3b74",
+          "version": null
+        }
+      },
+      {
         "package": "CwlCatchException",
         "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
         "state": {

@@ -5,6 +5,7 @@ import MapboxCoreNavigation
 import CarPlay
 import MultipeerKit
 import MapboxNavigationRemoteKit
+import MapboxNavigationHistoryKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -46,7 +47,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Current.setupRemoteCli()
 
         Current.actions.listHistoryFiles
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.global())
             .sink { peerPayload in
                 do {
                     let historyFileUrls = try FileManager.default
@@ -63,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             .store(in: &subscriptions)
 
         Current.actions.downloadHistoryFile
-            .receive(on: DispatchQueue.main)
+            .receive(on: DispatchQueue.global())
             .sink { peerPayload in
                 do {
                     let fileData = try Data(contentsOf: URL(fileURLWithPath: peerPayload.payload.historyFile.path))
@@ -74,6 +75,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 catch {
                     print(error)
                 }
+            }
+            .store(in: &subscriptions)
+
+        Current.actions.downloadGpxHistoryFile
+            .receive(on: DispatchQueue.global())
+            .sink { peerPayload in
+                let path = peerPayload.payload.historyFile.path
+                guard FileManager.default.fileExists(atPath: path) else { return}
+                let gpxString = Parser.parseHistory(at: path, with: .gpx)
+                guard let fileData = gpxString.data(using: .utf8) else { return }
+                let name = ((peerPayload.payload.historyFile.name as NSString).deletingPathExtension as NSString).appendingPathExtension("gpx") ?? "error.gpx"
+                let response = DownloadGpxHistoryFileResponse(name: name, data: fileData)
+                Current.transceiver.send(response, to: [peerPayload.sender])
             }
             .store(in: &subscriptions)
         

@@ -51,6 +51,7 @@ struct World {
         let currentLocation: PassthroughSubject<PeerPayload<CurrentLocationResponse>, Never> = .init()
         let stopHistoryRecording: PassthroughSubject<PeerPayload<StopHistoryRecordingResponse>, Never> = .init()
         let listHistoryFiles: PassthroughSubject<PeerPayload<HistoryFilesResponse>, Never> = .init()
+        let downloadGpxHistoryFile: PassthroughSubject<PeerPayload<DownloadGpxHistoryFileResponse>, Never> = .init()
     }
 
     func setupRemoteCli() {
@@ -64,24 +65,10 @@ struct World {
             Current.responses.listHistoryFiles.send(.init(payload: payload, sender: sender))
         }
         transceiver.receive(DownloadHistoryFileResponse.self) { payload, sender in
-#if canImport(AppKit)
-            let panel = NSSavePanel()
-            panel.nameFieldLabel = "Save history file as"
-            panel.nameFieldStringValue = payload.name
-            panel.canCreateDirectories = true
-
-            panel.begin { response in
-                guard response == NSApplication.ModalResponse.OK, let fileUrl = panel.url else {
-                    return
-                }
-                do {
-                    try payload.data.write(to: fileUrl)
-                }
-                catch {
-                    print(error)
-                }
-            }
-#endif
+            saveFile(data: payload.data, name: payload.name)
+        }
+        transceiver.receive(DownloadGpxHistoryFileResponse.self) { payload, sender in
+            Current.responses.downloadGpxHistoryFile.send(.init(payload: payload, sender: sender))
         }
         transceiver.resume()
     }
@@ -96,3 +83,26 @@ var Current: World = {
         responses: .init()
     )
 }()
+
+func saveFile(data: Data, name: String) {
+#if canImport(AppKit)
+            let panel = NSSavePanel()
+            panel.nameFieldLabel = "Save as"
+            panel.nameFieldStringValue = name
+            panel.canCreateDirectories = true
+
+            panel.begin { response in
+                guard response == NSApplication.ModalResponse.OK, let fileUrl = panel.url else {
+                    return
+                }
+                do {
+                    try data.write(to: fileUrl)
+                }
+                catch {
+                    print(error)
+                }
+            }
+#else
+            #error("Write os aware logic")
+#endif
+}

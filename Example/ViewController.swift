@@ -650,5 +650,24 @@ extension ViewController {
                     Current.transceiver.send(StopHistoryRecordingResponse(file: historyFile), to: [peerPayload.sender])
                 }
             }
-            .store(in: &remoteActionSubscriptions)    }
+            .store(in: &remoteActionSubscriptions)
+
+        Current.actions.simulateLocation
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] peerPayload in
+                var timestamp = Date()
+                let locations: [CLLocation] = peerPayload.payload.coordinates.map { coordinate in
+                    let l = CLLocation(coordinate: coordinate, altitude: 0, horizontalAccuracy: 0, verticalAccuracy: 0, timestamp: timestamp)
+                    timestamp = timestamp.addingTimeInterval(1)
+                    return l
+                }
+                let lm = ReplayLocationManager(locations: locations)
+                let ps = PassiveLocationManager(directions: .shared,
+                                                systemLocationManager: lm,
+                                                tileStoreLocation: .default)
+                ps.startUpdatingLocation()
+                self?.navigationMapView.mapView.location.overrideLocationProvider(with: PassiveLocationProvider(locationManager: ps))
+            }
+            .store(in: &remoteActionSubscriptions)
+    }
 }

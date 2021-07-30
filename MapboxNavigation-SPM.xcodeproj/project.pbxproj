@@ -43,6 +43,11 @@
 		DA303CA521B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
 		DA8805002316EAED00B54D87 /* ViewController+GuidanceCards.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+GuidanceCards.swift */; };
 		DAF5BE4A26A1FD1200DD3F2B /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = DAF5BE4926A1FD1200DD3F2B /* MapboxGeocoder */; };
+		E21CE1C926B3C95C00155627 /* MapboxNavigationRemoteKit in Frameworks */ = {isa = PBXBuildFile; productRef = E21CE1C826B3C95C00155627 /* MapboxNavigationRemoteKit */; };
+		E21CE1CB26B3C95E00155627 /* MapboxNavigationRemoteMultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E21CE1CA26B3C95E00155627 /* MapboxNavigationRemoteMultipeerKit */; };
+		E21CE1CD26B3CA1300155627 /* MapboxNavigationHistoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = E21CE1CC26B3CA1300155627 /* MapboxNavigationHistoryKit */; };
+		E21CE1CF26B3CCC000155627 /* GpxViewer.swift in Sources */ = {isa = PBXBuildFile; fileRef = E21CE1CE26B3CCC000155627 /* GpxViewer.swift */; };
+		E21CE1D226B3CCF200155627 /* CoreGPX in Frameworks */ = {isa = PBXBuildFile; productRef = E21CE1D126B3CCF200155627 /* CoreGPX */; };
 		E22E6D1526B28EFB00033DF2 /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D1426B28EFB00033DF2 /* World.swift */; };
 		E22E6D1626B28EFB00033DF2 /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D1426B28EFB00033DF2 /* World.swift */; };
 		E22E6D1826B2901300033DF2 /* Communication.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D1726B2901300033DF2 /* Communication.swift */; };
@@ -54,11 +59,9 @@
 		E22E6D2D26B2936D00033DF2 /* MultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D2C26B2936D00033DF2 /* MultipeerKit */; };
 		E22E6D2F26B293EA00033DF2 /* World.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D2E26B293EA00033DF2 /* World.swift */; };
 		E22E6D3326B297C500033DF2 /* MapboxNavigationRemoteKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3226B297C500033DF2 /* MapboxNavigationRemoteKit */; };
-		E22E6D3526B298BA00033DF2 /* MapboxNavigationRemoteKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3426B298BA00033DF2 /* MapboxNavigationRemoteKit */; };
 		E22E6D3726B29DCC00033DF2 /* StartNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D3626B29DCC00033DF2 /* StartNavigationView.swift */; };
 		E22E6D3A26B2A2DA00033DF2 /* CurrentLocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D3826B2A22500033DF2 /* CurrentLocationView.swift */; };
 		E22E6D3C26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3B26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit */; };
-		E22E6D3E26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3D26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit */; };
 		E22E6D4026B2A4CF00033DF2 /* MultipeerKit in Frameworks */ = {isa = PBXBuildFile; productRef = E22E6D3F26B2A4CF00033DF2 /* MultipeerKit */; };
 		E22E6D4226B2BA2F00033DF2 /* PeersListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E22E6D4126B2BA2F00033DF2 /* PeersListView.swift */; };
 		E26AD10126B2D6F30074E303 /* HistoryRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26AD10026B2D6F30074E303 /* HistoryRecorderView.swift */; };
@@ -158,6 +161,7 @@
 		DAE26B1A20644047001D6E1F /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Main.strings; sourceTree = "<group>"; };
 		DAE26B20206441D8001D6E1F /* pt-PT */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "pt-PT"; path = "pt-PT.lproj/Main.strings"; sourceTree = "<group>"; };
 		DAE7114C1F22E94E009AED76 /* it */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
+		E21CE1CE26B3CCC000155627 /* GpxViewer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GpxViewer.swift; sourceTree = "<group>"; };
 		E22E6D1426B28EFB00033DF2 /* World.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = World.swift; sourceTree = "<group>"; };
 		E22E6D1726B2901300033DF2 /* Communication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Communication.swift; sourceTree = "<group>"; };
 		E22E6D1E26B2932700033DF2 /* MapboxNavigationRemote.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxNavigationRemote.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -182,10 +186,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E22E6D3E26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */,
+				E21CE1CB26B3C95E00155627 /* MapboxNavigationRemoteMultipeerKit in Frameworks */,
 				DA1A1B0425E087A20097BBD7 /* MapboxNavigation in Frameworks */,
-				E22E6D3526B298BA00033DF2 /* MapboxNavigationRemoteKit in Frameworks */,
 				E22E6D4026B2A4CF00033DF2 /* MultipeerKit in Frameworks */,
+				E21CE1C926B3C95C00155627 /* MapboxNavigationRemoteKit in Frameworks */,
+				E21CE1CD26B3CA1300155627 /* MapboxNavigationHistoryKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +225,7 @@
 				E22E6D3C26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit in Frameworks */,
 				E22E6D3326B297C500033DF2 /* MapboxNavigationRemoteKit in Frameworks */,
 				E22E6D2D26B2936D00033DF2 /* MultipeerKit in Frameworks */,
+				E21CE1D226B3CCF200155627 /* CoreGPX in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,6 +353,7 @@
 				E26AD10026B2D6F30074E303 /* HistoryRecorderView.swift */,
 				E26AD10226B2D8F10074E303 /* HistoryFilesView.swift */,
 				E26AD10426B2DEED0074E303 /* HistoryFileView.swift */,
+				E21CE1CE26B3CCC000155627 /* GpxViewer.swift */,
 				E22E6D2E26B293EA00033DF2 /* World.swift */,
 				E22E6D2426B2932800033DF2 /* Assets.xcassets */,
 				E22E6D2626B2932900033DF2 /* Preview Content */,
@@ -382,9 +389,10 @@
 			name = Example;
 			packageProductDependencies = (
 				DA1A1B0325E087A20097BBD7 /* MapboxNavigation */,
-				E22E6D3426B298BA00033DF2 /* MapboxNavigationRemoteKit */,
-				E22E6D3D26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit */,
 				E22E6D3F26B2A4CF00033DF2 /* MultipeerKit */,
+				E21CE1C826B3C95C00155627 /* MapboxNavigationRemoteKit */,
+				E21CE1CA26B3C95E00155627 /* MapboxNavigationRemoteMultipeerKit */,
+				E21CE1CC26B3CA1300155627 /* MapboxNavigationHistoryKit */,
 			);
 			productName = "Example-Swift";
 			productReference = 358D14631E5E3B7700ADE590 /* Example.app */;
@@ -469,6 +477,7 @@
 				E22E6D2C26B2936D00033DF2 /* MultipeerKit */,
 				E22E6D3226B297C500033DF2 /* MapboxNavigationRemoteKit */,
 				E22E6D3B26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit */,
+				E21CE1D126B3CCF200155627 /* CoreGPX */,
 			);
 			productName = MapboxNavigationRemote;
 			productReference = E22E6D1E26B2932700033DF2 /* MapboxNavigationRemote.app */;
@@ -558,6 +567,7 @@
 			packageReferences = (
 				DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */,
 				E22E6D0F26B28E1C00033DF2 /* XCRemoteSwiftPackageReference "MultipeerKit" */,
+				E21CE1D026B3CCF200155627 /* XCRemoteSwiftPackageReference "CoreGPX" */,
 			);
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
 			projectDirPath = "";
@@ -761,6 +771,7 @@
 				E26AD10526B2DEED0074E303 /* HistoryFileView.swift in Sources */,
 				E22E6D4226B2BA2F00033DF2 /* PeersListView.swift in Sources */,
 				E22E6D3A26B2A2DA00033DF2 /* CurrentLocationView.swift in Sources */,
+				E21CE1CF26B3CCC000155627 /* GpxViewer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1329,6 +1340,14 @@
 				minimumVersion = 0.14.0;
 			};
 		};
+		E21CE1D026B3CCF200155627 /* XCRemoteSwiftPackageReference "CoreGPX" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/vincentneo/CoreGPX.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		E22E6D0F26B28E1C00033DF2 /* XCRemoteSwiftPackageReference "MultipeerKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/insidegui/MultipeerKit.git";
@@ -1357,6 +1376,23 @@
 			package = DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */;
 			productName = MapboxGeocoder;
 		};
+		E21CE1C826B3C95C00155627 /* MapboxNavigationRemoteKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationRemoteKit;
+		};
+		E21CE1CA26B3C95E00155627 /* MapboxNavigationRemoteMultipeerKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationRemoteMultipeerKit;
+		};
+		E21CE1CC26B3CA1300155627 /* MapboxNavigationHistoryKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigationHistoryKit;
+		};
+		E21CE1D126B3CCF200155627 /* CoreGPX */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E21CE1D026B3CCF200155627 /* XCRemoteSwiftPackageReference "CoreGPX" */;
+			productName = CoreGPX;
+		};
 		E22E6D2C26B2936D00033DF2 /* MultipeerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E22E6D0F26B28E1C00033DF2 /* XCRemoteSwiftPackageReference "MultipeerKit" */;
@@ -1366,15 +1402,7 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigationRemoteKit;
 		};
-		E22E6D3426B298BA00033DF2 /* MapboxNavigationRemoteKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationRemoteKit;
-		};
 		E22E6D3B26B2A4AB00033DF2 /* MapboxNavigationRemoteMultipeerKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = MapboxNavigationRemoteMultipeerKit;
-		};
-		E22E6D3D26B2A4B200033DF2 /* MapboxNavigationRemoteMultipeerKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigationRemoteMultipeerKit;
 		};
