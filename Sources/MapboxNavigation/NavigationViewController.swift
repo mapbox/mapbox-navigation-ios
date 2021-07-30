@@ -417,6 +417,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         // Start the navigation service on presentation.
         navigationService.start()
+        navigationMapView?.mapView.location.locationProvider.stopUpdatingLocation()
         
         if let firstInstruction = navigationService.routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction {
             navigationService(navigationService,
@@ -850,8 +851,6 @@ extension NavigationViewController: NavigationServiceDelegate {
             component.navigationService(service, willEndSimulating: progress, becauseOf: reason)
         }
         navigationMapView?.simulatesLocation = false
-        navigationMapView?.mapView.location.locationProvider.stopUpdatingHeading()
-        navigationMapView?.mapView.location.locationProvider.stopUpdatingLocation()
     }
     
     public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
