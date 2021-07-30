@@ -850,6 +850,8 @@ extension NavigationViewController: NavigationServiceDelegate {
             component.navigationService(service, willEndSimulating: progress, becauseOf: reason)
         }
         navigationMapView?.simulatesLocation = false
+        navigationMapView?.mapView.location.locationProvider.stopUpdatingHeading()
+        navigationMapView?.mapView.location.locationProvider.stopUpdatingLocation()
     }
     
     public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
@@ -857,8 +859,6 @@ extension NavigationViewController: NavigationServiceDelegate {
             component.navigationService(service, didEndSimulating: progress, becauseOf: reason)
         }
         navigationMapView?.mapView.location.overrideLocationProvider(with: AppleLocationProvider())
-        navigationMapView?.mapView.location.locationProvider.startUpdatingHeading()
-        navigationMapView?.mapView.location.locationProvider.startUpdatingLocation()
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
