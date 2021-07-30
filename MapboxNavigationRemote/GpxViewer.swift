@@ -61,7 +61,7 @@ struct GpxViewer: View {
                     guard let data = rawGpx.data(using: .utf8) else { return }
                     saveFile(data: data, name: name)
                 }
-                Button("Simulate") {
+                Button("Simulate (Free Ride Only)") {
                     Current.transceiver.send(SimulateLocationAction(coordinates: coordinates), to: Current.peers)
                 }
             }

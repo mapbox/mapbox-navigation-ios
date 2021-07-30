@@ -1,4 +1,5 @@
 import SwiftUI
+import MapboxNavigationRemoteKit
 
 struct GpxSimulationView: View {
     @State var rawGpx: String?
