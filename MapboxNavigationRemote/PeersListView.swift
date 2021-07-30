@@ -67,6 +67,11 @@ struct PeersListView: View {
                         .padding()
                         .navigationTitle("History Recorder")
                 }
+                NavigationLink("Simulate from GPX") {
+                    GpxSimulationView()
+                        .padding()
+                        .navigationTitle("GPX Simulation")
+                }
             }
         }
     }

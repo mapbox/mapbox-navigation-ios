@@ -106,3 +106,24 @@ func saveFile(data: Data, name: String) {
             #error("Write os aware logic")
 #endif
 }
+
+func openFile(completion: @escaping (URL) -> Void) {
+#if canImport(AppKit)
+    let panel = NSOpenPanel()
+    panel.nameFieldLabel = "Open GPX File"
+    panel.canCreateDirectories = true
+    panel.canChooseFiles = true
+    panel.canChooseDirectories = false
+    panel.allowedContentTypes = [.init(filenameExtension: "gpx")!]
+    panel.allowsMultipleSelection = false
+
+    panel.begin { response in
+        guard response == NSApplication.ModalResponse.OK, let fileUrl = panel.url else {
+            return
+        }
+        completion(fileUrl)
+    }
+#else
+#error("Write os aware logic")
+#endif
+}

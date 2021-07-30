@@ -16,10 +16,12 @@ struct GpxViewer: View {
     let coordinates: [CLLocationCoordinate2D]
     let rawGpx: String
     let name: String
+    let dismissEnabled: Bool
 
-    init(rawGpx: String, name: String) {
+    init(rawGpx: String, name: String, dismissEnabled: Bool = true) {
         self.rawGpx = rawGpx
         self.name = name
+        self.dismissEnabled = dismissEnabled
         gpx = GPXParser(withRawString: rawGpx)?.parsedData()
         coordinates = gpx?.waypoints.compactMap({ waypoint in
             guard let lat = waypoint.latitude,
@@ -50,8 +52,10 @@ struct GpxViewer: View {
             }
 
             HStack {
-                Button("Dismiss") {
-                    presentationMode.wrappedValue.dismiss()
+                if dismissEnabled {
+                    Button("Dismiss") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }
                 Button("Save") {
                     guard let data = rawGpx.data(using: .utf8) else { return }
