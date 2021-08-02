@@ -47,8 +47,8 @@ extension NavigationMapView {
         // MARK: - Private methods
         
         private func showRouteIfNeeded() {
-            guard navigationViewData.containerViewController.isViewLoaded &&
-                    navigationViewData.containerViewController.view.window != nil else { return }
+            guard navigationViewData.containerViewController.isViewLoaded else { return }
+            
             guard !navigationMapView.showsRoute else { return }
             navigationMapView.show([router.route], legIndex: router.routeProgress.legIndex)
             navigationMapView.showWaypoints(on: router.route, legIndex: router.routeProgress.legIndex)
@@ -153,8 +153,7 @@ extension NavigationMapView {
             }
         }
         
-        func onViewDidAppear() {
-            showRouteIfNeeded()
+        func navigationViewDidAppear(_ animated: Bool) {
             currentLegIndexMapped = router.routeProgress.legIndex
             currentStepIndexMapped = router.routeProgress.currentLegProgress.stepIndex
         }

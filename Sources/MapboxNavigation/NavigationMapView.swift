@@ -923,8 +923,8 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
                     
-                    let arrowStrokeLayerPsoition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
-                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPsoition)
+                    let arrowStrokeLayerPosition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
+                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPosition)
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
