@@ -329,20 +329,22 @@ class NavigationViewControllerTests: TestCase {
         }
         waitForExpectations(timeout: 5, handler: nil)
         
-        navigationViewController.navigationMapView?.addArrow(route: initialRoute, legIndex: 0, stepIndex: 0)
         guard let allLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers
                 .map({ $0.id }) else {
             XCTFail("No layers in map"); return
         }
+        
         guard let indexOfArrowLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowLayer),
+              let indexOfMainRouteLayer = allLayerIds.firstIndex(of: initialRoute.identifier(.route(isMainRoute: true))),
               let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer),
               let indexOfArrowSymbolLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowSymbolLayer),
               let indexOfPuck3DLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.puck3DLayer) else {
             XCTFail("Failed to find all the layers"); return
         }
         
-        XCTAssertNotNil(indexOfArrowStrokeLayer, "Arrow stroke layer failed to be added")
-        XCTAssert(indexOfArrowStrokeLayer < indexOfArrowLayer, "Arrow layer is below arrow stroke layer")
+        // Since `NavigationViewController` presents route line after its presentation it is expected
+        // that maneuver arrow stroke layer will be added above main route line layer.
+        XCTAssert(indexOfMainRouteLayer < indexOfArrowStrokeLayer, "Arrow stroke layer should be above main route layer")
         XCTAssert(indexOfArrowLayer < indexOfArrowSymbolLayer, "Arrow symbol layer is below arrow layer")
         XCTAssert(indexOfArrowSymbolLayer < indexOfPuck3DLayer, "Puck 3D layer is below arrow symbol layer")
     }
