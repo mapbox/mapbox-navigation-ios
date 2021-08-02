@@ -34,6 +34,8 @@ public enum OpenLROrientation {
             self = .againstLine
         case .both:
             self = .both
+        @unknown default:
+            fatalError("Unknown OpenLROrientation type.")
         }
     }
 }

@@ -17,6 +17,8 @@ extension RouteState: CustomStringConvertible {
             return "offRoute"
         case .uncertain:
             return "uncertain"
+        @unknown default:
+            fatalError("Unknown RouteState value.")
         }
     }
 }

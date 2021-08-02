@@ -33,8 +33,8 @@ public enum DistancedRoadObject {
      */
     case polygon(identifier: RoadObjectIdentifier,
                  type: RoadObjectType,
-                 distanceToNearestEntry: CLLocationDistance,
-                 distanceToNearestExit: CLLocationDistance,
+                 distanceToNearestEntry: CLLocationDistance?,
+                 distanceToNearestExit: CLLocationDistance?,
                  isInside: Bool)
 
     /**
@@ -47,8 +47,8 @@ public enum DistancedRoadObject {
      */
     case subgraph(identifier: RoadObjectIdentifier,
                   type: RoadObjectType,
-                  distanceToNearestEntry: CLLocationDistance,
-                  distanceToNearestExit: CLLocationDistance,
+                  distanceToNearestEntry: CLLocationDistance?,
+                  distanceToNearestExit: CLLocationDistance?,
                   isInside: Bool)
     
     /**
@@ -108,15 +108,15 @@ public enum DistancedRoadObject {
             let info = native.distanceInfo.getPolygonDistanceInfo()
             self = .polygon(identifier: native.roadObjectId,
                             type: RoadObjectType(native.type),
-                            distanceToNearestEntry: info.distanceToNearestEntry,
-                            distanceToNearestExit: info.distanceToNearestExit,
+                            distanceToNearestEntry: info.entrances.first?.distance,
+                            distanceToNearestExit: info.exits.first?.distance,
                             isInside: info.isInside)
         } else if native.distanceInfo.isSubGraphDistanceInfo() {
             let info = native.distanceInfo.getSubGraphDistanceInfo()
             self = .subgraph(identifier: native.roadObjectId,
                              type: RoadObjectType(native.type),
-                             distanceToNearestEntry: info.distanceToNearestEntry,
-                             distanceToNearestExit: info.distanceToNearestExit,
+                             distanceToNearestEntry: info.entrances.first?.distance,
+                             distanceToNearestExit: info.exits.first?.distance,
                              isInside: info.isInside)
         } else if native.distanceInfo.isLineDistanceInfo() {
             let info = native.distanceInfo.getLineDistanceInfo()

@@ -35,6 +35,8 @@ public enum OpenLRSideOfRoad {
             self = .left
         case .both:
             self = .both
+        @unknown default:
+            fatalError("Unknown OpenLRSideOfRoad value.")
         }
     }
 }
