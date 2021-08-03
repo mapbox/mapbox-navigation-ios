@@ -390,7 +390,4 @@ workflows:
           iOS: "14.5"          
           device: "iPhone 12 Pro Max"          
           context: Slack Orb
-      - ios-trigger-metrics:
-          filters:
-            branches:
-              only: main
+      - ios-trigger-metrics
