@@ -388,7 +388,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      Updates key settings before loading the view.
      
-     This method basically re-runs the setup which takes place in `init`. It could be useful if some of the attribtues have changed before `NavigationViewController` did load it's view, or if you did not have access to initializing logic. For example, as a part of `UIStoryboardSegue` configuration.
+     This method basically re-runs the setup which takes place in `init`. It could be useful if some of the attributes have changed before `NavigationViewController` did load it's view, or if you did not have access to initializing logic. For example, as a part of `UIStoryboardSegue` configuration.
      
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
