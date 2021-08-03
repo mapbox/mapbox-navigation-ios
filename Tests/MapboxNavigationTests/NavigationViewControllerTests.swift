@@ -342,7 +342,7 @@ class NavigationViewControllerTests: TestCase {
         }
         
         guard let indexOfArrowLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowLayer),
-              let indexOfMainRouteLayer = allLayerIds.firstIndex(of: initialRoute.identifier(.route(isMainRoute: true))),
+              let indexOfMainRouteLayer = allLayerIds.firstIndex(of: service.route.identifier(.route(isMainRoute: true))),
               let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer),
               let indexOfArrowSymbolLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowSymbolLayer),
               let indexOfPuck3DLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.puck3DLayer) else {
