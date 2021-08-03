@@ -112,7 +112,7 @@ public class GenericRouteShield: StylableView {
                 currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
             }
         }
-        let criticalProperties: [AnyHashable?] = [dataSource.font.pointSize, backgroundColor, foregroundColor, proxy.borderWidth, proxy.cornerRadius]
+        let criticalProperties: [AnyHashable?] = [dataSource.font.pointSize, dataSource.textColor, backgroundColor, foregroundColor, proxy.borderWidth, proxy.cornerRadius]
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
     }
 }
