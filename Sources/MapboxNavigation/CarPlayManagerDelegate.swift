@@ -192,7 +192,7 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
         return nil
     }
     
