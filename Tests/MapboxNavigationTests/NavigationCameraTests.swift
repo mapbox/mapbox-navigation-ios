@@ -177,10 +177,10 @@ class NavigationCameraTests: XCTestCase {
         let navigationMapView = NavigationMapView(frame: .zero)
         XCTAssertEqual(navigationMapView.navigationCamera.state, .following)
         
-        let route = Fixture.route(from: jsonFileName,
-                                  options: routeOptions)
+        let routeResponse = Fixture.routeResponse(from: jsonFileName,
+                                                  options: routeOptions)
         
-        let navigationViewController = NavigationViewController(for: route,
+        let navigationViewController = NavigationViewController(for: routeResponse,
                                                                 routeIndex: 0,
                                                                 routeOptions: routeOptions)
         
@@ -367,7 +367,6 @@ class NavigationCameraTests: XCTestCase {
         }
         
         let routeProgress = RouteProgress(route: route,
-                                          routeIndex: 0,
                                           options: NavigationRouteOptions(coordinates: []))
         
         // Since second `stepIndex` is right after sharp maneuver default navigation camera behavior
@@ -484,7 +483,6 @@ class NavigationCameraTests: XCTestCase {
         }
         
         let routeProgress = RouteProgress(route: route,
-                                          routeIndex: 0,
                                           options: NavigationRouteOptions(coordinates: []))
         
         // Change `stepIndex` to simulate `CameraOptions` change. Since update to all `CameraOptions`
@@ -536,7 +534,6 @@ class NavigationCameraTests: XCTestCase {
         }
         
         let routeProgress = RouteProgress(route: route,
-                                          routeIndex: 0,
                                           options: NavigationRouteOptions(coordinates: []))
         
         let expectation = self.expectation(forNotification: .routeControllerProgressDidChange,

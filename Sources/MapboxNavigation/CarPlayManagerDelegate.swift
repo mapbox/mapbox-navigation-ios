@@ -57,13 +57,13 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      Asks the delegate to provide a navigation service. In multi-screen applications this should be the same instance used to guide the user along the route on the phone.
      
      - parameter carPlayManager: The CarPlay manager instance.
-     - parameter route: The route for which the returned route controller will manage location updates.
+     - parameter routeResponse: The `RouteResponse` containing a route for which the returned route controller will manage location updates.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeOptions: the options that were specified for the route request.
      - parameter desiredSimulationMode: The desired simulation mode to use.
      - returns: A navigation service that manages location updates along `route`.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService?
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService
     
     /**
      Called when the CarPlay manager fails to fetch a route.
@@ -192,7 +192,7 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceAlong route: Route, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
         return nil
     }
     

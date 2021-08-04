@@ -23,7 +23,7 @@ class TunnelAuthorityTests: TestCase {
     lazy var locationManager = NavigationLocationManager()
     
     func testUserWithinTunnelEntranceRadius() {
-        let routeProgress = RouteProgress(route: tunnelRoute, routeIndex: 0, options: tunnelOptions)
+        let routeProgress = RouteProgress(route: tunnelRoute, options: tunnelOptions)
         
         // Mock location move to first coordinate on tunnel route
         let firstCoordinate = tunnelRoute.shape!.coordinates.first!

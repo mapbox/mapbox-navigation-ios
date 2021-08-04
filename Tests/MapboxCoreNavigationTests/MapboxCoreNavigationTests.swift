@@ -36,7 +36,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testNavigationNotificationsInfoDict() {
-        navigation = MapboxNavigationService(route: route,
+        navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directions,
@@ -80,7 +80,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testDepart() {
-        navigation = MapboxNavigationService(route: route,
+        navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directions,
@@ -123,7 +123,7 @@ class MapboxCoreNavigationTests: TestCase {
         
         XCTAssertEqual(coordinates.count, 9, "Incorrect coordinates count.")
 
-        let navigationService = MapboxNavigationService(route: route,
+        let navigationService = MapboxNavigationService(routeResponse: response,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
                                                         directions: directions,
@@ -188,7 +188,7 @@ class MapboxCoreNavigationTests: TestCase {
         
         let locationManager = ReplayLocationManager(locations: locations)
         locationManager.speedMultiplier = 100
-        navigation = MapboxNavigationService(route: route,
+        navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directions,
@@ -239,7 +239,7 @@ class MapboxCoreNavigationTests: TestCase {
         }
         
         let locationManager = DummyLocationManager()
-        navigation = MapboxNavigationService(route: route,
+        navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directions,
@@ -270,7 +270,7 @@ class MapboxCoreNavigationTests: TestCase {
         }
 
         let locationManager = DummyLocationManager()
-        navigation = MapboxNavigationService(route: route,
+        navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directions,
@@ -326,7 +326,7 @@ class MapboxCoreNavigationTests: TestCase {
         locationManager.speedMultiplier = 100
         // ReplayLocationManager contains 411 location and at speed 100 it will take at most 5 second to stream all of them into the NavigationService
         let waitExpectation = expectation(description: "Waiting for ReplayLocationManager")
-        navigation = MapboxNavigationService(route: route,
+        navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directions,
@@ -434,7 +434,7 @@ class MapboxCoreNavigationTests: TestCase {
     
     func testFailToReroute() {
         let directionsClientSpy = DirectionsSpy()
-        navigation = MapboxNavigationService(route: route,
+        navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directionsClientSpy,

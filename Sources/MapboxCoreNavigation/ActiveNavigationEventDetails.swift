@@ -63,8 +63,8 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         simulation = dataSource.locationManagerType is SimulatedLocationManager.Type
         
         sessionIdentifier = session.identifier.uuidString
-        originalRequestIdentifier = session.originalRoute?.routeIdentifier
-        requestIdentifier = dataSource.routeProgress.route.routeIdentifier
+        originalRequestIdentifier = session.routeIdentifier
+        requestIdentifier = dataSource.router.indexedRouteResponse.routeResponse.identifier
                 
         self.appMetadata = appMetadata
         

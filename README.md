@@ -133,11 +133,11 @@ Directions.shared.calculate(routeOptions) { [weak self] (session, result) in
     case .failure(let error):
         print(error.localizedDescription)
     case .success(let response):
-        guard let route = response.routes?.first, let strongSelf = self else {
+        guard let strongSelf = self else {
             return
         }
-        // Pass the generated route to the the NavigationViewController
-        let viewController = NavigationViewController(for: route, routeIndex: 0, routeOptions: routeOptions)
+        // Pass the generated route response to the the NavigationViewController
+        let viewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions)
         viewController.modalPresentationStyle = .fullScreen
         strongSelf.present(viewController, animated: true, completion: nil)
     }
@@ -177,7 +177,7 @@ then initialize `NavigationViewController` with your style or styles:
 
 ```swift
 let navigationOptions = NavigationOptions(styles: [CustomStyle()])
-NavigationViewController(for: route, routeOptions: routeOptions, navigationOptions: navigationOptions)
+NavigationViewController(for: routeResponse, routeIndex: routeIndex, routeOptions: routeOptions, navigationOptions: navigationOptions)
 ```
 
 ### Starting from scratch

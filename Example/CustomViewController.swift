@@ -16,8 +16,8 @@ class CustomViewController: UIViewController {
     
     var simulateLocation = false
 
-    var userIndexedRoute: IndexedRoute?
-    
+    var indexedUserRouteResponse: IndexedRouteResponse?
+        
     var userRouteOptions: RouteOptions?
     
     var stepsViewController: StepsViewController?
@@ -44,9 +44,9 @@ class CustomViewController: UIViewController {
         navigationMapView.mapView.mapboxMap.style.uri = StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")
         navigationMapView.userCourseView.isHidden = false
         
-        let locationManager = simulateLocation ? SimulatedLocationManager(route: userIndexedRoute!.0) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(route: userIndexedRoute!.0,
-                                                    routeIndex: userIndexedRoute!.1,
+        let locationManager = simulateLocation ? SimulatedLocationManager(route: indexedUserRouteResponse!.routeResponse.routes!.first!) : NavigationLocationManager()
+        navigationService = MapboxNavigationService(routeResponse: indexedUserRouteResponse!.routeResponse,
+                                                    routeIndex: indexedUserRouteResponse!.routeIndex,
                                                     routeOptions: userRouteOptions!,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .onPoorGPS)
@@ -188,11 +188,10 @@ class CustomViewController: UIViewController {
     
     func addPreviewInstructions(step: RouteStep) {
         let route = navigationService.route
-        
         // find the leg that contains the step, legIndex, and stepIndex
         guard let leg = route.legs.first(where: { $0.steps.contains(step) }),
-            let legIndex = route.legs.firstIndex(of: leg),
-            let stepIndex = leg.steps.firstIndex(of: step) else {
+              let legIndex = route.legs.firstIndex(of: leg),
+              let stepIndex = leg.steps.firstIndex(of: step) else {
             return
         }
         
