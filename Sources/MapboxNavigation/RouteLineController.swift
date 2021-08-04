@@ -21,8 +21,6 @@ extension NavigationMapView {
             navigationViewData.router
         }
         
-        fileprivate var routeProgress: RouteProgress?
-        
         var routeLineTracksTraversal: Bool {
             get {
                 navigationMapView.routeLineTracksTraversal
@@ -31,6 +29,8 @@ extension NavigationMapView {
                 navigationMapView.routeLineTracksTraversal = newValue
                 if newValue {
                     navigationMapView.mapView.location.addLocationConsumer(newConsumer: self)
+                } else {
+                    navigationMapView.mapView.location.removeLocationConsumer(consumer: self)
                 }
             }
         }
@@ -42,6 +42,14 @@ extension NavigationMapView {
         
         init(_ navigationViewData: NavigationViewData) {
             self.navigationViewData = navigationViewData
+        }
+        
+        // MARK: - LocationConsumer method
+        
+        internal func locationUpdate(newLocation: Location) {
+            if routeLineTracksTraversal {
+                navigationMapView.updateVanishingRouteLine(coordinate: newLocation.coordinate)
+            }
         }
         
         // MARK: - Private methods
@@ -65,12 +73,6 @@ extension NavigationMapView {
             }
         }
         
-        internal func locationUpdate(newLocation: Location) {
-            guard routeLineTracksTraversal, let progress = routeProgress else { return }
-            navigationMapView.updateTraveledRouteLine(newLocation.coordinate)
-            navigationMapView.updateRoute(progress)
-        }
-        
         private func updateMapOverlays(for routeProgress: RouteProgress) {
             if routeProgress.currentLegProgress.followOnStep != nil {
                 navigationMapView.addArrow(route: routeProgress.route,
@@ -87,7 +89,7 @@ extension NavigationMapView {
             navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
             if routeLineTracksTraversal {
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-                self.routeProgress = routeProgress
+                navigationMapView.updateVanishingRouteLine(coordinate: router.location?.coordinate)
             }
         }
         
@@ -105,6 +107,11 @@ extension NavigationMapView {
             
             if annotatesSpokenInstructions {
                 navigationMapView.showVoiceInstructionsOnMap(route: route)
+            }
+            
+            if routeLineTracksTraversal {
+                navigationMapView.updateUpcomingRoutePointIndex(routeProgress: router.routeProgress)
+                navigationMapView.updateVanishingRouteLine(coordinate: location?.coordinate)
             }
         }
         
@@ -131,8 +138,11 @@ extension NavigationMapView {
             }
             
             if routeLineTracksTraversal {
+                if progress.currentLeg.segmentCongestionLevels != navigationMapView.currentLegCongestionLevels {
+                    navigationMapView.setUpLineGradientStops(along: progress.route)
+                }
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: progress)
-                routeProgress = progress
+                navigationMapView.updateVanishingRouteLine(coordinate: location.coordinate)
             }
         }
         

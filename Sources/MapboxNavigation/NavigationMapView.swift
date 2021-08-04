@@ -77,19 +77,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
-            let frame = CGRect(origin: .zero, size: 75.0)
-            let isHidden = userCourseView.isHidden
-            switch userLocationStyle {
-            case .courseView(let courseView):
-                userCourseView = reducedAccuracyActivatedMode
-                    ? UserHaloCourseView(frame: frame)
-                    : courseView
-            default:
-                userCourseView = reducedAccuracyActivatedMode
-                ? UserHaloCourseView(frame: frame)
-                : UserPuckCourseView(frame: frame)
-            }
-            userCourseView.isHidden = isHidden
+            updateUserCourseViewWithAccuracy()
         }
     }
     
@@ -176,9 +164,9 @@ open class NavigationMapView: UIView {
     var routeRemainingDistancesIndex: Int?
     var routeLineTracksTraversal: Bool = false
     var fractionTraveled: Double = 0.0
-    var preFractionTraveled: Double = 0.0
-    var vanishingRouteLineUpdateTimer: Timer? = nil
     var currentLegIndex: Int?
+    var currentLegCongestionLevels: [CongestionLevel]?
+    var currentLineGradientStops = [Double: UIColor]()
     
     var showsRoute: Bool {
         get {
@@ -341,12 +329,12 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
                   let location = self.mostRecentUserCourseViewLocation else { return }
-            self.moveUserLocation(to: location)
             
             switch self.userLocationStyle {
             case .courseView:
-                if let locationProvider = self.mapView.location.locationProvider {
-                    self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+                self.moveUserLocation(to: location)
+                if self.routeLineTracksTraversal {
+                    self.updateVanishingRouteLine(coordinate: location.coordinate)
                 }
             default:
                 if self.simulatesLocation, let locationProvider = self.mapView.location.locationProvider {
@@ -376,6 +364,22 @@ open class NavigationMapView: UIView {
         
         navigationCamera = NavigationCamera(mapView, navigationCameraType: navigationCameraType)
         navigationCamera.follow()
+    }
+    
+    func updateUserCourseViewWithAccuracy() {
+        let frame = CGRect(origin: .zero, size: 75.0)
+        let isHidden = userCourseView.isHidden
+        switch userLocationStyle {
+        case .courseView(let courseView):
+            userCourseView = reducedAccuracyActivatedMode
+                ? UserHaloCourseView(frame: frame)
+                : courseView
+        default:
+            userCourseView = reducedAccuracyActivatedMode
+            ? UserHaloCourseView(frame: frame)
+            : UserPuckCourseView(frame: frame)
+        }
+        userCourseView.isHidden = isHidden
     }
     
     func setupGestureRecognizers() {
@@ -524,6 +528,7 @@ open class NavigationMapView: UIView {
         for (index, route) in routes.enumerated() {
             if index == 0, routeLineTracksTraversal {
                 initPrimaryRoutePoints(route: route)
+                setUpLineGradientStops(along: route)
             }
             
             parentLayerIdentifier = addRouteLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0, legIndex: legIndex)
@@ -554,6 +559,19 @@ open class NavigationMapView: UIView {
                                                    zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)))
         moveUserLocation(to: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
+    
+    /**
+     Set up the line gradient stops for vanishing route line.
+     
+     - parameter route: Route that will show vanishing effect when `routeLineTracksTraversal` enabled.
+     */
+    func setUpLineGradientStops(along route: Route) {
+        if let legIndex = currentLegIndex {
+            currentLegCongestionLevels = route.legs[legIndex].segmentCongestionLevels
+            let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+            currentLineGradientStops = routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled)
+        }
+    }
 
     @discardableResult func addRouteLayer(_ route: Route,
                                           below parentLayerIndentifier: String? = nil,
@@ -561,7 +579,7 @@ open class NavigationMapView: UIView {
                                           legIndex: Int? = nil) -> String? {
         guard let shape = route.shape else { return nil }
         
-        let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, casingShapeFor: route) ?? shape)
+        let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, shapeFor: route) ?? shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: true))
         
         do {
@@ -583,18 +601,21 @@ open class NavigationMapView: UIView {
             lineLayer?.lineJoin = .constant(.round)
             lineLayer?.lineCap = .constant(.round)
             
-            // TODO: Verify that `isAlternativeRoute` parameter usage is needed.
             if isMainRoute {
-                let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-                let gradientStops = routeLineGradient(congestionFeatures,
-                                                      fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
-                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: trafficUnknownColor)))
+                if !currentLineGradientStops.isEmpty {
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(currentLineGradientStops, lineBaseColor: trafficUnknownColor)))
+                } else {
+                    let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+                    let gradientStops = routeLineGradient(congestionFeatures,
+                                                          fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: trafficUnknownColor)))
+                }
             } else {
                 if showsCongestionForAlternativeRoutes {
                     let gradientStops = routeLineGradient(route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
                                                           fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
                                                           isMain: false)
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: trafficUnknownColor)))
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: alternativeTrafficUnknownColor)))
                 } else {
                     lineLayer?.lineColor = .constant(.init(color: routeAlternateColor))
                 }
@@ -627,8 +648,9 @@ open class NavigationMapView: UIView {
     @discardableResult func addRouteCasingLayer(_ route: Route, below parentLayerIndentifier: String? = nil, isMainRoute: Bool = true) -> String? {
         guard let shape = route.shape else { return nil }
         
-        let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, shapeFor: route) ?? shape)
+        let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, casingShapeFor: route) ?? shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: isMainRoute))
+        
         do {
             try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
         } catch {

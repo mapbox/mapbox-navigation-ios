@@ -316,9 +316,11 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         if routeLineTracksTraversal {
+            if routeProgress.currentLeg.segmentCongestionLevels != navigationMapView?.currentLegCongestionLevels {
+                navigationMapView?.setUpLineGradientStops(along: routeProgress.route)
+            }
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-            navigationMapView?.updateTraveledRouteLine(location.coordinate)
-            navigationMapView?.updateRoute(routeProgress)
+            navigationMapView?.updateVanishingRouteLine(coordinate: location.coordinate)
         }
     }
     
@@ -574,7 +576,6 @@ public class CarPlayNavigationViewController: UIViewController {
                                               comment: "Title on continue button in CarPlay")
         
         let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
-            self.navigationService.router.advanceLegIndex()
             self.carInterfaceController.dismissTemplate(animated: true)
             self.updateRouteOnMap()
         }

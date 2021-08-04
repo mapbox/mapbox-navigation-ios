@@ -883,8 +883,6 @@ extension NavigationViewController: NavigationServiceDelegate {
             component.navigationService(service, didEndSimulating: progress, becauseOf: reason)
         }
         navigationMapView?.mapView.location.overrideLocationProvider(with: AppleLocationProvider())
-        navigationMapView?.mapView.location.locationProvider.startUpdatingHeading()
-        navigationMapView?.mapView.location.locationProvider.startUpdatingLocation()
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {

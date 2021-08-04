@@ -127,7 +127,7 @@ class NavigationMapViewTests: TestCase {
 
         navigationMapView.initPrimaryRoutePoints(route: route)
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: testRouteProgress)
-        navigationMapView.updateTraveledRouteLine(targetPoint)
+        navigationMapView.updateFractionTraveled(targetPoint)
 
         let expectedTraveledFraction = 0.06383308537010246
 
@@ -349,6 +349,21 @@ class NavigationMapViewTests: TestCase {
         congestions.enumerated().forEach {
             XCTAssertEqual(congestionLevel($0.element), expectedCongestionLevels[$0.offset])
         }
+    }
+    
+    func testUpdateRouteLineGradient() {
+        let route = loadRoute(from: "route-with-road-classes-single-congestion")
+        let congestions = route.congestionFeatures()
+        var lineGradient = navigationMapView.routeLineGradient(congestions, fractionTraveled: 0.0, isMain: true)
+        XCTAssertEqual(lineGradient[0.0], navigationMapView.trafficUnknownColor)
+        
+        let fractionTraveled = 0.5
+        let nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
+        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient)
+
+        XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficUnknownColor)
     }
     
     func testRoadClassesWithOverriddenCongestionLevelsRemovesDuplicates() {
