@@ -406,11 +406,11 @@ class CarPlayManagerSpec: QuickSpec {
         var customTripPreviewTextConfiguration: CPTripPreviewTextConfiguration?
         var customTrip: CPTrip?
 
-        func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> (CPTrip) {
+        func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip) -> CPTrip {
             return customTrip ?? trip
         }
 
-        func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> (CPTripPreviewTextConfiguration) {
+        func carPlayManager(_ carPlayManager: CarPlayManager, willPreview trip: CPTrip, with previewTextConfiguration: CPTripPreviewTextConfiguration) -> CPTripPreviewTextConfiguration {
             return customTripPreviewTextConfiguration ?? previewTextConfiguration
         }
 
@@ -423,7 +423,7 @@ class CarPlayManagerSpec: QuickSpec {
         }
         
         //TODO: ADD OPTIONS TO THIS DELEGATE METHOD
-        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService {
+        func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
             let directionsFake = Directions(credentials: Fixture.credentials)
             return MapboxNavigationService(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
         }
