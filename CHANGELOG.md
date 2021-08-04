@@ -55,6 +55,8 @@
 * Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationProvider.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
 * Added the `RouteController.startRecordingHistory()`, `RouteController.stopRecordingHistory(completionHandler:)`, `PassiveLocationManager.startRecordingHistory()`, and `PassiveLocationManager.stopRecordingHistory(completionHandler:)` methods for recording details about a trip for debugging purposes. ([#3157](https://github.com/mapbox/mapbox-navigation-ios/pull/3157))
 * Renamed `RouterDataSource.locationProvider` and `EventsManagerDataSource.locationProvider` properties to `RouterDataSource.locationManagerType` and `EventsManagerDataSource.locationManagerType` respectively. ([#3199](https://github.com/mapbox/mapbox-navigation-ios/pull/3199))
+* Adds `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:waypoint:)` which is called each time the user arrives at a waypoint. By default, this method returns true and prevents rerouting upon arriving. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
+* Fixes `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)`. To implement reroute after arrival behavior, you can now return `false` from this method, `false` from `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:waypoint:)` and set `NavigationViewController.showsEndOfRouteFeedback` to `false`. 
 
 ### Electronic horizon
 
