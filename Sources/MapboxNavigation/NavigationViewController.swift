@@ -914,7 +914,9 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     public func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
-        return navigationComponents.allSatisfy { $0.navigationService(service, shouldPreventReroutesWhenArrivingAt: waypoint) }
+        let componentsWantPreventReroutes = navigationComponents.allSatisfy { $0.navigationService(service, shouldPreventReroutesWhenArrivingAt: waypoint) }
+
+        return componentsWantPreventReroutes && (delegate?.navigationViewController(self, shouldPreventReroutesWhenArrivingAt: waypoint)) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
     
     public func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool {

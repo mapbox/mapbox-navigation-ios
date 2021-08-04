@@ -64,7 +64,18 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: True to allow the navigation view controller to calculate a new route; false to keep tracking the current route.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool
-    
+
+    /**
+     Called when the user arrives at a waypoint.
+
+     Return false to continue checking if reroute is needed. By default, the user will not be rerouted when arriving at a waypoint.
+
+     - parameter navigationViewController: The navigation view controller that has detected the need to calculate a new route.
+     - parameter waypoint: The waypoint that the controller has arrived at.
+     - returns: True to prevent reroutes.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
+
     /**
      Called immediately before the navigation view controller calculates a new route.
      
@@ -231,6 +242,11 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldRerouteFrom location: CLLocation) -> Bool {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        return RouteController.DefaultBehavior.shouldRerouteFromLocation
+    }
+
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
