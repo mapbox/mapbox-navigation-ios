@@ -138,6 +138,7 @@
 * Added optional `NavigationEventsManager.userInfo` property that can be sent with all navigation events. The new optional property contains application metadata, such as the application name and version, that is included in each event to help Mapbox triage and diagnose unexpected behavior. ([#3007](https://github.com/mapbox/mapbox-navigation-ios/pull/3007)).
 * Fixed an issue when `GenericRouteShield` images would ignore changing it's foreground color in favor of cached image. ([#3217](https://github.com/mapbox/mapbox-navigation-ios/pull/3217))
 * Fixed an issue when route line was sometimes invisilbe after starting active guidance session. ([#3205](https://github.com/mapbox/mapbox-navigation-ios/pull/3205))
+* Fixed an issue where reusing `NavigationMapView` across multiple instances of `NavigationViewController` would result in a crash. ([#3222](https://github.com/mapbox/mapbox-navigation-ios/pull/3222)) 
 
 ## v1.4.1
 
