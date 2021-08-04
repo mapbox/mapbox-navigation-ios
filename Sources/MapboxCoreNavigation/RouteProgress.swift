@@ -182,7 +182,7 @@ open class RouteProgress: Codable {
      Intializes a new `RouteProgress`.
 
      - parameter route: The route to follow.
-     - parameter routeIndex: The index of the route in the `RouteResponse`. By default, the route is the first route in the response.
+     - parameter options: The route options that were attached to the route request.
      - parameter legIndex: Zero-based index indicating the current leg the user is on.
      */
     public init(route: Route, options: RouteOptions, legIndex: Int = 0, spokenInstructionIndex: Int = 0) {
