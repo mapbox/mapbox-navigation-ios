@@ -66,6 +66,67 @@ class RouteControllerTests: TestCase {
         let expectedCoordinates = locations.map{$0.coordinate}
         XCTAssertEqual(expectedCoordinates, testCoordinates)
     }
+
+    func testRerouteAfterArrival() {
+        let origin = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
+
+        let routeResponse = Fixture.route(between: origin, and: destination).response
+        let routeCoordinates = Fixture.generateCoordinates(between: origin, and: destination, count: 10)
+
+        let overshootingDestination = CLLocationCoordinate2D(latitude: 0.002, longitude: 0.002)
+        let replyLocations = Fixture.generateCoordinates(between: origin, and: overshootingDestination, count: 11).map {
+            CLLocation(coordinate: $0)
+        }.shiftedToPresent()
+
+
+        let directions = DirectionsSpy()
+
+        let navOptions = NavigationRouteOptions(matchOptions: .init(coordinates: routeCoordinates))
+        let routeController = RouteController(alongRouteAtIndex: 0,
+                                              in: routeResponse,
+                                              options: navOptions,
+                                              directions: directions,
+                                              dataSource: self)
+
+        let routerDelegateSpy = RouterDelegateSpy()
+        routeController.delegate = routerDelegateSpy
+
+        let locationManager = ReplayLocationManager(locations: replyLocations)
+        locationManager.startDate = Date()
+        locationManager.delegate = routeController
+
+        let shouldRerouteCalled = expectation(description: "Should reroute called")
+        let shouldPreventReroutesCalled = expectation(description: "Should prevent reroutes called")
+        shouldPreventReroutesCalled.assertForOverFulfill = false
+        let rerouted = expectation(description: "Rerouted")
+        let calculateRouteCalled = expectation(description: "Calculate route called")
+
+        routerDelegateSpy.onShouldPreventReroutesWhenArrivingAt = { _ in
+            shouldPreventReroutesCalled.fulfill()
+            return false
+        }
+        routerDelegateSpy.onShouldRerouteFrom = { _ in
+            shouldRerouteCalled.fulfill()
+            return true
+        }
+        routerDelegateSpy.onDidRerouteAlong = { _ in
+            rerouted.fulfill()
+        }
+        directions.onCalculateRoute = { [unowned directions] in
+            calculateRouteCalled.fulfill()
+            let currentCoordinate = locationManager.location!.coordinate
+            directions.fireLastCalculateCompletion(with: [],
+                                                   routes: [Fixture.route(between: currentCoordinate,
+                                                                          and: destination).route],
+                                                   error: nil)
+        }
+
+        let speedMultiplier: TimeInterval = 100
+        locationManager.speedMultiplier = speedMultiplier
+        locationManager.startUpdatingLocation()
+        waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
+    }
 }
 
 extension RouteControllerTests: RouterDataSource {
