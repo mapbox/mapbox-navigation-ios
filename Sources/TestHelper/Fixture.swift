@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import Turf
 import UIKit.UIImage
 @testable import MapboxCoreNavigation
 
@@ -169,7 +170,57 @@ public class Fixture: NSObject {
                                               profileIdentifier: .automobile))
     }
 
-    public static let credentials: DirectionsCredentials = DirectionsCredentials(accessToken: "deadbeef", host: URL(string: "https://example.com")!)
+    public static func route(between origin: CLLocationCoordinate2D,
+                             and destination: CLLocationCoordinate2D,
+                             profileIdentifier: DirectionsProfileIdentifier = .automobile,
+                             transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {
+        let distance = origin.distance(to: destination)
+        let shape = LineString([origin, destination])
+        let intersection = Intersection(location: destination,
+                                        headings: [origin.direction(to: destination)],
+                                        approachIndex: 0,
+                                        outletIndex: 0,
+                                        outletIndexes: .init(integer: 0), approachLanes: nil, usableApproachLanes: nil, preferredApproachLanes: nil, usableLaneIndication: nil)
+
+        let arriveStep = RouteStep(transportType: transportType,
+                                   maneuverLocation: destination,
+                                   maneuverType: .arrive,
+                                   instructions: "arrive",
+                                   drivingSide: .right,
+                                   distance: distance,
+                                   expectedTravelTime: 0,
+                                   intersections: [intersection])
+        arriveStep.shape = shape
+        let leg = RouteLeg(steps: [arriveStep],
+                           name: "",
+                           distance: distance,
+                           expectedTravelTime: 0,
+                           profileIdentifier: profileIdentifier)
+        leg.destination = Waypoint(coordinate: destination)
+        let route = Route(legs: [leg], shape: shape, distance: distance, expectedTravelTime: 0)
+        let response = RouteResponse(httpResponse: nil,
+                                     routes: [route],
+                                     options: .route(.init(coordinates: [origin, destination])),
+                                     credentials: .mocked)
+        return (response: response, route: route)
+    }
+
+    public static func generateCoordinates(between start: CLLocationCoordinate2D,
+                                           and end: CLLocationCoordinate2D,
+                                           count: Int) -> [CLLocationCoordinate2D] {
+        precondition(count > 0)
+
+        let directionToEnd = start.direction(to: end)
+        let distance = start.distance(to: end)
+        var coordinates: [CLLocationCoordinate2D] = []
+
+        for distance in stride(from: 0, to: distance, by: distance / CLLocationDistance(count)) {
+            coordinates.append(start.coordinate(at: distance, facing: directionToEnd))
+        }
+
+        return coordinates
+    }
+    public static let credentials: DirectionsCredentials = .mocked
 }
 
 class TraceCollector: NSObject, CLLocationManagerDelegate {
