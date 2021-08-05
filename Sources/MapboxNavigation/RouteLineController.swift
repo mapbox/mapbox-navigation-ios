@@ -48,7 +48,7 @@ extension NavigationMapView {
         
         internal func locationUpdate(newLocation: Location) {
             if routeLineTracksTraversal {
-                navigationMapView.updateVanishingRouteLine(coordinate: newLocation.coordinate)
+                navigationMapView.travelAlongRouteLine(to: newLocation.coordinate)
             }
         }
         
@@ -89,7 +89,7 @@ extension NavigationMapView {
             navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
             if routeLineTracksTraversal {
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-                navigationMapView.updateVanishingRouteLine(coordinate: router.location?.coordinate)
+                navigationMapView.travelAlongRouteLine(to: router.location?.coordinate)
             }
         }
         
@@ -111,7 +111,7 @@ extension NavigationMapView {
             
             if routeLineTracksTraversal {
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: router.routeProgress)
-                navigationMapView.updateVanishingRouteLine(coordinate: location?.coordinate)
+                navigationMapView.travelAlongRouteLine(to: location?.coordinate)
             }
         }
         
@@ -142,7 +142,7 @@ extension NavigationMapView {
                     navigationMapView.setUpLineGradientStops(along: progress.route)
                 }
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: progress)
-                navigationMapView.updateVanishingRouteLine(coordinate: location.coordinate)
+                navigationMapView.travelAlongRouteLine(to: location.coordinate)
             }
         }
         

@@ -150,7 +150,7 @@ extension NavigationMapView {
      
      - parameter coordinate: Current position of the user location.
      */
-    func updateFractionTraveled(_ coordinate: CLLocationCoordinate2D?) {
+    func updateFractionTraveled(coordinate: CLLocationCoordinate2D?) {
         guard let granularDistances = routeLineGranularDistances,let index = routeRemainingDistancesIndex, let location = coordinate else { return }
         guard index < granularDistances.distanceArray.endIndex else { return }
         let traveledIndex = granularDistances.distanceArray[index]
@@ -176,10 +176,9 @@ extension NavigationMapView {
      Updates the route style layer and its casing style layer to gradually disappear as the user location puck travels along the displayed route.
      
      - parameter coordinate: Current position of the user location.
-     - parameter routeProgress: Current route progress.
      */
-    public func updateVanishingRouteLine(coordinate: CLLocationCoordinate2D?) {
-        updateFractionTraveled(coordinate)
+    public func travelAlongRouteLine(to coordinate: CLLocationCoordinate2D?) {
+        updateFractionTraveled(coordinate: coordinate)
         
         guard let route = routes?.first else { return }
         

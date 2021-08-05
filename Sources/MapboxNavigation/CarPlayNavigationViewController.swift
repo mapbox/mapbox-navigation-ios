@@ -330,7 +330,7 @@ public class CarPlayNavigationViewController: UIViewController {
                 navigationMapView?.setUpLineGradientStops(along: routeProgress.route)
             }
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-            navigationMapView?.updateVanishingRouteLine(coordinate: location.coordinate)
+            navigationMapView?.travelAlongRouteLine(to: location.coordinate)
         }
     }
     

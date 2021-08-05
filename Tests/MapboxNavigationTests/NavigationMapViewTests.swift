@@ -127,7 +127,7 @@ class NavigationMapViewTests: TestCase {
 
         navigationMapView.initPrimaryRoutePoints(route: route)
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: testRouteProgress)
-        navigationMapView.updateFractionTraveled(targetPoint)
+        navigationMapView.updateFractionTraveled(coordinate: targetPoint)
 
         let expectedTraveledFraction = 0.06383308537010246
 
@@ -374,6 +374,13 @@ class NavigationMapViewTests: TestCase {
             nexDownHeavyFraction: navigationMapView.trafficModerateColor,
             0.4: navigationMapView.trafficHeavyColor
         ]
+        
+        fractionTraveled = 0.3
+        nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
+        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient)
+        XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficModerateColor)
         
         fractionTraveled = 0.35
         nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)

@@ -334,7 +334,7 @@ open class NavigationMapView: UIView {
             case .courseView:
                 self.moveUserLocation(to: location)
                 if self.routeLineTracksTraversal {
-                    self.updateVanishingRouteLine(coordinate: location.coordinate)
+                    self.travelAlongRouteLine(to: location.coordinate)
                 }
             default:
                 if self.simulatesLocation, let locationProvider = self.mapView.location.locationProvider {
@@ -371,13 +371,11 @@ open class NavigationMapView: UIView {
         let isHidden = userCourseView.isHidden
         switch userLocationStyle {
         case .courseView(let courseView):
-            userCourseView = reducedAccuracyActivatedMode
-                ? UserHaloCourseView(frame: frame)
-                : courseView
-        default:
-            userCourseView = reducedAccuracyActivatedMode
-            ? UserHaloCourseView(frame: frame)
-            : UserPuckCourseView(frame: frame)
+            userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: frame) : courseView
+        case .puck2D(_):
+            userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: frame) : UserPuckCourseView(frame: frame)
+        case .puck3D(_):
+            userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: frame) : UserPuckCourseView(frame: frame)
         }
         userCourseView.isHidden = isHidden
     }
