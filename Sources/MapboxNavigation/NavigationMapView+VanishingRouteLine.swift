@@ -198,20 +198,18 @@ extension NavigationMapView {
             return
         }
         
-        if !currentLineGradientStops.isEmpty {
-            do {
-                try mapView.mapboxMap.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
-                    let mainRouteLayerGradient = self.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentLineGradientStops)
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor))
-                }
-                
-                try mapView.mapboxMap.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
-                    let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveled)
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor))
-                }
-            } catch {
-                print("Failed to update main route line layer.")
+        do {
+            try mapView.mapboxMap.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                let mainRouteLayerGradient = self.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentLineGradientStops)
+                lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor))
             }
+            
+            try mapView.mapboxMap.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveled)
+                lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor))
+            }
+        } catch {
+            print("Failed to update main route line layer.")
         }
         
     }
