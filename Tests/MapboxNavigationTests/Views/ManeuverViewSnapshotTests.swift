@@ -6,7 +6,7 @@ import TestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class ManeuverViewTests: TestCase {
+class ManeuverViewSnapshotTests: TestCase {
     let maneuverView = ManeuverView(frame: CGRect(origin: .zero, size: CGSize(width: 50, height: 50)))
 
     override func setUp() {

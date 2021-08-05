@@ -63,7 +63,6 @@ class LaneTests: TestCase {
         addLanes(lanes: rightHandLanes, stackView: view)
         addLanes(lanes: leftHandLanes, stackView: view)
         
-
         assertImageSnapshot(matching: view, as: .image(precision: 0.95))
     }
 }
