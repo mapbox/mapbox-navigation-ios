@@ -40,6 +40,7 @@
 * If you need to customize the appearance of the user location indicator, you can subclass `UserPuckCourseView` and `UserHaloCourseView` as a starting point. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
 * Fixed an issue where route line disappears when changing `MapView` style. ([#3136](https://github.com/mapbox/mapbox-navigation-ios/pull/3136))
 * Added `NavigationOptions.navigationMapView` property to allow customization or reusing possibilities for `NavigationViewController.navigationMapView` ([#3186](https://github.com/mapbox/mapbox-navigation-ios/pull/3186)).
+* Renamed the `NavigationMapView.updateRoute(_:)` method to `NavigationMapView.travelAlongRouteLine(to:)`. Improved the performance of updating the route line to change color at the user’s location as they progress along the route. ([#3201](https://github.com/mapbox/mapbox-navigation-ios/pull/3201)).
 
 ### Location tracking
 

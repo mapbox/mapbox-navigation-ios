@@ -95,6 +95,7 @@ public class CarPlayNavigationViewController: UIViewController {
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
+    var currentLegIndexMapped: Int = 0
 
     // MARK: - Initialization methods
     
@@ -140,6 +141,7 @@ public class CarPlayNavigationViewController: UIViewController {
         observeNotifications(navigationService)
         updateManeuvers(navigationService.routeProgress)
         navigationService.start()
+        currentLegIndexMapped = navigationService.router.routeProgress.legIndex
     }
     
     override public func viewWillDisappear(_ animated: Bool) {
@@ -290,6 +292,8 @@ public class CarPlayNavigationViewController: UIViewController {
             return
         }
         
+        let legIndex = routeProgress.legIndex
+        
         // Update the user puck
         navigationMapView?.updatePreferredFrameRate(for: routeProgress)
         navigationMapView?.moveUserLocation(to: location, animated: true)
@@ -315,10 +319,18 @@ public class CarPlayNavigationViewController: UIViewController {
             speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
         }
         
+        if legIndex != currentLegIndexMapped {
+            navigationMapView?.showWaypoints(on: routeProgress.route, legIndex: legIndex)
+            navigationMapView?.show([routeProgress.route], legIndex: legIndex)
+            currentLegIndexMapped = legIndex
+        }
+        
         if routeLineTracksTraversal {
+            if routeProgress.currentLeg.segmentCongestionLevels != navigationMapView?.currentLegCongestionLevels {
+                navigationMapView?.setUpLineGradientStops(along: routeProgress.route)
+            }
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-            navigationMapView?.updateTraveledRouteLine(location.coordinate)
-            navigationMapView?.updateRoute(routeProgress)
+            navigationMapView?.travelAlongRouteLine(to: location.coordinate)
         }
     }
     
@@ -574,7 +586,6 @@ public class CarPlayNavigationViewController: UIViewController {
                                               comment: "Title on continue button in CarPlay")
         
         let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
-            self.navigationService.router.advanceLegIndex()
             self.carInterfaceController.dismissTemplate(animated: true)
             self.updateRouteOnMap()
         }

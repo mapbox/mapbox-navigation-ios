@@ -146,10 +146,11 @@ extension NavigationMapView {
     }
     
     /**
-     Updates the route line appearance from the origin point to the indicated point
-     - parameter coordinate: current position of the puck
+     Updates the fractionTraveled along the route line from the origin point to the indicated point.
+     
+     - parameter coordinate: Current position of the user location.
      */
-    func updateTraveledRouteLine(_ coordinate: CLLocationCoordinate2D?) {
+    func updateFractionTraveled(coordinate: CLLocationCoordinate2D?) {
         guard let granularDistances = routeLineGranularDistances,let index = routeRemainingDistancesIndex, let location = coordinate else { return }
         guard index < granularDistances.distanceArray.endIndex else { return }
         let traveledIndex = granularDistances.distanceArray[index]
@@ -166,7 +167,6 @@ extension NavigationMapView {
         if granularDistances.distance >= remainingDistance {
             let offSet = (1.0 - remainingDistance / granularDistances.distance)
             if offSet >= 0 {
-                preFractionTraveled = fractionTraveled
                 fractionTraveled = offSet
             }
         }
@@ -175,15 +175,18 @@ extension NavigationMapView {
     /**
      Updates the route style layer and its casing style layer to gradually disappear as the user location puck travels along the displayed route.
      
-     - parameter routeProgress: Current route progress.
+     - parameter coordinate: Current position of the user location.
      */
-    public func updateRoute(_ routeProgress: RouteProgress) {
-        let mainRouteLayerIdentifier = routeProgress.route.identifier(.route(isMainRoute: true))
-        let mainRouteCasingLayerIdentifier = routeProgress.route.identifier(.routeCasing(isMainRoute: true))
+    public func travelAlongRouteLine(to coordinate: CLLocationCoordinate2D?) {
+        updateFractionTraveled(coordinate: coordinate)
+        
+        guard let route = routes?.first else { return }
+        
+        let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
+        let mainRouteCasingLayerIdentifier = route.identifier(.routeCasing(isMainRoute: true))
         
         if fractionTraveled >= 1.0 {
             // In case if route was fully travelled - remove main route and its casing.
-            
             do {
                 try mapView.mapboxMap.style.removeLayer(withId: mainRouteLayerIdentifier)
                 try mapView.mapboxMap.style.removeLayer(withId: mainRouteCasingLayerIdentifier)
@@ -192,42 +195,46 @@ extension NavigationMapView {
             }
             
             fractionTraveled = 0.0
-            preFractionTraveled = 0.0
             return
         }
         
-        vanishingRouteLineUpdateTimer?.invalidate()
-        vanishingRouteLineUpdateTimer = nil
-        
-        let traveledDifference = fractionTraveled - preFractionTraveled
-        if traveledDifference == 0.0 {
-            return
-        }
-        
-        let congestionSegments = routeProgress.route.congestionFeatures(legIndex: currentLegIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-        
-        updateRouteLine(congestionSegments:congestionSegments, layerIdentifier: mainRouteLayerIdentifier, fractionTraveledUpdate: fractionTraveled)
-        updateRouteLine(layerIdentifier: mainRouteCasingLayerIdentifier, fractionTraveledUpdate: fractionTraveled)
-    }
-    
-    func updateRouteLine(congestionSegments: [Turf.Feature]? = nil, layerIdentifier: String, fractionTraveledUpdate: Double) {
         do {
-            if let congestionSegments = congestionSegments {
-                try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
-                    let mainRouteLayerGradient = self.routeLineGradient(congestionSegments,
-                                                                        fractionTraveled: fractionTraveledUpdate)
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor))
-                }
-            } else {
-                try mapView.mapboxMap.style.updateLayer(withId: layerIdentifier) { (lineLayer: inout LineLayer) throws in
-                    let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveledUpdate)
-                    
-                    lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor))
-                }
+            try mapView.mapboxMap.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                let mainRouteLayerGradient = self.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentLineGradientStops)
+                lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor))
+            }
+            
+            try mapView.mapboxMap.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
+                let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveled)
+                lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor))
             }
         } catch {
             print("Failed to update main route line layer.")
         }
+        
+    }
+    
+    func updateRouteLineGradientStops(fractionTraveled: Double, gradientStops: [Double: UIColor]) -> [Double: UIColor] {
+        var filteredGradientStops = gradientStops.filter { key, value in
+            return key >= fractionTraveled
+        }
+        filteredGradientStops[0.0] = traversedRouteColor
+        
+        let  nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
+        if nextDownFractionTraveled >= 0.0 {
+            filteredGradientStops[nextDownFractionTraveled] = traversedRouteColor
+        }
+        
+        // Find the nearest smaller stop than the `fractionTraveled` and apply its color to the `fractionTraveled` till the next stop.
+        let sortedStops = gradientStops.keys.sorted()
+        if let minStop = sortedStops.last(where: { $0 <= fractionTraveled }),
+           minStop != 0.0 {
+            filteredGradientStops[fractionTraveled] = gradientStops[minStop]
+        } else {
+            filteredGradientStops[fractionTraveled] = trafficUnknownColor
+        }
+
+        return filteredGradientStops
     }
     
     func routeLineGradient(_ congestionFeatures: [Turf.Feature]? = nil, fractionTraveled: Double, isMain: Bool = true) -> [Double: UIColor] {
