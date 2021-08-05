@@ -368,7 +368,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      
      - parameter navigationService: The navigation service that manages navigation along the route. Route data and options will be extracted from this instance.
      */
-    convenience init(navigationService service: NavigationService) {
+    public convenience init(navigationService service: NavigationService) {
         guard case let .route(routeOptions) = service.indexedRouteResponse.routeResponse.options else {
             preconditionFailure("NavigationViewController(navigationService:) must recieve `navigationService` created with `RouteOptions`.")
         }
