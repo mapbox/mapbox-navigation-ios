@@ -106,7 +106,6 @@ let package = Package(
             ],
             exclude: [
                 "Info.plist",
-                "MapboxNavigationTests-Bridging.h",
                 "__Snapshots__", // Ignore snapshots folder
             ]
         ),
