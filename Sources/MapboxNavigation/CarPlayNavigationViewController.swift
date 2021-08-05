@@ -95,6 +95,7 @@ public class CarPlayNavigationViewController: UIViewController {
     var mapTemplate: CPMapTemplate
     var carFeedbackTemplate: CPGridTemplate!
     var carInterfaceController: CPInterfaceController
+    var currentLegIndexMapped: Int = 0
 
     // MARK: - Initialization methods
     
@@ -140,6 +141,7 @@ public class CarPlayNavigationViewController: UIViewController {
         observeNotifications(navigationService)
         updateManeuvers(navigationService.routeProgress)
         navigationService.start()
+        currentLegIndexMapped = navigationService.router.routeProgress.legIndex
     }
     
     override public func viewWillDisappear(_ animated: Bool) {
@@ -290,6 +292,8 @@ public class CarPlayNavigationViewController: UIViewController {
             return
         }
         
+        let legIndex = routeProgress.legIndex
+        
         // Update the user puck
         navigationMapView?.updatePreferredFrameRate(for: routeProgress)
         navigationMapView?.moveUserLocation(to: location, animated: true)
@@ -313,6 +317,12 @@ public class CarPlayNavigationViewController: UIViewController {
         if let speedLimitView = speedLimitView {
             speedLimitView.signStandard = routeProgress.currentLegProgress.currentStep.speedLimitSignStandard
             speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
+        }
+        
+        if legIndex != currentLegIndexMapped {
+            navigationMapView?.showWaypoints(on: routeProgress.route, legIndex: legIndex)
+            navigationMapView?.show([routeProgress.route], legIndex: legIndex)
+            currentLegIndexMapped = legIndex
         }
         
         if routeLineTracksTraversal {
