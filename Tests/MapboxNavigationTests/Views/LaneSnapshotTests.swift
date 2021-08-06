@@ -5,7 +5,7 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class LaneTests: TestCase {
+class LaneSnapshotTests: TestCase {
     override func setUp() {
         super.setUp()
         isRecording = false
