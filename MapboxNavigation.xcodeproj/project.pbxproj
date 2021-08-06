@@ -1023,12 +1023,6 @@
 			children = (
 				8AB316CA26BCA72300C3AC76 /* CGSize.swift */,
 				8D9CD7FD20880581004DC4B3 /* XCTestCase.swift */,
-				DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */,
-				DA0557242155040700A1F2AA /* RouteTests.swift */,
-				C5A60EC820A2417200C21178 /* StringTests.swift */,
-				DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */,
-				355B469C22B9031E009CE634 /* SKUTestable.swift */,
-				2B2B1EED2424E55800FA18A6 /* SKUIDTestable.swift */,
 				8AB316C826BCA56D00C3AC76 /* UIViewController.swift */,
 			);
 			name = Extensions;
@@ -1273,13 +1267,14 @@
 		8AB316BC26BC9E1E00C3AC76 /* CarPlay */ = {
 			isa = PBXGroup;
 			children = (
+				DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */,
 				35BC7177226F6667003BB5F1 /* CarPlayCompassViewTests.swift */,
 				16EF6C1D21193A9600AA580B /* CarPlayManagerTests.swift */,
 				8DEDBCA7222F433700DA2618 /* CarPlayNavigationViewControllerTests.swift */,
 				E2D1497E265CFD33008135A3 /* CarPlayUtils.swift */,
 				35E5B962227B4B620033A124 /* CarPlayCompassViewSnapshotTests.swift */,
 			);
-			path = CarPlay;
+			name = CarPlay;
 			sourceTree = "<group>";
 		};
 		8AB316BD26BC9F1800C3AC76 /* Camera */ = {
@@ -1287,7 +1282,7 @@
 			children = (
 				8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */,
 			);
-			path = Camera;
+			name = Camera;
 			sourceTree = "<group>";
 		};
 		8AB316BE26BC9F6A00C3AC76 /* Style */ = {
@@ -1295,7 +1290,7 @@
 			children = (
 				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
 			);
-			path = Style;
+			name = Style;
 			sourceTree = "<group>";
 		};
 		8AB316BF26BC9F8900C3AC76 /* Speech */ = {
@@ -1303,7 +1298,7 @@
 			children = (
 				2B81EC27241A237E00145086 /* SpeechSynthesizersControllerTests.swift */,
 			);
-			path = Speech;
+			name = Speech;
 			sourceTree = "<group>";
 		};
 		8AB316C026BC9FAB00C3AC76 /* Instructions */ = {
@@ -1319,7 +1314,7 @@
 				1662244620256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift */,
 				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
 			);
-			path = Instructions;
+			name = Instructions;
 			sourceTree = "<group>";
 		};
 		8AB316C126BC9FFC00C3AC76 /* Cache */ = {
@@ -1328,7 +1323,7 @@
 				160D827A2059973C00D278D6 /* DataCacheTests.swift */,
 				1662244A2029059C00EA4824 /* ImageCacheTests.swift */,
 			);
-			path = Cache;
+			name = Cache;
 			sourceTree = "<group>";
 		};
 		8AB316C326BCA0A300C3AC76 /* Views */ = {
@@ -1340,7 +1335,7 @@
 				8D86AE8A21C31CC80064A304 /* ManeuverArrowSnapshotTests.swift */,
 				3510300E1F54B67000E3B7E7 /* LaneSnapshotTests.swift */,
 			);
-			path = Views;
+			name = Views;
 			sourceTree = "<group>";
 		};
 		8AB316C526BCA0DA00C3AC76 /* Navigation */ = {
@@ -1351,24 +1346,29 @@
 				AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */,
 				169A9709216440820082A6A0 /* NavigationViewControllerTestDoubles.swift */,
 			);
-			path = Navigation;
+			name = Navigation;
 			sourceTree = "<group>";
 		};
 		8AB316C626BCA29B00C3AC76 /* SKU */ = {
 			isa = PBXGroup;
 			children = (
+				355B469C22B9031E009CE634 /* SKUTestable.swift */,
+				2B2B1EED2424E55800FA18A6 /* SKUIDTestable.swift */,
 				2B07444024B4832400615E87 /* TokenTestViewController.swift */,
 				355B469A22B902C9009CE634 /* SKUTests.swift */,
 			);
-			path = SKU;
+			name = SKU;
 			sourceTree = "<group>";
 		};
 		8AB316C726BCA4CF00C3AC76 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
+				DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */,
+				C5A60EC820A2417200C21178 /* StringTests.swift */,
+				DA0557242155040700A1F2AA /* RouteTests.swift */,
 				35B1AEBB20AD9B3C00C8544E /* LeaksSpec.swift */,
 			);
-			path = Misc;
+			name = Misc;
 			sourceTree = "<group>";
 		};
 		8AD12F3126BCADC10008AE55 /* Guidance Cards */ = {
@@ -1376,7 +1376,7 @@
 			children = (
 				439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */,
 			);
-			path = "Guidance Cards";
+			name = "Guidance Cards";
 			sourceTree = "<group>";
 		};
 		8AD12F3B26BCADF30008AE55 /* Banners */ = {
@@ -1384,7 +1384,7 @@
 			children = (
 				8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */,
 			);
-			path = Banners;
+			name = Banners;
 			sourceTree = "<group>";
 		};
 		8AD866EA25CA1BC90019A638 /* Camera */ = {
@@ -2884,7 +2884,6 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Tests/MapboxNavigationTests/MapboxNavigationTests-Bridging.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 			};
 			name = Release;

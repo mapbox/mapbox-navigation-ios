@@ -106,12 +106,7 @@ let package = Package(
             ],
             exclude: [
                 "Info.plist",
-                // Ignore folders created by snapshot testing
-                "Instructions/__Snapshots__",
-                "CarPlay/__Snapshots__",
-                "Views/__Snapshots__",
-                "Banners/__Snapshots__",
-                "Guidance Cards/__Snapshots__"
+                "__Snapshots__", // Ignore snapshots folder
             ]
         ),
     ]
