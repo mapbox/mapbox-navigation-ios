@@ -1,11 +1,8 @@
 import XCTest
 import TestHelper
-
-extension CGSize {
-    static let iPhone5      : CGSize    = CGSize(width: 320, height: 568)
-    static let iPhone6Plus  : CGSize    = CGSize(width: 414, height: 736)
-    static let iPhoneX      : CGSize    = CGSize(width: 375, height: 812)
-}
+import MapboxCoreNavigation
+import MapboxDirections
+import CoreLocation
 
 struct ShieldImage {
     /// PNG at 3×
@@ -19,3 +16,12 @@ extension ShieldImage {
     static let us101 = ShieldImage(image: Fixture.image(named: "us-101"),
                                    baseURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-101")!)
 }
+
+var routeOptions: NavigationRouteOptions {
+    let from = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
+    let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
+    return NavigationRouteOptions(waypoints: [from, to])
+}
+
+let jsonFileName = "routeWithInstructions"
+let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)

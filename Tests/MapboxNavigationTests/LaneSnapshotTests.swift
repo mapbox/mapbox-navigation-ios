@@ -5,7 +5,7 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class LaneTests: TestCase {
+class LaneSnapshotTests: TestCase {
     override func setUp() {
         super.setUp()
         isRecording = false
@@ -63,7 +63,6 @@ class LaneTests: TestCase {
         addLanes(lanes: rightHandLanes, stackView: view)
         addLanes(lanes: leftHandLanes, stackView: view)
         
-
         assertImageSnapshot(matching: view, as: .image(precision: 0.95))
     }
 }
