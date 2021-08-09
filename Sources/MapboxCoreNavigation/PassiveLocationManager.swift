@@ -1,3 +1,6 @@
+// IMPORTANT: Tampering with any file that contains billing code is a violation of our ToS
+// and will result in enforcement of the penalties stipulated in the ToS.
+
 import MapboxNavigationNative
 import CoreLocation
 import MapboxDirections
@@ -8,8 +11,12 @@ import MapboxDirections
  Unlike `Router` classes such as `RouteController` and `LegacyRouteController`, this class operates without a predefined route, matching the user’s location to the road network at large. You can use a passive location manager to determine a starting point for a route that you calculate using the `Directions.calculate(_:completionHandler:)` method. If the user happens to be moving while you calculate the route, the passive location manager makes it less likely that the route will begin with a short segment on a side road or driveway and a confusing instruction to turn onto the current road.
  
  To find out when the user’s location changes, implement the `PassiveLocationManagerDelegate` protocol, or observe `Notification.Name.passiveLocationManagerDidUpdate` notifications for more detailed information.
+
+ - important: Creating an instance of this class will start a free-driving session. If the application goes into the background or you temporarily stop needing location updates for any other reason, temporarily pause the trip session using the `PassiveLocationManager.pauseTripSession()` method to avoid unnecessary costs. The trip session also stops when the instance is deinitialized. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide.
  */
 open class PassiveLocationManager: NSObject {
+    private let sessionUUID: UUID = .init()
+
     /**
      Initializes the location manager with the given directions service.
      
@@ -39,9 +46,12 @@ open class PassiveLocationManager: NSObject {
         _eventsManager = eventsManager
 
         subscribeNotifications()
+
+        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
     }
     
     deinit {
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
         eventsManager.withBackupDataSource(active: nil, passive: self) {
             if self.lastRawLocation != nil {
                 self.eventsManager.sendPassiveNavigationStop()
@@ -118,10 +128,31 @@ open class PassiveLocationManager: NSObject {
             eventsManager.sendPassiveNavigationStart()
         }
     }
-    
+
+    /**
+     Pauses the Free Drive session.
+
+     Use this method to extend the existing Free Drive session if you temporarily don't need navigation updates. For
+     more info, read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+     */
+    public func pauseTripSession() {
+        BillingHandler.shared.pauseBillingSession(with: sessionUUID)
+    }
+
+    /**
+     Resumes the Free Drive session.
+
+     Resumes navigation updates paused by `PassiveLocationManager.pauseTripSession()`. For more info, read the
+     [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+     */
+    public func resumeTripSession() {
+        BillingHandler.shared.resumeBillingSession(with: sessionUUID)
+    }
+
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
-              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
+              let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus,
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
         DispatchQueue.main.async { [weak self] in
             self?.update(to: status)
         }

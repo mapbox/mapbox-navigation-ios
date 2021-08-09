@@ -1,3 +1,6 @@
+// IMPORTANT: Tampering with any file that contains billing code is a violation of our ToS
+// and will result in enforcement of the penalties stipulated in the ToS.
+
 import Foundation
 import CoreLocation
 import MapboxDirections
@@ -83,6 +86,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     var isFirstLocation: Bool = true
 
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
+
+    private let sessionUUID: UUID = .init()
     
     required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
         self.directions = directions
@@ -93,12 +98,14 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         super.init()
-        
+        BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
         checkForUpdates()
         checkForLocationUsageDescription()
     }
 
     deinit {
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+        
         if let del = delegate, del.routerShouldDisableBatteryMonitoring(self) {
             UIDevice.current.isBatteryMonitoringEnabled = false
         }

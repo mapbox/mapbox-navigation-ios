@@ -122,7 +122,8 @@ public protocol Router: CLLocationManagerDelegate {
     /// `RouterDelegate.router(router:willRerouteFrom:)` and `RouterDelegate.router(_:didRerouteAlong:at:proactive:)`
     /// methods.
     /// - Parameters:
-    ///   - indexedRouteResponse: A `MapboxDirections.RouteResponse` object with a new route along with its index in routes array.
+    ///   - indexedRouteResponse: A `MapboxDirections.RouteResponse` object with a new route along with its index in
+    ///   routes array.
     ///   - routeOptions: Route options used to create the route. You can pass nil to reuse the `RouteOptions` from the
     ///   currently active route. If the new `indexedRoute` is for a different set of waypoints, `routeOptions` are
     ///   required.
@@ -130,6 +131,9 @@ public protocol Router: CLLocationManagerDelegate {
     ///  - Important: This method can interfere with `Route.reroute(from:along:)` method. Before updating the route
     ///  manually make sure that there is no reroute running by observing `RouterDelegate.router(_:willRerouteFrom:)`
     ///  and `router(_:didRerouteAlong:at:proactive:)` `delegate` methods.
+    ///
+    ///  - Important: Updating the route can have an impact on your usage costs.
+    ///  From more info read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?)
 }
 

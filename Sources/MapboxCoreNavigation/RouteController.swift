@@ -1,3 +1,6 @@
+// IMPORTANT: Tampering with any file that contains billing code is a violation of our ToS
+// and will result in enforcement of the penalties stipulated in the ToS.
+
 import Foundation
 import CoreLocation
 import MapboxNavigationNative
@@ -11,6 +14,9 @@ import Turf
  
  `RouteController` is responsible for the core navigation logic whereas
  `NavigationViewController` is responsible for displaying a default drop-in navigation UI.
+
+ - important: Creating an instance of this type will start an Active Guidance session. The trip session is stopped when
+ the instance is deallocated. From more info read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
  */
 open class RouteController: NSObject {
     public enum DefaultBehavior {
@@ -20,6 +26,8 @@ open class RouteController: NSObject {
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
+
+    private let sessionUUID: UUID = .init()
     
     var navigator: MapboxNavigationNative.Navigator {
         return Navigator.shared.navigator
@@ -153,13 +161,16 @@ open class RouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
-        
+        BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
+
         subscribeNotifications()
         updateNavigator(with: _routeProgress)
         updateObservation(for: _routeProgress)
     }
     
     deinit {
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+        
         resetObservation(for: _routeProgress)
         unsubscribeNotifications()
     }
@@ -599,13 +610,46 @@ extension RouteController: Router {
     }
 
     public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
-        guard let routes = indexedRouteResponse.routeResponse.routes, routes.count > indexedRouteResponse.routeIndex else {
+        guard let routes = indexedRouteResponse.routeResponse.routes,
+              routes.count > indexedRouteResponse.routeIndex else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
+        let route = routes[indexedRouteResponse.routeIndex]
+        if shouldStartNewBillingSession(for: route, routeOptions: routeOptions) {
+            BillingHandler.shared.stopBillingSession(with: sessionUUID)
+            BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
+        }
+
         let routeOptions = routeOptions ?? routeProgress.routeOptions
-        routeProgress = RouteProgress(route: routes[indexedRouteResponse.routeIndex], options: routeOptions)
+        routeProgress = RouteProgress(route: route, options: routeOptions)
         self.indexedRouteResponse = indexedRouteResponse
         updateNavigator(with: routeProgress)
+    }
+
+    private func shouldStartNewBillingSession(for newRoute: Route, routeOptions: RouteOptions?) -> Bool {
+        guard let routeOptions = routeOptions else {
+            // Waypoints are read from routeOptions.
+            // If new route without routeOptions, it means we have the same waypoints.
+            return false
+        }
+        guard !routeOptions.waypoints.isEmpty else {
+            return false // Don't need to bil for routes without waypoints
+        }
+
+        let newRouteWaypoints = routeOptions.waypoints.dropFirst()
+        let currentRouteRemaingWaypoints = routeProgress.remainingWaypoints
+
+        guard newRouteWaypoints.count == currentRouteRemaingWaypoints.count else {
+            return true
+        }
+
+        for (newWaypoint, currentWaypoint) in zip(newRouteWaypoints, currentRouteRemaingWaypoints) {
+            if newWaypoint.coordinate.distance(to: currentWaypoint.coordinate) > 100 {
+                return true
+            }
+        }
+
+        return false
     }
 }
 
