@@ -149,17 +149,6 @@ public class NavigationSettings {
      */
     public static let shared: NavigationSettings = .init()
     
-    /// Returns a reflection of this class excluding the `properties` variable.
-    lazy var properties: [Mirror.Child] = {
-        let properties = Mirror(reflecting: self).children
-        return properties.filter({ (child) -> Bool in
-            if let label = child.label {
-                return label != "properties.storage" && label != "$__lazy_storage_$_properties"
-            }
-            return false
-        })
-    }()
-    
     private func notifyChanged(property: StoredProperty, value: Any) {
         UserDefaults.standard.set(value, forKey: property.key.prefixed)
         NotificationCenter.default.post(name: .navigationSettingsDidChange,
