@@ -328,7 +328,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     var ornamentsController: NavigationMapView.OrnamentsController?
     var routeOverlayController: NavigationMapView.RouteOverlayController?
     var viewObservers: [NavigationComponentDelegate?] = []
-    var mapTileStore: TileStoreConfiguration.Location? = .default
+    var mapTileStore: TileStoreConfiguration.Location? {
+        NavigationSettings.shared.tileStoreConfiguration.mapLocation
+    }
     
     // MARK: - NavigationViewData implementation
         
@@ -361,12 +363,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
     required public init(for routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
-        if let options = navigationOptions {
-            mapTileStore = options.tileStoreConfiguration.mapLocation
-        }
-        
-        
         super.init(nibName: nil, bundle: nil)
+        
         _ = prepareViewLoading(routeResponse: routeResponse,
                                routeIndex: routeIndex,
                                routeOptions: routeOptions,
@@ -411,10 +409,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             return false
         }
         
-        if let options = navigationOptions {
-            self.mapTileStore = options.tileStoreConfiguration.mapLocation
-        }
-        
         self._routeResponse = routeResponse
         self._routeIndex = routeIndex
         self._routeOptions = routeOptions
@@ -434,12 +428,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             print("`Route` was created using `RouteOptions` and not `NavigationRouteOptions`. Although not required, this may lead to a suboptimal navigation experience. Without `NavigationRouteOptions`, it is not guaranteed you will get congestion along the route line, better ETAs and ETA label color dependent on congestion.")
         }
         
-        let tileStoreLocation = navigationOptions?.tileStoreConfiguration.navigatorLocation ?? .default
         navigationService = navigationOptions?.navigationService
             ?? MapboxNavigationService(routeResponse: routeResponse,
                                        routeIndex: routeIndex,
-                                       routeOptions: routeOptions,
-                                       tileStoreLocation: tileStoreLocation)
+                                       routeOptions: routeOptions)
         navigationService.delegate = self
         
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
@@ -504,8 +496,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         subviewInits.append { [weak self] in
             if let predictiveCacheOptions = self?.navigationOptions?.predictiveCacheOptions {
-                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions,
-                                                                 tileStoreConfiguration: self?.navigationOptions?.tileStoreConfiguration)
+                self?.navigationMapView?.enablePredictiveCaching(options: predictiveCacheOptions)
             }
         }
         

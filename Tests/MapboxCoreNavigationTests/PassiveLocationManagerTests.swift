@@ -66,17 +66,17 @@ class PassiveLocationManagerTests: TestCase {
         
         let bundle = Bundle(for: Fixture.self)
         let filePathURL: URL = URL(fileURLWithPath: bundle.bundlePath.appending("/tiles/liechtenstein"))
-        Navigator.tilesURL = filePathURL
+        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .custom(filePathURL), mapLocation: nil))
     }
     
     override func tearDown() {
         PassiveLocationManager.historyDirectoryURL = nil
-        Navigator.tilesURL = nil
+        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil))
         Navigator._recreateNavigator()
     }
     
     func testManualLocations() {
-        let locationManager = PassiveLocationManager(directions: directions)
+        let locationManager = PassiveLocationManager()
         Navigator.shared.navigator.resetRideSession()
         let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
         locationUpdateExpectation.expectedFulfillmentCount = 1

@@ -20,7 +20,7 @@ class NativeHandlersFactory {
     let configFactoryType: ConfigFactory.Type
     
     init(tileStorePath: String,
-         credentials: DirectionsCredentials = Directions.shared.credentials,
+         credentials: DirectionsCredentials,
          tilesVersion: String? = nil,
          historyDirectoryURL: URL? = nil,
          targetVersion: String? = nil,

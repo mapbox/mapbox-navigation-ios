@@ -13,14 +13,6 @@ class Navigator {
      */
     static var tilesVersion: String = ""
     
-    /**
-     A local path to the tiles storage location. If not specified - will be automatically set to a default location.
-     
-     This property can only be modified before creating `Navigator` shared instance, all
-     further changes to this property will have no effect. After initialisation, use `tileStore` to get correponding instance.
-     */
-    static var tilesURL: URL? = nil
-    
     private(set) var navigator: MapboxNavigationNative.Navigator
     
     private(set) var cacheHandle: CacheHandle
@@ -39,15 +31,8 @@ class Navigator {
     private(set) var tileVersionState: TileVersionState
     
     /**
-     The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.
-     
-     - precondition: `credentials` should be set before getting the shared navigator for the first time.
-     */
-    static var credentials: DirectionsCredentials? = nil
-    
-    /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
-     satisfying provided configuration (`tilesVersion` and `tilesURL`).
+     satisfying provided configuration (`tilesVersion` and `NavigationSettings`).
      */
     static var shared: Navigator {
         return _navigator
@@ -65,8 +50,9 @@ class Navigator {
      Restrict direct initializer access.
      */
     private init() {
-        let factory = NativeHandlersFactory(tileStorePath: Self.tilesURL?.path ?? "",
-                                            credentials: Self.credentials ?? Directions.shared.credentials,
+        let tileStorePath = NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path
+        let factory = NativeHandlersFactory(tileStorePath: tileStorePath ?? "",
+                                            credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL)
         tileVersionState = .nominal
@@ -93,8 +79,8 @@ class Navigator {
         tileVersionState = .nominal
         navigator.shutdown()
         
-        let factory = NativeHandlersFactory(tileStorePath: Self.tilesURL?.path ?? "",
-                                            credentials: Self.credentials ?? Directions.shared.credentials,
+        let factory = NativeHandlersFactory(tileStorePath: NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
+                                            credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: version ?? Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL,
                                             targetVersion: version.map { _ in Self.tilesVersion })

@@ -6,16 +6,14 @@ extension TilesetDescriptorFactory {
     /**
      Gets TilesetDescriptor which corresponds to current Navigator dataset and the specified `version`.
      - Parameters:
-       - cacheLocation: A `Location` where cache data is stored.
        - version: TilesetDescriptor version.
        - completionQueue: A DispatchQueue on which the completion will be called.
        - completion: A completion that will be used to pass the tileset descriptor.
      */
-    public class func getSpecificVersion(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default,
-                                         version: String,
+    public class func getSpecificVersion(version: String,
                                          completionQueue: DispatchQueue = .main,
                                          completion: @escaping (TilesetDescriptor) -> Void) {
-        let cacheHandle = NativeHandlersFactory(tileStorePath: cacheLocation.tileStoreURL?.path ?? "").cacheHandle
+        let cacheHandle = Navigator.shared.cacheHandle
         completionQueue.async {
             completion(getSpecificVersion(forCache: cacheHandle, version: version))
         }
@@ -27,34 +25,15 @@ extension TilesetDescriptorFactory {
      It is intended to be used when creating off-line tile packs.
 
      - Parameters:
-       - location: A `Location` where cache data is stored.
        - completionQueue: A DispatchQueue on which the completion will be called.
        - completion: A completion that will be used to pass the latest tileset descriptor.
      */
-    public class func getLatest(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default,
-                                completionQueue: DispatchQueue = .main,
+    public class func getLatest(completionQueue: DispatchQueue = .main,
                                 completion: @escaping (_ latestTilesetDescriptor: TilesetDescriptor) -> Void) {
-        /**
-         NOTE: The latest tile descriptor is resolved asynchronously in `MBNNCacheHandle,` but there is no way to wait
-         until the latest descriptor is resolved in the cache handle. Until we have such capabilities,  we deploy
-         a quick fix to let `MBNNCacheHandle` resolve the latest descriptor by waiting for  X seconds until we ask it
-         for the descriptor. We fallback to this workaround only when `Navigator` hasn't been created yet, or
-         the navigator isn't in the appropriate state for requested tile descriptor.
-         */
+        let cacheHandle = Navigator.shared.cacheHandle
 
-        let tileStoreUrl = cacheLocation.tileStoreURL
-        if Navigator.isSharedInstanceCreated,
-           Navigator.tilesURL == tileStoreUrl,
-           case .nominal = Navigator.shared.tileVersionState {
-            completionQueue.async {
-                completion(getLatestForCache(Navigator.shared.cacheHandle))
-            }
-        }
-        else {
-            let cacheHandle = NativeHandlersFactory(tileStorePath: tileStoreUrl?.path ?? "").cacheHandle
-            completionQueue.asyncAfter(deadline: .now() + 1) {
-                completion(getLatestForCache(cacheHandle))
-            }
+        completionQueue.async {
+            completion(getLatestForCache(cacheHandle))
         }
     }
 }

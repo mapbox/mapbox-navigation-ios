@@ -9,7 +9,7 @@ class MapboxNavigationServiceSpec: QuickSpec {
     override func spec() {
         describe("MapboxNavigationService") {
             let subject = LeakTest {
-                let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: routeOptions,  directions: DirectionsSpy())
+                let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: routeOptions)
                 return service
             }
             it("Must not leak.") {

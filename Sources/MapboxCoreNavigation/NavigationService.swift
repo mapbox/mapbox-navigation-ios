@@ -231,12 +231,11 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeOptions: The route options used to get the route.
-     - parameter directions: The Directions object that created `route`.
+     - parameter directions: The Directions object that created `route`. If this argument is omitted, the shared value of `NavigationSettings.directions` will be used.
      - parameter locationSource: An optional override for the default `NaviationLocationManager`.
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
-     - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      */
     required public init(routeResponse: RouteResponse,
                          routeIndex: Int,
@@ -245,10 +244,9 @@ public class MapboxNavigationService: NSObject, NavigationService {
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          simulating simulationMode: SimulationMode = .onPoorGPS,
-                         routerType: Router.Type? = nil,
-                         tileStoreLocation: TileStoreConfiguration.Location = .default) {
+                         routerType: Router.Type? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
-        self.directions = directions ?? Directions.shared
+        self.directions = directions ?? NavigationSettings.shared.directions
         self.simulationMode = simulationMode
         super.init()
         resumeNotifications()
@@ -259,7 +257,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        _router = routerType.init(alongRouteAtIndex: routeIndex, in: routeResponse, options: routeOptions, directions: self.directions, dataSource: self, tileStoreLocation: tileStoreLocation)
+        _router = routerType.init(alongRouteAtIndex: routeIndex, in: routeResponse, options: routeOptions, directions: self.directions, dataSource: self)
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self

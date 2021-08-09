@@ -5,10 +5,11 @@ import MapboxNavigationNative
  Proactively fetches tiles which may become necessary if the device loses its Internet connection at some point during passive or active turn-by-turn navigation.
  
  Typically, you initialize an instance of this class and retain it as long as caching is required.
+
+ - note: This object uses global tile store configuration from `NavigationSettings.tileStoreConfiguration`.
  */
 public class PredictiveCacheManager {
     public typealias MapOptions = (tileStore: TileStore, styleSourcePaths: [String])
-    public typealias TileStoreMapOptions = (tileStoreConfiguration: TileStoreConfiguration, styleSourcePaths: [String])
     
     private var controllers: [PredictiveCacheController] = []
     private var predictiveCacheOptions: PredictiveCacheOptions
@@ -20,15 +21,13 @@ public class PredictiveCacheManager {
      Recommended constructor. This action will initialize tile storage for navigation tiles.
     
      - parameter predictiveCacheOptions: A configuration specifying various caching parameters, such as the radii of current and destination locations.
-     - parameter tileStoreMapOptions: Information about tile storages locations, as well as tilesets names for caching. If no Map tile store location is provided - predictive caching is disabled for map tiles.
+     - parameter styleSourcePaths: Tilesets names for caching.
      */
-    public convenience init(predictiveCacheOptions: PredictiveCacheOptions, tileStoreMapOptions: TileStoreMapOptions) {
-        Navigator.tilesURL = tileStoreMapOptions.tileStoreConfiguration.navigatorLocation.tileStoreURL
-
+    public convenience init(predictiveCacheOptions: PredictiveCacheOptions,
+                            styleSourcePaths: [String]) {
         var mapOptions: MapOptions?
-        if let tileStore = tileStoreMapOptions.tileStoreConfiguration.mapLocation?.tileStore {
-            mapOptions = MapOptions(tileStore,
-                                    tileStoreMapOptions.styleSourcePaths)
+        if let tileStore = NavigationSettings.shared.tileStoreConfiguration.mapLocation?.tileStore {
+            mapOptions = MapOptions(tileStore, styleSourcePaths)
         }
         
         self.init(predictiveCacheOptions: predictiveCacheOptions, mapOptions: mapOptions)
@@ -38,14 +37,13 @@ public class PredictiveCacheManager {
      Initializes a predictive cache.
      
      This action will initialize tile storage for navigation tiles.
-     It is recommended to use `init(predictiveCacheOptions:, tileStoreMapOptions:)` instead to control navigator storage location.
+     It is recommended to use `init(predictiveCacheOptions:styleSourcePaths:)` instead to control navigator storage location.
     
      - parameter predictiveCacheOptions: A configuration specifying various caching parameters, such as the radii of current and destination locations.
      - parameter mapOptions: Information about `MapView` tiles such as the location and tilesets to cache. If this argument is set to `nil`, predictive caching is disabled for map tiles.
-     - seealso: `PredictiveCacheManager.init(predictiveCacheOptions:, tileStoreMapOptions)`
+     - seealso: `PredictiveCacheManager.init(predictiveCacheOptions:styleSourcePaths:)`
      */
     public init(predictiveCacheOptions: PredictiveCacheOptions, mapOptions: MapOptions?) {
-        Navigator.credentials = predictiveCacheOptions.credentials
         self.predictiveCacheOptions = predictiveCacheOptions
         self.mapOptions = mapOptions
         

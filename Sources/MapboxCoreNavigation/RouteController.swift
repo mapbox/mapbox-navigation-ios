@@ -144,10 +144,8 @@ open class RouteController: NSObject {
         return snappedLocation ?? rawLocation
     }
     
-    required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = Directions.shared, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location = .default) {
+    required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
         self.directions = directions
-        Navigator.credentials = directions.credentials
-        Navigator.tilesURL = tileStoreLocation.tileStoreURL
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source

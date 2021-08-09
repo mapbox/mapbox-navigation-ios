@@ -9,7 +9,6 @@ extension TileStore {
      
      This method iterates all existing `OfflineRegion`s. If any of the regions have older version of nav tiles or do not have them at all - it will report `false`.
      
-     - parameter cacheLocation: A `Location` where cache data is stored.
      - parameter completion: A completion callback, reporting the result. `nil` is returned if error occured during the process.
      
      - Note:
@@ -17,10 +16,8 @@ extension TileStore {
      worker thread; it is the responsibility of the user to dispatch to a
      user-controlled thread.
      */
-    public func containsLatestNavigationTiles(forCacheLocation cacheLocation: TileStoreConfiguration.Location = .default,
-                                              completion: @escaping ContainsCompletion) {
-        TilesetDescriptorFactory.getLatest(forCacheLocation: cacheLocation,
-                                           completionQueue: .main) { latestTilesetDescriptor in
+    public func containsLatestNavigationTiles(completion: @escaping ContainsCompletion) {
+        TilesetDescriptorFactory.getLatest(completionQueue: .main) { latestTilesetDescriptor in
             self.__getAllTileRegions { expected in
                 if expected.isValue(), let regions = expected.value as? Array<TileRegion> {
                     let lock = NSLock()
@@ -64,7 +61,6 @@ extension TileStore {
      Checks if a tile region with the given id contains latest version of Navigation tiles.
      
      - parameter regionId: The tile region identifier.
-     - parameter cacheLocation: A `Location` where cache data is stored.
      - parameter completion: The result callback. If error occured - `nil` will be returned.
      
      - Note:
@@ -73,10 +69,8 @@ extension TileStore {
      user-controlled thread.
      */
     public func tileRegionContainsLatestNavigationTiles(forId regionId: String,
-                                                        cacheLocation: TileStoreConfiguration.Location = .default,
                                                         completion: @escaping ContainsCompletion) {
-        TilesetDescriptorFactory.getLatest(forCacheLocation: cacheLocation,
-                                           completionQueue: .main) { latestTilesetDescriptor in
+        TilesetDescriptorFactory.getLatest(completionQueue: .main) { latestTilesetDescriptor in
             self.__tileRegionContainsDescriptors(forId: regionId,
                                                  descriptors: [latestTilesetDescriptor],
                                                  callback: { expected in
