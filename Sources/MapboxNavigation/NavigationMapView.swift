@@ -162,11 +162,18 @@ open class NavigationMapView: UIView {
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?
-    var routeLineTracksTraversal: Bool = false
     var fractionTraveled: Double = 0.0
     var currentLegIndex: Int?
     var currentLegCongestionLevels: [CongestionLevel]?
     var currentLineGradientStops = [Double: UIColor]()
+    var routeLineTracksTraversal: Bool = false {
+        didSet {
+            if routeLineTracksTraversal, let route = self.routes?.first {
+                initPrimaryRoutePoints(route: route)
+                setUpLineGradientStops(along: route)
+            }
+        }
+    }
     
     var showsRoute: Bool {
         get {
