@@ -455,15 +455,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     func setupVoiceController() {
         let credentials = navigationService.directions.credentials
-        let defaultVoiceController = RouteVoiceController(navigationService: navigationService,
-                                                          accessToken: credentials.accessToken,
-                                                          host: credentials.host.absoluteString)
-        
-        voiceController = navigationOptions?.voiceController ?? defaultVoiceController
-        
-        // Initialize voice controller if it hasn't been overridden.
-        // This is optional and lazy so it can be mutated by the developer after init.
-        _ = voiceController
+        voiceController = navigationOptions?.voiceController
+            ?? RouteVoiceController(navigationService: navigationService,
+                                    accessToken: credentials.accessToken,
+                                    host: credentials.host.absoluteString)
     }
     
     func setupStyleManager(_ navigationOptions: NavigationOptions?) {
