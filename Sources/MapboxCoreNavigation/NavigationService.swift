@@ -327,12 +327,24 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     public func start() {
-        // Jump to the first coordinate on the route if the location source does
-        // not yet have a fixed location.
-        if router.location == nil,
-            let coordinate = route.shape?.coordinates.first {
-            let location = CLLocation(coordinate: coordinate, altitude: -1, horizontalAccuracy: -1, verticalAccuracy: -1, course: -1, speed: 0, timestamp: Date())
-            router.locationManager?(nativeLocationSource, didUpdateLocations: [location])
+        // Feed the first location to the router if router doesn't have a location yet. See #1790, #3237 for reference.
+        if router.location == nil {
+            if let currentLocation = locationManager.location {
+                router.locationManager?(nativeLocationSource, didUpdateLocations: [
+                   currentLocation
+                ])
+            }
+            else if let coordinate = route.shape?.coordinates.first { // fallback to simulated location.
+                router.locationManager?(nativeLocationSource, didUpdateLocations: [
+                    CLLocation(coordinate: coordinate,
+                               altitude: -1,
+                               horizontalAccuracy: -1,
+                               verticalAccuracy: -1,
+                               course: -1,
+                               speed: 0,
+                               timestamp: Date())
+                ])
+            }
         }
         
         nativeLocationSource.startUpdatingHeading()
