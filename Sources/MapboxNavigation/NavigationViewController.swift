@@ -425,11 +425,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         
         let tileStoreLocation = navigationOptions?.tileStoreConfiguration.navigatorLocation ?? .default
-        let defaultNavigationService = MapboxNavigationService(routeResponse: routeResponse,
-                                                               routeIndex: routeIndex,
-                                                               routeOptions: routeOptions,
-                                                               tileStoreLocation: tileStoreLocation)
-        navigationService = navigationOptions?.navigationService ?? defaultNavigationService
+        navigationService = navigationOptions?.navigationService
+            ?? MapboxNavigationService(routeResponse: routeResponse,
+                                       routeIndex: routeIndex,
+                                       routeOptions: routeOptions,
+                                       tileStoreLocation: tileStoreLocation)
         navigationService.delegate = self
         
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
