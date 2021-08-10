@@ -66,6 +66,8 @@ public enum FeedbackType: CustomStringConvertible {
             return "lane_guidance_incorrect"
         case .incorrectVisual(subtype: .roadKnownByDifferentName):
             return "road_known_by_different_name"
+        case .incorrectVisual(subtype: .incorrectSpeedLimit):
+            return "incorrect_speed_limit"
         case .confusingAudio(subtype: .guidanceTooEarly):
             return "guidance_too_early"
         case .confusingAudio(subtype: .guidanceTooLate):
@@ -98,7 +100,19 @@ public enum FeedbackType: CustomStringConvertible {
             return "road_is_missing_from_map"
         case .positioning(subtype: .userPosition):
             return "positioning_issue"
-        default:
+        case .incorrectVisual(subtype: .other),
+                .confusingAudio(subtype: .other),
+                .routeQuality(subtype: .other),
+                .illegalRoute(subtype: .other),
+                .roadClosure(subtype: .other):
+            return "other"
+        case .general,
+                .incorrectVisual(subtype: nil),
+                .confusingAudio(subtype: nil),
+                .routeQuality(subtype: nil),
+                .illegalRoute(subtype: nil),
+                .roadClosure(subtype: nil),
+                .positioning(subtype: nil):
             return nil
         }
     }
