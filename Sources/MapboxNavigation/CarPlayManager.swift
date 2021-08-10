@@ -638,8 +638,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
                             selectedPreviewFor trip: CPTrip,
                             using routeChoice: CPRouteChoice) {
         guard let carPlayMapViewController = carPlayMapViewController,
-              let (route, _, _) = routeChoice.userInfo as? (Route, Int, RouteOptions) else { return }
+              let (routeResponse, routeIndex, _) = routeChoice.userInfo as? (RouteResponse, Int, RouteOptions),
+              let routes = routeResponse.routes,
+              routes.indices.contains(routeIndex) else { return }
         
+        let route = routes[routeIndex]
         let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)
