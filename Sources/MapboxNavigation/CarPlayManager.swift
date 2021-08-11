@@ -180,6 +180,7 @@ public class CarPlayManager: NSObject {
     }
     
     private weak var navigationService: NavigationService?
+    private var idleTimerCancellable: IdleTimerManager.Cancellable?
     
     internal var mapTemplateProvider: MapTemplateProvider
     
@@ -283,10 +284,9 @@ extension CarPlayManager: CPApplicationDelegate {
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
-        if let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) {
-            UIApplication.shared.isIdleTimerDisabled = shouldDisableIdleTimer
-        } else {
-            UIApplication.shared.isIdleTimerDisabled = true
+        let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) ?? true
+        if shouldDisableIdleTimer {
+            idleTimerCancellable = IdleTimerManager.shared.disableIdleTimer()
         }
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
@@ -318,11 +318,7 @@ extension CarPlayManager: CPApplicationDelegate {
 
         eventsManager.sendCarPlayDisconnectEvent()
 
-        if let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) {
-            UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
-        } else {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
+        idleTimerCancellable = nil
     }
 
     func mapTemplate(for interfaceController: CPInterfaceController) -> CPMapTemplate {
@@ -864,10 +860,9 @@ extension CarPlayManager {
         interfaceController.delegate = self
         self.interfaceController = interfaceController
 
-        if let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) {
-            UIApplication.shared.isIdleTimerDisabled = shouldDisableIdleTimer
-        } else {
-            UIApplication.shared.isIdleTimerDisabled = true
+        let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) ?? true
+        if shouldDisableIdleTimer {
+            idleTimerCancellable = IdleTimerManager.shared.disableIdleTimer()
         }
 
         let carPlayMapViewController = CarPlayMapViewController(styles: styles)
@@ -897,11 +892,7 @@ extension CarPlayManager {
 
         eventsManager.sendCarPlayDisconnectEvent()
 
-        if let shouldDisableIdleTimer = delegate?.carPlayManagerShouldDisableIdleTimer(self) {
-            UIApplication.shared.isIdleTimerDisabled = !shouldDisableIdleTimer
-        } else {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
+        idleTimerCancellable = nil
     }
 }
 

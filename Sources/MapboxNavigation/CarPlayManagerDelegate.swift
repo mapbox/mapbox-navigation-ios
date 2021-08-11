@@ -254,7 +254,7 @@ public extension CarPlayManagerDelegate {
      */
     func carPlayManagerShouldDisableIdleTimer(_ carPlayManager: CarPlayManager) -> Bool {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
-        return false
+        return true
     }
 
     /**

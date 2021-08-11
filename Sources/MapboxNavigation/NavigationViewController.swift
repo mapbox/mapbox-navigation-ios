@@ -174,7 +174,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      If `true`, `UIApplication.isIdleTimerDisabled` is set to `true` in `viewWillAppear(_:)` and `false` in `viewWillDisappear(_:)`. If your application manages the idle timer itself, set this property to `false`.
      */
-    public var shouldManageApplicationIdleTimer = true
+    public var shouldManageApplicationIdleTimer = true {
+        didSet {
+            updateIdleTimerIfNeeded()
+        }
+    }
     
     /**
      Allows to control highlighting of the destination building on arrival. By default destination buildings will not be highlighted.
@@ -312,6 +316,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     private var passedApproachingDestinationThreshold: Bool = false
     private var currentLeg: RouteLeg?
     private var foundAllBuildings = false
+    private var idleTimerCancellable: IdleTimerManager.Cancellable?
+    private var isViewVisible: Bool = false {
+        didSet {
+            updateIdleTimerIfNeeded()
+        }
+    }
     
     var arrivalController: ArrivalController?
     var cameraController: CameraController?
@@ -583,16 +593,13 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             $0?.navigationViewWillAppear(animated)
         }
         
-        if shouldManageApplicationIdleTimer {
-            UIApplication.shared.isIdleTimerDisabled = true
-        }
-        
         notifyUserAboutLowVolumeIfNeeded()
     }
     
     open override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        
+
+        isViewVisible = true
         viewObservers.forEach {
             $0?.navigationViewDidAppear(animated)
         }
@@ -604,15 +611,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         viewObservers.forEach {
             $0?.navigationViewWillDisappear(animated)
         }
-        
-        if shouldManageApplicationIdleTimer {
-            UIApplication.shared.isIdleTimerDisabled = false
-        }
     }
     
     open override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         
+        isViewVisible = false
         viewObservers.forEach {
             $0?.navigationViewDidDisappear(animated)
         }
@@ -640,6 +644,15 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         // create low volume notification status and append to array of statuses
         let lowVolumeStatus = StatusView.Status(identifier: "INAUDIBLE_INSTRUCTIONS_CTA", title: title, duration: 3, animated: true, priority: 3)
         show(lowVolumeStatus)
+    }
+
+    private func updateIdleTimerIfNeeded() {
+        if !isViewVisible {
+            idleTimerCancellable = nil
+        }
+        else if shouldManageApplicationIdleTimer {
+            idleTimerCancellable = IdleTimerManager.shared.disableIdleTimer()
+        }
     }
     
     // MARK: - Containerization methods
