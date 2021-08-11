@@ -6,12 +6,12 @@
 
 * The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * You can now install MapboxNavigation using Swift Package Manager, but you can no longer install it using Carthage. If you previously installed MapboxNavigation using Carthage, use Swift Package Manager instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.5](https://github.com/mapbox/mapbox-maps-ios/). ([#3162](https://github.com/mapbox/mapbox-navigation-ios/pull/3162))
-* MapboxNavigation now depends on MapboxNavigationNative v60.0.0. ([#3162](https://github.com/mapbox/mapbox-navigation-ios/pull/3162))
-* MapboxNavigation now depends on MapboxCommon v14.0.1. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.6](https://github.com/mapbox/mapbox-maps-ios/). ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
+* MapboxNavigation now depends on MapboxNavigationNative v62.0.0. ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
+* MapboxNavigation now depends on MapboxCommon v16.2.0. ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
 * MapboxNavigation now depends on MapboxMobileEvents v1.0.2. ([#3039](https://github.com/mapbox/mapbox-navigation-ios/pull/3039))
 * MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.7 but no longer depends on MapboxAccounts. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808), [#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829), [#2837](https://github.com/mapbox/mapbox-navigation-ios/pull/2837), [#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077), [#3182](https://github.com/mapbox/mapbox-navigation-ios/pull/3182))
-* MapboxNavigation now depends on Turf v2.0.0-beta.1. ([#3077](https://github.com/mapbox/mapbox-navigation-ios/pull/3077))
+* MapboxNavigation now depends on Turf v2.0.0-rc.1. ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
 * MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Xcode 12.4 or above is now required for building this SDK from source.
 * Carthage v0.38 or above is now required for installing this SDK if you use Carthage. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))

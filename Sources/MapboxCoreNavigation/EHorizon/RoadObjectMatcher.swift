@@ -92,10 +92,16 @@ final public class RoadObjectMatcher {
 
      - parameter point: Point representing the object.
      - parameter identifier: Unique identifier of the object.
+     - parameter heading: Heading of the provided point, which is going to be matched.
      */
-    public func match(point: CLLocationCoordinate2D, identifier: RoadObjectIdentifier) {
-        let point = MatchableGeometry(id: identifier, coordinates: [point].map(CLLocation.init))
-        native.matchPoints(forPoints: [point], useOnlyPreloadedTiles: false)
+    public func match(point: CLLocationCoordinate2D, identifier: RoadObjectIdentifier, heading: CLHeading? = nil) {
+        var trueHeading: NSNumber? = nil
+        if let heading = heading, heading.trueHeading >= 0.0 {
+            trueHeading = NSNumber(value: heading.trueHeading)
+        }
+        
+        let matchablePoint = MatchablePoint(id: identifier, coordinate: point, heading: trueHeading)
+        native.matchPoints(for: [matchablePoint], useOnlyPreloadedTiles: false)
     }
 
     /**

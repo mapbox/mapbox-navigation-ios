@@ -43,7 +43,6 @@ class NativeHandlersFactory {
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
         MapboxNavigationNative.Navigator(config: configHandle,
-                                         runLoopExecutor: runloopExecutor,
                                          cache: cacheHandle,
                                          historyRecorder: historyRecorder)
     }()
@@ -114,9 +113,5 @@ class NativeHandlersFactory {
         return configFactoryType.build(for: settingsProfile,
                                        config: navigatorConfig,
                                        customConfig: customConfigJSON)
-    }()
-    
-    lazy var runloopExecutor: RunLoopExecutorHandle = {
-        RunLoopExecutorFactory.build()
     }()
 }

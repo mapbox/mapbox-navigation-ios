@@ -118,11 +118,15 @@ class MapboxCoreNavigationTests: TestCase {
     
     func testNewStep() {
         let steps = route.legs[0].steps
-        // Create list of coordinates, which includes only first step.
-        let coordinates = steps[0].shape?.coordinates ?? []
+        // Create list of coordinates, which includes all coordinates in the first step and
+        // first coordinate in the second step.
+        var coordinates: [CLLocationCoordinate2D] = []
+        if let firstStep = steps[0].shape, let secondStep = steps[1].shape {
+            coordinates = firstStep.coordinates + secondStep.coordinates.prefix(1)
+        }
         
-        XCTAssertEqual(coordinates.count, 9, "Incorrect coordinates count.")
-
+        XCTAssertEqual(coordinates.count, 10, "Incorrect coordinates count.")
+        
         let navigationService = MapboxNavigationService(routeResponse: response,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
@@ -132,7 +136,7 @@ class MapboxCoreNavigationTests: TestCase {
         var receivedSpokenInstructions: [String] = []
         
         let expectation = self.expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
-                    object: navigationService.router) { (notification) -> Bool in
+                                           object: navigationService.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
             guard let spokenInstruction = routeProgress?.currentLegProgress.currentStepProgress.currentSpokenInstruction?.text else {
@@ -156,7 +160,8 @@ class MapboxCoreNavigationTests: TestCase {
                        timestamp: currentDate + $0.offset)
         }        
         
-        // Iterate overal locations in first step with delay of one second.
+        // Iterate over all locations in the first step and first location in the second step and
+        // simulate location update.
         for location in locations {
             navigationService.router.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
             RunLoop.current.run(until: Date().addingTimeInterval(0.01))
@@ -164,7 +169,6 @@ class MapboxCoreNavigationTests: TestCase {
         
         wait(for: [expectation], timeout: 10.0)
         
-        // TODO: Consider improving this test by decreasing delays for location simulation.
         let expectedSpokenInstructions = [
             "Head south on Taylor Street, then turn right onto California Street",
             "Turn right onto California Street",
