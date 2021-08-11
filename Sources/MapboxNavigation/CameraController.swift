@@ -56,6 +56,25 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         navigationMapView.navigationCamera.moveToOverview()
     }
     
+    @objc func recenter(_ sender: AnyObject) {
+        recenter(sender, completion: nil)
+    }
+    
+    func recenter(_ sender: AnyObject, completion: ((CameraController, CLLocation) -> ())?) {
+        guard let location = navigationMapView.mostRecentUserCourseViewLocation else { return }
+
+        navigationMapView.moveUserLocation(to: location)
+        completion?(self, location)
+
+        navigationMapView.navigationCamera.follow()
+        navigationMapView.addArrow(route: router.route,
+                                   legIndex: router.routeProgress.legIndex,
+                                   stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
+        
+        let navigationViewController = navigationViewData.containerViewController as? NavigationViewController
+        navigationViewController?.navigationComponents.compactMap({ $0 as? NavigationMapInteractionObserver }).forEach { $0.navigationViewController(didCenterOn: location) }
+    }
+    
     func center(on step: RouteStep,
                 route: Route,
                 legIndex: Int,
@@ -131,6 +150,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
     
     func navigationViewDidLoad(_: UIView) {
         navigationViewData.navigationView.overviewButton.addTarget(self, action: #selector(overview(_:)), for: .touchUpInside)
+        navigationViewData.navigationView.resumeButton.addTarget(self, action: #selector(recenter(_:)), for: .touchUpInside)
         
         self.navigationMapView.userCourseView.isHidden = false
         self.navigationViewData.navigationView.resumeButton.isHidden = true

@@ -517,25 +517,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         navigationMapView?.navigationCamera.follow()
     }
     
-    func setupResumeButton() {
-        navigationView.resumeButton.addTarget(self, action: #selector(recenter(_:)), for: .touchUpInside)
-    }
-    
-    @objc func recenter(_ sender: AnyObject) {
-        guard let location = navigationMapView?.mostRecentUserCourseViewLocation else { return }
-        
-        navigationMapView?.moveUserLocation(to: location)
-        
-        navigationMapView?.navigationCamera.follow()
-        navigationMapView?.addArrow(route: router.route,
-                                   legIndex: router.routeProgress.legIndex,
-                                   stepIndex: router.routeProgress.currentLegProgress.stepIndex + 1)
-        
-        navigationComponents.compactMap({ $0 as? NavigationMapInteractionObserver }).forEach {
-            $0.navigationViewController(didCenterOn: location)
-        }
-    }
-    
     func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {
         let topBanner = navigationOptions?.topBanner ?? {
             let viewController: TopBannerViewController = .init()
@@ -593,7 +574,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupNavigationService()
         setupVoiceController()
         setupNavigationCamera()
-        setupResumeButton()
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -1043,7 +1023,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
             banner.displayStepsTable()
             
             if banner.isDisplayingPreviewInstructions {
-                recenter(self)
+                cameraController?.recenter(self)
             }
         default:
             break
@@ -1116,7 +1096,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     }
     
     public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
-        recenter(self)
+        cameraController?.recenter(self)
     }
 }
 
