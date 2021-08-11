@@ -171,6 +171,8 @@ open class NavigationMapView: UIView {
             if routeLineTracksTraversal, let route = self.routes?.first {
                 initPrimaryRoutePoints(route: route)
                 setUpLineGradientStops(along: route)
+            } else {
+                removeLineGradientStops()
             }
         }
     }
@@ -575,6 +577,18 @@ open class NavigationMapView: UIView {
             currentLegCongestionLevels = route.legs[legIndex].segmentCongestionLevels
             let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
             currentLineGradientStops = routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled)
+        }
+    }
+    
+    /**
+     Stop the vanishing effect for route line when `routeLineTracksTraversal` disabled.
+     */
+    func removeLineGradientStops() {
+        fractionTraveled = 0.0
+        currentLegCongestionLevels = nil
+        currentLineGradientStops.removeAll()
+        if let routes = self.routes {
+            show(routes, legIndex: currentLegIndex)
         }
     }
 
