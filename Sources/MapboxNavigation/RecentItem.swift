@@ -2,21 +2,25 @@ import Foundation
 import CarPlay
 
 /**
- Struct, which represents recently found search item on CarPlay.
+ Struct, which represents recently found search item on CarPlay. When storing recent items in an array
+ use dedicated methods for addition: `[RecentItem].add(_:)`, and removal: `[RecentItem].remove(_:)`.
  */
 public struct RecentItem: Equatable, Codable {
     
     /**
      Property, which contains information regarding geocoder result.
      */
-    public var navigationGeocodedPlacemark: NavigationGeocodedPlacemark
+    public private(set) var navigationGeocodedPlacemark: NavigationGeocodedPlacemark
 
     var timestamp: Date
     
-    static var filePathUrl: URL {
+    static var recentItemsPathUrl: URL? {
         get {
-            let documents = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)[0]
-            let url = URL(fileURLWithPath: documents)
+            guard let documentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else {
+                return nil
+            }
+            
+            let url = URL(fileURLWithPath: documentsDirectory)
             return url.appendingPathComponent("RecentItems.data")
         }
     }
@@ -34,17 +38,17 @@ public struct RecentItem: Equatable, Codable {
     }
 
     /**
-     Loads a list of `RecentItem`s, which is serialized into a file stored in `filePathUrl`.
+     Loads a list of `RecentItem`s, which is serialized into a file stored in `recentItemsPathUrl`.
      */
-    static public func loadDefaults() -> [RecentItem] {
-        let data = try? Data(contentsOf: RecentItem.filePathUrl)
-        let decoder = JSONDecoder()
-        if let data = data,
-           let recentItems = try? decoder.decode([RecentItem].self, from: data) {
+    public static func loadDefaults() -> [RecentItem] {
+        guard let recentItemsPathUrl = RecentItem.recentItemsPathUrl else { return [] }
+        
+        if let data = try? Data(contentsOf: recentItemsPathUrl),
+           let recentItems = try? JSONDecoder().decode([RecentItem].self, from: data) {
             return recentItems.sorted(by: { $0.timestamp > $1.timestamp })
         }
 
-        return [RecentItem]()
+        return []
     }
 
     /**
@@ -66,12 +70,29 @@ public struct RecentItem: Equatable, Codable {
 
 extension Array where Element == RecentItem {
     
-    public func save() {
-        let encoder = JSONEncoder()
-        let data = try? encoder.encode(self)
-        (try? data?.write(to: RecentItem.filePathUrl)) as ()??
+    /**
+     Method, which allows to save an array of `RecentItem`s into file stored in `recentItemsPathUrl`.
+     */
+    @discardableResult public func save() -> Bool {
+        guard let recentItemsPathUrl = RecentItem.recentItemsPathUrl else { return false }
+        
+        do {
+            let data = try JSONEncoder().encode(self)
+            try data.write(to: recentItemsPathUrl)
+        } catch {
+            NSLog("Failed to save recent items with error: \(error.localizedDescription)")
+            return false
+        }
+        
+        return true
     }
-
+    
+    /**
+     Method, which adds `RecentItem` to the collection. In case if similar `RecentItem` already exists
+     in collection, `timestamp` of its first occurrence will be updated.
+     
+     - parameter recentItem: `RecentItem` instance, which will be added to the collection.
+     */
     public mutating func add(_ recentItem: RecentItem) {
         let existingNavigationGeocodedPlacemark = lazy.filter {
             $0.navigationGeocodedPlacemark == recentItem.navigationGeocodedPlacemark
@@ -87,8 +108,13 @@ extension Array where Element == RecentItem {
         remove(validNavigationGeocodedPlacemark)
         add(updatedNavigationGeocodedPlacemark)
     }
-
-    mutating func remove(_ recentItem: RecentItem) {
+    
+    /**
+     Method, which removes from the collection first occurrence of a `RecentItem`.
+     
+     - parameter recentItem: `RecentItem` instance, which will be removed from the collection.
+     */
+    public mutating func remove(_ recentItem: RecentItem) {
         if let index = firstIndex(of: recentItem) {
             remove(at: index)
         }
