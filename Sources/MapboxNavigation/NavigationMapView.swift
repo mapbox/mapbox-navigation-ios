@@ -162,11 +162,20 @@ open class NavigationMapView: UIView {
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?
-    var routeLineTracksTraversal: Bool = false
     var fractionTraveled: Double = 0.0
     var currentLegIndex: Int?
     var currentLegCongestionLevels: [CongestionLevel]?
     var currentLineGradientStops = [Double: UIColor]()
+    var routeLineTracksTraversal: Bool = false {
+        didSet {
+            if routeLineTracksTraversal, let route = self.routes?.first {
+                initPrimaryRoutePoints(route: route)
+                setUpLineGradientStops(along: route)
+            } else {
+                removeLineGradientStops()
+            }
+        }
+    }
     
     var showsRoute: Bool {
         get {
@@ -570,6 +579,22 @@ open class NavigationMapView: UIView {
             currentLineGradientStops = routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled)
         }
     }
+    
+    /**
+     Stop the vanishing effect for route line when `routeLineTracksTraversal` disabled.
+     */
+    func removeLineGradientStops() {
+        fractionTraveled = 0.0
+        currentLegCongestionLevels = nil
+        currentLineGradientStops.removeAll()
+        if let routes = self.routes {
+            show(routes, legIndex: currentLegIndex)
+        }
+        
+        routePoints = nil
+        routeLineGranularDistances = nil
+        routeRemainingDistancesIndex = nil
+    }
 
     @discardableResult func addRouteLayer(_ route: Route,
                                           below parentLayerIndentifier: String? = nil,
@@ -839,8 +864,7 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.style.removeSources(sourceIdentifiers)
         
         routes = nil
-        routePoints = nil
-        routeLineGranularDistances = nil
+        removeLineGradientStops()
     }
     
     /**
