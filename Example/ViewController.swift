@@ -280,6 +280,7 @@ class ViewController: UIViewController {
         
         // Control floating buttons position in a navigation view.
         navigationViewController.floatingButtonsPosition = .topTrailing
+        navigationViewController.showsEndOfRouteFeedback = false
         
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -323,6 +324,7 @@ class ViewController: UIViewController {
         let options = NavigationOptions(navigationService: navigationService(response: response, routeIndex: 0, options: routeOptions), topBanner: instructionsCardCollection, predictiveCacheOptions: PredictiveCacheOptions())
         let navigationViewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
+        navigationViewController.showsEndOfRouteFeedback = false
         
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
@@ -579,7 +581,17 @@ extension ViewController: NavigationViewControllerDelegate {
         }
         return true
     }
-    
+
+    func navigationViewController(_ navigationViewController: NavigationViewController,
+                                  shouldRerouteFrom location: CLLocation) -> Bool {
+        true
+    }
+
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
+        false
+    }
+
+
     func navigationViewControllerDidDismiss(_ navigationViewController: NavigationViewController, byCanceling canceled: Bool) {
         endCarPlayNavigation(canceled: canceled)
         dismissActiveNavigationViewController()

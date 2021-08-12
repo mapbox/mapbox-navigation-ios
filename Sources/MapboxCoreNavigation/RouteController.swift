@@ -220,10 +220,13 @@ open class RouteController: NSObject {
         let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
                                                           geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat),
                                                           waypoints: waypoints)
-        navigator.setRouteForRouteResponse(routeJSONString,
-                                           route: 0,
-                                           leg: UInt32(routeProgress.legIndex),
-                                           options: activeGuidanceOptions)
+        let result = navigator.setRouteForRouteResponse(routeJSONString,
+                                                        route: 0,
+                                                        leg: UInt32(routeProgress.legIndex),
+                                                        options: activeGuidanceOptions)
+        if result.isError() {
+            print("ERROR: \(result.error!)")
+        }
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
@@ -242,6 +245,7 @@ open class RouteController: NSObject {
         }
         
         rawLocation = location
+        print(">>> Locations to navigator: \(locations)")
         
         locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
     }
@@ -524,7 +528,8 @@ extension RouteController: Router {
 
         /// NavNative doesn't support reroutes after arrival.
         /// The code below is a port of logic from LegacyRouteController
-        /// This should be removed once NavNative adds support for reroutes after arrival. 
+        /// This should be removed once NavNative adds support for reroutes after arrival.
+        print(">>> Checking is user on route. State: \(status.routeState)")
         if status.routeState == .complete {
             // If the user has arrived and reroutes after arrival should be prevented, do not continue monitor
             // reroutes, step progress, etc
@@ -568,8 +573,10 @@ extension RouteController: Router {
         isRerouting = true
         
         getDirections(from: location, along: progress) { [weak self] (session, result) in
-            self?.isRerouting = false
-            
+            defer {
+                self?.isRerouting = false
+            }
+
             guard let strongSelf: RouteController = self else {
                 return
             }

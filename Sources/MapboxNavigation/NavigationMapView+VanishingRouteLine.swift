@@ -166,6 +166,7 @@ extension NavigationMapView {
          */
         if granularDistances.distance >= remainingDistance {
             let offSet = (1.0 - remainingDistance / granularDistances.distance)
+//            print(">>>\ngranual: \(granularDistances.distance)\nremaining: \(remainingDistance)\noffset: \(offSet)\ntraveledIndexRemaining: \(traveledIndex.distanceRemaining)\narrived:\(progress.isFinalLeg && progress.currentLegProgress.userHasArrivedAtWaypoint)\nleg rem: \(progress.currentLegProgress.distanceRemaining)")
             if offSet >= 0 {
                 fractionTraveled = offSet
             }

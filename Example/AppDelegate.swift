@@ -1,6 +1,8 @@
 import UIKit
 import MapboxNavigation
+import MapboxCoreNavigation
 import CarPlay
+@_implementationOnly import MapboxCommon_Private
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -36,9 +38,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             window?.rootViewController = UIViewController()
         }
-        
+
         listMapboxFrameworks()
-        
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+        RouteController.historyDirectoryURL = url
+        RouteController.startRecordingHistory()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 60) {
+            RouteController.stopRecordingHistory { url in
+                print(url)
+            }
+        }
+        LogConfiguration.getInstance().setFilterLevelFor(.debug)
         return true
     }
 
