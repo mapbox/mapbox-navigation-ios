@@ -140,6 +140,7 @@
 * Fixed an issue when `GenericRouteShield` images would ignore changing it's foreground color in favor of cached image. ([#3217](https://github.com/mapbox/mapbox-navigation-ios/pull/3217))
 * Fixed an issue when route line was sometimes invisilbe after starting active guidance session. ([#3205](https://github.com/mapbox/mapbox-navigation-ios/pull/3205))
 * Fixed an issue where reusing `NavigationMapView` across multiple instances of `NavigationViewController` would result in a crash. ([#3222](https://github.com/mapbox/mapbox-navigation-ios/pull/3222)) 
+* Fixed missing feedback subtype description for `FeedbackType.incorrectVisual(subtype: .incorrectSpeedLimit)` and all "other" subtypes. ([#3238](https://github.com/mapbox/mapbox-navigation-ios/pull/3238))
 
 ## v1.4.1
 
