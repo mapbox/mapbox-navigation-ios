@@ -1,7 +1,7 @@
 import XCTest
 import CarPlay
 import MapboxNavigation
-@testable import TestHelper
+import TestHelper
 
 class NavigationGeocodedPlacemarkTests: TestCase {
     
