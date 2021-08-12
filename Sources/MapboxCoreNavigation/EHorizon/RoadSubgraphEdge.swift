@@ -5,7 +5,7 @@ import MapboxNavigationNative
 extension RoadGraph {
 
     /**
-     The `SubgraphEdge` represents a edge in the complex object which might be considered as a directed graph. The graph might contain loops. `innerEdgeIds` and `outerEdgeIds` properties contain edge ids, which allows to traverse the graph, obtain geometry and calculate different distances inside it.
+     The `SubgraphEdge` represents an edge in the complex object which might be considered as a directed graph. The graph might contain loops. `innerEdgeIds` and `outerEdgeIds` properties contain edge ids, which allows to traverse the graph, obtain geometry and calculate different distances inside it.
      */
     public struct SubgraphEdge {
 
