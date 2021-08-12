@@ -124,23 +124,6 @@ extension CLLocation: Encodable {
         try container.encode(timestamp, forKey: .timestamp)
     }
     
-    convenience init(latitude: CLLocationDegrees,
-                     longitude: CLLocationDegrees,
-                     altitude: CLLocationDistance,
-                     horizontalAccuracy: CLLocationAccuracy,
-                     verticalAccuracy: CLLocationAccuracy,
-                     course: CLLocationDirection,
-                     speed: CLLocationSpeed,
-                     timestamp: Date) {
-        self.init(coordinate: CLLocationCoordinate2DMake(latitude, longitude),
-                  altitude: altitude,
-                  horizontalAccuracy: horizontalAccuracy,
-                  verticalAccuracy: verticalAccuracy,
-                  course: course,
-                  speed: speed,
-                  timestamp: timestamp)
-    }
-    
     convenience init(model: CLLocationModel) {
         self.init(coordinate: CLLocationCoordinate2DMake(model.latitude, model.longitude),
                   altitude: model.altitude,

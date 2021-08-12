@@ -6,10 +6,6 @@
 
 #import <CarPlay/CarPlay.h>
 
-@interface CPMapTemplate (MBTestableInternal)
-
-@end
-
 @implementation CPMapTemplate (MBTestable)
 
 #pragma clang diagnostic push
