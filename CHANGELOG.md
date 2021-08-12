@@ -70,6 +70,7 @@
 * Added `RoadObjectStore.addUserDefinedRoadObject(_:)`, `RoadObjectStore.removeUserDefinedRoadObject(identifier:)`, and `RoadObjectStore.removeAllUserDefinedRoadObjects()` for adding/removing user-defined road objects to the electronic horizon. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
 * Removed `Alert` enum, and `alert`, `distance`, `length`, `beginCoordinate`, `endCoordinate`, `beginSegmentIndex`, and `endSegmentIndex` properties from `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added the `RouteAlerts.roadObject` property. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added the `RoadObjectLocation.subgraph` enum case and the corresponding `RoadGraph.SubgraphEdge` structure represeting edges in the subgraph. ([#3250](https://github.com/mapbox/mapbox-navigation-ios/pull/3250))
 
 ### Camera
 

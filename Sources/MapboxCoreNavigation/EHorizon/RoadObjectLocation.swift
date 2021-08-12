@@ -36,6 +36,14 @@ public enum RoadObjectLocation {
     case polyline(path: RoadGraph.Path, shape: Turf.Geometry)
 
     /**
+     Location of an object represented as a subgraph.
+     - parameter enters: Positions of the subgraph enters.
+     - parameter exits: Positions of the subgraph exits.
+     - parameter edges: Edges of the subgraph associated by id.
+     */
+    case subgraph(enters: [RoadObjectPosition], exits: [RoadObjectPosition], edges: [RoadGraph.SubgraphEdge.Identifier: RoadGraph.SubgraphEdge])
+
+    /**
      Location of an object represented as an OpenLR line.
      - parameter path: Position of a line on a road graph.
      - parameter shape: Shape of a line.
@@ -84,6 +92,13 @@ public enum RoadObjectLocation {
         } else if native.isRouteAlert() {
             let location = native.getRouteAlert()
             self = .routeAlert(shape: Geometry(location.getShape()))
+        } else if native.isMatchedSubgraphLocation() {
+            let location = native.getMatchedSubgraphLocation()
+            let edges = location.getEdges()
+                .map { (id, edge) in (UInt(truncating: id), RoadGraph.SubgraphEdge(edge)) }
+            self = .subgraph(enters: location.getEnters().map(RoadObjectPosition.init),
+                             exits: location.getExits().map(RoadObjectPosition.init),
+                             edges: .init(uniqueKeysWithValues: edges))
         } else {
             preconditionFailure("RoadObjectLocation can't be constructed. Unknown type.")
         }

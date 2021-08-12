@@ -151,6 +151,7 @@
 		3EA9371104016CD402547F1A /* ImageCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938479CF48D7AD1B6369B /* ImageCache.swift */; };
 		3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA93230997B8D59E3B76C8C /* InstructionPresenter.swift */; };
 		3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938BE5468824787100228 /* ImageRepository.swift */; };
+		414119FF26C5269A00402B5D /* RoadSubgraphEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 414119FE26C5269A00402B5D /* RoadSubgraphEdge.swift */; };
 		4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4303A3982332CD6200B5737D /* UnimplementedLogging.swift */; };
 		4316D95C24340555000DD8F8 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4316D95B24340555000DD8F8 /* Match.swift */; };
 		439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */; };
@@ -629,6 +630,7 @@
 		3EA938479CF48D7AD1B6369B /* ImageCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageCache.swift; sourceTree = "<group>"; };
 		3EA938BE5468824787100228 /* ImageRepository.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageRepository.swift; sourceTree = "<group>"; };
 		3EA93A10227A7DAF1861D9F5 /* Cache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Cache.swift; sourceTree = "<group>"; };
+		414119FE26C5269A00402B5D /* RoadSubgraphEdge.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoadSubgraphEdge.swift; sourceTree = "<group>"; };
 		4303A3982332CD6200B5737D /* UnimplementedLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnimplementedLogging.swift; sourceTree = "<group>"; };
 		4316D95B24340555000DD8F8 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
 		439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceCardsSnapshotTests.swift; sourceTree = "<group>"; };
@@ -1772,9 +1774,9 @@
 			children = (
 				2EFADFE8264C1F9200B618C4 /* DistancedRoadObject.swift */,
 				DA5F44FF25F07DE200F573EC /* ElectronicHorizonOptions.swift */,
+				2E50E0E5264E49EF009D3848 /* OpenLRIdentifier.swift */,
 				2EFADFEB264C1F9200B618C4 /* OpenLROrientation.swift */,
 				2EFADFEC264C1F9200B618C4 /* OpenLRSideOfRoad.swift */,
-				2E50E0E5264E49EF009D3848 /* OpenLRIdentifier.swift */,
 				DA5F44C325F07AB500F573EC /* RoadGraph.swift */,
 				DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */,
 				DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */,
@@ -1788,9 +1790,10 @@
 				2E50E0DB264E49C8009D3848 /* RoadObjectMatcherDelegate.swift */,
 				2E50E0D1264E468B009D3848 /* RoadObjectMatcherError.swift */,
 				2EFADFEE264C1F9200B618C4 /* RoadObjectPosition.swift */,
-				DA5F44F425F07D3B00F573EC /* RoadObjectStore.swift */,
 				DA5F44F325F07D3A00F573EC /* RoadObjectsStoreDelegate.swift */,
+				DA5F44F425F07D3B00F573EC /* RoadObjectStore.swift */,
 				DA5F44A325F07A6500F573EC /* RoadObjectType.swift */,
+				414119FE26C5269A00402B5D /* RoadSubgraphEdge.swift */,
 			);
 			path = EHorizon;
 			sourceTree = "<group>";
@@ -2514,6 +2517,7 @@
 			files = (
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
 				DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */,
+				414119FF26C5269A00402B5D /* RoadSubgraphEdge.swift in Sources */,
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,
 				2EFADFFE264C1F9200B618C4 /* OpenLRSideOfRoad.swift in Sources */,
