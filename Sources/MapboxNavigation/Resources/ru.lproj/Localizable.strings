@@ -4,6 +4,9 @@
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "Куда дальше?";
 
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Продолжить";
+
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Текущее положение";
 
@@ -43,17 +46,35 @@
 /* Title for unmute button */
 "CARPLAY_UNMUTE" = "Звук";
 
+/* Specific route feedback that audio guidance provided was confusing. */
+"CONFUSING_AUDIO_FEEDBACK" = "Непонятная подсказка";
+
+/* Specific route feedback that audio guidance was provided too early before a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_EARLY_FEEDBACK" = "Подсказка слишком рано";
+
+/* Specific route feedback that audio guidance was provided too late for a maneuever. */
+"CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Подсказка слишком поздно";
+
+/* Specific route feedback that an audio guidance problem was encountered but not listed as a choice. */
+"CONFUSING_AUDIO_OTHER_FEEDBACK" = "Другое";
+
+/* Specific route feedback that audio guidance used incorrect pronunciation. */
+"CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Неправильное произношение";
+
+/* Specific route feedback that audio guidance repeated a road name. */
+"CONFUSING_AUDIO_ROADNAME_REPEATED_FEEDBACK" = "Название дороги дважды";
+
 /* Dismiss button title on the steps view */
 "DISMISS_STEPS_TITLE" = "Закрыть";
+
+/* Label indicating precise location is off and needs to be turned on to navigate */
+"ENABLE_PRECISE_LOCATION" = "Для навигации требуется точное позиционирование";
 
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Вы прибыли";
 
 /* Comment Placeholder Text */
 "END_OF_ROUTE_TITLE" = "Чем мы можем помочь?";
-
-/* Error message when the SDK is unable to read a spoken instruction. */
-"FAILED_INSTRUCTION" = "Не удаётся произнести инструкцию.";
 
 /* Indicates a faster route was found */
 "FASTER_ROUTE_FOUND" = "Найден маршрут быстрее";
@@ -64,8 +85,44 @@
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Сообщить о проблеме";
 
+/* Specific route feedback that a illegal route problem was encountered but not listed as a choice. */
+"ILLEGAL_ROUTE_OTHER_FEEDBACK" = "Другое";
+
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Увеличить громкость для голосовых инструкций";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"INCORRECT_SPEED_LIMIT" = "Неправильное ограничение скорости";
+
+/* Specific route feedback that an exit was incorrect. */
+"INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Неправильный съезд";
+
+/* General category of route feedback where visual instruction was incorrect. */
+"INCORRECT_VISUAL_FEEDBACK" = "Неверная подсказка";
+
+/* Specific route feedback that an instruction was missing. */
+"INCORRECT_VISUAL_INSTRUCTION_MISSING_FEEDBACK" = "Не хватает подсказки";
+
+/* Specific route feedback for an unnecessary instruction. */
+"INCORRECT_VISUAL_INSTRUCTION_UNNECESSARY_FEEDBACK" = "Лишняя подсказка";
+
+/* Specific route feedback that the wrong lane was specified. */
+"INCORRECT_VISUAL_LANE_GUIDANCE_INCORRECT_FEEDBACK" = "Неверный указатель по полосам";
+
+/* Specific route feedback that a maneuver specified was incorrect. */
+"INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Неверный манёвр";
+
+/* Specific route feedback that a visual instruction problem was encountered but not listed as a choice. */
+"INCORRECT_VISUAL_OTHER_FEEDBACK" = "Другое";
+
+/* Specific route feedback that a road is known by another name. */
+"INCORRECT_VISUAL_ROAD_NAME_DIFFERENT_FEEDBACK" = "Дорога известна под другим названием";
+
+/* Specific route feedback for incorrect street name. */
+"INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Неверное название дороги";
+
+/* Specific route feedback for incorrect turn arrow being shown. */
+"INCORRECT_VISUAL_TURN_ICON_INCORRECT_FEEDBACK" = "Неверный символ поворота";
 
 /* Format for displaying the first two major ways */
 "LEG_MAJOR_WAYS_FORMAT" = "%1$@ и %2$@";
@@ -73,8 +130,20 @@
 /* Format string for a short distance or time less than a minimum threshold; 1 = duration remaining */
 "LESS_THAN" = "<%@";
 
+/* Title for button that cancels user's submission of feedback on navigation session issues. */
+"NAVIGATION_REPORT_CANCEL" = "Отмена";
+
+/* Title for button that submits user's feedback on multiple navigation session issues. 1 is the number of items */
+"NAVIGATION_REPORT_ISSUES" = "Переслать %ld отчётов";
+
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "Нет рейтинга.";
+
+/* General category of route feedback where user position is incorrect. */
+"POSITIONING" = "Позиционирование";
+
+/* Specific route feedback that user positioning is incorrect. */
+"POSITIONING_USER" = "Ваше местоположение";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Нажмите для обнуления рейтинга.";
@@ -90,6 +159,63 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Возобновить";
+
+/* Specific route feedback that a road closure type was encountered but not listed as a choice. */
+"ROAD_CLOSURE_OTHER_FEEDBACK" = "Другое";
+
+/* This route does not have tolls */
+"ROUTE_HAS_NO_TOLLS" = "Нет оплаты";
+
+/* This route does have tolls */
+"ROUTE_HAS_TOLLS" = "Платная дорога";
+
+/* Specific route feedback that user was offered an alternative that was unexpected. */
+"ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Альтернативный маршрут не подходит";
+
+/* General category of route feedback where route quality was poor. */
+"ROUTE_QUALITY_FEEDBACK" = "Плохая дорога";
+
+/* Specific route feedback that route suggested an illegal roadway. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_CARS_NOT_ALLOWED_FEEDBACK" = "Машинам проезд запрещён";
+
+/* General route feedback that route contained illegal instructions. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_FEEDBACK" = "Недопустимый маршрут";
+
+/* Specific route feedback that route travelled wrong way on a one-way road. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_ONE_WAY_FEEDBACK" = "Маршрут навстречу одностороннему движению";
+
+/* Specific route feedback that route suggested an illegal turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Поворот не разрешён";
+
+/* Specific route feedback that route suggested an illegal unprotected turn. */
+"ROUTE_QUALITY_ILLEGAL_ROUTE_UNPROTECTED_TURN_FEEDBACK" = "Поворот на перекрёстке был небезопасен";
+
+/* Specific route feedback that route contained non-existant roads. */
+"ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "Маршрут включал отсутствующие дороги";
+
+/* Specific route feedback that route was not drivable. */
+"ROUTE_QUALITY_NON_DRIVABLE_FEEDBACK" = "Маршрут невозможен";
+
+/* Specific route feedback that route was not ideal according to user. */
+"ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "Маршрут не самый подходящий";
+
+/* Specific route feedback that a route quality problem was encountered but not listed as a choice. */
+"ROUTE_QUALITY_OTHER_FEEDBACK" = "Другое";
+
+/* General route feedback that route contained closed road. */
+"ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Дорога закрыта";
+
+/* Specifc route feedback that route contained road that is permanently closed. */
+"ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Дорога перекрыта навсегда";
+
+/* Specifc route feedback that route contained road not shown on map. */
+"ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK" = "Дорога отсутствует на карте";
+
+/* Specific route feedback that route contained impassible, narrow roads. */
+"ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Маршрут включал слишком узкие дороги";
+
+/* Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible. */
+"SPEED_LIMIT_LEGEND" = "Скорость";
 
 /* The text of a banner that appears during turn-by-turn navigation when route simulation is enabled. */
 "USER_IN_SIMULATION_MODE" = "Ускорение моделирования маршрута в %@ раз";
