@@ -1,6 +1,3 @@
-/* Error message when an offline route request returns a response that can’t be deserialized */
-"OFFLINE_CORRUPT_DATA" = "Es wurde eine ungültige Route berechnet, da keine Verbindung besteht.";
-
 /* Inform developer an update is available */
 "UPDATE_AVAILABLE" = "Mapbox Navigation SDK für iOS Version %@ ist jetzt verfügbar.";
 
