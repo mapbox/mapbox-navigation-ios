@@ -590,6 +590,10 @@ open class NavigationMapView: UIView {
         if let routes = self.routes {
             show(routes, legIndex: currentLegIndex)
         }
+        
+        routePoints = nil
+        routeLineGranularDistances = nil
+        routeRemainingDistancesIndex = nil
     }
 
     @discardableResult func addRouteLayer(_ route: Route,
@@ -860,8 +864,7 @@ open class NavigationMapView: UIView {
         mapView.mapboxMap.style.removeSources(sourceIdentifiers)
         
         routes = nil
-        routePoints = nil
-        routeLineGranularDistances = nil
+        removeLineGradientStops()
     }
     
     /**
