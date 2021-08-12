@@ -5,7 +5,7 @@
 "CARPLAY_ARRIVED_MESSAGE" = "Was möchtest du machen?";
 
 /* Title on continue button in CarPlay */
-"CARPLAY_CONTINUE" = "Continue";
+"CARPLAY_CONTINUE" = "Fortfahren";
 
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Aktuelle Position";
@@ -68,7 +68,7 @@
 "DISMISS_STEPS_TITLE" = "Schließen";
 
 /* Label indicating precise location is off and needs to be turned on to navigate */
-"ENABLE_PRECISE_LOCATION" = "Enable precise location to navigate";
+"ENABLE_PRECISE_LOCATION" = "Aktiviere den genauen Standort zur Navigation";
 
 /* Title used for arrival */
 "END_OF_ROUTE_ARRIVED" = "Du bist angekommen";
@@ -92,7 +92,7 @@
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Lautstärke anpassen, um Anweisungen zu hören";
 
 /* Specific route feedback that a speed limit is incorrect. */
-"INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
+"INCORRECT_SPEED_LIMIT" = "Geschwindigkeitslimit falsch";
 
 /* Specific route feedback that an exit was incorrect. */
 "INCORRECT_VISUAL_EXIT_INFO_INCORRECT_FEEDBACK" = "Ausfahrtsinformation falsch";
@@ -140,10 +140,10 @@
 "NO_RATING" = "Keine Bewertung gesetzt.";
 
 /* General category of route feedback where user position is incorrect. */
-"POSITIONING" = "Positioning";
+"POSITIONING" = "Positionierung";
 
 /* Specific route feedback that user positioning is incorrect. */
-"POSITIONING_USER" = "Your position";
+"POSITIONING_USER" = "Ihre Position";
 
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Klicke, um Bewertung auf 0 zurückzusetzen.";
@@ -164,10 +164,10 @@
 "ROAD_CLOSURE_OTHER_FEEDBACK" = "Anderes";
 
 /* This route does not have tolls */
-"ROUTE_HAS_NO_TOLLS" = "No Tolls";
+"ROUTE_HAS_NO_TOLLS" = "Keine Mautgebühr";
 
 /* This route does have tolls */
-"ROUTE_HAS_TOLLS" = "Tolls";
+"ROUTE_HAS_TOLLS" = "Mautgebühren";
 
 /* Specific route feedback that user was offered an alternative that was unexpected. */
 "ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Alternative Route war unerwartet";
