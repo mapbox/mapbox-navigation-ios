@@ -62,13 +62,15 @@ class RecentItemTests: TestCase {
     }
     
     func testRecentItemsAddingAndRemoving() {
-        let firstNavigationGeocodedPlacemark = NavigationGeocodedPlacemark(title: "San Francisco",
+        let firstTitle = "San Francisco"
+        let firstNavigationGeocodedPlacemark = NavigationGeocodedPlacemark(title: firstTitle,
                                                                            subtitle: "CA",
                                                                            location: CLLocation(latitude: 37.772898, longitude: -122.411765),
                                                                            routableLocations: nil)
         let firstRecentItem = RecentItem(firstNavigationGeocodedPlacemark)
         
-        let secondNavigationGeocodedPlacemark = NavigationGeocodedPlacemark(title: "Seattle",
+        let secondTitle = "Seattle"
+        let secondNavigationGeocodedPlacemark = NavigationGeocodedPlacemark(title: secondTitle,
                                                                             subtitle: "WA",
                                                                             location: CLLocation(latitude: 47.605215, longitude: -122.33029),
                                                                             routableLocations: nil)
@@ -92,5 +94,7 @@ class RecentItemTests: TestCase {
         recentItems.add(firstRecentItem)
         recentItems.add(secondRecentItem)
         XCTAssertEqual(recentItems.count, 2, "There should two elements in recent items array.")
+        XCTAssertEqual(recentItems[0].navigationGeocodedPlacemark.title, secondTitle, "Titles should be similar.")
+        XCTAssertEqual(recentItems[1].navigationGeocodedPlacemark.title, firstTitle, "Titles should be similar.")
     }
 }
