@@ -281,11 +281,42 @@ extension Navigator: ElectronicHorizonObserver {
 
 extension Navigator: NavigatorObserver {
     func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
-        guard origin == .locationUpdate else { return }
+        print("%%% Status: \(status); origin: \(origin)")
+
         let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
             .originKey: origin,
             .statusKey: status,
         ]
         NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
+    }
+}
+
+extension NavigationStatusOrigin: CustomStringConvertible {
+    public var description: String {
+        switch self {
+
+        case .locationUpdate:
+            return "locationUpdate"
+        case .legChange:
+            return "legChange"
+        case .setRoute:
+            return "setRoute"
+        case .unconditional:
+            return "unconditional"
+        @unknown default:
+            return "unknown"
+        }
+    }
+}
+
+extension NavigationStatus {
+    open override var description: String {
+"""
+Banner: \(bannerInstruction?.primary.text ?? "nil")
+Voice: \(voiceInstruction?.announcement ?? "nil")
+State: \(routeState)
+RouteSequenceNumber: \(routeSequenceNumber)
+RoadName: \(roadName)
+"""
     }
 }
