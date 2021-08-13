@@ -282,7 +282,6 @@
 		B4A78D27261FD47700FDF212 /* DCA-Arboretum.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AF3261FD0A30078546C /* DCA-Arboretum.json */; };
 		B4A78D28261FD47700FDF212 /* routeWithInstructions.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AF4261FD0A30078546C /* routeWithInstructions.json */; };
 		B4A78D29261FD47700FDF212 /* 9-legged-route.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AF5261FD0A30078546C /* 9-legged-route.json */; };
-		B4A78D2A261FD47700FDF212 /* DCA-Arboretum.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AF6261FD0A30078546C /* DCA-Arboretum.trace.json */; };
 		B4A78D2B261FD47700FDF212 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AF7261FD0A30078546C /* route.json */; };
 		B4A78D2C261FD47700FDF212 /* route-with-tertiary.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AF8261FD0A30078546C /* route-with-tertiary.json */; };
 		B4A78D2D261FD47700FDF212 /* DCA-Arboretum-dummy-faster-route.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AF9261FD0A30078546C /* DCA-Arboretum-dummy-faster-route.json */; };
@@ -773,7 +772,6 @@
 		B47C1AF3261FD0A30078546C /* DCA-Arboretum.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "DCA-Arboretum.json"; sourceTree = "<group>"; };
 		B47C1AF4261FD0A30078546C /* routeWithInstructions.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = routeWithInstructions.json; sourceTree = "<group>"; };
 		B47C1AF5261FD0A30078546C /* 9-legged-route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "9-legged-route.json"; sourceTree = "<group>"; };
-		B47C1AF6261FD0A30078546C /* DCA-Arboretum.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "DCA-Arboretum.trace.json"; sourceTree = "<group>"; };
 		B47C1AF7261FD0A30078546C /* route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		B47C1AF8261FD0A30078546C /* route-with-tertiary.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-tertiary.json"; sourceTree = "<group>"; };
 		B47C1AF9261FD0A30078546C /* DCA-Arboretum-dummy-faster-route.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "DCA-Arboretum-dummy-faster-route.json"; sourceTree = "<group>"; };
@@ -1546,7 +1544,6 @@
 				B47C1AF3261FD0A30078546C /* DCA-Arboretum.json */,
 				B47C1AF4261FD0A30078546C /* routeWithInstructions.json */,
 				B47C1AF5261FD0A30078546C /* 9-legged-route.json */,
-				B47C1AF6261FD0A30078546C /* DCA-Arboretum.trace.json */,
 				B47C1AF7261FD0A30078546C /* route.json */,
 				B47C1AF8261FD0A30078546C /* route-with-tertiary.json */,
 				B47C1AF9261FD0A30078546C /* DCA-Arboretum-dummy-faster-route.json */,
@@ -2207,7 +2204,6 @@
 				B4A78D28261FD47700FDF212 /* routeWithInstructions.json in Resources */,
 				B4A78D29261FD47700FDF212 /* 9-legged-route.json in Resources */,
 				8ABCD6A426AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json in Resources */,
-				B4A78D2A261FD47700FDF212 /* DCA-Arboretum.trace.json in Resources */,
 				E2D1497B265CFB5B008135A3 /* 107.gph.gz in Resources */,
 				B4A78D2B261FD47700FDF212 /* route.json in Resources */,
 				B4A78D2C261FD47700FDF212 /* route-with-tertiary.json in Resources */,
