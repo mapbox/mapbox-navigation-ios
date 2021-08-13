@@ -271,7 +271,6 @@
 		B4A78D1C261FD47700FDF212 /* routeWithTunnels_9thStreetDC.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AE8261FD0A30078546C /* routeWithTunnels_9thStreetDC.json */; };
 		B4A78D1D261FD47700FDF212 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AE9261FD0A30078546C /* PipeFittersUnion-FourSeasonsBoston.json */; };
 		B4A78D1E261FD47700FDF212 /* route-with-straight-roundabout.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AEA261FD0A30078546C /* route-with-straight-roundabout.json */; };
-		B4A78D1F261FD47700FDF212 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AEB261FD0A30078546C /* PipeFittersUnion-FourSeasonsBoston.trace.json */; };
 		B4A78D20261FD47700FDF212 /* route-doubling-back.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AEC261FD0A30078546C /* route-doubling-back.json */; };
 		B4A78D21261FD47700FDF212 /* route-for-lane-testing.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AED261FD0A30078546C /* route-for-lane-testing.json */; };
 		B4A78D22261FD47700FDF212 /* straight-line.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AEE261FD0A30078546C /* straight-line.json */; };
@@ -761,7 +760,6 @@
 		B47C1AE8261FD0A30078546C /* routeWithTunnels_9thStreetDC.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = routeWithTunnels_9thStreetDC.json; sourceTree = "<group>"; };
 		B47C1AE9261FD0A30078546C /* PipeFittersUnion-FourSeasonsBoston.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "PipeFittersUnion-FourSeasonsBoston.json"; sourceTree = "<group>"; };
 		B47C1AEA261FD0A30078546C /* route-with-straight-roundabout.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-with-straight-roundabout.json"; sourceTree = "<group>"; };
-		B47C1AEB261FD0A30078546C /* PipeFittersUnion-FourSeasonsBoston.trace.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "PipeFittersUnion-FourSeasonsBoston.trace.json"; sourceTree = "<group>"; };
 		B47C1AEC261FD0A30078546C /* route-doubling-back.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-doubling-back.json"; sourceTree = "<group>"; };
 		B47C1AED261FD0A30078546C /* route-for-lane-testing.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "route-for-lane-testing.json"; sourceTree = "<group>"; };
 		B47C1AEE261FD0A30078546C /* straight-line.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "straight-line.json"; sourceTree = "<group>"; };
@@ -1533,7 +1531,6 @@
 				B47C1AE8261FD0A30078546C /* routeWithTunnels_9thStreetDC.json */,
 				B47C1AE9261FD0A30078546C /* PipeFittersUnion-FourSeasonsBoston.json */,
 				B47C1AEA261FD0A30078546C /* route-with-straight-roundabout.json */,
-				B47C1AEB261FD0A30078546C /* PipeFittersUnion-FourSeasonsBoston.trace.json */,
 				B47C1AEC261FD0A30078546C /* route-doubling-back.json */,
 				B47C1AED261FD0A30078546C /* route-for-lane-testing.json */,
 				B47C1AEE261FD0A30078546C /* straight-line.json */,
@@ -2191,7 +2188,6 @@
 				B4A78D1E261FD47700FDF212 /* route-with-straight-roundabout.json in Resources */,
 				E2D1496B265CFB4D008135A3 /* waypoint-after-turn.json in Resources */,
 				E2D1496E265CFB4D008135A3 /* md5_crazy_strings.txt in Resources */,
-				B4A78D1F261FD47700FDF212 /* PipeFittersUnion-FourSeasonsBoston.trace.json in Resources */,
 				B4A78D20261FD47700FDF212 /* route-doubling-back.json in Resources */,
 				B4A78D21261FD47700FDF212 /* route-for-lane-testing.json in Resources */,
 				B4A78D22261FD47700FDF212 /* straight-line.json in Resources */,
