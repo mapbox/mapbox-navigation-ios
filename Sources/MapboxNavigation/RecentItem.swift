@@ -14,7 +14,7 @@ public struct RecentItem: Equatable, Codable {
 
     var timestamp: Date
     
-    static var recentItemsPathUrl: URL? {
+    static var recentItemsPathURL: URL? {
         get {
             guard let documentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else {
                 return nil
@@ -38,12 +38,12 @@ public struct RecentItem: Equatable, Codable {
     }
 
     /**
-     Loads a list of `RecentItem`s, which is serialized into a file stored in `recentItemsPathUrl`.
+     Loads a list of `RecentItem`s, which is serialized into a file stored in `recentItemsPathURL`.
      */
     public static func loadDefaults() -> [RecentItem] {
-        guard let recentItemsPathUrl = RecentItem.recentItemsPathUrl else { return [] }
+        guard let recentItemsPathURL = RecentItem.recentItemsPathURL else { return [] }
         
-        if let data = try? Data(contentsOf: recentItemsPathUrl),
+        if let data = try? Data(contentsOf: recentItemsPathURL),
            let recentItems = try? JSONDecoder().decode([RecentItem].self, from: data) {
             return recentItems.sorted(by: { $0.timestamp > $1.timestamp })
         }
@@ -71,14 +71,14 @@ public struct RecentItem: Equatable, Codable {
 extension Array where Element == RecentItem {
     
     /**
-     Method, which allows to save an array of `RecentItem`s into file stored in `recentItemsPathUrl`.
+     Saves an array of `RecentItem`s to a file at the path specified by `recentItemsPathURL`.
      */
     @discardableResult public func save() -> Bool {
-        guard let recentItemsPathUrl = RecentItem.recentItemsPathUrl else { return false }
+        guard let recentItemsPathURL = RecentItem.recentItemsPathURL else { return false }
         
         do {
             let data = try JSONEncoder().encode(self)
-            try data.write(to: recentItemsPathUrl)
+            try data.write(to: recentItemsPathURL)
         } catch {
             NSLog("Failed to save recent items with error: \(error.localizedDescription)")
             return false
@@ -88,10 +88,9 @@ extension Array where Element == RecentItem {
     }
     
     /**
-     Method, which adds `RecentItem` to the collection. In case if similar `RecentItem` already exists
-     in collection, `timestamp` of its first occurrence will be updated.
+     Adds a recent item to the collection. If a similar recent item is already in the collection, this method updates the `timestamp` of that item instead of adding a redundant item.
      
-     - parameter recentItem: `RecentItem` instance, which will be added to the collection.
+     - parameter recentItem: A recent item to add to the collection.
      */
     public mutating func add(_ recentItem: RecentItem) {
         let existingNavigationGeocodedPlacemark = lazy.filter {
@@ -110,9 +109,9 @@ extension Array where Element == RecentItem {
     }
     
     /**
-     Method, which removes from the collection first occurrence of a `RecentItem`.
+     Removes the first matching recent item from the collection.
      
-     - parameter recentItem: `RecentItem` instance, which will be removed from the collection.
+     - parameter recentItem: A recent item to remove from the collection.
      */
     public mutating func remove(_ recentItem: RecentItem) {
         if let index = firstIndex(of: recentItem) {

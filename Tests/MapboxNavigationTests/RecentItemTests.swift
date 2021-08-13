@@ -49,11 +49,11 @@ class RecentItemTests: TestCase {
         
         addTeardownBlock {
             do {
-                guard let recentItemsPathUrl = RecentItem.recentItemsPathUrl else {
+                guard let recentItemsPathURL = RecentItem.recentItemsPathURL else {
                     XCTFail("File URL, where recent items are saved should be available.")
                     return
                 }
-                try FileManager.default.removeItem(at: recentItemsPathUrl)
+                try FileManager.default.removeItem(at: recentItemsPathURL)
             } catch {
                 XCTFail("Failed to remove file with recent items with error: \(error.localizedDescription)")
                 return
