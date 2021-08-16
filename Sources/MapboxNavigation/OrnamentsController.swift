@@ -58,6 +58,8 @@ extension NavigationMapView {
         
         var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
         
+        var roadNameFromStatus: String?
+        
         // MARK: - Lifecycle
         
         init(_ navigationViewData: NavigationViewData, eventsManager: NavigationEventsManager) {
@@ -70,17 +72,28 @@ extension NavigationMapView {
                                                    selector: #selector(orientationDidChange(_:)),
                                                    name: UIDevice.orientationDidChangeNotification,
                                                    object: nil)
-
+            NotificationCenter.default.addObserver(self,
+                                                   selector: #selector(didUpdateRoadNameFromStatus),
+                                                   name: .routeControllerRoadName,
+                                                   object: nil)
         }
         
         private func suspendNotifications() {
             NotificationCenter.default.removeObserver(self,
                                                       name: UIDevice.orientationDidChangeNotification,
                                                       object: nil)
+            NotificationCenter.default.removeObserver(self,
+                                                      name: .routeControllerRoadName,
+                                                      object: nil)
         }
         
         @objc func orientationDidChange(_ notification: Notification) {
             updateMapViewOrnaments()
+        }
+        
+        @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
+            guard let roadName = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String else { return }
+            roadNameFromStatus = roadName
         }
         
         // MARK: - Methods
@@ -252,8 +265,20 @@ extension NavigationMapView {
                     
                     var smallestLabelDistance = Double.infinity
                     var latestFeature: MapboxCommon.Feature?
+                    
+                    var minimumEditDistance = Int.max
+                    var similarFeature: MapboxCommon.Feature?
 
                     for queriedFeature in queriedFeatures {
+                        // Calculate the Levenshtein–Damerau edit distance between the road name from status and the feature property road name, and then use the smallest one for the road label.
+                        if let roadName = queriedFeature.feature.properties["name"] as? String,
+                           let roadNameFromStatus = self.roadNameFromStatus {
+                            let stringEditDistance = roadNameFromStatus.minimumEditDistance(to: roadName)
+                            if stringEditDistance < minimumEditDistance {
+                                minimumEditDistance = stringEditDistance
+                                similarFeature = queriedFeature.feature
+                            }
+                        }
                         
                         var lineStrings: [LineString] = []
                         
@@ -287,7 +312,14 @@ extension NavigationMapView {
                     }
                     
                     var hideWayName = true
-                    if smallestLabelDistance < 5 {
+                    if latestFeature != similarFeature {
+                        let style = self.navigationMapView.mapView.mapboxMap.style
+                        if let similarFeature = similarFeature,
+                           self.navigationView.wayNameView.setupWith(feature: similarFeature,
+                                                                     using: style) {
+                            hideWayName = false
+                        }
+                    } else if smallestLabelDistance < 5 {
                         let style = self.navigationMapView.mapView.mapboxMap.style
                         if let latestFeature = latestFeature,
                            self.navigationView.wayNameView.setupWith(feature: latestFeature,

@@ -187,6 +187,13 @@ public extension Notification.Name {
      The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
     */
     static let locationAuthorizationDidChange: Notification.Name = .init(rawValue: "LocationAuthorizationDidChange")
+    
+    /**
+     Posted when `RouteController` detects the road name.
+     
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.roadNameKey`.
+     */
+    static let routeControllerRoadName: Notification.Name = .init(rawValue: "RouteControllerRoadName")
  
 }
 
@@ -237,6 +244,11 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.routeControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether `RouteController` proactively rerouted the user onto a faster route.
          */
         public static let isProactiveKey: NotificationUserInfoKey = .init(rawValue: "RouteControllerDidFindFasterRoute")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerRoadName` notification. The corresponding value is a `NSString` object representing the current road name.
+         */
+        public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
     }
 }
 
