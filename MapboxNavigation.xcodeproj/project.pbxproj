@@ -35,6 +35,8 @@
 		16EF6C22211BA4B300AA580B /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */; };
 		1FFDFD92249C1AA80091746A /* JunctionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDFD91249C1AA70091746A /* JunctionView.swift */; };
 		2B07444124B4832400615E87 /* TokenTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B07444024B4832400615E87 /* TokenTestViewController.swift */; };
+		2B2C8DBA26E75884002CCF08 /* NavigationRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C8DB926E75884002CCF08 /* NavigationRouter.swift */; };
+		2B2C8DBC26E7589F002CCF08 /* CacheHandlerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2C8DBB26E7589F002CCF08 /* CacheHandlerFactory.swift */; };
 		2B3ED38C2609FA7900861A84 /* ArrivalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED38B2609FA7900861A84 /* ArrivalController.swift */; };
 		2B3ED3962609FB2300861A84 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED3952609FB2300861A84 /* CameraController.swift */; };
 		2B3ED3B4260A162900861A84 /* NavigationViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED3B3260A162900861A84 /* NavigationViewData.swift */; };
@@ -50,7 +52,6 @@
 		2B81EC28241A237E00145086 /* SpeechSynthesizersControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B81EC27241A237E00145086 /* SpeechSynthesizersControllerTests.swift */; };
 		2B871272263966F0001082A9 /* TileStoreConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B8712682639631C001082A9 /* TileStoreConfiguration.swift */; };
 		2B91C9B12416357700E532A5 /* MapboxSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */; };
-		2B955B1C25EFDDCB00BBFEC6 /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B955B1B25EFDDCB00BBFEC6 /* Directions.swift */; };
 		2BBED92F265E2C7D00F90032 /* NativeHandlersFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBED92E265E2C7D00F90032 /* NativeHandlersFactory.swift */; };
 		2BBED93B267A3AB900F90032 /* BillingHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBED93A267A3AB900F90032 /* BillingHandler.swift */; };
 		2BBEEDA52508DB1700C8DA4A /* RouteLegProgress.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */; };
@@ -539,6 +540,8 @@
 		16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewController.swift; sourceTree = "<group>"; };
 		1FFDFD91249C1AA70091746A /* JunctionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JunctionView.swift; sourceTree = "<group>"; };
 		2B07444024B4832400615E87 /* TokenTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTestViewController.swift; sourceTree = "<group>"; };
+		2B2C8DB926E75884002CCF08 /* NavigationRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationRouter.swift; sourceTree = "<group>"; };
+		2B2C8DBB26E7589F002CCF08 /* CacheHandlerFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CacheHandlerFactory.swift; sourceTree = "<group>"; };
 		2B3ED38B2609FA7900861A84 /* ArrivalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalController.swift; sourceTree = "<group>"; };
 		2B3ED3952609FB2300861A84 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		2B3ED3B3260A162900861A84 /* NavigationViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewData.swift; sourceTree = "<group>"; };
@@ -554,7 +557,6 @@
 		2B81EC27241A237E00145086 /* SpeechSynthesizersControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechSynthesizersControllerTests.swift; sourceTree = "<group>"; };
 		2B8712682639631C001082A9 /* TileStoreConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileStoreConfiguration.swift; sourceTree = "<group>"; };
 		2B91C9B02416357700E532A5 /* MapboxSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxSpeechSynthesizer.swift; sourceTree = "<group>"; };
-		2B955B1B25EFDDCB00BBFEC6 /* Directions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
 		2BBED92E265E2C7D00F90032 /* NativeHandlersFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NativeHandlersFactory.swift; sourceTree = "<group>"; };
 		2BBED93A267A3AB900F90032 /* BillingHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillingHandler.swift; sourceTree = "<group>"; };
 		2BBEEDA42508DB1700C8DA4A /* RouteLegProgress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteLegProgress.swift; sourceTree = "<group>"; };
@@ -1750,7 +1752,6 @@
 				C582FD5E203626E900A9086E /* CLLocationDirection.swift */,
 				2E82B9DB26E61F4600B7837F /* CongestionLevel.swift */,
 				C5D9800E1EFBCDAD006DBF2E /* Date.swift */,
-				2B955B1B25EFDDCB00BBFEC6 /* Directions.swift */,
 				3A163AE2249901D000D66A0D /* FixLocation.swift */,
 				DAF27247264E028B00C0AC37 /* Geometry.swift */,
 				C51DF8651F38C31C006C6A15 /* Locale.swift */,
@@ -1810,6 +1811,7 @@
 				B4843886270F8E1600E161E6 /* SimulationType.swift */,
 				2BBED93A267A3AB900F90032 /* BillingHandler.swift */,
 				C58D6BAC1DDCF2AE00387F53 /* CoreConstants.swift */,
+				2B2C8DBB26E7589F002CCF08 /* CacheHandlerFactory.swift */,
 				351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */,
 				B417913A2624F9EA001E0348 /* MBXInfo.plist */,
 				C5ADFBCD1DDCC7840011824B /* Info.plist */,
@@ -1818,6 +1820,7 @@
 				2BBED92E265E2C7D00F90032 /* NativeHandlersFactory.swift */,
 				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
 				C5E7A31B1F4F6828001CB015 /* NavigationRouteOptions.swift */,
+				2B2C8DB926E75884002CCF08 /* NavigationRouter.swift */,
 				35375EC01F31FA86004CE727 /* NavigationSettings.swift */,
 				351174F31EF1C0530065E248 /* ReplayLocationManager.swift */,
 				C5ADFBF91DDCC9580011824B /* LegacyRouteController.swift */,
@@ -2672,6 +2675,7 @@
 				417D127726E24D0800E0AB16 /* FreeDriveEventDetails.swift in Sources */,
 				353E68FC1EF0B7F8007B2AE5 /* NavigationLocationManager.swift in Sources */,
 				2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */,
+				2B2C8DBC26E7589F002CCF08 /* CacheHandlerFactory.swift in Sources */,
 				353E68FE1EF0B985007B2AE5 /* BundleAdditions.swift in Sources */,
 				11D1F8A22696EBD40053A93F /* Dictionary+Equality.swift in Sources */,
 				2EFAE005264C1F9200B618C4 /* RoadObjectLocation.swift in Sources */,
@@ -2727,7 +2731,6 @@
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
 				DA5F450025F07DE200F573EC /* ElectronicHorizonOptions.swift in Sources */,
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
-				2B955B1C25EFDDCB00BBFEC6 /* Directions.swift in Sources */,
 				DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */,
 				5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */,
 				118D883526F8CA0700B2ED7B /* EndOfRouteFeedback.swift in Sources */,
@@ -2741,6 +2744,7 @@
 				C578DA081EFD0FFF0052079F /* ProcessInfo.swift in Sources */,
 				2B42586E2657BF9100B487C3 /* TileStore.swift in Sources */,
 				2BE7016925371E3400F46E4E /* Incident.swift in Sources */,
+				2B2C8DBA26E75884002CCF08 /* NavigationRouter.swift in Sources */,
 				E2805A5826CB994500165DB9 /* NSLock+MapboxInternal.swift in Sources */,
 				C58D6BAD1DDCF2AE00387F53 /* CoreConstants.swift in Sources */,
 				2B7ACA9B25E3F84700B0ACFD /* PredictiveCacheManager.swift in Sources */,

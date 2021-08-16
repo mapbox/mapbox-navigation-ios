@@ -63,7 +63,7 @@ public class JunctionView: UIImageView {
             } else {
                 guard let imageURL = guidanceViewImageRepresentation.imageURL else { return }
                 let baseURLString = imageURL.absoluteString
-                guard let accessToken = service.directions.credentials.accessToken else { return }
+                guard let accessToken = service.credentials.accessToken else { return }
                 let stringURL = baseURLString + "&access_token=" + accessToken
 
                 guard let guidanceViewImageURL = URL(string: stringURL) else { return }

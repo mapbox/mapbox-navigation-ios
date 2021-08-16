@@ -48,9 +48,9 @@ open class RouteController: NSObject {
     public unowned var dataSource: RouterDataSource
     
     /**
-     The Directions object used to create the route.
+     Routing source type used to create the route.
      */
-    public var directions: Directions
+    public var routingSource: NavigationRouter.RouterSource
     
     public var route: Route {
         return routeProgress.route
@@ -186,8 +186,7 @@ open class RouteController: NSObject {
     
     var didFindFasterRoute = false
     
-
-    var routeTask: URLSessionDataTask?
+    var routeTask: NavigationRouter.RoutingRequest?
     
     // MARK: Navigating
     
@@ -521,8 +520,8 @@ open class RouteController: NSObject {
     
     // MARK: Handling Lifecycle
     
-    required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
-        self.directions = directions
+    required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, routingSource: NavigationRouter.RouterSource = .hybrid, dataSource source: RouterDataSource) {
+        self.routingSource = routingSource
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
@@ -539,6 +538,7 @@ open class RouteController: NSObject {
     deinit {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         unsubscribeNotifications()
+        routeTask?.cancel()
     }
 
     private func subscribeNotifications() {
@@ -683,7 +683,6 @@ extension RouteController: Router {
               routes.count > indexedRouteResponse.routeIndex else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
-        let route = routes[indexedRouteResponse.routeIndex]
         if shouldStartNewBillingSession(for: route, routeOptions: routeOptions) {
             BillingHandler.shared.stopBillingSession(with: sessionUUID)
             BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)

@@ -15,6 +15,7 @@ class RouteControllerTests: TestCase {
 
     override func tearDown() {
         replayManager = nil
+        NavigationRouter.__testRoutesStub = nil
         super.tearDown()
     }
     
@@ -70,13 +71,11 @@ class RouteControllerTests: TestCase {
             CLLocation(coordinate: $0)
         }.shiftedToPresent()
 
-        let directions = DirectionsSpy()
-
         let navOptions = NavigationRouteOptions(coordinates: [origin, destination])
         let routeController = RouteController(alongRouteAtIndex: 0,
                                               in: routeResponse,
                                               options: navOptions,
-                                              directions: directions,
+                                              routingSource: .offline,
                                               dataSource: self)
 
         let routerDelegateSpy = RouterDelegateSpy()
@@ -112,7 +111,7 @@ class RouteControllerTests: TestCase {
             didRerouteCalled.fulfill()
         }
         
-        directions.onCalculateRoute = { [unowned directions] in
+        NavigationRouter.__testRoutesStub = { (options, completionHandler) in
             calculateRouteCalled.fulfill()
             let currentCoordinate = locationManager.location!.coordinate
             
@@ -124,13 +123,15 @@ class RouteControllerTests: TestCase {
                 destinationWaypoint
             ]
             
-            let routes = [
-                Fixture.route(between: currentCoordinate, and: destination).route
-            ]
-            
-            directions.fireLastCalculateCompletion(with: waypoints,
-                                                   routes: routes,
-                                                   error: nil)
+            completionHandler(Directions.Session(options, DirectionsCredentials()),
+                              .success(RouteResponse(httpResponse: nil,
+                                                     identifier: nil,
+                                                     routes: [Fixture.route(between: currentCoordinate,
+                                                                            and: destination).route],
+                                                     waypoints: waypoints,
+                                                     options: .route(options),
+                                                     credentials: .mocked)))
+            return 0
         }
 
         let replayFinished = expectation(description: "Replay Finished")

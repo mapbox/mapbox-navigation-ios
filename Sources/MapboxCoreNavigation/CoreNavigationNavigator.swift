@@ -18,12 +18,6 @@ class Navigator {
     
     private(set) var cacheHandle: CacheHandle
     
-    lazy var routerInterface: MapboxNavigationNative_Private.RouterInterface = {
-        return MapboxNavigationNative_Private.RouterFactory.build(for: .hybrid,
-                                                                  cache: cacheHandle,
-                                                                  historyRecorder: historyRecorder)
-    }()
-    
     var mostRecentNavigationStatus: NavigationStatus? = nil
     
     private(set) var tileStore: TileStore

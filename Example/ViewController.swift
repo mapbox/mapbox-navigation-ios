@@ -513,7 +513,7 @@ class ViewController: UIViewController {
     }
 
     func requestRoute(with options: RouteOptions, success: @escaping RouteRequestSuccess, failure: RouteRequestFailure?) {
-        NavigationSettings.shared.directions.calculateWithCache(options: options) { (session, result) in
+        NavigationRouter().requestRoutes(options: options) { (session, result) in
             switch result {
             case let .success(response):
                 success(response)

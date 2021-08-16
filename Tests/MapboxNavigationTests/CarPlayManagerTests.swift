@@ -201,33 +201,6 @@ class CarPlayManagerTests: TestCase {
         XCTAssert(spy.recievedError == testError, "Delegate should have receieved error")
     }
     
-    func testDirectionsOverride() {
-        class DirectionsInvocationSpy: Directions {
-            typealias VoidClosure = () -> Void
-            var payload: VoidClosure?
-            
-            override func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
-                payload?()
-                
-                return URLSessionDataTask()
-            }
-        }
-        
-        let expectation = XCTestExpectation(description: "Ensuring Spy is called")
-        let spy = DirectionsInvocationSpy(credentials: .mocked)
-        spy.payload = expectation.fulfill
-        
-        let subject = CarPlayManager(directions: spy)
-      
-        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-        let options = RouteOptions(waypoints: [waypoint1, waypoint2])
-        subject.calculate(options, completionHandler: { _, _ in })
-        wait(for: [expectation], timeout: 1.0)
-        
-        XCTAssert(subject.directions == spy, "Directions client is not overridden properly.")
-    }
-    
     func testCustomStyles() {
         class CustomStyle: DayStyle {}
         
@@ -260,8 +233,7 @@ class CarPlayManagerSpec: QuickSpec {
             Navigator._recreateNavigator()
             
             CarPlayMapViewController.swizzleMethods()
-            let directionsSpy = DirectionsSpy()
-            manager = CarPlayManager(styles: nil, directions: directionsSpy, eventsManager: nil)
+            manager = CarPlayManager(styles: nil, eventsManager: nil)
             delegate = TestCarPlayManagerDelegate()
             manager!.delegate = delegate
 
@@ -279,6 +251,10 @@ class CarPlayManagerSpec: QuickSpec {
             beforeEach {
                 manager!.mapTemplateProvider = MapTemplateSpyProvider()
             }
+            
+            afterEach {
+                NavigationRouter.__testRoutesStub = nil
+            }
 
             let previewRoutesAction = {
                 let options = NavigationRouteOptions(coordinates: [
@@ -288,10 +264,19 @@ class CarPlayManagerSpec: QuickSpec {
                 let route = Fixture.route(from: "route-with-banner-instructions", options: options)
                 let waypoints = options.waypoints
 
-                let directionsSpy = manager!.directions as! DirectionsSpy
-
+                let fasterResponse = RouteResponse(httpResponse: nil,
+                                                   identifier: nil,
+                                                   routes: [route],
+                                                   waypoints: waypoints,
+                                                   options: .route(options),
+                                                   credentials: Fixture.credentials)
+                NavigationRouter.__testRoutesStub = { (options, completionHandler) in
+                    completionHandler(Directions.Session(options, Fixture.credentials),
+                                      .success(fasterResponse))
+                    return 0
+                }
+                
                 manager!.previewRoutes(for: options, completionHandler: {})
-                directionsSpy.fireLastCalculateCompletion(with: waypoints, routes: [route], error: nil)
             }
 
             context("when the trip is not customized by the developer") {
