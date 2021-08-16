@@ -143,6 +143,7 @@
 * Fixed an issue when route line was sometimes invisilbe after starting active guidance session. ([#3205](https://github.com/mapbox/mapbox-navigation-ios/pull/3205))
 * Fixed an issue where reusing `NavigationMapView` across multiple instances of `NavigationViewController` would result in a crash. ([#3222](https://github.com/mapbox/mapbox-navigation-ios/pull/3222)) 
 * Fixed missing feedback subtype description for `FeedbackType.incorrectVisual(subtype: .incorrectSpeedLimit)` and all "other" subtypes. ([#3238](https://github.com/mapbox/mapbox-navigation-ios/pull/3238))
+* Fixed an issue where the first location update was incorrectly generated in the `NavigationService.start()` method. ([#3239](https://github.com/mapbox/mapbox-navigation-ios/pull/3239/files))
 
 ## v1.4.1
 
