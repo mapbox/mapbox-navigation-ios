@@ -43,7 +43,11 @@ class RecentItemTests: TestCase {
         XCTAssertTrue(recentItems.save(), "Saving should be successful.")
         
         let savedRecentItems = RecentItem.loadDefaults()
-        XCTAssertEqual(savedRecentItems.count, 2, "There should be two recent items.")
+        if savedRecentItems.count != 2 {
+            XCTFail("There should be two recent items.")
+            return
+        }
+        
         XCTAssertEqual(savedRecentItems[0], firstRecentItem, "Recent item, with modified timestamp should be the first one in a list.")
         XCTAssertEqual(savedRecentItems[1], secondRecentItem, "Recent item, with no modifications to timestamp should be the second one in a list.")
         
@@ -56,7 +60,6 @@ class RecentItemTests: TestCase {
                 try FileManager.default.removeItem(at: recentItemsPathURL)
             } catch {
                 XCTFail("Failed to remove file with recent items with error: \(error.localizedDescription)")
-                return
             }
         }
     }
