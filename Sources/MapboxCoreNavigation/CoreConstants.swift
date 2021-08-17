@@ -191,7 +191,7 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` detects the road name.
      
-     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.roadNameKey`.
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.roadNameKey`.
      */
     static let routeControllerRoadName: Notification.Name = .init(rawValue: "RouteControllerRoadName")
  
