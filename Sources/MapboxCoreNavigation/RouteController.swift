@@ -361,7 +361,7 @@ open class RouteController: NSObject {
     
     func updateRoadName(status: NavigationStatus) {
         let roadName = status.roadName
-        NotificationCenter.default.post(name: .routeControllerRoadName, object: self, userInfo: [
+        NotificationCenter.default.post(name: .currentRoadNameDidChange, object: self, userInfo: [
             NotificationUserInfoKey.roadNameKey: roadName
         ])
     }
