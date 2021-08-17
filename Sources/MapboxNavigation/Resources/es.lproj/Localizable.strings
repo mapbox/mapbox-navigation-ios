@@ -4,6 +4,9 @@
 /* Message on arrival action sheet */
 "CARPLAY_ARRIVED_MESSAGE" = "¿Qué quieres hacer?";
 
+/* Title on continue button in CarPlay */
+"CARPLAY_CONTINUE" = "Continúe";
+
 /* Name of the waypoint associated with the current location */
 "CARPLAY_CURRENT_LOCATION" = "Ubicación actual";
 
@@ -161,10 +164,10 @@
 "ROAD_CLOSURE_OTHER_FEEDBACK" = "Otro";
 
 /* This route does not have tolls */
-"ROUTE_HAS_NO_TOLLS" = "No Tolls";
+"ROUTE_HAS_NO_TOLLS" = "Sin peaje";
 
 /* This route does have tolls */
-"ROUTE_HAS_TOLLS" = "Tolls";
+"ROUTE_HAS_TOLLS" = "Peaje";
 
 /* Specific route feedback that user was offered an alternative that was unexpected. */
 "ROUTE_QUALITY_ALTERNATIVE_ROUTE_NOT_EXPECTED_FEEDBACK" = "Ruta alternativa inesperada";

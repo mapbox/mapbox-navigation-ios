@@ -18,6 +18,7 @@
 * Carthage v0.38 or above is now required for installing this SDK if you use Carthage. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
 * You can fully build this SDK on Macs with Apple Silicon. ([#3031](https://github.com/mapbox/mapbox-navigation-ios/pull/3031))
 * Removed the optional dependency on MapboxGeocoder.swift. ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999), [#3183](https://github.com/mapbox/mapbox-navigation-ios/issues/3183])
+* Added a Castilian Spanish localization. ([#3186](https://github.com/mapbox/mapbox-navigation-ios/pull/3186))
 
 ### Map
 

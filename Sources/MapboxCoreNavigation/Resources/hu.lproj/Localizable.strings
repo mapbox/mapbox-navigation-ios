@@ -1,17 +1,3 @@
-﻿/* Format for speech string after completing a maneuver and starting a new step; 1 = distance */
-"CONTINUE" = "Continue for %@";
+/* Inform developer an update is available */
+"UPDATE_AVAILABLE" = "Elérhető a Mapbox Navigation SDK for iOS %@ verziója.";
 
-/* Format for speech string after completing a maneuver and starting a new step; 1 = way name; 2 = distance */
-"CONTINUE_ON_ROAD" = "Haladj ezen: %1$@ még ennyit: %2$@";
-
-/* Format for speech string; 1 = current instruction; 2 = the following linked instruction */
-"LINKED_UTTERANCE_FORMAT" = "%1$@, majd %2$@";
-
-/* Format for speech string; 1 = current instruction; 2 = formatted distance to the following linked instruction; 3 = that linked instruction */
-"LINKED_WITH_DISTANCE_UTTERANCE_FORMAT" = "%1$@, majd %2$@ múlva %3$@";
-
-/* Format for speech string; 1 = way name; 2 = way route number */
-"NAME_AND_REF" = "%1$@ (%2$@)";
-
-/* Format for speech string; 1 = formatted distance; 2 = instruction */
-"WITH_DISTANCE_UTTERANCE_FORMAT" = "%1$@ múlva %2$@";
