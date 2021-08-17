@@ -269,6 +269,7 @@ open class RouteController: NSObject {
         updateRouteLegProgress(status: status)
         updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
+        updateRoadName(status: status)
         
         if willReroute {
             reroute(from: location, along: routeProgress)
@@ -356,6 +357,13 @@ open class RouteController: NSObject {
                 announcePassage(of: instruction, routeProgress: routeProgress)
             }
         }
+    }
+    
+    func updateRoadName(status: NavigationStatus) {
+        let roadName = status.roadName
+        NotificationCenter.default.post(name: .routeControllerRoadName, object: self, userInfo: [
+            NotificationUserInfoKey.roadNameKey: roadName
+        ])
     }
     
     func updateRouteLegProgress(status: NavigationStatus) {

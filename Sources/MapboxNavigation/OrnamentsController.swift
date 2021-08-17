@@ -58,7 +58,7 @@ extension NavigationMapView {
         
         var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
         
-        var electronicHorizonRoadNames = [String]()
+        var roadNameFromStatus: String?
         
         // MARK: - Lifecycle
         
@@ -73,10 +73,9 @@ extension NavigationMapView {
                                                    name: UIDevice.orientationDidChangeNotification,
                                                    object: nil)
             NotificationCenter.default.addObserver(self,
-                                                   selector: #selector(didUpdateEHorizonRoadName),
-                                                   name: .electronicHorizonDidUpdatePosition,
+                                                   selector: #selector(didUpdateRoadNameFromStatus),
+                                                   name: .routeControllerRoadName,
                                                    object: nil)
-
         }
         
         private func suspendNotifications() {
@@ -84,29 +83,17 @@ extension NavigationMapView {
                                                       name: UIDevice.orientationDidChangeNotification,
                                                       object: nil)
             NotificationCenter.default.removeObserver(self,
-                                                      name: .electronicHorizonDidUpdatePosition,
+                                                      name: .routeControllerRoadName,
                                                       object: nil)
-        }
-        
-        @objc func didUpdateEHorizonRoadName(_ notification: Notification) {
-            guard let startingEdge = notification.userInfo?[RoadGraph.NotificationUserInfoKey.treeKey] as? RoadGraph.Edge else { return }
-            let edgeIdentifier = startingEdge.identifier
-            
-            guard let routeController = navigationViewData.router as? RouteController,
-                  let metadata = routeController.roadGraph.edgeMetadata(edgeIdentifier: edgeIdentifier) else { return }
-            
-            electronicHorizonRoadNames = metadata.names.map { name -> String in
-                switch name {
-                case .name(let name):
-                    return name
-                case .code(let code):
-                    return code
-                }
-            }
         }
         
         @objc func orientationDidChange(_ notification: Notification) {
             updateMapViewOrnaments()
+        }
+        
+        @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
+            guard let roadName = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String else { return }
+            roadNameFromStatus = roadName
         }
         
         // MARK: - Methods
@@ -283,11 +270,10 @@ extension NavigationMapView {
                     var similarFeature: MapboxCommon.Feature?
 
                     for queriedFeature in queriedFeatures {
-                        // Calculate the Levenshtein–Damerau edit distance between the EHorizon road name and the feature property road name, and then use the smallest one for the road label.
+                        // Calculate the Levenshtein–Damerau edit distance between the road name from status and the feature property road name, and then use the smallest one for the road label.
                         if let roadName = queriedFeature.feature.properties["name"] as? String,
-                           !roadName.isEmpty,
-                           !self.electronicHorizonRoadNames.isEmpty {
-                            let stringEditDistance = self.electronicHorizonRoadNames.map{ $0.minimumEditDistance(to: roadName) }.reduce(0, +)
+                           let roadNameFromStatus = self.roadNameFromStatus {
+                            let stringEditDistance = roadNameFromStatus.minimumEditDistance(to: roadName)
                             if stringEditDistance < minimumEditDistance {
                                 minimumEditDistance = stringEditDistance
                                 similarFeature = queriedFeature.feature
