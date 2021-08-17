@@ -2,6 +2,20 @@ import Foundation
 import UIKit
 @_spi(MapboxInternal) import MapboxCoreNavigation
 
+/// An idle timer which is managed by `IdleTimerManager`.
+protocol IdleTimer {
+    func setDisabled(_ disabled: Bool)
+}
+
+/// UIApplication specific idle timer.
+struct UIApplicationIdleTimer: IdleTimer {
+    func setDisabled(_ disabled: Bool) {
+        onMainAsync {
+            UIApplication.shared.isIdleTimerDisabled = disabled
+        }
+    }
+}
+
 /// Manages `UIApplication.shared.isIdleTimerDisabled`. Thread-safe.
 final class IdleTimerManager {
     /// While a cancellable isn't cancelled, the idle timer is disabled. A cancellable is cancelled on deallocation.
@@ -17,7 +31,9 @@ final class IdleTimerManager {
         }
     }
 
-    static let shared: IdleTimerManager = .init()
+    static let shared: IdleTimerManager = .init(idleTimer: UIApplicationIdleTimer())
+
+    private let idleTimer: IdleTimer
 
     private let lock: NSLock = .init()
     /// Number of currently non cancelled `IdleTimerManager.Cancellable` instances.
@@ -27,7 +43,9 @@ final class IdleTimerManager {
         }
     }
 
-    private init() {}
+    init(idleTimer: IdleTimer) {
+        self.idleTimer = idleTimer
+    }
 
     /**
      Disables idle timer `UIApplication.shared.isIdleTimerDisabled`
@@ -45,10 +63,7 @@ final class IdleTimerManager {
 
     private func _updateIdleTimer() {
         let isIdleTimerDisabled = _cancellablesCount > 0
-
-        onMainAsync {
-            UIApplication.shared.isIdleTimerDisabled = isIdleTimerDisabled
-        }
+        idleTimer.setDisabled(isIdleTimerDisabled)
     }
 
     private func changeCancellablesCount(delta: Int) {
