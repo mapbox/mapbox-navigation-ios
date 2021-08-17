@@ -16,12 +16,11 @@ public struct RecentItem: Equatable, Codable {
     
     static var recentItemsPathURL: URL? {
         get {
-            guard let documentsDirectory = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first else {
+            guard let documentsDirectory = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true) else {
                 return nil
             }
             
-            let url = URL(fileURLWithPath: documentsDirectory)
-            return url.appendingPathComponent("RecentItems.data")
+            return documentsDirectory.appendingPathComponent("RecentItems.data")
         }
     }
     
@@ -43,12 +42,15 @@ public struct RecentItem: Equatable, Codable {
     public static func loadDefaults() -> [RecentItem] {
         guard let recentItemsPathURL = RecentItem.recentItemsPathURL else { return [] }
         
-        if let data = try? Data(contentsOf: recentItemsPathURL),
-           let recentItems = try? JSONDecoder().decode([RecentItem].self, from: data) {
+        do {
+            let data = try Data(contentsOf: recentItemsPathURL)
+            let recentItems = try JSONDecoder().decode([RecentItem].self, from: data)
+            
             return recentItems.sorted(by: { $0.timestamp > $1.timestamp })
+        } catch {
+            NSLog("Failed to load recent items with error: \(error.localizedDescription)")
+            return []
         }
-
-        return []
     }
 
     /**
