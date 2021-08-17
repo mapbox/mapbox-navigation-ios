@@ -74,7 +74,7 @@ extension NavigationMapView {
                                                    object: nil)
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(didUpdateRoadNameFromStatus),
-                                                   name: .routeControllerRoadName,
+                                                   name: .currentRoadNameDidChange,
                                                    object: nil)
         }
         
@@ -83,7 +83,7 @@ extension NavigationMapView {
                                                       name: UIDevice.orientationDidChangeNotification,
                                                       object: nil)
             NotificationCenter.default.removeObserver(self,
-                                                      name: .routeControllerRoadName,
+                                                      name: .currentRoadNameDidChange,
                                                       object: nil)
         }
         
@@ -92,8 +92,7 @@ extension NavigationMapView {
         }
         
         @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
-            guard let roadName = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String else { return }
-            roadNameFromStatus = roadName
+            roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
         }
         
         // MARK: - Methods

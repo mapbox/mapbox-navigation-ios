@@ -193,7 +193,7 @@ public extension Notification.Name {
      
      The user info dictionary contains the key `RouteController.NotificationUserInfoKey.roadNameKey`.
      */
-    static let routeControllerRoadName: Notification.Name = .init(rawValue: "RouteControllerRoadName")
+    static let currentRoadNameDidChange: Notification.Name = .init(rawValue: "CurrentRoadNameDidChange")
  
 }
 
@@ -246,7 +246,7 @@ extension RouteController {
         public static let isProactiveKey: NotificationUserInfoKey = .init(rawValue: "RouteControllerDidFindFasterRoute")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.routeControllerRoadName` notification. The corresponding value is a `NSString` object representing the current road name.
+         A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `NSString` object representing the current road name.
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
     }
