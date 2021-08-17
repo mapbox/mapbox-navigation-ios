@@ -560,6 +560,47 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
     }
     
+    func testRunningAnimators() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        let navigationCameraStateTransition = NavigationCameraStateTransition(navigationMapView.mapView)
+        
+        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.788443,
+                                                                         longitude: -122.4020258),
+                                          padding: .zero,
+                                          anchor: .zero,
+                                          zoom: 15.0,
+                                          bearing: 0.0,
+                                          pitch: 45.0)
+        
+        let followingExpectation = expectation(description: "Camera transition expectation.")
+        
+        navigationCameraStateTransition.transitionToFollowing(cameraOptions) {
+            followingExpectation.fulfill()
+        }
+        
+        // Attempt to stop animators right away to verify that no side effects occur. Based on Maps SDK
+        // behavior it should not be possible to stop animator, which has not started yet.
+        navigationCameraStateTransition.stopAnimators()
+        
+        wait(for: [followingExpectation], timeout: 5.0)
+        
+        // Anchor and padding animators are not created when performing transition to the
+        // `NavigationCameraState.following` state.
+        guard let animatorCenter = navigationCameraStateTransition.animatorCenter,
+              let animatorZoom = navigationCameraStateTransition.animatorZoom,
+              let animatorBearing = navigationCameraStateTransition.animatorBearing,
+              let animatorPitch = navigationCameraStateTransition.animatorPitch else {
+            XCTFail("Animators should be available.")
+            return
+        }
+        
+        XCTAssertFalse(animatorCenter.isRunning, "Center animator should not be running.")
+        XCTAssertFalse(animatorZoom.isRunning, "Zoom animator should not be running.")
+        XCTAssertFalse(animatorBearing.isRunning, "Bearing animator should not be running.")
+        XCTAssertFalse(animatorPitch.isRunning, "Pitch animator should not be running.")
+    }
+    
     // MARK: - Helper methods
     
     func route(from file: String) -> Route? {

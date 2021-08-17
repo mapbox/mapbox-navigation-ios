@@ -54,6 +54,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             camera.pitch = 0.0
             if let midPointZoom = camera.zoom {
                 let cameraOptions = CameraOptions(center: location,
+                                                  padding: padding,
                                                   anchor: screenCenterPoint,
                                                   zoom: CGFloat(midPointZoom),
                                                   bearing: bearing,
@@ -61,6 +62,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
                 
                 transitionFromHighZoomToMidpoint(cameraOptions) {
                     let cameraOptions = CameraOptions(center: location,
+                                                      padding: padding,
                                                       anchor: anchor,
                                                       zoom: CGFloat(zoom),
                                                       bearing: bearing,
@@ -228,8 +230,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
             animatorPadding
         ]
         
-        animators.forEach {
-            $0?.stopAnimation()
+        animators.compactMap({ $0 }).forEach {
+            if $0.isRunning {
+                $0.stopAnimation()
+            }
         }
     }
     
