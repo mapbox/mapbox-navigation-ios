@@ -619,9 +619,9 @@ class NavigationServiceTests: TestCase {
             waitForNavNativeCallbacks()
 
             if index < 31 {
-                XCTAssert(routeController.routeProgress.legIndex == 0)
+                XCTAssertEqual(routeController.routeProgress.legIndex,0)
             } else {
-                XCTAssert(routeController.routeProgress.legIndex == 1)
+                XCTAssertEqual(routeController.routeProgress.legIndex, 1)
             }
         }
         
