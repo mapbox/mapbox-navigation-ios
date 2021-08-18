@@ -571,6 +571,7 @@ open class NavigationMapView: UIView {
      */
     func removeLineGradientStops() {
         fractionTraveled = 0.0
+        currentLegIndex = nil
         currentLegCongestionLevels = nil
         currentLineGradientStops.removeAll()
         if let routes = self.routes {
