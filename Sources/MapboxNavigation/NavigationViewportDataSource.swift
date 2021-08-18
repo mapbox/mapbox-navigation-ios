@@ -316,12 +316,15 @@ public class NavigationViewportDataSource: ViewportDataSource {
         }
         
         if overviewCameraOptions.centerUpdatesAllowed {
-            let center = remainingCoordinatesOnRoute
-                .map({ mapView.mapboxMap.point(for: $0) }).boundingBoxPoints
-                .map({ mapView.mapboxMap.coordinate(for: $0) }).centerCoordinate
-            
-            overviewMobileCamera.center = center
-            overviewCarPlayCamera.center = center
+            if let boundingBox = BoundingBox(from: remainingCoordinatesOnRoute) {
+                let center = [
+                    boundingBox.southWest,
+                    boundingBox.northEast
+                ].centerCoordinate
+                
+                overviewMobileCamera.center = center
+                overviewCarPlayCamera.center = center
+            }
         }
         
         if overviewCameraOptions.zoomUpdatesAllowed {
