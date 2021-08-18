@@ -217,8 +217,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
             
             if options.followingCameraOptions.centerUpdatesAllowed {
+                var center: CLLocationCoordinate2D = location.coordinate
                 if let boundingBox = BoundingBox(from: coordinatesToManeuver + coordinatesForManeuverFraming) {
-                    var center: CLLocationCoordinate2D = location.coordinate
                     let coordinates = [
                         center,
                         boundingBox.northEast,
@@ -231,10 +231,10 @@ public class NavigationViewportDataSource: ViewportDataSource {
                     if let adjustedCenter = centerLineString.coordinateFromStart(distance: centerCoordDistance) {
                         center = adjustedCenter
                     }
-                    
-                    followingMobileCamera.center = center
-                    followingCarPlayCamera.center = center
                 }
+                
+                followingMobileCamera.center = center
+                followingCarPlayCamera.center = center
             }
             
             if options.followingCameraOptions.zoomUpdatesAllowed {
