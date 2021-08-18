@@ -299,7 +299,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
     func updateOverviewCamera(_ activeLocation: CLLocation?, routeProgress: RouteProgress?) {
         guard let mapView = mapView,
               let coordinate = activeLocation?.coordinate,
-              let heading = activeLocation?.course,
               let routeProgress = routeProgress else { return }
         
         let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -343,8 +342,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
         
         if overviewCameraOptions.bearingUpdatesAllowed {
             // In case if `NavigationCamera` is already in `NavigationCameraState.overview` value
-            // of bearing will be ignored.
-            let bearing = mapView.cameraState.bearing + heading.shortestRotation(angle: mapView.cameraState.bearing)
+            // of bearing will be also ignored.
+            let bearing = 0.0
             
             overviewMobileCamera.bearing = bearing
             overviewCarPlayCamera.bearing = bearing
