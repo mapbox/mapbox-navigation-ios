@@ -319,10 +319,6 @@ public class CarPlayNavigationViewController: UIViewController {
             speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
         }
         
-        if routeProgress.isFinalLeg && routeProgress.currentLegProgress.distanceRemaining <= 0.0 {
-            navigationMapView?.removeRoutes()
-        }
-        
         if legIndex != currentLegIndexMapped {
             navigationMapView?.showWaypoints(on: routeProgress.route, legIndex: legIndex)
             navigationMapView?.show([routeProgress.route], legIndex: legIndex)
@@ -330,6 +326,10 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         if routeLineTracksTraversal {
+            if routeProgress.isFinalLeg && routeProgress.currentLegProgress.distanceRemaining <= 0.0 {
+                navigationMapView?.removeRoutes()
+            }
+            
             if routeProgress.currentLeg.segmentCongestionLevels != navigationMapView?.currentLegCongestionLevels {
                 navigationMapView?.setUpLineGradientStops(along: routeProgress.route)
             }

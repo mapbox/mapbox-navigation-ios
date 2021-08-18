@@ -121,11 +121,6 @@ extension NavigationMapView {
             let stepIndex = progress.currentLegProgress.stepIndex
             
             navigationMapView.updatePreferredFrameRate(for: progress)
-            
-            if progress.isFinalLeg && progress.currentLegProgress.distanceRemaining <= 0.0 {
-                navigationMapView.removeRoutes()
-            }
-            
             if currentLegIndexMapped != legIndex {
                 navigationMapView.showWaypoints(on: route, legIndex: legIndex)
                 navigationMapView.show([route], legIndex: legIndex)
@@ -143,6 +138,10 @@ extension NavigationMapView {
             }
             
             if routeLineTracksTraversal {
+                if progress.isFinalLeg && progress.currentLegProgress.distanceRemaining <= 0.0 {
+                    navigationMapView.removeRoutes()
+                }
+                
                 if progress.currentLeg.segmentCongestionLevels != navigationMapView.currentLegCongestionLevels {
                     navigationMapView.setUpLineGradientStops(along: progress.route)
                 }
