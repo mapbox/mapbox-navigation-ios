@@ -50,6 +50,7 @@ class ArrivalController: NavigationComponentDelegate {
             return
         }
         
+        navigationMapView.removeRoutes()
         embedEndOfRoute(into: viewController, onDismiss: onDismiss)
         endOfRouteViewController.destination = destination
         navigationViewData.navigationView.endOfRouteView?.isHidden = false
