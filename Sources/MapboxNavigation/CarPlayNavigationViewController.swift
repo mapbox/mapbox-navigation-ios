@@ -251,6 +251,7 @@ public class CarPlayNavigationViewController: UIViewController {
                                                selector: #selector(rerouted(_:)),
                                                name: .routeControllerDidReroute,
                                                object: service.router)
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(refresh(_:)),
                                                name: .routeControllerDidRefreshRoute,
@@ -270,6 +271,7 @@ public class CarPlayNavigationViewController: UIViewController {
         NotificationCenter.default.removeObserver(self,
                                                   name: .routeControllerDidReroute,
                                                   object: nil)
+        
         NotificationCenter.default.removeObserver(self,
                                                   name: .routeControllerDidRefreshRoute,
                                                   object: nil)
