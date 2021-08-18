@@ -281,7 +281,6 @@ extension Navigator: ElectronicHorizonObserver {
 
 extension Navigator: NavigatorObserver {
     func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
-        guard origin == .locationUpdate else { return }
         let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
             .originKey: origin,
             .statusKey: status,
