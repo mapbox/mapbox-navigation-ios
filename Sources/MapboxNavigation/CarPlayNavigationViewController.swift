@@ -251,6 +251,10 @@ public class CarPlayNavigationViewController: UIViewController {
                                                selector: #selector(rerouted(_:)),
                                                name: .routeControllerDidReroute,
                                                object: service.router)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(refresh(_:)),
+                                               name: .routeControllerDidRefreshRoute,
+                                               object: service.router)
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(visualInstructionDidChange(_:)),
@@ -265,6 +269,9 @@ public class CarPlayNavigationViewController: UIViewController {
         
         NotificationCenter.default.removeObserver(self,
                                                   name: .routeControllerDidReroute,
+                                                  object: nil)
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .routeControllerDidRefreshRoute,
                                                   object: nil)
         
         NotificationCenter.default.removeObserver(self,
@@ -329,10 +336,6 @@ public class CarPlayNavigationViewController: UIViewController {
             if routeProgress.isFinalLeg && routeProgress.currentLegProgress.distanceRemaining <= 0.0 {
                 navigationMapView?.removeRoutes()
             }
-            
-            if routeProgress.currentLeg.segmentCongestionLevels != navigationMapView?.currentLegCongestionLevels {
-                navigationMapView?.setUpLineGradientStops(along: routeProgress.route)
-            }
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView?.travelAlongRouteLine(to: location.coordinate)
         }
@@ -340,6 +343,18 @@ public class CarPlayNavigationViewController: UIViewController {
     
     @objc func rerouted(_ notification: NSNotification) {
         updateRouteOnMap()
+    }
+    
+    @objc func refresh(_ notification: NSNotification) {
+        let progress = navigationService.routeProgress
+        let legIndex = progress.legIndex
+        let coordinate = navigationService.router.location?.coordinate
+        
+        navigationMapView?.show([progress.route], legIndex: legIndex)
+        if routeLineTracksTraversal {
+            navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: progress)
+            navigationMapView?.travelAlongRouteLine(to: coordinate)
+        }
     }
     
     func updateRouteOnMap() {

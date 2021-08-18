@@ -141,10 +141,6 @@ extension NavigationMapView {
                 if progress.isFinalLeg && progress.currentLegProgress.distanceRemaining <= 0.0 {
                     navigationMapView.removeRoutes()
                 }
-                
-                if progress.currentLeg.segmentCongestionLevels != navigationMapView.currentLegCongestionLevels {
-                    navigationMapView.setUpLineGradientStops(along: progress.route)
-                }
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: progress)
                 navigationMapView.travelAlongRouteLine(to: location.coordinate)
             }
