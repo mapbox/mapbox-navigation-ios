@@ -25,6 +25,7 @@ class NativeHandlersFactoryTests: TestCase {
     override func setUp() {
         UserDefaults.standard.set(nil, forKey: customConfigKey)
         handlersFactory = NativeHandlersFactory(tileStorePath: "tile store path",
+                                                credentials: .mocked,
                                                 configFactoryType: ConfigFactorySpy.self)
     }
     

@@ -60,9 +60,8 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter directions: The Directions object that created `route`.
      - parameter source: The data source for the RouteController.
-     - parameter tileStoreLocation: Configuration of `TileStore` location, where Navigation tiles are stored.
      */
-    init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource, tileStoreLocation: TileStoreConfiguration.Location)
+    init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.

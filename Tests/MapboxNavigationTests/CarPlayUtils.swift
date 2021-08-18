@@ -65,8 +65,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
 
     func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
         let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
-        let directionsClientSpy = DirectionsSpy()
-        let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
+        let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: routeOptions, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self, simulating: desiredSimulationMode)
         return service
     }
 

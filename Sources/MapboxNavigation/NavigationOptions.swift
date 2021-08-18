@@ -46,12 +46,7 @@ open class NavigationOptions: NavigationCustomizable {
      These options control how the `PredictiveCacheManager` will try to proactively fetch data related to the route. A `nil` value disables the feature.
      */
     open var predictiveCacheOptions: PredictiveCacheOptions?
-    
-    /**
-     Configuration of `TileStore` location, where Map and Navigation tiles are stored.
-     */
-    open var tileStoreConfiguration: TileStoreConfiguration = .default
-    
+
     /**
      Custom `NavigationMapView` instance to be embedded in navigation UI.
      
@@ -73,10 +68,9 @@ open class NavigationOptions: NavigationCustomizable {
      - parameter topBanner: The container view controller that presents the top banner.
      - parameter bottomBanner: The container view controller that presents the bottom banner.
      - parameter predictiveCacheOptions: Configuration for predictive caching. These options control how the `PredictiveCacheManager` will try to proactively fetch data related to the route. A `nil` value disables the feature.
-     - parameter tileStoreConfiguration: Configuration of `TileStore` location, where Map and Navigation tiles are stored.
      - parameter navigationMapView: Custom `NavigationMapView` instance to supersede the default one.
      */
-    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, tileStoreConfiguration: TileStoreConfiguration = .default, navigationMapView: NavigationMapView? = nil) {
+    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, navigationMapView: NavigationMapView? = nil) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
@@ -84,7 +78,6 @@ open class NavigationOptions: NavigationCustomizable {
         self.topBanner = topBanner
         self.bottomBanner = bottomBanner
         self.predictiveCacheOptions = predictiveCacheOptions
-        self.tileStoreConfiguration = tileStoreConfiguration
         self.navigationMapView = navigationMapView
     }
     

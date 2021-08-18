@@ -1,6 +1,7 @@
 import Foundation
 import XCTest
 import MapboxDirections
+import MapboxCoreNavigation
 #if canImport(MapboxMaps)
 import MapboxMaps
 #endif
@@ -13,6 +14,11 @@ open class TestCase: XCTestCase {
     open override class func setUp() {
         super.setUp()
         initializeIfNeeded()
+    }
+
+    open override func setUp() {
+        super.setUp()
+        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
     }
 
     /// Prepares tests for execution. Should be called once before any test runs.

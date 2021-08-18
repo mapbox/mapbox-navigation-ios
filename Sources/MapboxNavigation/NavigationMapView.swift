@@ -400,28 +400,14 @@ open class NavigationMapView: UIView {
      Setups the Predictive Caching mechanism using provided Options.
      
      This will handle all the required manipulations to enable the feature and maintain it during the navigations. Once enabled, it will be present as long as `NavigationMapView` is retained.
-     If `NavigationMapView` was not configured to maintain a tile storage - this function does nothing.
      
      - parameter options: options, controlling caching parameters like area radius and concurrent downloading threads.
-     - parameter tileStoreConfiguration: configuration for tile storage parameters. If `nil` - default settings will be used.
      */
-    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions, tileStoreConfiguration: TileStoreConfiguration?) {
+    public func enablePredictiveCaching(options predictiveCacheOptions: PredictiveCacheOptions) {
         let styleSourcePaths = mapView.styleSourceDatasets(["raster", "vector"])
         
-        if let tileStoreConfiguration = tileStoreConfiguration {
-            let tileStoreMapOptions = PredictiveCacheManager.TileStoreMapOptions(tileStoreConfiguration,
-                                                                                 styleSourcePaths)
-                                                                                 
-            
-            predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
-                                                            tileStoreMapOptions: tileStoreMapOptions)
-        } else if let tileStore = mapTileStore {
-            let mapOptions = PredictiveCacheManager.MapOptions(tileStore,
-                                                               styleSourcePaths)
-            
-            predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
-                                                            mapOptions: mapOptions)
-        }
+        predictiveCacheManager = PredictiveCacheManager(predictiveCacheOptions: predictiveCacheOptions,
+                                                        styleSourcePaths: styleSourcePaths)
     }
     
     @objc private func resetFrameRate(_ sender: UIGestureRecognizer) {

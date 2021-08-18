@@ -35,15 +35,14 @@ fileprivate class CPManeuverFake: CPManeuver {
 class CarPlayNavigationViewControllerTests: TestCase {
     func testCarplayDisplaysCorrectEstimates() {
         //set up the litany of dependancies
-        let directions = Directions(credentials: Fixture.credentials)
-        let manager = CarPlayManager(directions: directions)
+        let manager = CarPlayManager()
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
             CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
         ])
         let routeResponse = Fixture.routeResponse(from: "multileg-route", options: options)
-        let navService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: options, directions: .mocked)
+        let navService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: options)
         let interface = FakeCPInterfaceController(context: "test estimates display")
         let mapSpy = MapTemplateSpy()
         let trip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])

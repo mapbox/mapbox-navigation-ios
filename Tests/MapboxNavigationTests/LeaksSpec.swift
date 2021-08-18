@@ -16,7 +16,7 @@ class LeaksSpec: QuickSpec {
         return options
     }()
     
-    lazy var dummySvc: NavigationService = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: initialOptions, directions: .mocked)
+    lazy var dummySvc: NavigationService = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: initialOptions)
     
     override func spec() {
         DirectionsCredentials.injectSharedToken(.mockedAccessToken)
@@ -39,8 +39,7 @@ class LeaksSpec: QuickSpec {
             ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
 
             let navigationViewController = LeakTest {
-                let directions = DirectionsSpy(credentials: Fixture.credentials)
-                let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: self.initialOptions, directions: directions, eventsManagerType: NavigationEventsManagerSpy.self)
+                let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: self.initialOptions, eventsManagerType: NavigationEventsManagerSpy.self)
                 let navOptions = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub(navigationService: self.dummySvc))
                 
                 return NavigationViewController(for: response, routeIndex: 0, routeOptions: self.initialOptions, navigationOptions: navOptions)

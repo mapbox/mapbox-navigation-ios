@@ -20,7 +20,7 @@ class CarPlayManagerTests: TestCase {
     override func setUp() {
         super.setUp()
         eventsManagerSpy = NavigationEventsManagerSpy()
-        manager = CarPlayManager(directions: .mocked, eventsManager: eventsManagerSpy, carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
+        manager = CarPlayManager(eventsManager: eventsManagerSpy, carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         searchController = CarPlaySearchController()
     }
 
@@ -194,7 +194,7 @@ class CarPlayManagerTests: TestCase {
     }
     
     func testRouteFailure() {
-        let manager = CarPlayManager(directions: .mocked)
+        let manager = CarPlayManager()
         
         let spy = CarPlayManagerFailureDelegateSpy()
         let testError = DirectionsError.requestTooLarge
@@ -240,7 +240,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(manager?.styles.last?.styleType, StyleType.night)
         
         let styles = [CustomStyle()]
-        XCTAssertEqual(CarPlayManager(styles: styles, directions: .mocked).styles, styles, "CarPlayManager should persist the initial styles given to it.")
+        XCTAssertEqual(CarPlayManager(styles: styles).styles, styles, "CarPlayManager should persist the initial styles given to it.")
     }
 }
 
@@ -424,8 +424,7 @@ class CarPlayManagerSpec: QuickSpec {
         
         //TODO: ADD OPTIONS TO THIS DELEGATE METHOD
         func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
-            let directionsFake = Directions(credentials: Fixture.credentials)
-            return MapboxNavigationService(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: routeOptions, directions: directionsFake, simulating: desiredSimulationMode)
+            return MapboxNavigationService(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: routeOptions, simulating: desiredSimulationMode)
         }
 
         func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
