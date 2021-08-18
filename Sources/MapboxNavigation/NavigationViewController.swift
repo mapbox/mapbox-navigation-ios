@@ -812,16 +812,20 @@ extension NavigationViewController: NavigationServiceDelegate {
         guard let destination = progress.currentLeg.destination else {
             preconditionFailure("Current leg has no destination")
         }
-        let shouldPrevent = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
-        let userHasArrivedAndShouldPreventRerouting = shouldPrevent && !progress.currentLegProgress.userHasArrivedAtWaypoint
-        
-        if snapsUserLocationAnnotationToRoute, userHasArrivedAndShouldPreventRerouting {
+        let preventRerouting = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
+        let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint
+
+        if snapsUserLocationAnnotationToRoute && (!userArrivedAtWaypoint || preventRerouting) {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation), for: location)
-            navigationMapView?.moveUserLocation(to: location, animated: true)
         } else  {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation))
         }
-        
+
+        let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
+        if movePuckToCurrentLocation {
+            navigationMapView?.moveUserLocation(to: location, animated: true)
+        }
+
         attemptToHighlightBuildings(progress, with: location)
         
         // Finally, pass the message onto the `NavigationViewControllerDelegate`.
@@ -910,7 +914,9 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     public func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
-        return navigationComponents.allSatisfy { $0.navigationService(service, shouldPreventReroutesWhenArrivingAt: waypoint) }
+        let componentsWantPreventReroutes = navigationComponents.allSatisfy { $0.navigationService(service, shouldPreventReroutesWhenArrivingAt: waypoint) }
+
+        return componentsWantPreventReroutes && (delegate?.navigationViewController(self, shouldPreventReroutesWhenArrivingAt: waypoint)) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
     
     public func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool {

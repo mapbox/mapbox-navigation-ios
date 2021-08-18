@@ -2,6 +2,8 @@ import Foundation
 import MapboxDirections
 
 public class DirectionsSpy: Directions {
+    /// Callback fired when there is a request to caclulate a new route.
+    public var onCalculateRoute: (() -> Void)?
     public var lastCalculateOptionsCompletion: RouteCompletionHandler?
     
     override public func calculate(_ options: MatchOptions, completionHandler: @escaping Directions.MatchCompletionHandler) -> URLSessionDataTask {
@@ -11,6 +13,7 @@ public class DirectionsSpy: Directions {
     
     override public func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
         lastCalculateOptionsCompletion = completionHandler
+        onCalculateRoute?()
         return DummyURLSessionDataTask()
     }
     
