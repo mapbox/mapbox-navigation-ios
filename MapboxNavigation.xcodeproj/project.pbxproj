@@ -191,7 +191,6 @@
 		8ABB9E75268E0140009013A5 /* NavigationCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */; };
 		8ABCD6A426AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json in Resources */ = {isa = PBXBuildFile; fileRef = 8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */; };
 		8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3965225DC66570027A035 /* NavigationCameraType.swift */; };
-		8AD12F4B26C193560008AE55 /* ArrayTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4726C193520008AE55 /* ArrayTests.swift */; };
 		8AD12F4C26C193560008AE55 /* LeaksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4826C193520008AE55 /* LeaksTests.swift */; };
 		8AD12F4D26C1A5C10008AE55 /* Snapshot++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4326C191080008AE55 /* Snapshot++.swift */; };
 		8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */; };
@@ -673,7 +672,6 @@
 		8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera-bearing-smoothing.json"; sourceTree = "<group>"; };
 		8AC3965225DC66570027A035 /* NavigationCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraType.swift; sourceTree = "<group>"; };
 		8AD12F4326C191080008AE55 /* Snapshot++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Snapshot++.swift"; sourceTree = "<group>"; };
-		8AD12F4726C193520008AE55 /* ArrayTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrayTests.swift; sourceTree = "<group>"; };
 		8AD12F4826C193520008AE55 /* LeaksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaksTests.swift; sourceTree = "<group>"; };
 		8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCamera.swift; sourceTree = "<group>"; };
 		8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraStateTransition.swift; sourceTree = "<group>"; };
@@ -884,11 +882,11 @@
 		DA6C925A24C60C92003A0AD6 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA73F87820BF851B0067649B /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = de; path = Resources/de.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		DA754E1723AC56E5007E16B5 /* MBXAccountsLoader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = MBXAccountsLoader.m; path = include/MBXAccountsLoader.m; sourceTree = "<group>"; };
-		DA7A97CE26A7613C001B6A9A /* RouteOptionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteOptionsTests.swift; sourceTree = "<group>"; };
 		DA75C2C426A602A100BAD63D /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/Navigation.strings"; sourceTree = "<group>"; };
 		DA75C2C526A602CF00BAD63D /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DA75C2C626A602E300BAD63D /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DA75C2C726A602FF00BAD63D /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = "es-ES"; path = "Resources/es-ES.lproj/Localizable.stringsdict"; sourceTree = "<group>"; };
+		DA7A97CE26A7613C001B6A9A /* RouteOptionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteOptionsTests.swift; sourceTree = "<group>"; };
 		DA8264871F2AADC200454B24 /* zh-Hant */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/Navigation.strings"; sourceTree = "<group>"; };
 		DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaneViewTests.swift; sourceTree = "<group>"; };
 		DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedLimitView.swift; sourceTree = "<group>"; };
@@ -1382,7 +1380,6 @@
 		8AB316C726BCA4CF00C3AC76 /* Misc */ = {
 			isa = PBXGroup;
 			children = (
-				8AD12F4726C193520008AE55 /* ArrayTests.swift */,
 				8AD12F4826C193520008AE55 /* LeaksTests.swift */,
 				DADD827F2161EC0300B8B47D /* UIViewAnimationOptionsTests.swift */,
 				C5A60EC820A2417200C21178 /* StringTests.swift */,
@@ -2450,7 +2447,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AD12F4B26C193560008AE55 /* ArrayTests.swift in Sources */,
 				8D9CD7FF20880581004DC4B3 /* XCTestCase.swift in Sources */,
 				8A75A85D26C44612009CFE83 /* RecentItemTests.swift in Sources */,
 				35DC585D1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift in Sources */,
