@@ -217,21 +217,24 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
             
             if options.followingCameraOptions.centerUpdatesAllowed {
-                var center: CLLocationCoordinate2D = location.coordinate
-                let centerLineString = LineString([
-                    location.coordinate,
-                    (coordinatesToManeuver + coordinatesForManeuverFraming)
-                        .map({ mapView.mapboxMap.point(for: $0) }).boundingBoxPoints
-                        .map({ mapView.mapboxMap.coordinate(for: $0) }).centerCoordinate
-                ])
-                let centerLineStringTotalDistance = centerLineString.distance() ?? 0.0
-                let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchСoefficient)
-                if let adjustedCenter = centerLineString.coordinateFromStart(distance: centerCoordDistance) {
-                    center = adjustedCenter
+                if let boundingBox = BoundingBox(from: coordinatesToManeuver + coordinatesForManeuverFraming) {
+                    var center: CLLocationCoordinate2D = location.coordinate
+                    let coordinates = [
+                        center,
+                        boundingBox.northEast,
+                        boundingBox.southWest
+                    ]
+                    
+                    let centerLineString = LineString(coordinates)
+                    let centerLineStringTotalDistance = centerLineString.distance() ?? 0.0
+                    let centerCoordDistance = centerLineStringTotalDistance * (1 - pitchСoefficient)
+                    if let adjustedCenter = centerLineString.coordinateFromStart(distance: centerCoordDistance) {
+                        center = adjustedCenter
+                    }
+                    
+                    followingMobileCamera.center = center
+                    followingCarPlayCamera.center = center
                 }
-                
-                followingMobileCamera.center = center
-                followingCarPlayCamera.center = center
             }
             
             if options.followingCameraOptions.zoomUpdatesAllowed {
