@@ -225,9 +225,9 @@ open class RouteController: NSObject {
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
-    private func updateRouteLeg(to value: Int) {
-        let legIndex = UInt32(value)
-        navigator.changeRouteLeg(forRoute: 0, leg: legIndex)
+    private func updateRouteLeg(to legIndex: Int) {
+        precondition(legIndex >= 0, "Leg index can't be negative")
+        navigator.changeRouteLeg(forRoute: 0, leg: UInt32(legIndex))
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
