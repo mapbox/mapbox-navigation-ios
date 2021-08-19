@@ -38,33 +38,33 @@ class RouteControllerTests: TestCase {
         let routeResponse = Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options)
         
         let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay")
-        let locationManager = ReplayLocationManager(locations: locations)
+        let locationManager = ReplayLocationManager(locations: locations.shiftedToPresent())
         replayManager = locationManager
         locationManager.startDate = Date()
         let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
         let routeController = RouteController(alongRouteAtIndex: 0, in: routeResponse, options: equivalentRouteOptions, dataSource: self)
         locationManager.delegate = routeController
-        
-        var testCoordinates = [CLLocationCoordinate2D]()
+        let routerDelegateSpy = RouterDelegateSpy()
+        routeController.delegate = routerDelegateSpy
 
-        // Dirty fix
-        // Setting dummy first location to kick start NN.Navigator
-        routeController.navigator.updateLocation(for: FixLocation(CLLocation(coordinate: CLLocationCoordinate2D(latitude: 0.0, longitude: 0.0),
-                                                                             altitude: 0,
-                                                                             horizontalAccuracy: 0,
-                                                                             verticalAccuracy: 0,
-                                                                             timestamp: Date())))
-        
-        while testCoordinates.count < locationManager.locations.count {
-            locationManager.tick()
-            guard let location = routeController.location else {
-                XCTFail("Empty location"); return
-            }
-            testCoordinates.append(location.coordinate)
+        var actualCoordinates = [CLLocationCoordinate2D]()
+        routerDelegateSpy.onShouldDiscard = { location in
+            actualCoordinates.append(location.coordinate)
+            return false
         }
-        
-        let expectedCoordinates = locations.map{$0.coordinate}
-        XCTAssertEqual(expectedCoordinates, testCoordinates)
+        let expectedTestCoordinatesCount = locationManager.locations.count
+        expectation(description: "All coordinates processed") {
+            actualCoordinates.count == expectedTestCoordinatesCount
+        }
+
+        let speedMultiplier: TimeInterval = 100
+        locationManager.speedMultiplier = speedMultiplier
+        locationManager.startUpdatingLocation()
+
+        waitForExpectations(timeout: TimeInterval(locationManager.locations.count) / speedMultiplier + 1, handler: nil)
+
+        let expectedCoordinates = locations.map(\.coordinate)
+        XCTAssertEqual(expectedCoordinates, actualCoordinates)
     }
 
     func testRerouteAfterArrival() {
