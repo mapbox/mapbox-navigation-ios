@@ -113,12 +113,12 @@ public class CarPlayMapViewController: UIViewController {
     /**
      The map button property for hiding or showing the pan map button.
      */
-    internal(set) public var panMapButton: CPMapButton?
+    public internal(set) var panMapButton: CPMapButton?
     
     /**
      The map button property for exiting the pan map mode.
      */
-    internal(set) public var dismissPanningButton: CPMapButton?
+    public internal(set) var dismissPanningButton: CPMapButton?
     
     // MARK: - Initialization methods
     
@@ -306,10 +306,9 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     }
     
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        let styleURL = style.previewMapStyleURL
         let mapboxMapStyle = navigationMapView.mapView.mapboxMap.style
         if mapboxMapStyle.uri?.rawValue != style.mapStyleURL.absoluteString {
-            mapboxMapStyle.uri = StyleURI(url: styleURL)
+            mapboxMapStyle.uri = StyleURI(url: style.previewMapStyleURL)
         }
     }
     

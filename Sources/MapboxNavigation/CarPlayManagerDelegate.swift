@@ -161,6 +161,34 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
                         didAdd finalDestinationAnnotation: PointAnnotation,
                         to parentViewController: UIViewController,
                         pointAnnotationManager: PointAnnotationManager)
+    
+    /**
+     Called when a template presented by the `CarPlayManager` is about to appear on the screen.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        templateWillAppear template: CPTemplate,
+                        animated: Bool)
+    
+    /**
+     Called when a template presented by the `CarPlayManager` has finished appearing on the screen.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        templateDidAppear template: CPTemplate,
+                        animated: Bool)
+    
+    /**
+     Called when a template presented by the `CarPlayManager` is about to disappear from the screen.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        templateWillDisappear template: CPTemplate,
+                        animated: Bool)
+    
+    /**
+     Called when a template presented by the `CarPlayManager` has finished disappearing from the screen.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        templateDidDisappear template: CPTemplate,
+                        animated: Bool)
 }
 
 @available(iOS 12.0, *)
@@ -271,6 +299,42 @@ public extension CarPlayManagerDelegate {
                         didAdd finalDestinationAnnotation: PointAnnotation,
                         to parentViewController: UIViewController,
                         pointAnnotationManager: PointAnnotationManager) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        templateWillAppear template: CPTemplate,
+                        animated: Bool) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        templateDidAppear template: CPTemplate,
+                        animated: Bool) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        templateWillDisappear template: CPTemplate,
+                        animated: Bool) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        templateDidDisappear template: CPTemplate,
+                        animated: Bool) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
 }
