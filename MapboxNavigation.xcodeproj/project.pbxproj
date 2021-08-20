@@ -188,6 +188,8 @@
 		8AAE94A126A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */; };
 		8AB316C926BCA56D00C3AC76 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316C826BCA56D00C3AC76 /* UIViewController.swift */; };
 		8AB316CB26BCA72300C3AC76 /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316CA26BCA72300C3AC76 /* CGSize.swift */; };
+		8AB316A926BA026B00C3AC76 /* MapTemplateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316A826BA026B00C3AC76 /* MapTemplateProvider.swift */; };
+		8AB316AB26BA029100C3AC76 /* MapTemplateProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316AA26BA029100C3AC76 /* MapTemplateProviderDelegate.swift */; };
 		8ABB9E75268E0140009013A5 /* NavigationCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */; };
 		8ABCD6A426AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json in Resources */ = {isa = PBXBuildFile; fileRef = 8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */; };
 		8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3965225DC66570027A035 /* NavigationCameraType.swift */; };
@@ -668,6 +670,8 @@
 		8AB316AE26BB315100C3AC76 /* CPMapTemplate+MBTestable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CPMapTemplate+MBTestable.m"; sourceTree = "<group>"; };
 		8AB316C826BCA56D00C3AC76 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		8AB316CA26BCA72300C3AC76 /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
+		8AB316A826BA026B00C3AC76 /* MapTemplateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTemplateProvider.swift; sourceTree = "<group>"; };
+		8AB316AA26BA029100C3AC76 /* MapTemplateProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTemplateProviderDelegate.swift; sourceTree = "<group>"; };
 		8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraTests.swift; sourceTree = "<group>"; };
 		8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera-bearing-smoothing.json"; sourceTree = "<group>"; };
 		8AC3965225DC66570027A035 /* NavigationCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraType.swift; sourceTree = "<group>"; };
@@ -1069,6 +1073,8 @@
 				8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */,
 				C5FFAC1420D96F5B009E7F98 /* CarPlayNavigationViewController.swift */,
 				8AEB28AB265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift */,
+				8AB316A826BA026B00C3AC76 /* MapTemplateProvider.swift */,
+				8AB316AA26BA029100C3AC76 /* MapTemplateProviderDelegate.swift */,
 				358E31D522562697009B3EC2 /* CarPlayCompassView.swift */,
 				352C35BF2134958F00D77796 /* RecentItem.swift */,
 				8A1943A82685DC680066E2F8 /* NavigationGeocodedPlacemark.swift */,
@@ -2389,7 +2395,9 @@
 				351BEC051E5BCC6C006FE110 /* LaneView.swift in Sources */,
 				C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */,
 				CFD47D9020FD85EC00BC1E49 /* ResourceOptionsManager.swift in Sources */,
+				8AB316AB26BA029100C3AC76 /* MapTemplateProviderDelegate.swift in Sources */,
 				B44177F82649B08400781319 /* UserLocationStyle.swift in Sources */,
+				8AB316A926BA026B00C3AC76 /* MapTemplateProvider.swift in Sources */,
 				351BEC0D1E5BCC72006FE110 /* Bundle.swift in Sources */,
 				8DF399B21FB257B30034904C /* UIGestureRecognizer.swift in Sources */,
 				DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */,
