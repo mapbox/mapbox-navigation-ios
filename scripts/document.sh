@@ -40,6 +40,7 @@ mkdir -p /tmp/mbnavigation/
 README=/tmp/mbnavigation/README.md
 cp docs/cover.md "${README}"
 perl -pi -e "s/\\$\\{MINOR_VERSION\\}/${MINOR_VERSION}/" "${README}"
+perl -pi -e "s/\\$\\{SHORT_VERSION\\}/${SHORT_VERSION}/" "${README}"
 # http://stackoverflow.com/a/4858011/4585461
 echo "## Changes in version ${RELEASE_VERSION}" >> "${README}"
 sed -n -e '/^## /{' -e ':a' -e 'n' -e '/^## /q' -e 'p' -e 'ba' -e '}' CHANGELOG.md >> "${README}"
