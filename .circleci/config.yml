@@ -130,7 +130,9 @@ step-library:
   - &trigger-metrics
       run:
         name: Trigger metrics
-        command: python scripts/trigger-metrics.py
+        command: |
+          pip3 install requests
+          python3 scripts/trigger-metrics.py
 
 jobs:
   pod-job:
@@ -290,6 +292,7 @@ jobs:
     environment:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
+      - checkout
       - *trigger-metrics
   
   spm-test-job:
