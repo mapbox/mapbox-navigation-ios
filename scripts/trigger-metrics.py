@@ -17,7 +17,7 @@ def TriggerPipeline(token, commit, ci_ref):
         "parameters": {
           "run_ios_navigation_benchmark": True,
           "target_branch": commit,  
-          "ci_ref": ci_ref,
+          "ci_ref": int(ci_ref),
         }
     }
 
