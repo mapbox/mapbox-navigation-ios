@@ -36,52 +36,18 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     
     public func transitionToFollowing(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
         guard let mapView = mapView,
-              let zoom = cameraOptions.zoom,
-              let location = cameraOptions.center,
-              let bearing = cameraOptions.bearing,
-              let pitch = cameraOptions.pitch,
-              let padding = cameraOptions.padding,
-              let anchor = cameraOptions.anchor else {
+              let zoom = cameraOptions.zoom else {
             completion()
             return
         }
-        
-        if transitionDestinationIsOffScreen(location, edgeInsets: padding) {
-            let screenCenterPoint = self.screenCenterPoint(0.0, bounds: mapView.bounds, edgeInsets: padding)
-            let lineString = LineString([mapView.cameraState.center, location])
-            var camera = mapView.mapboxMap.camera(for: .lineString(lineString), padding: .zero, bearing: nil, pitch: nil)
-            camera.bearing = mapView.cameraState.bearing
-            camera.pitch = 0.0
-            if let midPointZoom = camera.zoom {
-                let cameraOptions = CameraOptions(center: location,
-                                                  padding: padding,
-                                                  anchor: screenCenterPoint,
-                                                  zoom: CGFloat(midPointZoom),
-                                                  bearing: bearing,
-                                                  pitch: 0.0)
-                
-                transitionFromHighZoomToMidpoint(cameraOptions) {
-                    let cameraOptions = CameraOptions(center: location,
-                                                      padding: padding,
-                                                      anchor: anchor,
-                                                      zoom: CGFloat(zoom),
-                                                      bearing: bearing,
-                                                      pitch: CGFloat(pitch))
-                    
-                    self.transitionFromLowZoomToHighZoom(cameraOptions) {
-                        completion()
-                    }
-                }
+  
+        if mapView.cameraState.zoom < zoom {
+            transitionFromLowZoomToHighZoom(cameraOptions) {
+                completion()
             }
         } else {
-            if mapView.cameraState.zoom < zoom {
-                transitionFromLowZoomToHighZoom(cameraOptions) {
-                    completion()
-                }
-            } else {
-                transitionFromHighZoomToLowZoom(cameraOptions) {
-                    completion()
-                }
+            transitionFromHighZoomToLowZoom(cameraOptions) {
+                completion()
             }
         }
     }
@@ -329,51 +295,6 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         }
     }
     
-    func transitionFromHighZoomToMidpoint(_ cameraOptions: CameraOptions, completion: @escaping (() -> Void)) {
-        guard let mapView = mapView,
-              let zoom = cameraOptions.zoom,
-              let location = cameraOptions.center,
-              let bearing = cameraOptions.bearing else {
-            completion()
-            return
-        }
-        
-        let zoomLevelDistance: CLLocationDistance = CLLocationDistance(abs(mapView.cameraState.zoom - zoom))
-        let levelsPerSecondMaxZoomAnimation: Double = 0.6
-        let zoomAnimationDuration: TimeInterval = max(min(zoomLevelDistance / levelsPerSecondMaxZoomAnimation, 0.8), 0.2)
-        let zoomAnimationDelay: TimeInterval = 0.0
-        let endZoomAnimation: TimeInterval = zoomAnimationDuration + zoomAnimationDelay
-        
-        let centerTranslationDistance: CLLocationDistance = mapView.cameraState.center.distance(to: location)
-        let metersPerSecondMaxCenterAnimation: Double = 1000.0
-        let centerAnimationDuration: TimeInterval = max(min(centerTranslationDistance / metersPerSecondMaxCenterAnimation, 1.4), 0.8)
-        let centerAnimationDelay: TimeInterval = max(endZoomAnimation - centerAnimationDuration, 0.0)
-        
-        let bearingDegreesChange: CLLocationDirection = bearing.shortestRotation(angle: mapView.cameraState.bearing)
-        let degreesPerSecondMaxBearingAnimation: Double = 60.0
-        let bearingAnimationDuration: TimeInterval = max(min(bearingDegreesChange / degreesPerSecondMaxBearingAnimation, 1.2), 0.8)
-        let bearingAnimationDelay: TimeInterval = max(endZoomAnimation - bearingAnimationDuration - 0.4, 0.0)
-        
-        let pitchAndAnchorAnimationDuration: TimeInterval = 0.6
-        let pitchAndAnchorAnimationDelay: TimeInterval = 0.0
-        
-        let transitionParameters = TransitionParameters(
-            cameraOptions,
-            centerAnimationDuration,
-            centerAnimationDelay,
-            zoomAnimationDuration,
-            zoomAnimationDelay,
-            bearingAnimationDuration,
-            bearingAnimationDelay,
-            pitchAndAnchorAnimationDuration,
-            pitchAndAnchorAnimationDelay
-        )
-        
-        transition(transitionParameters) {
-            completion()
-        }
-    }
-    
     func transition(_ transitionParameters: TransitionParameters, completion: @escaping (() -> Void)) {
         guard let mapView = mapView,
               let center = transitionParameters.cameraOptions.center,
@@ -468,22 +389,5 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         animationsGroup.notify(queue: .main) {
             completion()
         }
-    }
-    
-    func transitionDestinationIsOffScreen(_ transitionDestination: CLLocationCoordinate2D, edgeInsets: UIEdgeInsets = .zero) -> Bool {
-        guard let mapView = mapView else { return false }
-        let inset: CGFloat = 40.0
-        let halo = UIEdgeInsets(top: edgeInsets.top - inset, left: -inset, bottom: edgeInsets.bottom - inset, right: -inset)
-        
-        return !halo.rectValue(mapView.bounds).contains(mapView.mapboxMap.point(for: transitionDestination))
-    }
-    
-    func screenCenterPoint(_ pitchEffectCoefficient: Double, bounds: CGRect, edgeInsets: UIEdgeInsets) -> CGPoint {
-        let xCenter = max(((bounds.size.width - edgeInsets.left - edgeInsets.right) / 2.0) + edgeInsets.left, 0.0)
-        let height = (bounds.size.height - edgeInsets.top - edgeInsets.bottom)
-        let yCenter = max((height / 2.0) + edgeInsets.top, 0.0)
-        let yOffsetCenter = max((height / 2.0) - 7.0, 0.0) * CGFloat(pitchEffectCoefficient) + yCenter
-        
-        return CGPoint(x: xCenter, y: yOffsetCenter)
     }
 }

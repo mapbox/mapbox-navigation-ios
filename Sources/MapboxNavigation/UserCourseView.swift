@@ -16,15 +16,15 @@ public extension CourseUpdatable {
     func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            let isCameraFollowing = navigationCameraState == .following
             let angle = CGFloat(CLLocationDegrees(direction - location.course).toRadians())
-            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
-            
-            let isCameraTransitioning = navigationCameraState == .transitionToFollowing || navigationCameraState == .transitionToOverview
-            let pitch = CGFloat(isCameraTransitioning ? 0.0 : CLLocationDegrees(pitch).toRadians())
-            
             self.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            
+            // `UserCourseView` pitch is changed only during transition to the overview mode.
+            let pitch = CGFloat(navigationCameraState == .transitionToOverview ? 0.0 : CLLocationDegrees(pitch).toRadians())
             var transform = CATransform3DRotate(CATransform3DIdentity, pitch, 1.0, 0, 0)
+            
+            let isCameraFollowing = navigationCameraState == .following
+            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
             transform = CATransform3DScale(transform, scale, scale, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
             self.layer.sublayerTransform = transform
@@ -55,15 +55,15 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
     public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            let isCameraFollowing = navigationCameraState == .following
             let angle = CGFloat(CLLocationDegrees(direction - location.course).toRadians())
-            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
-            
-            let isCameraTransitioning = navigationCameraState == .transitionToFollowing || navigationCameraState == .transitionToOverview
-            let pitch = CGFloat(isCameraTransitioning ? 0.0 : CLLocationDegrees(pitch).toRadians())
-            
             self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            
+            // `UserCourseView` pitch is changed only during transition to the overview mode.
+            let pitch = CGFloat(navigationCameraState == .transitionToOverview ? 0.0 : CLLocationDegrees(pitch).toRadians())
             var transform = CATransform3DRotate(CATransform3DIdentity, pitch, 1.0, 0, 0)
+            
+            let isCameraFollowing = navigationCameraState == .following
+            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
             transform = CATransform3DScale(transform, scale, scale, 1)
             transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
             self.layer.sublayerTransform = transform
