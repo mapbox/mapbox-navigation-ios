@@ -126,6 +126,7 @@ open class RouteStepProgress: Codable {
      */
     public var remainingSpokenInstructions: [SpokenInstruction]? {
         guard let instructions = step.instructionsSpokenAlongStep else { return nil }
+        guard spokenInstructionIndex < instructions.count else { return nil }
         return Array(instructions.suffix(from: spokenInstructionIndex))
     }
 
