@@ -253,21 +253,17 @@ open class NavigationMapView: UIView {
     }
     
     func setupUserLocation() {
-        mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
-            guard let self = self else { return }
-            switch self.userLocationStyle {
-            case .courseView((let courseView)):
-                self.mapView.location.options.puckType = nil
-                self.userCourseView = courseView
-                self.userCourseView.isHidden = false
-            case .puck2D(configuration: var configuration):
-                self.userCourseView.isHidden = true
-                self.mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
-                configuration = configuration ?? Puck2DConfiguration()
-            case .puck3D(configuration: let configuration):
-                self.userCourseView.isHidden = true
-                self.mapView.location.options.puckType = .puck3D(configuration)
-            }
+        switch userLocationStyle {
+        case .courseView((let courseView)):
+            mapView.location.options.puckType = nil
+            userCourseView = courseView
+            userCourseView.isHidden = false
+        case .puck2D(configuration: let configuration):
+            userCourseView.isHidden = true
+            mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
+        case .puck3D(configuration: let configuration):
+            userCourseView.isHidden = true
+            mapView.location.options.puckType = .puck3D(configuration)
         }
         mapView.location.options.puckBearingSource = .course
     }
