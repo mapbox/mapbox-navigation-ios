@@ -29,7 +29,7 @@ public struct FollowingCameraOptions {
             }
             
             if zoomRange.upperBound > 22.0 {
-                preconditionFailure("Upper bound of the zoom range should not be lower than 0.0")
+                preconditionFailure("Upper bound of the zoom range should not be higher than 22.0")
             }
         }
     }

@@ -618,6 +618,20 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertFalse(appliedChanges, "Zoom range changes should not be applied.")
     }
     
+    func testNavigationCameraOverviewCameraOptionsMaximumZoomLevel() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource
+        
+        var appliedChanges = false
+        expect {
+            // It should only be possible to set maximum zoom level between `0.0` and `22.0`.
+            navigationViewportDataSource?.options.overviewCameraOptions.maximumZoomLevel = 23.0
+            appliedChanges = true
+        }.to(throwAssertion())
+        
+        XCTAssertFalse(appliedChanges, "Maximum zoom level changes should not be applied.")
+    }
+    
     // MARK: - Helper methods
     
     func route(from file: String) -> Route? {

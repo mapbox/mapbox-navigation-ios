@@ -12,7 +12,17 @@ public struct OverviewCameraOptions {
      
      Defaults to `16.35`.
      */
-    public var maximumZoomLevel: Double = 16.35
+    public var maximumZoomLevel: Double = 16.35 {
+        didSet {
+            if maximumZoomLevel < 0.0 {
+                preconditionFailure("Maximum zoom level should not be lower than 0.0")
+            }
+            
+            if maximumZoomLevel > 22.0 {
+                preconditionFailure("Maximum zoom level should not be higher than 22.0")
+            }
+        }
+    }
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.center` property
