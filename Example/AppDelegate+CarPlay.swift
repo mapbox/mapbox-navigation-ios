@@ -450,10 +450,6 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
         appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene,
                                                             didConnectCarInterfaceController: interfaceController,
                                                             to: window)
-        
-        appDelegate.carPlayManager.application(UIApplication.shared,
-                                               didConnectCarInterfaceController: interfaceController,
-                                               to: window)
     }
 
     func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
@@ -463,9 +459,6 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
         
         appDelegate.carPlayManager.delegate = nil
         appDelegate.carPlaySearchController.delegate = nil
-        appDelegate.carPlayManager.application(UIApplication.shared,
-                                               didDisconnectCarInterfaceController: interfaceController,
-                                               from: window)
         
         if let navigationViewController = appDelegate.currentAppRootViewController?.activeNavigationViewController {
             navigationViewController.didDisconnectFromCarPlay()
