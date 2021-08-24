@@ -15,20 +15,24 @@ public struct FollowingCameraOptions {
     public var defaultPitch: Double = 45.0
     
     /**
-     Minimum zoom, which will be used when producing camera frame in `NavigationCameraState.following`
+     Zoom levels range, which will be used when producing camera frame in `NavigationCameraState.following`
      state.
      
-     Defaults to `10.50`.
-     */
-    public var minimumZoomLevel: Double = 10.50
-    
-    /**
-     Maximum zoom, which will be used when producing camera frame in `NavigationCameraState.following`
-     state. It will be also used as initial value when active guidance navigation starts.
+     Upper bound of the range will be also used as initial zoom level when active guidance navigation starts.
      
-     Defaults to `16.35`.
+     Lower bound defaults to `10.50`, upper bound defaults to `16.35`.
      */
-    public var maximumZoomLevel: Double = 16.35
+    public var zoomRange: ClosedRange<Double> = 10.50...16.35 {
+        didSet {
+            if zoomRange.lowerBound < 0.0 {
+                preconditionFailure("Lower bound of the zoom range should not be lower than 0.0")
+            }
+            
+            if zoomRange.upperBound > 22.0 {
+                preconditionFailure("Upper bound of the zoom range should not be lower than 0.0")
+            }
+        }
+    }
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.center` property

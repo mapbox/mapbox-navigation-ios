@@ -245,16 +245,16 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                        maxPitch: followingCameraOptions.defaultPitch,
                                                        edgeInsets: viewportPadding,
                                                        defaultZoomLevel: defaultZoomLevel,
-                                                       maxZoomLevel: followingCameraOptions.maximumZoomLevel,
-                                                       minZoomLevel: followingCameraOptions.minimumZoomLevel)
+                                                       maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
+                                                       minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
                 
                 followingCarPlayCamera.zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
                                                         pitch: pitch,
                                                         maxPitch: followingCameraOptions.defaultPitch,
                                                         edgeInsets: carPlayCameraPadding,
                                                         defaultZoomLevel: defaultZoomLevel,
-                                                        maxZoomLevel: followingCameraOptions.maximumZoomLevel,
-                                                        minZoomLevel: followingCameraOptions.minimumZoomLevel)
+                                                        maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
+                                                        minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
             }
             
             if options.followingCameraOptions.bearingUpdatesAllowed {

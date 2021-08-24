@@ -549,7 +549,7 @@ open class NavigationMapView: UIView {
         guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
         
         mapView.mapboxMap.setCamera(to: CameraOptions(center: coordinate,
-                                                   zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.maximumZoomLevel)))
+                                                      zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.zoomRange.upperBound)))
         moveUserLocation(to: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))
     }
     

@@ -2,6 +2,7 @@ import XCTest
 import Turf
 import MapboxMaps
 import MapboxDirections
+import Nimble
 
 @testable import TestHelper
 @testable import MapboxNavigation
@@ -599,6 +600,22 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertFalse(animatorZoom.isRunning, "Zoom animator should not be running.")
         XCTAssertFalse(animatorBearing.isRunning, "Bearing animator should not be running.")
         XCTAssertFalse(animatorPitch.isRunning, "Pitch animator should not be running.")
+    }
+    
+    func testNavigationCameraFollowingCameraOptionsZoomRanges() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource
+        
+        navigationViewportDataSource?.options.followingCameraOptions.zoomRange = 10.0...22.0
+        
+        var appliedChanges = false
+        expect {
+            // It should only be possible to set zoom range levels from `0.0` to `22.0`.
+            navigationViewportDataSource?.options.followingCameraOptions.zoomRange = -1.0...100.0
+            appliedChanges = true
+        }.to(throwAssertion())
+        
+        XCTAssertFalse(appliedChanges, "Zoom range changes should not be applied.")
     }
     
     // MARK: - Helper methods
