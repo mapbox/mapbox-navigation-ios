@@ -44,6 +44,7 @@
 * Added `NavigationOptions.navigationMapView` property to allow customization or reusing possibilities for `NavigationViewController.navigationMapView` ([#3186](https://github.com/mapbox/mapbox-navigation-ios/pull/3186)).
 * Renamed the `NavigationMapView.updateRoute(_:)` method to `NavigationMapView.travelAlongRouteLine(to:)`. Improved the performance of updating the route line to change color at the user’s location as they progress along the route. ([#3201](https://github.com/mapbox/mapbox-navigation-ios/pull/3201)).
 * Fixed an issue when user passed destination and the route line grows back when `NavigationViewController.routeLineTracksTraversal` is enabled. ([#3255](https://github.com/mapbox/mapbox-navigation-ios/pull/3255))
+* The `NavigationMapView.userLocationStyle` now supports instant user location indicator change without style loaded lag. ([#3295](https://github.com/mapbox/mapbox-navigation-ios/pull/3295))
 
 ### Location tracking
 

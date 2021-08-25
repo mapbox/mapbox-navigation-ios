@@ -330,18 +330,19 @@ class NavigationViewControllerTests: TestCase {
         let model = MapboxMaps.Model()
         let puck3DConfiguration = Puck3DConfiguration(model: model)
         navigationViewController.navigationMapView?.userLocationStyle = .puck3D(configuration: puck3DConfiguration)
-        expectation(description: "Puck set up") {
-            navigationViewController.navigationMapView?.mapView.location.options.puckType != nil
+        
+        guard let instantLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id }),
+              instantLayerIds.contains(NavigationMapView.LayerIdentifier.puck3DLayer) else {
+            XCTFail("Failed to set up 3D puck instantly"); return
         }
-        waitForExpectations(timeout: 5, handler: nil)
+        
+        navigationViewController.navigationMapView?.show([initialRoute])
+        navigationViewController.navigationMapView?.addArrow(route: initialRoute, legIndex: 0, stepIndex: 4)
         
         guard let allLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers
-                .map({ $0.id }) else {
-            XCTFail("No layers in map"); return
-        }
-        
-        guard let indexOfArrowLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowLayer),
-              let indexOfMainRouteLayer = allLayerIds.firstIndex(of: service.route.identifier(.route(isMainRoute: true))),
+                .map({ $0.id }),
+              let indexOfArrowLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowLayer),
+              let indexOfMainRouteLayer = allLayerIds.firstIndex(of: initialRoute.identifier(.route(isMainRoute: true))),
               let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer),
               let indexOfArrowSymbolLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowSymbolLayer),
               let indexOfPuck3DLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.puck3DLayer) else {
