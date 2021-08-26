@@ -77,6 +77,7 @@
 * Removed `Alert` enum, and `alert`, `distance`, `length`, `beginCoordinate`, `endCoordinate`, `beginSegmentIndex`, and `endSegmentIndex` properties from `RouteAlerts`. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added the `RouteAlerts.roadObject` property. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added the `RoadObjectLocation.subgraph` enum case and the corresponding `RoadGraph.SubgraphEdge` structure represeting edges in the subgraph. ([#3250](https://github.com/mapbox/mapbox-navigation-ios/pull/3250))
+* Added the `shape` value to the `RoadObjectLocation.subgraph` enum case. ([#3301](https://github.com/mapbox/mapbox-navigation-ios/pull/3301)) 
 
 ### Camera
 
