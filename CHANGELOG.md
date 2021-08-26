@@ -109,6 +109,7 @@
 * Added the ability to show speed limit indicator on CarPlay during free-drive. ([#3197](https://github.com/mapbox/mapbox-navigation-ios/pull/3197))
 * `CarPlayManagerDelegate.carPlayManager(_:navigationServiceAlong:routeIndex:routeOptions:desiredSimulationMode:)` now requires optional `NavigationService`. In case if `NavigationService` was not provided `MapboxNavigationService` will be used by default. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
 * `CarPlayManagerDelegate.carplayManagerShouldDisableIdleTimer(_:)` was renamed to `CarPlayManagerDelegate.carPlayManagerShouldDisableIdleTimer(_:)`. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
+* Added `CarPlayManagerDelegate.carPlayManager(_:templateWillAppear:animated:)`, `carPlayManager(_:templateDidAppear:animated:)`, `carPlayManager(_:templateWillDisappear:animated:)`, and `carPlayManager(_:templateDidDisappear:animated:)` to pass through the corresponding methods from `CPInterfaceControllerDelegate`. ([#3219](https://github.com/mapbox/mapbox-navigation-ios/pull/3219))
 
 ### Other changes
 
