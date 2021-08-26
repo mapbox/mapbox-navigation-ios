@@ -151,9 +151,8 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
     }
 }
 
-
 class UserPuckStyleKitView: UIView {
-    private typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
+    typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
     
     var fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000) {
         didSet {
@@ -167,7 +166,7 @@ class UserPuckStyleKitView: UIView {
             setNeedsDisplay()
         }
     }
-    lazy private var puckColorComponents: ColorComponents! = colorComponents(puckColor)
+    lazy var puckColorComponents: ColorComponents! = colorComponents(puckColor)
     
     var stalePuckColor: UIColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1) {
         didSet {
@@ -175,7 +174,7 @@ class UserPuckStyleKitView: UIView {
             setNeedsDisplay()
         }
     }
-    lazy private var stalePuckColorComponents: ColorComponents! = colorComponents(stalePuckColor)
+    lazy var stalePuckColorComponents: ColorComponents! = colorComponents(stalePuckColor)
     
     var staleRatio: CGFloat = 0 {
         didSet {
@@ -198,8 +197,10 @@ class UserPuckStyleKitView: UIView {
         return (hue, saturation, brightness, alpha)
     }
     
-    private func drawingPuckColor() -> UIColor
-    {
+    private func drawingPuckColor() -> UIColor {
+        puckColorComponents = colorComponents(puckColor)
+        stalePuckColorComponents = colorComponents(stalePuckColor)
+        
         return UIColor(hue: puckColorComponents.hue + (stalePuckColorComponents.hue - puckColorComponents.hue) * staleRatio,
                        saturation: puckColorComponents.saturation + (stalePuckColorComponents.saturation - puckColorComponents.saturation) * staleRatio,
                        brightness: puckColorComponents.brightness + (stalePuckColorComponents.brightness - puckColorComponents.brightness) * staleRatio,
