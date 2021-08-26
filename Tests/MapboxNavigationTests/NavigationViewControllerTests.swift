@@ -300,7 +300,7 @@ class NavigationViewControllerTests: TestCase {
         }
 
         XCTAssert(annotations
-                    .compactMap { $0.feature.geometry.value as? Turf.Point }
+                    .compactMap { $0.geometry.value as? Turf.Point }
                     .contains { $0.coordinates.distance(to: firstDestination) < 1 },
                   "Destination annotation does not exist on map")
         
@@ -315,7 +315,7 @@ class NavigationViewControllerTests: TestCase {
         
         // Verify that there is a destination on the second route.
         XCTAssert(newAnnotations
-                    .compactMap { $0.feature.geometry.value as? Turf.Point }
+                    .compactMap { $0.geometry.value as? Turf.Point }
                     .contains { $0.coordinates.distance(to: secondDestination) < 1 },
                   "New destination annotation does not exist on map")
         XCTAssertEqual(navigationViewController.routeResponse.identifier,
