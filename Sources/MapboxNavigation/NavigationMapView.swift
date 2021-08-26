@@ -158,13 +158,17 @@ open class NavigationMapView: UIView {
      */
     var finalDestinationAnnotation: PointAnnotation? = nil
     
+    /**
+     A pending user location coordinate, which is used to calculate the bottleneck distance for vanishing route line when a location update comes in.
+     */
+    var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
+    
     var routes: [Route]?
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?
     var fractionTraveled: Double = 0.0
     var currentLegIndex: Int?
-    var currentLegCongestionLevels: [CongestionLevel]?
     var currentLineGradientStops = [Double: UIColor]()
     var routeLineTracksTraversal: Bool = false {
         didSet {
@@ -556,9 +560,9 @@ open class NavigationMapView: UIView {
      */
     func setUpLineGradientStops(along route: Route) {
         if let legIndex = currentLegIndex {
-            currentLegCongestionLevels = route.legs[legIndex].segmentCongestionLevels
             let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
             currentLineGradientStops = routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled)
+            pendingCoordinateForRouteLine = mostRecentUserCourseViewLocation?.coordinate ?? route.shape?.coordinates.first
         }
     }
     
@@ -567,8 +571,6 @@ open class NavigationMapView: UIView {
      */
     func removeLineGradientStops() {
         fractionTraveled = 0.0
-        currentLegIndex = nil
-        currentLegCongestionLevels = nil
         currentLineGradientStops.removeAll()
         if let routes = self.routes {
             show(routes, legIndex: currentLegIndex)
@@ -577,6 +579,7 @@ open class NavigationMapView: UIView {
         routePoints = nil
         routeLineGranularDistances = nil
         routeRemainingDistancesIndex = nil
+        pendingCoordinateForRouteLine = nil
     }
 
     @discardableResult func addRouteLayer(_ route: Route,
@@ -1428,8 +1431,8 @@ open class NavigationMapView: UIView {
         
         // Sort the array in order of closest to tap.
         let closest = waypoints.sorted { (left, right) -> Bool in
-            let leftDistance = calculateDistance(coordinate1: left.coordinate, coordinate2: tapCoordinate)
-            let rightDistance = calculateDistance(coordinate1: right.coordinate, coordinate2: tapCoordinate)
+            let leftDistance = left.coordinate.projectedDistance(to: tapCoordinate)
+            let rightDistance = right.coordinate.projectedDistance(to: tapCoordinate)
             return leftDistance < rightDistance
         }
         

@@ -335,7 +335,7 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         if routeLineTracksTraversal {
-            if routeProgress.isFinalLeg && routeProgress.currentLegProgress.distanceRemaining <= 0.0 {
+            if routeProgress.routeIsComplete {
                 navigationMapView?.removeRoutes()
             }
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
