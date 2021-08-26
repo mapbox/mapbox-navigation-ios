@@ -77,8 +77,8 @@ class NavigationMapViewTests: TestCase {
         navigationMapView.pointAnnotationManager = navigationMapView.mapView.annotations.makePointAnnotationManager()
         let pointAnnotationManager = navigationMapView.pointAnnotationManager
         XCTAssertEqual(0, pointAnnotationManager?.annotations.count)
-        pointAnnotationManager?.syncAnnotations([PointAnnotation(coordinate: CLLocationCoordinate2D()),
-                                                 PointAnnotation(coordinate: CLLocationCoordinate2D())])
+        pointAnnotationManager?.annotations = [PointAnnotation(coordinate: CLLocationCoordinate2D()),
+                                               PointAnnotation(coordinate: CLLocationCoordinate2D())]
         XCTAssertEqual(pointAnnotationManager?.annotations.count, 2)
         
         navigationMapView.showWaypoints(on: route)
@@ -88,7 +88,7 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(pointAnnotationManager?.annotations.count, 0)
         
         // Clean up
-        pointAnnotationManager?.syncAnnotations([])
+        pointAnnotationManager?.annotations.removeAll()
         XCTAssertEqual(0, pointAnnotationManager?.annotations.count)
     }
 

@@ -8,7 +8,7 @@ class CustomViewController: UIViewController {
     
     var destinationAnnotation: PointAnnotation! {
         didSet {
-            pointAnnotationManager?.syncAnnotations([destinationAnnotation])
+            pointAnnotationManager?.annotations = [destinationAnnotation]
         }
     }
     

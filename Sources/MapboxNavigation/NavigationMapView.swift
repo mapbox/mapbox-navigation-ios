@@ -354,7 +354,7 @@ open class NavigationMapView: UIView {
             
             if let finalDestinationAnnotation = self.finalDestinationAnnotation,
                let pointAnnotationManager = self.pointAnnotationManager {
-                pointAnnotationManager.syncAnnotations([finalDestinationAnnotation])
+                pointAnnotationManager.annotations = [finalDestinationAnnotation]
                 self.delegate?.navigationMapView(self,
                                                  didAdd: finalDestinationAnnotation,
                                                  pointAnnotationManager: pointAnnotationManager)
@@ -774,7 +774,7 @@ open class NavigationMapView: UIView {
             // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
             // and add it only after fully loading `MapView` style.
             if let pointAnnotationManager = pointAnnotationManager {
-                pointAnnotationManager.syncAnnotations([destinationAnnotation])
+                pointAnnotationManager.annotations = [destinationAnnotation]
                 delegate?.navigationMapView(self,
                                             didAdd: destinationAnnotation,
                                             pointAnnotationManager: pointAnnotationManager)
@@ -854,7 +854,7 @@ open class NavigationMapView: UIView {
      Removes all existing `Waypoint` objects from `MapView`, which were added by `NavigationMapView`.
      */
     public func removeWaypoints() {
-        pointAnnotationManager?.syncAnnotations([])
+        pointAnnotationManager?.annotations.removeAll()
         
         let layers: Set = [
             NavigationMapView.LayerIdentifier.waypointCircleLayer,
