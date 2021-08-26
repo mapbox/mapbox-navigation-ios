@@ -151,8 +151,9 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
     }
 }
 
+
 class UserPuckStyleKitView: UIView {
-    typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
+    private typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
     
     var fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000) {
         didSet {
@@ -166,7 +167,7 @@ class UserPuckStyleKitView: UIView {
             setNeedsDisplay()
         }
     }
-    lazy var puckColorComponents: ColorComponents! = colorComponents(puckColor)
+    lazy private var puckColorComponents: ColorComponents! = colorComponents(puckColor)
     
     var stalePuckColor: UIColor = UIColor(red: 0.6, green: 0.6, blue: 0.6, alpha: 1) {
         didSet {
@@ -174,7 +175,7 @@ class UserPuckStyleKitView: UIView {
             setNeedsDisplay()
         }
     }
-    lazy var stalePuckColorComponents: ColorComponents! = colorComponents(stalePuckColor)
+    lazy private var stalePuckColorComponents: ColorComponents! = colorComponents(stalePuckColor)
     
     var staleRatio: CGFloat = 0 {
         didSet {
