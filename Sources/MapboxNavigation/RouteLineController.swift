@@ -138,7 +138,7 @@ extension NavigationMapView {
             }
             
             if routeLineTracksTraversal {
-                if progress.isFinalLeg && progress.currentLegProgress.distanceRemaining <= 0.0 {
+                if progress.routeIsComplete {
                     navigationMapView.removeRoutes()
                 }
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: progress)

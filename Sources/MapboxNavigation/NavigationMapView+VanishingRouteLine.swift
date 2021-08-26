@@ -111,7 +111,7 @@ extension NavigationMapView {
         for index in stride(from: coordinates.count - 1, to: 0, by: -1) {
             let curr = coordinates[index]
             let prev = coordinates[index - 1]
-            distance += calculateDistance(coordinate1: curr, coordinate2: prev)
+            distance += curr.projectedDistance(to: prev)
             indexArray[index - 1] = RouteLineDistancesIndex(point: prev, distanceRemaining: distance)
         }
         indexArray[coordinates.count - 1] = RouteLineDistancesIndex(point: coordinates[coordinates.count - 1], distanceRemaining: 0.0)
@@ -119,39 +119,12 @@ extension NavigationMapView {
     }
     
     /**
-     Calculates the distance between 2 points using [EPSG:3857 projection](https://epsg.io/3857).
-     */
-    func calculateDistance(coordinate1: CLLocationCoordinate2D, coordinate2: CLLocationCoordinate2D) -> Double {
-        let distanceArray: [Double] = [
-            (projectX(coordinate1.longitude) - projectX(coordinate2.longitude)),
-            (projectY(coordinate1.latitude) - projectY(coordinate2.latitude))
-        ]
-        return (distanceArray[0] * distanceArray[0] + distanceArray[1] * distanceArray[1]).squareRoot()
-    }
-
-    func projectX(_ x: Double) -> Double {
-        return x / 360.0 + 0.5
-    }
-    
-    func projectY(_ y: Double) -> Double {
-        let sinValue = sin(y * Double.pi / 180)
-        let newYValue = 0.5 - 0.25 * log((1 + sinValue) / (1 - sinValue)) / Double.pi
-        if newYValue < 0 {
-            return 0.0
-        } else if newYValue > 1 {
-            return 1.1
-        } else {
-            return newYValue
-        }
-    }
-    
-    /**
      Updates the fractionTraveled along the route line from the origin point to the indicated point.
      
      - parameter coordinate: Current position of the user location.
      */
-    func updateFractionTraveled(coordinate: CLLocationCoordinate2D?) {
-        guard let granularDistances = routeLineGranularDistances,let index = routeRemainingDistancesIndex, let location = coordinate else { return }
+    func updateFractionTraveled(coordinate: CLLocationCoordinate2D) {
+        guard let granularDistances = routeLineGranularDistances,let index = routeRemainingDistancesIndex else { return }
         guard index < granularDistances.distanceArray.endIndex else { return }
         let traveledIndex = granularDistances.distanceArray[index]
         let upcomingPoint = traveledIndex.point
@@ -159,7 +132,7 @@ extension NavigationMapView {
         /**
          Take the remaining distance from the upcoming point on the route and extends it by the exact position of the puck.
          */
-        let remainingDistance = traveledIndex.distanceRemaining + calculateDistance(coordinate1: upcomingPoint, coordinate2: location)
+        let remainingDistance = traveledIndex.distanceRemaining + upcomingPoint.projectedDistance(to: coordinate)
         
         /**
          Calculate the percentage of the route traveled.
@@ -178,9 +151,17 @@ extension NavigationMapView {
      - parameter coordinate: Current position of the user location.
      */
     public func travelAlongRouteLine(to coordinate: CLLocationCoordinate2D?) {
-        updateFractionTraveled(coordinate: coordinate)
-        
         guard let route = routes?.first else { return }
+        
+        guard pendingCoordinateForRouteLine != coordinate,
+              let preCoordinate = pendingCoordinateForRouteLine,
+              let currentCoordinate = coordinate else { return }
+        
+        let distance = preCoordinate.distance(to: currentCoordinate)
+        let meterPerPixel = getMetersPerPixelAtLatitude(currentCoordinate.latitude, Double(mapView.cameraState.zoom))
+        guard distance >= meterPerPixel else { return }
+            
+        updateFractionTraveled(coordinate: currentCoordinate)
         
         let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
         let mainRouteCasingLayerIdentifier = route.identifier(.routeCasing(isMainRoute: true))
@@ -212,6 +193,7 @@ extension NavigationMapView {
             print("Failed to update main route line layer.")
         }
         
+        pendingCoordinateForRouteLine = coordinate
     }
     
     func updateRouteLineGradientStops(fractionTraveled: Double, gradientStops: [Double: UIColor]) -> [Double: UIColor] {
