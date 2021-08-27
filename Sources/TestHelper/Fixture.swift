@@ -46,6 +46,13 @@ public class Fixture: NSObject {
         return image
     }
     
+    public static func color(named colorName: String) -> UIColor {
+        guard let color = UIColor(named: colorName, in: bundle, compatibleWith: nil) else {
+            preconditionFailure("Fixture color \(colorName) not found.")
+        }
+        return color
+    }
+    
     public class func downloadRouteFixture(coordinates: [CLLocationCoordinate2D], fileName: String, completion: @escaping () -> Void) {
         let accessToken = "<# Mapbox Access Token #>"
         let credentials = DirectionsCredentials(accessToken: accessToken)

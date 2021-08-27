@@ -124,7 +124,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     }
     
     @objc private func progressDidChange(_ notification: Notification) {
-        routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+        routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
     }
     
     @objc private func didReroute(_ notification: Notification) {

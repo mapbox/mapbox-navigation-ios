@@ -131,8 +131,8 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
         staleTimer = Timer(timeInterval: staleRefreshInterval,
                            repeats: true,
                            block: { [weak self] _ in
-            self?.refreshPuckStaleState()
-        })
+                            self?.refreshPuckStaleState()
+                           })
         RunLoop.current.add(staleTimer, forMode: .common)
     }
 
@@ -150,7 +150,6 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
         lastLocationUpdate = Date()
     }
 }
-
 
 class UserPuckStyleKitView: UIView {
     private typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)
@@ -198,8 +197,10 @@ class UserPuckStyleKitView: UIView {
         return (hue, saturation, brightness, alpha)
     }
     
-    private func drawingPuckColor() -> UIColor
-    {
+    private func drawingPuckColor() -> UIColor {
+        puckColorComponents = colorComponents(puckColor)
+        stalePuckColorComponents = colorComponents(stalePuckColor)
+        
         return UIColor(hue: puckColorComponents.hue + (stalePuckColorComponents.hue - puckColorComponents.hue) * staleRatio,
                        saturation: puckColorComponents.saturation + (stalePuckColorComponents.saturation - puckColorComponents.saturation) * staleRatio,
                        brightness: puckColorComponents.brightness + (stalePuckColorComponents.brightness - puckColorComponents.brightness) * staleRatio,
@@ -208,10 +209,13 @@ class UserPuckStyleKitView: UIView {
     
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        drawNavigation_puck(fillColor: fillColor, puckColor: drawingPuckColor(), shadowColor: shadowColor, circleColor: fillColor)
+        drawNavigationPuck(fillColor: fillColor, puckColor: drawingPuckColor(), shadowColor: shadowColor, circleColor: fillColor)
     }
     
-    func drawNavigation_puck(fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000), shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160), circleColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
+    func drawNavigationPuck(fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000),
+                            puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000),
+                            shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160),
+                            circleColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
         
         //// Canvas 2
         //// navigation_pluck
