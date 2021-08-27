@@ -131,8 +131,8 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
         staleTimer = Timer(timeInterval: staleRefreshInterval,
                            repeats: true,
                            block: { [weak self] _ in
-            self?.refreshPuckStaleState()
-        })
+                            self?.refreshPuckStaleState()
+                           })
         RunLoop.current.add(staleTimer, forMode: .common)
     }
 
@@ -150,7 +150,6 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
         lastLocationUpdate = Date()
     }
 }
-
 
 class UserPuckStyleKitView: UIView {
     private typealias ColorComponents = (hue: CGFloat, saturation: CGFloat, brightness: CGFloat, alpha: CGFloat)

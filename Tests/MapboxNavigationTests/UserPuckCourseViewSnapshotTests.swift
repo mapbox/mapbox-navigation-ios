@@ -55,4 +55,36 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         darkUserPuckСourseView.puckView.draw(frame)
         assertImageSnapshot(matching: darkUserPuckСourseView, as: .image(precision: 0.95))
     }
+    
+    func testUserPuckCourseViewStalePuckColor() {
+        let frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
+        let userPuckСourseView = UserPuckCourseView(frame: frame)
+        userPuckСourseView.puckColor = .green
+        userPuckСourseView.stalePuckColor = .red
+        userPuckСourseView.staleInterval = 1.0
+        userPuckСourseView.staleRefreshInterval = 0.1
+        userPuckСourseView.puckView.draw(frame)
+        
+        // Right after `UserPuckCourseView` creation and when it's not yet stale its puck color
+        // should be green.
+        assertImageSnapshot(matching: userPuckСourseView, as: .image(precision: 0.95))
+        
+        // Simulate location update to be able to move puck to the stale state.
+        NotificationCenter.default.post(name: .routeControllerProgressDidChange,
+                                        object: self,
+                                        userInfo: nil)
+        
+        let stalePuckExpectation = expectation(description: "Stale puck expectation")
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            userPuckСourseView.puckView.draw(frame)
+            stalePuckExpectation.fulfill()
+        }
+        
+        wait(for: [stalePuckExpectation], timeout: 10.0)
+        
+        // It is expected that puck moves to the stale state within one second and gradually changes
+        // its color to red.
+        assertImageSnapshot(matching: userPuckСourseView, as: .image(precision: 0.95))
+    }
 }
