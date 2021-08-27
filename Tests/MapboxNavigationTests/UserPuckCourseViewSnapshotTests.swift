@@ -1,5 +1,6 @@
 import XCTest
 import UIKit
+import CoreLocation
 import TestHelper
 import SnapshotTesting
 @testable import MapboxNavigation
@@ -86,5 +87,34 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         // It is expected that puck moves to the stale state within one second and gradually changes
         // its color to red.
         assertImageSnapshot(matching: userPuckСourseView, as: .image(precision: 0.95))
+    }
+    
+    func testCourseUpdatable() {
+        
+        class CourseUpdatableMock: UIView, CourseUpdatable {
+            
+        }
+        
+        let courseUpdatableMock = CourseUpdatableMock()
+        
+        let course = 12.0
+        let location = CLLocation(coordinate: CLLocationCoordinate2D(latitude: 37.762939, longitude: -122.434755),
+                                  altitude: 0.0,
+                                  horizontalAccuracy: 0.0,
+                                  verticalAccuracy: 0.0,
+                                  course: 12.0,
+                                  speed: 0.0,
+                                  timestamp: Date())
+        
+        let direction = 24.0
+        courseUpdatableMock.update(location: location,
+                                   pitch: 0.0,
+                                   direction: direction,
+                                   animated: false,
+                                   navigationCameraState: .following)
+        
+        let angle = CLLocationDegrees(atan2f(Float(courseUpdatableMock.transform.b),
+                                             Float(courseUpdatableMock.transform.a))).toDegrees()
+        XCTAssertEqual(angle, course - direction, accuracy: 0.1, "Direction angles of the puck should be almost equal.")
     }
 }
