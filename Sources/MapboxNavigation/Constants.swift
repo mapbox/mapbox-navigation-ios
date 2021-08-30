@@ -40,6 +40,11 @@ public let CongestionAttribute = "congestion"
  */
 public let NavigationViewMinimumVolumeForWarning: Float = 0.3
 
+/**
+ The distance of blending color between two different congestion level segment in meters.
+ */
+public let gradientCongestionblendingDistance: Double = 30.0
+
 extension Notification.Name {
     /**
      Posted when `StyleManager` applies a style that was triggered by change of time of day, or when entering or exiting a tunnel.
