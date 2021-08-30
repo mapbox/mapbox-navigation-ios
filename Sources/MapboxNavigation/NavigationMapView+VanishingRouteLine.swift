@@ -244,7 +244,7 @@ extension NavigationMapView {
 
                 let lineString = feature.geometry.value as? LineString
                 guard let distance = lineString?.distance() else { return gradientStops }
-                let stopGap = max(min(gradientCongestionblendingDistance, distance * 0.1) / routeDistance, 0.0000000000000002)
+                let stopGap = max(min(GradientCongestionblendingDistance, distance * 0.1) / routeDistance, 0.0000000000000002)
                 
                 if index == congestionFeatures.startIndex {
                     distanceTraveled = distanceTraveled + distance
