@@ -562,7 +562,7 @@ open class NavigationMapView: UIView {
         if let legIndex = currentLegIndex {
             let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
             currentLineGradientStops = routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled)
-            pendingCoordinateForRouteLine = mostRecentUserCourseViewLocation?.coordinate ?? route.shape?.coordinates.first
+            pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
         }
     }
     
