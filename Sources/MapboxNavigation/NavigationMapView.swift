@@ -619,7 +619,9 @@ open class NavigationMapView: UIView {
             
             if isMainRoute {
                 if !currentLineGradientStops.isEmpty {
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(currentLineGradientStops, lineBaseColor: trafficUnknownColor)))
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(currentLineGradientStops,
+                                                                                                  lineBaseColor: trafficUnknownColor,
+                                                                                                  isSoft: showFadingCongestionColor)))
                 } else {
                     let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                     let gradientStops = routeLineGradient(congestionFeatures,
