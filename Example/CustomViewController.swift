@@ -49,7 +49,7 @@ class CustomViewController: UIViewController {
                                                     routeIndex: indexedUserRouteResponse!.routeIndex,
                                                     routeOptions: userRouteOptions!,
                                                     locationSource: locationManager,
-                                                    simulating: simulateLocation ? .always : .onPoorGPS)
+                                                    simulating: simulateLocation ? .always : .inTunnels)
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         

@@ -604,7 +604,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         mapTemplate.hideTripPreviews()
         
-        let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .onPoorGPS
+        let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .inTunnels
         
         let navigationService = self.navigationService ??
             delegate?.carPlayManager(self, navigationServiceFor: routeResponse,
