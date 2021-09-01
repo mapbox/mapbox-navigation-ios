@@ -57,7 +57,7 @@ open class NavigationOptions: NavigationCustomizable {
     /**
      The simulation mode type. Used for setting the simulation mode of the navigation service.
      
-     If set to `nil` will default to `.inTunnels`.
+     If set to `nil` will default to `.inTunnels`. This setting will be ignored if custom `navigationService` instance was provided.
      */
     open var simulationMode: SimulationMode?
     
