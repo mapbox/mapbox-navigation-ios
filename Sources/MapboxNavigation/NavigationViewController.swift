@@ -435,7 +435,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         navigationService = navigationOptions?.navigationService
             ?? MapboxNavigationService(routeResponse: routeResponse,
                                        routeIndex: routeIndex,
-                                       routeOptions: routeOptions)
+                                       routeOptions: routeOptions,
+                                       simulating: navigationOptions?.simulationMode)
         navigationService.delegate = self
         
         NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile

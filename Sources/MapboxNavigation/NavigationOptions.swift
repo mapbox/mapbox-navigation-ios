@@ -54,6 +54,13 @@ open class NavigationOptions: NavigationCustomizable {
      */
     open var navigationMapView: NavigationMapView?
     
+    /**
+     The simulation mode type. Used for setting the simulation mode of the navigation service.
+     
+     If set to `nil` will default to `.inTunnels`.
+     */
+    open var simulationMode: SimulationMode?
+    
     // This makes the compiler happy.
     required public init() {
         // do nothing
@@ -70,7 +77,7 @@ open class NavigationOptions: NavigationCustomizable {
      - parameter predictiveCacheOptions: Configuration for predictive caching. These options control how the `PredictiveCacheManager` will try to proactively fetch data related to the route. A `nil` value disables the feature.
      - parameter navigationMapView: Custom `NavigationMapView` instance to supersede the default one.
      */
-    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, navigationMapView: NavigationMapView? = nil) {
+    public convenience init(styles: [Style]? = nil, navigationService: NavigationService? = nil, voiceController: RouteVoiceController? = nil, topBanner: ContainerViewController? = nil, bottomBanner: ContainerViewController? = nil, predictiveCacheOptions: PredictiveCacheOptions? = nil, navigationMapView: NavigationMapView? = nil, simulationMode: SimulationMode? = nil) {
         self.init()
         self.styles = styles
         self.navigationService = navigationService
@@ -79,6 +86,7 @@ open class NavigationOptions: NavigationCustomizable {
         self.bottomBanner = bottomBanner
         self.predictiveCacheOptions = predictiveCacheOptions
         self.navigationMapView = navigationMapView
+        self.simulationMode = simulationMode
     }
     
     /**
