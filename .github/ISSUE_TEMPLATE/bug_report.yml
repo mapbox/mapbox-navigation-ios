@@ -20,10 +20,6 @@ body:
       label: "Mapbox Navigation SDK version"      
     validations:
       required: true
-  - type: input
-    attributes:
-      label: "Custom Mapbox Navigation SDK version"
-      placeholder: "e.g. 2.0.0-beta.14"
   - type: textarea
     attributes:
       label: Steps to reproduce
