@@ -61,6 +61,7 @@
 * Renamed `RouterDataSource.locationProvider` and `EventsManagerDataSource.locationProvider` properties to `RouterDataSource.locationManagerType` and `EventsManagerDataSource.locationManagerType` respectively. ([#3199](https://github.com/mapbox/mapbox-navigation-ios/pull/3199))
 * Adds `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, which is called each time the user arrives at a waypoint. By default, this method returns true and prevents rerouting upon arriving. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
 * Fixes an issue where the user would be rerouted even if `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` returned `false`. To implement reroute after arrival behavior, return `true` from this method and `false` from `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, then set `NavigationViewController.showsEndOfRouteFeedback` to `false`. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
+* Added `UserHaloCourseView.haloBorderWidth`, which allows to change border of the ring around halo view. ([#3309](https://github.com/mapbox/mapbox-navigation-ios/pull/3309))
 
 ### Electronic horizon
 
