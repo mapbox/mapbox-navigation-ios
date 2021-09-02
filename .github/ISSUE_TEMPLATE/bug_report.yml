@@ -13,6 +13,8 @@ body:
         * Guides and examples - https://www.mapbox.com/ios-sdk/navigation/
         * API reference - https://www.mapbox.com/mapbox-navigation-ios/navigation/
         * The example app - https://github.com/mapbox/navigation-ios-examples
+        * Mapbox Directions for Swift - https://github.com/mapbox/mapbox-directions-swift
+        * Mapbox Maps SDK for iOS - https://github.com/mapbox/mapbox-maps-ios
   - type: textarea
     attributes:
       label: "Mapbox Navigation SDK version"      
