@@ -13,13 +13,9 @@ body:
         * Guides and examples - https://www.mapbox.com/ios-sdk/navigation/
         * API reference - https://www.mapbox.com/mapbox-navigation-ios/navigation/
         * The example app - https://github.com/mapbox/navigation-ios-examples
-  - type: dropdown
+  - type: textarea
     attributes:
-      label: "Mapbox Navigation SDK version"
-      options:
-        - 2.0.0-beta.19
-        - 1.4.2
-        - custom
+      label: "Mapbox Navigation SDK version"      
     validations:
       required: true
   - type: input
