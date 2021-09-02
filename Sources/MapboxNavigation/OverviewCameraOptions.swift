@@ -4,7 +4,7 @@ import Foundation
  Options, which are used to control what `CameraOptions` parameters will be modified by
  `NavigationViewportDataSource` in `NavigationCameraState.overview` state.
  */
-public struct OverviewCameraOptions {
+public struct OverviewCameraOptions: Equatable {
     
     /**
      Maximum zoom level, which will be used when producing camera frame in `NavigationCameraState.overview`
@@ -12,7 +12,17 @@ public struct OverviewCameraOptions {
      
      Defaults to `16.35`.
      */
-    public var maximumZoomLevel: Double = 16.35
+    public var maximumZoomLevel: Double = 16.35 {
+        didSet {
+            if maximumZoomLevel < 0.0 {
+                preconditionFailure("Maximum zoom level should not be lower than 0.0")
+            }
+            
+            if maximumZoomLevel > 22.0 {
+                preconditionFailure("Maximum zoom level should not be higher than 22.0")
+            }
+        }
+    }
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.center` property
@@ -63,4 +73,19 @@ public struct OverviewCameraOptions {
      Defaults to `true`.
      */
     public var paddingUpdatesAllowed = true
+    
+    /**
+     Initializes `OverviewCameraOptions` instance.
+     */
+    public init() {
+        // No-op
+    }
+    
+    public static func == (lhs: OverviewCameraOptions, rhs: OverviewCameraOptions) -> Bool {
+        return lhs.maximumZoomLevel == rhs.maximumZoomLevel &&
+            lhs.zoomUpdatesAllowed == rhs.zoomUpdatesAllowed &&
+            lhs.bearingUpdatesAllowed == rhs.bearingUpdatesAllowed &&
+            lhs.pitchUpdatesAllowed == rhs.pitchUpdatesAllowed &&
+            lhs.paddingUpdatesAllowed == rhs.paddingUpdatesAllowed
+    }
 }
