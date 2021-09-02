@@ -636,6 +636,33 @@ class NavigationCameraTests: XCTestCase {
         XCTAssertFalse(appliedChanges, "Maximum zoom level changes should not be applied.")
     }
     
+    func testNavigationViewportDataSourceOptionsInitializer() {
+        // `NavigationViewportDataSourceOptions` initializers should be available for public usage.
+        let navigationViewportDataSourceOptions = NavigationViewportDataSourceOptions()
+        
+        let navigationMapView = NavigationMapView(frame: .zero)
+        let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource
+        navigationViewportDataSource?.options = navigationViewportDataSourceOptions
+        
+        XCTAssertEqual(navigationViewportDataSource?.options,
+                       navigationViewportDataSourceOptions,
+                       "NavigationViewportDataSourceOptions instances should be equal.")
+        
+        let followingCameraOptions = FollowingCameraOptions()
+        let overviewCameraOptions = OverviewCameraOptions()
+        
+        let modifiedNavigationViewportDataSourceOptions = NavigationViewportDataSourceOptions(followingCameraOptions,
+                                                                                              overviewCameraOptions: overviewCameraOptions)
+        
+        XCTAssertEqual(modifiedNavigationViewportDataSourceOptions.followingCameraOptions,
+                       followingCameraOptions,
+                       "FollowingCameraOptions instances should be equal.")
+        
+        XCTAssertEqual(modifiedNavigationViewportDataSourceOptions.overviewCameraOptions,
+                       overviewCameraOptions,
+                       "OverviewCameraOptions instances should be equal.")
+    }
+    
     // MARK: - Helper methods
     
     func route(from file: String) -> Route? {

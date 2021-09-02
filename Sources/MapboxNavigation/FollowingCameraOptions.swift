@@ -4,7 +4,7 @@ import CoreLocation
  Options, which are used to control what `CameraOptions` parameters will be modified by
  `NavigationViewportDataSource` in `NavigationCameraState.following` state.
  */
-public struct FollowingCameraOptions {
+public struct FollowingCameraOptions: Equatable {
     
     /**
      Pitch, which will be taken into account when preparing `CameraOptions` during active guidance
@@ -108,6 +108,20 @@ public struct FollowingCameraOptions {
      Options, which allow to modify the framed route geometries when approaching a maneuver.
      */
     public var pitchNearManeuver: PitchNearManeuver = PitchNearManeuver()
+    
+    public static func == (lhs: FollowingCameraOptions, rhs: FollowingCameraOptions) -> Bool {
+        return lhs.defaultPitch == rhs.defaultPitch &&
+            lhs.zoomRange == rhs.zoomRange &&
+            lhs.centerUpdatesAllowed == rhs.centerUpdatesAllowed &&
+            lhs.zoomUpdatesAllowed == rhs.zoomUpdatesAllowed &&
+            lhs.bearingUpdatesAllowed == rhs.bearingUpdatesAllowed &&
+            lhs.pitchUpdatesAllowed == rhs.pitchUpdatesAllowed &&
+            lhs.paddingUpdatesAllowed == rhs.paddingUpdatesAllowed &&
+            lhs.intersectionDensity == rhs.intersectionDensity &&
+            lhs.bearingSmoothing == rhs.bearingSmoothing &&
+            lhs.geometryFramingAfterManeuver == rhs.geometryFramingAfterManeuver &&
+            lhs.pitchNearManeuver == rhs.pitchNearManeuver
+    }
 }
 
 /**
@@ -116,7 +130,7 @@ public struct FollowingCameraOptions {
  By default the whole remainder of the step is framed, while `IntersectionDensity` options shrink
  that geometry to increase the zoom level.
  */
-public struct IntersectionDensity {
+public struct IntersectionDensity: Equatable {
     
     /**
      Controls whether additional coordinates after the upcoming maneuver will be framed
@@ -143,13 +157,19 @@ public struct IntersectionDensity {
      Defaults to `20.0` meters.
      */
     public var minimumDistanceBetweenIntersections: CLLocationDistance = 20.0
+    
+    public static func == (lhs: IntersectionDensity, rhs: IntersectionDensity) -> Bool {
+        return lhs.enabled == rhs.enabled &&
+            lhs.averageDistanceMultiplier == rhs.averageDistanceMultiplier &&
+            lhs.minimumDistanceBetweenIntersections == rhs.minimumDistanceBetweenIntersections
+    }
 }
 
 /**
  Options, which allow to modify `CameraOptions.bearing` property based on information about
  bearing of an upcoming maneuver.
  */
-public struct BearingSmoothing {
+public struct BearingSmoothing: Equatable {
     
     /**
      Controls whether bearing smoothing will be performed or not.
@@ -168,13 +188,18 @@ public struct BearingSmoothing {
      Defaults to `45.0` degrees.
      */
     public var maximumBearingSmoothingAngle: CLLocationDirection = 45.0
+    
+    public static func == (lhs: BearingSmoothing, rhs: BearingSmoothing) -> Bool {
+        return lhs.enabled == rhs.enabled &&
+            lhs.maximumBearingSmoothingAngle == rhs.maximumBearingSmoothingAngle
+    }
 }
 
 /**
  Options, which allow to modify framed route geometries by appending additional coordinates after
  maneuver to extend the view.
  */
-public struct GeometryFramingAfterManeuver {
+public struct GeometryFramingAfterManeuver: Equatable {
     
     /**
      Controls whether additional coordinates after the upcoming maneuver will be framed
@@ -198,12 +223,18 @@ public struct GeometryFramingAfterManeuver {
      Defaults to `100.0` meters.
      */
     public var distanceToFrameAfterManeuver: CLLocationDistance = 100.0
+    
+    public static func == (lhs: GeometryFramingAfterManeuver, rhs: GeometryFramingAfterManeuver) -> Bool {
+        return lhs.enabled == rhs.enabled &&
+            lhs.distanceToCoalesceCompoundManeuvers == rhs.distanceToCoalesceCompoundManeuvers &&
+            lhs.distanceToFrameAfterManeuver == rhs.distanceToFrameAfterManeuver
+    }
 }
 
 /**
  Options, which allow to modify the framed route geometries when approaching a maneuver.
  */
-public struct PitchNearManeuver {
+public struct PitchNearManeuver: Equatable {
     
     /**
      Controls whether `CameraOptions.pitch` will be set to `0.0` near upcoming maneuver.
@@ -218,4 +249,9 @@ public struct PitchNearManeuver {
      Defaults to `180.0` meters.
      */
     public var triggerDistanceToManeuver: CLLocationDistance = 180.0
+    
+    public static func == (lhs: PitchNearManeuver, rhs: PitchNearManeuver) -> Bool {
+        return lhs.enabled == rhs.enabled &&
+            lhs.triggerDistanceToManeuver == rhs.triggerDistanceToManeuver
+    }
 }
