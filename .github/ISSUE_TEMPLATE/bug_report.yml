@@ -15,9 +15,9 @@ body:
         * The example app - https://github.com/mapbox/navigation-ios-examples
         * Mapbox Directions for Swift - https://github.com/mapbox/mapbox-directions-swift
         * Mapbox Maps SDK for iOS - https://github.com/mapbox/mapbox-maps-ios
-  - type: textarea
+  - type: input
     attributes:
-      label: "Mapbox Navigation SDK version"      
+      label: "Mapbox Navigation SDK version"
     validations:
       required: true
   - type: textarea
