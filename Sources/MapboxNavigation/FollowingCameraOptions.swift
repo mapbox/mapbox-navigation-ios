@@ -109,6 +109,13 @@ public struct FollowingCameraOptions: Equatable {
      */
     public var pitchNearManeuver: PitchNearManeuver = PitchNearManeuver()
     
+    /**
+     Initializes `FollowingCameraOptions` instance.
+     */
+    public init() {
+        // No-op
+    }
+    
     public static func == (lhs: FollowingCameraOptions, rhs: FollowingCameraOptions) -> Bool {
         return lhs.defaultPitch == rhs.defaultPitch &&
             lhs.zoomRange == rhs.zoomRange &&
@@ -158,6 +165,13 @@ public struct IntersectionDensity: Equatable {
      */
     public var minimumDistanceBetweenIntersections: CLLocationDistance = 20.0
     
+    /**
+     Initializes `IntersectionDensity` instance.
+     */
+    public init() {
+        // No-op
+    }
+    
     public static func == (lhs: IntersectionDensity, rhs: IntersectionDensity) -> Bool {
         return lhs.enabled == rhs.enabled &&
             lhs.averageDistanceMultiplier == rhs.averageDistanceMultiplier &&
@@ -188,6 +202,13 @@ public struct BearingSmoothing: Equatable {
      Defaults to `45.0` degrees.
      */
     public var maximumBearingSmoothingAngle: CLLocationDirection = 45.0
+    
+    /**
+     Initializes `BearingSmoothing` instance.
+     */
+    public init() {
+        // No-op
+    }
     
     public static func == (lhs: BearingSmoothing, rhs: BearingSmoothing) -> Bool {
         return lhs.enabled == rhs.enabled &&
@@ -224,6 +245,13 @@ public struct GeometryFramingAfterManeuver: Equatable {
      */
     public var distanceToFrameAfterManeuver: CLLocationDistance = 100.0
     
+    /**
+     Initializes `GeometryFramingAfterManeuver` instance.
+     */
+    public init() {
+        // No-op
+    }
+    
     public static func == (lhs: GeometryFramingAfterManeuver, rhs: GeometryFramingAfterManeuver) -> Bool {
         return lhs.enabled == rhs.enabled &&
             lhs.distanceToCoalesceCompoundManeuvers == rhs.distanceToCoalesceCompoundManeuvers &&
@@ -249,6 +277,13 @@ public struct PitchNearManeuver: Equatable {
      Defaults to `180.0` meters.
      */
     public var triggerDistanceToManeuver: CLLocationDistance = 180.0
+    
+    /**
+     Initializes `PitchNearManeuver` instance.
+     */
+    public init() {
+        // No-op
+    }
     
     public static func == (lhs: PitchNearManeuver, rhs: PitchNearManeuver) -> Bool {
         return lhs.enabled == rhs.enabled &&

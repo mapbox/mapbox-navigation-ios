@@ -74,6 +74,13 @@ public struct OverviewCameraOptions: Equatable {
      */
     public var paddingUpdatesAllowed = true
     
+    /**
+     Initializes `OverviewCameraOptions` instance.
+     */
+    public init() {
+        // No-op
+    }
+    
     public static func == (lhs: OverviewCameraOptions, rhs: OverviewCameraOptions) -> Bool {
         return lhs.maximumZoomLevel == rhs.maximumZoomLevel &&
             lhs.zoomUpdatesAllowed == rhs.zoomUpdatesAllowed &&
