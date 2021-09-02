@@ -12,7 +12,17 @@ public struct FollowingCameraOptions: Equatable {
      
      Defaults to `45.0` degrees.
      */
-    public var defaultPitch: Double = 45.0
+    public var defaultPitch: Double = 45.0 {
+        didSet {
+            if defaultPitch < 0.0 {
+                preconditionFailure("Lower bound of the pitch should not be lower than 0.0")
+            }
+            
+            if defaultPitch > 85.0 {
+                preconditionFailure("Upper bound of the pitch should not be higher than 85.0")
+            }
+        }
+    }
     
     /**
      Zoom levels range, which will be used when producing camera frame in `NavigationCameraState.following`
