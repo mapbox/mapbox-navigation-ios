@@ -37,19 +37,34 @@ open class NavigationEventsManager {
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    func withBackupDataSource(_ forcedDataSource: EventsManagerDataSource, action: () -> Void) {
-        backupDataSource = forcedDataSource
+    func withBackupDataSource(active forcedActiveDataSource: EventsManagerDataSource?,
+                              passive forcedPassiveDataSource: PassiveNavigationEventsManagerDataSource?,
+                              action: () -> Void) {
+        backupActiveDataSource = forcedActiveDataSource
+        backupPassiveDataSource = forcedPassiveDataSource
         action()
-        backupDataSource = nil
+        backupActiveDataSource = nil
+        backupPassiveDataSource = nil
     }
-    
-    private var backupDataSource: EventsManagerDataSource?
+
+    private var backupPassiveDataSource: PassiveNavigationEventsManagerDataSource?
+    private weak var _passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
+    private var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
+    {
+        get {
+            return _passiveNavigationDataSource ?? backupPassiveDataSource
+        }
+        set {
+            _passiveNavigationDataSource = newValue
+        }
+    }
+
+    private var backupActiveDataSource: EventsManagerDataSource?
     private weak var _activeNavigationDataSource: EventsManagerDataSource?
-    private weak var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
     var activeNavigationDataSource: EventsManagerDataSource?
     {
         get {
-            return _activeNavigationDataSource ?? backupDataSource
+            return _activeNavigationDataSource ?? backupActiveDataSource
         }
         set {
             _activeNavigationDataSource = newValue
