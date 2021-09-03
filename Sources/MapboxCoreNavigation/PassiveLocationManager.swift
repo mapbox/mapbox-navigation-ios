@@ -38,13 +38,14 @@ open class PassiveLocationManager: NSObject {
         eventsManager.userInfo = userInfo
         _eventsManager = eventsManager
 
-        eventsManager.sendPassiveNavigationStart()
         subscribeNotifications()
     }
     
     deinit {
         eventsManager.withBackupDataSource(active: nil, passive: self) {
-            self.eventsManager.sendPassiveNavigationStop()
+            if self.lastRawLocation != nil {
+                self.eventsManager.sendPassiveNavigationStop()
+            }
         }
         unsubscribeNotifications()
     }
@@ -111,7 +112,11 @@ open class PassiveLocationManager: NSObject {
             navigator.updateLocation(for: FixLocation(location))
         }
 
+        let isFirstLocation = lastRawLocation == nil
         lastRawLocation = locations.last
+        if isFirstLocation {
+            eventsManager.sendPassiveNavigationStart()
+        }
     }
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
