@@ -113,6 +113,16 @@ public var RouteControllerIncorrectCourseMultiplier: Int = 4
  */
 public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
 
+//MARK: - Congestion level default ranges
+
+public let CongestionRangeLow: CongestionRange = 0..<40
+
+public let CongestionRangeModerate: CongestionRange = 40..<60
+
+public let CongestionRangeHeavy: CongestionRange = 60..<80
+
+public let CongestionRangeSevere: CongestionRange = 80..<101
+
 public extension Notification.Name {
     /**
      Posted when `PassiveLocationManager` receives a user location update representing movement along the expected route.

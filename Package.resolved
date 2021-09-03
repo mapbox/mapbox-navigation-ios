@@ -41,9 +41,9 @@
         "package": "MapboxDirections",
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
-          "branch": null,
-          "revision": "fb3975af8ce6676390f1f73c8ad296549c612e2c",
-          "version": "2.0.0-beta.9"
+          "branch": "pad-congestion-numeric",
+          "revision": "fd9ec3d50ddd9facdcc432065ac09537d9b3c49e",
+          "version": null
         }
       },
       {
