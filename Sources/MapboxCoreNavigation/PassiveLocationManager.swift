@@ -15,12 +15,15 @@ open class PassiveLocationManager: NSObject {
      
      - parameter directions: The directions service that allows the location manager to access road network data. If this argument is omitted, the shared value of `NavigationSettings.directions` will be used.
      - parameter systemLocationManager: The system location manager that provides raw locations for the receiver to match against the road network.
+     - parameter eventsManagerType: An optional events manager type to use.
+     - parameter userInfo: An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
      
      - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
      */
     public required init(directions: Directions = NavigationSettings.shared.directions,
                          systemLocationManager: NavigationLocationManager? = nil,
-                         eventsManagerType: NavigationEventsManager.Type? = nil) {
+                         eventsManagerType: NavigationEventsManager.Type? = nil,
+                         userInfo: [String: String?]? = nil) {
         self.directions = directions
         
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
@@ -30,15 +33,18 @@ open class PassiveLocationManager: NSObject {
         self.systemLocationManager.delegate = self
 
         let resolvedEventsManagerType = eventsManagerType ?? NavigationEventsManager.self
-        _eventsManager = resolvedEventsManagerType.init(passiveNavigationDataSource: self,
-                                                        accessToken: directions.credentials.accessToken)
+        let eventsManager = resolvedEventsManagerType.init(passiveNavigationDataSource: self,
+                                                           accessToken: directions.credentials.accessToken)
+        eventsManager.userInfo = userInfo
+        _eventsManager = eventsManager
 
+        eventsManager.sendPassiveNavigationStart()
         subscribeNotifications()
     }
     
     deinit {
         eventsManager.withBackupDataSource(active: nil, passive: self) {
-            // TODO: Send end event
+            self.eventsManager.sendPassiveNavigationStop()
         }
         unsubscribeNotifications()
     }
