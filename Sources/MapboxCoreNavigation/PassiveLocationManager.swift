@@ -15,10 +15,15 @@ open class PassiveLocationManager: NSObject {
      
      - parameter directions: The directions service that allows the location manager to access road network data. If this argument is omitted, the shared value of `NavigationSettings.directions` will be used.
      - parameter systemLocationManager: The system location manager that provides raw locations for the receiver to match against the road network.
+     - parameter eventsManagerType: An optional events manager type to use.
+     - parameter userInfo: An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
      
      - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
      */
-    public required init(directions: Directions = NavigationSettings.shared.directions, systemLocationManager: NavigationLocationManager? = nil) {
+    public required init(directions: Directions = NavigationSettings.shared.directions,
+                         systemLocationManager: NavigationLocationManager? = nil,
+                         eventsManagerType: NavigationEventsManager.Type? = nil,
+                         userInfo: [String: String?]? = nil) {
         self.directions = directions
         
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
@@ -27,12 +32,25 @@ open class PassiveLocationManager: NSObject {
         
         self.systemLocationManager.delegate = self
 
+        let resolvedEventsManagerType = eventsManagerType ?? NavigationEventsManager.self
+        let eventsManager = resolvedEventsManagerType.init(passiveNavigationDataSource: self,
+                                                           accessToken: directions.credentials.accessToken)
+        eventsManager.userInfo = userInfo
+        _eventsManager = eventsManager
+
         subscribeNotifications()
     }
     
     deinit {
+        eventsManager.withBackupDataSource(active: nil, passive: self) {
+            if self.lastRawLocation != nil {
+                self.eventsManager.sendPassiveNavigationStop()
+            }
+        }
         unsubscribeNotifications()
     }
+
+    private var _eventsManager: NavigationEventsManager?
     
     /**
      The directions service that allows the location manager to access road network data.
@@ -43,6 +61,11 @@ open class PassiveLocationManager: NSObject {
      A `NavigationLocationManager` that provides raw locations for the receiver to match against the road network.
      */
     public let systemLocationManager: NavigationLocationManager
+
+    /**
+     The events manager, responsible for all telemetry.
+     */
+    public var eventsManager: NavigationEventsManager { _eventsManager! }
     
     /**
      The underlying navigator that performs map matching.
@@ -89,7 +112,11 @@ open class PassiveLocationManager: NSObject {
             navigator.updateLocation(for: FixLocation(location))
         }
 
+        let isFirstLocation = lastRawLocation == nil
         lastRawLocation = locations.last
+        if isFirstLocation {
+            eventsManager.sendPassiveNavigationStart()
+        }
     }
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
