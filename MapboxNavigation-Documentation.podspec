@@ -45,17 +45,17 @@ Pod::Spec.new do |s|
 
   s.frameworks = ['CarPlay']
 
-  s.dependency "MapboxDirections-pre", "2.0.0-beta.8"
+  s.dependency "MapboxDirections-pre", "2.0.0-beta.9"
   s.dependency "MapboxMaps", "10.0.0-rc.7"
   s.dependency "MapboxMobileEvents", "~> 1.0.0"
-  s.dependency "MapboxNavigationNative", "~> 64.0"
+  s.dependency "MapboxNavigationNative", "~> 65.0"
   s.dependency "Solar-dev", "~> 3.0"
   s.dependency "Turf", "2.0.0-rc.1"
   s.dependency "MapboxSpeech-pre", "2.0.0-alpha.1"
 
   s.swift_version = "5.0"
 
-  # https://github.com/mapbox/mapbox-navigation-ios/issues/2665 
+  # https://github.com/mapbox/mapbox-navigation-ios/issues/2665
   s.user_target_xcconfig = {
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => '$(EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_$(EFFECTIVE_PLATFORM_SUFFIX)__NATIVE_ARCH_64_BIT_$(NATIVE_ARCH_64_BIT)__XCODE_$(XCODE_VERSION_MAJOR))',
     'EXCLUDED_ARCHS__EFFECTIVE_PLATFORM_SUFFIX_simulator__NATIVE_ARCH_64_BIT_x86_64__XCODE_1200' => 'arm64 arm64e armv7 armv7s armv6 armv8'
