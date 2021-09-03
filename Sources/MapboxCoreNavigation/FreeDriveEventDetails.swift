@@ -46,6 +46,7 @@ struct FreeDriveEventDetails: GlobalEventDetails {
         case eventType
         case location
         case locationEngine
+        case navigatorSessionIdentifier
         case percentTimeInForeground
         case percentTimeInPortrait
         case screenBrightness
@@ -70,6 +71,7 @@ struct FreeDriveEventDetails: GlobalEventDetails {
         try container.encode(sessionIdentifier, forKey: .sessionIdentifier)
         try container.encode(simulation, forKey: .simulation)
         try container.encode(volumeLevel, forKey: .volumeLevel)
+        try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .navigatorSessionIdentifier)
         try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(event, forKey: .event)
         try container.encodeIfPresent(location?.dictionaryRepresentation, forKey: .location)
