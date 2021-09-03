@@ -300,6 +300,11 @@ open class NavigationEventsManager {
     }
 
     func sendPassiveNavigationStart() {
+        guard let dataSource = passiveNavigationDataSource else { return }
+        if sessionState.departureTimestamp == nil {
+            sessionState.departureTimestamp = dataSource.rawLocation?.timestamp ?? Date()
+        }
+
         guard let attributes = (try? passiveNavigationEvent(type: .start)?.asDictionary()) as [String: Any]?? else { return }
         mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
         mobileEventsManager.flush()
