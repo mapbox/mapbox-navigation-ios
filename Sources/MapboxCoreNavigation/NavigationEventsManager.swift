@@ -3,17 +3,23 @@ import MapboxMobileEvents
 import MapboxDirections
 
 let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
+let NavigationEventTypeFreeDrive = "navigation.freeDrive"
 
 /**
  A data source that declares values required for recording passive location events.
  */
 public protocol PassiveNavigationEventsManagerDataSource: AnyObject {
     var rawLocation: CLLocation? { get }
+    var locationManagerType: NavigationLocationManager.Type { get }
 }
 
 extension PassiveLocationManager: PassiveNavigationEventsManagerDataSource {
     public var rawLocation: CLLocation? {
         return self.lastRawLocation
+    }
+
+    public var locationManagerType: NavigationLocationManager.Type {
+        return type(of: systemLocationManager)
     }
 }
 
@@ -195,6 +201,15 @@ open class NavigationEventsManager {
 
         return event
     }
+
+    func passiveNavigationEvent(type: FreeDriveEventDetails.EventType) -> FreeDriveEventDetails? {
+        guard let dataSource = passiveNavigationDataSource else { return nil }
+
+        var event = FreeDriveEventDetails(type: type, dataSource: dataSource, sessionState: sessionState, appMetadata: userInfo)
+        event.event = NavigationEventTypeFreeDrive
+
+        return event
+    }
     
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
@@ -281,6 +296,18 @@ open class NavigationEventsManager {
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         guard let attributes = (try? navigationCancelEvent(rating: rating, comment: comment)?.asDictionary()) as [String: Any]?? else { return }
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes ?? [:])
+        mobileEventsManager.flush()
+    }
+
+    func sendPassiveNavigationStart() {
+        guard let attributes = (try? passiveNavigationEvent(type: .start)?.asDictionary()) as [String: Any]?? else { return }
+        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
+        mobileEventsManager.flush()
+    }
+
+    func sendPassiveNavigationStop() {
+        guard let attributes = (try? passiveNavigationEvent(type: .stop)?.asDictionary()) as [String: Any]?? else { return }
+        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
         mobileEventsManager.flush()
     }
     
