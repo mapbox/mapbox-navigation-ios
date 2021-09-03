@@ -190,7 +190,7 @@ class ViewController: UIViewController {
     }
     
     @objc func feedback(_ sender: Any) {
-        let feedbackViewController = FeedbackViewController(eventsManager: eventsManager)
+        let feedbackViewController = FeedbackViewController(eventsManager: eventsManager, type: .passiveNavigation)
         feedbackViewController.detailedFeedbackEnabled = true
         present(feedbackViewController, animated: true)
     }

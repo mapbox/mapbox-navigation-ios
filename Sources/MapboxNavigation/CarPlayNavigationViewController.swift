@@ -476,7 +476,7 @@ public class CarPlayNavigationViewController: UIViewController {
             guard let feedback = self.eventsManager.createFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
             guard let feedbackItem = foundItem.first else { return }
-            self.eventsManager.sendFeedback(feedback, type: feedbackItem.feedbackType)
+            self.eventsManager.sendFeedback(feedback, type: feedbackItem.type)
             
             let dismissTitle = NSLocalizedString("CARPLAY_DISMISS",
                                                  bundle: .mapboxNavigation,

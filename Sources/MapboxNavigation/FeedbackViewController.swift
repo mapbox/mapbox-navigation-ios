@@ -70,16 +70,10 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     static let contentInset: UIEdgeInsets = UIEdgeInsets(top: 12, left: 0, bottom: 12, right: 0)
     
     let interactor = Interactor()
-    /**
-     The feedback items that are visible and selectable by the user.
-     */
-    public var sections: [FeedbackItem] {
-        [FeedbackType.incorrectVisual(subtype: nil),
-         FeedbackType.confusingAudio(subtype: nil),
-         FeedbackType.illegalRoute(subtype: nil),
-         FeedbackType.roadClosure(subtype: nil),
-         FeedbackType.routeQuality(subtype: nil),
-         FeedbackType.positioning(subtype: nil)].map { $0.generateFeedbackItem() }
+    let type: FeedbackViewControllerType
+    
+    var sections: [FeedbackItem] {
+        type.feedbackItems
     }
 
     /**
@@ -138,8 +132,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     /**
      Initialize a new FeedbackViewController from a `NavigationEventsManager`.
      */
-    public init(eventsManager: NavigationEventsManager) {
+    public init(eventsManager: NavigationEventsManager, type: FeedbackViewControllerType = .activeNavigation) {
         self.eventsManager = eventsManager
+        self.type = type
         super.init(nibName: nil, bundle: nil)
         commonInit()
     }
@@ -150,6 +145,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     required public init?(coder aDecoder: NSCoder) {
         eventsManager = aDecoder.decodeObject(of: [NavigationEventsManager.self], forKey: "NavigationEventsManager") as? NavigationEventsManager
+        self.type = FeedbackViewControllerType.activeNavigation
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -242,16 +238,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     func send(_ item: FeedbackItem) {
         if let feedback = currentFeedback {
             delegate?.feedbackViewController(self, didSend: item, feedback: feedback)
-            eventsManager?.sendFeedback(feedback, type: item.feedbackType)
-        }
-        
-        guard let parent = presentingViewController else {
-            dismiss(animated: true)
-            return
-        }
-        
-        dismiss(animated: true) {
-            DialogViewController().present(on: parent)
+            eventsManager?.sendFeedback(feedback, type: item.type)
         }
     }
     
@@ -289,7 +276,7 @@ extension FeedbackViewController: UICollectionViewDelegate {
 
         if detailedFeedbackEnabled, let eventsManager = eventsManager, let feedback = currentFeedback {
             let feedbackViewController = FeedbackSubtypeViewController(eventsManager: eventsManager,
-                                                                       feedbackType: item.feedbackType,
+                                                                       feedbackType: item.type,
                                                                        feedback: feedback)
 
             guard let parent = presentingViewController else {
@@ -302,6 +289,15 @@ extension FeedbackViewController: UICollectionViewDelegate {
             }
         } else {
             send(item)
+            
+            guard let parent = presentingViewController else {
+                dismiss(animated: true)
+                return
+            }
+            
+            dismiss(animated: true) {
+                DialogViewController().present(on: parent)
+            }
         }
     }
 }
