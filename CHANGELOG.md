@@ -164,6 +164,7 @@
 * `NavigationViewController.mapTileStore` is now obtained from `NavigationSettings.tileStoreConfiguration`. ([#3215](https://github.com/mapbox/mapbox-navigation-ios/pull/3215))
 * Removed `tileStoreConfiguration` parameter from `NavigationMapView.enablePredictiveCaching(options:)` in favor of `NavigationSettings.tileStoreConfiguration`. ([#3215](https://github.com/mapbox/mapbox-navigation-ios/pull/3215))
 * Fixed an issue, which prevented the ability to change `UserPuckCourseView.puckColor` when changing system-wide appearance. ([#3306](https://github.com/mapbox/mapbox-navigation-ios/pull/3306))
+* `FeedbackViewController` now can be customized to show only feedback types specific to passive navigation. Pass `FeedbackViewControllerType` to the constructor of the feedback view controller to configure the available feedback categories. ([#3323](https://github.com/mapbox/mapbox-navigation-ios/pull/3323))
 
 ## v1.4.1
 
