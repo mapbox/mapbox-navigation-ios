@@ -242,7 +242,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     func send(_ item: FeedbackItem) {
         if let feedback = currentFeedback {
             delegate?.feedbackViewController(self, didSend: item, feedback: feedback)
-            eventsManager?.sendFeedback(feedback, type: item.feedbackType)
+            eventsManager?.sendActiveNavigationFeedback(feedback, type: item.feedbackType)
         }
         
         guard let parent = presentingViewController else {

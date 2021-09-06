@@ -360,8 +360,8 @@ open class NavigationEventsManager {
      - parameter type: A `FeedbackType` used to specify the type of feedback.
      - parameter description: A custom string used to describe the problem in detail.
      */
-    public func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
-        feedback.update(type: type.description, subtype: type.description, description: description)
+    public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
+        feedback.update(type: type.description, subtype: type.subtypeDescription, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }
     
@@ -377,7 +377,7 @@ open class NavigationEventsManager {
     public func sendPassiveNavigationFeedback(_ feedback: FeedbackEvent,
                                               type: PassiveNavigationFeedbackType,
                                               description: String? = nil) {
-        feedback.update(type: type.description, subtype: type.description, description: description)
+        feedback.update(type: type.description, subtype: type.subtypeDescription, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }
     

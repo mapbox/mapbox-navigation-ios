@@ -169,7 +169,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
             if let feedback = self.currentFeedback {
                 for item in selectedItems {
                     delegate?.feedbackViewController(self, didSend: item, feedback: feedback)
-                    eventsManager?.sendFeedback(feedback, type: item.feedbackType, description: nil)
+                    eventsManager?.sendActiveNavigationFeedback(feedback, type: item.feedbackType)
                 }
             }
 

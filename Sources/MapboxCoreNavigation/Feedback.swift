@@ -1,11 +1,11 @@
 import Foundation
 
 /**
- Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.sendFeedback(_:type:description:)`.
+ Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)`.
  */
 public enum FeedbackType: CustomStringConvertible {
 
-    /// Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.sendFeedback(_:type:description:)`
+    /// Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)`
     /// to elaborate on the feedback if possible.
     case general
 
