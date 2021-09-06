@@ -274,7 +274,8 @@ extension FeedbackViewController: UICollectionViewDelegate {
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = sections[indexPath.row]
 
-        if detailedFeedbackEnabled, let eventsManager = eventsManager, let feedback = currentFeedback {
+        if detailedFeedbackEnabled, let eventsManager = eventsManager, let feedback = currentFeedback,
+           FeedbackItem.subtypeItems(for: item.type).count > 0 {
             let feedbackViewController = FeedbackSubtypeViewController(eventsManager: eventsManager,
                                                                        feedbackType: item.type,
                                                                        feedback: feedback)
