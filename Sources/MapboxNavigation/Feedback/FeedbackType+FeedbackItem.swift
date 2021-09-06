@@ -110,6 +110,6 @@ public extension FeedbackType {
     /// Generates a `FeedbackItem` for a given `FeedbackType`
     /// - Returns: A `FeedbackItem` model object used to render UI
     func generateFeedbackItem() -> FeedbackItem {
-        return FeedbackItem(title: title, image: image, activeNavigationFeedbackType: self)
+        return FeedbackItem(title: title, image: image, feedbackType: .activeNavigation(self))
     }
 }

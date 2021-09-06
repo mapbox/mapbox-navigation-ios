@@ -58,6 +58,6 @@ extension PassiveNavigationFeedbackType {
     /// Generates a `FeedbackItem` for a given `PassiveNavigationFeedbackType`
     /// - Returns: A `FeedbackItem` model object used to render UI
     func generateFeedbackItem() -> FeedbackItem {
-        return FeedbackItem(title: title, image: image, passiveNavigationFeedbackType: self)
+        return FeedbackItem(title: title, image: image, feedbackType: .passiveNavigation(self))
     }
 }

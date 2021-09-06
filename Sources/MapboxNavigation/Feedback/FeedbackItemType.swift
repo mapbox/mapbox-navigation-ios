@@ -6,13 +6,12 @@ public enum FeedbackItemType: Equatable {
     
     public static func == (lhs: FeedbackItemType, rhs: FeedbackItemType) -> Bool {
         switch (lhs, rhs) {
-        case (.activeNavigation, .passiveNavigation),
-             (.passiveNavigation, .activeNavigation):
-            return false
         case (.activeNavigation(let leftType), .activeNavigation(let rightType)):
             return leftType.title == rightType.title
         case (.passiveNavigation(let leftType), .passiveNavigation(let rightType)):
             return leftType.title == rightType.title
+        default:
+            return false
         }
     }
     

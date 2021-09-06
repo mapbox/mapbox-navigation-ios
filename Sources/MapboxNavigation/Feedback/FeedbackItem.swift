@@ -21,21 +21,12 @@ public struct FeedbackItem {
     public var type: FeedbackItemType
     
     /**
-     Creates a new `FeedbackItem` from active navigation feedback.
+     Creates a new `FeedbackItem` from navigation feedback.
      */
-    public init(title: String, image: UIImage, activeNavigationFeedbackType: FeedbackType) {
+    public init(title: String, image: UIImage, feedbackType: FeedbackItemType) {
         self.title = title
         self.image = image
-        self.type = .activeNavigation(activeNavigationFeedbackType)
-    }
-    
-    /**
-     Creates a new `FeedbackItem` from passive navigation feedback.
-     */
-    public init(title: String, image: UIImage, passiveNavigationFeedbackType: PassiveNavigationFeedbackType) {
-        self.title = title
-        self.image = image
-        self.type = .passiveNavigation(passiveNavigationFeedbackType)
+        self.type = feedbackType
     }
     
     static func subtypeItems(for type: FeedbackItemType) -> [FeedbackItem] {
