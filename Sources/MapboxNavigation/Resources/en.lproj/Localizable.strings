@@ -139,6 +139,42 @@
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No rating set.";
 
+/* Specific route feedback that user positioning is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Bad GPS";
+
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Incorrect visual";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
+
+/* Specific route feedback for incorrect street name. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_STREET_NAME_INCORRECT" = "Street name incorrect";
+
+/* General category of feedback where there is an issue on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE" = "Road issue";
+
+/* Feedback that map shows a non-existant road. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_MISSING_ROAD" = "Missing road";
+
+/* Feedback that a street is permanently blocked off. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Street permanently blocked off";
+
+/* Feedback that a street is temporary blocked off. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARY_BLOCKED_OFF" = "Street temporary blocked off";
+
+/* Feedback that there is a congestion on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_CONGESTION" = "Congestion";
+
+/* Feedback that there is a moderate traffic on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_MODERATE" = "Moderate";
+
+/* Feedback that there is no traffic on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_NO_TRAFFIC" = "No traffic";
+
+/* General category of feedback where there is an issue on the road. */
+"PASSIVE_NAVIGATION_WRONG_TRAFFIC" = "Road issue";
+
 /* General category of route feedback where user position is incorrect. */
 "POSITIONING" = "Positioning";
 
