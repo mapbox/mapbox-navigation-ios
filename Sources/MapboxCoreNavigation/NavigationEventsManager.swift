@@ -55,10 +55,8 @@ open class NavigationEventsManager {
 
     private var backupPassiveDataSource: PassiveNavigationEventsManagerDataSource?
     private weak var _passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
-    private var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
-    {
+    private var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? {
         get {
-            return _activeNavigationDataSource ?? backupDataSource
             return _passiveNavigationDataSource ?? backupPassiveDataSource
         }
         set {
@@ -68,8 +66,7 @@ open class NavigationEventsManager {
 
     private var backupActiveDataSource: ActiveNavigationEventsManagerDataSource?
     private weak var _activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?
-    var activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?
-    {
+    var activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? {
         get {
             return _activeNavigationDataSource ?? backupActiveDataSource
         }
@@ -408,7 +405,7 @@ open class NavigationEventsManager {
      - parameter type: A `ActiveNavigationFeedbackType` used to specify the type of feedback.
      - parameter description: A custom string used to describe the problem in detail.
      */
-    public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
+    public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: ActiveNavigationFeedbackType, description: String? = nil) {
         feedback.update(type: type.typeKey, subtype: type.subtypeKey, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }
