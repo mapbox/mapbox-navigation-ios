@@ -3,7 +3,7 @@ import Foundation
 /**
  Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.sendPassiveNavigationFeedback(_:type:description:)`.
  */
-public enum PassiveNavigationFeedbackType: CustomStringConvertible {
+public enum PassiveNavigationFeedbackType {
     
     /// Indicates an incorrect visual.
     case incorrectVisual(subtype: PassiveNavigationIncorrectVisualSubtype?)
@@ -24,7 +24,7 @@ public enum PassiveNavigationFeedbackType: CustomStringConvertible {
     /// to elaborate on the feedback if possible.
     case other
     
-    public var description: String {
+    public var typeKey: String {
         switch self {
         case .incorrectVisual:
             return "incorrect_visual"
@@ -41,7 +41,7 @@ public enum PassiveNavigationFeedbackType: CustomStringConvertible {
         }
     }
     
-    public var subtypeDescription: String? {
+    public var subtypeKey: String? {
         switch self {
         case .incorrectVisual(subtype: .incorrectStreetName):
             return "street_name_incorrect"

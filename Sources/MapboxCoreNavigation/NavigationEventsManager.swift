@@ -361,7 +361,7 @@ open class NavigationEventsManager {
      - parameter description: A custom string used to describe the problem in detail.
      */
     public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
-        feedback.update(type: type.description, subtype: type.subtypeDescription, description: description)
+        feedback.update(type: type.typeKey, subtype: type.subtypeKey, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }
     
@@ -377,7 +377,7 @@ open class NavigationEventsManager {
     public func sendPassiveNavigationFeedback(_ feedback: FeedbackEvent,
                                               type: PassiveNavigationFeedbackType,
                                               description: String? = nil) {
-        feedback.update(type: type.description, subtype: type.subtypeDescription, description: description)
+        feedback.update(type: type.typeKey, subtype: type.subtypeKey, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }
     
