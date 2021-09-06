@@ -6,7 +6,11 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        // Test that classes are accessible
+        // and prevent comiler optimizations for unused imports.
+        _ = PassiveLocationManager()
+        _ = NavigationMapView(frame: .zero)
     }
 }
 
