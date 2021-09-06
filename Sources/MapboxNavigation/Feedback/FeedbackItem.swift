@@ -76,7 +76,7 @@ extension NavigationEventsManager {
     func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackItemType) {
         switch type {
         case .activeNavigation(let type):
-            sendFeedback(feedback, type: type)
+            sendActiveNavigationFeedback(feedback, type: type)
         case .passiveNavigation(let type):
             sendPassiveNavigationFeedback(feedback, type: type)
         }
