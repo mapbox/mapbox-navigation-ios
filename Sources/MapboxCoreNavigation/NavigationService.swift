@@ -35,7 +35,7 @@ public enum SimulationMode: Int {
  
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
-public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, EventsManagerDataSource {
+public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, ActiveNavigationEventsManagerDataSource {
     /**
      The location manager for the service. This will be the object responsible for notifying the service of GPS updates.
      */
@@ -536,7 +536,7 @@ extension MapboxNavigationService: RouterDelegate {
     }
 }
 
-//MARK: EventsManagerDataSource Logic
+//MARK: ActiveNavigationEventsManagerDataSource Logic
 extension MapboxNavigationService {
     public var routeProgress: RouteProgress {
         return router.routeProgress

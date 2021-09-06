@@ -43,7 +43,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var comment: String?
     var userIdentifier: String?
     var appMetadata: [String: String?]?
-    var feedbackType: FeedbackType?
+    var feedbackType: ActiveNavigationFeedbackType?
     var description: String?
     var screenshot: String?
     var secondsSinceLastReroute: TimeInterval?
@@ -55,7 +55,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
     var percentTimeInForeground: Int = 0
     var percentTimeInPortrait: Int = 0
     
-    init(dataSource: EventsManagerDataSource, session: SessionState, defaultInterface: Bool, appMetadata: [String: String?]? = nil) {
+    init(dataSource: ActiveNavigationEventsManagerDataSource, session: SessionState, defaultInterface: Bool, appMetadata: [String: String?]? = nil) {
         coordinate = dataSource.router.rawLocation?.coordinate
         startTimestamp = session.departureTimestamp
         sdkIdentifier = defaultInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"

@@ -1,7 +1,7 @@
 import MapboxCoreNavigation
 
 public enum FeedbackItemType: Equatable {
-    case activeNavigation(FeedbackType)
+    case activeNavigation(ActiveNavigationFeedbackType)
     case passiveNavigation(PassiveNavigationFeedbackType)
     
     public static func == (lhs: FeedbackItemType, rhs: FeedbackItemType) -> Bool {

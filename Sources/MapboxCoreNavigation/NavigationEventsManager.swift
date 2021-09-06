@@ -18,9 +18,9 @@ extension PassiveLocationManager: PassiveNavigationEventsManagerDataSource {
 }
 
 /**
- The `EventsManagerDataSource` protocol declares values required for recording route following events.
+ The `ActiveNavigationEventsManagerDataSource` protocol declares values required for recording route following events.
  */
-public protocol EventsManagerDataSource: AnyObject {
+public protocol ActiveNavigationEventsManagerDataSource: AnyObject {
     var routeProgress: RouteProgress { get }
     var router: Router { get }
     var desiredAccuracy: CLLocationAccuracy { get }
@@ -37,16 +37,16 @@ open class NavigationEventsManager {
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    func withBackupDataSource(_ forcedDataSource: EventsManagerDataSource, action: () -> Void) {
+    func withBackupDataSource(_ forcedDataSource: ActiveNavigationEventsManagerDataSource, action: () -> Void) {
         backupDataSource = forcedDataSource
         action()
         backupDataSource = nil
     }
     
-    private var backupDataSource: EventsManagerDataSource?
-    private weak var _activeNavigationDataSource: EventsManagerDataSource?
+    private var backupDataSource: ActiveNavigationEventsManagerDataSource?
+    private weak var _activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?
     private weak var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
-    var activeNavigationDataSource: EventsManagerDataSource?
+    var activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?
     {
         get {
             return _activeNavigationDataSource ?? backupDataSource
@@ -85,7 +85,7 @@ open class NavigationEventsManager {
         return token
     }()
     
-    public required init(activeNavigationDataSource: EventsManagerDataSource? = nil,
+    public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
                          passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
                          accessToken possibleToken: String? = nil,
                          mobileEventsManager: MMEEventsManager = .shared()) {
@@ -357,10 +357,10 @@ open class NavigationEventsManager {
      You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
      
      - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `FeedbackType` used to specify the type of feedback.
+     - parameter type: A `ActiveNavigationFeedbackType` used to specify the type of feedback.
      - parameter description: A custom string used to describe the problem in detail.
      */
-    public func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
+    public func sendFeedback(_ feedback: FeedbackEvent, type: ActiveNavigationFeedbackType, description: String? = nil) {
         feedback.update(type: type.description, subtype: type.description, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }

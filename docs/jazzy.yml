@@ -48,7 +48,8 @@ custom_categories:
       - VisualInstruction
       - VisualInstructionDelegate
       - NavigationEventsManager
-      - EventsManagerDataSource
+      - ActiveNavigationEventsManagerDataSource
+      - PassiveNavigationEventsManagerDataSource
       - NavigationLocationManager
       - ReplayLocationManager
       - SimulatedLocationManager
@@ -148,7 +149,8 @@ custom_categories:
       - FeedbackViewController
       - FeedbackViewControllerDelegate
       - FeedbackItem
-      - FeedbackType
+      - ActiveNavigationFeedbackType
+      - PassiveNavigationFeedbackType
       - IncorrectVisualSubtype
       - ConfusingAudioSubtype
       - RouteQualitySubtype

@@ -1,7 +1,7 @@
 import MapboxCoreNavigation
 import UIKit
 
-public extension FeedbackType {
+public extension ActiveNavigationFeedbackType {
 
     // TODO: Localize these strings
     var title: String {
@@ -107,7 +107,7 @@ public extension FeedbackType {
         return .feedbackImage(named: imageName)
     }
 
-    /// Generates a `FeedbackItem` for a given `FeedbackType`
+    /// Generates a `FeedbackItem` for a given `ActiveNavigationFeedbackType`
     /// - Returns: A `FeedbackItem` model object used to render UI
     func generateFeedbackItem() -> FeedbackItem {
         return FeedbackItem(title: title, image: image, feedbackType: .activeNavigation(self))
