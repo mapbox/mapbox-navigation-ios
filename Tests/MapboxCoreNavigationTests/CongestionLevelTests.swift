@@ -3,7 +3,7 @@ import XCTest
 
 class CongestionLevelTests: XCTestCase {
 
-    func testCongestionRangeDefaulValues() {
+    func testCongestionRangeDefaultValues() {
         CongestionRange.resetCongestionRangesToDefault()
     }
 }
