@@ -1,11 +1,11 @@
 import Foundation
 
 /**
- Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.sendFeedback(_:type:description:)`.
+ Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)`.
  */
-public enum FeedbackType: CustomStringConvertible {
+public enum FeedbackType {
 
-    /// Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.sendFeedback(_:type:description:)`
+    /// Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)`
     /// to elaborate on the feedback if possible.
     case general
 
@@ -28,7 +28,7 @@ public enum FeedbackType: CustomStringConvertible {
     case positioning(subtype: PositioningSubtype?)
 
     /// Description of the category for this type of feedback
-    public var description: String {
+    public var typeKey: String {
         switch self {
         case .general:
             return "general"
@@ -48,7 +48,7 @@ public enum FeedbackType: CustomStringConvertible {
     }
 
     /// Optional detailed description of the subtype of this feedback
-    public var subtypeDescription: String? {
+    public var subtypeKey: String? {
         switch self {
         case .incorrectVisual(subtype: .turnIconIncorrect):
             return "turn_icon_incorrect"

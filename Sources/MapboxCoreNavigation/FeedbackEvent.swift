@@ -2,7 +2,7 @@ import Foundation
 
 /**
  Feedback event that can be created using `NavigationEventsManager.createFeedback()`.
- Use `NavigationEventsManager.sendFeedback(_:type:description:)` to send it to the server.
+ Use `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)` to send it to the server.
  Conforms to the `Codable` protocol, so the application can store the event persistently.
  */
 public class FeedbackEvent: Codable {
