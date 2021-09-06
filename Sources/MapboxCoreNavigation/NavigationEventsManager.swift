@@ -3,17 +3,23 @@ import MapboxMobileEvents
 import MapboxDirections
 
 let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
+let NavigationEventTypeFreeDrive = "navigation.freeDrive"
 
 /**
  A data source that declares values required for recording passive location events.
  */
 public protocol PassiveNavigationEventsManagerDataSource: AnyObject {
     var rawLocation: CLLocation? { get }
+    var locationManagerType: NavigationLocationManager.Type { get }
 }
 
 extension PassiveLocationManager: PassiveNavigationEventsManagerDataSource {
     public var rawLocation: CLLocation? {
         return self.lastRawLocation
+    }
+
+    public var locationManagerType: NavigationLocationManager.Type {
+        return type(of: systemLocationManager)
     }
 }
 
@@ -37,19 +43,35 @@ open class NavigationEventsManager {
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
-    func withBackupDataSource(_ forcedDataSource: ActiveNavigationEventsManagerDataSource, action: () -> Void) {
-        backupDataSource = forcedDataSource
+    func withBackupDataSource(active forcedActiveDataSource: ActiveNavigationEventsManagerDataSource?,
+                              passive forcedPassiveDataSource: PassiveNavigationEventsManagerDataSource?,
+                              action: () -> Void) {
+        backupActiveDataSource = forcedActiveDataSource
+        backupPassiveDataSource = forcedPassiveDataSource
         action()
-        backupDataSource = nil
+        backupActiveDataSource = nil
+        backupPassiveDataSource = nil
     }
-    
-    private var backupDataSource: ActiveNavigationEventsManagerDataSource?
-    private weak var _activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?
-    private weak var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
-    var activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?
+
+    private var backupPassiveDataSource: PassiveNavigationEventsManagerDataSource?
+    private weak var _passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
+    private var passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?
     {
         get {
             return _activeNavigationDataSource ?? backupDataSource
+            return _passiveNavigationDataSource ?? backupPassiveDataSource
+        }
+        set {
+            _passiveNavigationDataSource = newValue
+        }
+    }
+
+    private var backupActiveDataSource: ActiveNavigationEventsManagerDataSource?
+    private weak var _activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?
+    var activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?
+    {
+        get {
+            return _activeNavigationDataSource ?? backupActiveDataSource
         }
         set {
             _activeNavigationDataSource = newValue
@@ -180,6 +202,15 @@ open class NavigationEventsManager {
 
         return event
     }
+
+    func passiveNavigationEvent(type: FreeDriveEventDetails.EventType) -> FreeDriveEventDetails? {
+        guard let dataSource = passiveNavigationDataSource else { return nil }
+
+        var event = FreeDriveEventDetails(type: type, dataSource: dataSource, sessionState: sessionState, appMetadata: userInfo)
+        event.event = NavigationEventTypeFreeDrive
+
+        return event
+    }
     
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
@@ -266,6 +297,23 @@ open class NavigationEventsManager {
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         guard let attributes = (try? navigationCancelEvent(rating: rating, comment: comment)?.asDictionary()) as [String: Any]?? else { return }
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes ?? [:])
+        mobileEventsManager.flush()
+    }
+
+    func sendPassiveNavigationStart() {
+        guard let dataSource = passiveNavigationDataSource else { return }
+        if sessionState.departureTimestamp == nil {
+            sessionState.departureTimestamp = dataSource.rawLocation?.timestamp ?? Date()
+        }
+
+        guard let attributes = (try? passiveNavigationEvent(type: .start)?.asDictionary()) as [String: Any]?? else { return }
+        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
+        mobileEventsManager.flush()
+    }
+
+    func sendPassiveNavigationStop() {
+        guard let attributes = (try? passiveNavigationEvent(type: .stop)?.asDictionary()) as [String: Any]?? else { return }
+        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
         mobileEventsManager.flush()
     }
     
@@ -360,8 +408,8 @@ open class NavigationEventsManager {
      - parameter type: A `ActiveNavigationFeedbackType` used to specify the type of feedback.
      - parameter description: A custom string used to describe the problem in detail.
      */
-    public func sendFeedback(_ feedback: FeedbackEvent, type: ActiveNavigationFeedbackType, description: String? = nil) {
-        feedback.update(type: type.description, subtype: type.description, description: description)
+    public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
+        feedback.update(type: type.typeKey, subtype: type.subtypeKey, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }
     
@@ -377,7 +425,7 @@ open class NavigationEventsManager {
     public func sendPassiveNavigationFeedback(_ feedback: FeedbackEvent,
                                               type: PassiveNavigationFeedbackType,
                                               description: String? = nil) {
-        feedback.update(type: type.description, subtype: type.description, description: description)
+        feedback.update(type: type.typeKey, subtype: type.subtypeKey, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }
     

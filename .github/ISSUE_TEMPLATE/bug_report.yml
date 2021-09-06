@@ -1,0 +1,45 @@
+name: Bug Report
+description: File a bug report
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Hello and thanks for contributing!
+
+        Before continuing, can you check if the answer is available within:
+
+        * Guides and examples - https://www.mapbox.com/ios-sdk/navigation/
+        * API reference - https://www.mapbox.com/mapbox-navigation-ios/navigation/
+        * The example app - https://github.com/mapbox/navigation-ios-examples
+        * Mapbox Directions for Swift - https://github.com/mapbox/mapbox-directions-swift
+        * Mapbox Maps SDK for iOS - https://github.com/mapbox/mapbox-maps-ios
+  - type: input
+    attributes:
+      label: "Mapbox Navigation SDK version"
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: dropdown
+    attributes:
+      label: "Is this a one-time issue or a repeatable issue?"
+      options:
+        - one-time
+        - repeatable
+    validations:
+      required: true

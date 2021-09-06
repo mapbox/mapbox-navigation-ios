@@ -58,7 +58,7 @@ struct PassiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(coordinate?.longitude, forKey: .longitude)
         try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
         try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
-        try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
+        try container.encodeIfPresent(feedbackType?.typeKey, forKey: .feedbackType)
         try container.encodeIfPresent(event, forKey: .event)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)

@@ -57,7 +57,7 @@ struct PerformanceEventDetails: EventDetails {
     }
 }
 
-protocol NavigationEventDetails: EventDetails {
+protocol GlobalEventDetails: EventDetails {
     var audioType: String { get }
     var applicationState: UIApplication.State { get }
     var batteryLevel: Int { get }
@@ -68,6 +68,13 @@ protocol NavigationEventDetails: EventDetails {
     var sdkVersion: String { get }
     var screenBrightness: Int { get }
     var volumeLevel: Int { get }
+    var percentTimeInPortrait: Int { get set }
+    var percentTimeInForeground: Int { get set }
+    var totalTimeInForeground: TimeInterval { get set }
+    var totalTimeInBackground: TimeInterval { get set }
+}
+
+protocol NavigationEventDetails: GlobalEventDetails {
     var screenshot: String? { get set }
     var feedbackType: ActiveNavigationFeedbackType? { get set }
     var description: String? { get set }
@@ -76,13 +83,9 @@ protocol NavigationEventDetails: EventDetails {
     var driverMode: String { get }
     var sessionIdentifier: String { get }
     var startTimestamp: Date? { get }
-    var percentTimeInPortrait: Int { get set }
-    var percentTimeInForeground: Int { get set }
-    var totalTimeInForeground: TimeInterval { get set }
-    var totalTimeInBackground: TimeInterval { get set }
 }
 
-extension NavigationEventDetails {
+extension GlobalEventDetails {
     var audioType: String { AVAudioSession.sharedInstance().audioType }
     var applicationState: UIApplication.State {
         if Thread.isMainThread {
@@ -104,7 +107,7 @@ extension NavigationEventDetails {
     }
     var screenBrightness: Int { Int(UIScreen.main.brightness * 100) }
     var volumeLevel: Int { Int(AVAudioSession.sharedInstance().outputVolume * 100) }
-    
+
     mutating func updateTimeState(session: SessionState) {
         var totalTimeInPortrait = session.timeSpentInPortrait
         var totalTimeInLandscape = session.timeSpentInLandscape

@@ -223,7 +223,7 @@ struct ActiveNavigationEventDetails: NavigationEventDetails {
         try container.encodeIfPresent(comment, forKey: .comment)
         try container.encodeIfPresent(userIdentifier, forKey: .userIdentifier)
         try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
-        try container.encodeIfPresent(feedbackType?.description, forKey: .feedbackType)
+        try container.encodeIfPresent(feedbackType?.typeKey, forKey: .feedbackType)
         try container.encodeIfPresent(description, forKey: .description)
         try container.encodeIfPresent(screenshot, forKey: .screenshot)
         try container.encodeIfPresent(secondsSinceLastReroute, forKey: .secondsSinceLastReroute)
