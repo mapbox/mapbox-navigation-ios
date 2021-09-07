@@ -179,18 +179,32 @@ extension NavigationMapView {
             return
         }
         
-        do {
-            try mapView.mapboxMap.style.updateLayer(withId: mainRouteLayerIdentifier) { (lineLayer: inout LineLayer) throws in
-                let mainRouteLayerGradient = self.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentLineGradientStops)
-                lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor))
+        let mainRouteLayerGradient = self.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentLineGradientStops)
+        let mainRouteLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor)
+        
+        if let data = try? JSONEncoder().encode(mainRouteLayerGradientExpression.self),
+           let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) {
+            do {
+                try mapView.mapboxMap.style.setLayerProperty(for: mainRouteLayerIdentifier,
+                                                             property: "line-gradient",
+                                                             value: jsonObject)
+            } catch {
+                print("Failed to update main route line layer.")
             }
-            
-            try mapView.mapboxMap.style.updateLayer(withId: mainRouteCasingLayerIdentifier) { (lineLayer: inout LineLayer) throws in
-                let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveled)
-                lineLayer.lineGradient = .expression(Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor))
+        }
+        
+        let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveled)
+        let mainRouteCasingLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor)
+        
+        if let data = try? JSONEncoder().encode(mainRouteCasingLayerGradientExpression.self),
+           let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) {
+            do {
+                try mapView.mapboxMap.style.setLayerProperty(for: mainRouteCasingLayerIdentifier,
+                                                             property: "line-gradient",
+                                                             value: jsonObject)
+            } catch {
+                print("Failed to update main route casing layer.")
             }
-        } catch {
-            print("Failed to update main route line layer.")
         }
         
         pendingCoordinateForRouteLine = coordinate
