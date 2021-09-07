@@ -24,9 +24,9 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
         }, profileIdentifier: profileIdentifier)
         includesAlternativeRoutes = true
         if profileIdentifier == .walking {
-            attributeOptions = [.congestionLevel, .expectedTravelTime]
+            attributeOptions = [.numericCongestionLevel, .expectedTravelTime]
         } else {
-            attributeOptions = [.congestionLevel, .expectedTravelTime, .maximumSpeedLimit]
+            attributeOptions = [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit]
         }
         includesExitRoundaboutManeuver = true
         if profileIdentifier == .automobileAvoidingTraffic {
@@ -85,7 +85,7 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
             $0.coordinateAccuracy = -1
             return $0
         }, profileIdentifier: profileIdentifier)
-        attributeOptions = [.congestionLevel, .expectedTravelTime]
+        attributeOptions = [.numericCongestionLevel, .expectedTravelTime]
         if profileIdentifier == .automobile || profileIdentifier == .automobileAvoidingTraffic {
             attributeOptions.insert(.maximumSpeedLimit)
         }
