@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     var trackStyledFeature: StyledFeature!
     var rawTrackStyledFeature: StyledFeature!
     var speedLimitView: SpeedLimitView!
-    var passiveLocationManager: PassiveLocationManager!
+    weak var passiveLocationManager: PassiveLocationManager?
     
     var currentEdgeIdentifier: RoadGraph.Edge.Identifier?
     var nextEdgeIdentifier: RoadGraph.Edge.Identifier?
@@ -190,7 +190,10 @@ class ViewController: UIViewController {
     }
     
     @objc func feedback(_ sender: Any) {
-        let feedbackViewController = FeedbackViewController(eventsManager: passiveLocationManager.eventsManager, type: .passiveNavigation)
+        guard let passiveNavigationEventsManager = passiveLocationManager?.eventsManager else {
+            assertionFailure("Not in Passive Navigation"); return
+        }
+        let feedbackViewController = FeedbackViewController(eventsManager: passiveNavigationEventsManager, type: .passiveNavigation)
         feedbackViewController.detailedFeedbackEnabled = true
         present(feedbackViewController, animated: true)
     }
