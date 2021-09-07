@@ -250,7 +250,37 @@ class MapViewTests: XCTestCase {
         mapView.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
         assert(roadLabelProperty: "name_en", placeLabelProperty: "name_zh")
         
+        // https://github.com/mapbox/mapbox-maps-ios/issues/655
         expect { mapView.localizeLabels(into: Locale(identifier: "tlh")) }
             .to(throwAssertion(), description: "Localization into Klingon should not be supported. 🖖")
+    }
+    
+    func testPreferredMapboxStreetsLocale() {
+        // https://github.com/mapbox/mapbox-maps-ios/issues/653
+        XCTAssertNil(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "mul")),
+                     "Local language not yet implemented.")
+        
+        XCTAssertEqual(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "es")),
+                       Locale(identifier: "es"),
+                       "Exact match should be supported.")
+        
+        XCTAssertEqual(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "en-US")),
+                       Locale(identifier: "en"),
+                       "Extraneous region codes should be removed.")
+        XCTAssertEqual(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "en-Latn")),
+                       Locale(identifier: "en"),
+                       "Extraneous script codes should be removed.")
+        
+        XCTAssertEqual(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "zh-Hans-CN")),
+                       Locale(identifier: "zh-Hans"),
+                       "Extraneous region codes should be removed.")
+        XCTAssertEqual(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "zh-Hant-HK")),
+                       Locale(identifier: "zh-Hant"),
+                       "Extraneous region codes should be removed.")
+        
+        XCTAssertNil(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "frm")),
+                     "Middle French not supported despite sharing prefix with French.")
+        XCTAssertNil(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "tlh")),
+                     "Klingon not yet implemented. 🖖")
     }
 }
