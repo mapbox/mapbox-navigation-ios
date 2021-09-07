@@ -146,6 +146,7 @@ class ViewController: UIViewController {
         
         navigationMapView.delegate = self
         navigationMapView.userLocationStyle = .puck2D()
+        navigationMapView.mapView.mapboxMap.loadStyleURI(.navigationDay)
         
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()
