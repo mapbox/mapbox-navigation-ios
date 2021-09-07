@@ -66,7 +66,7 @@ open class DayStyle: Style {
     public required init() {
         super.init()
         
-        mapStyleURL = MapboxMaps.Style.navigationDayStyleURL
+        mapStyleURL = URL(string: StyleURI.navigationDay.rawValue)!
         previewMapStyleURL = mapStyleURL
         styleType = .day
         statusBarStyle = .default
