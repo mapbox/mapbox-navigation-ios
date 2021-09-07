@@ -1351,8 +1351,15 @@ open class NavigationMapView: UIView {
     
     // MARK: - Road labels localization methods
     
+    /**
+     Attempts to localize labels into the system’s preferred language.
+     
+     This method automatically modifies the `SymbolLayer.textField` property of any symbol style layer whose source is the <a href="https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#overview">Mapbox Streets source</a>. The user can set the system’s preferred language in Settings, General Settings, Language & Region.
+     
+     This method avoids localizing road labels into the system’s preferred language, in an effort to match road signage. The turn banner always displays road names and exit destinations in the local language. If this `NavigationMapView` stands alone outside a `NavigationViewController`, you should call the `MapboxMap.onEvery(_:handler:)` on `mapView`, passing in `MapEvents.EventKind.styleLoaded`, and call this method inside the closure. The map view embedded in `NavigationViewController` is localized automatically, so you do not need to call this method on the value of `NavigationViewController.navigationMapView`.
+     */
     public func localizeLabels() {
-        // TODO: Implement ability to localize road labels.
+        mapView.localizeLabels(into: .nationalizedCurrent)
     }
     
     // MARK: - Route voice instructions methods

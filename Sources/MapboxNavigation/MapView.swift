@@ -45,7 +45,7 @@ extension MapView {
     }
     
     /**
-     Returns a set of source identifiers for tilesets that are or include the Mapbox Incidents source.
+     Returns a set of source identifiers for tilesets that are or include the given source.
      
      - parameter tileSetIdentifier: Identifier of the tile set in the form `user.tileset`.
      - returns: Set of source identifiers.
@@ -197,5 +197,28 @@ extension MapView {
             let identifiers = tileSetIdentifiers($0.id, sourceType: $0.type.rawValue)
             return VectorSource.isMapboxStreets(identifiers)
         }
+    }
+    
+    /**
+     Attempts to localize road labels into the local language and other labels into the given locale.
+     */
+    func localizeLabels(into locale: Locale) {
+        guard !ResourceOptionsManager.hasChinaBaseURL,
+              let mapboxStreetsSource = streetsSources().first else { return }
+        
+        let streetsSourceTilesetIdentifiers = tileSetIdentifiers(mapboxStreetsSource.id)
+        let roadLabelSourceLayerIdentifier = streetsSourceTilesetIdentifiers.compactMap { VectorSource.roadLabelLayerIdentifiersByTileSetIdentifier[$0]
+        }.first
+        
+        let style = mapboxMap.style
+        let localizableLayerIdentifiers = style.allLayerIdentifiers.lazy
+            .filter { $0.type == .symbol }
+            // We only know how to localize layers backed by the Mapbox Streets source.
+            .filter { style.layerProperty(for: $0.id, property: "source") as? String == mapboxStreetsSource.id }
+            // Road labels should match road signage, so they should not be localized.
+            // TODO: Actively delocalize road labels into the “name” property: https://github.com/mapbox/mapbox-maps-ios/issues/653
+            .filter { style.layerProperty(for: $0.id, property: "source-layer") as? String != roadLabelSourceLayerIdentifier }
+            .map { $0.id }
+        try? style.localizeLabels(into: locale, forLayerIds: Array(localizableLayerIdentifiers))
     }
 }

@@ -1,4 +1,5 @@
 import XCTest
+import Nimble
 import MapboxMaps
 @testable import MapboxNavigation
 
@@ -136,5 +137,120 @@ class MapViewTests: XCTestCase {
         XCTAssertFalse(mapView.showsIncidents, "Incidents should not be shown by default.")
         mapView.showsIncidents = false
         XCTAssertFalse(mapView.showsIncidents, "Incidents should not be shown after change.")
+    }
+    
+    func testLocalizingLabels() {
+        let resourceOptions = ResourceOptions(accessToken: "")
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+        
+        let styleJSONObject: [String: Any] = [
+            "version": 8,
+            "center": [
+                -122.385563, 37.763330
+            ],
+            "zoom": 15,
+            "sources": [
+                "composite": [
+                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
+                    "type": "vector",
+                ]
+            ],
+            "layers": [
+                [
+                    "id": "road-labels",
+                    "type": "symbol",
+                    "source": "composite",
+                    "source-layer": "road",
+                    "layout": [
+                        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]],
+                    ],
+                ],
+                [
+                    "id": "place-labels",
+                    "type": "symbol",
+                    "source": "composite",
+                    "source-layer": "place",
+                    "layout": [
+                        "text-field": ["coalesce", ["get", "name_en"], ["get", "name"]],
+                    ],
+                ],
+            ],
+        ]
+        
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+        
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        
+        mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
+            mapLoadingErrorExpectation.fulfill()
+        })
+        
+        mapView.mapboxMap.loadStyleJSON(styleJSON)
+        
+        wait(for: [mapLoadingErrorExpectation], timeout: 10.0)
+        
+        let style = mapView.mapboxMap.style
+        XCTAssertEqual(style.allSourceIdentifiers.count, 1)
+        XCTAssertEqual(style.allLayerIdentifiers.count, 2)
+        
+        func textFieldExpression(layerIdentifier: String) -> Exp? {
+            let expressionArray = style.layerProperty(for: layerIdentifier, property: "text-field")
+            
+            var expressionData: Data? = nil
+            XCTAssertNoThrow(expressionData = try JSONSerialization.data(withJSONObject: expressionArray, options: []))
+            guard expressionData != nil else { return nil }
+            
+            var expression: Exp? = nil
+            XCTAssertNoThrow(expression = try JSONDecoder().decode(Exp.self, from: expressionData!))
+            return expression
+        }
+        
+        XCTAssertEqual(textFieldExpression(layerIdentifier: "road-labels"),
+                       Exp(.format) {
+                        Exp(.coalesce) { Exp(.get) { "name_en" }; Exp(.get) { "name" } }
+                        FormatOptions()
+                       },
+                       "Road labels should be in English by default.")
+        XCTAssertEqual(textFieldExpression(layerIdentifier: "place-labels"),
+                       Exp(.format) {
+                        Exp(.coalesce) { Exp(.get) { "name_en" }; Exp(.get) { "name" } }
+                        FormatOptions()
+                       },
+                       "Place labels should be in English by default.")
+        
+        func assert(roadLabelProperty: String, placeLabelProperty: String) {
+            // TODO: Unlocalize road labels: https://github.com/mapbox/mapbox-maps-ios/issues/653
+            XCTAssertEqual(textFieldExpression(layerIdentifier: "road-labels"),
+                           Exp(.format) {
+                            Exp(.coalesce) { Exp(.get) { roadLabelProperty }; Exp(.get) { "name" } }
+                            FormatOptions()
+                           },
+                           "Road labels should remain in English after localization.")
+            
+            XCTAssertEqual(textFieldExpression(layerIdentifier: "place-labels"),
+                           Exp(.format) {
+                            Exp(.coalesce) { Exp(.get) { placeLabelProperty }; Exp(.get) { "name" } }
+                            FormatOptions()
+                           },
+                           "Place labels should be localized after localization.")
+        }
+        
+        mapView.localizeLabels(into: Locale(identifier: "en"))
+        assert(roadLabelProperty: "name_en", placeLabelProperty: "name_en")
+        
+        mapView.localizeLabels(into: Locale(identifier: "es"))
+        assert(roadLabelProperty: "name_en", placeLabelProperty: "name_es")
+        
+        mapView.localizeLabels(into: Locale(identifier: "zh-Hant-TW"))
+        assert(roadLabelProperty: "name_en", placeLabelProperty: "name_zh-Hant")
+        
+        // Simplified Chinese is broken: https://github.com/mapbox/mapbox-maps-ios/issues/652
+        mapView.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
+        assert(roadLabelProperty: "name_en", placeLabelProperty: "name_zh")
+        
+        expect { mapView.localizeLabels(into: Locale(identifier: "tlh")) }
+            .to(throwAssertion(), description: "Localization into Klingon should not be supported. 🖖")
     }
 }
