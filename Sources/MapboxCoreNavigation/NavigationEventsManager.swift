@@ -399,7 +399,7 @@ open class NavigationEventsManager {
     }
     
     /**
-     Send feedback to the Mapbox data team.
+     Send active navigation feedback to the Mapbox data team.
      
      You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
      
@@ -407,8 +407,24 @@ open class NavigationEventsManager {
      - parameter type: A `FeedbackType` used to specify the type of feedback.
      - parameter description: A custom string used to describe the problem in detail.
      */
-    public func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
-        feedback.update(type: type, source: .user, description: description)
+    public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: FeedbackType, description: String? = nil) {
+        feedback.update(with: type, description: description)
+        sendFeedbackEvents([feedback.coreEvent])
+    }
+    
+    /**
+     Send passive navigation feedback to the Mapbox data team.
+     
+     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
+     
+     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
+     - parameter type: A `PassiveNavigationFeedbackType` used to specify the type of feedback.
+     - parameter description: A custom string used to describe the problem in detail.
+     */
+    public func sendPassiveNavigationFeedback(_ feedback: FeedbackEvent,
+                                              type: PassiveNavigationFeedbackType,
+                                              description: String? = nil) {
+        feedback.update(with: type, description: description)
         sendFeedbackEvents([feedback.coreEvent])
     }
     

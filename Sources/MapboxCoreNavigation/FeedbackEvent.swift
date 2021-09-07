@@ -2,7 +2,7 @@ import Foundation
 
 /**
  Feedback event that can be created using `NavigationEventsManager.createFeedback()`.
- Use `NavigationEventsManager.sendFeedback(_:type:description:)` to send it to the server.
+ Use `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)` to send it to the server.
  Conforms to the `Codable` protocol, so the application can store the event persistently.
  */
 public class FeedbackEvent: Codable {
@@ -14,12 +14,12 @@ public class FeedbackEvent: Codable {
         coreEvent = CoreFeedbackEvent(timestamp: Date(), eventDictionary: dictionary ?? [:])
     }
     
-    func update(type: FeedbackType, source: FeedbackSource, description: String?) {
+    func update(with type: FeedbackTypeProtocol, source: FeedbackSource = .user, description: String?) {
         let feedbackSubTypeKey = "feedbackSubType"
-        coreEvent.eventDictionary["feedbackType"] = type.description
+        coreEvent.eventDictionary["feedbackType"] = type.typeKey
 
         // if there is a subtype for this event then append the subtype description to our list for this type of feedback
-        if let subtypeDescription = type.subtypeDescription {
+        if let subtypeDescription = type.subtypeKey {
             var subtypeList = [String]()
             if let existingSubtypeList = coreEvent.eventDictionary[feedbackSubTypeKey] as? [String] {
                 subtypeList.append(contentsOf: existingSubtypeList)
