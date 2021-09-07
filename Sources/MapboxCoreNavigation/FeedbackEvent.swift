@@ -14,7 +14,7 @@ public class FeedbackEvent: Codable {
         coreEvent = CoreFeedbackEvent(timestamp: Date(), eventDictionary: dictionary ?? [:])
     }
     
-    func update(with type: FeedbackTypeProtocol, source: FeedbackSource = .user, description: String?) {
+    func update(with type: FeedbackType, source: FeedbackSource = .user, description: String?) {
         let feedbackSubTypeKey = "feedbackSubType"
         coreEvent.eventDictionary["feedbackType"] = type.typeKey
 

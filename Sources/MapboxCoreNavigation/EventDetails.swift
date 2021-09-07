@@ -76,7 +76,7 @@ protocol GlobalEventDetails: EventDetails {
 
 protocol NavigationEventDetails: GlobalEventDetails {
     var screenshot: String? { get set }
-    var feedbackType: FeedbackType? { get set }
+    var feedbackType: ActiveNavigationFeedbackType? { get set }
     var description: String? { get set }
     var userIdentifier: String? { get set }
     var appMetadata: [String:String?]? { get set }

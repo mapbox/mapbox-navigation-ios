@@ -24,7 +24,7 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         super.init(activeNavigationDataSource: nil, accessToken: "fake token", mobileEventsManager: mobileEventsManagerSpy)
     }
     
-    required convenience init(activeNavigationDataSource: EventsManagerDataSource? = nil,
+    required convenience init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
                   passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
                   accessToken possibleToken: String? = nil,
                   mobileEventsManager: MMEEventsManager = .shared()) {

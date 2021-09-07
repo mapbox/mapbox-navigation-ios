@@ -32,7 +32,7 @@ public struct FeedbackItem {
     static func subtypeItems(for type: FeedbackItemType) -> [FeedbackItem] {
         switch type {
         case .activeNavigation(let type):
-            let subtypes: [FeedbackType]
+            let subtypes: [ActiveNavigationFeedbackType]
             switch type {
             case .general:
                 subtypes = []
