@@ -3,7 +3,7 @@ import Foundation
 /**
  Feedback type is used to specify the type of feedback being recorded with `NavigationEventsManager.sendPassiveNavigationFeedback(_:type:description:)`.
  */
-public enum PassiveNavigationFeedbackType {
+public enum PassiveNavigationFeedbackType: FeedbackTypeProtocol {
     
     /// Indicates an incorrect visual.
     case incorrectVisual(subtype: PassiveNavigationIncorrectVisualSubtype?)

@@ -14,12 +14,12 @@ public class FeedbackEvent: Codable {
         coreEvent = CoreFeedbackEvent(timestamp: Date(), eventDictionary: dictionary ?? [:])
     }
     
-    func update(type: String, subtype: String?, source: FeedbackSource = .user, description: String?) {
+    func update(with type: FeedbackTypeProtocol, source: FeedbackSource = .user, description: String?) {
         let feedbackSubTypeKey = "feedbackSubType"
-        coreEvent.eventDictionary["feedbackType"] = type
+        coreEvent.eventDictionary["feedbackType"] = type.typeKey
 
         // if there is a subtype for this event then append the subtype description to our list for this type of feedback
-        if let subtypeDescription = subtype {
+        if let subtypeDescription = type.subtypeKey {
             var subtypeList = [String]()
             if let existingSubtypeList = coreEvent.eventDictionary[feedbackSubTypeKey] as? [String] {
                 subtypeList.append(contentsOf: existingSubtypeList)
