@@ -67,11 +67,6 @@ public struct FeedbackItem {
     }
 }
 
-public struct FeedbackSubtypeItem {
-    public var item: FeedbackItem
-    public var subtype: String?
-}
-
 extension NavigationEventsManager {
     func sendFeedback(_ feedback: FeedbackEvent, type: FeedbackItemType) {
         switch type {
