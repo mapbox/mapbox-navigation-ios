@@ -19,12 +19,12 @@ extension URLSession {
             guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier else { return nil }
             var stringForShortVersion: String? {
                 switch name {
-                case "MapboxNavigation":
+                case "MapboxNavigation_MapboxNavigation":
                     return Bundle.string(forMapboxNavigationInfoDictionaryKey: "CFBundleShortVersionString")
-                case "MapboxCoreNavigation":
+                case "MapboxNavigation_MapboxCoreNavigation":
                     return Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString")
                 default:
-                    return bundle?.object(forInfoDictionaryKey:"CFBundleShortVersionString") as? String
+                    return bundle?.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
                 }
             }
             guard let version = stringForShortVersion else { return nil }
