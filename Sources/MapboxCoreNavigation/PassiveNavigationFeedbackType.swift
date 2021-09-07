@@ -72,7 +72,7 @@ public enum PassiveNavigationFeedbackType: FeedbackTypeProtocol {
 }
 
 /// Enum denoting the subtypes of the  `Incorrect Visual` top-level category.
-public enum PassiveNavigationIncorrectVisualSubtype {
+public enum PassiveNavigationIncorrectVisualSubtype: CaseIterable {
     /// The name of the street that appears for the driver on the map is incorrect.
     case incorrectStreetName
     
@@ -81,7 +81,7 @@ public enum PassiveNavigationIncorrectVisualSubtype {
 }
 
 /// Enum denoting the subtypes of the  `Road Issue` top-level category.
-public enum PassiveNavigationRoadIssueSubtype {
+public enum PassiveNavigationRoadIssueSubtype: CaseIterable {
     /// The map data is incorrect, the certain piece must be excluded from routing because user won’t be ever able to follow any route based on that piece .
     case streetPermanentlyBlockedOff
     
@@ -93,7 +93,7 @@ public enum PassiveNavigationRoadIssueSubtype {
 }
 
 /// Enum denoting the subtypes of the  `Wrong Traffic` top-level category.
-public enum PassiveNavigationWrongTrafficSubtype {
+public enum PassiveNavigationWrongTrafficSubtype: CaseIterable {
     /// The traffic displayed on the map is not reflecting the actual congestion of the road.
     case congestion
     

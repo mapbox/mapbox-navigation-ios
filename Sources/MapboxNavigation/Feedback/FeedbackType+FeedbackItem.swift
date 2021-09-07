@@ -1,16 +1,10 @@
-import UIKit
 import MapboxCoreNavigation
-
-extension UIImage {
-    fileprivate class func feedbackImage(named: String) -> UIImage {
-        return Bundle.mapboxNavigation.image(named: named)!
-    }
-}
+import UIKit
 
 public extension FeedbackType {
 
     // TODO: Localize these strings
-    internal var title: String {
+    var title: String {
         switch self {
         case .general:
             return "Feedback"
@@ -90,7 +84,7 @@ public extension FeedbackType {
     }
 
     /// Provides the image name for a given feedback type
-    internal var image: UIImage {
+    var image: UIImage {
         var imageName = ""
 
         switch self {
@@ -116,40 +110,6 @@ public extension FeedbackType {
     /// Generates a `FeedbackItem` for a given `FeedbackType`
     /// - Returns: A `FeedbackItem` model object used to render UI
     func generateFeedbackItem() -> FeedbackItem {
-        return FeedbackItem(title: self.title, image: self.image, feedbackType: self)
+        return FeedbackItem(title: title, image: image, feedbackType: .activeNavigation(self))
     }
-}
-
-/**
- A single feedback item displayed on an instance of `FeedbackViewController`.
- */
-public struct FeedbackItem {
-    /**
-     The title of feedback item. This will be rendered directly below the image.
-     */
-    public var title: String
-    
-    /**
-     An image representation of the feedback.
-     */
-    public var image: UIImage
-    
-    /**
-     The type of feedback that best describes the event.
-     */
-    public var feedbackType: FeedbackType
-    
-    /**
-     Creates a new `FeedbackItem`.
-     */
-    public init(title: String, image: UIImage, feedbackType: FeedbackType) {
-        self.title = title
-        self.image = image
-        self.feedbackType = feedbackType
-    }
-}
-
-public struct FeedbackSubtypeItem {
-    public var item: FeedbackItem
-    public var subtype: String?
 }

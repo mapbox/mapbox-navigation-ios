@@ -3,7 +3,7 @@ import MapboxCoreNavigation
 
 class FeedbackSubtypeViewController: FeedbackViewController {
 
-    var activeFeedbackType: FeedbackType?
+    var currentFeedbackType: FeedbackItemType?
 
     private let reportButtonContainer = UIView()
     private let reportButtonSeparator = UIView()
@@ -14,9 +14,9 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     /**
      Initialize a new FeedbackSubtypeViewController from a `NavigationEventsManager`.
      */
-    init(eventsManager: NavigationEventsManager, feedbackType: FeedbackType, feedback: FeedbackEvent) {
+    init(eventsManager: NavigationEventsManager, feedbackType: FeedbackItemType, feedback: FeedbackEvent) {
         super.init(eventsManager: eventsManager)
-        activeFeedbackType = feedbackType
+        currentFeedbackType = feedbackType
         currentFeedback = feedback
         reportButton.setBackgroundImage(UIImage(color: #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1)), for: .normal)
         reportButton.layer.cornerRadius = 24
@@ -44,48 +44,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     }
 
     override var sections: [FeedbackItem] {
-        get {
-            guard let activeFeedbackType = activeFeedbackType else { return [] }
-            switch activeFeedbackType {
-            case .general:
-                return []
-            case .incorrectVisual(_):
-                return [FeedbackType.incorrectVisual(subtype: .turnIconIncorrect),
-                        FeedbackType.incorrectVisual(subtype: .streetNameIncorrect),
-                        FeedbackType.incorrectVisual(subtype: .instructionUnnecessary),
-                        FeedbackType.incorrectVisual(subtype: .instructionMissing),
-                        FeedbackType.incorrectVisual(subtype: .maneuverIncorrect),
-                        FeedbackType.incorrectVisual(subtype: .exitInfoIncorrect),
-                        FeedbackType.incorrectVisual(subtype: .laneGuidanceIncorrect),
-                        FeedbackType.incorrectVisual(subtype: .roadKnownByDifferentName),
-                        FeedbackType.incorrectVisual(subtype: .incorrectSpeedLimit),
-                        FeedbackType.incorrectVisual(subtype: .other)].map { $0.generateFeedbackItem() }
-            case .confusingAudio(_):
-                return [FeedbackType.confusingAudio(subtype: .guidanceTooEarly),
-                        FeedbackType.confusingAudio(subtype: .guidanceTooLate),
-                        FeedbackType.confusingAudio(subtype: .pronunciationIncorrect),
-                        FeedbackType.confusingAudio(subtype: .roadNameRepeated),
-                        FeedbackType.confusingAudio(subtype: .other)].map { $0.generateFeedbackItem() }
-            case .routeQuality(_):
-                return [FeedbackType.routeQuality(subtype: .routeNonDrivable),
-                        FeedbackType.routeQuality(subtype: .routeNotPreferred),
-                        FeedbackType.routeQuality(subtype: .alternativeRouteNotExpected),
-                        FeedbackType.routeQuality(subtype: .routeIncludedMissingRoads),
-                        FeedbackType.routeQuality(subtype: .other)].map { $0.generateFeedbackItem() }
-            case .illegalRoute(_):
-                return [FeedbackType.illegalRoute(subtype: .routedDownAOneWay),
-                        FeedbackType.illegalRoute(subtype: .turnWasNotAllowed),
-                        FeedbackType.illegalRoute(subtype: .carsNotAllowedOnStreet),
-                        FeedbackType.illegalRoute(subtype: .turnAtIntersectionUnprotected),
-                        FeedbackType.illegalRoute(subtype: .other)].map { $0.generateFeedbackItem() }
-            case .roadClosure(_):
-                return [FeedbackType.roadClosure(subtype: .streetPermanentlyBlockedOff),
-                        FeedbackType.roadClosure(subtype: .roadMissingFromMap),
-                        FeedbackType.roadClosure(subtype: .other)].map { $0.generateFeedbackItem() }
-            case .positioning(_):
-                return [FeedbackType.positioning(subtype: .userPosition)].map { $0.generateFeedbackItem() }
-            }
-        }
+        currentFeedbackType.flatMap { FeedbackItem.subtypeItems(for: $0) } ?? []
     }
 
     override var draggableHeight: CGFloat {
@@ -149,7 +108,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
         let item = sections[indexPath.row]
         selectedItems.removeAll { existingItem -> Bool in
-            return existingItem.feedbackType.title == item.feedbackType.title
+            return existingItem.type == item.type
         }
 
         updateButtonTitle()
@@ -166,11 +125,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     private func sendReport() {
         if selectedItems.count > 0 {
-            if let feedback = self.currentFeedback {
-                for item in selectedItems {
-                    delegate?.feedbackViewController(self, didSend: item, feedback: feedback)
-                    eventsManager?.sendActiveNavigationFeedback(feedback, type: item.feedbackType)
-                }
+            for item in selectedItems {
+                send(item)
             }
 
             guard let parent = presentingViewController else {

@@ -119,7 +119,7 @@ public enum FeedbackType: FeedbackTypeProtocol {
 }
 
 /// Enum denoting the subtypes of the  `Incorrect Visual` top-level category
-public enum IncorrectVisualSubtype: String {
+public enum IncorrectVisualSubtype: String, CaseIterable {
     case turnIconIncorrect
     case streetNameIncorrect
     case instructionUnnecessary
@@ -133,7 +133,7 @@ public enum IncorrectVisualSubtype: String {
 }
 
 /// Enum denoting the subtypes of the  `Confusing Audio` top-level category
-public enum ConfusingAudioSubtype: String {
+public enum ConfusingAudioSubtype: String, CaseIterable {
     case guidanceTooEarly
     case guidanceTooLate
     case pronunciationIncorrect
@@ -142,7 +142,7 @@ public enum ConfusingAudioSubtype: String {
 }
 
 /// Enum denoting the subtypes of the  `Route Quality` top-level category
-public enum RouteQualitySubtype: String {
+public enum RouteQualitySubtype: String, CaseIterable {
     case routeNonDrivable
     case routeNotPreferred
     case alternativeRouteNotExpected
@@ -152,7 +152,7 @@ public enum RouteQualitySubtype: String {
 }
 
 /// Enum denoting the subtypes of the  `Illegal Route` top-level category
-public enum IllegalRouteSubtype: String {
+public enum IllegalRouteSubtype: String, CaseIterable {
     case routedDownAOneWay
     case turnWasNotAllowed
     case carsNotAllowedOnStreet
@@ -161,13 +161,13 @@ public enum IllegalRouteSubtype: String {
 }
 
 /// Enum denoting the subtypes of the  `Road Closure` top-level category
-public enum RoadClosureSubtype: String {
+public enum RoadClosureSubtype: String, CaseIterable {
     case streetPermanentlyBlockedOff
     case roadMissingFromMap
     case other
 }
 
-public enum PositioningSubtype: String {
+public enum PositioningSubtype: String, CaseIterable {
     case userPosition
 }
 
