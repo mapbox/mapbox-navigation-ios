@@ -115,12 +115,24 @@ public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
 
 //MARK: - Congestion level default ranges
 
+/**
+ Default range that matches `NumericCongestionLevel` values into `CongestionLevel.low` bucket.
+ */
 public let CongestionRangeLow: CongestionRange = 0..<40
 
+/**
+ Default range that matches `NumericCongestionLevel` values into `CongestionLevel.moderate` bucket.
+ */
 public let CongestionRangeModerate: CongestionRange = 40..<60
 
+/**
+ Default range that matches `NumericCongestionLevel` values into `CongestionLevel.heavy` bucket.
+ */
 public let CongestionRangeHeavy: CongestionRange = 60..<80
 
+/**
+ Default range that matches `NumericCongestionLevel` values into `CongestionLevel.severe` bucket.
+ */
 public let CongestionRangeSevere: CongestionRange = 80..<101
 
 public extension Notification.Name {
