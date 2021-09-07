@@ -28,7 +28,7 @@ extension PassiveNavigationFeedbackType {
         case .roadIssue(subtype: .none):
             return NSLocalizedString("PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE", bundle: .mapboxNavigation, value: "Road issue", comment: "General category of feedback where there is an issue on the road.")
         case .wrongTraffic(subtype: .none):
-            return NSLocalizedString("PASSIVE_NAVIGATION_WRONG_TRAFFIC", bundle: .mapboxNavigation, value: "Road issue", comment: "General category of feedback where there is an issue on the road.")
+            return NSLocalizedString("PASSIVE_NAVIGATION_WRONG_TRAFFIC", bundle: .mapboxNavigation, value: "Wrong traffic", comment: "General category of feedback where there is a wrong traffic.")
         case .other:
             return "Other"
         case .custom:

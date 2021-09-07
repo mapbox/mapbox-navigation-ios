@@ -172,8 +172,8 @@
 /* Feedback that there is no traffic on the road. */
 "PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_NO_TRAFFIC" = "No traffic";
 
-/* General category of feedback where there is an issue on the road. */
-"PASSIVE_NAVIGATION_WRONG_TRAFFIC" = "Road issue";
+/* General category of feedback where there is a wrong traffic. */
+"PASSIVE_NAVIGATION_WRONG_TRAFFIC" = "Wrong traffic";
 
 /* General category of route feedback where user position is incorrect. */
 "POSITIONING" = "Positioning";
