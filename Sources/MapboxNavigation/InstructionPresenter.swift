@@ -28,7 +28,10 @@ class InstructionPresenter {
     private let instruction: VisualInstruction
     private weak var dataSource: DataSource?
 
-    required init(_ instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository = .shared, downloadCompletion: ShieldDownloadCompletion?) {
+    required init(_ instruction: VisualInstruction,
+                  dataSource: DataSource,
+                  imageRepository: ImageRepository = .shared,
+                  downloadCompletion: ShieldDownloadCompletion?) {
         self.instruction = instruction
         self.dataSource = dataSource
         self.imageRepository = imageRepository
@@ -43,16 +46,20 @@ class InstructionPresenter {
     private let imageRepository: ImageRepository
     
     func attributedText() -> NSAttributedString {
-        guard let source = self.dataSource else {
+        guard let source = self.dataSource,
+              let attributedTextRepresentation = self.attributedTextRepresentation(of: instruction,
+                                                                                   dataSource: source,
+                                                                                   imageRepository: imageRepository,
+                                                                                   onImageDownload: completeShieldDownload).mutableCopy() as? NSMutableAttributedString else {
             return NSAttributedString()
         }
-        
-        let attributedTextRepresentation = self.attributedTextRepresentation(of: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload).mutableCopy() as! NSMutableAttributedString
         
         // Collect abbreviation priorities embedded in the attributed text representation.
         let wholeRange = NSRange(location: 0, length: attributedTextRepresentation.length)
         var priorities = IndexSet()
-        attributedTextRepresentation.enumerateAttribute(.abbreviationPriority, in: wholeRange, options: .longestEffectiveRangeNotRequired) { (priority, range, stop) in
+        attributedTextRepresentation.enumerateAttribute(.abbreviationPriority,
+                                                        in: wholeRange,
+                                                        options: .longestEffectiveRangeNotRequired) { (priority, range, stop) in
             if let priority = priority as? Int {
                 priorities.insert(priority)
             }
@@ -68,10 +75,14 @@ class InstructionPresenter {
             
             // Look for substrings with the current abbreviation priority and replace them with the embedded abbreviations.
             let wholeRange = NSRange(location: 0, length: attributedTextRepresentation.length)
-            attributedTextRepresentation.enumerateAttribute(.abbreviationPriority, in: wholeRange, options: []) { (priority, range, stop) in
+            attributedTextRepresentation.enumerateAttribute(.abbreviationPriority,
+                                                            in: wholeRange,
+                                                            options: []) { (priority, range, stop) in
                 var abbreviationRange = range
                 if priority as? Int == currentPriority,
-                   let abbreviation = attributedTextRepresentation.attribute(.abbreviation, at: range.location, effectiveRange: &abbreviationRange) as? String {
+                   let abbreviation = attributedTextRepresentation.attribute(.abbreviation,
+                                                                             at: range.location,
+                                                                             effectiveRange: &abbreviationRange) as? String {
                     assert(abbreviationRange == range, "Abbreviation and abbreviation priority should be applied to the same effective range.")
                     attributedTextRepresentation.replaceCharacters(in: abbreviationRange, with: abbreviation)
                 }
@@ -81,7 +92,10 @@ class InstructionPresenter {
         return attributedTextRepresentation
     }
     
-    func attributedTextRepresentation(of instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString {
+    func attributedTextRepresentation(of instruction: VisualInstruction,
+                                      dataSource: DataSource,
+                                      imageRepository: ImageRepository,
+                                      onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString {
         var components = instruction.components
         
         let isShield: (_ key: VisualInstruction.Component?) -> Bool = { (component) in
@@ -122,7 +136,11 @@ class InstructionPresenter {
                 return attributedString
             case .image(let image, let alternativeText):
                 // Ideally represent the image component as a shield image.
-                return self.attributedString(forShieldComponent: image, repository: imageRepository, dataSource: dataSource, cacheKey: component.cacheKey!, onImageDownload: onImageDownload)
+                return self.attributedString(forShieldComponent: image,
+                                             repository: imageRepository,
+                                             dataSource: dataSource,
+                                             cacheKey: component.cacheKey!,
+                                             onImageDownload: onImageDownload)
                     // Fall back to a generic shield if no shield image is available.
                     ?? genericShield(text: alternativeText.text, dataSource: dataSource, cacheKey: component.cacheKey!)
                     // Finally, fall back to a plain text representation if the generic shield couldn’t be rendered.
@@ -143,24 +161,28 @@ class InstructionPresenter {
         return attributedTextRepresentations.joined(separator: separator)
     }
     
-    func attributedString(forShieldComponent shield: VisualInstruction.Component.ImageRepresentation, repository:ImageRepository, dataSource: DataSource, cacheKey: String, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
-        //If we have the shield already cached, use that.
+    func attributedString(forShieldComponent shield: VisualInstruction.Component.ImageRepresentation,
+                          repository: ImageRepository,
+                          dataSource: DataSource,
+                          cacheKey: String,
+                          onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
         if let cachedImage = repository.cachedImageForKey(cacheKey) {
             return attributedString(withFont: dataSource.font, shieldImage: cachedImage)
         }
         
-        // Let's download the shield
         shieldImageForComponent(representation: shield, in: repository, cacheKey: cacheKey, completion: onImageDownload)
         
-        //Return nothing in the meantime, triggering downstream behavior (generic shield or text)
+        // Return nothing in the meantime, triggering downstream behavior (generic shield or text).
         return nil
     }
     
-    
-    private func shieldImageForComponent(representation: VisualInstruction.Component.ImageRepresentation, in repository: ImageRepository, cacheKey: String, completion: @escaping ImageDownloadCompletion) {
+    private func shieldImageForComponent(representation: VisualInstruction.Component.ImageRepresentation,
+                                         in repository: ImageRepository,
+                                         cacheKey: String,
+                                         completion: @escaping ImageDownloadCompletion) {
         guard let imageURL = representation.imageURL(scale: VisualInstruction.Component.scale, format: .png) else { return }
         
-        repository.imageWithURL(imageURL, cacheKey: cacheKey, completion: completion )
+        repository.imageWithURL(imageURL, cacheKey: cacheKey, completion: completion)
     }
 
     private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
@@ -179,7 +201,8 @@ class InstructionPresenter {
             attachment.image = image
         } else {
             let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
-            view.foregroundColor = dataSource.textColor
+            view.foregroundColor = GenericRouteShield.appearance().foregroundColor
+            view.borderWidth = GenericRouteShield.appearance().borderWidth
             guard let image = takeSnapshot(on: view) else { return nil }
             imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
@@ -212,7 +235,7 @@ class InstructionPresenter {
     
     private func completeShieldDownload(_ image: UIImage?) {
         guard image != nil else { return }
-        //We *must* be on main thread here, because attributedText() looks at object properties only accessible on main thread.
+        // We *must* be on main thread here, because attributedText() looks at object properties only accessible on main thread.
         DispatchQueue.main.async {
             self.onShieldDownload?(self.attributedText()) //FIXME: Can we work with the image directly?
         }
@@ -247,9 +270,15 @@ class ImageInstruction: NSTextAttachment, ImagePresenter {
     var font: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
     var text: String?
     
-    override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+    override func attachmentBounds(for textContainer: NSTextContainer?,
+                                   proposedLineFragment lineFrag: CGRect,
+                                   glyphPosition position: CGPoint,
+                                   characterIndex charIndex: Int) -> CGRect {
         guard let image = image else {
-            return super.attachmentBounds(for: textContainer, proposedLineFragment: lineFrag, glyphPosition: position, characterIndex: charIndex)
+            return super.attachmentBounds(for: textContainer,
+                                          proposedLineFragment: lineFrag,
+                                          glyphPosition: position,
+                                          characterIndex: charIndex)
         }
         let yOrigin = (font.capHeight - image.size.height).rounded() / 2
         return CGRect(x: 0, y: yOrigin, width: image.size.width, height: image.size.height)
@@ -260,9 +289,3 @@ class TextInstruction: ImageInstruction {}
 class ShieldAttachment: ImageInstruction {}
 class GenericShieldAttachment: ShieldAttachment {}
 class ExitAttachment: ImageInstruction {}
-
-extension CGSize {
-    fileprivate static func +(lhs: CGSize, rhs: CGSize) -> CGSize {
-        return CGSize(width: lhs.width + rhs.width, height: lhs.height +  rhs.height)
-    }
-}
