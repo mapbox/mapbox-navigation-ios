@@ -37,7 +37,7 @@ extension PassiveNavigationFeedbackType {
     }
     
     var image: UIImage {
-        var imageName = ""
+        let imageName: String
 
         switch self {
         case .badGPS:

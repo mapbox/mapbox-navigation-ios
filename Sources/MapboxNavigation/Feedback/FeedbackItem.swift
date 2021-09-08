@@ -34,10 +34,8 @@ public struct FeedbackItem {
         case .activeNavigation(let type):
             let subtypes: [ActiveNavigationFeedbackType]
             switch type {
-            case .general:
-                subtypes = []
-            case .incorrectVisual:
-                subtypes = IncorrectVisualSubtype.allCases.map { .incorrectVisual(subtype: $0) }
+            case .looksIncorrect:
+                subtypes = LooksIncorrectSubtype.allCases.map { .looksIncorrect(subtype: $0) }
             case .confusingAudio:
                 subtypes = ConfusingAudioSubtype.allCases.map { .confusingAudio(subtype: $0) }
             case .routeQuality:
@@ -46,8 +44,8 @@ public struct FeedbackItem {
                 subtypes = IllegalRouteSubtype.allCases.map { .illegalRoute(subtype: $0) }
             case .roadClosure:
                 subtypes = RoadClosureSubtype.allCases.map { .roadClosure(subtype: $0) }
-            case .positioning:
-                subtypes = PositioningSubtype.allCases.map { .positioning(subtype: $0) }
+            case .positioning, .custom, .other:
+                subtypes = []
             }
             return subtypes.map { $0.generateFeedbackItem() }
         case .passiveNavigation(let type):
