@@ -204,7 +204,7 @@ extension NavigationMapView {
     }
     
     func updateRouteLineGradientStops(fractionTraveled: Double, gradientStops: [Double: UIColor]) -> [Double: UIColor] {
-        // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply it's color to the `fractionTraveled` stop.
+        // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply its color to the `fractionTraveled` stop.
         var minimumSegment: (Double, UIColor) = (0.0, trafficUnknownColor)
         var filteredGradientStops = [Double: UIColor]()
         
@@ -232,8 +232,8 @@ extension NavigationMapView {
         
         if let congestionFeatures = congestionFeatures {
             let routeDistance = congestionFeatures.compactMap({ ($0.geometry.value as? LineString)?.distance() }).reduce(0, +)
-            // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply it's color to the `fractionTraveled` stop.
-            var minimumSegment: (Double, UIColor) = (0.0, .clear)
+            // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply its color to the `fractionTraveled` stop.
+            var minimumSegment: (Double, UIColor) = isMain ? (0.0, .trafficUnknown) : (0.0, .alternativeTrafficUnknown)
 
             for (index, feature) in congestionFeatures.enumerated() {
                 var associatedFeatureColor = routeCasingColor

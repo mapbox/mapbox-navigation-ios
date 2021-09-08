@@ -392,9 +392,9 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
     }
     
-    func testUpdateSoftRouteLineGradient() {
+    func testSoftRouteLineGradient() {
         let route = loadRoute(from: "route-with-road-classes-single-congestion")
-        let congestions = route.congestionFeatures()
+        var congestions = route.congestionFeatures()
         var fractionTraveled = 0.0
         var lineGradient = navigationMapView.routeLineGradient(congestions, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
         XCTAssertEqual(2, lineGradient.keys.count)
@@ -416,6 +416,13 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficSevereColor)
         XCTAssertEqual(lineGradient[0.305], navigationMapView.trafficModerateColor)
+        
+        congestions = [Turf.Feature]()
+        lineGradient = navigationMapView.routeLineGradient(congestions, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
+        XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficUnknownColor)
+        
     }
     
     func testUpdateRouteLineGradient() {
