@@ -15,7 +15,7 @@
 * MapboxNavigation now depends on MapboxNavigationNative v65.0.1. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
 * MapboxNavigation now depends on MapboxCommon v17.1.0. ([#3297](https://github.com/mapbox/mapbox-navigation-ios/pull/3297))
 * MapboxNavigation now depends on MapboxMobileEvents v1.0.3. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
-* MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.9. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
+* MapboxCoreNavigation depends on MapboxDirections v2.0.0-rc.1. ([#3325](https://github.com/mapbox/mapbox-navigation-ios/pull/3325))
 * MapboxCoreNavigation no longer depends on MapboxAccounts. ([#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829))
 * MapboxNavigation now depends on Turf v2.0.0-rc.1. ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
 * MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
