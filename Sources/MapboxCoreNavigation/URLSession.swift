@@ -26,19 +26,34 @@ extension URLSession {
 
         let bundleComponents = bundles.compactMap { (bundle) -> String? in
             guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier else { return nil }
+            
+            let defaultMapboxNavigationBundleName = "MapboxNavigation"
+            let defaultMapboxCoreNavigationBundleName = "MapboxCoreNavigation"
+            
+            #if SWIFT_PACKAGE
+            let mapboxNavigationName = "MapboxNavigation_MapboxNavigation"
+            #else
+            let mapboxNavigationName = defaultMapboxNavigationBundleName
+            #endif
+
+            #if SWIFT_PACKAGE
+            let mapboxCoreNavigationName = "MapboxNavigation_MapboxCoreNavigation"
+            #else
+            let mapboxCoreNavigationName = defaultMapboxCoreNavigationBundleName
+            #endif
+            
+            var bundleName: String {
+                switch name {
+                case mapboxNavigationName:
+                    return defaultMapboxNavigationBundleName
+                case mapboxCoreNavigationName:
+                    return defaultMapboxCoreNavigationBundleName
+                default:
+                    return name
+                }
+            }
+            
             var stringForShortVersion: String? {
-                #if SWIFT_PACKAGE
-                let mapboxNavigationName = "MapboxNavigation_MapboxNavigation"
-                #else
-                let mapboxNavigationName = "MapboxNavigation"
-                #endif
-
-                #if SWIFT_PACKAGE
-                let mapboxCoreNavigationName = "MapboxNavigation_MapboxCoreNavigation"
-                #else
-                let mapboxCoreNavigationName = "MapboxCoreNavigation"
-                #endif
-
                 switch name {
                 case mapboxNavigationName:
                     return Bundle.string(forMapboxNavigationInfoDictionaryKey: "CFBundleShortVersionString")
@@ -49,7 +64,7 @@ extension URLSession {
                 }
             }
             guard let version = stringForShortVersion else { return nil }
-            return "\(name)/\(version)"
+            return "\(bundleName)/\(version)"
         }
 
         let system: String
