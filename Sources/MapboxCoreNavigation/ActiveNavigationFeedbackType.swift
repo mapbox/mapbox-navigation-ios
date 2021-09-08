@@ -5,7 +5,7 @@ import Foundation
  */
 public enum ActiveNavigationFeedbackType: FeedbackType {
 
-    /// Indicates an incorrect visual.
+    /// Indicates an incorrect visual instruction or other user interface issue.
     case looksIncorrect(subtype: LooksIncorrectSubtype?)
 
     /// Indicates confusing voice instruction.
