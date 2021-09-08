@@ -2,6 +2,11 @@
 
 ## v2.0.0
 
+### Pricing
+
+* New per trip pricing option. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide ([#3147](https://github.com/mapbox/mapbox-navigation-ios/pull/3147))
+* `MBXNavigationBillingMethod` is no longer supported. ([#3147](https://github.com/mapbox/mapbox-navigation-ios/pull/3147))
+
 ### Packaging
 
 * The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))

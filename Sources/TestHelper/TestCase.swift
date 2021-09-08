@@ -1,13 +1,15 @@
 import Foundation
 import XCTest
-import MapboxDirections
-import MapboxCoreNavigation
+@testable import MapboxDirections
+@testable import MapboxCoreNavigation
 #if canImport(MapboxMaps)
 import MapboxMaps
 #endif
 
 /// Base Mapbox XCTestCase class with common setup logic
 open class TestCase: XCTestCase {
+    public var billingServiceMock: BillingServiceMock!
+
     /// Inidicates whether one time initialization completed in ``initializeIfNeeded`` method.
     private static var isInitializationCompleted: Bool = false
 
@@ -19,6 +21,8 @@ open class TestCase: XCTestCase {
     open override func setUp() {
         super.setUp()
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
+        billingServiceMock = .init()
+        BillingHandler.__replaceSharedInstance(with: BillingHandler.__createMockedHandler(with: billingServiceMock))
     }
 
     /// Prepares tests for execution. Should be called once before any test runs.

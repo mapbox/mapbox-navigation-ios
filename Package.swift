@@ -11,7 +11,6 @@ let package = Package(
         .library(
             name: "MapboxCoreNavigation",
             targets: [
-                "CMapboxCoreNavigation",
                 "MapboxCoreNavigation",
             ]
         ),
@@ -38,14 +37,12 @@ let package = Package(
         .target(
             name: "MapboxCoreNavigation",
             dependencies: [
-                "CMapboxCoreNavigation",
                 "MapboxDirections",
                 "MapboxMobileEvents",
                 "MapboxNavigationNative",
             ],
             exclude: ["Info.plist"],
             resources: [.copy("MBXInfo.plist")]),
-        .target(name: "CMapboxCoreNavigation"),
         .target(
             name: "MapboxNavigation",
             dependencies: [

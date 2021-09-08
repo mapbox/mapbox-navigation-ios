@@ -225,8 +225,13 @@ public class CarPlayManager: NSObject {
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D,
                                            navigationService: NavigationService) {
         // Stop the background `PassiveLocationProvider` sending location and heading update `mapView` before turn-by-turn navigation session starts.
-        navigationMapView?.mapView.location.locationProvider.stopUpdatingLocation()
-        navigationMapView?.mapView.location.locationProvider.stopUpdatingHeading()
+        if let locationProvider = navigationMapView?.mapView.location.locationProvider {
+            locationProvider.stopUpdatingLocation()
+            locationProvider.stopUpdatingHeading()
+            if let passiveLocationProvider = locationProvider as? PassiveLocationProvider {
+                passiveLocationProvider.locationManager.pauseTripSession()
+            }
+        }
         
         var trip = CPTrip(routeResponse: navigationService.indexedRouteResponse.routeResponse)
         trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
@@ -690,6 +695,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.removeRoutes()
         navigationMapView.removeWaypoints()
+        if let passiveLocationProvider = navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider {
+            passiveLocationProvider.locationManager.resumeTripSession()
+        }
         delegate?.carPlayManagerDidEndNavigation(self)
     }
     
@@ -832,6 +840,9 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         interfaceController.setRootTemplate(mapTemplate, animated: true)
         popToRootTemplate(interfaceController: interfaceController, animated: true)
 
+        if let passiveLocationProvider = navigationMapView?.mapView.location.locationProvider as? PassiveLocationProvider {
+            passiveLocationProvider.locationManager.resumeTripSession()
+        }
         delegate?.carPlayManagerDidEndNavigation(self)
     }
     

@@ -1,31 +1,43 @@
 import XCTest
 import TestHelper
-import MapboxCoreNavigation
+@testable import MapboxCoreNavigation
 import MapboxDirections
 import MapboxSpeech
 import MapboxNavigation
+import MapboxCommon_Private
 
 class SKUTests: TestCase {
-    
-    // Billing per monthly active user (MAU), the default, corresponds to `MBXAccountsSKUID.navigationUser`.
-    
     func testDirectionsSKU() {
+        let expected: String = UUID().uuidString
+        billingServiceMock.onGetSKUTokenIfValid = { _ in
+            expected
+        }
+        XCTAssertEqual(Directions.skuToken, "")
+        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: .init())
         let directionsSkuToken = Directions.skuToken
         
-        XCTAssertNotNil(directionsSkuToken)
-        
-        XCTAssertEqual(directionsSkuToken?.skuId, SkuID.navigationUser.rawValue)
+        XCTAssertEqual(directionsSkuToken, expected)
     }
     
     func testSpeechSynthesizerSKU() {
+        let expected: String = UUID().uuidString
+
+        billingServiceMock.onGetSKUTokenIfValid = { _ in
+            expected
+        }
+        XCTAssertEqual(Directions.skuToken, "")
+        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: .init())
+
         let speechSkuToken = SpeechSynthesizer.skuToken
         
-        XCTAssertNotNil(speechSkuToken)
-        
-        XCTAssertEqual(speechSkuToken?.skuId, SkuID.navigationUser.rawValue)
+        XCTAssertEqual(speechSkuToken, expected)
     }
 
-    func disabled_testSKUTokensMatch() {
+    func testSKUTokensMatch() {
+        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: .init())
+        let skuToken = TokenGenerator.getSKUToken(for: .nav2SesTrip)
+        billingServiceMock.onGetSKUTokenIfValid = { _ in skuToken }
+
         let viewController = TokenTestViewController()
         let tokenExpectation = XCTestExpectation(description: "All tokens should be fetched")
         viewController.tokenExpectation = tokenExpectation
@@ -34,8 +46,9 @@ class SKUTests: TestCase {
 
         wait(for: [tokenExpectation], timeout: 5)
 
-        XCTAssertEqual(viewController.mapViewToken?.skuId, SkuID.navigationUser.rawValue)
-        XCTAssertEqual(viewController.mapViewToken, viewController.directionsToken)
-        XCTAssertEqual(viewController.mapViewToken, viewController.speechSynthesizerToken)
+        XCTAssertNotEqual(viewController.mapViewToken, viewController.directionsToken)
+        XCTAssertNotEqual(viewController.mapViewToken, viewController.speechSynthesizerToken)
+        XCTAssertEqual(viewController.speechSynthesizerToken, skuToken)
+        XCTAssertEqual(viewController.directionsToken, skuToken)
     }
 }

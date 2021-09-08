@@ -24,6 +24,10 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  To be informed of significant events and decision points as the user progresses along the route, set the `NavigationService.delegate` property of the `NavigationService` that you provide when creating the navigation options.
  
  `CarPlayNavigationViewController` manages the corresponding user interface on a CarPlay screen.
+
+ - important: Creating an instance of this type with parameters that uses `RouteController` with will start an Active
+ Guidance session. The trip session is stopped when the instance is deallocated. For more info read the
+ [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
  */
 open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData {
     /**
