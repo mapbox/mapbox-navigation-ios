@@ -40,6 +40,7 @@ enum BillingServiceError: Error {
 /// Protocol for `BillingServiceNative` implementation. Inversing the dependency on `BillingServiceNative` allows us
 /// to unit test our implementation.
 protocol BillingService {
+    var accessToken: String { get }
     func getSKUTokenIfValid(for sessionType: BillingHandler.SessionType) -> String
     func beginBillingSession(for sessionType: BillingHandler.SessionType,
                              onError: @escaping (BillingServiceError) -> Void)
@@ -54,7 +55,8 @@ protocol BillingService {
 /// Implementation of `BillingService` protocol which uses `BillingServiceNative`.
 private final class ProductionBillingService: BillingService {
     /// Mapbox access token which will be included in the billing requests.
-    private let accessToken: String
+    let accessToken: String
+
     /// The User Agent string which will be included in the billing requests.
     private let userAgent: String
     /// `SKUIdentifier` which is used for navigation MAU billing events.
@@ -240,6 +242,11 @@ final class BillingHandler {
         }
 
         return ""
+    }
+
+    /// Access token that matches `BillingHandler.serviceSkuToken`.
+    var serviceAccessToken: String {
+        billingService.accessToken
     }
 
     private init(service: BillingService) {

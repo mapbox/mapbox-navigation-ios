@@ -30,6 +30,7 @@ public final class BillingServiceMock: BillingService {
     private var _sessionStates: [BillingHandler.SessionType: BillingHandler.SessionState] = [:]
     private var _events: [Event] = []
 
+    public var accessToken: String = .mockedAccessToken
     public var onBeginBillingSession: ((_ sessionType: BillingHandler.SessionType,
                                         _ callback: @escaping (BillingServiceError) -> Void) -> Void)?
     public var onGetSKUTokenIfValid: ((_ sessionType: BillingHandler.SessionType) -> String)?
