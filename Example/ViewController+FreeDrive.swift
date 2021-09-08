@@ -104,7 +104,7 @@ extension ViewController {
             var layer = LineLayer(id: styledFeature.layerIdentifier)
             layer.source = styledFeature.sourceIdentifier
             layer.lineWidth = .constant(styledFeature.lineWidth)
-            layer.lineColor = .constant(.init(color: styledFeature.color))
+            layer.lineColor = .constant(.init(styledFeature.color))
             try style.addLayer(layer)
         } catch {
             NSLog("Failed to perform operation with error: \(error.localizedDescription).")

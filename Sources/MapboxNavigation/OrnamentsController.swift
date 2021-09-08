@@ -217,7 +217,7 @@ extension NavigationMapView {
                 streetLabelLayer.sourceLayer = sourceLayerIdentifier
                 streetLabelLayer.lineOpacity = .constant(1.0)
                 streetLabelLayer.lineWidth = .constant(20.0)
-                streetLabelLayer.lineColor = .constant(.init(color: .white))
+                streetLabelLayer.lineColor = .constant(.init(.white))
                 
                 if ![DirectionsProfileIdentifier.walking, DirectionsProfileIdentifier.cycling].contains(router.routeProgress.routeOptions.profileIdentifier) {
                     // Filter out to road classes valid only for motor transport.
@@ -265,14 +265,14 @@ extension NavigationMapView {
                     guard let self = self else { return }
                     
                     var smallestLabelDistance = Double.infinity
-                    var latestFeature: MapboxCommon.Feature?
+                    var latestFeature: Turf.Feature?
                     
                     var minimumEditDistance = Int.max
-                    var similarFeature: MapboxCommon.Feature?
+                    var similarFeature: Turf.Feature?
 
                     for queriedFeature in queriedFeatures {
                         // Calculate the Levenshtein–Damerau edit distance between the road name from status and the feature property road name, and then use the smallest one for the road label.
-                        if let roadName = queriedFeature.feature.properties["name"] as? String,
+                        if let roadName = queriedFeature.feature?.properties?["name"] as? String,
                            let roadNameFromStatus = self.roadNameFromStatus {
                             let stringEditDistance = roadNameFromStatus.minimumEditDistance(to: roadName)
                             if stringEditDistance < minimumEditDistance {
@@ -285,12 +285,12 @@ extension NavigationMapView {
 
                         var lineStrings: [LineString] = []
                         
-                        if queriedFeature.feature.geometry.geometryType == GeometryType_Line,
-                           let coordinates = queriedFeature.feature.geometry.extractLocationsArray() as? [CLLocationCoordinate2D] {
-                            lineStrings.append(LineString(coordinates))
-                        } else if queriedFeature.feature.geometry.geometryType == GeometryType_MultiLine,
-                                  let coordinates = queriedFeature.feature.geometry.extractLocations2DArray() as? [[CLLocationCoordinate2D]] {
-                            for coordinates in coordinates {
+                        if queriedFeature.feature?.geometry.type == .LineString,
+                           let lineString = queriedFeature.feature?.geometry.value as? LineString {
+                            lineStrings.append(lineString)
+                        } else if queriedFeature.feature?.geometry.type == .MultiLineString,
+                                  let multiLineString = queriedFeature.feature?.geometry.value as? MultiLineString {
+                            for coordinates in multiLineString.coordinates {
                                 lineStrings.append(LineString(coordinates))
                             }
                         }
@@ -312,7 +312,7 @@ extension NavigationMapView {
                     }
                     
                     var hideWayName = true
-                    if latestFeature != similarFeature {
+                    if latestFeature?.featureIdentifier != similarFeature?.featureIdentifier {
                         let style = self.navigationMapView.mapView.mapboxMap.style
                         if let similarFeature = similarFeature,
                            self.navigationView.wayNameView.setupWith(feature: similarFeature,
