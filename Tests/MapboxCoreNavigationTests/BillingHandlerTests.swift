@@ -620,4 +620,10 @@ final class BillingHandlerUnitTests: TestCase {
                                     routeOptions: newRouteOptions)
         billingServiceMock.assertEvents(expectedEvents)
     }
+
+    func testServiceAccessToken() {
+        let expectedAccessToken = UUID().uuidString
+        billingServiceMock.accessToken = expectedAccessToken
+        XCTAssertEqual(Accounts.serviceAccessToken, expectedAccessToken)
+    }
 }
