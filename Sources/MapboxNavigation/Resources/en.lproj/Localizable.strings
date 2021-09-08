@@ -223,9 +223,6 @@
 /* Specifc route feedback that route contained road that is permanently closed. */
 "ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Street permanently blocked off";
 
-/* Specifc route feedback that route contained road not shown on map. */
-"ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK" = "Road missing from map";
-
 /* Specific route feedback that route contained impassible, narrow roads. */
 "ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Route had roads too narrow to pass";
 

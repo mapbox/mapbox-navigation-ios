@@ -60,8 +60,6 @@ public extension ActiveNavigationFeedbackType {
             return NSLocalizedString("ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK", bundle: .mapboxNavigation, value: "Road closure", comment: "General route feedback that route contained closed road.")
         case .roadClosure(.streetPermanentlyBlockedOff):
             return NSLocalizedString("ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK", bundle: .mapboxNavigation, value: "Street permanently blocked off", comment: "Specifc route feedback that route contained road that is permanently closed.")
-        case .roadClosure(.roadMissingFromMap):
-            return NSLocalizedString("ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK", bundle: .mapboxNavigation, value: "Road missing from map", comment: "Specifc route feedback that route contained road not shown on map.")
         case .positioning:
             return NSLocalizedString("POSITIONING", bundle: .mapboxNavigation, value: "Positioning", comment: "General category of route feedback where user position is incorrect.")
         case .custom:

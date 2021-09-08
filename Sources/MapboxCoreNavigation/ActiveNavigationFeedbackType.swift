@@ -19,7 +19,7 @@ public enum ActiveNavigationFeedbackType: FeedbackType {
 
     /// Indicates a road closure was observed.
     case roadClosure(subtype: RoadClosureSubtype?)
-    
+
     /// Indicates a problem with positioning the user
     case positioning
     
@@ -99,8 +99,6 @@ public enum ActiveNavigationFeedbackType: FeedbackType {
             return "cars_not_allowed_on_street"
         case .roadClosure(subtype: .streetPermanentlyBlockedOff):
             return "street_permanently_blocked_off"
-        case .roadClosure(subtype: .roadMissingFromMap):
-            return "road_is_missing_from_map"
         case .other:
             return "other_issue"
         case .custom(_, let subtypeKey):
@@ -156,7 +154,6 @@ public enum IllegalRouteSubtype: String, CaseIterable {
 /// Enum denoting the subtypes of the  `Road Closure` top-level category
 public enum RoadClosureSubtype: String, CaseIterable {
     case streetPermanentlyBlockedOff
-    case roadMissingFromMap
 }
 
 /// Enum denoting the origin source of the corresponding feedback item

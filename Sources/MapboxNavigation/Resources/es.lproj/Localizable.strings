@@ -187,9 +187,6 @@
 /* Specifc route feedback that route contained road that is permanently closed. */
 "ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Calle cerrada permanentemente";
 
-/* Specifc route feedback that route contained road not shown on map. */
-"ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK" = "Calle ausente del mapa";
-
 /* Specific route feedback that route contained impassible, narrow roads. */
 "ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "La ruta tiene caminos angostos al tránsito";
 
