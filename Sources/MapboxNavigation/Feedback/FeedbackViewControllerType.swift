@@ -8,12 +8,12 @@ public enum FeedbackViewControllerType {
     var feedbackItems: [FeedbackItem] {
         switch self {
         case .activeNavigation:
-            return [ActiveNavigationFeedbackType.incorrectVisual(subtype: nil),
+            return [ActiveNavigationFeedbackType.looksIncorrect(subtype: nil),
                     ActiveNavigationFeedbackType.confusingAudio(subtype: nil),
                     ActiveNavigationFeedbackType.illegalRoute(subtype: nil),
                     ActiveNavigationFeedbackType.roadClosure(subtype: nil),
                     ActiveNavigationFeedbackType.routeQuality(subtype: nil),
-                    ActiveNavigationFeedbackType.positioning(subtype: nil)].map { $0.generateFeedbackItem() }
+                    ActiveNavigationFeedbackType.positioning].map { $0.generateFeedbackItem() }
         case .passiveNavigation:
             return [PassiveNavigationFeedbackType.incorrectVisual(subtype: nil),
                     PassiveNavigationFeedbackType.roadIssue(subtype: nil),

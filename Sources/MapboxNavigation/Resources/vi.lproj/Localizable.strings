@@ -55,9 +55,6 @@
 /* Specific route feedback that audio guidance was provided too late for a maneuever. */
 "CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Lời hướng dẫn quá trễ";
 
-/* Specific route feedback that an audio guidance problem was encountered but not listed as a choice. */
-"CONFUSING_AUDIO_OTHER_FEEDBACK" = "Khác";
-
 /* Specific route feedback that audio guidance used incorrect pronunciation. */
 "CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Phát âm sai";
 
@@ -85,9 +82,6 @@
 /* Title of view controller for sending feedback */
 "FEEDBACK_TITLE" = "Báo cáo Vấn đề";
 
-/* Specific route feedback that a illegal route problem was encountered but not listed as a choice. */
-"ILLEGAL_ROUTE_OTHER_FEEDBACK" = "Khác";
-
 /* Label indicating the device volume is too low to hear spoken instructions and needs to be manually increased */
 "INAUDIBLE_INSTRUCTIONS_CTA" = "Điều chỉnh Âm lượng để Nghe Hướng dẫn";
 
@@ -111,12 +105,6 @@
 
 /* Specific route feedback that a maneuver specified was incorrect. */
 "INCORRECT_VISUAL_MANEUVER_INCORRECT_FEEDBACK" = "Tháo tác sai";
-
-/* Specific route feedback that a visual instruction problem was encountered but not listed as a choice. */
-"INCORRECT_VISUAL_OTHER_FEEDBACK" = "Khác";
-
-/* Specific route feedback that a road is known by another name. */
-"INCORRECT_VISUAL_ROAD_NAME_DIFFERENT_FEEDBACK" = "Đường có tên khác";
 
 /* Specific route feedback for incorrect street name. */
 "INCORRECT_VISUAL_STREET_NAME_INCORRECT_FEEDBACK" = "Tên đường sai";
@@ -142,9 +130,6 @@
 /* General category of route feedback where user position is incorrect. */
 "POSITIONING" = "Định vị";
 
-/* Specific route feedback that user positioning is incorrect. */
-"POSITIONING_USER" = "Vị trí của bạn";
-
 /* Rating Reset To Zero Accessability Hint */
 "RATING_ACCESSIBILITY_RESET" = "Chạm để đặt lại đánh giá.";
 
@@ -159,9 +144,6 @@
 
 /* Button title for resume tracking */
 "RESUME" = "Tiếp tục";
-
-/* Specific route feedback that a road closure type was encountered but not listed as a choice. */
-"ROAD_CLOSURE_OTHER_FEEDBACK" = "Khác";
 
 /* This route does not have tolls */
 "ROUTE_HAS_NO_TOLLS" = "Miễn phí";
@@ -187,9 +169,6 @@
 /* Specific route feedback that route suggested an illegal turn. */
 "ROUTE_QUALITY_ILLEGAL_ROUTE_TURN_NOT_ALLOWED_FEEDBACK" = "Không cho phép quẹo vào đấy";
 
-/* Specific route feedback that route suggested an illegal unprotected turn. */
-"ROUTE_QUALITY_ILLEGAL_ROUTE_UNPROTECTED_TURN_FEEDBACK" = "Khó quẹo tại ngã tư không có đèn giao thông hoặc bảng dừng lại";
-
 /* Specific route feedback that route contained non-existant roads. */
 "ROUTE_QUALITY_INCLUDED_MISSING_ROADS_FEEDBACK" = "Đường sá bị thiếu trên tuyến đường";
 
@@ -207,9 +186,6 @@
 
 /* Specifc route feedback that route contained road that is permanently closed. */
 "ROUTE_QUALITY_ROAD_CLOSURE_PERMANENT_FEEDBACK" = "Đường chặn cố định";
-
-/* Specifc route feedback that route contained road not shown on map. */
-"ROUTE_QUALITY_ROAD_MISSING_FROM_MAP_FEEDBACK" = "Đường không hiển thị trên bản đồ";
 
 /* Specific route feedback that route contained impassible, narrow roads. */
 "ROUTE_QUALITY_ROADS_TOO_NARROW_FEEDBACK" = "Tuyến đường đi theo đường quá hẹp";

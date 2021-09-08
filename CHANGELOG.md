@@ -173,6 +173,7 @@
 * `FeedbackViewController` now can be customized to show only feedback types specific to passive navigation. Pass `FeedbackViewControllerType` to the constructor of the feedback view controller to configure the available feedback categories. ([#3323](https://github.com/mapbox/mapbox-navigation-ios/pull/3323))
 * Renamed `FeedbackType` to `ActiveNavigationFeedbackType` and `EventsManagerDataSource` to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
 * Fixed an issue when road label resolving during the active navigation was consuming too much CPU and might lead to crashes. ([#3340](https://github.com/mapbox/mapbox-navigation-ios/pull/3340))
+* Feedback categories and subcategories for active navigation were changed. "Incorrect visual" category was renamed to "Looks Incorrect". For the full updated list of supported categories see enum `ActiveNavigationFeedbackType`. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
 
 ## v1.4.1
 

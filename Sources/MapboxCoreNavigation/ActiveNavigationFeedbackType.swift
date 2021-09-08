@@ -5,12 +5,8 @@ import Foundation
  */
 public enum ActiveNavigationFeedbackType: FeedbackType {
 
-    /// Indicates general feedback. You should provide a `description` string to `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)`
-    /// to elaborate on the feedback if possible.
-    case general
-
-    /// Indicates an incorrect visual.
-    case incorrectVisual(subtype: IncorrectVisualSubtype?)
+    /// Indicates an incorrect visual instruction or other user interface issue.
+    case looksIncorrect(subtype: LooksIncorrectSubtype?)
 
     /// Indicates confusing voice instruction.
     case confusingAudio(subtype: ConfusingAudioSubtype?)
@@ -25,48 +21,55 @@ public enum ActiveNavigationFeedbackType: FeedbackType {
     case roadClosure(subtype: RoadClosureSubtype?)
 
     /// Indicates a problem with positioning the user
-    case positioning(subtype: PositioningSubtype?)
+    case positioning
+    
+    /// Indicates a custom feedback type and subtype.
+    case custom(typeKey: String, subtypeKey: String?)
+    
+    /// Indicates other feedback. You should provide a `description` string to `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)`
+    /// to elaborate on the feedback if possible.
+    case other
 
     /// Description of the category for this type of feedback
     public var typeKey: String {
         switch self {
-        case .general:
-            return "general"
-        case .incorrectVisual(_):
+        case .looksIncorrect:
             return "incorrect_visual_guidance"
-        case .confusingAudio(_):
+        case .confusingAudio:
             return "incorrect_audio_guidance"
-        case .routeQuality(_):
+        case .routeQuality:
             return "routing_error"
-        case .illegalRoute(_):
-            return "not_allowed"
-        case .roadClosure(_):
+        case .illegalRoute:
+            return "route_not_allowed"
+        case .roadClosure:
             return "road_closed"
-        case .positioning(_):
+        case .positioning:
             return "positioning_issue"
+        case .custom(let typeKey, _):
+            return typeKey
+        case .other:
+            return "other_issue"
         }
     }
 
     /// Optional detailed description of the subtype of this feedback
     public var subtypeKey: String? {
         switch self {
-        case .incorrectVisual(subtype: .turnIconIncorrect):
+        case .looksIncorrect(subtype: .turnIconIncorrect):
             return "turn_icon_incorrect"
-        case .incorrectVisual(subtype: .streetNameIncorrect):
+        case .looksIncorrect(subtype: .streetNameIncorrect):
             return "street_name_incorrect"
-        case .incorrectVisual(subtype: .instructionUnnecessary):
+        case .looksIncorrect(subtype: .instructionUnnecessary):
             return "instruction_unnecessary"
-        case .incorrectVisual(subtype: .instructionMissing):
+        case .looksIncorrect(subtype: .instructionMissing):
             return "instruction_missing"
-        case .incorrectVisual(subtype: .maneuverIncorrect):
+        case .looksIncorrect(subtype: .maneuverIncorrect):
             return "maneuver_incorrect"
-        case .incorrectVisual(subtype: .exitInfoIncorrect):
+        case .looksIncorrect(subtype: .exitInfoIncorrect):
             return "exit_info_incorrect"
-        case .incorrectVisual(subtype: .laneGuidanceIncorrect):
+        case .looksIncorrect(subtype: .laneGuidanceIncorrect):
             return "lane_guidance_incorrect"
-        case .incorrectVisual(subtype: .roadKnownByDifferentName):
-            return "road_known_by_different_name"
-        case .incorrectVisual(subtype: .incorrectSpeedLimit):
+        case .looksIncorrect(subtype: .incorrectSpeedLimit):
             return "incorrect_speed_limit"
         case .confusingAudio(subtype: .guidanceTooEarly):
             return "guidance_too_early"
@@ -76,6 +79,8 @@ public enum ActiveNavigationFeedbackType: FeedbackType {
             return "pronunciation_incorrect"
         case .confusingAudio(subtype: .roadNameRepeated):
             return "road_name_repeated"
+        case .confusingAudio(subtype: .instructionMissing):
+            return "instruction_missing"
         case .routeQuality(subtype: .routeNonDrivable):
             return "route_not_driveable"
         case .routeQuality(subtype: .routeNotPreferred):
@@ -92,34 +97,25 @@ public enum ActiveNavigationFeedbackType: FeedbackType {
             return "turn_was_not_allowed"
         case .illegalRoute(subtype: .carsNotAllowedOnStreet):
             return "cars_not_allowed_on_street"
-        case .illegalRoute(subtype: .turnAtIntersectionUnprotected):
-            return "turn_at_intersection_was_unprotected"
         case .roadClosure(subtype: .streetPermanentlyBlockedOff):
             return "street_permanently_blocked_off"
-        case .roadClosure(subtype: .roadMissingFromMap):
-            return "road_is_missing_from_map"
-        case .positioning(subtype: .userPosition):
-            return "positioning_issue"
-        case .incorrectVisual(subtype: .other),
-                .confusingAudio(subtype: .other),
-                .routeQuality(subtype: .other),
-                .illegalRoute(subtype: .other),
-                .roadClosure(subtype: .other):
-            return "other"
-        case .general,
-                .incorrectVisual(subtype: nil),
+        case .other:
+            return "other_issue"
+        case .custom(_, let subtypeKey):
+            return subtypeKey
+        case .positioning,
+                .looksIncorrect(subtype: nil),
                 .confusingAudio(subtype: nil),
                 .routeQuality(subtype: nil),
                 .illegalRoute(subtype: nil),
-                .roadClosure(subtype: nil),
-                .positioning(subtype: nil):
+                .roadClosure(subtype: nil):
             return nil
         }
     }
 }
 
-/// Enum denoting the subtypes of the  `Incorrect Visual` top-level category
-public enum IncorrectVisualSubtype: String, CaseIterable {
+/// Enum denoting the subtypes of the  `Looks Incorrect` top-level category
+public enum LooksIncorrectSubtype: String, CaseIterable {
     case turnIconIncorrect
     case streetNameIncorrect
     case instructionUnnecessary
@@ -127,9 +123,7 @@ public enum IncorrectVisualSubtype: String, CaseIterable {
     case maneuverIncorrect
     case exitInfoIncorrect
     case laneGuidanceIncorrect
-    case roadKnownByDifferentName
     case incorrectSpeedLimit
-    case other
 }
 
 /// Enum denoting the subtypes of the  `Confusing Audio` top-level category
@@ -138,7 +132,7 @@ public enum ConfusingAudioSubtype: String, CaseIterable {
     case guidanceTooLate
     case pronunciationIncorrect
     case roadNameRepeated
-    case other
+    case instructionMissing
 }
 
 /// Enum denoting the subtypes of the  `Route Quality` top-level category
@@ -148,7 +142,6 @@ public enum RouteQualitySubtype: String, CaseIterable {
     case alternativeRouteNotExpected
     case routeIncludedMissingRoads
     case routeHadRoadsTooNarrowToPass
-    case other
 }
 
 /// Enum denoting the subtypes of the  `Illegal Route` top-level category
@@ -156,19 +149,11 @@ public enum IllegalRouteSubtype: String, CaseIterable {
     case routedDownAOneWay
     case turnWasNotAllowed
     case carsNotAllowedOnStreet
-    case turnAtIntersectionUnprotected
-    case other
 }
 
 /// Enum denoting the subtypes of the  `Road Closure` top-level category
 public enum RoadClosureSubtype: String, CaseIterable {
     case streetPermanentlyBlockedOff
-    case roadMissingFromMap
-    case other
-}
-
-public enum PositioningSubtype: String, CaseIterable {
-    case userPosition
 }
 
 /// Enum denoting the origin source of the corresponding feedback item
