@@ -171,6 +171,7 @@
 * Fixed an issue, which prevented the ability to change `UserPuckCourseView.puckColor` when changing system-wide appearance. ([#3306](https://github.com/mapbox/mapbox-navigation-ios/pull/3306))
 * `FeedbackViewController` now can be customized to show only feedback types specific to passive navigation. Pass `FeedbackViewControllerType` to the constructor of the feedback view controller to configure the available feedback categories. ([#3323](https://github.com/mapbox/mapbox-navigation-ios/pull/3323))
 * Renamed `FeedbackType` to `ActiveNavigationFeedbackType` and `EventsManagerDataSource` to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
+* Fixed an issue when road label resolving during the active navigation was consuming too much CPU and might lead to crashes. ([#3340](https://github.com/mapbox/mapbox-navigation-ios/pull/3340))
 
 ## v1.4.1
 
