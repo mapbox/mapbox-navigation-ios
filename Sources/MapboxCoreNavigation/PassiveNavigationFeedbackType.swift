@@ -49,8 +49,8 @@ public enum PassiveNavigationFeedbackType: FeedbackType {
             return "incorrect_speed_limit"
         case .roadIssue(subtype: .streetPermanentlyBlockedOff):
             return "street_permanently_blocked_off"
-        case .roadIssue(subtype: .streetTemporaryBlockedOff):
-            return "street_temporary_blocked_off"
+        case .roadIssue(subtype: .streetTemporarilyBlockedOff):
+            return "street_temporarily_blocked_off"
         case .roadIssue(subtype: .missingRoad):
             return "missing_road"
         case .wrongTraffic(subtype: .congestion):
@@ -86,7 +86,7 @@ public enum PassiveNavigationRoadIssueSubtype: CaseIterable {
     case streetPermanentlyBlockedOff
     
     /// The user is unable to follow the route due to a temporary closure.
-    case streetTemporaryBlockedOff
+    case streetTemporarilyBlockedOff
     
     /// The map data is incorrect or outdated, the user isn’t able to follow any route based on that road.
     case missingRoad

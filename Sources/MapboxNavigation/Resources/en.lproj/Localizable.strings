@@ -134,7 +134,7 @@
 "PASSIVE_NAVIGATION_FEEDBACK_BAD_GPS" = "Bad GPS";
 
 /* General category of feedback where something looks incorrect. */
-"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Incorrect visual";
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Looks incorrect";
 
 /* Specific route feedback that a speed limit is incorrect. */
 "PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_INCORRECT_SPEED_LIMIT" = "Speed limit incorrect";
@@ -152,7 +152,7 @@
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Street permanently blocked off";
 
 /* Feedback that a street is temporary blocked off. */
-"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARY_BLOCKED_OFF" = "Street temporary blocked off";
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Street temporarily blocked off";
 
 /* Feedback that there is a congestion on the road. */
 "PASSIVE_NAVIGATION_FEEDBACK_WRONG_TRAFFIC_CONGESTION" = "Congestion";

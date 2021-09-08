@@ -252,10 +252,12 @@ extension NavigationMapView {
                     NSLog("Failed to add \(roadLabelStyleLayerIdentifier) with error: \(error.localizedDescription).")
                 }
             }
-            
+
             let closestCoordinate = location.coordinate
+            let lookAheadDistance: CLLocationDistance = 10
+            let pointAheadUser = stepShape.sliced(from: closestCoordinate)?.coordinateFromStart(distance: lookAheadDistance)
             let position = mapView.mapboxMap.point(for: closestCoordinate)
-            
+
             mapView.mapboxMap.queryRenderedFeatures(at: position,
                                                     options: RenderedQueryOptions(layerIds: [roadLabelStyleLayerIdentifier], filter: nil)) { [weak self] result in
                 switch result {
@@ -278,7 +280,9 @@ extension NavigationMapView {
                                 similarFeature = queriedFeature.feature
                             }
                         }
-                        
+
+                        guard let pointAheadUser = pointAheadUser else { continue }
+
                         var lineStrings: [LineString] = []
                         
                         if queriedFeature.feature.geometry.geometryType == GeometryType_Line,
@@ -292,10 +296,7 @@ extension NavigationMapView {
                         }
                         
                         for lineString in lineStrings {
-                            let lookAheadDistance: CLLocationDistance = 10
                             guard let pointAheadFeature = lineString.sliced(from: closestCoordinate)?.coordinateFromStart(distance: lookAheadDistance) else { continue }
-                            guard let slicedLine = stepShape.sliced(from: closestCoordinate),
-                                  let pointAheadUser = slicedLine.coordinateFromStart(distance: lookAheadDistance) else { continue }
                             guard let reversedPoint = LineString(lineString.coordinates.reversed()).sliced(from: closestCoordinate)?.coordinateFromStart(distance: lookAheadDistance) else { continue }
                             
                             let distanceBetweenPointsAhead = pointAheadFeature.distance(to: pointAheadUser)

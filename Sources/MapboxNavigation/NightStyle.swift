@@ -8,7 +8,7 @@ open class NightStyle: DayStyle {
     public required init() {
         super.init()
         
-        mapStyleURL = MapboxMaps.Style.navigationNightStyleURL
+        mapStyleURL = URL(string: StyleURI.navigationNight.rawValue)!
         previewMapStyleURL = mapStyleURL
         styleType = .night
         statusBarStyle = .lightContent
