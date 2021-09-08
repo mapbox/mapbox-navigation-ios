@@ -180,7 +180,7 @@ extension NavigationMapView {
         }
         
         let mainRouteLayerGradient = updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentLineGradientStops)
-        let mainRouteLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor, isSoft: showFadingCongestionColor)
+        let mainRouteLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor, isSoft: crossfadesCongestionSegments)
         setLayerLineGradient(for: mainRouteLayerIdentifier, exp: mainRouteLayerGradientExpression)
         
         let mainRouteCasingLayerGradient = routeLineGradient(fractionTraveled: fractionTraveled)
@@ -244,7 +244,8 @@ extension NavigationMapView {
 
                 let lineString = feature.geometry.value as? LineString
                 guard let distance = lineString?.distance() else { return gradientStops }
-                let stopGap = max(min(GradientCongestionBlendingDistance, distance * 0.1) / routeDistance, 0.0000000000000002)
+                let minimumPercentGap = 0.0000000000000002
+                let stopGap = (routeDistance > 0.0) ? max(min(GradientCongestionFadingDistance, distance * 0.1) / routeDistance, minimumPercentGap) : minimumPercentGap
                 
                 if index == congestionFeatures.startIndex {
                     minimumSegment = (0.0, associatedFeatureColor)

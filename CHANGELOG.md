@@ -51,8 +51,9 @@
 * Renamed the `NavigationMapView.updateRoute(_:)` method to `NavigationMapView.travelAlongRouteLine(to:)`. Improved the performance of updating the route line to change color at the user’s location as they progress along the route. ([#3201](https://github.com/mapbox/mapbox-navigation-ios/pull/3201)).
 * Fixed an issue when user passed destination and the route line grows back when `NavigationViewController.routeLineTracksTraversal` is enabled. ([#3255](https://github.com/mapbox/mapbox-navigation-ios/pull/3255))
 * The `NavigationMapView.userLocationStyle` now supports instant user location indicator change without style loaded lag. ([#3295](https://github.com/mapbox/mapbox-navigation-ios/pull/3295))
+<<<<<<< HEAD
 * Fixed incorrect color-coded traffic congestion along the route line and incorrect speeds in the speed limit view after some time had elapsed after rerouting. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344]))
-* Added the `NavigationMapView.showFadingCongestionColor` property to show blending color between different congestion levels on route lines, and the global variable `GradientCongestionblendingDistance` to adjust the distance of blending color segment. ([#3307](https://github.com/mapbox/mapbox-navigation-ios/pull/3307))
+* By default, there is no longer a subtle crossfade between traffic congestion segments along a route line. To reenable this crossfade, set the `NavigationMapView.crossfadesCongestionSegments` property to `true`. You can also adjust the length of this crossfade using the global variable `GradientCongestionFadingDistance`. ([#3307](https://github.com/mapbox/mapbox-navigation-ios/pull/3307))
 
 ### Location tracking
 

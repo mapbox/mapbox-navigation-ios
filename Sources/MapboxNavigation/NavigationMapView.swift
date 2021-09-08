@@ -57,11 +57,11 @@ open class NavigationMapView: UIView {
     public var showsCongestionForAlternativeRoutes: Bool = false
     
     /**
-     Controls whether to show fading gradient congestion color on route lines. Defaults to `false`.
+     Controls whether to show fading gradient color on route lines between two different congestion level segments. Defaults to `false`.
      
-     If `true`, the congestion level in the route line will be shown as fading gradient color instead of abrupt and steep change.
+     If `true`, the congestion level change between two segments in the route line will be shown as fading gradient color instead of abrupt and steep change.
      */
-    public var showFadingCongestionColor: Bool = false
+    public var crossfadesCongestionSegments: Bool = false
 
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -568,7 +568,7 @@ open class NavigationMapView: UIView {
     func setUpLineGradientStops(along route: Route) {
         if let legIndex = currentLegIndex {
             let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-            currentLineGradientStops = routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isSoft: showFadingCongestionColor)
+            currentLineGradientStops = routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isSoft: crossfadesCongestionSegments)
             pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
         }
     }
@@ -621,26 +621,26 @@ open class NavigationMapView: UIView {
                 if !currentLineGradientStops.isEmpty {
                     lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(currentLineGradientStops,
                                                                                                   lineBaseColor: trafficUnknownColor,
-                                                                                                  isSoft: showFadingCongestionColor)))
+                                                                                                  isSoft: crossfadesCongestionSegments)))
                 } else {
                     let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
                     let gradientStops = routeLineGradient(congestionFeatures,
                                                           fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
-                                                          isSoft: showFadingCongestionColor)
+                                                          isSoft: crossfadesCongestionSegments)
                     
                     lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                                   lineBaseColor: trafficUnknownColor,
-                                                                                                  isSoft: showFadingCongestionColor)))
+                                                                                                  isSoft: crossfadesCongestionSegments)))
                 }
             } else {
                 if showsCongestionForAlternativeRoutes {
                     let gradientStops = routeLineGradient(route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
                                                           fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
                                                           isMain: false,
-                                                          isSoft: showFadingCongestionColor)
+                                                          isSoft: crossfadesCongestionSegments)
                     lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                                   lineBaseColor: alternativeTrafficUnknownColor,
-                                                                                                  isSoft: showFadingCongestionColor)))
+                                                                                                  isSoft: crossfadesCongestionSegments)))
                 } else {
                     lineLayer?.lineColor = .constant(.init(color: routeAlternateColor))
                 }

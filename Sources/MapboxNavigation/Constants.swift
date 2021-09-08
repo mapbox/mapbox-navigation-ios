@@ -41,9 +41,9 @@ public let CongestionAttribute = "congestion"
 public let NavigationViewMinimumVolumeForWarning: Float = 0.3
 
 /**
- The distance of blending color between two different congestion level segment in meters.
+ The distance of fading color change between two different congestion level segments in meters.
  */
-public var GradientCongestionBlendingDistance: Double = 30.0
+public var GradientCongestionFadingDistance: CLLocationDistance = 30.0
 
 extension Notification.Name {
     /**
