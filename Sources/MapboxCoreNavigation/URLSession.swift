@@ -27,10 +27,22 @@ extension URLSession {
         let bundleComponents = bundles.compactMap { (bundle) -> String? in
             guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier else { return nil }
             var stringForShortVersion: String? {
+                #if SWIFT_PACKAGE
+                let mapboxNavigationName = "MapboxNavigation_MapboxNavigation"
+                #else
+                let mapboxNavigationName = "MapboxNavigation"
+                #endif
+
+                #if SWIFT_PACKAGE
+                let mapboxCoreNavigationName = "MapboxNavigation_MapboxCoreNavigation"
+                #else
+                let mapboxCoreNavigationName = "MapboxCoreNavigation"
+                #endif
+
                 switch name {
-                case "MapboxNavigation_MapboxNavigation":
+                case mapboxNavigationName:
                     return Bundle.string(forMapboxNavigationInfoDictionaryKey: "CFBundleShortVersionString")
-                case "MapboxNavigation_MapboxCoreNavigation":
+                case mapboxCoreNavigationName:
                     return Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString")
                 default:
                     return bundle?.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
