@@ -8,13 +8,22 @@ extension URLSession {
      The user agent string for any HTTP requests performed directly within MapboxCoreNavigation or MapboxNavigation.
      */
     public static let userAgent: String = {
+        // Bundles in order from the application level on down
+        #if SWIFT_PACKAGE
         let bundles: [Bundle?] = [
-            // Bundles in order from the application level on down
+            .main,
+            .mapboxNavigationIfInstalled,
+            .mapboxCoreNavigation
+        ]
+        #else
+        let bundles: [Bundle?] = [
             .main,
             .mapboxNavigationIfInstalled,
             .mapboxCoreNavigation,
             .init(for: Directions.self),
         ]
+        #endif
+
         let bundleComponents = bundles.compactMap { (bundle) -> String? in
             guard let name = bundle?.object(forInfoDictionaryKey: "CFBundleName") as? String ?? bundle?.bundleIdentifier else { return nil }
             var stringForShortVersion: String? {
