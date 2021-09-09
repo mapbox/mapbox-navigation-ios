@@ -301,18 +301,12 @@ extension InternalRouter where Self: Router {
                 return completion(session, .failure(error))
             case .success(let response):
                 guard let mostSimilarIndex = response.routes?.index(mostSimilarTo: progress.route) else {
-                    return completion(session, .success(.init(routeResponse: response, routeIndex: 0)))
+                    return completion(session, .failure(.unableToRoute))
                 }
                 
                 return completion(session, .success(.init(routeResponse: response, routeIndex: mostSimilarIndex)))
             }
         }
-    }
-    
-    func setRoute(_ route: Route, proactive: Bool, routeOptions: RouteOptions?) {
-        let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
-        
-        routeProgress = RouteProgress(route: route, options: routeOptions ?? routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
     }
     
     func announceImpendingReroute(at location: CLLocation) {

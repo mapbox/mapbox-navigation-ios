@@ -54,7 +54,13 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         routeProgress.route
     }
     
-    public internal(set) var indexedRouteResponse: IndexedRouteResponse
+    public internal(set) var indexedRouteResponse: IndexedRouteResponse {
+        didSet {
+            if let routes = indexedRouteResponse.routeResponse.routes {
+                precondition(routes.indices.contains(indexedRouteResponse.routeIndex), "Route index is out of bounds.")
+            }
+        }
+    }
 
     var isRerouting = false
     var isRefreshing = false

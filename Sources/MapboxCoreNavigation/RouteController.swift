@@ -44,7 +44,13 @@ open class RouteController: NSObject {
         return routeProgress.route
     }
     
-    public internal(set) var indexedRouteResponse: IndexedRouteResponse
+    public internal(set) var indexedRouteResponse: IndexedRouteResponse {
+        didSet {
+            if let routes = indexedRouteResponse.routeResponse.routes {
+                precondition(routes.indices.contains(indexedRouteResponse.routeIndex), "Route index is out of bounds.")
+            }
+        }
+    }
     
     var routeTask: URLSessionDataTask?
     
