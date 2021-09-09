@@ -34,7 +34,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var centerUpdatesAllowed = true
+    public var centerUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.zoom` property
@@ -44,7 +44,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var zoomUpdatesAllowed = true
+    public var zoomUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.bearing` property
@@ -54,7 +54,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var bearingUpdatesAllowed = true
+    public var bearingUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.pitch` property
@@ -64,7 +64,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var pitchUpdatesAllowed = true
+    public var pitchUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.padding` property
@@ -74,7 +74,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var paddingUpdatesAllowed = true
+    public var paddingUpdatesAllowed: Bool = true
     
     /**
      Initializes `OverviewCameraOptions` instance.
