@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
           "branch": null,
-          "revision": "4501b0cbf709ae9fdabb82a2942cd3d54295b411",
-          "version": "2.0.0-alpha.1"
+          "revision": "7b04b5173eb985a260083dfbeb9a3567d46a0333",
+          "version": "2.0.0-rc.1"
         }
       },
       {
