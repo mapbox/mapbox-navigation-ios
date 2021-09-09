@@ -34,7 +34,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     var lastRouteRefresh: Date?
 
-    public var routeProgress: RouteProgress {
+    public internal(set) var routeProgress: RouteProgress {
         didSet {
             movementsAwayFromRoute = 0
         }

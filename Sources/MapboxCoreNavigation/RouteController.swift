@@ -63,7 +63,7 @@ open class RouteController: NSObject {
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
-    public var routeProgress: RouteProgress {
+    public internal(set) var routeProgress: RouteProgress {
         willSet {
             resetObservation(for: newValue)
         }
