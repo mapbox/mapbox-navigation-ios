@@ -261,7 +261,7 @@ open class RouteProgress: Codable {
             /// An index into the route’s coordinates and congestionTravelTimesSegmentsByStep that corresponds to a step’s maneuver location.
             var congestionTravelTimesSegmentsByLeg: [[TimedCongestionLevel]] = []
 
-            if let segmentCongestionLevels = leg.segmentCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
+            if let segmentCongestionLevels = leg.resolvedCongestionLevels, let expectedSegmentTravelTimes = leg.expectedSegmentTravelTimes {
                 for step in leg.steps {
                     guard let coordinates = step.shape?.coordinates else { continue }
                     let stepCoordinateCount = step.maneuverType == .arrive ? Int(coordinates.count) : coordinates.dropLast().count
