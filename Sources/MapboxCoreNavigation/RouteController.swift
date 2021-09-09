@@ -597,6 +597,7 @@ extension RouteController: Router {
                 guard case let .route(routeOptions) = response.options else { return } //TODO: Can a match hit this codepoint?
                 strongSelf._routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0)
                 strongSelf._routeProgress.currentLegProgress.stepIndex = 0
+                strongSelf.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
                 strongSelf.announce(reroute: route, at: location, proactive: false)
                 
             case let .failure(error):
