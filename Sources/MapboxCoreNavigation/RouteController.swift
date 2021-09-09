@@ -46,21 +46,9 @@ open class RouteController: NSObject {
     
     public internal(set) var indexedRouteResponse: IndexedRouteResponse
     
-    private var _routeProgress: RouteProgress {
-        willSet {
-            resetObservation(for: _routeProgress)
-        }
-        didSet {
-            updateNavigator(with: _routeProgress)
-            updateObservation(for: _routeProgress)
-        }
-    }
-    
     var routeTask: URLSessionDataTask?
     
     var lastRerouteLocation: CLLocation?
-    
-    var didFindFasterRoute = false
     
     var isRerouting = false
     
@@ -76,15 +64,12 @@ open class RouteController: NSObject {
      Details about the user’s progress along the current route, leg, and step.
      */
     public var routeProgress: RouteProgress {
-        get {
-            return _routeProgress
+        willSet {
+            resetObservation(for: newValue)
         }
-        set {
-            if let location = self.location {
-                delegate?.router(self, willRerouteFrom: location)
-            }
-            _routeProgress = newValue
-            announce(reroute: routeProgress.route, at: rawLocation, proactive: didFindFasterRoute)
+        didSet {
+            updateNavigator(with: routeProgress)
+            updateObservation(for: routeProgress)
         }
     }
     
@@ -155,7 +140,7 @@ open class RouteController: NSObject {
     required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
         self.directions = directions
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -164,14 +149,14 @@ open class RouteController: NSObject {
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
-        updateNavigator(with: _routeProgress)
-        updateObservation(for: _routeProgress)
+        updateNavigator(with: routeProgress)
+        updateObservation(for: routeProgress)
     }
     
     deinit {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         
-        resetObservation(for: _routeProgress)
+        resetObservation(for: routeProgress)
         unsubscribeNotifications()
     }
     
@@ -307,13 +292,13 @@ open class RouteController: NSObject {
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
-        self.updateNavigator(with: self._routeProgress)
-        self.updateRouteLeg(to: self._routeProgress.legIndex)
+        self.updateNavigator(with: self.routeProgress)
+        self.updateRouteLeg(to: self.routeProgress.legIndex)
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
-        self.updateNavigator(with: self._routeProgress)
-        self.updateRouteLeg(to: self._routeProgress.legIndex)
+        self.updateNavigator(with: self.routeProgress)
+        self.updateRouteLeg(to: self.routeProgress.legIndex)
     }
     
     func updateIndexes(status: NavigationStatus, progress: RouteProgress) {
@@ -573,10 +558,7 @@ extension RouteController: Router {
             }
         }
         
-        delegate?.router(self, willRerouteFrom: location)
-        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            NotificationUserInfoKey.locationKey: location,
-        ])
+        announceImpendingReroute(at: location)
         
         self.lastRerouteLocation = location
         
@@ -596,8 +578,7 @@ extension RouteController: Router {
                 let response = indexedResponse.routeResponse
                 guard let route = response.routes?[indexedResponse.routeIndex] else { return }
                 guard case let .route(routeOptions) = response.options else { return } //TODO: Can a match hit this codepoint?
-                strongSelf._routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0)
-                strongSelf._routeProgress.currentLegProgress.stepIndex = 0
+                strongSelf.routeProgress = RouteProgress(route: route, options: routeOptions)
                 strongSelf.indexedRouteResponse = indexedResponse
                 strongSelf.announce(reroute: route, at: location, proactive: false)
                 
@@ -624,6 +605,7 @@ extension RouteController: Router {
 
         let routeOptions = routeOptions ?? routeProgress.routeOptions
         routeProgress = RouteProgress(route: route, options: routeOptions)
+        announce(reroute: route, at: location, proactive: false)
         self.indexedRouteResponse = indexedRouteResponse
         updateNavigator(with: routeProgress)
     }

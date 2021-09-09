@@ -144,11 +144,7 @@ protocol InternalRouter: AnyObject {
     
     var routeTask: URLSessionDataTask? { get set }
     
-    var didFindFasterRoute: Bool { get set }
-    
     var lastRerouteLocation: CLLocation? { get set }
-    
-    func setRoute(_ route: Route, proactive: Bool, routeOptions: RouteOptions?)
     
     var isRerouting: Bool { get set }
     
@@ -246,7 +242,8 @@ extension InternalRouter where Self: Router {
         isRerouting = true
         
         calculateRoutes(from: location, along: routeProgress) { [weak self] (session, result) in
-            self?.isRerouting = false
+            guard let self = self else { return }
+            self.isRerouting = false
             
             guard case let .success(indexedResponse) = result else {
                 return
@@ -254,7 +251,7 @@ extension InternalRouter where Self: Router {
             let response = indexedResponse.routeResponse
             guard let route = response.routes?.first else { return }
             
-            self?.lastProactiveRerouteDate = nil
+            self.lastProactiveRerouteDate = nil
             
             guard let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first else {
                 return
@@ -270,8 +267,14 @@ extension InternalRouter where Self: Router {
                 }
                 
                 // Prefer the most optimal route (the first one) over the route that matched the original choice.
-                self?.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
-                self?.setRoute(route, proactive: true, routeOptions: routeOptions)
+                self.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
+                
+                // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don’t announce it.
+                // FIXME: There must be a better way to skip a redundant initial instruction than to assume the old route’s spoken instruction index is appliable to the new route.
+                let spokenInstructionIndex = self.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
+                self.routeProgress = RouteProgress(route: route, options: routeOptions ?? self.routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+                
+                self.announce(reroute: route, at: location, proactive: true)
             }
         }
     }
@@ -309,14 +312,14 @@ extension InternalRouter where Self: Router {
     func setRoute(_ route: Route, proactive: Bool, routeOptions: RouteOptions?) {
         let spokenInstructionIndex = routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
         
-        if proactive {
-            didFindFasterRoute = true
-        }
-        defer {
-            didFindFasterRoute = false
-        }
-        
         routeProgress = RouteProgress(route: route, options: routeOptions ?? routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
+    }
+    
+    func announceImpendingReroute(at location: CLLocation) {
+        delegate?.router(self, willRerouteFrom: location)
+        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
+            RouteController.NotificationUserInfoKey.locationKey: location,
+        ])
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {

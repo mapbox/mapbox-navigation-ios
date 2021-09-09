@@ -72,6 +72,7 @@
 * Added `UserHaloCourseView.haloBorderWidth`, which allows to change border of the ring around halo view. ([#3309](https://github.com/mapbox/mapbox-navigation-ios/pull/3309))
 * Fixed an issue where the `RouteController.indexedRouteResponse` property would remain unchanged after the user is rerouted. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344]))
 * Fixed an issue where the `IndexedRouteResponse.routeIndex` of the `NavigationService.indexedRouteResponse` property would reset to zero after the user is rerouted. ([#3345](https://github.com/mapbox/mapbox-navigation-ios/pull/3345]))
+* Fixed an issue where setting the `RouteController.routeProgress` property caused the `NavigationServiceDelegate.navigationService(_:willRerouteFrom:)`, `NavigationViewControllerDelegate.navigationService(_:willRerouteFrom:)`, `NavigationServiceDelegate.navigationService(_:didRerouteAlong:at:proactive:)`, and `NavigationViewControllerDelegate.navigationViewController(_:didRerouteAlong:)` methods to get called. ([#3345](https://github.com/mapbox/mapbox-navigation-ios/pull/3345]))
 * Rerouting now uses the snapped location, instead of raw location. ([#3361](https://github.com/mapbox/mapbox-navigation-ios/pull/3361))
 
 ### Electronic horizon
