@@ -51,6 +51,7 @@
 * Renamed the `NavigationMapView.updateRoute(_:)` method to `NavigationMapView.travelAlongRouteLine(to:)`. Improved the performance of updating the route line to change color at the user’s location as they progress along the route. ([#3201](https://github.com/mapbox/mapbox-navigation-ios/pull/3201)).
 * Fixed an issue when user passed destination and the route line grows back when `NavigationViewController.routeLineTracksTraversal` is enabled. ([#3255](https://github.com/mapbox/mapbox-navigation-ios/pull/3255))
 * The `NavigationMapView.userLocationStyle` now supports instant user location indicator change without style loaded lag. ([#3295](https://github.com/mapbox/mapbox-navigation-ios/pull/3295))
+* Fixed incorrect color-coded traffic congestion along the route line and incorrect speeds in the speed limit view after some time had elapsed after rerouting. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344]))
 
 ### Location tracking
 
@@ -68,6 +69,7 @@
 * Adds `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, which is called each time the user arrives at a waypoint. By default, this method returns true and prevents rerouting upon arriving. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
 * Fixes an issue where the user would be rerouted even if `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` returned `false`. To implement reroute after arrival behavior, return `true` from this method and `false` from `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, then set `NavigationViewController.showsEndOfRouteFeedback` to `false`. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
 * Added `UserHaloCourseView.haloBorderWidth`, which allows to change border of the ring around halo view. ([#3309](https://github.com/mapbox/mapbox-navigation-ios/pull/3309))
+* Fixed an issue where the `RouteController.indexedRouteResponse` property would remain unchanged after the user is rerouted. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344]))
 
 ### Electronic horizon
 
