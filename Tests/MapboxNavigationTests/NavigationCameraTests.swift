@@ -604,36 +604,33 @@ class NavigationCameraTests: XCTestCase {
     
     func testNavigationCameraFollowingCameraOptionsZoomRanges() {
         let navigationMapView = NavigationMapView(frame: .zero)
-        let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource
+        guard let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource else {
+            XCTFail(); return
+        }
         
-        navigationViewportDataSource?.options.followingCameraOptions.zoomRange = 10.0...22.0
+        navigationViewportDataSource.options.followingCameraOptions.zoomRange = 10.0...22.0
         
-        let zoomRange = navigationViewportDataSource?.options.followingCameraOptions.zoomRange
-        XCTAssertEqual(zoomRange?.lowerBound, 10.0, "Lower bounds should be equal.")
-        XCTAssertEqual(zoomRange?.upperBound, 22.0, "Upper bounds should be equal.")
+        let zoomRange = navigationViewportDataSource.options.followingCameraOptions.zoomRange
+        XCTAssertEqual(zoomRange.lowerBound, 10.0, "Lower bounds should be equal.")
+        XCTAssertEqual(zoomRange.upperBound, 22.0, "Upper bounds should be equal.")
         
-        var appliedChanges = false
-        expect {
-            // It should only be possible to set zoom range levels from `0.0` to `22.0`.
-            navigationViewportDataSource?.options.followingCameraOptions.zoomRange = -1.0...100.0
-            appliedChanges = true
-        }.to(throwAssertion())
-        
-        XCTAssertFalse(appliedChanges, "Zoom range changes should not be applied.")
+        // It should only be possible to set zoom range levels from `0.0` to `22.0`.
+        navigationViewportDataSource.options.followingCameraOptions.zoomRange = -1.0...100.0
+        XCTAssertEqual(navigationViewportDataSource.options.followingCameraOptions.zoomRange,
+                       0...22)
     }
     
     func testNavigationCameraOverviewCameraOptionsMaximumZoomLevel() {
         let navigationMapView = NavigationMapView(frame: .zero)
-        let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource
+        guard let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource else {
+            XCTFail(); return
+        }
         
-        var appliedChanges = false
-        expect {
-            // It should only be possible to set maximum zoom level between `0.0` and `22.0`.
-            navigationViewportDataSource?.options.overviewCameraOptions.maximumZoomLevel = 23.0
-            appliedChanges = true
-        }.to(throwAssertion())
-        
-        XCTAssertFalse(appliedChanges, "Maximum zoom level changes should not be applied.")
+        // It should only be possible to set maximum zoom level between `0.0` and `22.0`.
+        navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel = 23.0
+        XCTAssertEqual(navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel, 22)
+        navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel = -1
+        XCTAssertEqual(navigationViewportDataSource.options.overviewCameraOptions.maximumZoomLevel, 0)
     }
     
     func testNavigationViewportDataSourceOptionsInitializer() {
