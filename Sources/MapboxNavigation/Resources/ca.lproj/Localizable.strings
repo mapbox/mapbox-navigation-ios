@@ -178,9 +178,6 @@
 /* Specific route feedback that route was not ideal according to user. */
 "ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "Aquesta ruta no és la preferida";
 
-/* Specific route feedback that a route quality problem was encountered but not listed as a choice. */
-"ROUTE_QUALITY_OTHER_FEEDBACK" = "Altres";
-
 /* General route feedback that route contained closed road. */
 "ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Carretera tancada";
 

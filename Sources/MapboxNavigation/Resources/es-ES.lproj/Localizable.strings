@@ -55,6 +55,9 @@
 /* Specific route feedback that audio guidance was provided too late for a maneuever. */
 "CONFUSING_AUDIO_GUIDANCE_TOO_LATE_FEEDBACK" = "Instrucciones tardes";
 
+/* Specific route feedback that audio guidance instruction is missing */
+"CONFUSING_AUDIO_INSTRUCTION_MISSING_FEEDBACK" = "Faltan instrucciones";
+
 /* Specific route feedback that audio guidance used incorrect pronunciation. */
 "CONFUSING_AUDIO_PRONUNCIATION_INCORRECT_FEEDBACK" = "Pronunciación incorrecta";
 
@@ -127,6 +130,27 @@
 /* Accessibility value of label indicating the absence of a rating */
 "NO_RATING" = "No hay calificación.";
 
+/* General category of feedback where something looks incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL" = "Parece incorrecto";
+
+/* Specific route feedback that a speed limit is incorrect. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_INCORRECT_SPEED_LIMIT" = "Límite de velocidad incorrecto";
+
+/* Specific route feedback for incorrect street name. */
+"PASSIVE_NAVIGATION_FEEDBACK_INCORRECT_VISUAL_STREET_NAME_INCORRECT" = "Nombre de calle incorrecto";
+
+/* General category of feedback where there is an issue on the road. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE" = "Problema del camino";
+
+/* Feedback that map shows a non-existant road. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_MISSING_ROAD" = "Falta camino";
+
+/* Feedback that a street is permanently blocked off. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Calle cerrada permanentemente";
+
+/* Feedback that a street is temporary blocked off. */
+"PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Calle cerrada temporalmente";
+
 /* General category of route feedback where user position is incorrect. */
 "POSITIONING" = "Posicionamiento";
 
@@ -177,9 +201,6 @@
 
 /* Specific route feedback that route was not ideal according to user. */
 "ROUTE_QUALITY_NOT_PREFERRED_FEEDBACK" = "No es la ruta preferida";
-
-/* Specific route feedback that a route quality problem was encountered but not listed as a choice. */
-"ROUTE_QUALITY_OTHER_FEEDBACK" = "Otro";
 
 /* General route feedback that route contained closed road. */
 "ROUTE_QUALITY_ROAD_CLOSURE_FEEDBACK" = "Camino cerrado";
