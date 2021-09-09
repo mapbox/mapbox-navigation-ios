@@ -584,7 +584,7 @@ extension RouteController: Router {
         if isRerouting { return }
         isRerouting = true
         
-        getDirections(from: location, along: progress) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
             self?.isRerouting = false
             
             guard let strongSelf: RouteController = self else {
@@ -592,12 +592,13 @@ extension RouteController: Router {
             }
             
             switch result {
-            case let .success(response):
-                guard let route = response.routes?.first else { return }
+            case let .success(indexedResponse):
+                let response = indexedResponse.routeResponse
+                guard let route = response.routes?[indexedResponse.routeIndex] else { return }
                 guard case let .route(routeOptions) = response.options else { return } //TODO: Can a match hit this codepoint?
                 strongSelf._routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0)
                 strongSelf._routeProgress.currentLegProgress.stepIndex = 0
-                strongSelf.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
+                strongSelf.indexedRouteResponse = indexedResponse
                 strongSelf.announce(reroute: route, at: location, proactive: false)
                 
             case let .failure(error):

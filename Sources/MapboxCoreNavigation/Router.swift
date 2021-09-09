@@ -245,12 +245,13 @@ extension InternalRouter where Self: Router {
         if isRerouting { return }
         isRerouting = true
         
-        getDirections(from: location, along: routeProgress) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: routeProgress) { [weak self] (session, result) in
             self?.isRerouting = false
             
-            guard case let .success(response) = result else {
+            guard case let .success(indexedResponse) = result else {
                 return
             }
+            let response = indexedResponse.routeResponse
             guard let route = response.routes?.first else { return }
             
             self?.lastProactiveRerouteDate = nil
@@ -268,33 +269,40 @@ extension InternalRouter where Self: Router {
                     routeOptions = options
                 }
                 
+                // Prefer the most optimal route (the first one) over the route that matched the original choice.
                 self?.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
                 self?.setRoute(route, proactive: true, routeOptions: routeOptions)
             }
         }
     }
     
-    func getDirections(from location: CLLocation, along progress: RouteProgress, completion: @escaping Directions.RouteCompletionHandler) {
+    /// Like RouteCompletionHandler, but including the index of the route in the response that is most similar to the route in the route progress.
+    typealias IndexedRouteCompletionHandler = (_ session: Directions.Session, _ result: Result<IndexedRouteResponse, DirectionsError>) -> Void
+    
+    /**
+     Asynchronously calculates route response from a location along an existing route tracked by the given route progress object.
+     
+     - parameter origin: The origin of each resulting route.
+     - parameter progress: The current route progress, along which the origin is located.
+     - parameter completion: The closure to execute once the routes have been calculated. If successful, the result includes the index of the route that is most similar to the passed-in `RouteProgress.route`, which is not necessarily the first route. The first route is the route considered to be the most optimal, even if it differs from the original choice.
+     */
+    func calculateRoutes(from origin: CLLocation, along progress: RouteProgress, completion: @escaping IndexedRouteCompletionHandler) {
         routeTask?.cancel()
-        let options = progress.reroutingOptions(with: location)
+        let options = progress.reroutingOptions(with: origin)
         
-        lastRerouteLocation = location
+        lastRerouteLocation = origin
         
         routeTask = directions.calculateWithCache(options: options) {(session, result) in
-            
-            guard case let .success(response) = result else {
-                return completion(session, result)
+            switch result {
+            case .failure(let error):
+                return completion(session, .failure(error))
+            case .success(let response):
+                guard let mostSimilarIndex = response.routes?.index(mostSimilarTo: progress.route) else {
+                    return completion(session, .success(.init(routeResponse: response, routeIndex: 0)))
+                }
+                
+                return completion(session, .success(.init(routeResponse: response, routeIndex: mostSimilarIndex)))
             }
-            
-            guard let mostSimilar = response.routes?.mostSimilar(to: progress.route) else {
-                return completion(session, result)
-            }
-            
-            var modifiedResponse = response
-            modifiedResponse.routes?.removeAll { $0 == mostSimilar }
-            modifiedResponse.routes?.insert(mostSimilar, at: 0)
-            
-            return completion(session, .success(modifiedResponse))
         }
     }
     
@@ -323,12 +331,12 @@ extension InternalRouter where Self: Router {
 }
 
 extension Array where Element: MapboxDirections.Route {
-    func mostSimilar(to route: Route) -> Route? {
+    func index(mostSimilarTo route: Route) -> Int? {
         let target = route.description
-        return self.min { (left, right) -> Bool in
-            let leftDistance = left.description.minimumEditDistance(to: target)
-            let rightDistance = right.description.minimumEditDistance(to: target)
+        return enumerated().min { (left, right) -> Bool in
+            let leftDistance = left.element.description.minimumEditDistance(to: target)
+            let rightDistance = right.element.description.minimumEditDistance(to: target)
             return leftDistance < rightDistance
-        }
+        }?.offset
     }
 }

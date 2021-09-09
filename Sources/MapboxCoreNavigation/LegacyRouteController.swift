@@ -362,7 +362,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         self.lastRerouteLocation = location
 
-        getDirections(from: location, along: progress) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
             guard let strongSelf = self else {
                 return
             }
@@ -375,11 +375,12 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                      RouteController.NotificationUserInfoKey.routingErrorKey: error,
                  ])
                  return
-            case let .success(response):
+            case let .success(indexedResponse):
+                let response = indexedResponse.routeResponse
                 guard case let .route(options) = response.options, !(response.routes?.isEmpty ?? true) else {
                     return
                 }
-                strongSelf.updateRoute(with: .init(routeResponse: response, routeIndex: 0), routeOptions: options) // unconditionally getting the first route above
+                strongSelf.updateRoute(with: indexedResponse, routeOptions: options)
             }
         }
     }
