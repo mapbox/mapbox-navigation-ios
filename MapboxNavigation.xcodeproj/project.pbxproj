@@ -31,7 +31,6 @@
 		16EF6C22211BA4B300AA580B /* CarPlayMapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */; };
 		1FFDFD92249C1AA80091746A /* JunctionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FFDFD91249C1AA70091746A /* JunctionView.swift */; };
 		2B07444124B4832400615E87 /* TokenTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B07444024B4832400615E87 /* TokenTestViewController.swift */; };
-		2B2B1EEE2424E55800FA18A6 /* SKUIDTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2B1EED2424E55800FA18A6 /* SKUIDTestable.swift */; };
 		2B3ED38C2609FA7900861A84 /* ArrivalController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED38B2609FA7900861A84 /* ArrivalController.swift */; };
 		2B3ED3962609FB2300861A84 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED3952609FB2300861A84 /* CameraController.swift */; };
 		2B3ED3B4260A162900861A84 /* NavigationViewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3ED3B3260A162900861A84 /* NavigationViewData.swift */; };
@@ -206,8 +205,8 @@
 		8AB316AB26BA029100C3AC76 /* MapTemplateProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316AA26BA029100C3AC76 /* MapTemplateProviderDelegate.swift */; };
 		8AB316C926BCA56D00C3AC76 /* UIViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316C826BCA56D00C3AC76 /* UIViewController.swift */; };
 		8AB316CB26BCA72300C3AC76 /* CGSize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316CA26BCA72300C3AC76 /* CGSize.swift */; };
-		8AB8F30226DD96ED003FF4EE /* UserHaloCourseViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB8F30126DD96ED003FF4EE /* UserHaloCourseViewSnapshotTests.swift */; };
 		8AB8F30026DD7C30003FF4EE /* CGPointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB8F2FF26DD7C30003FF4EE /* CGPointTests.swift */; };
+		8AB8F30226DD96ED003FF4EE /* UserHaloCourseViewSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB8F30126DD96ED003FF4EE /* UserHaloCourseViewSnapshotTests.swift */; };
 		8ABB9E75268E0140009013A5 /* NavigationCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */; };
 		8ABCD6A426AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json in Resources */ = {isa = PBXBuildFile; fileRef = 8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */; };
 		8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3965225DC66570027A035 /* NavigationCameraType.swift */; };
@@ -517,7 +516,6 @@
 		16EF6C21211BA4B300AA580B /* CarPlayMapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewController.swift; sourceTree = "<group>"; };
 		1FFDFD91249C1AA70091746A /* JunctionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JunctionView.swift; sourceTree = "<group>"; };
 		2B07444024B4832400615E87 /* TokenTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenTestViewController.swift; sourceTree = "<group>"; };
-		2B2B1EED2424E55800FA18A6 /* SKUIDTestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SKUIDTestable.swift; sourceTree = "<group>"; };
 		2B3ED38B2609FA7900861A84 /* ArrivalController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrivalController.swift; sourceTree = "<group>"; };
 		2B3ED3952609FB2300861A84 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		2B3ED3B3260A162900861A84 /* NavigationViewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewData.swift; sourceTree = "<group>"; };
@@ -706,8 +704,8 @@
 		8AB316AE26BB315100C3AC76 /* CPMapTemplate+MBTestable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CPMapTemplate+MBTestable.m"; sourceTree = "<group>"; };
 		8AB316C826BCA56D00C3AC76 /* UIViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIViewController.swift; sourceTree = "<group>"; };
 		8AB316CA26BCA72300C3AC76 /* CGSize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGSize.swift; sourceTree = "<group>"; };
-		8AB8F30126DD96ED003FF4EE /* UserHaloCourseViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseViewSnapshotTests.swift; sourceTree = "<group>"; };
 		8AB8F2FF26DD7C30003FF4EE /* CGPointTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CGPointTests.swift; sourceTree = "<group>"; };
+		8AB8F30126DD96ED003FF4EE /* UserHaloCourseViewSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserHaloCourseViewSnapshotTests.swift; sourceTree = "<group>"; };
 		8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraTests.swift; sourceTree = "<group>"; };
 		8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera-bearing-smoothing.json"; sourceTree = "<group>"; };
 		8AC3965225DC66570027A035 /* NavigationCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraType.swift; sourceTree = "<group>"; };
@@ -1422,7 +1420,6 @@
 			isa = PBXGroup;
 			children = (
 				355B469C22B9031E009CE634 /* SKUTestable.swift */,
-				2B2B1EED2424E55800FA18A6 /* SKUIDTestable.swift */,
 				2B07444024B4832400615E87 /* TokenTestViewController.swift */,
 				355B469A22B902C9009CE634 /* SKUTests.swift */,
 			);
@@ -2520,7 +2517,6 @@
 				8AB316CB26BCA72300C3AC76 /* CGSize.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
 				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
-				2B2B1EEE2424E55800FA18A6 /* SKUIDTestable.swift in Sources */,
 				DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */,
 				8DFD949E221F66BE00152F45 /* BottomBannerSnapshotTests.swift in Sources */,
 				355B469B22B902C9009CE634 /* SKUTests.swift in Sources */,
