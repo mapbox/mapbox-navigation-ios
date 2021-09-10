@@ -101,18 +101,28 @@ public class GenericRouteShield: StylableView {
 
         let performAsCurrentSelector = Selector(("performAsCurrentTraitCollection:" as NSString) as String)
 
-        if #available(iOS 13.0, *) {
-            if let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection, currentTraitCollection.responds(to: performAsCurrentSelector), let backgroundCGColor = backgroundColor?.cgColor, let foregroundCGColor = foregroundColor?.cgColor {
-
-                let colorCopyingClosure = {
-                    backgroundColor = UIColor(cgColor: backgroundCGColor)
-                    foregroundColor = UIColor(cgColor: foregroundCGColor)
-                }
-                let colorCopyingBlock: @convention(block) () -> Void = colorCopyingClosure
-                currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
+        if #available(iOS 13.0, *),
+           let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection,
+           currentTraitCollection.responds(to: performAsCurrentSelector),
+           let backgroundCGColor = backgroundColor?.cgColor,
+           let foregroundCGColor = foregroundColor?.cgColor {
+            let colorCopyingClosure = {
+                backgroundColor = UIColor(cgColor: backgroundCGColor)
+                foregroundColor = UIColor(cgColor: foregroundCGColor)
             }
+            let colorCopyingBlock: @convention(block) () -> Void = colorCopyingClosure
+            currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
         }
-        let criticalProperties: [AnyHashable?] = [dataSource.font.pointSize, dataSource.textColor, backgroundColor, foregroundColor, proxy.borderWidth, proxy.cornerRadius]
-        return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
+        
+        let criticalProperties: [AnyHashable?] = [
+            dataSource.font.pointSize,
+            dataSource.textColor,
+            backgroundColor,
+            foregroundColor,
+            proxy.borderWidth,
+            proxy.cornerRadius
+        ]
+        
+        return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0) }))
     }
 }

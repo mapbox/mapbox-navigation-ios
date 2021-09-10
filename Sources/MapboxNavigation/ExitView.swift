@@ -81,7 +81,7 @@ public class ExitView: StylableView {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        pointSize = 0.0        
+        pointSize = 0.0
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -95,7 +95,6 @@ public class ExitView: StylableView {
         translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
 
-        //build view hierarchy
         let children = [imageView, exitNumberLabel]
         addSubviews(children)
         buildConstraints()
@@ -125,6 +124,7 @@ public class ExitView: StylableView {
         
         addConstraints(constraints)
     }
+    
     func rightExitConstraints() -> [NSLayoutConstraint] {
         let labelLeading = exitNumberLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8)
         let spacing = self.spacing(for: .right)
@@ -149,18 +149,29 @@ public class ExitView: StylableView {
         var backgroundColor = proxy.backgroundColor
         var foregroundColor = proxy.foregroundColor
         let performAsCurrentSelector = Selector(("performAsCurrentTraitCollection:" as NSString) as String)
-        if #available(iOS 13.0, *) {
-            if let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection, currentTraitCollection.responds(to: performAsCurrentSelector), let backgroundCGColor = backgroundColor?.cgColor, let foregroundCGColor = foregroundColor?.cgColor {
-
-                let colorCopyingClosure = {
-                    backgroundColor = UIColor(cgColor: backgroundCGColor)
-                    foregroundColor = UIColor(cgColor: foregroundCGColor)
-                }
-                let colorCopyingBlock: @convention(block) () -> Void = colorCopyingClosure
-                currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
+        
+        if #available(iOS 13.0, *),
+           let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection,
+           currentTraitCollection.responds(to: performAsCurrentSelector),
+           let backgroundCGColor = backgroundColor?.cgColor,
+           let foregroundCGColor = foregroundColor?.cgColor {
+            let colorCopyingClosure = {
+                backgroundColor = UIColor(cgColor: backgroundCGColor)
+                foregroundColor = UIColor(cgColor: foregroundCGColor)
             }
+            let colorCopyingBlock: @convention(block) () -> Void = colorCopyingClosure
+            currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
         }
-        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, backgroundColor, foregroundColor, proxy.borderWidth, proxy.cornerRadius]
+        
+        let criticalProperties: [AnyHashable?] = [
+            side,
+            dataSource.font.pointSize,
+            backgroundColor,
+            foregroundColor,
+            proxy.borderWidth,
+            proxy.cornerRadius
+        ]
+        
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
     }
 }

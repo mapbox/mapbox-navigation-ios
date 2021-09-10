@@ -51,7 +51,6 @@ open class ManeuverView: UIView {
         }
     }
 
-
     public var isStart = false {
         didSet {
             setNeedsDisplay()
