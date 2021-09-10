@@ -379,11 +379,8 @@ jobs:
           condition: << parameters.spm >>
           steps:
             - run:
-                name: Move Xcode project aside
-                command: rm -rf *.xcodeproj
-            - run:
                 name: MapboxNavigation-Package
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
+                command: xcodebuild build test -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigationTests -project MapboxNavigation-SPM.xcodeproj -only-testing:"MapboxNavigationTests/BuildingHighlightingTests/testHighlightBuildings" -derivedDataPath "tmp" CONFIGURATION_BUILD_DIR="tmp" TARGET_BUILD_DIR="tmp" TEST_HOST="/tmp/TestHost.app/TestHost" PLUGINS_FOLDER_PATH="tmp"; ls -l tmp
       - when:
           condition: << parameters.codecoverage >>
           steps:
