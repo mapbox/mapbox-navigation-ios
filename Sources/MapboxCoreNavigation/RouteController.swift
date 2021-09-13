@@ -278,7 +278,7 @@ open class RouteController: NSObject {
         updateRoadName(status: status)
         
         if willReroute {
-            reroute(from: location, along: routeProgress)
+            reroute(from: CLLocation(status.location), along: routeProgress)
         }
 
         if status.routeState != .complete {
