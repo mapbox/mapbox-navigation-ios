@@ -376,12 +376,16 @@ class ViewController: UIViewController {
         let toggleDayNightStyle: ActionHandler = { _ in self.toggleDayNightStyle() }
         let requestFollowCamera: ActionHandler = { _ in self.requestFollowCamera() }
         let requestIdleCamera: ActionHandler = { _ in self.requestIdleCamera() }
+        let turnOnHistoryRecording: ActionHandler = { _ in self.turnOnHistoryRecording() }
+        let turnOffHistoryRecording: ActionHandler = { _ in self.turnOffHistoryRecording() }
         
         let actions: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Toggle Day/Night Style", .default, toggleDayNightStyle),
             ("Request Following Camera", .default, requestFollowCamera),
             ("Request Idle Camera", .default, requestIdleCamera),
-            ("Cancel", .cancel, nil)
+            ("Turn On History Recording", .default, turnOnHistoryRecording),
+            ("Turn Off History Recording", .default, turnOffHistoryRecording),
+            ("Cancel", .cancel, nil),
         ]
         
         actions
@@ -410,6 +414,24 @@ class ViewController: UIViewController {
     
     func requestIdleCamera() {
         navigationMapView.navigationCamera.stop()
+    }
+
+    func turnOnHistoryRecording() {
+        PassiveLocationManager.startRecordingHistory()
+    }
+
+    func turnOffHistoryRecording() {
+        PassiveLocationManager.stopRecordingHistory { historyFileUrl in
+            guard let historyFileUrl = historyFileUrl else { return }
+            DispatchQueue.main.async {
+                #if targetEnvironment(simulator)
+                print("History file saved at path: \(historyFileUrl.path)")
+                #else
+                let shareVC = UIActivityViewController(activityItems: [historyFileUrl], applicationActivities: nil)
+                self.present(shareVC, animated: true, completion: nil)
+                #endif
+            }
+        }
     }
     
     func requestRoute() {
