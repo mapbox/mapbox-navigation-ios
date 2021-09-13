@@ -253,7 +253,8 @@ class MapboxCoreNavigationTests: TestCase {
             XCTAssertEqual(notification.userInfo?.count, 1)
             
             let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
-            return offRouteLocations.contains(location)
+            // location is a map-matched location, so we don't know it in advance
+            return offRouteLocations[0].distance(from: location) < 10
         }
         
         navigation.start()

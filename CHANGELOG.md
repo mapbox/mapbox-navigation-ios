@@ -70,7 +70,7 @@
 * Fixes an issue where the user would be rerouted even if `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` returned `false`. To implement reroute after arrival behavior, return `true` from this method and `false` from `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, then set `NavigationViewController.showsEndOfRouteFeedback` to `false`. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
 * Added `UserHaloCourseView.haloBorderWidth`, which allows to change border of the ring around halo view. ([#3309](https://github.com/mapbox/mapbox-navigation-ios/pull/3309))
 * Fixed an issue where the `RouteController.indexedRouteResponse` property would remain unchanged after the user is rerouted. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344]))
-* Rerouting now uses the snapped location, instead of raw location. ([#](https://github.com/mapbox/mapbox-navigation-ios/pull/))
+* Rerouting now uses the snapped location, instead of raw location. ([#3361](https://github.com/mapbox/mapbox-navigation-ios/pull/3361))
 
 ### Electronic horizon
 
