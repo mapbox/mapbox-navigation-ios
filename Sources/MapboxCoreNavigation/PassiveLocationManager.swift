@@ -118,6 +118,10 @@ open class PassiveLocationManager: NSObject {
     }
 
     private func didUpdate(locations: [CLLocation]) {
+        // NOTE: We should stop updating `navigator` with locations if billing session isn't running.
+        //       To be replaced by `Navigator` pause/resume functionality once available.
+        guard BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
+
         for location in locations {
             navigator.updateLocation(for: FixLocation(location))
         }
