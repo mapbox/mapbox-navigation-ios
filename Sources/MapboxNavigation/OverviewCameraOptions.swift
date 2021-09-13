@@ -11,15 +11,19 @@ public struct OverviewCameraOptions: Equatable {
      state.
      
      Defaults to `16.35`.
+
+     - Invariant: Acceptable range of values is 0...22.
      */
     public var maximumZoomLevel: Double = 16.35 {
         didSet {
             if maximumZoomLevel < 0.0 {
-                preconditionFailure("Maximum zoom level should not be lower than 0.0")
+                maximumZoomLevel = 0
+                assertionFailure("Maximum zoom level should not be lower than 0.0")
             }
             
             if maximumZoomLevel > 22.0 {
-                preconditionFailure("Maximum zoom level should not be higher than 22.0")
+                maximumZoomLevel = 22
+                assertionFailure("Maximum zoom level should not be higher than 22.0")
             }
         }
     }
