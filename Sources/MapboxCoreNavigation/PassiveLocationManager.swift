@@ -97,10 +97,13 @@ open class PassiveLocationManager: NSObject {
     public weak var delegate: PassiveLocationManagerDelegate?
     
     /**
-     Starts the generation of location updates. 
+     Starts the generation of location updates and resumes trip session.
+
+     To learn more read `PassiveLocationManager.resumeTripSession()` method documentation.
      */
+    @available(*, deprecated, message: "Use resumeTripSession() instead.")
     public func startUpdatingLocation() {
-        systemLocationManager.startUpdatingLocation()
+        resumeTripSession()
     }
     
     var lastRawLocation: CLLocation?
@@ -108,7 +111,8 @@ open class PassiveLocationManager: NSObject {
     /**
      Manually sets the current location.
      
-     This method stops any automatic location updates.
+     This method stops any automatic location updates
+     without pausing the Free Drive session (`PassiveLocationManager.pauseTripSession()`).
      */
     public func updateLocation(_ location: CLLocation?) {
         guard let location = location else { return }
@@ -134,23 +138,27 @@ open class PassiveLocationManager: NSObject {
     }
 
     /**
-     Pauses the Free Drive session.
+     Pauses the Free Drive session assosiated with this instance.
+
+     Paused trip sessions don't generate location and navigation status updates.
 
      Use this method to extend the existing Free Drive session if you temporarily don't need navigation updates. For
      more info, read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
      */
     public func pauseTripSession() {
         BillingHandler.shared.pauseBillingSession(with: sessionUUID)
+        systemLocationManager.stopUpdatingLocation()
     }
 
     /**
-     Resumes the Free Drive session.
+     Resumes the Free Drive session assosiated with this instance.
 
      Resumes navigation updates paused by `PassiveLocationManager.pauseTripSession()`. For more info, read the
      [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
      */
     public func resumeTripSession() {
         BillingHandler.shared.resumeBillingSession(with: sessionUUID)
+        systemLocationManager.startUpdatingLocation()
     }
 
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
