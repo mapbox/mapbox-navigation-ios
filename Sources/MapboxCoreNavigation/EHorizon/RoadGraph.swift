@@ -9,6 +9,8 @@ import MapboxNavigationNative
  */
 public final class RoadGraph {
 
+    // MARK: Getting Edge Info
+    
     /**
      Returns metadata about the edge with the given edge identifier.
      
@@ -32,6 +34,8 @@ public final class RoadGraph {
         }
         return LineString(locations.map { $0.coordinate })
     }
+    
+    // MARK: Retrieving GeoJSON Geometry Of Objects
     
     /**
      Returns a line string geometry corresponding to the given path.

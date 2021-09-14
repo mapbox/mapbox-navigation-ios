@@ -21,6 +21,8 @@ public final class RoadObjectStore {
         }
     }
 
+    // MARK: Getting Road Objects Data
+    
     /**
      Returns mapping `road object identifier -> RoadObjectEdgeLocation` for all road objects
      which are lying on the edge with given identifier.
@@ -52,6 +54,8 @@ public final class RoadObjectStore {
         return native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))
     }
 
+    // MARK: Managing Custom Road Objects
+    
     /**
      Adds a road object to be tracked in the electronic horizon. In case if an object with such identifier already exists, updates it.
      NB: a road object obtained from route alerts cannot be added via this API.

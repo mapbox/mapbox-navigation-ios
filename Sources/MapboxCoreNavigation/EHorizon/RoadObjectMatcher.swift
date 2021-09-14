@@ -11,23 +11,7 @@ import Turf
  */
 final public class RoadObjectMatcher {
 
-    /// Road object matcher delegate.
-    public weak var delegate: RoadObjectMatcherDelegate? {
-        didSet {
-            if delegate != nil {
-                internalRoadObjectMatcherListener.delegate = delegate
-            } else {
-                internalRoadObjectMatcherListener.delegate = nil
-            }
-            updateListener()
-        }
-    }
-    
-    /**
-     Object, which subscribes to events being sent from the `RoadObjectMatcherListener`, and passes them
-     to the `RoadObjectMatcherDelegate`.
-     */
-    var internalRoadObjectMatcherListener: InternalRoadObjectMatcherListener!
+    // MARK: Matching Objects
 
     /**
      Matches given OpenLR object to the graph.
@@ -113,17 +97,20 @@ final public class RoadObjectMatcher {
         native.cancel(forIds: [identifier])
     }
 
-    init(_ native: MapboxNavigationNative.RoadObjectMatcher) {
-        self.native = native
-        
-        internalRoadObjectMatcherListener = InternalRoadObjectMatcherListener(roadObjectMatcher: self)
+    // MARK: Observing Matching Results
+    
+    /// Road object matcher delegate.
+    public weak var delegate: RoadObjectMatcherDelegate? {
+        didSet {
+            if delegate != nil {
+                internalRoadObjectMatcherListener.delegate = delegate
+            } else {
+                internalRoadObjectMatcherListener.delegate = nil
+            }
+            updateListener()
+        }
     }
-
-    deinit {
-        internalRoadObjectMatcherListener.delegate = nil
-        native.setListenerFor(nil)
-    }
-
+    
     private func updateListener() {
         if delegate != nil {
             native.setListenerFor(internalRoadObjectMatcherListener)
@@ -136,6 +123,23 @@ final public class RoadObjectMatcher {
         didSet {
             updateListener()
         }
+    }
+    
+    /**
+     Object, which subscribes to events being sent from the `RoadObjectMatcherListener`, and passes them
+     to the `RoadObjectMatcherDelegate`.
+     */
+    var internalRoadObjectMatcherListener: InternalRoadObjectMatcherListener!
+    
+    init(_ native: MapboxNavigationNative.RoadObjectMatcher) {
+        self.native = native
+        
+        internalRoadObjectMatcherListener = InternalRoadObjectMatcherListener(roadObjectMatcher: self)
+    }
+
+    deinit {
+        internalRoadObjectMatcherListener.delegate = nil
+        native.setListenerFor(nil)
     }
 }
 
