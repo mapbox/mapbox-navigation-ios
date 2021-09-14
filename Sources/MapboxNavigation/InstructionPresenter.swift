@@ -136,11 +136,11 @@ class InstructionPresenter {
                 return attributedString
             case .image(let image, let alternativeText):
                 // Ideally represent the image component as a shield image.
-                return self.attributedString(forShieldComponent: image,
-                                             repository: imageRepository,
-                                             dataSource: dataSource,
-                                             cacheKey: component.cacheKey!,
-                                             onImageDownload: onImageDownload)
+                return attributedString(forShieldComponent: image,
+                                        repository: imageRepository,
+                                        dataSource: dataSource,
+                                        cacheKey: component.cacheKey!,
+                                        onImageDownload: onImageDownload)
                     // Fall back to a generic shield if no shield image is available.
                     ?? genericShield(text: alternativeText.text, dataSource: dataSource, cacheKey: component.cacheKey!)
                     // Finally, fall back to a plain text representation if the generic shield couldn’t be rendered.
@@ -149,7 +149,10 @@ class InstructionPresenter {
                 preconditionFailure("Exit components should have been removed above")
             case .exitCode(let text):
                 let exitSide: ExitSide = instruction.maneuverDirection == .left ? .left : .right
-                return exitShield(side: exitSide, text: text.text, dataSource: dataSource, cacheKey: component.cacheKey!)
+                return exitShield(side: exitSide,
+                                  text: text.text,
+                                  dataSource: dataSource,
+                                  cacheKey: component.cacheKey!)
                     ?? NSAttributedString(string: text.text, attributes: defaultAttributes)
             case .lane(_, _, _):
                 preconditionFailure("Lane component has no attributed string representation.")
@@ -192,7 +195,9 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func genericShield(text: String, dataSource: DataSource, cacheKey: String) -> NSAttributedString? {
+    private func genericShield(text: String,
+                               dataSource: DataSource,
+                               cacheKey: String) -> NSAttributedString? {
         let additionalKey = GenericRouteShield.criticalHash(dataSource: dataSource)
         let attachment = GenericShieldAttachment()
         
@@ -213,7 +218,10 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func exitShield(side: ExitSide = .right, text: String, dataSource: DataSource, cacheKey: String) -> NSAttributedString? {
+    private func exitShield(side: ExitSide = .right,
+                            text: String,
+                            dataSource: DataSource,
+                            cacheKey: String) -> NSAttributedString? {
         let additionalKey = ExitView.criticalHash(side: side, dataSource: dataSource)
         let attachment = ExitAttachment()
 
@@ -222,7 +230,8 @@ class InstructionPresenter {
             attachment.image = image
         } else {
             let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
-            view.foregroundColor = dataSource.textColor
+            view.foregroundColor = ExitView.appearance().foregroundColor
+            view.borderWidth = ExitView.appearance().borderWidth
             guard let image = takeSnapshot(on: view) else { return nil }
             imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image

@@ -116,7 +116,6 @@ public class GenericRouteShield: StylableView {
         
         let criticalProperties: [AnyHashable?] = [
             dataSource.font.pointSize,
-            dataSource.textColor,
             backgroundColor,
             foregroundColor,
             proxy.borderWidth,

@@ -12,14 +12,26 @@ func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
 func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
                            _ maneuverDirection: ManeuverDirection = .left,
                            primaryInstruction: [VisualInstruction.Component],
-                           secondaryInstruction: [VisualInstruction.Component]?) -> VisualInstructionBanner {
-    let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: primaryInstruction)
+                           secondaryInstruction: [VisualInstruction.Component]?,
+                           drivingSide: DrivingSide = .right) -> VisualInstructionBanner {
+    let primary = VisualInstruction(text: "Instruction",
+                                    maneuverType: maneuverType,
+                                    maneuverDirection: maneuverDirection,
+                                    components: primaryInstruction)
     var secondary: VisualInstruction? = nil
     if let secondaryInstruction = secondaryInstruction {
-        secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: secondaryInstruction)
+        secondary = VisualInstruction(text: "Instruction",
+                                      maneuverType: maneuverType,
+                                      maneuverDirection: maneuverDirection,
+                                      components: secondaryInstruction)
     }
     
-    return VisualInstructionBanner(distanceAlongStep: 482.803, primary: primary, secondary: secondary, tertiary: nil, quaternary: nil, drivingSide: .right)
+    return VisualInstructionBanner(distanceAlongStep: 482.803,
+                                   primary: primary,
+                                   secondary: secondary,
+                                   tertiary: nil,
+                                   quaternary: nil,
+                                   drivingSide: drivingSide)
 }
 
 class InstructionsBannerViewIntegrationTests: TestCase {
