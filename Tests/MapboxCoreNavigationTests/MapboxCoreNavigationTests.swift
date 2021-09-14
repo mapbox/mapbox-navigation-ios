@@ -254,7 +254,7 @@ class MapboxCoreNavigationTests: TestCase {
             
             let location = notification.userInfo![RouteController.NotificationUserInfoKey.locationKey] as! CLLocation
             // location is a map-matched location, so we don't know it in advance
-            return offRouteLocations[0].distance(from: location) < 10
+            return offRouteLocations.first(where: { $0.distance(from: location) < 10 }) != nil
         }
         
         navigation.start()
