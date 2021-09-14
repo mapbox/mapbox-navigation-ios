@@ -40,6 +40,11 @@ public let CongestionAttribute = "congestion"
  */
 public let NavigationViewMinimumVolumeForWarning: Float = 0.3
 
+/**
+ The distance of fading color change between two different congestion level segments in meters.
+ */
+public var GradientCongestionFadingDistance: CLLocationDistance = 30.0
+
 extension Notification.Name {
     /**
      Posted when `StyleManager` applies a style that was triggered by change of time of day, or when entering or exiting a tunnel.
