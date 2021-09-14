@@ -182,7 +182,7 @@ custom_categories:
       - RoadObjectMatcher
       - RoadObjectsStore
       - RoadObjectLocation
-      - RoadObjectType
+      - ObjectType
       - RoadObjectMatcherDelegate
       - RoadObjectsStoreDelegate
       - RoadObjectEdgeLocation

@@ -13,7 +13,7 @@ public enum DistancedRoadObject {
      - parameter type: Road object type.
      - parameter distance: Distance to the point object, measured in meters.
      */
-    case point(identifier: RoadObjectIdentifier, type: RoadObjectType, distance: CLLocationDistance)
+    case point(identifier: RoadObjectIdentifier, type: RoadObject.ObjectType, distance: CLLocationDistance)
     
     /**
      The information about distance to the road object represented as a gantry.
@@ -21,7 +21,7 @@ public enum DistancedRoadObject {
      - parameter type: Road object type.
      - parameter distance: Distance to the gantry object.
      */
-    case gantry(identifier: RoadObjectIdentifier, type: RoadObjectType, distance: CLLocationDistance)
+    case gantry(identifier: RoadObjectIdentifier, type: RoadObject.ObjectType, distance: CLLocationDistance)
     
     /**
      The information about distance to the road object represented as a polygon.
@@ -32,7 +32,7 @@ public enum DistancedRoadObject {
      - parameter isInside: Boolean to indicate whether we're currently "inside" the object.
      */
     case polygon(identifier: RoadObjectIdentifier,
-                 type: RoadObjectType,
+                 type: RoadObject.ObjectType,
                  distanceToNearestEntry: CLLocationDistance?,
                  distanceToNearestExit: CLLocationDistance?,
                  isInside: Bool)
@@ -46,7 +46,7 @@ public enum DistancedRoadObject {
      - parameter isInside: Boolean that indicates whether we're currently "inside" the object.
      */
     case subgraph(identifier: RoadObjectIdentifier,
-                  type: RoadObjectType,
+                  type: RoadObject.ObjectType,
                   distanceToNearestEntry: CLLocationDistance?,
                   distanceToNearestExit: CLLocationDistance?,
                   isInside: Bool)
@@ -62,7 +62,7 @@ public enum DistancedRoadObject {
      - parameter length: Length of the road object measured in meters.
      */
     case line(identifier: RoadObjectIdentifier,
-              type: RoadObjectType,
+              type: RoadObject.ObjectType,
               distanceToEntry: CLLocationDistance,
               distanceToExit: CLLocationDistance,
               distanceToEnd: CLLocationDistance,
@@ -82,7 +82,7 @@ public enum DistancedRoadObject {
     }
 
     /** Road object type */
-    public var type: RoadObjectType {
+    public var type: RoadObject.ObjectType {
         switch self {
         case .point(_, let type, _),
              .gantry(_, let type, _),
@@ -97,31 +97,31 @@ public enum DistancedRoadObject {
         if native.distanceInfo.isPointDistanceInfo() {
             let info = native.distanceInfo.getPointDistanceInfo()
             self = .point(identifier: native.roadObjectId,
-                          type: RoadObjectType(native.type),
+                          type: RoadObject.ObjectType(native.type),
                           distance: info.distance)
         } else if native.distanceInfo.isGantryDistanceInfo() {
             let info = native.distanceInfo.getGantryDistanceInfo()
             self = .gantry(identifier: native.roadObjectId,
-                           type: RoadObjectType(native.type),
+                           type: RoadObject.ObjectType(native.type),
                            distance: info.distance)
         } else if native.distanceInfo.isPolygonDistanceInfo() {
             let info = native.distanceInfo.getPolygonDistanceInfo()
             self = .polygon(identifier: native.roadObjectId,
-                            type: RoadObjectType(native.type),
+                            type: RoadObject.ObjectType(native.type),
                             distanceToNearestEntry: info.entrances.first?.distance,
                             distanceToNearestExit: info.exits.first?.distance,
                             isInside: info.isInside)
         } else if native.distanceInfo.isSubGraphDistanceInfo() {
             let info = native.distanceInfo.getSubGraphDistanceInfo()
             self = .subgraph(identifier: native.roadObjectId,
-                             type: RoadObjectType(native.type),
+                             type: RoadObject.ObjectType(native.type),
                              distanceToNearestEntry: info.entrances.first?.distance,
                              distanceToNearestExit: info.exits.first?.distance,
                              isInside: info.isInside)
         } else if native.distanceInfo.isLineDistanceInfo() {
             let info = native.distanceInfo.getLineDistanceInfo()
             self = .line(identifier: native.roadObjectId,
-                         type: RoadObjectType(native.type),
+                         type: RoadObject.ObjectType(native.type),
                          distanceToEntry: info.distanceToEntry,
                          distanceToExit: info.distanceToExit,
                          distanceToEnd: info.distanceToEnd,
