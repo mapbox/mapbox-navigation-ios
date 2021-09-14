@@ -356,7 +356,6 @@ final class BillingHandler {
     func resumeBillingSession(with uuid: UUID) {
         lock.lock()
         guard var session = _sessions[uuid] else {
-            assertionFailure("Trying to resume non-existing session.")
             lock.unlock(); return
         }
         session.isPaused = false
