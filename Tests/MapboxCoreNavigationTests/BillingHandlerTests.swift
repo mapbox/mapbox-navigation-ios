@@ -539,6 +539,7 @@ final class BillingHandlerUnitTests: TestCase {
         let routeController = RouteController(alongRouteAtIndex: 0,
                                               in: initialRouteResponse,
                                               options: NavigationRouteOptions(coordinates: initialRouteWaypoints),
+                                              routingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: dataSource)
 
         let routeUpdated = expectation(description: "Route updated")
@@ -601,13 +602,11 @@ final class BillingHandlerUnitTests: TestCase {
                 .map { CLLocation(coordinate: $0) }
                 .shiftedToPresent()
 
-            let directions = DirectionsSpy()
-
             let navOptions = NavigationRouteOptions(coordinates: [origin, destination])
             let routeController = RouteController(alongRouteAtIndex: 0,
                                                   in: routeResponse,
                                                   options: navOptions,
-                                                  directions: directions,
+                                                  routingProvider: MapboxRoutingProvider(.offline),
                                                   dataSource: self)
 
             let routerDelegateSpy = RouterDelegateSpy()

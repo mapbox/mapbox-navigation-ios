@@ -15,14 +15,14 @@ class NativeHandlersFactory {
     
     let tileStorePath: String
     let credentials: Credentials
-    let tilesVersion: String?
+    let tilesVersion: String
     let historyDirectoryURL: URL?
     let targetVersion: String?
     let configFactoryType: ConfigFactory.Type
     
     init(tileStorePath: String,
          credentials: Credentials,
-         tilesVersion: String? = nil,
+         tilesVersion: String = "",
          historyDirectoryURL: URL? = nil,
          targetVersion: String? = nil,
          configFactoryType: ConfigFactory.Type = ConfigFactory.self) {
@@ -38,7 +38,9 @@ class NativeHandlersFactory {
     
     lazy var historyRecorder: HistoryRecorderHandle? = {
         historyDirectoryURL.flatMap {
-            HistoryRecorderHandle.build(forHistoryDir: $0.path, config: configHandle)
+            historyRecorderHandlerFactory.getHandler(with: (path: $0.path,
+                                                            configHandle: configHandle),
+                                                     cacheData: self)
         }
     }()
     
@@ -51,9 +53,9 @@ class NativeHandlersFactory {
     }()
     
     lazy var cacheHandle: CacheHandle = {
-        CacheHandlerFactory.getHandler(for: tilesConfig,
-                                       config: configHandle,
-                                       historyRecorder: historyRecorder,
+        cacheHandlerFactory.getHandler(with: (tilesConfig: tilesConfig,
+                                              configHandle: configHandle,
+                                              historyRecorder: historyRecorder),
                                        cacheData: self)
     }()
     
@@ -74,7 +76,7 @@ class NativeHandlersFactory {
     
     lazy var endpointConfig: TileEndpointConfiguration = {
         TileEndpointConfiguration(credentials: credentials,
-                                  tilesVersion: tilesVersion ?? "",
+                                  tilesVersion: tilesVersion,
                                   minimumDaysToPersistVersion: nil,
                                   targetVersion: targetVersion)
     }()

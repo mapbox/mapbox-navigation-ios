@@ -35,7 +35,7 @@ fileprivate class CPManeuverFake: CPManeuver {
 class CarPlayNavigationViewControllerTests: TestCase {
     func testCarplayDisplaysCorrectEstimates() {
         //set up the litany of dependancies
-        let manager = CarPlayManager()
+        let manager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
             CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),

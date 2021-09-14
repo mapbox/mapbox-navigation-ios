@@ -28,8 +28,9 @@ public struct IndexedRouteResponse {
     /**
      Returns a route from the `routeResponse` under given `routeIndex` if possible.
      */
-    public var selectedRoute: Route? {
-        guard routeResponse.routes?.count ?? 0 > routeIndex else {
+    public var currentRoute: Route? {
+        guard let routes = routeResponse.routes,
+              routes.count > routeIndex else {
             return nil
         }
         return routeResponse.routes?[routeIndex]
@@ -76,10 +77,14 @@ public protocol Router: CLLocationManagerDelegate {
      
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
-     - parameter routingSource: `NavigationRouter` source type, used to create route.
+     - parameter routingProvider: `RoutingProvider`, used to create route.
      - parameter source: The data source for the RouteController.
      */
-    init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, routingSource: NavigationRouter.RouterSource, dataSource source: RouterDataSource)
+    init(alongRouteAtIndex routeIndex: Int,
+         in routeResponse: RouteResponse,
+         options: RouteOptions,
+         routingProvider: RoutingProvider,
+         dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -164,7 +169,7 @@ protocol InternalRouter: AnyObject {
     
     var lastRouteRefresh: Date? { get set }
     
-    var routeTask: NavigationRouter.RoutingRequest? { get set }
+    var routeTask: NavigationProviderRequest? { get set }
     
     var lastRerouteLocation: CLLocation? { get set }
     
@@ -172,7 +177,7 @@ protocol InternalRouter: AnyObject {
     
     var isRefreshing: Bool { get set }
     
-    var routingSource: NavigationRouter.RouterSource { get }
+    var routingProvider: RoutingProvider { get }
     
     var routeProgress: RouteProgress { get }
     
@@ -189,49 +194,54 @@ extension InternalRouter where Self: Router {
     func refreshAndCheckForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         if refreshesRoute {
             refreshRoute(from: location, legIndex: routeProgress.legIndex) {
-                self.checkForFasterRoute(from: location, routeProgress: routeProgress, router: $0)
+                self.checkForFasterRoute(from: location, routeProgress: routeProgress)
             }
         } else {
             checkForFasterRoute(from: location, routeProgress: routeProgress)
         }
     }
     
-    func refreshRoute(from location: CLLocation, legIndex: Int, completion: @escaping (NavigationRouter?)->()) {
+    func refreshRoute(from location: CLLocation, legIndex: Int, completion: @escaping ()->()) {
         guard refreshesRoute else {
-            completion(nil)
+            completion()
             return
         }
         
         guard let lastRouteRefresh = lastRouteRefresh else {
             self.lastRouteRefresh = location.timestamp
-            completion(nil)
+            completion()
             return
         }
         
         guard location.timestamp.timeIntervalSince(lastRouteRefresh) >= RouteControllerProactiveReroutingInterval else {
-            completion(nil)
+            completion()
             return
         }
         
         if isRefreshing {
-            completion(nil)
+            completion()
             return
         }
         isRefreshing = true
-        let router = NavigationRouter(self.routingSource)
-        router.refreshRoute(indexedRouteResponse: indexedRouteResponse,
-                            fromLegAtIndex: UInt32(legIndex)) { [weak self, weak router] session, result in
+        routingProvider.refreshRoute(indexedRouteResponse: indexedRouteResponse,
+                                     fromLegAtIndex: UInt32(legIndex)) { [weak self] session, result in
             defer {
                 self?.isRefreshing = false
                 self?.lastRouteRefresh = nil
-                completion(router)
+                completion()
             }
             
             guard case let .success(response) = result, let self = self else {
                 return
             }
             self.indexedRouteResponse = .init(routeResponse: response, routeIndex: self.indexedRouteResponse.routeIndex)
-            self.routeProgress.refreshRoute(with: self.indexedRouteResponse.selectedRoute!, at: location)
+            
+            guard let currentRoute = self.indexedRouteResponse.currentRoute else {
+                assertionFailure("Refreshed `RouteResponse` did not contain required `routeIndex`!")
+                return
+            }
+            
+            self.routeProgress.refreshRoute(with: currentRoute, at: location)
             
             var userInfo = [RouteController.NotificationUserInfoKey: Any]()
             userInfo[.routeProgressKey] = self.routeProgress
@@ -240,7 +250,7 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func checkForFasterRoute(from location: CLLocation, routeProgress: RouteProgress, router: NavigationRouter? = nil) {
+    func checkForFasterRoute(from location: CLLocation, routeProgress: RouteProgress) {
         // Check for faster route given users current location
         guard reroutesProactively else { return }
         
@@ -269,7 +279,7 @@ extension InternalRouter where Self: Router {
         if isRerouting { return }
         isRerouting = true
         
-        calculateRoutes(from: location, along: routeProgress, router: router) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: routeProgress) { [weak self] (session, result) in
             guard let self = self else { return }
 
             guard case let .success(indexedResponse) = result else {
@@ -317,14 +327,13 @@ extension InternalRouter where Self: Router {
      - parameter progress: The current route progress, along which the origin is located.
      - parameter completion: The closure to execute once the routes have been calculated. If successful, the result includes the index of the route that is most similar to the passed-in `RouteProgress.route`, which is not necessarily the first route. The first route is the route considered to be the most optimal, even if it differs from the original choice.
      */
-    func calculateRoutes(from origin: CLLocation, along progress: RouteProgress, router: NavigationRouter? = nil, completion: @escaping IndexedRouteCompletionHandler) {
+    func calculateRoutes(from origin: CLLocation, along progress: RouteProgress, completion: @escaping IndexedRouteCompletionHandler) {
         routeTask?.cancel()
         let options = progress.reroutingOptions(with: origin)
         
         lastRerouteLocation = origin
         
-        let router = router ?? NavigationRouter(self.routingSource)
-        let taskId = router.requestRoutes(options: options) {(session, result) in
+        routeTask = routingProvider.calculateRoutes(options: options) {(session, result) in
             defer { self.routeTask = nil }
             switch result {
             case .failure(let error):
@@ -337,7 +346,6 @@ extension InternalRouter where Self: Router {
                 return completion(session, .success(.init(routeResponse: response, routeIndex: mostSimilarIndex)))
             }
         }
-        routeTask = router.activeRequests[taskId]
     }
     
     func announceImpendingReroute(at location: CLLocation) {

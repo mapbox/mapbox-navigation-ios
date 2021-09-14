@@ -5,9 +5,9 @@ import MapboxDirections
 /**
  A navigation service coordinates various nonvisual components that track the user as they navigate along a predetermined route. You use `MapboxNavigationService`, which conforms to this protocol, either as part of `NavigationViewController` or by itself as part of a custom user interface. A navigation service calls methods on its `delegate`, which conforms to the `NavigationServiceDelegate` protocol, whenever significant events or decision points occur along the route.
  
- A navigation service controls a `NavigationLocationManager` for determining the user’s location, a `Router` that tracks the user’s progress along the route, a `Directions` service for calculating new routes (only used when rerouting), and a `NavigationEventsManager` for sending telemetry events related to navigation or user feedback.
+ A navigation service controls a `NavigationLocationManager` for determining the user’s location, a `Router` that tracks the user’s progress along the route, a `MapboxRoutingProvider` service for calculating new routes (only used when rerouting), and a `NavigationEventsManager` for sending telemetry events related to navigation or user feedback.
  
- `NavigationViewController` comes with a `MapboxNavigationService` by default. You may override it to customize the `Directions` service or simulation mode. After creating the navigation service, pass it into `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:)`, then pass that object into `NavigationViewController(for:options:)`.
+ `NavigationViewController` comes with a `MapboxNavigationService` by default. You may override it to customize the `MapboxRoutingProvider`'s source service or simulation mode. After creating the navigation service, pass it into `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:)`, then pass that object into `NavigationViewController(for:options:)`.
  
  If you use a navigation service by itself, outside of `NavigationViewController`, call `start()` when the user is ready to begin navigating along the route.
  */
@@ -20,7 +20,18 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      A reference to a MapboxDirections service. Used for rerouting.
      */
+    @available(*, deprecated, message: "Use `routingProvider` instead. If navigation service was not initialized using `Directions` object - this property is unused and ignored.")
     var directions: Directions { get }
+    
+    /**
+     `RoutingProvider`, used to create route.
+     */
+    var routingProvider: RoutingProvider { get }
+    
+    /**
+     Credentials data, used to authorize server requests.
+     */
+    var credentials: Credentials { get }
     
     /**
      The router object that tracks the user’s progress as they travel along a predetermined route.
@@ -263,17 +274,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     /**
-     Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
-     
-     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
-     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
-     - parameter routeOptions: The route options used to get the route.
-     */
-    convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions options: RouteOptions) {
-        self.init(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
-    }
-    
-    /**
      Intializes a new `NavigationService`.
      
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
@@ -285,16 +285,68 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
      */
+    @available(*, deprecated, renamed: "init(routeResponse:routeIndex:routeOptions:routingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
+    public convenience init(routeResponse: RouteResponse,
+                            routeIndex: Int,
+                            routeOptions: RouteOptions,
+                            directions: Directions? = nil,
+                            locationSource: NavigationLocationManager? = nil,
+                            eventsManagerType: NavigationEventsManager.Type? = nil,
+                            simulating simulationMode: SimulationMode? = nil,
+                            routerType: Router.Type? = nil) {
+        self.init(routeResponse: routeResponse,
+                  routeIndex: routeIndex,
+                  routeOptions: routeOptions,
+                  routingProvider: directions ?? Directions.shared,
+                  credentials: directions?.credentials ?? NavigationSettings.shared.directions.credentials,
+                  locationSource: locationSource,
+                  eventsManagerType: eventsManagerType,
+                  simulating: simulationMode,
+                  routerType: routerType)
+    }
+    
+    /**
+     Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
+     
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
+     */
+    convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions options: RouteOptions) {
+        self.init(routeResponse: routeResponse,
+                  routeIndex: routeIndex,
+                  routeOptions: options,
+                  routingProvider: NavigationSettings.shared.directions,
+                  credentials: NavigationSettings.shared.directions.credentials,
+                  locationSource: nil,
+                  eventsManagerType: nil)
+    }
+    
+    /**
+     Intializes a new `NavigationService`.
+     
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter routingProvider: `RoutingProvider`, used to create route.
+     - parameter credentials: Credentials to authorize additional data requests throughout the route.
+     - parameter locationSource: An optional override for the default `NaviationLocationManager`.
+     - parameter eventsManagerType: An optional events manager type to use while tracking the route.
+     - parameter simulationMode: The simulation mode desired.
+     - parameter routerType: An optional router type to use for traversing the route.
+     */
     required public init(routeResponse: RouteResponse,
                          routeIndex: Int,
                          routeOptions: RouteOptions,
-                         directions: Directions? = nil,
+                         routingProvider: RoutingProvider,
+                         credentials: Credentials,
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          simulating simulationMode: SimulationMode? = nil,
                          routerType: Router.Type? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
-        self.directions = directions ?? NavigationSettings.shared.directions
+        self.routingProvider = routingProvider
+        self.credentials = credentials
         self.simulationMode = simulationMode ?? .inTunnels
         super.init()
         resumeNotifications()
@@ -307,12 +359,16 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        _router = routerType.init(alongRouteAtIndex: routeIndex, in: routeResponse, options: routeOptions, directions: self.directions, dataSource: self)
+        _router = routerType.init(alongRouteAtIndex: routeIndex,
+                                  in: routeResponse,
+                                  options: routeOptions,
+                                  routingProvider: routingProvider,
+                                  dataSource: self)
         NavigationSettings.shared.distanceUnit = .init(routeOptions.distanceMeasurementSystem)
 
         let eventType = eventsManagerType ?? NavigationEventsManager.self
         _eventsManager = eventType.init(activeNavigationDataSource: self,
-                                        accessToken: self.directions.credentials.accessToken)
+                                        accessToken: self.credentials.accessToken)
         locationManager.activityType = routeOptions.activityType
         bootstrapEvents()
         
@@ -371,7 +427,18 @@ public class MapboxNavigationService: NSObject, NavigationService {
     /**
      A reference to a MapboxDirections service. Used for rerouting.
      */
-    public var directions: Directions
+    @available(*, deprecated, message: "Use `routingProvider` instead. If navigation service was not initialized using `Directions` object - this property is unused and ignored.")
+    public lazy var directions: Directions = self.routingProvider as? Directions ?? NavigationSettings.shared.directions
+    
+    /**
+     `RoutingProvider`, used to create route.
+     */
+    public var routingProvider: RoutingProvider
+    
+    /**
+     Credentials data, used to authorize server requests.
+     */
+    public var credentials: Credentials
 
     
     // MARK: Managing Route-Related Data

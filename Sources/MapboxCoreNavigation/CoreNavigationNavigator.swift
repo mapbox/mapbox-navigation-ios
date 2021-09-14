@@ -1,7 +1,6 @@
 import MapboxNavigationNative
 import MapboxDirections
 @_implementationOnly import MapboxCommon_Private
-@_implementationOnly import MapboxNavigationNative_Private
 
 class Navigator {
     

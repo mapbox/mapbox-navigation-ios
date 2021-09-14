@@ -42,7 +42,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingSource: .offline,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              simulating: .never)
         let now = Date()
         let steps = route.legs.first!.steps
@@ -86,7 +87,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingSource: .offline,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              simulating: .never)
         
         // Coordinates from first step
@@ -135,7 +137,8 @@ class MapboxCoreNavigationTests: TestCase {
         let navigationService = MapboxNavigationService(routeResponse: response,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
-                                                        routingSource: .offline,
+                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        credentials: Fixture.credentials,
                                                         locationSource: locationManager,
                                                         simulating: .never)
         
@@ -191,7 +194,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingSource: .offline,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
         
@@ -242,7 +246,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingSource: .offline,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
@@ -285,7 +290,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: routeResponse,
                                              routeIndex: 0,
                                              routeOptions: navOptions,
-                                             routingSource: .offline,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
         navigation.router.refreshesRoute = false
@@ -334,7 +340,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingSource: .offline,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              locationSource: locationManager)
         navigation.router.refreshesRoute = false
         
@@ -455,7 +462,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingSource: .online,
+                                             routingProvider: MapboxRoutingProvider(.online),
+                                             credentials: Fixture.credentials,
                                              simulating: .never)
         
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in

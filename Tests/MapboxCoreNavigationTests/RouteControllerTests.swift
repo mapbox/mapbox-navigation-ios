@@ -15,7 +15,7 @@ class RouteControllerTests: TestCase {
 
     override func tearDown() {
         replayManager = nil
-        NavigationRouter.__testRoutesStub = nil
+        MapboxRoutingProvider.__testRoutesStub = nil
         super.tearDown()
     }
     
@@ -29,10 +29,11 @@ class RouteControllerTests: TestCase {
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
         let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
-        let routeController = RouteController(alongRouteAtIndex: 0, in: routeResponse, options: equivalentRouteOptions, dataSource: self)
+        let routeController = RouteController(alongRouteAtIndex: 0, in: routeResponse, options: equivalentRouteOptions, routingProvider: MapboxRoutingProvider(.offline), dataSource: self)
         locationManager.delegate = routeController
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
+        routeController.reroutesProactively = false
 
         var actualCoordinates = [CLLocationCoordinate2D]()
         routerDelegateSpy.onShouldDiscard = { location in
@@ -75,7 +76,7 @@ class RouteControllerTests: TestCase {
         let routeController = RouteController(alongRouteAtIndex: 0,
                                               in: routeResponse,
                                               options: navOptions,
-                                              routingSource: .offline,
+                                              routingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
 
         let routerDelegateSpy = RouterDelegateSpy()
@@ -111,27 +112,13 @@ class RouteControllerTests: TestCase {
             didRerouteCalled.fulfill()
         }
         
-        NavigationRouter.__testRoutesStub = { (options, completionHandler) in
+        MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
+            DispatchQueue.main.async {
+                completionHandler(Directions.Session(options, .mocked),
+                                  .success(routeResponse))
+            }
             calculateRouteCalled.fulfill()
-            let currentCoordinate = locationManager.location!.coordinate
-            
-            let originWaypoint = Waypoint(coordinate: currentCoordinate)
-            let destinationWaypoint = Waypoint(coordinate: destination)
-            
-            let waypoints = [
-                originWaypoint,
-                destinationWaypoint
-            ]
-            
-            completionHandler(Directions.Session(options, DirectionsCredentials()),
-                              .success(RouteResponse(httpResponse: nil,
-                                                     identifier: nil,
-                                                     routes: [Fixture.route(between: currentCoordinate,
-                                                                            and: destination).route],
-                                                     waypoints: waypoints,
-                                                     options: .route(options),
-                                                     credentials: .mocked)))
-            return 0
+            return nil
         }
 
         let replayFinished = expectation(description: "Replay Finished")

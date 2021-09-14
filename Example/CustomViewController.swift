@@ -48,6 +48,8 @@ class CustomViewController: UIViewController {
         navigationService = MapboxNavigationService(routeResponse: indexedUserRouteResponse!.routeResponse,
                                                     routeIndex: indexedUserRouteResponse!.routeIndex,
                                                     routeOptions: userRouteOptions!,
+                                                    routingProvider: MapboxRoutingProvider(.hybrid),
+                                                    credentials: NavigationSettings.shared.directions.credentials,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .inTunnels)
         navigationService.delegate = self
