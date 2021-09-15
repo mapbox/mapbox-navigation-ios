@@ -252,7 +252,11 @@ open class RouteController: NSObject {
         
         rawLocation = location
         
-        locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
+        locations.forEach {
+            navigator.updateLocation(for: FixLocation($0)) { _ in
+                // No-op
+            }
+        }
     }
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {

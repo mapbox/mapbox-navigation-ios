@@ -106,20 +106,36 @@ open class PassiveLocationManager: NSObject {
     var lastRawLocation: CLLocation?
     
     /**
+     A closure to be called when manual location was successfully set.
+     
+     - parameter success: Boolean value, which is set to `true` in case if manual location was
+     successfully set, otherwise `false`.
+     */
+    public typealias UpdateLocationCompletionHandler = (_ success: Bool) -> Void
+    
+    /**
      Manually sets the current location.
      
      This method stops any automatic location updates.
+     
+     - parameter location: Location, which will be used by navigator.
+     - parameter completion: Completion handler, which will be called when asynchronous operation completes.
      */
-    public func updateLocation(_ location: CLLocation?) {
+    public func updateLocation(_ location: CLLocation?, completion: UpdateLocationCompletionHandler? = nil) {
         guard let location = location else { return }
         systemLocationManager.stopUpdatingLocation()
         systemLocationManager.stopUpdatingHeading()
-        self.didUpdate(locations: [location])
+        
+        didUpdate(locations: [location]) { success in
+            completion?(success)
+        }
     }
 
-    private func didUpdate(locations: [CLLocation]) {
+    private func didUpdate(locations: [CLLocation], completion: UpdateLocationCompletionHandler? = nil) {
         for location in locations {
-            navigator.updateLocation(for: FixLocation(location))
+            navigator.updateLocation(for: FixLocation(location)) { success in
+                completion?(success)
+            }
         }
 
         let isFirstLocation = lastRawLocation == nil
