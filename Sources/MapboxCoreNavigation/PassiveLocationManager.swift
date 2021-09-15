@@ -98,12 +98,6 @@ open class PassiveLocationManager: NSObject {
      */
     public weak var delegate: PassiveLocationManagerDelegate?
     
-    /// See `PassiveLocationManager.startTripSession()`.
-    @available(*, deprecated, message: "Use startTripSession() instead.")
-    public func startUpdatingLocation() {
-        startTripSession()
-    }
-    
     var lastRawLocation: CLLocation?
     
     /**
