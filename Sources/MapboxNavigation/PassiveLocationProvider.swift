@@ -76,11 +76,11 @@ open class PassiveLocationProvider: NSObject, LocationProvider {
     }
 
     public func startUpdatingLocation() {
-        locationManager.resumeTripSession()
+        locationManager.startTripSession()
     }
 
     public func stopUpdatingLocation() {
-        locationManager.pauseTripSession()
+        locationManager.stopTripSession()
     }
 
     public var headingOrientation: CLDeviceOrientation {

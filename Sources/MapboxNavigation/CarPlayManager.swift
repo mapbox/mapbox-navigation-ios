@@ -229,7 +229,7 @@ public class CarPlayManager: NSObject {
             locationProvider.stopUpdatingLocation()
             locationProvider.stopUpdatingHeading()
             if let passiveLocationProvider = locationProvider as? PassiveLocationProvider {
-                passiveLocationProvider.locationManager.pauseTripSession()
+                passiveLocationProvider.locationManager.stopTripSession()
             }
         }
         
@@ -696,7 +696,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         navigationMapView.removeRoutes()
         navigationMapView.removeWaypoints()
         if let passiveLocationProvider = navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider {
-            passiveLocationProvider.locationManager.resumeTripSession()
+            passiveLocationProvider.locationManager.startTripSession()
         }
         delegate?.carPlayManagerDidEndNavigation(self)
     }
@@ -841,7 +841,7 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         popToRootTemplate(interfaceController: interfaceController, animated: true)
 
         if let passiveLocationProvider = navigationMapView?.mapView.location.locationProvider as? PassiveLocationProvider {
-            passiveLocationProvider.locationManager.resumeTripSession()
+            passiveLocationProvider.locationManager.startTripSession()
         }
         delegate?.carPlayManagerDidEndNavigation(self)
     }

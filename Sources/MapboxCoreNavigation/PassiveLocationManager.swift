@@ -12,10 +12,11 @@ import MapboxDirections
  
  To find out when the user’s location changes, implement the `PassiveLocationManagerDelegate` protocol, or observe `Notification.Name.passiveLocationManagerDidUpdate` notifications for more detailed information.
 
- - important: Creating an instance of this class will start a free-driving session. If the application goes into the background or you temporarily stop needing location updates for any other reason, temporarily pause the trip session using the `PassiveLocationManager.pauseTripSession()` method to avoid unnecessary costs. The trip session also stops when the instance is deinitialized. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide.
+ - important: Calling `PassiveLocationManager.startTripSession()` will start a free-driving session. If the application goes into the background or you temporarily stop needing location updates for any other reason, temporarily pause the trip session using the `PassiveLocationManager.stopTripSession()` method to avoid unnecessary costs. The trip session also stops when the instance is deinitialized. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide.
  */
 open class PassiveLocationManager: NSObject {
     private let sessionUUID: UUID = .init()
+    private var isSessionStarted: Bool = false
 
     /**
      Initializes the location manager with the given directions service.
@@ -25,7 +26,8 @@ open class PassiveLocationManager: NSObject {
      - parameter eventsManagerType: An optional events manager type to use.
      - parameter userInfo: An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
      
-     - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
+     - postcondition: Call `startTripSession()` afterward to start a Free Drive session and begin receiving
+     location updates.
      */
     public required init(directions: Directions = NavigationSettings.shared.directions,
                          systemLocationManager: NavigationLocationManager? = nil,
@@ -46,8 +48,6 @@ open class PassiveLocationManager: NSObject {
         _eventsManager = eventsManager
 
         subscribeNotifications()
-
-        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
     }
     
     deinit {
@@ -96,14 +96,10 @@ open class PassiveLocationManager: NSObject {
      */
     public weak var delegate: PassiveLocationManagerDelegate?
     
-    /**
-     Starts the generation of location updates and resumes trip session.
-
-     To learn more read `PassiveLocationManager.resumeTripSession()` method documentation.
-     */
-    @available(*, deprecated, message: "Use resumeTripSession() instead.")
+    /// See `PassiveLocationManager.startTripSession()`.
+    @available(*, deprecated, message: "Use startTripSession() instead.")
     public func startUpdatingLocation() {
-        resumeTripSession()
+        startTripSession()
     }
     
     var lastRawLocation: CLLocation?
@@ -138,26 +134,36 @@ open class PassiveLocationManager: NSObject {
     }
 
     /**
-     Pauses the Free Drive session assosiated with this instance.
+     Stops the Free Drive session associated with this instance.
 
-     Paused trip sessions don't generate location and navigation status updates.
+     Stopped trip sessions don't generate location and navigation status updates.
 
      Use this method to extend the existing Free Drive session if you temporarily don't need navigation updates. For
-     more info, read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+     For more info, read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
      */
-    public func pauseTripSession() {
-        BillingHandler.shared.pauseBillingSession(with: sessionUUID)
+    public func stopTripSession() {
+        if isSessionStarted {
+            BillingHandler.shared.pauseBillingSession(with: sessionUUID)
+        }
         systemLocationManager.stopUpdatingLocation()
     }
 
     /**
-     Resumes the Free Drive session assosiated with this instance.
+     Starts a Free Drive session associated with this instance.
 
-     Resumes navigation updates paused by `PassiveLocationManager.pauseTripSession()`. For more info, read the
-     [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+     For more info, read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+
+     **See Also:**
+     - `PassiveLocationManager.stopTripSession()`
      */
-    public func resumeTripSession() {
-        BillingHandler.shared.resumeBillingSession(with: sessionUUID)
+    public func startTripSession() {
+        if isSessionStarted {
+            BillingHandler.shared.resumeBillingSession(with: sessionUUID)
+        }
+        else {
+            BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
+            isSessionStarted = true
+        }
         systemLocationManager.startUpdatingLocation()
     }
 

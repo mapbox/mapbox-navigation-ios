@@ -284,26 +284,37 @@ final class BillingHandlerUnitTests: TestCase {
         let locationManager = ReplayLocationManager(locations: locations)
         locationManager.startDate = Date()
 
-        let passiveLocationManager = PassiveLocationManager(directions: DirectionsSpy(),
-                                                            systemLocationManager: locationManager)
+        autoreleasepool {
+            let passiveLocationManager: PassiveLocationManager = .init(directions: DirectionsSpy(),
+                                                                       systemLocationManager: locationManager)
+            locationManager.delegate = passiveLocationManager
+            passiveLocationManager.delegate = updatesSpy
 
-        locationManager.delegate = passiveLocationManager
-        passiveLocationManager.delegate = updatesSpy
-        passiveLocationManager.pauseTripSession()
-        locationManager.tick()
+            locationManager.tick()
+            billingServiceMock.assertEvents([]) // PassiveLocationManager starts without a trip session
+            XCTAssertNil(passiveLocationManager.rawLocation, "Location updates should be blocked")
 
-        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
+            passiveLocationManager.startTripSession() // Starting trip for the first time should trigger begin billing session
+            locationManager.tick()
+            billingServiceMock.assertEvents([
+                .beginBillingSession(.freeDrive),
+            ])
+            XCTAssertNotNil(passiveLocationManager.rawLocation)
 
+            passiveLocationManager.stopTripSession() // Stopping active trip session should pause it
+
+            billingServiceMock.assertEvents([
+                .beginBillingSession(.freeDrive),
+                .pauseBillingSession(.freeDrive),
+            ])            
+        }
+
+        // Destroyed PassiveLocationManager should stop billing session
         billingServiceMock.assertEvents([
             .beginBillingSession(.freeDrive),
-            .pauseBillingSession(.freeDrive)
+            .pauseBillingSession(.freeDrive),
+            .stopBillingSession(.freeDrive),
         ])
-
-        XCTAssertNil(passiveLocationManager.rawLocation, "Location updates should be blocked")
-
-        passiveLocationManager.resumeTripSession()
-        locationManager.tick()
-        XCTAssertNotNil(passiveLocationManager.rawLocation)
     }
 
     func testTokens() {
