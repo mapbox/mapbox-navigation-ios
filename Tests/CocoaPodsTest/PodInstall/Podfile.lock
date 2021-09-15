@@ -2,12 +2,12 @@ PODS:
   - MapboxCommon (18.0.0)
   - MapboxCoreMaps (10.0.0-rc.8):
     - MapboxCommon (~> 18.0)
-  - MapboxCoreNavigation (2.0.0-beta.25):
-    - MapboxDirections-pre (= 2.0.0-beta.9)
+  - MapboxCoreNavigation (2.0.0-rc.1):
+    - MapboxDirections-pre (= 2.0.0-rc.1)
     - MapboxMobileEvents (~> 1.0.0)
     - MapboxNavigationNative (~> 66.0)
     - Turf (= 2.0.0-rc.1)
-  - MapboxDirections-pre (2.0.0-beta.9):
+  - MapboxDirections-pre (2.0.0-rc.1):
     - Polyline (~> 5.0)
     - Turf (~> 2.0.0-rc.1)
   - MapboxMaps (10.0.0-rc.8):
@@ -16,15 +16,15 @@ PODS:
     - MapboxMobileEvents (= 1.0.3)
     - Turf (= 2.0.0-rc.1)
   - MapboxMobileEvents (1.0.3)
-  - MapboxNavigation (2.0.0-beta.25):
-    - MapboxCoreNavigation (= 2.0.0-beta.25)
+  - MapboxNavigation (2.0.0-rc.1):
+    - MapboxCoreNavigation (= 2.0.0-rc.1)
     - MapboxMaps (= 10.0.0-rc.8)
     - MapboxMobileEvents (~> 1.0.0)
-    - MapboxSpeech-pre (= 2.0.0-alpha.1)
+    - MapboxSpeech-pre (= 2.0.0-rc.1)
     - Solar-dev (~> 3.0)
   - MapboxNavigationNative (66.0.0):
     - MapboxCommon (~> 18.0)
-  - MapboxSpeech-pre (2.0.0-alpha.1)
+  - MapboxSpeech-pre (2.0.0-rc.1)
   - Polyline (5.0.2)
   - Solar-dev (3.0.1)
   - Turf (2.0.0-rc.1)
@@ -55,13 +55,13 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   MapboxCommon: ea974a60b24bf4ce16314a5c99384512e7d5aa4e
   MapboxCoreMaps: 130eab4f9861dbb9b09b5e25b65ce701dec4a91a
-  MapboxCoreNavigation: 23b64419641422d4bcf105446ef4a4cc6b3e4925
-  MapboxDirections-pre: 6fcda7a8ad0c37c69e83f813aff46af0c2bba9ec
+  MapboxCoreNavigation: 961c1a22d1388ee39746f79e732a16787d7d6573
+  MapboxDirections-pre: 25013fec9715dbc17c1c1798da3105e9b3140cd9
   MapboxMaps: 10ffa18d5543a7ac5a2d4973647197f15e624baa
   MapboxMobileEvents: 852274da39a3ed9a56dfff3bab64a055d23768c7
-  MapboxNavigation: b87e40c22a1a7edc545f97e12e4da27978621d5b
+  MapboxNavigation: 7dcc9fb21a50777cd7845a1213ccf35a2aa99248
   MapboxNavigationNative: f539b0a114c2dfdc6ab05fff306157fedd4d3c3e
-  MapboxSpeech-pre: aeb16de604d07ceb4195150c3359d5401bb298e6
+  MapboxSpeech-pre: c2739e843762ac6b222fb7132ac71903aa750af3
   Polyline: fce41d72e1146c41c6d081f7656827226f643dff
   Solar-dev: 4612dc9878b9fed2667d23b327f1d4e54e16e8d0
   Turf: 4efd14674a1a2f9527b7c0aadde8003a7b73b1be

@@ -131,6 +131,7 @@ custom_categories:
       - RouteLineWidthByZoomLevel
       - NavigationMapViewMinimumDistanceForOverheadZooming
       - NavigationViewMinimumVolumeForWarning
+      - GradientCongestionFadingDistance
       - RouteControllerIncorrectCourseMultiplier
       - RouteControllerLinkedInstructionBufferMultiplier
       - RouteControllerMaximumSpeedForUsingCurrentStep

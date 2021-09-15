@@ -48,8 +48,8 @@ class TokenTestViewController: UIViewController {
             // waiting for MapView token to be extracted from a style request
             _ = self.semaphore.wait(timeout: .now() + 4)
 
-            self.directionsToken = Directions.skuToken
-            self.speechSynthesizerToken = SpeechSynthesizer.skuToken
+            self.directionsToken = Directions.shared.skuToken
+            self.speechSynthesizerToken = SpeechSynthesizer(accessToken: .mockedAccessToken).skuToken
             
             DispatchQueue.main.async {
                 HTTPStubs.removeAllStubs()

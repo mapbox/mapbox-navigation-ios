@@ -12,9 +12,9 @@ class SKUTests: TestCase {
         billingServiceMock.onGetSKUTokenIfValid = { _ in
             expected
         }
-        XCTAssertEqual(Directions.skuToken, "")
+        XCTAssertEqual(Directions.shared.skuToken, "")
         BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: .init())
-        let directionsSkuToken = Directions.skuToken
+        let directionsSkuToken = Directions.shared.skuToken
         
         XCTAssertEqual(directionsSkuToken, expected)
     }
@@ -25,10 +25,12 @@ class SKUTests: TestCase {
         billingServiceMock.onGetSKUTokenIfValid = { _ in
             expected
         }
-        XCTAssertEqual(Directions.skuToken, "")
+
+        let speechSynthesizer = SpeechSynthesizer(accessToken: billingServiceMock.accessToken)
+        XCTAssert(speechSynthesizer.skuToken == nil || speechSynthesizer.skuToken == "")
         BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: .init())
 
-        let speechSkuToken = SpeechSynthesizer.skuToken
+        let speechSkuToken = speechSynthesizer.skuToken
         
         XCTAssertEqual(speechSkuToken, expected)
     }

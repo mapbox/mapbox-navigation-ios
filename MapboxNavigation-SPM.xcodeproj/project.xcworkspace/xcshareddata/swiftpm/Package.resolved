@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "fb3975af8ce6676390f1f73c8ad296549c612e2c",
-          "version": "2.0.0-beta.9"
+          "revision": "6e5b4be4388ad971ce9e4bf2bac21fa413bb06e5",
+          "version": "2.0.0-rc.1"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
           "branch": null,
-          "revision": "4501b0cbf709ae9fdabb82a2942cd3d54295b411",
-          "version": "2.0.0-alpha.1"
+          "revision": "7b04b5173eb985a260083dfbeb9a3567d46a0333",
+          "version": "2.0.0-rc.1"
         }
       },
       {
@@ -96,8 +96,8 @@
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {
           "branch": null,
-          "revision": "af1730dde4e6c0d45bf01b99f8a41713ce536790",
-          "version": "9.2.0"
+          "revision": "c93f16c25af5770f0d3e6af27c9634640946b068",
+          "version": "9.2.1"
         }
       },
       {

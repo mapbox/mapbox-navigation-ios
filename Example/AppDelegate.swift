@@ -1,5 +1,6 @@
 import UIKit
 import MapboxNavigation
+import MapboxCoreNavigation
 import CarPlay
 
 @UIApplicationMain
@@ -30,6 +31,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        let historyRecordingUrl = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent("historyRecordings")
+        _ = try? FileManager.default.createDirectory(at: historyRecordingUrl,
+                                                     withIntermediateDirectories: true,
+                                                     attributes: nil)
+
+        PassiveLocationManager.historyDirectoryURL = historyRecordingUrl
+
         if isRunningTests() {
             if window == nil {
                 window = UIWindow(frame: UIScreen.main.bounds)

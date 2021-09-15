@@ -21,7 +21,7 @@ class OptionsTests: TestCase {
         XCTAssertEqual(options.profileIdentifier, .automobileAvoidingTraffic)
         XCTAssertEqual(options.routeShapeResolution, .full)
         XCTAssertEqual(options.shapeFormat, .polyline6)
-        XCTAssertEqual(options.attributeOptions, [.congestionLevel, .expectedTravelTime, .maximumSpeedLimit])
+        XCTAssertEqual(options.attributeOptions, [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit])
         XCTAssertTrue(options.includesVisualInstructions)
         XCTAssertTrue(options.includesSpokenInstructions)
     }

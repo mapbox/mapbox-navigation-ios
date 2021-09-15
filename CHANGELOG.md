@@ -4,7 +4,7 @@
 
 ### Pricing
 
-* New per trip pricing option. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide ([#3147](https://github.com/mapbox/mapbox-navigation-ios/pull/3147))
+* New per trip pricing option. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide ([#3147](https://github.com/mapbox/mapbox-navigation-ios/pull/3147), [#3338](https://github.com/mapbox/mapbox-navigation-ios/pull/3338))
 * `MBXNavigationBillingMethod` is no longer supported. ([#3147](https://github.com/mapbox/mapbox-navigation-ios/pull/3147))
 
 ### Packaging
@@ -15,7 +15,7 @@
 * MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.8](https://github.com/mapbox/mapbox-maps-ios/). ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
 * MapboxNavigation now depends on MapboxNavigationNative v66.0.0. ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
 * MapboxNavigation now depends on MapboxCommon v18.0.0. ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
-* MapboxCoreNavigation depends on MapboxDirections v2.0.0-beta.9. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
+* MapboxCoreNavigation depends on MapboxDirections v2.0.0-rc.1. ([#3325](https://github.com/mapbox/mapbox-navigation-ios/pull/3325))
 * MapboxCoreNavigation no longer depends on MapboxAccounts. ([#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829))
 * MapboxNavigation now depends on Turf v2.0.0-rc.1. ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
 * MapboxNavigation and MapboxCoreNavigation require iOS 11.0 or above to run. iOS 10._x_ is no longer supported. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
@@ -51,6 +51,8 @@
 * Renamed the `NavigationMapView.updateRoute(_:)` method to `NavigationMapView.travelAlongRouteLine(to:)`. Improved the performance of updating the route line to change color at the user’s location as they progress along the route. ([#3201](https://github.com/mapbox/mapbox-navigation-ios/pull/3201)).
 * Fixed an issue when user passed destination and the route line grows back when `NavigationViewController.routeLineTracksTraversal` is enabled. ([#3255](https://github.com/mapbox/mapbox-navigation-ios/pull/3255))
 * The `NavigationMapView.userLocationStyle` now supports instant user location indicator change without style loaded lag. ([#3295](https://github.com/mapbox/mapbox-navigation-ios/pull/3295))
+* Fixed incorrect color-coded traffic congestion along the route line and incorrect speeds in the speed limit view after some time had elapsed after rerouting. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344]))
+* By default, there is no longer a subtle crossfade between traffic congestion segments along a route line. To reenable this crossfade, set the `NavigationMapView.crossfadesCongestionSegments` property to `true`. You can also adjust the length of this crossfade using the global variable `GradientCongestionFadingDistance`. ([#3307](https://github.com/mapbox/mapbox-navigation-ios/pull/3307))
 
 ### Location tracking
 
@@ -68,6 +70,8 @@
 * Adds `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, which is called each time the user arrives at a waypoint. By default, this method returns true and prevents rerouting upon arriving. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
 * Fixes an issue where the user would be rerouted even if `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` returned `false`. To implement reroute after arrival behavior, return `true` from this method and `false` from `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, then set `NavigationViewController.showsEndOfRouteFeedback` to `false`. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
 * Added `UserHaloCourseView.haloBorderWidth`, which allows to change border of the ring around halo view. ([#3309](https://github.com/mapbox/mapbox-navigation-ios/pull/3309))
+* Fixed an issue where the `RouteController.indexedRouteResponse` property would remain unchanged after the user is rerouted. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344]))
+* Rerouting now uses the snapped location, instead of raw location. ([#3361](https://github.com/mapbox/mapbox-navigation-ios/pull/3361))
 
 ### Electronic horizon
 
@@ -146,8 +150,8 @@
 * The `ActiveNavigationEventsManagerDataSource.router`, `NavigationService.router`, `NavigationService.eventsManager`, `MapboxNavigationService.router`, `MapboxNavigationService.eventsManager` properties are no longer force unwrapped. ([#3055](https://github.com/mapbox/mapbox-navigation-ios/pull/3055))
 * Fixed an issue where traffic congestion segments along the route line blurred into each other when the map was zoomed in far enough. ([#3153](https://github.com/mapbox/mapbox-navigation-ios/pull/3153))
 * You can now solicit user feedback about `PassiveLocationManager` and `NavigationMapView` outside of active turn-by-turn navigation. Use `PassiveLocationManager.eventsManager` property of `NavigationEventsManager` type to create and send user feedback. You can use a `FeedbackViewController` to present the user with the same options as during turn-by-turn navigation. Alternatively, if you present a custom feedback UI, call the `NavigationEventsManager.createFeedback()` method and configure the resulting `FeedbackEvent` with any additional context. ([#3122](https://github.com/mapbox/mapbox-navigation-ios/pull/3122), [#3322](https://github.com/mapbox/mapbox-navigation-ios/pull/3322))
-* You can now manage the feedback event lifecycle, allowing the user to submit additional details later. Use `NavigationEventsManager.createFeedback()` to create a `FeedbackEvent` and `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)` to send it to Mapbox. `FeedbackEvent` conforms to the `Codable` protocol, so your application can store incomplete feedback across sessions if necessary. ([#3154](https://github.com/mapbox/mapbox-navigation-ios/pull/3154))
-* To submit feedback during passive navigation use  `NavigationEventsManager.createFeedback()` to create a `FeedbackEvent` and `NavigationEventsManager.sendPassiveNavigationFeedback(_:type:description:)` to send it to Mapbox. This method accepts `PassiveNavigationFeedbackType` with feedback types specific to the passive navigation. ([#3154](https://github.com/mapbox/mapbox-navigation-ios/pull/3154))
+* You can now manage the feedback event lifecycle, allowing the user to submit additional details later. Use `NavigationEventsManager.createFeedback()` to create a `FeedbackEvent` and `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)` to send it to Mapbox. `FeedbackEvent` conforms to the `Codable` protocol, so your application can store incomplete feedback across sessions if necessary. ([#3154](https://github.com/mapbox/mapbox-navigation-ios/pull/3154), [#3318](https://github.com/mapbox/mapbox-navigation-ios/pull/3318))
+* To submit feedback during passive navigation use  `NavigationEventsManager.createFeedback()` to create a `FeedbackEvent` and `NavigationEventsManager.sendPassiveNavigationFeedback(_:type:description:)` to send it to Mapbox. This method accepts `PassiveNavigationFeedbackType` with feedback types specific to the passive navigation. ([#3154](https://github.com/mapbox/mapbox-navigation-ios/pull/3154), [#3318](https://github.com/mapbox/mapbox-navigation-ios/pull/3318))
 * `NavigationViewController.indexedRoute`, `NavigationService.indexedRoute` and `Router.indexedRoute` properties are readonly now. Use dedicated `Router.updateRoute(with:routeOptions:)` method to update the route. ([#3159](https://github.com/mapbox/mapbox-navigation-ios/pull/#3159))
 * Removed the `NavigationViewController.indexedRoute`, `NavigationService.indexedRoute`, `Router.indexedRoute` properties in favor of `NavigationViewController.indexedRouteResponse`, `NavigationService.indexedRouteResponse`, and `Router.indexedRouteResponse`. Removed the `RouteProgress.indexedRoute` property. Added `NavigationViewController.prepareViewLoading(routeResponse:, routeIndex:, routeOptions:, navigationOptions:)` method to setup it for `UIStoryboard`. ([#3182](https://github.com/mapbox/mapbox-navigation-ios/pull/3182))
 * Fixed an issue where a subclass of `NavigationRouteOptions` would turn into an ordinary `RouteOptions` when rerouting the user. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
@@ -174,6 +178,8 @@
 * Renamed `FeedbackType` to `ActiveNavigationFeedbackType` and `EventsManagerDataSource` to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
 * Fixed an issue when road label resolving during the active navigation was consuming too much CPU and might lead to crashes. ([#3340](https://github.com/mapbox/mapbox-navigation-ios/pull/3340))
 * Feedback categories and subcategories for active navigation were changed. "Incorrect visual" category was renamed to "Looks Incorrect". For the full updated list of supported categories see enum `ActiveNavigationFeedbackType`. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
+* Fixed bundle names retrieval in `URLSession.userAgent`. ([#3335]((https://github.com/mapbox/mapbox-navigation-ios/pull/3335))
+* Fixed IndexedRouteResponse handling after rerouting. ([#3344]((https://github.com/mapbox/mapbox-navigation-ios/pull/3344))
 
 ## v1.4.1
 

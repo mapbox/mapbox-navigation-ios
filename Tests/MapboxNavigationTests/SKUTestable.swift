@@ -30,23 +30,20 @@ extension MapView {
 }
 
 extension SpeechSynthesizer {
-    
-    @objc class var skuToken: String? {
+    @objc var skuToken: String? {
         let options = SpeechOptions(text: "foo")
-        let synthesizer = SpeechSynthesizer(accessToken: "foo")
-        let url = synthesizer.url(forSynthesizing: options)
+        let url = self.url(forSynthesizing: options)
         return url.queryItem("sku")?.value
     }
 }
 
-extension Directions {
-    
-    @objc class var skuToken: String? {
+extension Directions {    
+    @objc var skuToken: String? {
         let options = RouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 1, longitude: 2),
             CLLocationCoordinate2D(latitude: 3, longitude: 4)
         ])
-        let url = Directions(credentials: DirectionsCredentials(accessToken: "foo")).url(forCalculating: options)
+        let url = self.url(forCalculating: options)
         return url.queryItem("sku")?.value
     }
 }
