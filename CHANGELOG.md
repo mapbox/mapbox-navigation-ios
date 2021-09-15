@@ -6,6 +6,8 @@
 
 * New per trip pricing option. For more information, see the “[Pricing](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/)” guide ([#3147](https://github.com/mapbox/mapbox-navigation-ios/pull/3147), [#3338](https://github.com/mapbox/mapbox-navigation-ios/pull/3338))
 * `MBXNavigationBillingMethod` is no longer supported. ([#3147](https://github.com/mapbox/mapbox-navigation-ios/pull/3147))
+* Add new methods to control Free Drive trips: `PassiveLocationManager.startTripSession()` and `PassiveLocationManager.startTripSession()`. ([#3362](https://github.com/mapbox/mapbox-navigation-ios/pull/3362))
+* `RouteController` manages Active Guidance trips. ([#3147](https://github.com/mapbox/mapbox-navigation-ios/pull/3147))
 
 ### Packaging
 
@@ -64,8 +66,7 @@
 * Fixed a potential hang when `PassiveLocationManager` fails to download routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Fixed an issue where `RouteController` or `PassiveLocationManager` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* Renamed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` to `PassiveLocationProvider.startUpdatingLocation()`. This method now runs synchronously like `CLLocationManager.startUpdatingLocation()`. ([#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823))
-* Remove `PassiveLocationManager.startUpdatingLocation` in favour of `PassiveLocationManager.startTripSession()` which works better with new pricing option. ([#3362](https://github.com/mapbox/mapbox-navigation-ios/pull/3362)).
+* Removed `PassiveLocationManager.startUpdatingLocation(completionHandler:)` in favour of `PassiveLocationManager.startTripSession()` which works better with new pricing option. ([#3362](https://github.com/mapbox/mapbox-navigation-ios/pull/3362),[#2823](https://github.com/mapbox/mapbox-navigation-ios/pull/2823)).
 * Added the `RouteController.startRecordingHistory()`, `RouteController.stopRecordingHistory(completionHandler:)`, `PassiveLocationManager.startRecordingHistory()`, and `PassiveLocationManager.stopRecordingHistory(completionHandler:)` methods for recording details about a trip for debugging purposes. ([#3157](https://github.com/mapbox/mapbox-navigation-ios/pull/3157))
 * Renamed `RouterDataSource.locationProvider` and `ActiveNavigationEventsManagerDataSource.locationProvider` properties to `RouterDataSource.locationManagerType` and `ActiveNavigationEventsManagerDataSource.locationManagerType` respectively. ([#3199](https://github.com/mapbox/mapbox-navigation-ios/pull/3199))
 * Adds `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, which is called each time the user arrives at a waypoint. By default, this method returns true and prevents rerouting upon arriving. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
