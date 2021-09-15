@@ -86,7 +86,7 @@ public final class RoadObjectStore {
     }
 
     deinit {
-        native.setObserverForOptions(nil)
+        native.removeObserver(for: self)
     }
 
     var native: MapboxNavigationNative.RoadObjectsStore {
@@ -97,9 +97,9 @@ public final class RoadObjectStore {
     
     private func updateObserver() {
         if delegate != nil {
-            native.setObserverForOptions(self)
+            native.addObserver(for: self)
         } else {
-            native.setObserverForOptions(nil)
+            native.removeObserver(for: self)
         }
     }
 }
