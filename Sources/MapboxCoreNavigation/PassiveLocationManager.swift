@@ -69,6 +69,8 @@ open class PassiveLocationManager: NSObject {
     
     /**
      A `NavigationLocationManager` that provides raw locations for the receiver to match against the road network.
+
+     - important: Don't call `NavigationLocationManager.startUpdatingLocation()` and `NavigationLocationManager.stopUpdatingLocation` directly, use `PassiveLocationManager.startTripSession()` and `PassiveLocationManager.stopTripSession()` instead. 
      */
     public let systemLocationManager: NavigationLocationManager
 
