@@ -104,7 +104,7 @@ open class PassiveLocationManager: NSObject {
      Manually sets the current location.
      
      This method stops any automatic location updates
-     without pausing the Free Drive session (`PassiveLocationManager.pauseTripSession()`).
+     without stopping the Free Drive session (`PassiveLocationManager.stopTripSession()`).
      */
     public func updateLocation(_ location: CLLocation?) {
         guard let location = location else { return }
