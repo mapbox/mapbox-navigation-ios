@@ -285,13 +285,20 @@ extension NavigationMapView {
 
                         var lineStrings: [LineString] = []
                         
-                        if queriedFeature.feature?.geometry.type == .LineString,
-                           let lineString = queriedFeature.feature?.geometry.value as? LineString {
-                            lineStrings.append(lineString)
-                        } else if queriedFeature.feature?.geometry.type == .MultiLineString,
-                                  let multiLineString = queriedFeature.feature?.geometry.value as? MultiLineString {
-                            for coordinates in multiLineString.coordinates {
-                                lineStrings.append(LineString(coordinates))
+                        if let feature = queriedFeature.feature {
+                            switch feature.geometry.type {
+                            case .LineString:
+                                if let lineString = feature.geometry.value as? LineString {
+                                    lineStrings.append(lineString)
+                                }
+                            case .MultiLineString:
+                                if let multiLineString = feature.geometry.value as? MultiLineString {
+                                    for coordinates in multiLineString.coordinates {
+                                        lineStrings.append(LineString(coordinates))
+                                    }
+                                }
+                            default:
+                                break
                             }
                         }
                         
