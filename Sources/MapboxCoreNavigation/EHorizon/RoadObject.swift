@@ -20,8 +20,8 @@ public struct RoadObject {
     /** Location of the road object. */
     public let location: RoadObjectLocation
 
-    /** Type of the road object with metadata. */
-    public let type: RoadObject.ObjectType
+    /** Kind of the road object with metadata. */
+    public let kind: RoadObject.Kind
 
     /** `true` if an object is added by user, `false` if it comes from Mapbox service. */
     public let isUserDefined: Bool
@@ -31,11 +31,14 @@ public struct RoadObject {
     /**
      Initializes a new `RoadObject` object.
      */
-    public init(identifier: RoadObjectIdentifier, length: CLLocationDistance?, location: RoadObjectLocation, type: RoadObject.ObjectType) {
+    public init(identifier: RoadObjectIdentifier,
+                length: CLLocationDistance?,
+                location: RoadObjectLocation,
+                kind: RoadObject.Kind) {
         self.identifier = identifier
         self.length = length
         self.location = location
-        self.type = type
+        self.kind = kind
         isUserDefined = true
         native = nil
     }
@@ -44,7 +47,7 @@ public struct RoadObject {
         identifier = native.id
         length = native.length?.doubleValue
         location = RoadObjectLocation(native.location)
-        type = RoadObject.ObjectType(type: native.type, metadata: native.metadata)
+        kind = RoadObject.Kind(type: native.type, metadata: native.metadata)
         isUserDefined = native.provider == .custom
         self.native = native
     }

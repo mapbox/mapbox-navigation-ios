@@ -7,7 +7,7 @@ extension RoadObject {
     /**
      Type of the road object.
      */
-    public enum ObjectType {
+    public enum Kind {
         
         /**
          An alert providing information about incidents on a route. Incidents can include *congestion*,
