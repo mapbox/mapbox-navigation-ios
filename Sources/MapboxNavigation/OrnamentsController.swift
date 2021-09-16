@@ -203,12 +203,7 @@ extension NavigationMapView {
                     let identifiers = mapView.tileSetIdentifiers(mapboxStreetsSource.id,
                                                                  sourceType: mapboxStreetsSource.type.rawValue)
                     if VectorSource.isMapboxStreets(identifiers) {
-                        let roadLabelLayerIdentifiersByTileSetIdentifier = [
-                            "mapbox.mapbox-streets-v8": "road",
-                            "mapbox.mapbox-streets-v7": "road_label",
-                        ]
-                        
-                        return identifiers.compactMap({ roadLabelLayerIdentifiersByTileSetIdentifier[$0] }).first
+                        return identifiers.compactMap({ VectorSource.roadLabelLayerIdentifiersByTileSetIdentifier[$0] }).first
                     }
                     
                     return nil
