@@ -181,7 +181,7 @@ custom_categories:
       - DistancedRoadObject
       - RoadObjectMatcher
       - RoadObjectsStore
-      - RoadObjectLocation
+      - RoadObject.Location
       - RoadObject.Kind
       - RoadObjectMatcherDelegate
       - RoadObjectsStoreDelegate

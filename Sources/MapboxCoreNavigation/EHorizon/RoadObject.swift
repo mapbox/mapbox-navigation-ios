@@ -18,7 +18,7 @@ public struct RoadObject {
     public let length: CLLocationDistance?
 
     /** Location of the road object. */
-    public let location: RoadObjectLocation
+    public let location: RoadObject.Location
 
     /** Kind of the road object with metadata. */
     public let kind: RoadObject.Kind
@@ -33,7 +33,7 @@ public struct RoadObject {
      */
     public init(identifier: RoadObject.Identifier,
                 length: CLLocationDistance?,
-                location: RoadObjectLocation,
+                location: RoadObject.Location,
                 kind: RoadObject.Kind) {
         self.identifier = identifier
         self.length = length
@@ -46,7 +46,7 @@ public struct RoadObject {
     init(_ native: MapboxNavigationNative.RoadObject) {
         identifier = native.id
         length = native.length?.doubleValue
-        location = RoadObjectLocation(native.location)
+        location = RoadObject.Location(native.location)
         kind = RoadObject.Kind(type: native.type, metadata: native.metadata)
         isUserDefined = native.provider == .custom
         self.native = native
