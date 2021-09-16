@@ -187,5 +187,5 @@ custom_categories:
       - RoadObjectsStoreDelegate
       - RoadObject.EdgeLocation
       - RoadObjectMatcherError
-      - RoadObjectPosition
+      - RoadObject.Position
       - RoadObject.Identifier
