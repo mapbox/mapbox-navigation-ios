@@ -248,7 +248,7 @@ final class BillingHandlerUnitTests: TestCase {
         queue.async {
             self.handler.stopBillingSession(with: freeDriveSessionUUID)
         }
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 5, handler: nil)
         billingService.assertEvents([
             .beginBillingSession(.freeDrive),
             .beginBillingSession(.activeGuidance),
