@@ -179,32 +179,30 @@ public class Fixture: NSObject {
 
     public static func route(between origin: CLLocationCoordinate2D,
                              and destination: CLLocationCoordinate2D,
+                             legsCount: Int = 1,
                              profileIdentifier: DirectionsProfileIdentifier = .automobile,
                              transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {
-        let distance = origin.distance(to: destination)
-        let shape = LineString([origin, destination])
-        let intersection = Intersection(location: destination,
-                                        headings: [origin.direction(to: destination)],
-                                        approachIndex: 0,
-                                        outletIndex: 0,
-                                        outletIndexes: .init(integer: 0), approachLanes: nil, usableApproachLanes: nil, preferredApproachLanes: nil, usableLaneIndication: nil)
+        precondition(legsCount > 0)
 
-        let arriveStep = RouteStep(transportType: transportType,
-                                   maneuverLocation: destination,
-                                   maneuverType: .arrive,
-                                   instructions: "arrive",
-                                   drivingSide: .right,
-                                   distance: distance,
-                                   expectedTravelTime: 0,
-                                   intersections: [intersection])
-        arriveStep.shape = shape
-        let leg = RouteLeg(steps: [arriveStep],
-                           name: "",
-                           distance: distance,
-                           expectedTravelTime: 0,
-                           profileIdentifier: profileIdentifier)
-        leg.destination = Waypoint(coordinate: destination)
-        let route = Route(legs: [leg], shape: shape, distance: distance, expectedTravelTime: 0)
+        let routeDistance = origin.distance(to: destination)
+        let routeShape = LineString([origin, destination])
+        var legs: [RouteLeg] = []
+        let direction = origin.direction(to: destination)
+        let distancePerLeg = routeDistance / Double(legsCount)
+
+        var legOrigin: CLLocationCoordinate2D = origin
+        for _ in 0..<legsCount {
+            let legDestination = legOrigin.coordinate(at: distancePerLeg, facing: direction)
+            let leg = generateLeg(between: legOrigin,
+                                  and: legDestination,
+                                  profileIdentifier: profileIdentifier,
+                                  transportType: transportType)
+            leg.source = legs.last?.destination
+            legs.append(leg)
+            legOrigin = legDestination
+        }
+
+        let route = Route(legs: legs, shape: routeShape, distance: routeDistance, expectedTravelTime: 0)
         let response = RouteResponse(httpResponse: nil,
                                      routes: [route],
                                      options: .route(.init(coordinates: [origin, destination])),
@@ -227,6 +225,41 @@ public class Fixture: NSObject {
 
         return coordinates
     }
+
+    public static func generateLeg(between origin: CLLocationCoordinate2D,
+                                   and destination: CLLocationCoordinate2D,
+                                   profileIdentifier: DirectionsProfileIdentifier = .automobile,
+                                   transportType: TransportType = .automobile) -> RouteLeg {
+        let distance = origin.distance(to: destination)
+        let shape = LineString([origin, destination])
+        let intersection = Intersection(location: destination,
+                                        headings: [origin.direction(to: destination)],
+                                        approachIndex: 0,
+                                        outletIndex: 0,
+                                        outletIndexes: .init(integer: 0),
+                                        approachLanes: nil,
+                                        usableApproachLanes: nil,
+                                        preferredApproachLanes: nil,
+                                        usableLaneIndication: nil)
+
+        let arriveStep = RouteStep(transportType: transportType,
+                                   maneuverLocation: destination,
+                                   maneuverType: .arrive,
+                                   instructions: "arrive",
+                                   drivingSide: .right,
+                                   distance: distance,
+                                   expectedTravelTime: 0,
+                                   intersections: [intersection])
+        arriveStep.shape = shape
+        let leg = RouteLeg(steps: [arriveStep],
+                           name: "",
+                           distance: distance,
+                           expectedTravelTime: 0,
+                           profileIdentifier: profileIdentifier)
+        leg.destination = Waypoint(coordinate: destination)
+        return leg
+    }
+
     public static let credentials: DirectionsCredentials = .mocked
 }
 
