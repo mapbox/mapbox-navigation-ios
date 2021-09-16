@@ -38,6 +38,14 @@ public struct IndexedRouteResponse {
 }
 
 /**
+ A closure to be called when `RouteLeg` was changed.
+ 
+ - parameter success: Boolean value, which is set to `true` in case if `RouteLeg` was
+ successfully changed, otherwise `false`.
+ */
+public typealias AdvanceLegCompletionHandler = (_ success: Bool) -> Void
+
+/**
  A class conforming to the `Router` protocol tracks the user’s progress as they travel along a predetermined route. It calls methods on its `delegate`, which conforms to the `RouterDelegate` protocol, whenever significant events or decision points occur along the route. Despite its name, this protocol does not define the interface of a routing engine.
  
  There are two concrete implementations of the `Router` protocol. `RouteController`, the default implementation, is capable of client-side routing and depends on the Mapbox Navigation Native framework. `LegacyRouteController` is an alternative implementation that does not have this dependency but must be used in conjunction with the Mapbox Directions API over a network connection.
@@ -114,7 +122,7 @@ public protocol Router: CLLocationManagerDelegate {
      
      This is a convienence method provided to advance the leg index of any given router without having to worry about the internal data structure of the router.
      */
-    func advanceLegIndex()
+    func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler?)
 
     /// Replaces currently active route with the provided `IndexedRoute`.
     ///
