@@ -907,11 +907,11 @@ open class NavigationMapView: UIView {
             let maneuverCoordinate = step.maneuverLocation
             guard step.maneuverType != .arrive else { return }
             
-            let metersPerPointAtLatitude = Projection.metersPerPoint(for: maneuverCoordinate.latitude,
-                                                                     zoom: mapView.cameraState.zoom)
+            let metersPerPoint = Projection.metersPerPoint(for: maneuverCoordinate.latitude,
+                                                           zoom: mapView.cameraState.zoom)
             
             // TODO: Implement ability to change `shaftLength` depending on zoom level.
-            let shaftLength = max(min(30 * metersPerPointAtLatitude, 30), 10)
+            let shaftLength = max(min(30 * metersPerPoint, 30), 10)
             let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             
             var puckLayerIdentifier: String?
