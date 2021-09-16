@@ -86,7 +86,9 @@ public final class RoadObjectStore {
     }
 
     deinit {
-        native.removeObserver(for: self)
+        if native.hasObservers() {
+            native.removeObserver(for: self)
+        }
     }
 
     var native: MapboxNavigationNative.RoadObjectsStore {
@@ -99,7 +101,9 @@ public final class RoadObjectStore {
         if delegate != nil {
             native.addObserver(for: self)
         } else {
-            native.removeObserver(for: self)
+            if native.hasObservers() {
+                native.removeObserver(for: self)
+            }
         }
     }
 }
