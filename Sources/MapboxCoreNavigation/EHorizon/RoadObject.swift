@@ -12,7 +12,7 @@ public struct RoadObject {
      * Identifier of the road object. If we get the same objects (e.g. `RoadObject.ObjectType.tunnel`) from the
      * electronic horizon and the active route, they will not have the same IDs.
      */
-    public let identifier: RoadObjectIdentifier
+    public let identifier: RoadObject.Identifier
 
     /** Length of the object, `nil` if the object is point-like. */
     public let length: CLLocationDistance?
@@ -31,7 +31,7 @@ public struct RoadObject {
     /**
      Initializes a new `RoadObject` object.
      */
-    public init(identifier: RoadObjectIdentifier,
+    public init(identifier: RoadObject.Identifier,
                 length: CLLocationDistance?,
                 location: RoadObjectLocation,
                 kind: RoadObject.Kind) {

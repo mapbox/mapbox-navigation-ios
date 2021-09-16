@@ -13,7 +13,7 @@ public enum DistancedRoadObject {
      - parameter kind: Road object kind.
      - parameter distance: Distance to the point object, measured in meters.
      */
-    case point(identifier: RoadObjectIdentifier,
+    case point(identifier: RoadObject.Identifier,
                kind: RoadObject.Kind,
                distance: CLLocationDistance)
     
@@ -23,7 +23,7 @@ public enum DistancedRoadObject {
      - parameter kind: Road object kind.
      - parameter distance: Distance to the gantry object.
      */
-    case gantry(identifier: RoadObjectIdentifier,
+    case gantry(identifier: RoadObject.Identifier,
                 kind: RoadObject.Kind,
                 distance: CLLocationDistance)
     
@@ -35,7 +35,7 @@ public enum DistancedRoadObject {
      - parameter distanceToNearestExit: Distance measured in meters to nearest exit.
      - parameter isInside: Boolean to indicate whether we're currently "inside" the object.
      */
-    case polygon(identifier: RoadObjectIdentifier,
+    case polygon(identifier: RoadObject.Identifier,
                  kind: RoadObject.Kind,
                  distanceToNearestEntry: CLLocationDistance?,
                  distanceToNearestExit: CLLocationDistance?,
@@ -49,7 +49,7 @@ public enum DistancedRoadObject {
      - parameter distanceToNearestExit: Distance measured in meters to the nearest exit.
      - parameter isInside: Boolean that indicates whether we're currently "inside" the object.
      */
-    case subgraph(identifier: RoadObjectIdentifier,
+    case subgraph(identifier: RoadObject.Identifier,
                   kind: RoadObject.Kind,
                   distanceToNearestEntry: CLLocationDistance?,
                   distanceToNearestExit: CLLocationDistance?,
@@ -65,7 +65,7 @@ public enum DistancedRoadObject {
      - parameter isEntryFromStart: Boolean that indicates whether we enter the road object from its start. This value is `false` if already "within" the object.
      - parameter length: Length of the road object measured in meters.
      */
-    case line(identifier: RoadObjectIdentifier,
+    case line(identifier: RoadObject.Identifier,
               kind: RoadObject.Kind,
               distanceToEntry: CLLocationDistance,
               distanceToExit: CLLocationDistance,
@@ -73,8 +73,10 @@ public enum DistancedRoadObject {
               isEntryFromStart: Bool,
               length: CLLocationDistance)
 
-    /** Road object identifier */
-    public var identifier: RoadObjectIdentifier {
+    /**
+     Road object identifier
+     */
+    public var identifier: RoadObject.Identifier {
         switch self {
         case .point(let identifier, _, _),
              .gantry(let identifier, _, _),
@@ -85,7 +87,9 @@ public enum DistancedRoadObject {
         }
     }
 
-    /** Road object kind */
+    /**
+     Road object kind
+     */
     public var kind: RoadObject.Kind {
         switch self {
         case .point(_, let type, _),
