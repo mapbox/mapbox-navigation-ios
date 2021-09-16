@@ -182,10 +182,10 @@ custom_categories:
       - RoadObjectMatcher
       - RoadObjectsStore
       - RoadObjectLocation
-      - ObjectType
+      - RoadObject.Kind
       - RoadObjectMatcherDelegate
       - RoadObjectsStoreDelegate
-      - RoadObjectEdgeLocation
+      - RoadObject.EdgeLocation
       - RoadObjectMatcherError
       - RoadObjectPosition
-      - RoadObjectIdentifier
+      - RoadObject.Identifier

@@ -25,13 +25,13 @@ public final class RoadObjectStore {
     }
 
     /**
-     Returns mapping `road object identifier -> RoadObjectEdgeLocation` for all road objects
+     Returns mapping `road object identifier -> RoadObject.EdgeLocation` for all road objects
      which are lying on the edge with given identifier.
      - parameter edgeIdentifier: The identifier of the edge to query.
      */
-    public func roadObjectEdgeLocations(edgeIdentifier: RoadGraph.Edge.Identifier) -> [RoadObject.Identifier: RoadObjectEdgeLocation] {
+    public func roadObjectEdgeLocations(edgeIdentifier: RoadGraph.Edge.Identifier) -> [RoadObject.Identifier: RoadObject.EdgeLocation] {
         let objects = native.getForEdgeId(UInt64(edgeIdentifier))
-        return objects.mapValues(RoadObjectEdgeLocation.init)
+        return objects.mapValues(RoadObject.EdgeLocation.init)
     }
 
     /**
