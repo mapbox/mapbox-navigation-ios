@@ -570,14 +570,14 @@ jobs:
           
   spm-core-integration-test-job:
     macos:
-      xcode: "12.5.1"
+      xcode: "13.0.0"
     steps:
       - checkout
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - run:
           name: Build SPM Core integration test
-          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=14.5,name=iPhone 12 Pro Max" build | xcpretty
+          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=14.5,name=iPhone 12 Pro Max" build
       
 
 workflows:
