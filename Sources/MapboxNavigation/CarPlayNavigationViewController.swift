@@ -188,13 +188,10 @@ public class CarPlayNavigationViewController: UIViewController {
                                                                                              viewportDataSourceType: .active)
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
         
-        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+        // Reapply runtime styling changes each time the style changes.
+        navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
             self?.navigationMapView?.localizeLabels()
             self?.navigationMapView?.mapView.showsTraffic = false
-        }
-        
-        // Route line should be added to `MapView`, when its style changes.
-        navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
             self?.updateRouteOnMap()
         }
         
