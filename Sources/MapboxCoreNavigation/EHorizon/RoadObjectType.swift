@@ -8,8 +8,8 @@ import MapboxNavigationNative
 public enum RoadObjectType {
 
     /**
-     An alert providing information about incidents on a route. Incidents can include *congestion*,
-     *massTransit*, and more (see `Kind` for the full list of incident types).
+     An alert providing information about incidents on a route. Incidents can include congestion,
+     mass Transit, and more (see `Incident.Kind` for the full list of incident types).
      */
     case incident(Incident?)
 
