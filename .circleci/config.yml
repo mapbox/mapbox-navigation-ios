@@ -567,6 +567,17 @@ jobs:
       - run:
           name: Generating MapboxNavigation API Diff
           command: ./scripts/swift-api-diff/.build/release/swift-api-diff diff $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json
+          
+  spm-core-integration-test-job:
+    macos:
+      xcode: "12.5.1"
+    steps:
+      - checkout
+      - *prepare-netrc-file
+      - *add-github-to-known-hosts
+      - run:
+          name: Build SPM Core integration test
+          command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=14.5,name=iPhone 12 Pro Max" build | xcpretty
       
 
 workflows:
@@ -645,6 +656,8 @@ workflows:
           iOS: "14.5"          
           device: "iPhone 12 Pro Max"          
           context: Slack Orb
+      - spm-core-integration-test-job:
+          name: "Xcode 12.5.1; iOS 14.5; SPM Core test"
       - ios-trigger-metrics:
           filters:
             branches:
