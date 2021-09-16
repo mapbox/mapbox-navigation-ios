@@ -179,7 +179,7 @@ final class BillingHandlerUnitTests: TestCase {
         }
         let sessionUUID = UUID()
         handler.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 2, handler: nil)
         XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .running)
 
         billingService.assertEvents([
