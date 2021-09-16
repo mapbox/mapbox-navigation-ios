@@ -626,4 +626,91 @@ final class BillingHandlerUnitTests: TestCase {
         billingServiceMock.accessToken = expectedAccessToken
         XCTAssertEqual(Accounts.serviceAccessToken, expectedAccessToken)
     }
+
+    func testForceStartNewBillingSession() {
+        let sessionUuid = UUID()
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
+        handler.beginNewBillingSessionIfRunning(with: sessionUuid)
+        
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .beginBillingSession(.activeGuidance),
+        ])
+    }
+
+    func testForceStartNewBillingSessionOnPausedSession() {
+        let sessionUuid = UUID()
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
+        handler.pauseBillingSession(with: sessionUuid)
+        handler.beginNewBillingSessionIfRunning(with: sessionUuid)
+
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .pauseBillingSession(.activeGuidance)
+        ])
+    }
+
+    func testForceStartNewBillingSessionOnNonExistentSession() {
+        let sessionUuid = UUID()
+        handler.beginNewBillingSessionIfRunning(with: sessionUuid)
+
+        billingService.assertEvents([
+        ])
+    }
+
+    func testTripPerWaypoint() {
+        let legsCount = 10
+        autoreleasepool {
+            let origin = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+            let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
+
+            let routeResponse = Fixture.route(between: origin, and: destination, legsCount: legsCount).response
+            let routeCoordinates = Fixture.generateCoordinates(between: origin, and: destination, count: 100)
+
+            let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 1000)
+                .map { CLLocation(coordinate: $0) }
+                .shiftedToPresent()
+
+            let directions = DirectionsSpy()
+
+            let navOptions = NavigationRouteOptions(matchOptions: .init(coordinates: routeCoordinates))
+            let routeController = RouteController(alongRouteAtIndex: 0,
+                                                  in: routeResponse,
+                                                  options: navOptions,
+                                                  directions: directions,
+                                                  dataSource: self)
+
+            let routerDelegateSpy = RouterDelegateSpy()
+            routeController.delegate = routerDelegateSpy
+
+            let locationManager = ReplayLocationManager(locations: replyLocations)
+            locationManager.startDate = Date()
+            locationManager.delegate = routeController
+
+            let arrivedAtWaypoint = expectation(description: "Arrive at waypoint")
+            arrivedAtWaypoint.expectedFulfillmentCount = legsCount
+            routerDelegateSpy.onDidArriveAt = { waypoint in
+                arrivedAtWaypoint.fulfill()
+                return true
+            }
+
+            let speedMultiplier: TimeInterval = 100
+            locationManager.speedMultiplier = speedMultiplier
+            locationManager.startUpdatingLocation()
+            waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
+        }
+
+        var expectedEvents: [BillingServiceMock.Event] = []
+        for _ in 0..<legsCount {
+            expectedEvents.append(.beginBillingSession(.activeGuidance))
+        }
+        expectedEvents.append(.stopBillingSession(.activeGuidance))
+        billingServiceMock.assertEvents(expectedEvents)
+    }
+}
+
+extension BillingHandlerUnitTests: RouterDataSource {
+    var locationManagerType: NavigationLocationManager.Type {
+        return NavigationLocationManager.self
+    }
 }

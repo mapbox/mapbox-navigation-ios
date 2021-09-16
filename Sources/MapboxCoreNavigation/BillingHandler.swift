@@ -307,6 +307,34 @@ final class BillingHandler {
         }
     }
 
+    /**
+     Starts a new billing session in `billingService` if a session with `uuid` exists and active.
+
+     Use this method to force `billingService` to start a new billing session. 
+     */
+    func beginNewBillingSessionIfRunning(with uuid: UUID) {
+        lock.lock()
+
+        guard let session = _sessions[uuid], !session.isPaused else {
+            return
+        }
+
+        lock.unlock()
+
+        billingService.beginBillingSession(for: session.type) { [logger] error in
+            os_log("New trip session isn't started. Please check that you have the correct Mapboox Access Token",
+                   log: logger,
+                   type: .fault)
+
+            switch error {
+            case .invalidSkuId:
+                preconditionFailure("Invalid sku_id: \(error)")
+            case .tokenValidationFailed, .resumeFailed, .unknown:
+                break
+            }
+        }
+    }
+
     /// Stops the billing session identified by the `uuid`.
     func stopBillingSession(with uuid: UUID) {
         lock.lock()
