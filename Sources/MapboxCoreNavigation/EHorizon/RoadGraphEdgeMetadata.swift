@@ -17,11 +17,24 @@ extension RoadGraph.Edge {
     /** Edge metadata */
     public struct Metadata {
 
+        // MARK: Geographical & Physical Characteristics
+        
         /** The bearing in degrees clockwise at the start of the edge. */
         public let heading: CLLocationDegrees
 
         /** The edge’s length in meters. */
         public let length: CLLocationDistance
+        
+        /** The edge’s mean elevation, measured in meters. */
+        public let altitude: CLLocationDistance?
+
+        /** The edge’s curvature. */
+        public let curvature: UInt
+
+        // MARK: Road Classification
+        
+        /** Is the edge a bridge? */
+        public let isBridge: Bool
         
         /** The edge’s general road classes. */
         public let roadClasses: RoadClasses
@@ -29,39 +42,35 @@ extension RoadGraph.Edge {
         /** The edge’s functional road class, according to the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#road), version 8. */
         public let mapboxStreetsRoadClass: MapboxStreetsRoadClass
 
-        /** The edge’s maximum speed limit. */
-        public let speedLimit: Measurement<UnitSpeed>?
-
-        /** The user’s expected average speed along the edge, measured in meters per second. */
-        public let speed: CLLocationSpeed
-
-        /** Is the edge a bridge? */
-        public let isBridge: Bool
-
+        
+        // MARK: Legal definitions
+        
         /** The edge's names */
         public let names: [RoadName]
-
-        /** The number of parallel traffic lanes along the edge. */
-        public let laneCount: UInt?
-
-        /** The edge’s mean elevation, measured in meters. */
-        public let altitude: CLLocationDistance?
-
-        /** The edge’s curvature. */
-        public let curvature: UInt
-
+        
         /** The ISO 3166-1 alpha-2 code of the country where this edge is located. */
         public let countryCode: String?
 
         /** The ISO 3166-2 code of the country subdivision where this edge is located. */
         public let regionCode: String?
         
-        /** Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the rule of the road. */
-        public let drivingSide: DrivingSide
+        // MARK: Road Regulations
         
         /** Indicates how many directions the user may travel along the edge. */
         public let directionality: Directionality
+        
+        /** The edge’s maximum speed limit. */
+        public let speedLimit: Measurement<UnitSpeed>?
 
+        /** The user’s expected average speed along the edge, measured in meters per second. */
+        public let speed: CLLocationSpeed
+        
+        /** Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the rule of the road. */
+        public let drivingSide: DrivingSide
+        
+        /** The number of parallel traffic lanes along the edge. */
+        public let laneCount: UInt?
+        
         /**
          Initializes a new edge `Metadata` object.
          */
