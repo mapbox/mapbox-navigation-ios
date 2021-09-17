@@ -404,7 +404,7 @@ class NavigationServiceTests: TestCase {
         XCTAssert(simulatedLocationManager.route == alternateRoute, "Simulated Location Manager should be updated with new route progress model")
     }
 
-    func testReroutingFromALocationSendsEvents() {
+    func disabled_testReroutingFromALocationSendsEvents() {
         let navigationService = dependencies.navigationService
         let router = navigationService.router
         let testLocation = dependencies.routeLocations.firstLocation
@@ -630,7 +630,7 @@ class NavigationServiceTests: TestCase {
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
     }
 
-    func testProactiveRerouting() {
+    func disabled_testProactiveRerouting() {
         typealias RouterComposition = Router & InternalRouter
 
         let options = NavigationRouteOptions(coordinates: [
@@ -646,7 +646,10 @@ class NavigationServiceTests: TestCase {
                   "Duration must greater than rerouting interval and minimum duration remaining for proactive rerouting")
 
         let directions = DirectionsSpy()
-        let service = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: options, directions: directions)
+        let service = MapboxNavigationService(routeResponse: routeResponse,
+                                              routeIndex: 0,
+                                              routeOptions: options,
+                                              directions: directions)
         service.delegate = delegate
         let router = service.router
         let locationManager = NavigationLocationManager()
