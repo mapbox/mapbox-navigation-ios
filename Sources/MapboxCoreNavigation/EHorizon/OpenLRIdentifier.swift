@@ -9,14 +9,14 @@ public enum OpenLRIdentifier {
 
      Supported references: line location, point along line, polygon.
      */
-    case tomTom(reference: RoadObjectIdentifier)
+    case tomTom(reference: RoadObject.Identifier)
 
     /**
      TPEG OpenLR.
 
      Only line locations are supported.
      */
-    case tpeg(reference: RoadObjectIdentifier)
+    case tpeg(reference: RoadObject.Identifier)
 }
 
 extension MapboxNavigationNative.OpenLRStandard {

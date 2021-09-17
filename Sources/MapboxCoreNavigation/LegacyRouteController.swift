@@ -30,26 +30,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     public var refreshesRoute: Bool = true
 
-    var didFindFasterRoute = false
-    
     var lastProactiveRerouteDate: Date?
     
     var lastRouteRefresh: Date?
 
-    public var routeProgress: RouteProgress {
-        get {
-            return _routeProgress
-        }
-        set {
-            if let location = self.location {
-                delegate?.router(self, willRerouteFrom: location)
-            }
-            _routeProgress = newValue
-            announce(reroute: routeProgress.route, at: location, proactive: didFindFasterRoute)
-        }
-    }
-    
-    private var _routeProgress: RouteProgress {
+    public internal(set) var routeProgress: RouteProgress {
         didSet {
             movementsAwayFromRoute = 0
         }
@@ -62,13 +47,20 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         let routeOptions = routeOptions ?? routeProgress.routeOptions
         routeProgress = RouteProgress(route: routes[indexedRouteResponse.routeIndex], options: routeOptions)
         self.indexedRouteResponse = indexedRouteResponse
+        announce(reroute: route, at: location, proactive: false)
     }
     
     public var route: Route {
         routeProgress.route
     }
     
-    public internal(set) var indexedRouteResponse: IndexedRouteResponse
+    public internal(set) var indexedRouteResponse: IndexedRouteResponse {
+        didSet {
+            if let routes = indexedRouteResponse.routeResponse.routes {
+                precondition(routes.indices.contains(indexedRouteResponse.routeIndex), "Route index is out of bounds.")
+            }
+        }
+    }
 
     var isRerouting = false
     var isRefreshing = false
@@ -92,7 +84,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
         self.directions = directions
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -355,14 +347,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         isRerouting = true
 
-        delegate?.router(self, willRerouteFrom: location)
-        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            RouteController.NotificationUserInfoKey.locationKey: location,
-        ])
+        announceImpendingReroute(at: location)
 
         self.lastRerouteLocation = location
 
-        getDirections(from: location, along: progress) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
             guard let strongSelf = self else {
                 return
             }
@@ -375,11 +364,12 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                      RouteController.NotificationUserInfoKey.routingErrorKey: error,
                  ])
                  return
-            case let .success(response):
-                guard case let .route(options) = response.options, !(response.routes?.isEmpty ?? true) else {
-                    return
-                }
-                strongSelf.updateRoute(with: .init(routeResponse: response, routeIndex: 0), routeOptions: options) // unconditionally getting the first route above
+            case let .success(indexedResponse):
+                let response = indexedResponse.routeResponse
+                guard let route = response.routes?[indexedResponse.routeIndex] else { return }
+                guard case let .route(options) = response.options else { return }
+                strongSelf.updateRoute(with: indexedResponse, routeOptions: options)
+                strongSelf.announce(reroute: route, at: location, proactive: false)
             }
         }
     }

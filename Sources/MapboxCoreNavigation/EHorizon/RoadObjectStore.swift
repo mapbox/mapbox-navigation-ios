@@ -1,12 +1,15 @@
 import Foundation
 import MapboxNavigationNative
 
-/**
- Identifies a road object in an electronic horizon. A road object represents a notable transition point along a road, such as a toll booth or tunnel entrance. A road object is similar to a `RouteAlert` but is more closely associated with the routing graph managed by the `RoadGraph` class.
- 
- Use a `RoadObjectStore` object to get more information about a road object with a given identifier or get the locations of road objects along `RoadGraph.Edge`s.
- */
-public typealias RoadObjectIdentifier = String
+extension RoadObject {
+    
+    /**
+     Identifies a road object in an electronic horizon. A road object represents a notable transition point along a road, such as a toll booth or tunnel entrance. A road object is similar to a `RouteAlert` but is more closely associated with the routing graph managed by the `RoadGraph` class.
+     
+     Use a `RoadObjectStore` object to get more information about a road object with a given identifier or get the locations of road objects along `RoadGraph.Edge`s.
+     */
+    public typealias Identifier = String
+}
 
 /**
  Stores and provides access to metadata about road objects.
@@ -22,13 +25,13 @@ public final class RoadObjectStore {
     }
 
     /**
-     Returns mapping `road object identifier -> RoadObjectEdgeLocation` for all road objects
+     Returns mapping `road object identifier -> RoadObject.EdgeLocation` for all road objects
      which are lying on the edge with given identifier.
      - parameter edgeIdentifier: The identifier of the edge to query.
      */
-    public func roadObjectEdgeLocations(edgeIdentifier: RoadGraph.Edge.Identifier) -> [RoadObjectIdentifier : RoadObjectEdgeLocation] {
+    public func roadObjectEdgeLocations(edgeIdentifier: RoadGraph.Edge.Identifier) -> [RoadObject.Identifier: RoadObject.EdgeLocation] {
         let objects = native.getForEdgeId(UInt64(edgeIdentifier))
-        return objects.mapValues(RoadObjectEdgeLocation.init)
+        return objects.mapValues(RoadObject.EdgeLocation.init)
     }
 
     /**
@@ -37,7 +40,7 @@ public final class RoadObjectStore {
      even if we know that we have object with such identifier based on previous calls.
      - parameter roadObjectIdentifier: The identifier of the road object to query.
      */
-    public func roadObject(identifier roadObjectIdentifier: RoadObjectIdentifier) -> RoadObject? {
+    public func roadObject(identifier roadObjectIdentifier: RoadObject.Identifier) -> RoadObject? {
         if let roadObject = native.getRoadObject(forId: roadObjectIdentifier) {
             return RoadObject(roadObject)
         }
@@ -48,7 +51,7 @@ public final class RoadObjectStore {
      Returns list of road object ids which are (partially) belong to `edgeIds`.
      - parameter edgeIds list of edge ids
      */
-    public func roadObjectIdentifiers(edgeIdentifiers: [RoadGraph.Edge.Identifier]) -> [RoadObjectIdentifier] {
+    public func roadObjectIdentifiers(edgeIdentifiers: [RoadGraph.Edge.Identifier]) -> [RoadObject.Identifier] {
         return native.getRoadObjectIdsByEdgeIds(forEdgeIds: edgeIdentifiers.map(NSNumber.init))
     }
 
@@ -70,7 +73,7 @@ public final class RoadObjectStore {
 
      - parameter identifier: Identifier of the road object that should be removed.
      */
-    public func removeUserDefinedRoadObject(identifier: RoadObjectIdentifier) {
+    public func removeUserDefinedRoadObject(identifier: RoadObject.Identifier) {
         native.removeCustomRoadObject(forId: identifier)
     }
 

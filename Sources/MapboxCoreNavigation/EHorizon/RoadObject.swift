@@ -9,19 +9,19 @@ import MapboxNavigationNative
 public struct RoadObject {
 
     /**
-     * Identifier of the road object. If we get the same objects (e.g. `RoadObjectType.tunnel`) from the
+     * Identifier of the road object. If we get the same objects (e.g. `RoadObject.ObjectType.tunnel`) from the
      * electronic horizon and the active route, they will not have the same IDs.
      */
-    public let identifier: RoadObjectIdentifier
+    public let identifier: RoadObject.Identifier
 
     /** Length of the object, `nil` if the object is point-like. */
     public let length: CLLocationDistance?
 
     /** Location of the road object. */
-    public let location: RoadObjectLocation
+    public let location: RoadObject.Location
 
-    /** Type of the road object with metadata. */
-    public let type: RoadObjectType
+    /** Kind of the road object with metadata. */
+    public let kind: RoadObject.Kind
 
     /** `true` if an object is added by user, `false` if it comes from Mapbox service. */
     public let isUserDefined: Bool
@@ -31,11 +31,14 @@ public struct RoadObject {
     /**
      Initializes a new `RoadObject` object.
      */
-    public init(identifier: RoadObjectIdentifier, length: CLLocationDistance?, location: RoadObjectLocation, type: RoadObjectType) {
+    public init(identifier: RoadObject.Identifier,
+                length: CLLocationDistance?,
+                location: RoadObject.Location,
+                kind: RoadObject.Kind) {
         self.identifier = identifier
         self.length = length
         self.location = location
-        self.type = type
+        self.kind = kind
         isUserDefined = true
         native = nil
     }
@@ -43,8 +46,8 @@ public struct RoadObject {
     init(_ native: MapboxNavigationNative.RoadObject) {
         identifier = native.id
         length = native.length?.doubleValue
-        location = RoadObjectLocation(native.location)
-        type = RoadObjectType(type: native.type, metadata: native.metadata)
+        location = RoadObject.Location(native.location)
+        kind = RoadObject.Kind(type: native.type, metadata: native.metadata)
         isUserDefined = native.provider == .custom
         self.native = native
     }
