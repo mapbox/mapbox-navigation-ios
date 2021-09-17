@@ -120,7 +120,7 @@ public var RouteSnappingMinimumHorizontalAccuracy: CLLocationAccuracy = 20.0
  */
 public var RouteControllerMaximumSpeedForUsingCurrentStep: CLLocationSpeed = 1
 
-//MARK: - Congestion level default ranges
+//MARK: - Congestion Level Default Ranges
 
 /**
  Default range that matches `NumericCongestionLevel` values into `CongestionLevel.low` bucket.
@@ -215,7 +215,7 @@ public extension Notification.Name {
      */
     static let currentRoadNameDidChange: Notification.Name = .init(rawValue: "CurrentRoadNameDidChange")
     
-    // MARK: Settings And Permissions Updates
+    // MARK: Settings and Permissions Updates
     
     /**
      Posted when something changes in the shared `NavigationSettings` object.

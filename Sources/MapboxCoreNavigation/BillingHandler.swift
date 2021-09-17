@@ -398,7 +398,7 @@ final class BillingHandler {
     }
 }
 
-// MARK: - Tests support
+// MARK: - Tests Support
 
 extension BillingHandler {
     static func __createMockedHandler(with service: BillingService) -> BillingHandler {

@@ -40,7 +40,7 @@ open class RouteProgress: Codable {
         return newOptions
     }
     
-    // MARK: Interacting With Route
+    // MARK: Interacting with Route
     
     /**
      Returns the current `Route`.
@@ -328,7 +328,7 @@ open class RouteProgress: Codable {
         }
     }
     
-    // MARK: - Codable implementation
+    // MARK: - Codable Implementation
     
     private enum CodingKeys: String, CodingKey {
         case indexedRoute

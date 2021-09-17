@@ -13,7 +13,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     private let sessionUUID: UUID = .init()
     
-    // MARK: Configuring Route-related Data
+    // MARK: Configuring Route-Related Data
     
     public unowned var dataSource: RouterDataSource
     
@@ -34,7 +34,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         }
     }
 
-    // MARK: Tracking The Progress
+    // MARK: Tracking the Progress
     
     public weak var delegate: RouterDelegate?
     
@@ -84,7 +84,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     var isFirstLocation: Bool = true
     
-    // MARK: Controlling And Altering The Route
+    // MARK: Controlling and Altering the Route
     
     public var reroutesProactively = true
     
@@ -286,7 +286,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         userSnapToStepDistanceFromManeuver = shape.distance(from: coordinate)
     }
     
-    // MARK: Handling LocationManager output
+    // MARK: Handling LocationManager Output
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         heading = newHeading
@@ -539,7 +539,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         }
     }
     
-    // MARK: Obsolete methods
+    // MARK: Obsolete Methods
     
     @available(swift, obsoleted: 0.1, message: "MapboxNavigationService is now the point-of-entry to MapboxCoreNavigation. Direct use of RouteController is no longer reccomended. See MapboxNavigationService for more information.")
     /// :nodoc: Obsoleted method.

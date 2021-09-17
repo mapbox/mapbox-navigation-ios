@@ -324,7 +324,7 @@ open class PassiveLocationManager: NSObject {
 
 extension PassiveLocationManager: CLLocationManagerDelegate {
     
-    // MARK: Handling LocationManager output
+    // MARK: Handling LocationManager Output
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         didUpdate(locations: locations)

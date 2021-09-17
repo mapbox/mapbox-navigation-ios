@@ -20,14 +20,14 @@ open class RouteLegProgress: Codable {
     public var distanceTraveled: CLLocationDistance {
         return leg.steps.prefix(upTo: stepIndex).map { $0.distance }.reduce(0, +) + currentStepProgress.distanceTraveled
     }
-    
+
     /**
      Duration remaining in seconds on current leg.
      */
     public var durationRemaining: TimeInterval {
         return remainingSteps.map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
     }
-    
+
     /**
      Distance remaining on the current leg.
      */

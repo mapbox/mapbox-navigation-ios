@@ -66,7 +66,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      */
     func router(_ router: Router, didFailToRerouteWith error: Error)
 
-    // MARK: Progressing The Route And Arriving Events
+    // MARK: Progressing the Route and Arriving Events
     
     /**
      Called immediately after the router refreshes the route.
@@ -137,7 +137,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      */
     func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
 
-    // MARK: Permissions events
+    // MARK: Permissions Events
     
     /**
      Called when the router will disable battery monitoring.

@@ -163,7 +163,7 @@ open class RouteStepProgress: Codable {
         return ["step.instructionsDisplayedAlongStep", "spokenInstructionIndex"]
     }
     
-    // MARK: - Codable implementation
+    // MARK: - Codable Implementation
     
     private enum CodingKeys: String, CodingKey {
         case step

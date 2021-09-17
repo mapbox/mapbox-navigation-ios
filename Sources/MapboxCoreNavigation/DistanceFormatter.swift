@@ -98,7 +98,7 @@ extension NSAttributedString.Key {
  */
 open class DistanceFormatter: Formatter, NSSecureCoding {
     
-    // MARK: Configuring The Formatting
+    // MARK: Configuring the Formatting
     
     public static var supportsSecureCoding = true
     
@@ -159,7 +159,7 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
         super.init(coder: decoder)
     }
     
-    // MARK: Getting String Representation Of Values
+    // MARK: Getting String Representation of Values
     
     /**
      Creates and returns a localized, formatted string representation of the given distance in meters.

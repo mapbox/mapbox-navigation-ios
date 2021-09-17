@@ -71,7 +71,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error)
     
-    // MARK: Progressing The Route And Arriving Events
+    // MARK: Progressing the Route and Arriving Events
     
     /**
      Called immediately after the navigation service refreshes the route.
@@ -144,7 +144,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
     
-    // MARK: Permissions events
+    // MARK: Permissions Events
     
     /**
      Called when the location manager's accuracy authorization changed.
@@ -166,7 +166,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool
     
-    // MARK: Simulation messages
+    // MARK: Simulation Messages
     
     /**
      Called when the navigation service is about to begin location simulation.

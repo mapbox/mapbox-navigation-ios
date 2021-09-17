@@ -39,7 +39,7 @@ public protocol ActiveNavigationEventsManagerDataSource: AnyObject {
 open class NavigationEventsManager {
     static let applicationSessionIdentifier = UUID()
     
-    // MARK: Configuring events
+    // MARK: Configuring Events
     
     /**
      Optional application metadata that that can help Mapbox more reliably diagnose problems that occur in the SDK.

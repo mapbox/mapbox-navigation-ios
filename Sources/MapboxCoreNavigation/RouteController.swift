@@ -29,7 +29,7 @@ open class RouteController: NSObject {
 
     private let sessionUUID: UUID = .init()
     
-    // MARK: Configuring Route-related Data
+    // MARK: Configuring Route-Related Data
     
     /**
      A `TileStore` instance used by navigator
@@ -60,7 +60,7 @@ open class RouteController: NSObject {
         }
     }
     
-    // MARK: Tracking The Progress
+    // MARK: Tracking the Progress
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -135,7 +135,7 @@ open class RouteController: NSObject {
         }
     }
     
-    // MARK: Controlling And Altering The Route
+    // MARK: Controlling and Altering the Route
     
     public var reroutesProactively: Bool = true
     
@@ -549,7 +549,7 @@ open class RouteController: NSObject {
 
 extension RouteController: Router {
     
-    // MARK: - Controlling And Altering The Route
+    // MARK: Controlling and Altering the Route
     
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
         return userIsOnRoute(location, status: nil)

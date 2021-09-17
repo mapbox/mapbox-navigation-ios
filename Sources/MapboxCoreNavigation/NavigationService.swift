@@ -289,7 +289,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public var directions: Directions
 
     
-    // MARK: Managing Route-related Data
+    // MARK: Managing Route-Related Data
     
     /**
      The `NavigationService` delegate. Wraps `RouterDelegate` messages.
@@ -348,7 +348,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         self.init(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
     
-    // MARK: Serving the lifecycle
+    // MARK: Serving the Lifecycle
     
     /**
      Intializes a new `NavigationService`.
@@ -422,7 +422,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
 
 extension MapboxNavigationService: CLLocationManagerDelegate {
     
-    // MARK: Handling LocationManager output
+    // MARK: Handling LocationManager Output
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         router.locationManager?(manager, didUpdateHeading: newHeading)
@@ -472,7 +472,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
 extension MapboxNavigationService: RouterDelegate {
     typealias Default = RouteController.DefaultBehavior
     
-    //MARK: - RouteControllerDelegate implementation
+    //MARK: RouteControllerDelegate Implementation
     
     public func router(_ router: Router, willRerouteFrom location: CLLocation) {
         //save any progress made by the router until now
@@ -564,7 +564,7 @@ extension MapboxNavigationService {
 
 extension MapboxNavigationService {
     
-    //MARK: RouterDataSource implementation
+    //MARK: RouterDataSource Implementation
     
     public var locationManagerType: NavigationLocationManager.Type {
         return type(of: locationManager)

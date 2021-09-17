@@ -2,7 +2,7 @@ import Foundation
 
 extension Bundle {
     
-    // MARK: Accessing SDK Bundles And .plists
+    // MARK: Accessing SDK Bundles and .Plists
     /**
      Returns a set of strings containing supported background mode types.
      */
