@@ -214,17 +214,15 @@ open class RouteController: NSObject {
             let routeJSONString = String(data: routeData, encoding: .utf8) else {
             return
         }
-        let waypoints = progress.routeOptions.waypoints.map {
-            MapboxNavigationNative.Waypoint(coordinate: $0.coordinate, isSilent: !$0.separatesLegs)
-        }
-        // TODO: Add support for alternative route
-        let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
-                                                          geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat),
-                                                          waypoints: waypoints)
+
+        let routeRequest = Directions().url(forCalculating: routeProgress.routeOptions).absoluteString
+        
         navigator.setRouteForRouteResponse(routeJSONString,
                                            route: 0,
                                            leg: UInt32(routeProgress.legIndex),
-                                           options: activeGuidanceOptions)
+                                           routeRequest: routeRequest) { result in
+            // No-op
+        }
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
