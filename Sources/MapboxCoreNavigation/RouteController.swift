@@ -671,7 +671,7 @@ extension RouteController: Router {
 
 extension RouteController: InternalRouter { }
 
-enum RouteControllerError: Swift.Error {
+enum RouteControllerError: Error {
     case internalError
     case failedToChangeRouteLeg
 }
