@@ -7,14 +7,13 @@ import CoreLocation
  adjusted by interval between locations.
  */
 open class ReplayLocationManager: NavigationLocationManager {
+    
+    // MARK: Simulation Controls
+    
     /**
      `speedMultiplier` adjusts the speed of the replay.
      */
     public var speedMultiplier: TimeInterval = 1
-    
-    var currentIndex: Int = 0
-    
-    var startDate: Date?
     
     /**
      `locations` to be replayed.
@@ -24,8 +23,16 @@ open class ReplayLocationManager: NavigationLocationManager {
             currentIndex = 0
         }
     }
-    private var synthesizedLocation: CLLocation?
-
+    
+    /**
+     `simulatesLocation` used to indicate whether the location manager is providing simulated locations.
+     - seealso: `NavigationMapView.simulatesLocation`
+     */
+    public override var simulatesLocation: Bool {
+        get { return true }
+        set { super.simulatesLocation = newValue }
+    }
+    
     override open var location: CLLocation? {
         get {
             return synthesizedLocation
@@ -35,10 +42,11 @@ open class ReplayLocationManager: NavigationLocationManager {
         }
     }
     
-    public override var simulatesLocation: Bool {
-        get { return true }
-        set { super.simulatesLocation = newValue }
-    }
+    var currentIndex: Int = 0
+    
+    var startDate: Date?
+    
+    private var synthesizedLocation: CLLocation?
     
     public init(locations: [CLLocation]) {
         self.locations = locations.sorted { $0.timestamp < $1.timestamp }

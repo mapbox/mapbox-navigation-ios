@@ -4,13 +4,6 @@ import MapboxNavigationNative
 import Turf
 
 extension CLLocation {
-    var isQualified: Bool {
-        return 0...100 ~= horizontalAccuracy
-    }
-    
-    var isQualifiedForStartingRoute: Bool {
-        return 0...20 ~= horizontalAccuracy
-    }
     
     /// Returns a dictionary representation of the location.
     public var dictionaryRepresentation: [String: Any] {
@@ -50,6 +43,14 @@ extension CLLocation {
                       speed: location.speed?.doubleValue ?? -1,
                       timestamp: location.time)
         }
+    }
+    
+    var isQualified: Bool {
+        return 0...100 ~= horizontalAccuracy
+    }
+    
+    var isQualifiedForStartingRoute: Bool {
+        return 0...20 ~= horizontalAccuracy
     }
     
     /**

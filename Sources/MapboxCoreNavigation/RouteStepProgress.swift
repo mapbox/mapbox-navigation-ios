@@ -6,6 +6,21 @@ import MapboxDirections
  `RouteStepProgress` stores the user’s progress along a route step.
  */
 open class RouteStepProgress: Codable {
+    
+    /**
+     Intializes a new `RouteStepProgress`.
+
+     - parameter step: Step on a `RouteLeg`.
+     */
+    public init(step: RouteStep, spokenInstructionIndex: Int = 0) {
+        self.step = step
+        self.userDistanceToManeuverLocation = step.distance
+        self.intersectionIndex = 0
+        self.spokenInstructionIndex = spokenInstructionIndex
+    }
+    
+    // MARK: Step Stats
+    
     /**
      Returns the current `RouteStep`.
      */
@@ -42,19 +57,9 @@ open class RouteStepProgress: Codable {
     public var durationRemaining: TimeInterval {
         return (1 - fractionTraveled) * step.expectedTravelTime
     }
+
+    // MARK: Intersections
     
-    /**
-     Intializes a new `RouteStepProgress`.
-
-     - parameter step: Step on a `RouteLeg`.
-     */
-    public init(step: RouteStep, spokenInstructionIndex: Int = 0) {
-        self.step = step
-        self.userDistanceToManeuverLocation = step.distance
-        self.intersectionIndex = 0
-        self.spokenInstructionIndex = spokenInstructionIndex
-    }
-
     /**
      All intersections on the current `RouteStep` and also the first intersection on the upcoming `RouteStep`.
 
@@ -103,6 +108,8 @@ open class RouteStepProgress: Codable {
      */
     public var userDistanceToUpcomingIntersection: CLLocationDistance?
 
+    // MARK: Visual and Spoken Instructions
+    
     /**
      Index into `step.instructionsDisplayedAlongStep` representing the current visual instruction for the step.
      */

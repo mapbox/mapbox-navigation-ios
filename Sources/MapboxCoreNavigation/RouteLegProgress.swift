@@ -6,27 +6,13 @@ import MapboxDirections
  `RouteLegProgress` stores the user’s progress along a route leg.
  */
 open class RouteLegProgress: Codable {
+    
+    // MARK: Leg Information
+    
     /**
      Returns the current `RouteLeg`.
      */
     public let leg: RouteLeg
-
-    /**
-     Index representing the current step.
-     */
-    public var stepIndex: Int {
-        didSet {
-            precondition(leg.steps.indices.contains(stepIndex), "It's not possible to set the stepIndex: \(stepIndex) when it's higher than steps count \(leg.steps.count) or not included.")
-            currentStepProgress = RouteStepProgress(step: currentStep)
-        }
-    }
-
-    /**
-     The remaining steps for user to complete.
-     */
-    public var remainingSteps: [RouteStep] {
-        return Array(leg.steps.suffix(from: stepIndex + 1))
-    }
 
     /**
      Total distance traveled in meters along current leg.
@@ -34,14 +20,14 @@ open class RouteLegProgress: Codable {
     public var distanceTraveled: CLLocationDistance {
         return leg.steps.prefix(upTo: stepIndex).map { $0.distance }.reduce(0, +) + currentStepProgress.distanceTraveled
     }
-
+    
     /**
      Duration remaining in seconds on current leg.
      */
     public var durationRemaining: TimeInterval {
         return remainingSteps.map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
     }
-
+    
     /**
      Distance remaining on the current leg.
      */
@@ -58,6 +44,25 @@ open class RouteLegProgress: Codable {
     }
 
     public var userHasArrivedAtWaypoint = false
+    
+    // MARK: Step(s) Parameters
+    
+    /**
+     Index representing the current step.
+     */
+    public var stepIndex: Int {
+        didSet {
+            precondition(leg.steps.indices.contains(stepIndex), "It's not possible to set the stepIndex: \(stepIndex) when it's higher than steps count \(leg.steps.count) or not included.")
+            currentStepProgress = RouteStepProgress(step: currentStep)
+        }
+    }
+
+    /**
+     The remaining steps for user to complete.
+     */
+    public var remainingSteps: [RouteStep] {
+        return Array(leg.steps.suffix(from: stepIndex + 1))
+    }
 
     /**
      Returns the `RouteStep` before a given step. Returns `nil` if there is no step prior.
@@ -136,6 +141,42 @@ open class RouteLegProgress: Codable {
     public var currentStepProgress: RouteStepProgress
 
     /**
+     Returns the SpeedLimit for the current position along the route. Returns SpeedLimit.invalid if the speed limit is unknown or missing.
+     
+     The maximum speed may be an advisory speed limit for segments where legal limits are not posted, such as highway entrance and exit ramps. If the speed limit along a particular segment is unknown, it is set to `nil`. If the speed is unregulated along the segment, such as on the German _Autobahn_ system, it is represented by a measurement whose value is `Double.infinity`.
+     
+     Speed limit data is available in [a number of countries and territories worldwide](https://docs.mapbox.com/help/how-mapbox-works/directions/).
+     */
+    public var currentSpeedLimit: Measurement<UnitSpeed>? {
+        guard let segmentMaximumSpeedLimits = leg.segmentMaximumSpeedLimits else {
+            return nil
+        }
+        
+        let distanceTraveled = currentStepProgress.distanceTraveled
+        guard var index = currentStep.shape?.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
+            return nil
+        }
+        
+        var range = leg.segmentRangesByStep[stepIndex]
+        
+        // indexedCoordinateFromStart(distance:) can return a coordinate indexed to the last coordinate of the step, which is past any segment on the current step.
+        if index == range.count && upcomingStep != nil {
+            range = leg.segmentRangesByStep[stepIndex.advanced(by: 1)]
+            index = 0
+        }
+        guard index < range.count && range.upperBound <= segmentMaximumSpeedLimits.endIndex else {
+            return nil
+        }
+        
+        let speedLimit = segmentMaximumSpeedLimits[range][range.lowerBound.advanced(by: index)]
+        if let speedUnit = currentStep.speedLimitUnit {
+            return speedLimit?.converted(to: speedUnit)
+        } else {
+            return speedLimit
+        }
+    }
+    
+    /**
      Intializes a new `RouteLegProgress`.
 
      - parameter leg: Leg on a `Route`.
@@ -199,42 +240,6 @@ open class RouteLegProgress: Codable {
         })
     }
 
-    /**
-     Returns the SpeedLimit for the current position along the route. Returns SpeedLimit.invalid if the speed limit is unknown or missing.
-     
-     The maximum speed may be an advisory speed limit for segments where legal limits are not posted, such as highway entrance and exit ramps. If the speed limit along a particular segment is unknown, it is set to `nil`. If the speed is unregulated along the segment, such as on the German _Autobahn_ system, it is represented by a measurement whose value is `Double.infinity`.
-     
-     Speed limit data is available in [a number of countries and territories worldwide](https://docs.mapbox.com/help/how-mapbox-works/directions/).
-     */
-    public var currentSpeedLimit: Measurement<UnitSpeed>? {
-        guard let segmentMaximumSpeedLimits = leg.segmentMaximumSpeedLimits else {
-            return nil
-        }
-        
-        let distanceTraveled = currentStepProgress.distanceTraveled
-        guard var index = currentStep.shape?.indexedCoordinateFromStart(distance: distanceTraveled)?.index else {
-            return nil
-        }
-        
-        var range = leg.segmentRangesByStep[stepIndex]
-        
-        // indexedCoordinateFromStart(distance:) can return a coordinate indexed to the last coordinate of the step, which is past any segment on the current step.
-        if index == range.count && upcomingStep != nil {
-            range = leg.segmentRangesByStep[stepIndex.advanced(by: 1)]
-            index = 0
-        }
-        guard index < range.count && range.upperBound <= segmentMaximumSpeedLimits.endIndex else {
-            return nil
-        }
-        
-        let speedLimit = segmentMaximumSpeedLimits[range][range.lowerBound.advanced(by: index)]
-        if let speedUnit = currentStep.speedLimitUnit {
-            return speedLimit?.converted(to: speedUnit)
-        } else {
-            return speedLimit
-        }
-    }
-    
     // MARK: - Codable implementation
     
     private enum CodingKeys: String, CodingKey {

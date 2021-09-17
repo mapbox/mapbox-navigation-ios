@@ -29,52 +29,6 @@ fileprivate class SimulatedLocation: CLLocation {
  The route will be replaced upon a `RouteControllerDidReroute` notification.
  */
 open class SimulatedLocationManager: NavigationLocationManager {
-    internal var currentDistance: CLLocationDistance = 0
-    fileprivate var currentSpeed: CLLocationSpeed = 30
-    fileprivate let accuracy: DispatchTimeInterval = .milliseconds(50)
-    let updateInterval: DispatchTimeInterval = .milliseconds(1000)
-    fileprivate var timer: DispatchTimer!
-    
-    fileprivate var locations: [SimulatedLocation]!
-    fileprivate var routeShape: LineString!
-    
-    /**
-     Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.
-     */
-    public var speedMultiplier: Double = 1
-    fileprivate var simulatedLocation: CLLocation?
-    override open var location: CLLocation? {
-        get {
-            return simulatedLocation
-        }
-        set {
-            simulatedLocation = newValue
-        }
-    }
-    
-    var route: Route? {
-        didSet {
-            reset()
-        }
-    }
-    
-    open override func copy() -> Any {
-        let copy = SimulatedLocationManager(route: route!)
-        copy.currentDistance = currentDistance
-        copy.simulatedLocation = simulatedLocation
-        copy.currentSpeed = currentSpeed
-        copy.locations = locations
-        copy.routeShape = routeShape
-        copy.speedMultiplier = speedMultiplier
-        return copy
-    }
-    
-    public override var simulatesLocation: Bool {
-        get { return true }
-        set { super.simulatesLocation = newValue }
-    }
-    
-    private var routeProgress: RouteProgress?
     
     /**
      Initalizes a new `SimulatedLocationManager` with the given route.
@@ -112,34 +66,31 @@ open class SimulatedLocationManager: NavigationLocationManager {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_:)), name: .routeControllerProgressDidChange, object: nil)
     }
     
-    private func reset() {
-        if let shape = route?.shape {
-            routeShape = shape
-            locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
-        }
-    }
-    
-    private func calculateCurrentDistance(_ distance: CLLocationDistance) -> CLLocationDistance {
-        return distance + (currentSpeed * speedMultiplier)
-    }
-    
-    @objc private func progressDidChange(_ notification: Notification) {
-        routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
-    }
-    
-    @objc private func didReroute(_ notification: Notification) {
-        guard let router = notification.object as? Router else {
-            return
-        }
-
-        self.currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled)
-        routeProgress = router.routeProgress
-        route = router.routeProgress.route
-    }
-    
     deinit {
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
+    }
+    
+    // MARK: Simulation Controls
+    
+    /**
+     Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.
+     */
+    public var speedMultiplier: Double = 1
+    override open var location: CLLocation? {
+        get {
+            return simulatedLocation
+        }
+        set {
+            simulatedLocation = newValue
+        }
+    }
+    
+    fileprivate var simulatedLocation: CLLocation?
+    
+    public override var simulatesLocation: Bool {
+        get { return true }
+        set { super.simulatesLocation = newValue }
     }
     
     override open func startUpdatingLocation() {
@@ -149,6 +100,31 @@ open class SimulatedLocationManager: NavigationLocationManager {
     override open func stopUpdatingLocation() {
         timer.disarm()
     }
+    
+    // MARK: Simulation Logic
+    
+    internal var currentDistance: CLLocationDistance = 0
+    fileprivate var currentSpeed: CLLocationSpeed = 30
+    fileprivate let accuracy: DispatchTimeInterval = .milliseconds(50)
+    let updateInterval: DispatchTimeInterval = .milliseconds(1000)
+    fileprivate var timer: DispatchTimer!
+    fileprivate var locations: [SimulatedLocation]!
+    fileprivate var routeShape: LineString!
+    
+    var route: Route? {
+        didSet {
+            reset()
+        }
+    }
+    
+    private func reset() {
+        if let shape = route?.shape {
+            routeShape = shape
+            locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
+        }
+    }
+    
+    private var routeProgress: RouteProgress?
     
     internal func tick() {
         guard let polyline = routeShape, let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
@@ -205,6 +181,35 @@ open class SimulatedLocationManager: NavigationLocationManager {
             let reversedTurnPenalty = maximumTurnPenalty - closestLocation.turnPenalty
             return reversedTurnPenalty.scale(minimumIn: minimumTurnPenalty, maximumIn: maximumTurnPenalty, minimumOut: minimumSpeed, maximumOut: maximumSpeed)
         }
+    }
+    
+    private func calculateCurrentDistance(_ distance: CLLocationDistance) -> CLLocationDistance {
+        return distance + (currentSpeed * speedMultiplier)
+    }
+    
+    open override func copy() -> Any {
+        let copy = SimulatedLocationManager(route: route!)
+        copy.currentDistance = currentDistance
+        copy.simulatedLocation = simulatedLocation
+        copy.currentSpeed = currentSpeed
+        copy.locations = locations
+        copy.routeShape = routeShape
+        copy.speedMultiplier = speedMultiplier
+        return copy
+    }
+    
+    @objc private func progressDidChange(_ notification: Notification) {
+        routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+    }
+    
+    @objc private func didReroute(_ notification: Notification) {
+        guard let router = notification.object as? Router else {
+            return
+        }
+
+        self.currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled)
+        routeProgress = router.routeProgress
+        route = router.routeProgress.route
     }
 }
 

@@ -1,6 +1,8 @@
 import Foundation
 
 extension Bundle {
+    
+    // MARK: Accessing SDK Bundles And .plists
     /**
      Returns a set of strings containing supported background mode types.
      */
@@ -56,12 +58,6 @@ extension Bundle {
         }
     }
     
-    public func ensureSuggestedTileURLExists() -> Bool {
-        guard let tilePath = suggestedTileURL else { return false }
-        try? FileManager.default.createDirectory(at: tilePath, withIntermediateDirectories: true, attributes: nil)
-        return true
-    }
-    
     /**
      Returns a dictionary of `MBXInfo.plist` in Mapbox Core Navigation.
      */
@@ -104,6 +100,19 @@ extension Bundle {
         } else {
             return nil
         }
+    }
+    
+    // MARK: Accessing Suggested Tile Directory
+    
+    /**
+     Creates folder structure for the `suggestedTileURL` if possible.
+     
+     - returns: `True` if folder is created and available.
+     */
+    public func ensureSuggestedTileURLExists() -> Bool {
+        guard let tilePath = suggestedTileURL else { return false }
+        try? FileManager.default.createDirectory(at: tilePath, withIntermediateDirectories: true, attributes: nil)
+        return true
     }
     
     /**

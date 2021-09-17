@@ -39,6 +39,29 @@ public protocol ActiveNavigationEventsManagerDataSource: AnyObject {
 open class NavigationEventsManager {
     static let applicationSessionIdentifier = UUID()
     
+    // MARK: Configuring events
+    
+    /**
+     Optional application metadata that that can help Mapbox more reliably diagnose problems that occur in the SDK.
+     For example, you can provide your application’s name and version, a unique identifier for the end user, and a session identifier.
+     To include this information, use the following keys: "name", "version", "userId", and "sessionId".
+    */
+    public var userInfo: [String: String?]? = nil
+    
+    /**
+     When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
+     */
+    public var delaysEventFlushing = true
+    
+    /**
+     Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
+     */
+    var usesDefaultUserInterface = {
+        return Bundle.mapboxNavigationIfInstalled != nil
+    }()
+    
+    // MARK: Storing Data and Datasources
+    
     private var sessionState = SessionState()
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
@@ -74,20 +97,6 @@ open class NavigationEventsManager {
             _activeNavigationDataSource = newValue
         }
     }
-    
-    /**
-     Optional application metadata that that can help Mapbox more reliably diagnose problems that occur in the SDK.
-     For example, you can provide your application’s name and version, a unique identifier for the end user, and a session identifier.
-     To include this information, use the following keys: "name", "version", "userId", and "sessionId".
-    */
-    public var userInfo: [String: String?]? = nil
-    
-    /**
-     Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
-     */
-    var usesDefaultUserInterface = {
-        return Bundle.mapboxNavigationIfInstalled != nil
-    }()
 
     /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
     private var mobileEventsManager: MMEEventsManager!
@@ -132,11 +141,6 @@ open class NavigationEventsManager {
     private func suspendNotifications() {
         NotificationCenter.default.removeObserver(self)
     }
-    
-    /**
-     When set to `false`, flushing of telemetry events is not delayed. Is set to `true` by default.
-     */
-    public var delaysEventFlushing = true
 
     func start() {
         let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
@@ -146,6 +150,56 @@ open class NavigationEventsManager {
         }
         mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
         mobileEventsManager.sendTurnstileEvent()
+    }
+    
+    // MARK: Sending Feedback Events
+    
+    /**
+     Create feedback about the current road segment/maneuver to be sent to the Mapbox data team.
+     
+     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
+     
+     - returns: Returns a feedback event.
+     
+     If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
+     Alternatively, you can use `FeedbackViewContoller` which handles feedback lifecycle internally.
+     
+     - Postcondition:
+     Call `sendFeedback(_:type:source:description:)` with the returned feedback to attach additional metadata to the feedback and send it.
+     */
+    public func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) -> FeedbackEvent? {
+        guard let eventDetails = navigationFeedbackEvent(screenshotOption: screenshotOption) else { return nil }
+        return FeedbackEvent(eventDetails: eventDetails)
+    }
+    
+    /**
+     Send active navigation feedback to the Mapbox data team.
+     
+     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
+     
+     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
+     - parameter type: A `ActiveNavigationFeedbackType` used to specify the type of feedback.
+     - parameter description: A custom string used to describe the problem in detail.
+     */
+    public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: ActiveNavigationFeedbackType, description: String? = nil) {
+        feedback.update(with: type, description: description)
+        sendFeedbackEvents([feedback.coreEvent])
+    }
+    
+    /**
+     Send passive navigation feedback to the Mapbox data team.
+     
+     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
+     
+     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
+     - parameter type: A `PassiveNavigationFeedbackType` used to specify the type of feedback.
+     - parameter description: A custom string used to describe the problem in detail.
+     */
+    public func sendPassiveNavigationFeedback(_ feedback: FeedbackEvent,
+                                              type: PassiveNavigationFeedbackType,
+                                              description: String? = nil) {
+        feedback.update(with: type, description: description)
+        sendFeedbackEvents([feedback.coreEvent])
     }
     
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> ActiveNavigationEventDetails? {
@@ -384,54 +438,6 @@ open class NavigationEventsManager {
     
     private func shouldDelayEvents() -> Bool {
         return delaysEventFlushing
-    }
-    
-    /**
-     Create feedback about the current road segment/maneuver to be sent to the Mapbox data team.
-     
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-     
-     - returns: Returns a feedback event.
-     
-     If you provide a custom feedback UI that lets users elaborate on an issue, you should call this before you show the custom UI so the location and timestamp are more accurate.
-     Alternatively, you can use `FeedbackViewContoller` which handles feedback lifecycle internally.
-     
-     - Postcondition:
-     Call `sendFeedback(_:type:source:description:)` with the returned feedback to attach additional metadata to the feedback and send it.
-     */
-    public func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) -> FeedbackEvent? {
-        guard let eventDetails = navigationFeedbackEvent(screenshotOption: screenshotOption) else { return nil }
-        return FeedbackEvent(eventDetails: eventDetails)
-    }
-    
-    /**
-     Send active navigation feedback to the Mapbox data team.
-     
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-     
-     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `ActiveNavigationFeedbackType` used to specify the type of feedback.
-     - parameter description: A custom string used to describe the problem in detail.
-     */
-    public func sendActiveNavigationFeedback(_ feedback: FeedbackEvent, type: ActiveNavigationFeedbackType, description: String? = nil) {
-        feedback.update(with: type, description: description)
-        sendFeedbackEvents([feedback.coreEvent])
-    }
-    
-    /**
-     Send passive navigation feedback to the Mapbox data team.
-     
-     You can pair this with a custom feedback UI in your app to flag problems during navigation such as road closures, incorrect instructions, etc.
-     
-     - parameter feedback: A `FeedbackEvent` created with `createFeedback()` method.
-     - parameter type: A `PassiveNavigationFeedbackType` used to specify the type of feedback.
-     - parameter description: A custom string used to describe the problem in detail.
-     */
-    public func sendPassiveNavigationFeedback(_ feedback: FeedbackEvent,
-                                              type: PassiveNavigationFeedbackType,
-                                              description: String? = nil) {
-        feedback.update(with: type, description: description)
-        sendFeedbackEvents([feedback.coreEvent])
     }
     
     //MARK: - Session State Management

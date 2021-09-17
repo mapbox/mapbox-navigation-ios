@@ -123,10 +123,8 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
 public class MapboxNavigationService: NSObject, NavigationService {
     typealias DefaultRouter = RouteController
 
-    private var _router: Router?
-    private var _eventsManager: NavigationEventsManager?
-    private var _poorGPSTimer: DispatchTimer?
-
+    // MARK: Simulating Traversing
+    
     /**
      The default time interval before beginning simulation when the `.onPoorGPS` simulation option is enabled.
      */
@@ -141,43 +139,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
     }
     
-    /**
-     The active location manager. Returns the location simulator if we're actively simulating, otherwise it returns the native location manager.
-     */
-    public var locationManager: NavigationLocationManager {
-        return simulatedLocationSource ?? nativeLocationSource
-    }
-    
-    /**
-     A reference to a MapboxDirections service. Used for rerouting.
-     */
-    public var directions: Directions
-    
-    /**
-     The active router. By default, a `RouteController`.
-     */
-    public var router: Router { _router! }
-    
-    /**
-     The events manager. Sends telemetry back to the Mapbox platform.
-     */
-    public var eventsManager: NavigationEventsManager { _eventsManager! }
-    
-    /**
-     The `NavigationService` delegate. Wraps `RouterDelegate` messages.
-     */
-    public weak var delegate: NavigationServiceDelegate?
-    
-    /**
-     The native location source. This is a `NavigationLocationManager` by default, but can be overridden with a custom location manager at initalization.
-     */
-    private var nativeLocationSource: NavigationLocationManager
-    
-    /**
-     The active location simulator. Only used during `SimulationOption.always` and `SimluatedLocationManager.onPoorGPS`. If there is no simulation active, this property is `nil`.
-     */
-    private var simulatedLocationSource: SimulatedLocationManager?
-
     /**
      The simulation mode of the service.
      */
@@ -211,8 +172,170 @@ public class MapboxNavigationService: NSObject, NavigationService {
     }
     
     var poorGPSTimer: DispatchTimer { _poorGPSTimer! }
+    private var _poorGPSTimer: DispatchTimer?
     private var isSimulating: Bool { return simulatedLocationSource != nil }
     private var _simulationSpeedMultiplier: Double = 1.0
+    
+    private func simulate(intent: SimulationIntent = .manual) {
+        guard !isSimulating else { return }
+        let progress = router.routeProgress
+        delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
+        simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
+        simulatedLocationSource?.delegate = self
+        simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
+        simulatedLocationSource?.startUpdatingLocation()
+        simulatedLocationSource?.startUpdatingHeading()
+        delegate?.navigationService(self, didBeginSimulating: progress, becauseOf: intent)
+    }
+    
+    private func endSimulation(intent: SimulationIntent = .manual) {
+        guard isSimulating else { return }
+        let progress = router.routeProgress
+        delegate?.navigationService(self, willEndSimulating: progress, becauseOf: intent)
+        simulatedLocationSource?.stopUpdatingLocation()
+        simulatedLocationSource?.stopUpdatingHeading()
+        simulatedLocationSource?.delegate = nil
+        simulatedLocationSource = nil
+        delegate?.navigationService(self, didEndSimulating: progress, becauseOf: intent)
+    }
+    
+    private func resetGPSCountdown() {
+        //Sanity check: if we're not on this mode, we have no business here.
+        guard simulationMode == .onPoorGPS else { return }
+        
+        // Immediately end simulation if it is occuring.
+        if isSimulating {
+            endSimulation(intent: .poorGPS)
+        }
+        
+        // Reset the GPS countdown.
+        poorGPSTimer.reset()
+    }
+    
+    // MARK: Controlling Navigation Service
+    
+    public func start() {
+        // Feed the first location to the router if router doesn't have a location yet. See #1790, #3237 for reference.
+        if router.location == nil {
+            if let currentLocation = locationManager.location {
+                router.locationManager?(nativeLocationSource, didUpdateLocations: [
+                   currentLocation
+                ])
+            }
+            else if let coordinate = route.shape?.coordinates.first { // fallback to simulated location.
+                router.locationManager?(nativeLocationSource, didUpdateLocations: [
+                    CLLocation(coordinate: coordinate,
+                               altitude: -1,
+                               horizontalAccuracy: -1,
+                               verticalAccuracy: -1,
+                               course: -1,
+                               speed: 0,
+                               timestamp: Date())
+                ])
+            }
+        }
+        
+        nativeLocationSource.startUpdatingHeading()
+        nativeLocationSource.startUpdatingLocation()
+        
+        if simulationMode == .always {
+            simulate()
+        }
+        
+        eventsManager.sendRouteRetrievalEvent()
+        router.delegate = self
+    }
+    
+    public func stop() {
+        
+        nativeLocationSource.stopUpdatingHeading()
+        nativeLocationSource.stopUpdatingLocation()
+        
+        if [.always, .onPoorGPS].contains(simulationMode) {
+            endSimulation()
+        }
+        
+        poorGPSTimer.disarm()
+        router.delegate = nil
+    }
+    
+    public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
+        eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
+        stop()
+    }
+    
+    // MARK: Managing Location
+    
+    /**
+     The active location manager. Returns the location simulator if we're actively simulating, otherwise it returns the native location manager.
+     */
+    public var locationManager: NavigationLocationManager {
+        return simulatedLocationSource ?? nativeLocationSource
+    }
+    
+    /**
+     The native location source. This is a `NavigationLocationManager` by default, but can be overridden with a custom location manager at initalization.
+     */
+    private var nativeLocationSource: NavigationLocationManager
+    
+    /**
+     The active location simulator. Only used during `SimulationOption.always` and `SimluatedLocationManager.onPoorGPS`. If there is no simulation active, this property is `nil`.
+     */
+    private var simulatedLocationSource: SimulatedLocationManager?
+    
+    /**
+     A reference to a MapboxDirections service. Used for rerouting.
+     */
+    public var directions: Directions
+
+    
+    // MARK: Managing Route-related Data
+    
+    /**
+     The `NavigationService` delegate. Wraps `RouterDelegate` messages.
+     */
+    public weak var delegate: NavigationServiceDelegate?
+    
+    /**
+     The active router. By default, a `RouteController`.
+     */
+    public var router: Router { _router! }
+    
+    /**
+     The events manager. Sends telemetry back to the Mapbox platform.
+     */
+    public var eventsManager: NavigationEventsManager { _eventsManager! }
+    
+    public var route: Route {
+        router.route
+    }
+    
+    public var indexedRouteResponse: IndexedRouteResponse {
+        router.indexedRouteResponse
+    }
+    
+    private var _router: Router?
+    private var _eventsManager: NavigationEventsManager?
+    
+    /**
+     Determines if a location is within a tunnel.
+     
+     - parameter location: The location to test.
+     - parameter progress: the RouteProgress model that contains the route geometry.
+
+     */
+    public func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
+        return TunnelAuthority.isInTunnel(at: location, along: progress)
+    }
+    
+    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
+        router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions)
+    }
+
+    private func bootstrapEvents() {
+        eventsManager.activeNavigationDataSource = self
+        eventsManager.resetSession()
+    }
     
     /**
      Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
@@ -224,6 +347,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
     convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions options: RouteOptions) {
         self.init(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
     }
+    
+    // MARK: Serving the lifecycle
     
     /**
      Intializes a new `NavigationService`.
@@ -282,120 +407,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
         simulatedLocationSource?.delegate = nil
     }
     
-    /**
-     Determines if a location is within a tunnel.
-     
-     - parameter location: The location to test.
-     - parameter progress: the RouteProgress model that contains the route geometry.
-
-     */
-    public func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
-        return TunnelAuthority.isInTunnel(at: location, along: progress)
-    }
-    
-    private func simulate(intent: SimulationIntent = .manual) {
-        guard !isSimulating else { return }
-        let progress = router.routeProgress
-        delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
-        simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
-        simulatedLocationSource?.delegate = self
-        simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
-        simulatedLocationSource?.startUpdatingLocation()
-        simulatedLocationSource?.startUpdatingHeading()
-        delegate?.navigationService(self, didBeginSimulating: progress, becauseOf: intent)
-    }
-    
-    private func endSimulation(intent: SimulationIntent = .manual) {
-        guard isSimulating else { return }
-        let progress = router.routeProgress
-        delegate?.navigationService(self, willEndSimulating: progress, becauseOf: intent)
-        simulatedLocationSource?.stopUpdatingLocation()
-        simulatedLocationSource?.stopUpdatingHeading()
-        simulatedLocationSource?.delegate = nil
-        simulatedLocationSource = nil
-        delegate?.navigationService(self, didEndSimulating: progress, becauseOf: intent)
-    }
-    
-    public var route: Route {
-        router.route
-    }
-    
-    public var indexedRouteResponse: IndexedRouteResponse {
-        router.indexedRouteResponse
-    }
-    
-    public func start() {
-        // Feed the first location to the router if router doesn't have a location yet. See #1790, #3237 for reference.
-        if router.location == nil {
-            if let currentLocation = locationManager.location {
-                router.locationManager?(nativeLocationSource, didUpdateLocations: [
-                   currentLocation
-                ])
-            }
-            else if let coordinate = route.shape?.coordinates.first { // fallback to simulated location.
-                router.locationManager?(nativeLocationSource, didUpdateLocations: [
-                    CLLocation(coordinate: coordinate,
-                               altitude: -1,
-                               horizontalAccuracy: -1,
-                               verticalAccuracy: -1,
-                               course: -1,
-                               speed: 0,
-                               timestamp: Date())
-                ])
-            }
-        }
-        
-        nativeLocationSource.startUpdatingHeading()
-        nativeLocationSource.startUpdatingLocation()
-        
-        if simulationMode == .always {
-            simulate()
-        }
-        
-        eventsManager.sendRouteRetrievalEvent()
-        router.delegate = self
-    }
-    
-    public func stop() {
-        
-        nativeLocationSource.stopUpdatingHeading()
-        nativeLocationSource.stopUpdatingLocation()
-        
-        if [.always, .onPoorGPS].contains(simulationMode) {
-            endSimulation()
-        }
-        
-        poorGPSTimer.disarm()
-        router.delegate = nil
-    }
-    
-    public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
-        eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
-        stop()
-    }
-
-    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
-        router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions)
-    }
-
-    private func bootstrapEvents() {
-        eventsManager.activeNavigationDataSource = self
-        eventsManager.resetSession()
-    }
-
-    private func resetGPSCountdown() {
-        //Sanity check: if we're not on this mode, we have no business here.
-        guard simulationMode == .onPoorGPS else { return }
-        
-        // Immediately end simulation if it is occuring.
-        if isSimulating {
-            endSimulation(intent: .poorGPS)
-        }
-        
-        // Reset the GPS countdown.
-        poorGPSTimer.reset()
-    }
-    
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
     }
@@ -410,6 +421,9 @@ public class MapboxNavigationService: NSObject, NavigationService {
 }
 
 extension MapboxNavigationService: CLLocationManagerDelegate {
+    
+    // MARK: Handling LocationManager output
+    
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         router.locationManager?(manager, didUpdateHeading: newHeading)
     }
@@ -455,9 +469,10 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
     }
 }
 
-//MARK: - RouteControllerDelegate
 extension MapboxNavigationService: RouterDelegate {
     typealias Default = RouteController.DefaultBehavior
+    
+    //MARK: - RouteControllerDelegate implementation
     
     public func router(_ router: Router, willRerouteFrom location: CLLocation) {
         //save any progress made by the router until now
@@ -503,7 +518,6 @@ extension MapboxNavigationService: RouterDelegate {
         delegate?.navigationService(self, didPassSpokenInstructionPoint: instruction, routeProgress: routeProgress)
     }
     
-    //MARK: Questions
     public func router(_ router: Router, shouldRerouteFrom location: CLLocation) -> Bool {
         return delegate?.navigationService(self, shouldRerouteFrom: location) ?? Default.shouldRerouteFromLocation
     }
@@ -536,8 +550,9 @@ extension MapboxNavigationService: RouterDelegate {
     }
 }
 
-//MARK: ActiveNavigationEventsManagerDataSource Logic
 extension MapboxNavigationService {
+    //MARK: ActiveNavigationEventsManagerDataSource Logic
+    
     public var routeProgress: RouteProgress {
         return router.routeProgress
     }
@@ -547,8 +562,10 @@ extension MapboxNavigationService {
     }
 }
 
-//MARK: RouterDataSource
 extension MapboxNavigationService {
+    
+    //MARK: RouterDataSource implementation
+    
     public var locationManagerType: NavigationLocationManager.Type {
         return type(of: locationManager)
     }

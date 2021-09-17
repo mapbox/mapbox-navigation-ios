@@ -16,6 +16,9 @@ import os.log
  - seealso: RouterDelegate
  */
 public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
+    
+    // MARK: Rerouting Logic
+    
     /**
      Returns whether the navigation service should be allowed to calculate a new route.
      
@@ -68,6 +71,8 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error)
     
+    // MARK: Progressing The Route And Arriving Events
+    
     /**
      Called immediately after the navigation service refreshes the route.
      
@@ -89,20 +94,15 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
-     Called when the navigation service detects that the user has passed a point at which an instruction should be displayed.
-     - parameter service: The navigation service that passed the instruction point.
-     - parameter instruction: The instruction to be presented.
-     - parameter routeProgress: The route progress object that the navigation service is updating.
+     Called when the navigation service arrives at a waypoint.
+     
+     You can implement this method to allow the navigation service to continue check and reroute the user if needed. By default, the user will not be rerouted when arriving at a waypoint.
+     
+     - parameter service: The navigation service that has arrived at a waypoint.
+     - parameter waypoint: The waypoint that the controller has arrived at.
+     - returns: True to prevent the navigation service from checking if the user should be rerouted.
      */
-    func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
-    
-    /**
-     Called when the navigation service detects that the user has passed a point at which an instruction should be spoken.
-     - parameter service: The navigation service that passed the instruction point.
-     - parameter instruction: The instruction to be spoken.
-     - parameter routeProgress: The route progress object that the navigation service is updating.
-     */
-    func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
+    func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
     
     /**
      Called as the navigation service approaches a waypoint.
@@ -129,15 +129,22 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
-     Called when the navigation service arrives at a waypoint.
-     
-     You can implement this method to allow the navigation service to continue check and reroute the user if needed. By default, the user will not be rerouted when arriving at a waypoint.
-     
-     - parameter service: The navigation service that has arrived at a waypoint.
-     - parameter waypoint: The waypoint that the controller has arrived at.
-     - returns: True to prevent the navigation service from checking if the user should be rerouted.
+     Called when the navigation service detects that the user has passed a point at which an instruction should be displayed.
+     - parameter service: The navigation service that passed the instruction point.
+     - parameter instruction: The instruction to be presented.
+     - parameter routeProgress: The route progress object that the navigation service is updating.
      */
-    func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
+    func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
+    
+    /**
+     Called when the navigation service detects that the user has passed a point at which an instruction should be spoken.
+     - parameter service: The navigation service that passed the instruction point.
+     - parameter instruction: The instruction to be spoken.
+     - parameter routeProgress: The route progress object that the navigation service is updating.
+     */
+    func navigationService(_ service: NavigationService, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
+    
+    // MARK: Permissions events
     
     /**
      Called when the location manager's accuracy authorization changed.
@@ -158,6 +165,8 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      - returns: A bool indicating whether to disable battery monitoring when the RouteController is deinited.
      */
     func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool
+    
+    // MARK: Simulation messages
     
     /**
      Called when the navigation service is about to begin location simulation.

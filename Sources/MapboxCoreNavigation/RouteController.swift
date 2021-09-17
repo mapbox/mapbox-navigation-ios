@@ -29,9 +29,7 @@ open class RouteController: NSObject {
 
     private let sessionUUID: UUID = .init()
     
-    var navigator: MapboxNavigationNative.Navigator {
-        return Navigator.shared.navigator
-    }
+    // MARK: Configuring Route-related Data
     
     /**
      A `TileStore` instance used by navigator
@@ -39,6 +37,16 @@ open class RouteController: NSObject {
     open var navigatorTileStore: TileStore {
         return Navigator.shared.tileStore
     }
+    
+    /**
+     The route controller’s associated location manager.
+     */
+    public unowned var dataSource: RouterDataSource
+    
+    /**
+     The Directions object used to create the route.
+     */
+    public var directions: Directions
     
     public var route: Route {
         return routeProgress.route
@@ -52,19 +60,7 @@ open class RouteController: NSObject {
         }
     }
     
-    var routeTask: URLSessionDataTask?
-    
-    var lastRerouteLocation: CLLocation?
-    
-    var isRerouting = false
-    
-    var isRefreshing = false
-    
-    var userSnapToStepDistanceFromManeuver: CLLocationDistance?
-    
-    var previousArrivalWaypoint: MapboxDirections.Waypoint?
-    
-    var isFirstLocation: Bool = true
+    // MARK: Tracking The Progress
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -76,6 +72,26 @@ open class RouteController: NSObject {
         didSet {
             updateNavigator(with: routeProgress)
             updateObservation(for: routeProgress)
+        }
+    }
+    
+    /**
+     The idealized user location. Snapped to the route line, if applicable, otherwise raw.
+     - seeAlso: snappedLocation, rawLocation
+     */
+    public var location: CLLocation? {
+        return snappedLocation ?? rawLocation
+    }
+    
+    /**
+     The most recently received user location.
+     - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
+     */
+    public var rawLocation: CLLocation? {
+        didSet {
+            if isFirstLocation == true {
+                isFirstLocation = false
+            }
         }
     }
     
@@ -99,110 +115,70 @@ open class RouteController: NSObject {
         return rawLocation?.timestamp
     }
 
-    var heading: CLHeading?
-
-    /**
-     The most recently received user location.
-     - note: This is a raw location received from `locationManager`. To obtain an idealized location, use the `location` property.
-     */
-    public var rawLocation: CLLocation? {
-        didSet {
-            if isFirstLocation == true {
-                isFirstLocation = false
-            }
-        }
-    }
-    
-    public var reroutesProactively: Bool = true
-    
-    var lastProactiveRerouteDate: Date?
-    
-    var lastRouteRefresh: Date?
-    
-    public var refreshesRoute: Bool = true
-    
     /**
      The route controller’s delegate.
      */
     public weak var delegate: RouterDelegate?
     
-    /**
-     The route controller’s associated location manager.
-     */
-    public unowned var dataSource: RouterDataSource
+    var heading: CLHeading?
+    var isFirstLocation: Bool = true
     
     /**
-     The Directions object used to create the route.
+     Advances current `RouteProgress.legIndex` by 1.
+     
+     - parameter completionHandler: Completion handler, which is called to report a status whether
+     `RouteLeg` was changed or not.
      */
-    public var directions: Directions
-    
-    /**
-     The idealized user location. Snapped to the route line, if applicable, otherwise raw.
-     - seeAlso: snappedLocation, rawLocation
-     */
-    public var location: CLLocation? {
-        return snappedLocation ?? rawLocation
+    public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
+        updateRouteLeg(to: routeProgress.legIndex + 1) { result in
+            completionHandler?(result)
+        }
     }
     
-    required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
-        self.directions = directions
-        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
-        self.dataSource = source
-        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
-        UIDevice.current.isBatteryMonitoringEnabled = true
-        
-        super.init()
-        BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
+    // MARK: Controlling And Altering The Route
+    
+    public var reroutesProactively: Bool = true
+    
+    var lastProactiveRerouteDate: Date?
+    
+    var isRerouting = false
+    
+    var lastRerouteLocation: CLLocation?
+    
+    public var refreshesRoute: Bool = true
+    
+    var isRefreshing = false
+    
+    var lastRouteRefresh: Date?
+    
+    var didFindFasterRoute = false
+    
 
-        subscribeNotifications()
-        updateNavigator(with: routeProgress)
-        updateObservation(for: routeProgress)
+    var routeTask: URLSessionDataTask?
+    
+    // MARK: Navigating
+    
+    var navigator: MapboxNavigationNative.Navigator {
+        return Navigator.shared.navigator
     }
     
-    deinit {
-        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+    var userSnapToStepDistanceFromManeuver: CLLocationDistance?
+    
+    var previousArrivalWaypoint: MapboxDirections.Waypoint?
+    
+    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let location = locations.last else { return }
         
-        resetObservation(for: routeProgress)
-        unsubscribeNotifications()
-    }
-    
-    func resetObservation(for progress: RouteProgress) {
-        progress.legIndexHandler = nil
-    }
-    
-    func updateObservation(for progress: RouteProgress) {
-        progress.legIndexHandler = { [weak self] (oldValue, newValue) in
-            guard newValue != oldValue else {
-                return
+        guard !(delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation) else {
+            return
+        }
+        
+        rawLocation = location
+        
+        locations.forEach {
+            navigator.updateLocation(for: FixLocation($0)) { _ in
+                // No-op
             }
-            self?.updateRouteLeg(to: newValue)
-        }
-    }
-    
-    func geometryEncoding(_ routeShapeFormat: RouteShapeFormat) -> ActiveGuidanceGeometryEncoding {
-        switch routeShapeFormat {
-        case .geoJSON:
-            return .geoJSON
-        case .polyline:
-            return .polyline5
-        case .polyline6:
-            return .polyline6
-        }
-    }
-    
-    func mode(_ profileIdentifier: DirectionsProfileIdentifier) -> ActiveGuidanceMode {
-        switch profileIdentifier {
-        case .automobile:
-            return .driving
-        case .automobileAvoidingTraffic:
-            return .driving
-        case .cycling:
-            return .cycling
-        case .walking:
-            return .walking
-        default:
-            return .driving
         }
     }
     
@@ -248,22 +224,6 @@ open class RouteController: NSObject {
         }
     }
     
-    public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        
-        guard !(delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation) else {
-            return
-        }
-        
-        rawLocation = location
-        
-        locations.forEach {
-            navigator.updateLocation(for: FixLocation($0)) { _ in
-                // No-op
-            }
-        }
-    }
-    
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
               let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
@@ -294,25 +254,6 @@ open class RouteController: NSObject {
             // Check for faster route proactively (if reroutesProactively is enabled)
             refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
         }
-    }
-    
-    private func subscribeNotifications() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(fallbackToOffline),
-                                               name: .navigationDidSwitchToFallbackVersion,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(restoreToOnline),
-                                               name: .navigationDidSwitchToTargetVersion,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(navigationStatusDidChange),
-                                               name: .navigationStatusDidChange,
-                                               object: nil)
-    }
-    
-    private func unsubscribeNotifications() {
-        NotificationCenter.default.removeObserver(self)
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
@@ -450,16 +391,87 @@ open class RouteController: NSObject {
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
     }
     
-    /**
-     Advances current `RouteProgress.legIndex` by 1.
-     
-     - parameter completionHandler: Completion handler, which is called to report a status whether
-     `RouteLeg` was changed or not.
-     */
-    public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
-        updateRouteLeg(to: routeProgress.legIndex + 1) { result in
-            completionHandler?(result)
+    func geometryEncoding(_ routeShapeFormat: RouteShapeFormat) -> ActiveGuidanceGeometryEncoding {
+        switch routeShapeFormat {
+        case .geoJSON:
+            return .geoJSON
+        case .polyline:
+            return .polyline5
+        case .polyline6:
+            return .polyline6
         }
+    }
+    
+    func mode(_ profileIdentifier: DirectionsProfileIdentifier) -> ActiveGuidanceMode {
+        switch profileIdentifier {
+        case .automobile:
+            return .driving
+        case .automobileAvoidingTraffic:
+            return .driving
+        case .cycling:
+            return .cycling
+        case .walking:
+            return .walking
+        default:
+            return .driving
+        }
+    }
+    
+    // MARK: Handling Lifecycle
+    
+    required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
+        self.directions = directions
+        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
+        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        self.dataSource = source
+        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+        UIDevice.current.isBatteryMonitoringEnabled = true
+        
+        super.init()
+        BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
+
+        subscribeNotifications()
+        updateNavigator(with: routeProgress)
+        updateObservation(for: routeProgress)
+    }
+    
+    deinit {
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+        
+        resetObservation(for: routeProgress)
+        unsubscribeNotifications()
+    }
+    
+    func resetObservation(for progress: RouteProgress) {
+        progress.legIndexHandler = nil
+    }
+    
+    func updateObservation(for progress: RouteProgress) {
+        progress.legIndexHandler = { [weak self] (oldValue, newValue) in
+            guard newValue != oldValue else {
+                return
+            }
+            self?.updateRouteLeg(to: newValue)
+        }
+    }
+    
+    private func subscribeNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(fallbackToOffline),
+                                               name: .navigationDidSwitchToFallbackVersion,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(restoreToOnline),
+                                               name: .navigationDidSwitchToTargetVersion,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationStatusDidChange),
+                                               name: .navigationStatusDidChange,
+                                               object: nil)
+    }
+    
+    private func unsubscribeNotifications() {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: Accessing Relevant Routing Data
@@ -536,6 +548,9 @@ open class RouteController: NSObject {
 }
 
 extension RouteController: Router {
+    
+    // MARK: - Controlling And Altering The Route
+    
     public func userIsOnRoute(_ location: CLLocation) -> Bool {
         return userIsOnRoute(location, status: nil)
     }
