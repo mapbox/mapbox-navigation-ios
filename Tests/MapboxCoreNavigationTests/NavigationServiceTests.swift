@@ -443,7 +443,7 @@ class NavigationServiceTests: TestCase {
         wait(for: [willRerouteNotificationExpectation], timeout: 0.1)
 
         // MARK: Upon rerouting successfully...
-        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: [alternateRoute], error: nil)
+        directionsClientSpy.fireLastCalculateCompletion(with: routeOptions.waypoints, routes: [alternateRoute], error: nil)
 
         // MARK: It tells the delegate & posts a didReroute notification
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))

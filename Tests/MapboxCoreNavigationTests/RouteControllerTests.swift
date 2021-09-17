@@ -116,9 +116,21 @@ class RouteControllerTests: TestCase {
         directions.onCalculateRoute = { [unowned directions] in
             calculateRouteCalled.fulfill()
             let currentCoordinate = locationManager.location!.coordinate
-            directions.fireLastCalculateCompletion(with: [],
-                                                   routes: [Fixture.route(between: currentCoordinate,
-                                                                          and: destination).route],
+            
+            let originWaypoint = Waypoint(coordinate: currentCoordinate)
+            let destinationWaypoint = Waypoint(coordinate: destination)
+            
+            let waypoints = [
+                originWaypoint,
+                destinationWaypoint
+            ]
+            
+            let routes = [
+                Fixture.route(between: currentCoordinate, and: destination).route
+            ]
+            
+            directions.fireLastCalculateCompletion(with: waypoints,
+                                                   routes: routes,
                                                    error: nil)
         }
 
