@@ -472,7 +472,7 @@ open class NavigationMapView: UIView {
             // While animating to overview mode, don't animate the puck.
             let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-                guard let point = self?.mapView.point(for: location.coordinate) else { return }
+                guard let point = self?.mapView.mapboxMap.point(for: location.coordinate) else { return }
                 self?.userCourseView.center = point
             }
             
@@ -612,7 +612,7 @@ open class NavigationMapView: UIView {
         if lineLayer == nil {
             lineLayer = LineLayer(id: layerIdentifier)
             lineLayer?.source = sourceIdentifier
-            lineLayer?.lineColor = .constant(.init(color: trafficUnknownColor))
+            lineLayer?.lineColor = .constant(.init(trafficUnknownColor))
             lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression())
             lineLayer?.lineJoin = .constant(.round)
             lineLayer?.lineCap = .constant(.round)
@@ -642,7 +642,7 @@ open class NavigationMapView: UIView {
                                                                                                   lineBaseColor: alternativeTrafficUnknownColor,
                                                                                                   isSoft: crossfadesCongestionSegments)))
                 } else {
-                    lineLayer?.lineColor = .constant(.init(color: routeAlternateColor))
+                    lineLayer?.lineColor = .constant(.init(routeAlternateColor))
                 }
             }
         }
@@ -690,7 +690,7 @@ open class NavigationMapView: UIView {
         if lineLayer == nil {
             lineLayer = LineLayer(id: layerIdentifier)
             lineLayer?.source = sourceIdentifier
-            lineLayer?.lineColor = .constant(.init(color: routeCasingColor))
+            lineLayer?.lineColor = .constant(.init(routeCasingColor))
             lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(1.5))
             lineLayer?.lineJoin = .constant(.round)
             lineLayer?.lineCap = .constant(.round)
@@ -699,7 +699,7 @@ open class NavigationMapView: UIView {
                 let gradientStops = routeLineGradient(fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
-                lineLayer?.lineColor = .constant(.init(color: routeAlternateCasingColor))
+                lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))
             }
         }
         
@@ -815,10 +815,10 @@ open class NavigationMapView: UIView {
             0.5
             1
         }
-        circleLayer.circleColor = .constant(.init(color: UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
+        circleLayer.circleColor = .constant(.init(UIColor(red:0.9, green:0.9, blue:0.9, alpha:1.0)))
         circleLayer.circleOpacity = .expression(opacity)
         circleLayer.circleRadius = .constant(.init(10))
-        circleLayer.circleStrokeColor = .constant(.init(color: UIColor.black))
+        circleLayer.circleStrokeColor = .constant(.init(UIColor.black))
         circleLayer.circleStrokeWidth = .constant(.init(1))
         circleLayer.circleStrokeOpacity = .expression(opacity)
         
@@ -844,7 +844,7 @@ open class NavigationMapView: UIView {
             1
         })
         symbolLayer.textHaloWidth = .constant(.init(0.25))
-        symbolLayer.textHaloColor = .constant(.init(color: UIColor.black))
+        symbolLayer.textHaloColor = .constant(.init(UIColor.black))
         
         return symbolLayer
     }
@@ -907,8 +907,11 @@ open class NavigationMapView: UIView {
             let maneuverCoordinate = step.maneuverLocation
             guard step.maneuverType != .arrive else { return }
             
+            let metersPerPoint = Projection.metersPerPoint(for: maneuverCoordinate.latitude,
+                                                           zoom: mapView.cameraState.zoom)
+            
             // TODO: Implement ability to change `shaftLength` depending on zoom level.
-            let shaftLength = max(min(30 * mapView.metersPerPointAtLatitude(latitude: maneuverCoordinate.latitude), 30), 10)
+            let shaftLength = max(min(30 * metersPerPoint, 30), 10)
             let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             
             var puckLayerIdentifier: String?
@@ -938,7 +941,7 @@ open class NavigationMapView: UIView {
                     arrowLayer.lineCap = .constant(.butt)
                     arrowLayer.lineJoin = .constant(.round)
                     arrowLayer.lineWidth = .expression(Expression.routeLineWidthExpression(0.70))
-                    arrowLayer.lineColor = .constant(.init(color: maneuverArrowColor))
+                    arrowLayer.lineColor = .constant(.init(maneuverArrowColor))
                     
                     try mapView.mapboxMap.style.addSource(arrowSource, id: NavigationMapView.SourceIdentifier.arrowSource)
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
@@ -964,7 +967,7 @@ open class NavigationMapView: UIView {
                     arrowStrokeLayer.lineCap = arrowLayer.lineCap
                     arrowStrokeLayer.lineJoin = arrowLayer.lineJoin
                     arrowStrokeLayer.lineWidth = .expression(Expression.routeLineWidthExpression(0.80))
-                    arrowStrokeLayer.lineColor = .constant(.init(color: maneuverArrowStrokeColor))
+                    arrowStrokeLayer.lineColor = .constant(.init(maneuverArrowStrokeColor))
                     
                     try mapView.mapboxMap.style.addSource(arrowStrokeSource, id: NavigationMapView.SourceIdentifier.arrowStrokeSource)
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
@@ -993,7 +996,7 @@ open class NavigationMapView: UIView {
                     arrowSymbolLayer.minZoom = Double(minimumZoomLevel)
                     arrowSymbolLayer.iconImage = .constant(.name(NavigationMapView.ImageIdentifier.arrowImage))
                     // FIXME: `iconColor` has no effect.
-                    arrowSymbolLayer.iconColor = .constant(.init(color: maneuverArrowColor))
+                    arrowSymbolLayer.iconColor = .constant(.init(maneuverArrowColor))
                     arrowSymbolLayer.iconRotationAlignment = .constant(.map)
                     arrowSymbolLayer.iconRotate = .constant(.init(shaftDirection))
                     arrowSymbolLayer.iconSize = .expression(Expression.routeLineWidthExpression(0.12))
@@ -1003,7 +1006,7 @@ open class NavigationMapView: UIView {
                     arrowSymbolCasingLayer.minZoom = arrowSymbolLayer.minZoom
                     arrowSymbolCasingLayer.iconImage = arrowSymbolLayer.iconImage
                     // FIXME: `iconColor` has no effect.
-                    arrowSymbolCasingLayer.iconColor = .constant(.init(color: maneuverArrowStrokeColor))
+                    arrowSymbolCasingLayer.iconColor = .constant(.init(maneuverArrowStrokeColor))
                     arrowSymbolCasingLayer.iconRotationAlignment = arrowSymbolLayer.iconRotationAlignment
                     arrowSymbolCasingLayer.iconRotate = arrowSymbolLayer.iconRotate
                     arrowSymbolCasingLayer.iconSize = .expression(Expression.routeLineWidthExpression(0.14))
@@ -1409,7 +1412,7 @@ open class NavigationMapView: UIView {
                 symbolLayer.textField = .expression(instruction)
                 symbolLayer.textSize = .constant(14)
                 symbolLayer.textHaloWidth = .constant(1)
-                symbolLayer.textHaloColor = .constant(.init(color: .white))
+                symbolLayer.textHaloColor = .constant(.init(.white))
                 symbolLayer.textOpacity = .constant(0.75)
                 symbolLayer.textAnchor = .constant(.bottom)
                 symbolLayer.textJustify = .constant(.left)
@@ -1419,7 +1422,7 @@ open class NavigationMapView: UIView {
                 circleLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
                 circleLayer.circleRadius = .constant(5)
                 circleLayer.circleOpacity = .constant(0.75)
-                circleLayer.circleColor = .constant(.init(color: .white))
+                circleLayer.circleColor = .constant(.init(.white))
                 try mapView.mapboxMap.style.addLayer(circleLayer)
             }
         } catch {

@@ -102,31 +102,32 @@ public enum DistancedRoadObject {
     }
 
     init(_ native: MapboxNavigationNative.RoadObjectDistance) {
-        if native.distanceInfo.isPointDistanceInfo() {
+        switch native.distanceInfo.type {
+        case .pointDistanceInfo:
             let info = native.distanceInfo.getPointDistanceInfo()
             self = .point(identifier: native.roadObjectId,
                           kind: RoadObject.Kind(native.type),
                           distance: info.distance)
-        } else if native.distanceInfo.isGantryDistanceInfo() {
+        case .gantryDistanceInfo:
             let info = native.distanceInfo.getGantryDistanceInfo()
             self = .gantry(identifier: native.roadObjectId,
                            kind: RoadObject.Kind(native.type),
                            distance: info.distance)
-        } else if native.distanceInfo.isPolygonDistanceInfo() {
+        case .polygonDistanceInfo:
             let info = native.distanceInfo.getPolygonDistanceInfo()
             self = .polygon(identifier: native.roadObjectId,
                             kind: RoadObject.Kind(native.type),
                             distanceToNearestEntry: info.entrances.first?.distance,
                             distanceToNearestExit: info.exits.first?.distance,
                             isInside: info.isInside)
-        } else if native.distanceInfo.isSubGraphDistanceInfo() {
+        case .subGraphDistanceInfo:
             let info = native.distanceInfo.getSubGraphDistanceInfo()
             self = .subgraph(identifier: native.roadObjectId,
                              kind: RoadObject.Kind(native.type),
                              distanceToNearestEntry: info.entrances.first?.distance,
                              distanceToNearestExit: info.exits.first?.distance,
                              isInside: info.isInside)
-        } else if native.distanceInfo.isLineDistanceInfo() {
+        case .lineDistanceInfo:
             let info = native.distanceInfo.getLineDistanceInfo()
             self = .line(identifier: native.roadObjectId,
                          kind: RoadObject.Kind(native.type),
@@ -135,7 +136,7 @@ public enum DistancedRoadObject {
                          distanceToEnd: info.distanceToEnd,
                          isEntryFromStart: info.isEntryFromStart,
                          length: info.length)
-        } else {
+        @unknown default:
             preconditionFailure("DistancedRoadObject can't be constructed. Unknown type.")
         }
     }

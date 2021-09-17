@@ -84,7 +84,8 @@ open class RouteController: NSObject {
      - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
      */
     var snappedLocation: CLLocation? {
-        guard lastLocationUpdateDate != nil, let status = navigator.getStatus() else {
+        guard lastLocationUpdateDate != nil,
+              let status = Navigator.shared.mostRecentNavigationStatus else {
             return nil
         }
         
@@ -213,24 +214,37 @@ open class RouteController: NSObject {
             let routeJSONString = String(data: routeData, encoding: .utf8) else {
             return
         }
-        let waypoints = progress.routeOptions.waypoints.map {
-            MapboxNavigationNative.Waypoint(coordinate: $0.coordinate, isSilent: !$0.separatesLegs)
-        }
-        // TODO: Add support for alternative route
-        let activeGuidanceOptions = ActiveGuidanceOptions(mode: mode(progress.routeOptions.profileIdentifier),
-                                                          geometryEncoding: geometryEncoding(progress.routeOptions.shapeFormat),
-                                                          waypoints: waypoints)
+
+        let routeRequest = Directions().url(forCalculating: routeProgress.routeOptions).absoluteString
+        
         navigator.setRouteForRouteResponse(routeJSONString,
                                            route: 0,
                                            leg: UInt32(routeProgress.legIndex),
-                                           options: activeGuidanceOptions)
+                                           routeRequest: routeRequest) { result in
+            // No-op
+        }
     }
     
     /// updateRouteLeg is used to notify nav-native of the developer changing the active route-leg.
-    private func updateRouteLeg(to value: Int) {
+    private func updateRouteLeg(to value: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
         let legIndex = UInt32(value)
-        if navigator.changeRouteLeg(forRoute: 0, leg: legIndex), let status = navigator.getStatus() {
-            updateIndexes(status: status, progress: routeProgress)
+        
+        navigator.changeRouteLeg(forRoute: 0, leg: legIndex) { [weak self] success in
+            guard let self = self else {
+                completionHandler?(.failure(RouteControllerError.internalError))
+                return
+            }
+            
+            // Since it's not possible to get navigator status synchronously `RouteProgress` related
+            // information will be updated in `RouteController.navigationStatusDidChange(_:)`.
+            let result: Result<RouteProgress, Error>
+            if success {
+                result = .success(self.routeProgress)
+            } else {
+                result = .failure(RouteControllerError.failedToChangeRouteLeg)
+            }
+            
+            completionHandler?(result)
         }
     }
     
@@ -243,7 +257,11 @@ open class RouteController: NSObject {
         
         rawLocation = location
         
-        locations.forEach { navigator.updateLocation(for: FixLocation($0)) }
+        locations.forEach {
+            navigator.updateLocation(for: FixLocation($0)) { _ in
+                // No-op
+            }
+        }
     }
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
@@ -432,8 +450,16 @@ open class RouteController: NSObject {
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
     }
     
-    public func advanceLegIndex() {
-        updateRouteLeg(to: routeProgress.legIndex + 1)
+    /**
+     Advances current `RouteProgress.legIndex` by 1.
+     
+     - parameter completionHandler: Completion handler, which is called to report a status whether
+     `RouteLeg` was changed or not.
+     */
+    public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
+        updateRouteLeg(to: routeProgress.legIndex + 1) { result in
+            completionHandler?(result)
+        }
     }
     
     // MARK: Accessing Relevant Routing Data
@@ -528,7 +554,7 @@ extension RouteController: Router {
         }
         
         // If we still wait for the first status from NavNative, there is no need to reroute
-        guard let status = status ?? navigator.getStatus() else { return true }
+        guard let status = status ?? Navigator.shared.mostRecentNavigationStatus else { return true }
 
         /// NavNative doesn't support reroutes after arrival.
         /// The code below is a port of logic from LegacyRouteController
@@ -644,3 +670,8 @@ extension RouteController: Router {
 }
 
 extension RouteController: InternalRouter { }
+
+enum RouteControllerError: Error {
+    case internalError
+    case failedToChangeRouteLeg
+}

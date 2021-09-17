@@ -77,36 +77,34 @@ extension RoadObject {
         case routeAlert(shape: Turf.Geometry)
         
         init(_ native: MapboxNavigationNative.MatchedRoadObjectLocation) {
-            if native.isOpenLRLineLocation() {
+            switch native.type {
+            case .openLRLineLocation:
                 let location = native.getOpenLRLineLocation()
                 self = .openLRLine(path: RoadGraph.Path(location.getPath()),
                                    shape: Geometry(location.getShape()))
-            } else if native.isOpenLRPointAlongLineLocation() {
+            case .openLRPointAlongLineLocation:
                 let location = native.getOpenLRPointAlongLineLocation()
                 self = .openLRPoint(position: RoadGraph.Position(location.getPosition()),
                                     sideOfRoad: OpenLRSideOfRoad(location.getSideOfRoad()),
                                     orientation: OpenLROrientation(location.getOrientation()),
                                     coordinate: location.getCoordinate())
-            } else if native.isMatchedPolylineLocation() {
+            case .matchedPolylineLocation:
                 let location = native.getMatchedPolylineLocation()
                 self = .polyline(path: RoadGraph.Path(location.getPath()),
                                  shape: Geometry(location.getShape()))
-            } else if native.isMatchedGantryLocation() {
+            case .matchedGantryLocation:
                 let location = native.getMatchedGantryLocation()
                 self = .gantry(positions: location.getPositions().map(RoadObject.Position.init),
                                shape: Geometry(location.getShape()))
-            } else if native.isMatchedPolygonLocation() {
+            case .matchedPolygonLocation:
                 let location = native.getMatchedPolygonLocation()
                 self = .polygon(entries: location.getEntries().map(RoadObject.Position.init),
                                 exits: location.getExits().map(RoadObject.Position.init),
                                 shape: Geometry(location.getShape()))
-            } else if native.isMatchedPointLocation() {
+            case .matchedPointLocation:
                 let location = native.getMatchedPointLocation()
                 self = .point(position: RoadObject.Position(location.getPosition()))
-            } else if native.isRouteAlert() {
-                let location = native.getRouteAlert()
-                self = .routeAlert(shape: Geometry(location.getShape()))
-            } else if native.isMatchedSubgraphLocation() {
+            case .matchedSubgraphLocation:
                 let location = native.getMatchedSubgraphLocation()
                 let edges = location.getEdges()
                     .map { (id, edge) in (UInt(truncating: id), RoadGraph.SubgraphEdge(edge)) }
@@ -114,8 +112,11 @@ extension RoadObject {
                                  exits: location.getExits().map(RoadObject.Position.init),
                                  shape: Geometry(location.getShape()),
                                  edges: .init(uniqueKeysWithValues: edges))
-            } else {
-                preconditionFailure("RoadObject.Location can't be constructed. Unknown type.")
+            case .routeAlertLocation:
+                let routeAlertLocation = native.getRouteAlert()
+                self = .routeAlert(shape: Geometry(routeAlertLocation.getShape()))
+            @unknown default:
+                preconditionFailure("RoadObjectLocation can't be constructed. Unknown type.")
             }
         }
     }

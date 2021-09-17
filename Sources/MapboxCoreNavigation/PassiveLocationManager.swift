@@ -106,20 +106,43 @@ open class PassiveLocationManager: NSObject {
     var lastRawLocation: CLLocation?
     
     /**
+     A closure, which is called to report a result whether location update succeeded or not.
+     
+     - parameter result: Result, which in case of success contains location (which was updated),
+     and error, in case of failure.
+     */
+    public typealias UpdateLocationCompletionHandler = (_ result: Result<CLLocation, Error>) -> Void
+    
+    /**
      Manually sets the current location.
      
      This method stops any automatic location updates.
+     
+     - parameter location: Location, which will be used by navigator.
+     - parameter completion: Completion handler, which will be called when asynchronous operation completes.
      */
-    public func updateLocation(_ location: CLLocation?) {
+    public func updateLocation(_ location: CLLocation?, completion: UpdateLocationCompletionHandler? = nil) {
         guard let location = location else { return }
         systemLocationManager.stopUpdatingLocation()
         systemLocationManager.stopUpdatingHeading()
-        self.didUpdate(locations: [location])
+        
+        didUpdate(locations: [location]) { result in
+            completion?(result)
+        }
     }
 
-    private func didUpdate(locations: [CLLocation]) {
+    private func didUpdate(locations: [CLLocation], completion: UpdateLocationCompletionHandler? = nil) {
         for location in locations {
-            navigator.updateLocation(for: FixLocation(location))
+            navigator.updateLocation(for: FixLocation(location)) { success in
+                let result: Result<CLLocation, Error>
+                if success {
+                    result = .success(location)
+                } else {
+                    result = .failure(PassiveLocationManagerError.failedToChangeLocation)
+                }
+                
+                completion?(result)
+            }
         }
 
         let isFirstLocation = lastRawLocation == nil
@@ -356,4 +379,8 @@ extension TileEndpointConfiguration {
                   versionBeforeFallback: targetVersion ?? tilesVersion,
                   minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
     }
+}
+
+enum PassiveLocationManagerError: Error {
+    case failedToChangeLocation
 }

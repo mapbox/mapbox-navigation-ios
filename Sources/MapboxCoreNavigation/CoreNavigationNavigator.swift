@@ -22,7 +22,9 @@ class Navigator {
                                                           cache: cacheHandle,
                                                           historyRecorder: historyRecorder)
     }()
-
+    
+    var mostRecentNavigationStatus: NavigationStatus? = nil
+    
     private(set) var tileStore: TileStore
     
     /**
@@ -272,5 +274,7 @@ extension Navigator: NavigatorObserver {
             .statusKey: status,
         ]
         NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
+        
+        mostRecentNavigationStatus = status
     }
 }

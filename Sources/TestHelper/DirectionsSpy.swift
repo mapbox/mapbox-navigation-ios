@@ -39,7 +39,7 @@ public class DirectionsSpy: Directions {
     
             lastCalculateOptionsCompletion(session, .success(response))
         }
-}
+    }
     
     public convenience init() {
         self.init(credentials: Fixture.credentials)

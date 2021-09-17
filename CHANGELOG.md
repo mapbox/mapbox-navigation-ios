@@ -11,10 +11,10 @@
 
 * The Mapbox Navigation SDK for iOS license has changed from the ISC License to the Mapbox Terms of Service. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * You can now install MapboxNavigation using Swift Package Manager, but you can no longer install it using Carthage. If you previously installed MapboxNavigation using Carthage, use Swift Package Manager instead. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
-* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.7](https://github.com/mapbox/mapbox-maps-ios/). ([#3297](https://github.com/mapbox/mapbox-navigation-ios/pull/3297))
-* MapboxNavigation now depends on MapboxNavigationNative v65.0.1. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
-* MapboxNavigation now depends on MapboxCommon v17.1.0. ([#3297](https://github.com/mapbox/mapbox-navigation-ios/pull/3297))
 * MapboxNavigation now depends on MapboxMobileEvents v1.0.3. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.8](https://github.com/mapbox/mapbox-maps-ios/). ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
+* MapboxNavigation now depends on MapboxNavigationNative v66.0.0. ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
+* MapboxNavigation now depends on MapboxCommon v18.0.0. ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
 * MapboxCoreNavigation depends on MapboxDirections v2.0.0-rc.1. ([#3325](https://github.com/mapbox/mapbox-navigation-ios/pull/3325))
 * MapboxCoreNavigation no longer depends on MapboxAccounts. ([#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829))
 * MapboxNavigation now depends on Turf v2.0.0-rc.1. ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
@@ -178,6 +178,7 @@
 * Feedback categories and subcategories for active navigation were changed. "Incorrect visual" category was renamed to "Looks Incorrect". For the full updated list of supported categories see enum `ActiveNavigationFeedbackType`. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
 * Fixed bundle names retrieval in `URLSession.userAgent`. ([#3335]((https://github.com/mapbox/mapbox-navigation-ios/pull/3335))
 * Fixed IndexedRouteResponse handling after rerouting. ([#3344]((https://github.com/mapbox/mapbox-navigation-ios/pull/3344))
+* Renamed the `Router.advanceLegIndex()` method to `Router.advanceLegIndex(completionHandler:)` and the `PassiveLocationDataSource.updateLocation(_:)` method to `PassiveLocationManager.updateLocation(_:completionHandler:)`. These methods are now asynchronous, and their completion handlers indicate whether the operation succeeded. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344))
 
 ## v1.4.1
 

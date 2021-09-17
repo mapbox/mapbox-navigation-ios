@@ -219,7 +219,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return isCloseToCurrentStep
     }
     
-    public func advanceLegIndex() {
+    public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
     }
