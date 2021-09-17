@@ -106,12 +106,12 @@ open class PassiveLocationManager: NSObject {
     var lastRawLocation: CLLocation?
     
     /**
-     A closure to be called when manual location was successfully set.
+     A closure, which is called to report a result whether location update succeeded or not.
      
-     - parameter success: Boolean value, which is set to `true` in case if manual location was
-     successfully set, otherwise `false`.
+     - parameter result: Result, which in case of success contains location (which was updated),
+     and error, in case of failure.
      */
-    public typealias UpdateLocationCompletionHandler = (_ success: Bool) -> Void
+    public typealias UpdateLocationCompletionHandler = (_ result: Result<CLLocation, Error>) -> Void
     
     /**
      Manually sets the current location.
@@ -126,15 +126,22 @@ open class PassiveLocationManager: NSObject {
         systemLocationManager.stopUpdatingLocation()
         systemLocationManager.stopUpdatingHeading()
         
-        didUpdate(locations: [location]) { success in
-            completion?(success)
+        didUpdate(locations: [location]) { result in
+            completion?(result)
         }
     }
 
     private func didUpdate(locations: [CLLocation], completion: UpdateLocationCompletionHandler? = nil) {
         for location in locations {
             navigator.updateLocation(for: FixLocation(location)) { success in
-                completion?(success)
+                let result: Result<CLLocation, Error>
+                if success {
+                    result = .success(location)
+                } else {
+                    result = .failure(PassiveLocationManagerError.failedToChangeLocation)
+                }
+                
+                completion?(result)
             }
         }
 
@@ -372,4 +379,8 @@ extension TileEndpointConfiguration {
                   versionBeforeFallback: targetVersion ?? tilesVersion,
                   minDiffInDaysToConsiderServerVersion: minimumDaysToPersistVersion as NSNumber?)
     }
+}
+
+enum PassiveLocationManagerError: Error {
+    case failedToChangeLocation
 }

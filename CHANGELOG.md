@@ -178,6 +178,7 @@
 * Feedback categories and subcategories for active navigation were changed. "Incorrect visual" category was renamed to "Looks Incorrect". For the full updated list of supported categories see enum `ActiveNavigationFeedbackType`. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
 * Fixed bundle names retrieval in `URLSession.userAgent`. ([#3335]((https://github.com/mapbox/mapbox-navigation-ios/pull/3335))
 * Fixed IndexedRouteResponse handling after rerouting. ([#3344]((https://github.com/mapbox/mapbox-navigation-ios/pull/3344))
+* Renamed `Router.advanceLegIndex()` to `Router.advanceLegIndex(completionHandler:)`. Added `AdvanceLegCompletionHandler` and `UpdateLocationCompletionHandler`, which allow to report result of advancing route leg in `Router` and updating location in `PassiveLocationManager` respectively. ([#3344]((https://github.com/mapbox/mapbox-navigation-ios/pull/3344))
 
 ## v1.4.1
 

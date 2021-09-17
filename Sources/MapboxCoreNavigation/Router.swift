@@ -40,10 +40,10 @@ public struct IndexedRouteResponse {
 /**
  A closure to be called when `RouteLeg` was changed.
  
- - parameter success: Boolean value, which is set to `true` in case if `RouteLeg` was
- successfully changed, otherwise `false`.
+ - parameter result: Result, which in case of successfully changed leg contains the most recent
+ `RouteProgress` and error, in case of failure.
  */
-public typealias AdvanceLegCompletionHandler = (_ success: Bool) -> Void
+public typealias AdvanceLegCompletionHandler = (_ result: Result<RouteProgress, Error>) -> Void
 
 /**
  A class conforming to the `Router` protocol tracks the user’s progress as they travel along a predetermined route. It calls methods on its `delegate`, which conforms to the `RouterDelegate` protocol, whenever significant events or decision points occur along the route. Despite its name, this protocol does not define the interface of a routing engine.

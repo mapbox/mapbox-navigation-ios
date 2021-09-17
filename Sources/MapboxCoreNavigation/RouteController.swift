@@ -229,10 +229,22 @@ open class RouteController: NSObject {
     private func updateRouteLeg(to value: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
         let legIndex = UInt32(value)
         
-        navigator.changeRouteLeg(forRoute: 0, leg: legIndex) { success in
+        navigator.changeRouteLeg(forRoute: 0, leg: legIndex) { [weak self] success in
+            guard let self = self else {
+                completionHandler?(.failure(RouteControllerError.internalError))
+                return
+            }
+            
             // Since it's not possible to get navigator status synchronously `RouteProgress` related
             // information will be updated in `RouteController.navigationStatusDidChange(_:)`.
-            completionHandler?(success)
+            let result: Result<RouteProgress, Error>
+            if success {
+                result = .success(self.routeProgress)
+            } else {
+                result = .failure(RouteControllerError.failedToChangeRouteLeg)
+            }
+            
+            completionHandler?(result)
         }
     }
     
@@ -441,11 +453,12 @@ open class RouteController: NSObject {
     /**
      Advances current `RouteProgress.legIndex` by 1.
      
-     - parameter completionHandler: Completion handler, which is called when `RouteLeg` was changed.
+     - parameter completionHandler: Completion handler, which is called to report a status whether
+     `RouteLeg` was changed or not.
      */
     public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
-        updateRouteLeg(to: routeProgress.legIndex + 1) { success in
-            completionHandler?(success)
+        updateRouteLeg(to: routeProgress.legIndex + 1) { result in
+            completionHandler?(result)
         }
     }
     
@@ -657,3 +670,8 @@ extension RouteController: Router {
 }
 
 extension RouteController: InternalRouter { }
+
+enum RouteControllerError: Swift.Error {
+    case internalError
+    case failedToChangeRouteLeg
+}
