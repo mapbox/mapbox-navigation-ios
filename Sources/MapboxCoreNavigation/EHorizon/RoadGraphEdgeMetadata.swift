@@ -31,13 +31,10 @@ extension RoadGraph.Edge {
         /** The edge’s curvature. */
         public let curvature: UInt
 
-        // MARK: Classification qualities
+        // MARK: Road Classification
         
         /** Is the edge a bridge? */
         public let isBridge: Bool
-        
-        /** The number of parallel traffic lanes along the edge. */
-        public let laneCount: UInt?
         
         /** The edge’s general road classes. */
         public let roadClasses: RoadClasses
@@ -45,17 +42,9 @@ extension RoadGraph.Edge {
         /** The edge’s functional road class, according to the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#road), version 8. */
         public let mapboxStreetsRoadClass: MapboxStreetsRoadClass
 
-        /** Indicates how many directions the user may travel along the edge. */
-        public let directionality: Directionality
         
         // MARK: Legal definitions
         
-        /** The edge’s maximum speed limit. */
-        public let speedLimit: Measurement<UnitSpeed>?
-
-        /** The user’s expected average speed along the edge, measured in meters per second. */
-        public let speed: CLLocationSpeed
-
         /** The edge's names */
         public let names: [RoadName]
         
@@ -65,8 +54,22 @@ extension RoadGraph.Edge {
         /** The ISO 3166-2 code of the country subdivision where this edge is located. */
         public let regionCode: String?
         
+        // MARK: Road Regulations
+        
+        /** Indicates how many directions the user may travel along the edge. */
+        public let directionality: Directionality
+        
+        /** The edge’s maximum speed limit. */
+        public let speedLimit: Measurement<UnitSpeed>?
+
+        /** The user’s expected average speed along the edge, measured in meters per second. */
+        public let speed: CLLocationSpeed
+        
         /** Indicates which side of a bidirectional road on which the driver must be driving. Also referred to as the rule of the road. */
         public let drivingSide: DrivingSide
+        
+        /** The number of parallel traffic lanes along the edge. */
+        public let laneCount: UInt?
         
         /**
          Initializes a new edge `Metadata` object.

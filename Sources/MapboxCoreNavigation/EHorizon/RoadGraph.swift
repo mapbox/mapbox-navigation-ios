@@ -35,7 +35,7 @@ public final class RoadGraph {
         return LineString(locations.map { $0.coordinate })
     }
     
-    // MARK: Retrieving GeoJSON Geometry Of Objects
+    // MARK: Retrieving the Shape of an Object
     
     /**
      Returns a line string geometry corresponding to the given path.
