@@ -10,7 +10,7 @@ public struct RoadObjectMatcherError: LocalizedError {
     public let description: String
 
     /** Identifier of the road object for which matching is failed. */
-    public let roadObjectIdentifier: RoadObjectIdentifier
+    public let roadObjectIdentifier: RoadObject.Identifier
 
     public var errorDescription: String? {
         return description
@@ -21,7 +21,7 @@ public struct RoadObjectMatcherError: LocalizedError {
      - parameter description: Description of the error.
      - parameter roadObjectIdentifier: Identifier of the road object for which matching is failed.
      */
-    public init(description: String, roadObjectIdentifier: RoadObjectIdentifier) {
+    public init(description: String, roadObjectIdentifier: RoadObject.Identifier) {
         self.description = description
         self.roadObjectIdentifier = roadObjectIdentifier
     }

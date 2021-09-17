@@ -180,12 +180,12 @@ custom_categories:
       - RoadObject
       - DistancedRoadObject
       - RoadObjectMatcher
-      - RoadObjectsStore
-      - RoadObjectLocation
-      - RoadObjectType
+      - RoadObjectStore
+      - RoadObject.Location
+      - RoadObject.Kind
       - RoadObjectMatcherDelegate
-      - RoadObjectsStoreDelegate
-      - RoadObjectEdgeLocation
+      - RoadObjectStoreDelegate
+      - RoadObject.EdgeLocation
       - RoadObjectMatcherError
-      - RoadObjectPosition
-      - RoadObjectIdentifier
+      - RoadObject.Position
+      - RoadObject.Identifier
