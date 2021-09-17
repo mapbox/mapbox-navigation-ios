@@ -79,7 +79,6 @@ class RouteControllerTests: TestCase {
             CLLocation(coordinate: $0)
         }.shiftedToPresent()
 
-
         let directions = DirectionsSpy()
 
         let navOptions = NavigationRouteOptions(matchOptions: .init(coordinates: routeCoordinates))
@@ -97,22 +96,31 @@ class RouteControllerTests: TestCase {
         locationManager.delegate = routeController
 
         let shouldRerouteCalled = expectation(description: "Should reroute called")
+        shouldRerouteCalled.assertForOverFulfill = false
+        
         let shouldPreventReroutesCalled = expectation(description: "Should prevent reroutes called")
         shouldPreventReroutesCalled.assertForOverFulfill = false
-        let rerouted = expectation(description: "Rerouted")
+        
+        let didRerouteCalled = expectation(description: "Did reroute called")
+        didRerouteCalled.assertForOverFulfill = false
+        
         let calculateRouteCalled = expectation(description: "Calculate route called")
-
+        calculateRouteCalled.assertForOverFulfill = false
+        
         routerDelegateSpy.onShouldPreventReroutesWhenArrivingAt = { _ in
             shouldPreventReroutesCalled.fulfill()
             return false
         }
+        
         routerDelegateSpy.onShouldRerouteFrom = { _ in
             shouldRerouteCalled.fulfill()
             return true
         }
+        
         routerDelegateSpy.onDidRerouteAlong = { _ in
-            rerouted.fulfill()
+            didRerouteCalled.fulfill()
         }
+        
         directions.onCalculateRoute = { [unowned directions] in
             calculateRouteCalled.fulfill()
             let currentCoordinate = locationManager.location!.coordinate
