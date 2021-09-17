@@ -158,13 +158,13 @@ class MapboxCoreNavigationTests: TestCase {
                        horizontalAccuracy: -1,
                        verticalAccuracy: -1,
                        timestamp: currentDate + $0.offset)
-        }        
+        }
         
         // Iterate over all locations in the first step and first location in the second step and
         // simulate location update.
         for location in locations {
             navigationService.router.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
-            RunLoop.current.run(until: Date().addingTimeInterval(0.01))
+            RunLoop.current.run(until: Date().addingTimeInterval(0.1))
         }
         
         wait(for: [expectation], timeout: 10.0)
