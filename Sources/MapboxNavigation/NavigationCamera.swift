@@ -70,7 +70,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         
         self.viewportDataSource.delegate = self
         
-        setupGestureRegonizers()
+        setupGestureRecognizers()
         
         // Uncomment to be able to see `NavigationCameraDebugView`.
         // setupDebugView(mapView,
@@ -80,7 +80,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
     // MARK: - Setting-up methods
     
-    func setupGestureRegonizers() {
+    func setupGestureRecognizers() {
         makeGestureRecognizersDisableCameraFollowing()
     }
     
