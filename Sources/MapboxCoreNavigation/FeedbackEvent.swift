@@ -33,4 +33,8 @@ public class FeedbackEvent: Codable {
         coreEvent.eventDictionary["source"] = source.description
         coreEvent.eventDictionary["description"] = description
     }
+    
+    public var contents: [String: Any] {
+        coreEvent.eventDictionary
+    }
 }
