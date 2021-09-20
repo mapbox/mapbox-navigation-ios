@@ -5,21 +5,25 @@ import CoreLocation
  `NavigationViewportDataSource` in `NavigationCameraState.following` state.
  */
 public struct FollowingCameraOptions: Equatable {
-    
+
     /**
      Pitch, which will be taken into account when preparing `CameraOptions` during active guidance
      navigation.
      
      Defaults to `45.0` degrees.
+
+     - Invariant: Acceptable range of values is `0...85`.
      */
     public var defaultPitch: Double = 45.0 {
         didSet {
             if defaultPitch < 0.0 {
-                preconditionFailure("Lower bound of the pitch should not be lower than 0.0")
+                defaultPitch = 0
+                assertionFailure("Lower bound of the pitch should not be lower than 0.0")
             }
             
             if defaultPitch > 85.0 {
-                preconditionFailure("Upper bound of the pitch should not be higher than 85.0")
+                defaultPitch = 85
+                assertionFailure("Upper bound of the pitch should not be higher than 85.0")
             }
         }
     }
@@ -31,15 +35,23 @@ public struct FollowingCameraOptions: Equatable {
      Upper bound of the range will be also used as initial zoom level when active guidance navigation starts.
      
      Lower bound defaults to `10.50`, upper bound defaults to `16.35`.
+
+     - Invariant: Acceptable range of values is `0...22`.
      */
     public var zoomRange: ClosedRange<Double> = 10.50...16.35 {
         didSet {
-            if zoomRange.lowerBound < 0.0 {
-                preconditionFailure("Lower bound of the zoom range should not be lower than 0.0")
+            let newValue = zoomRange
+
+            if newValue.lowerBound < 0.0 || newValue.upperBound > 22.0 {
+                zoomRange = max(0, zoomRange.lowerBound)...min(22, zoomRange.upperBound)
             }
             
-            if zoomRange.upperBound > 22.0 {
-                preconditionFailure("Upper bound of the zoom range should not be higher than 22.0")
+            if newValue.lowerBound < 0.0 {
+                assertionFailure("Lower bound of the zoom range should not be lower than 0.0")
+            }
+
+            if newValue.upperBound > 22.0 {
+                assertionFailure("Upper bound of the zoom range should not be higher than 22.0")
             }
         }
     }
@@ -62,7 +74,7 @@ public struct FollowingCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var zoomUpdatesAllowed = true
+    public var zoomUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.bearing` property
@@ -72,7 +84,7 @@ public struct FollowingCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var bearingUpdatesAllowed = true
+    public var bearingUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.pitch` property
@@ -82,7 +94,7 @@ public struct FollowingCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var pitchUpdatesAllowed = true
+    public var pitchUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.padding` property
@@ -92,7 +104,7 @@ public struct FollowingCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var paddingUpdatesAllowed = true
+    public var paddingUpdatesAllowed: Bool = true
     
     /**
      Options, which allow to modify the framed route geometries based on the intersection density.
@@ -200,7 +212,7 @@ public struct BearingSmoothing: Equatable {
      
      Defaults to `true`.
      */
-    public var enabled = true
+    public var enabled: Bool = true
     
     /**
      Controls how much the bearing can deviate from the location's bearing, in degrees.
@@ -279,7 +291,7 @@ public struct PitchNearManeuver: Equatable {
      
      Defaults to `true`.
      */
-    public var enabled = true
+    public var enabled: Bool = true
     
     /**
      Threshold distance to the upcoming maneuver.

@@ -11,15 +11,19 @@ public struct OverviewCameraOptions: Equatable {
      state.
      
      Defaults to `16.35`.
+
+     - Invariant: Acceptable range of values is 0...22.
      */
     public var maximumZoomLevel: Double = 16.35 {
         didSet {
             if maximumZoomLevel < 0.0 {
-                preconditionFailure("Maximum zoom level should not be lower than 0.0")
+                maximumZoomLevel = 0
+                assertionFailure("Maximum zoom level should not be lower than 0.0")
             }
             
             if maximumZoomLevel > 22.0 {
-                preconditionFailure("Maximum zoom level should not be higher than 22.0")
+                maximumZoomLevel = 22
+                assertionFailure("Maximum zoom level should not be higher than 22.0")
             }
         }
     }
@@ -32,7 +36,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var centerUpdatesAllowed = true
+    public var centerUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.zoom` property
@@ -42,7 +46,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var zoomUpdatesAllowed = true
+    public var zoomUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.bearing` property
@@ -52,7 +56,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var bearingUpdatesAllowed = true
+    public var bearingUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.pitch` property
@@ -62,7 +66,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var pitchUpdatesAllowed = true
+    public var pitchUpdatesAllowed: Bool = true
     
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.padding` property
@@ -72,7 +76,7 @@ public struct OverviewCameraOptions: Equatable {
      
      Defaults to `true`.
      */
-    public var paddingUpdatesAllowed = true
+    public var paddingUpdatesAllowed: Bool = true
     
     /**
      Initializes `OverviewCameraOptions` instance.
