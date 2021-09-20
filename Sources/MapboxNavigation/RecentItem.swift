@@ -40,8 +40,10 @@ public struct RecentItem: Equatable, Codable {
      Loads a list of `RecentItem`s, which is serialized into a file stored in `recentItemsPathURL`.
      */
     public static func loadDefaults() -> [RecentItem] {
-        guard let recentItemsPathURL = RecentItem.recentItemsPathURL else { return [] }
-        
+        guard let recentItemsPathURL = RecentItem.recentItemsPathURL,
+              FileManager.default.fileExists(atPath: recentItemsPathURL.path)
+        else { return [] }
+
         do {
             let data = try Data(contentsOf: recentItemsPathURL)
             let recentItems = try JSONDecoder().decode([RecentItem].self, from: data)
