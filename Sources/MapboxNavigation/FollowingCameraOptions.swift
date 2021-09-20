@@ -11,15 +11,19 @@ public struct FollowingCameraOptions: Equatable {
      navigation.
      
      Defaults to `45.0` degrees.
+
+     - Invariant: Acceptable range of values is `0...85`.
      */
     public var defaultPitch: Double = 45.0 {
         didSet {
             if defaultPitch < 0.0 {
-                preconditionFailure("Lower bound of the pitch should not be lower than 0.0")
+                defaultPitch = 0
+                assertionFailure("Lower bound of the pitch should not be lower than 0.0")
             }
             
             if defaultPitch > 85.0 {
-                preconditionFailure("Upper bound of the pitch should not be higher than 85.0")
+                defaultPitch = 85
+                assertionFailure("Upper bound of the pitch should not be higher than 85.0")
             }
         }
     }
@@ -31,15 +35,23 @@ public struct FollowingCameraOptions: Equatable {
      Upper bound of the range will be also used as initial zoom level when active guidance navigation starts.
      
      Lower bound defaults to `10.50`, upper bound defaults to `16.35`.
+
+     - Invariant: Acceptable range of values is `0...22`.
      */
     public var zoomRange: ClosedRange<Double> = 10.50...16.35 {
         didSet {
-            if zoomRange.lowerBound < 0.0 {
-                preconditionFailure("Lower bound of the zoom range should not be lower than 0.0")
+            let newValue = zoomRange
+
+            if newValue.lowerBound < 0.0 || newValue.upperBound > 22.0 {
+                zoomRange = max(0, zoomRange.lowerBound)...min(22, zoomRange.upperBound)
             }
             
-            if zoomRange.upperBound > 22.0 {
-                preconditionFailure("Upper bound of the zoom range should not be higher than 22.0")
+            if newValue.lowerBound < 0.0 {
+                assertionFailure("Lower bound of the zoom range should not be lower than 0.0")
+            }
+
+            if newValue.upperBound > 22.0 {
+                assertionFailure("Upper bound of the zoom range should not be higher than 22.0")
             }
         }
     }
