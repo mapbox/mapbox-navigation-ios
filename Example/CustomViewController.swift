@@ -42,7 +42,7 @@ class CustomViewController: UIViewController {
         super.viewDidLoad()
         
         navigationMapView.mapView.mapboxMap.style.uri = StyleURI(rawValue: "mapbox://styles/mapbox-map-design/ckd6dqf981hi71iqlyn3e896y")
-        navigationMapView.userCourseView.isHidden = false
+        navigationMapView.userLocationStyle = .courseView()
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: indexedUserRouteResponse!.routeResponse.routes!.first!) : NavigationLocationManager()
         navigationService = MapboxNavigationService(routeResponse: indexedUserRouteResponse!.routeResponse,

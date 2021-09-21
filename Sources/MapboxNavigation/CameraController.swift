@@ -152,7 +152,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         navigationViewData.navigationView.overviewButton.addTarget(self, action: #selector(overview(_:)), for: .touchUpInside)
         navigationViewData.navigationView.resumeButton.addTarget(self, action: #selector(recenter(_:)), for: .touchUpInside)
         
-        self.navigationMapView.userCourseView.isHidden = false
+        self.navigationMapView.userLocationStyle = .courseView()
         self.navigationViewData.navigationView.resumeButton.isHidden = true
     }
     

@@ -62,6 +62,21 @@ open class NavigationMapView: UIView {
      If `true`, the congestion level change between two segments in the route line will be shown as fading gradient color instead of abrupt and steep change.
      */
     public var crossfadesCongestionSegments: Bool = false
+    
+    /**
+     Allows to control current user location styling based on accuracy authorization permission on iOS 14 and above.
+     
+     If `false`, user location will be drawn based on style, which was set in `NavigationMapView.userLocationStyle`.
+     If `true`, `UserHaloCourseView` will be shown.
+     */
+    @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
+        didSet {
+            guard reducedAccuracyActivatedMode, let validUserCourseView = userCourseView else { return }
+            
+            userCourseView = UserHaloCourseView(frame: CGRect(origin: .zero, size: 75.0))
+            userCourseView?.isHidden = validUserCourseView.isHidden
+        }
+    }
 
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -82,11 +97,6 @@ open class NavigationMapView: UIView {
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     @objc dynamic public var buildingDefaultColor: UIColor = .defaultBuildingColor
     @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
-    @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
-        didSet {
-            updateUserCourseViewWithAccuracy()
-        }
-    }
     
     @objc dynamic public var routeDurationAnnotationSelectedColor: UIColor = .selectedRouteDurationAnnotationColor
     @objc dynamic public var routeDurationAnnotationColor: UIColor = .routeDurationAnnotationColor
@@ -125,19 +135,23 @@ open class NavigationMapView: UIView {
      
      The `UserCourseView`'s `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
      */
-    public var userCourseView: UserCourseView = UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0)) {
+    var userCourseView: UserCourseView? {
         didSet {
-            oldValue.removeFromSuperview()
-            installUserCourseView()
+            oldValue?.removeFromSuperview()
+            
+            if let userCourseView = userCourseView {
+                userCourseView.isHidden = false
+                mapView.addSubview(userCourseView)
+            }
         }
     }
     
     /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
      
-     By default, this property is set to `UserLocationStyle.courseView`, the bearing source is location course.
+     By default, this property is set to `UserLocationStyle.puck2D(configuration:)`, the bearing source is location course.
      */
-    public var userLocationStyle: UserLocationStyle = .courseView(UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))) {
+    public var userLocationStyle: UserLocationStyle? = .puck2D(configuration: nil) {
         didSet {
             setupUserLocation()
         }
@@ -258,23 +272,23 @@ open class NavigationMapView: UIView {
     fileprivate func commonInit() {
         makeGestureRecognizersResetFrameRate()
         setupGestureRecognizers()
-        installUserCourseView()
         subscribeForNotifications()
         setupUserLocation()
     }
     
     func setupUserLocation() {
         switch userLocationStyle {
-        case .courseView((let courseView)):
+        case .courseView(let courseView):
             mapView.location.options.puckType = nil
-            userCourseView = courseView
-            userCourseView.isHidden = false
+            userCourseView = courseView ?? UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))
         case .puck2D(configuration: let configuration):
-            userCourseView.isHidden = true
+            userCourseView?.removeFromSuperview()
             mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
         case .puck3D(configuration: let configuration):
-            userCourseView.isHidden = true
+            userCourseView?.removeFromSuperview()
             mapView.location.options.puckType = .puck3D(configuration)
+        case .none:
+            userCourseView?.removeFromSuperview()
         }
         mapView.location.options.puckBearingSource = .course
     }
@@ -382,20 +396,6 @@ open class NavigationMapView: UIView {
         navigationCamera.follow()
     }
     
-    func updateUserCourseViewWithAccuracy() {
-        let frame = CGRect(origin: .zero, size: 75.0)
-        let isHidden = userCourseView.isHidden
-        switch userLocationStyle {
-        case .courseView(let courseView):
-            userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: frame) : courseView
-        case .puck2D(_):
-            userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: frame) : UserPuckCourseView(frame: frame)
-        case .puck3D(_):
-            userCourseView = reducedAccuracyActivatedMode ? UserHaloCourseView(frame: frame) : UserPuckCourseView(frame: frame)
-        }
-        userCourseView.isHidden = isHidden
-    }
-    
     func setupGestureRecognizers() {
         // Gesture recognizer, which is used to detect taps on route line and waypoint.
         let mapViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didReceiveTap(sender:)))
@@ -451,11 +451,6 @@ open class NavigationMapView: UIView {
     
     // MARK: - User tracking methods
     
-    func installUserCourseView() {
-        userCourseView.isHidden = true
-        mapView.addSubview(userCourseView)
-    }
-    
     /**
      Updates `UserLocationStyle` to provided location.
      
@@ -463,7 +458,8 @@ open class NavigationMapView: UIView {
      - parameter animated: Property, which determines whether `UserLocationStyle` transition to new location will be animated.
      */
     public func moveUserLocation(to location: CLLocation, animated: Bool = false) {
-        guard CLLocationCoordinate2DIsValid(location.coordinate) else { return }
+        guard CLLocationCoordinate2DIsValid(location.coordinate),
+              let userCourseView = userCourseView else { return }
         
         mostRecentUserCourseViewLocation = location
         
@@ -472,8 +468,9 @@ open class NavigationMapView: UIView {
             // While animating to overview mode, don't animate the puck.
             let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
             UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-                guard let point = self?.mapView.mapboxMap.point(for: location.coordinate) else { return }
-                self?.userCourseView.center = point
+                guard let self = self else { return }
+                let point = self.mapView.mapboxMap.point(for: location.coordinate)
+                self.userCourseView?.center = point
             }
             
             let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
@@ -482,8 +479,8 @@ open class NavigationMapView: UIView {
                                   direction: cameraOptions.bearing!,
                                   animated: animated,
                                   navigationCameraState: navigationCamera.state)
-            
-        default: break
+        default:
+            break
         }
     }
     
