@@ -187,9 +187,7 @@ public class InstructionsCardContainerView: StylableView {
     
     public func updateInstruction(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil) {
         instructionsCardView.updateDistanceFromCurrentLocation(distance)
-        if instruction == nil {
-            instructionsCardView.step = step
-        }
+        instructionsCardView.step = step
         
         guard let instruction = instruction ?? step.instructionsDisplayedAlongStep?.last else { return }
         updateInstruction(instruction)

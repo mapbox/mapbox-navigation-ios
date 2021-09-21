@@ -171,7 +171,7 @@ open class InstructionsCardViewController: UIViewController {
         }
     }
     
-    func updateCurrentVisibleInstructionCard(for instruction: VisualInstructionBanner) {
+    open func updateCurrentVisibleInstructionCard(for instruction: VisualInstructionBanner) {
         guard let remainingStepsCount = routeProgress?.currentLegProgress.remainingSteps.endIndex else { return }
         let indexPath = IndexPath(row: 0, section: 0)
         if let container = instructionContainerView(at: indexPath), indexPath.row < remainingStepsCount {
@@ -220,13 +220,7 @@ open class InstructionsCardViewController: UIViewController {
             return nil
         }
         
-        if let instructionsCardContainerView = cell.subviews[1] as? InstructionsCardContainerView {
-            return instructionsCardContainerView
-        } else if let instructionsCardContainerView = cell.subviews[0] as? InstructionsCardContainerView {
-            return instructionsCardContainerView
-        } else {
-            return nil
-        }
+        return cell.subviews.compactMap{$0 as? InstructionsCardContainerView}.first
     }
     
     fileprivate func snappedIndexPath() -> IndexPath {
@@ -306,11 +300,9 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         
         let step = steps[indexPath.row]
         if indexPath.row == 0 {
-            let distance = distanceRemaining
-            cell.configure(for: step, distance: distance, instruction: self.currentInstruction)
+            cell.configure(for: step, distance: distanceRemaining, instruction: self.currentInstruction)
         } else {
-            let distance = step.distance
-            cell.configure(for: step, distance: distance)
+            cell.configure(for: step, distance: step.distance)
             
         }
         

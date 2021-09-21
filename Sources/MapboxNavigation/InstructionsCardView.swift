@@ -5,11 +5,7 @@ import MapboxDirections
 /// :nodoc:
 public class InstructionsCardView: BaseInstructionsBannerView {
     
-    var step: RouteStep! {
-        didSet {
-            self.updateInstruction(for: step)
-        }
-    }
+    var step: RouteStep!
     var distanceFromCurrentLocation: CLLocationDistance!
     var gradientLayer: CAGradientLayer!
     var highlightDistance: CLLocationDistance = InstructionsCardConstants.highlightDistance
