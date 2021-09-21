@@ -185,16 +185,19 @@ public class InstructionsCardContainerView: StylableView {
         return firstLayer
     }
     
-    public func updateInstruction(for step: RouteStep, distance: CLLocationDistance) {
+    public func updateInstruction(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil) {
         instructionsCardView.updateDistanceFromCurrentLocation(distance)
-        instructionsCardView.step = step
+        if instruction == nil {
+            instructionsCardView.step = step
+        }
         
-        guard let instruction = step.instructionsDisplayedAlongStep?.last else { return }
+        guard let instruction = instruction ?? step.instructionsDisplayedAlongStep?.last else { return }
         updateInstruction(instruction)
         updateInstructionCard(distance: distance)
     }
     
     public func updateInstruction(_ instruction: VisualInstructionBanner) {
+        instructionsCardView.update(for: instruction)
         lanesView.update(for: instruction)
         nextBannerView.instructionDelegate = self
         nextBannerView.update(for: instruction)
