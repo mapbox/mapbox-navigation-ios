@@ -45,6 +45,13 @@ step "Updating CocoaPods podspecs to version ${SEM_VERSION}…"
 
 find . -type f -name '*.podspec' -exec sed -i '' "s/^ *s.version *=.*$/  s.version = '${SEM_VERSION}'/" {} +
 
+if [[ $SHORT_VERSION != $SEM_VERSION ]]; then
+    step "Updating prerelease CocoaPods podspecs…"
+    cp MapboxCoreNavigation.podspec MapboxCoreNavigation-pre.podspec
+    cp MapboxNavigation.podspec MapboxNavigation-pre.podspec
+    sed -i '' -E "s/(\.name *= *\"[^\"]+)\"/\1-pre\"/g; s/(\.dependency *\"MapboxCoreNavigation)\"/\1-pre\"/g" *-pre.podspec
+fi
+
 step "Updating CocoaPods installation test fixture…"
 
 cd Tests/CocoaPodsTest/PodInstall/
