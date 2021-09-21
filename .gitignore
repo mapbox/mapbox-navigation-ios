@@ -20,3 +20,5 @@ Carthage/Checkouts
 .swiftpm/
 
 Examples/Swift/Navigation_Example.mobileprovision
+
+*-pre.podspec
