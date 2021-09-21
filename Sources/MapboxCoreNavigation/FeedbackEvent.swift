@@ -34,6 +34,7 @@ public class FeedbackEvent: Codable {
         coreEvent.eventDictionary["description"] = description
     }
     
+    /// :nodoc:
     public var contents: [String: Any] {
         coreEvent.eventDictionary
     }
