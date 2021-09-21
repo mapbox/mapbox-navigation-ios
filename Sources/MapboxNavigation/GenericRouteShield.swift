@@ -94,32 +94,20 @@ public class GenericRouteShield: StylableView {
     /**
      This generates the cache key needed to hold the `GenericRouteShield`'s `imageRepresentation` in the `ImageCache` caching engine.
      */
-    static func criticalHash(dataSource: DataSource) -> String {
-        let proxy = GenericRouteShield.appearance()
-        var backgroundColor = proxy.backgroundColor
-        var foregroundColor = proxy.foregroundColor
-
-        let performAsCurrentSelector = Selector(("performAsCurrentTraitCollection:" as NSString) as String)
-
-        if #available(iOS 13.0, *),
-           let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection,
-           currentTraitCollection.responds(to: performAsCurrentSelector),
-           let backgroundCGColor = backgroundColor?.cgColor,
-           let foregroundCGColor = foregroundColor?.cgColor {
-            let colorCopyingClosure = {
-                backgroundColor = UIColor(cgColor: backgroundCGColor)
-                foregroundColor = UIColor(cgColor: foregroundCGColor)
-            }
-            let colorCopyingBlock: @convention(block) () -> Void = colorCopyingClosure
-            currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
+    static func criticalHash(dataSource: DataSource, userInterfaceIdiom: UIUserInterfaceIdiom) -> String {
+        var appearance = GenericRouteShield.appearance()
+        if userInterfaceIdiom == .carPlay {
+            appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: userInterfaceIdiom))
         }
         
         let criticalProperties: [AnyHashable?] = [
             dataSource.font.pointSize,
-            backgroundColor,
-            foregroundColor,
-            proxy.borderWidth,
-            proxy.cornerRadius
+            appearance.backgroundColor,
+            appearance.foregroundColor,
+            appearance.borderColor,
+            appearance.borderWidth,
+            appearance.cornerRadius,
+            userInterfaceIdiom.rawValue
         ]
         
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0) }))

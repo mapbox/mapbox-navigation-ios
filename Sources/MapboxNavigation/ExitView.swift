@@ -144,32 +144,23 @@ public class ExitView: StylableView {
     /**
      This generates the cache key needed to hold the `ExitView`'s `imageRepresentation` in the `ImageCache` caching engine.
      */
-    static func criticalHash(side: ExitSide, dataSource: DataSource) -> String {
-        let proxy = ExitView.appearance()
-        var backgroundColor = proxy.backgroundColor
-        var foregroundColor = proxy.foregroundColor
-        let performAsCurrentSelector = Selector(("performAsCurrentTraitCollection:" as NSString) as String)
-        
-        if #available(iOS 13.0, *),
-           let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection,
-           currentTraitCollection.responds(to: performAsCurrentSelector),
-           let backgroundCGColor = backgroundColor?.cgColor,
-           let foregroundCGColor = foregroundColor?.cgColor {
-            let colorCopyingClosure = {
-                backgroundColor = UIColor(cgColor: backgroundCGColor)
-                foregroundColor = UIColor(cgColor: foregroundCGColor)
-            }
-            let colorCopyingBlock: @convention(block) () -> Void = colorCopyingClosure
-            currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
+    static func criticalHash(side: ExitSide,
+                             dataSource: DataSource,
+                             userInterfaceIdiom: UIUserInterfaceIdiom) -> String {
+        var appearance = ExitView.appearance()
+        if userInterfaceIdiom == .carPlay {
+            appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: userInterfaceIdiom))
         }
         
         let criticalProperties: [AnyHashable?] = [
             side,
             dataSource.font.pointSize,
-            backgroundColor,
-            foregroundColor,
-            proxy.borderWidth,
-            proxy.cornerRadius
+            appearance.backgroundColor,
+            appearance.foregroundColor,
+            appearance.borderColor,
+            appearance.borderWidth,
+            appearance.cornerRadius,
+            userInterfaceIdiom.rawValue
         ]
         
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))

@@ -25,7 +25,11 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                 self?.imageDownloadCompletion?()
             }
             
-            let presenter = InstructionPresenter(instruction, dataSource: self, imageRepository: imageRepository, downloadCompletion: update)
+            let presenter = InstructionPresenter(instruction,
+                                                 dataSource: self,
+                                                 imageRepository: imageRepository,
+                                                 userInterfaceIdiom: traitCollection.userInterfaceIdiom,
+                                                 downloadCompletion: update)
             
             let attributed = presenter.attributedText()
             attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
