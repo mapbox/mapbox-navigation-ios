@@ -59,9 +59,9 @@
         "package": "MapboxMaps",
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
-          "branch": "main",
-          "revision": "ddcf9f297e84d519e4db74ae6e819d2e9cadb2b6",
-          "version": null
+          "branch": null,
+          "revision": "3557fa41b15e465852b38b93cc00b52fc8b9d1aa",
+          "version": "10.0.0-rc.9"
         }
       },
       {
@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/jakeheis/SwiftCLI",
         "state": {
           "branch": null,
-          "revision": "2816678bcc37f4833d32abeddbdf5e757fa891d8",
-          "version": "6.0.2"
+          "revision": "2e949055d9797c1a6bddcda0e58dada16cc8e970",
+          "version": "6.0.3"
         }
       },
       {
