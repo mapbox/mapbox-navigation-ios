@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-common-ios.git",
         "state": {
           "branch": null,
-          "revision": "a69e8ec4684ea2db20c94e85bcb54497554500d0",
-          "version": "18.0.0"
+          "revision": "98893cfe86f3aeed89d852f406d74a1756f71dad",
+          "version": "19.0.0"
         }
       },
       {
@@ -33,8 +33,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-core-maps-ios.git",
         "state": {
           "branch": null,
-          "revision": "d5360ef24a2038150ab68c67ada0893f6d5b5b15",
-          "version": "10.0.0-rc.8"
+          "revision": "a5561019739925ba364263d3cf0dc58e1133a9ea",
+          "version": "10.0.0-rc.9.1"
         }
       },
       {
@@ -51,17 +51,17 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-events-ios.git",
         "state": {
           "branch": null,
-          "revision": "e4ded10f5b9594374416f9396d5b540f8c491bbe",
-          "version": "1.0.3"
+          "revision": "1df12e2514513acdf87841cde1f98fd8e414461e",
+          "version": "1.0.4"
         }
       },
       {
         "package": "MapboxMaps",
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
-          "branch": null,
-          "revision": "bedc49744970602ebc10c6de3f8a2b4cc6f084a6",
-          "version": "10.0.0-rc.8"
+          "branch": "main",
+          "revision": "ddcf9f297e84d519e4db74ae6e819d2e9cadb2b6",
+          "version": null
         }
       },
       {
@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "ebe110ef2252a38cff625b12f3584d1a312e2579",
-          "version": "66.0.1"
+          "revision": "7c8ae18aa21bea2b4e801f0b6aab6a2a21d4aec1",
+          "version": "66.0.0"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/jakeheis/SwiftCLI",
         "state": {
           "branch": null,
-          "revision": "2816678bcc37f4833d32abeddbdf5e757fa891d8",
-          "version": "6.0.2"
+          "revision": "2e949055d9797c1a6bddcda0e58dada16cc8e970",
+          "version": "6.0.3"
         }
       },
       {
