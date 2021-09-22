@@ -36,6 +36,8 @@ open class InstructionsCardViewController: UIViewController {
     public private(set) var isInPreview = false
     public var currentStepIndex: Int?
     
+    var currentInstruction: VisualInstructionBanner?
+    
     public var steps: [RouteStep]? {
         guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
         var mutatedSteps = steps
@@ -169,6 +171,14 @@ open class InstructionsCardViewController: UIViewController {
         }
     }
     
+    open func updateCurrentVisibleInstructionCard(for instruction: VisualInstructionBanner) {
+        guard let remainingStepsCount = routeProgress?.currentLegProgress.remainingSteps.endIndex else { return }
+        let indexPath = IndexPath(row: 0, section: 0)
+        if indexPath.row < remainingStepsCount, let container = instructionContainerView(at: indexPath) {
+            container.updateInstruction(instruction)
+        }
+    }
+    
     open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
         guard let legProgress = routeProgress?.currentLegProgress else { return }
         let remainingSteps = legProgress.remainingSteps
@@ -210,7 +220,7 @@ open class InstructionsCardViewController: UIViewController {
             return nil
         }
         
-        return cell.subviews[1] as? InstructionsCardContainerView
+        return cell.subviews.compactMap{ $0 as? InstructionsCardContainerView }.first
     }
     
     fileprivate func snappedIndexPath() -> IndexPath {
@@ -289,9 +299,11 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         cell.container.delegate = self
         
         let step = steps[indexPath.row]
-        let firstStep = indexPath.row == 0
-        let distance = firstStep ? distanceRemaining : step.distance
-        cell.configure(for: step, distance: distance)
+        if indexPath.row == 0 {
+            cell.configure(for: step, distance: distanceRemaining, instruction: self.currentInstruction)
+        } else {
+            cell.configure(for: step, distance: step.distance)
+        }
         
         return cell
     }
@@ -318,6 +330,8 @@ extension InstructionsCardViewController: NavigationComponent {
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         self.routeProgress = routeProgress
+        self.currentInstruction = instruction
+        updateCurrentVisibleInstructionCard(for: instruction)
         junctionView.update(for: instruction, service: service)
         reloadDataSource()
     }

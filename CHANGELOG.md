@@ -87,6 +87,7 @@
 * Fixed an issue where `GenericRouteShield` images would ignore changing its foreground color in favor of a cached image. ([#3217](https://github.com/mapbox/mapbox-navigation-ios/pull/3217))
 * Fixed an issue where some banner instructions were occasionally skipped. ([#3265](https://github.com/mapbox/mapbox-navigation-ios/pull/3265))
 * Improved the current road name label’s performance and fixed a potential crash when updating it. ([#3340](https://github.com/mapbox/mapbox-navigation-ios/pull/3340))
+* Fixed an issue where arrival guidance card appears too early. ([#3383](https://github.com/mapbox/mapbox-navigation-ios/pull/3383))
 
 ### Location tracking
 
