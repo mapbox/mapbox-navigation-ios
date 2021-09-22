@@ -16,7 +16,19 @@ class RouteProgressTests: TestCase {
         XCTAssertEqual(routeProgress.distanceTraveled, 0)
         XCTAssertEqual(round(routeProgress.durationRemaining), 858)
     }
-    
+
+    func testRouteWithNoDistance() {
+        let routeProgress = RouteProgress(route: routeWithNoDistance, options: routeOptions)
+        XCTAssertEqual(routeProgress.distanceRemaining, 0)
+        XCTAssertEqual(routeProgress.distanceTraveled, 0)
+        XCTAssertEqual(round(routeProgress.durationRemaining), 0)
+        XCTAssertEqual(routeProgress.fractionTraveled, 1)
+        XCTAssertEqual(routeProgress.currentLegProgress.distanceRemaining, 0)
+        XCTAssertEqual(routeProgress.currentLegProgress.distanceTraveled, 0)
+        XCTAssertEqual(routeProgress.currentLegProgress.durationRemaining, 0)
+        XCTAssertEqual(routeProgress.currentLegProgress.fractionTraveled, 1)
+    }
+
     func testRouteLegProgress() {
         let routeProgress = RouteProgress(route: route, options: routeOptions)
         XCTAssertEqual(routeProgress.currentLeg.description, "Hyde Street, Page Street")
