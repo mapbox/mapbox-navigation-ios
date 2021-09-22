@@ -73,6 +73,7 @@
 * By default, there is no longer a subtle crossfade between traffic congestion segments along a route line. To reenable this crossfade, set the `NavigationMapView.crossfadesCongestionSegments` property to `true`. You can also adjust the length of this crossfade using the global variable `GradientCongestionFadingDistance`. ([#3153](https://github.com/mapbox/mapbox-navigation-ios/pull/3153), [#3307](https://github.com/mapbox/mapbox-navigation-ios/pull/3307))
 * The duration annotations added by the `NavigationMapView.showRouteDurations(along:)` method are now set in the fonts you specify using the `NavigationMapView.routeDurationAnnotationFontNames` property. Use this property to specify a list of fallback fonts for better language support. ([#2873](https://github.com/mapbox/mapbox-navigation-ios/pull/2873))
 * Fixed an issue when route line was sometimes invisible after starting turn-by-turn navigation. ([#3205](https://github.com/mapbox/mapbox-navigation-ios/pull/3205))
+* Fixed a crash when navigating along a route 0 meters long (for example, because two waypoints snap to the same location). ([#3387](https://github.com/mapbox/mapbox-navigation-ios/pull/3387))
 
 ### Banners and guidance instructions
 
@@ -169,7 +170,7 @@
 * Fixed a missing feedback subtype description for `LooksIncorrectSubtype.incorrectSpeedLimit` and all “other” subtypes. ([#3238](https://github.com/mapbox/mapbox-navigation-ios/pull/3238))
 * Renamed the `FeedbackViewController(eventsManager:)` initializer to  `FeedbackViewController(eventsManager:type:)`. You can now customize the view controller to show only the feedback types specific to passive navigation. ([#3323](https://github.com/mapbox/mapbox-navigation-ios/pull/3323))
 * Renamed the `FeedbackType` enumeration to `ActiveNavigationFeedbackType` and the `EventsManagerDataSource` protocol to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
-* Renamed the user-facing feedback categories and subcategories for active turn-by-turn navigation that are represented at runtime by the `ActiveNavigationFeedbackType` enumeration. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
+* Renamed the user-facing feedback categories and subcategories for active turn-by-turn navigation that are represented at runtime by the `ActiveNavigationFeedbackType` enumeration. ([#3339](https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
 
 ### Other changes
 
