@@ -236,6 +236,13 @@ step-library:
         name: Add GitHub to known hosts
         command: |
           for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+          
+  - &install-mbx-ci
+      run:
+        name: Install mbx-ci
+        command: |
+          curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > /usr/local/bin/mbx-ci
+          chmod 755 /usr/local/bin/mbx-ci
 
   - &build-Example
       run:
@@ -579,6 +586,53 @@ jobs:
           name: Build SPM Core integration test
           command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.0,name=iPhone 13 Pro Max" build
       
+  generate-docs-job:
+    parameters:
+      xcode:
+        type: string
+        default: "12.4.0"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *install-cocoapods-installation
+      - *prepare-netrc-file
+      - *install-mbx-ci
+      - *restore-cache-podmaster
+      - *restore-cache-cocoapods-installation
+      - run:
+          name: Generate docs
+          command: |
+            OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
+            OUTPUT="${OUTPUT:-documentation}"
+            echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
+            scripts/document.sh
+      - *save-cache-podmaster
+      - *save-cache-cocoapods-installation
+      - when:
+          condition:
+            matches:
+              pattern: "^v.*\\..*\\..*$"
+              value: << pipeline.git.tag >>
+          steps:
+            - run:
+                name: Push docs to publisher-production
+                command: |
+                  git remote set-url origin https://x-access-token:$(mbx-ci github writer token)@github.com/mapbox/mapbox-navigation-ios.git
+                  git config user.email "release-bot@mapbox.com"
+                  git config user.name "Release SDK bot"
+                  git checkout -- Sources
+                  git checkout publisher-production
+                  BRANCH="docs-${OUTPUT}" # push directly to publisher-production when verified on a release tag
+                  git checkout "${BRANCH}" || git checkout -b "${BRANCH}"
+                  git add "${OUTPUT}"
+                  git commit -m "v${OUTPUT}"
+                  git push origin "${BRANCH}"
+            - notify-build-finished:
+                notify_success: true
+      - notify-build-finished
 
 workflows:
   extended-workflow:
@@ -658,6 +712,13 @@ workflows:
           context: Slack Orb
       - spm-core-integration-test-job:
           name: "Xcode 13; iOS 15.0; SPM Core test"
+      - generate-docs-job:
+          name: Generate docs and push it for release tag
+          context: Slack Orb
+          filters:
+            tags:
+              only: /.*/
+        
       - ios-trigger-metrics:
           filters:
             branches:
