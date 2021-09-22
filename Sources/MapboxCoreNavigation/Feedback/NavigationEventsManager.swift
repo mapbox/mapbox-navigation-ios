@@ -217,7 +217,7 @@ open class NavigationEventsManager {
         return eventDictionary
     }
     
-    func navigationFeedbackEvent() -> NavigationEventDetails? {
+    func navigationFeedbackEvent(screenshotOption: FeedbackScreenshotOption) -> NavigationEventDetails? {
         var event: NavigationEventDetails
     
         if let activeNavigationDataSource = activeNavigationDataSource {
@@ -232,7 +232,15 @@ open class NavigationEventsManager {
         
         event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
         event.event = MMEEventTypeNavigationFeedback
-        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        
+        let screenshot: UIImage?
+        switch screenshotOption {
+        case .automatic:
+            screenshot = captureScreen(scaledToFit: 250)
+        case .custom(let customScreenshot):
+            screenshot = customScreenshot
+        }
+        event.screenshot = screenshot?.jpegData(compressionQuality: 0.2)?.base64EncodedString()
         
         return event
     }
@@ -256,7 +264,7 @@ open class NavigationEventsManager {
         event.newDistanceRemaining = -1
         event.newDurationRemaining = -1
         event.newGeometry = nil
-        event.screenshot = captureScreen(scaledToFit: 250)?.base64EncodedString()
+        event.screenshot = captureScreen(scaledToFit: 250)?.jpegData(compressionQuality: 0.2)?.base64EncodedString()
         
         return event
     }
@@ -391,8 +399,8 @@ open class NavigationEventsManager {
      - Postcondition:
      Call `sendFeedback(_:type:source:description:)` with the returned feedback to attach additional metadata to the feedback and send it.
      */
-    public func createFeedback() -> FeedbackEvent? {
-        guard let eventDetails = navigationFeedbackEvent() else { return nil }
+    public func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) -> FeedbackEvent? {
+        guard let eventDetails = navigationFeedbackEvent(screenshotOption: screenshotOption) else { return nil }
         return FeedbackEvent(eventDetails: eventDetails)
     }
     

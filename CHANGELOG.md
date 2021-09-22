@@ -170,6 +170,7 @@
 * Renamed the `FeedbackViewController(eventsManager:)` initializer to  `FeedbackViewController(eventsManager:type:)`. You can now customize the view controller to show only the feedback types specific to passive navigation. ([#3323](https://github.com/mapbox/mapbox-navigation-ios/pull/3323))
 * Renamed the `FeedbackType` enumeration to `ActiveNavigationFeedbackType` and the `EventsManagerDataSource` protocol to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
 * Renamed the user-facing feedback categories and subcategories for active turn-by-turn navigation that are represented at runtime by the `ActiveNavigationFeedbackType` enumeration. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
+* You can now pass your own screenshot to the `NavigationEventsManager.createFeedback()` when a user submits a feedback. Screenshots help Mapbox to determine where issues exist for review and correction.
 
 ### Other changes
 
