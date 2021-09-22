@@ -269,16 +269,27 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testArrive() {
-        let now = Date()
-        let locations = Fixture.generateTrace(for: route).enumerated().map {
-            $0.element.shifted(to: now + $0.offset)
-        }
+        let origin = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
 
-        let locationManager = DummyLocationManager()
-        navigation = MapboxNavigationService(routeResponse: response,
+        let routeResponse = Fixture.route(between: origin, and: destination).response
+        let routeCoordinates = Fixture.generateCoordinates(between: origin, and: destination, count: 100)
+
+        let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 1000)
+            .map { CLLocation(coordinate: $0) }
+            .shiftedToPresent()
+
+        let locationManager = ReplayLocationManager(locations: replyLocations)
+        let speedMultiplier: TimeInterval = 100
+        locationManager.speedMultiplier = speedMultiplier
+        locationManager.startDate = Date()
+
+        let navOptions = NavigationRouteOptions(matchOptions: .init(coordinates: routeCoordinates))
+
+        navigation = MapboxNavigationService(routeResponse: routeResponse,
                                              routeIndex: 0,
-                                             routeOptions: routeOptions,
-                                             directions: directions,
+                                             routeOptions: navOptions,
+                                             directions: .mocked,
                                              locationSource: locationManager,
                                              simulating: .never)
 
@@ -293,8 +304,6 @@ class MapboxCoreNavigationTests: TestCase {
 
             init(_ willArriveExpectation: XCTestExpectation, _ didArriveExpectation: XCTestExpectation) {
                 self.willArriveExpectation = willArriveExpectation
-                // TODO: remove next line (fulfill) when willArrive works properly
-                self.willArriveExpectation.fulfill()
                 self.didArriveExpectation = didArriveExpectation
             }
 
@@ -316,12 +325,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation.delegate = responder
         navigation.start()
 
-        for location in locations {
-            navigation.locationManager(locationManager, didUpdateLocations: [location])
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
-        }
-
-        waitForExpectations(timeout: 5, handler: nil)
+        waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
     }
     
     func testOrderOfExecution() {
