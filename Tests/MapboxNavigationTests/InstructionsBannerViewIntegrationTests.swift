@@ -299,10 +299,19 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         
         label.availableBounds = { return label.frame }
         
-        let presenter = InstructionPresenter(exitInstruction, dataSource: label, downloadCompletion: nil)
+        let userInterfaceIdiom: UIUserInterfaceIdiom = .phone
+        
+        let presenter = InstructionPresenter(exitInstruction,
+                                             dataSource: label,
+                                             userInterfaceIdiom: userInterfaceIdiom,
+                                             downloadCompletion: nil)
+        
         let attributed = presenter.attributedText()
         
-        let key = [exitCodeAttribute.cacheKey!, ExitView.criticalHash(side: .right, dataSource: label)].joined(separator: "-")
+        let key = [
+            exitCodeAttribute.cacheKey!,
+            ExitView.criticalHash(side: .right, dataSource: label, userInterfaceIdiom: userInterfaceIdiom)
+        ].joined(separator: "-")
         XCTAssertNotNil(imageRepository.cachedImageForKey(key), "Expected cached image")
         
         let spaceRange = NSMakeRange(1, 1)
