@@ -6,6 +6,7 @@ import TestHelper
 @testable import MapboxCoreNavigation
 
 let jsonFileName = "routeWithInstructions"
+let jsonFileNameEmptyDistance = "routeWithNoDistance"
 var routeOptions: NavigationRouteOptions {
     let from = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
     let to = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
@@ -15,6 +16,9 @@ let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
 let directions = DirectionsSpy()
 let route: Route = {
     return Fixture.route(from: jsonFileName, options: routeOptions)
+}()
+let routeWithNoDistance: Route = {
+    return Fixture.route(from: jsonFileNameEmptyDistance, options: routeOptions)
 }()
 
 let waitForInterval: TimeInterval = 5

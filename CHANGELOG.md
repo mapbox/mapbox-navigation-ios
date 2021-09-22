@@ -102,6 +102,7 @@
 * Fixed unnecessary rerouting when calling the `NavigationService.start()` method. ([#3239](https://github.com/mapbox/mapbox-navigation-ios/pull/3239))
 * Fixed an issue where `RouteController` or `PassiveLocationManager` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Fixed a crash when navigating along a route 0 meters long (for example, because two waypoints snap to the same location). ([#3387](https://github.com/mapbox/mapbox-navigation-ios/pull/3387))
 
 #### Passive navigation
 

@@ -77,6 +77,7 @@ open class RouteProgress: Codable {
      Number between 0 and 1 representing how far along the `Route` the user has traveled.
      */
     public var fractionTraveled: Double {
+        guard route.distance > 0 else { return 1 }
         return distanceTraveled / route.distance
     }
 
