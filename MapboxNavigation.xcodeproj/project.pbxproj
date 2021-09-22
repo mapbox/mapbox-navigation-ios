@@ -361,6 +361,7 @@
 		DA85D5EF25DB4AA4008A2AD4 /* LaneViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA85D5EE25DB4AA3008A2AD4 /* LaneViewTests.swift */; };
 		DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7523B5D84900B56786 /* SpeedLimitView.swift */; };
 		DA8F3A7823B5DB7900B56786 /* SpeedLimitStyleKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8F3A7723B5DB7900B56786 /* SpeedLimitStyleKit.swift */; };
+		DA972D3926FB9ABD009F5615 /* routeWithNoDistance.json in Resources */ = {isa = PBXBuildFile; fileRef = DA972D3826FB9ABD009F5615 /* routeWithNoDistance.json */; };
 		DAAE5F301EAE4C4700832871 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = DAAE5F321EAE4C4700832871 /* Localizable.strings */; };
 		DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */ = {isa = PBXBuildFile; fileRef = DABA591425E58D5600D0C1DB /* Accounts.swift */; };
 		DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAD17201214DB12B009C8161 /* CPMapTemplateTests.swift */; };
@@ -934,6 +935,7 @@
 		DA9059B3223B1769006E8B46 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA9059B4223B1770006E8B46 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA9059B5223B1778006E8B46 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ja; path = Resources/ja.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
+		DA972D3826FB9ABD009F5615 /* routeWithNoDistance.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = routeWithNoDistance.json; sourceTree = "<group>"; };
 		DAA292FF1F16CC2200D94613 /* lt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = lt; path = lt.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DAAE5F331EAE4C5A00832871 /* zh-Hans */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		DABA591425E58D5600D0C1DB /* Accounts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Accounts.swift; sourceTree = "<group>"; };
@@ -1618,6 +1620,7 @@
 				B47C1AFC261FD0A30078546C /* route-with-road-classes-single-congestion.json */,
 				B47C1AFD261FD0A30078546C /* route-with-lanes.json */,
 				B47C1AFE261FD0A30078546C /* sthlm-double-back.json */,
+				DA972D3826FB9ABD009F5615 /* routeWithNoDistance.json */,
 			);
 			path = Fixtures;
 			sourceTree = "<group>";
@@ -2275,6 +2278,7 @@
 				E2D1496D265CFB4D008135A3 /* Images.xcassets in Resources */,
 				B4A78D31261FD47700FDF212 /* route-with-lanes.json in Resources */,
 				B4A78D32261FD47700FDF212 /* sthlm-double-back.json in Resources */,
+				DA972D3926FB9ABD009F5615 /* routeWithNoDistance.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
