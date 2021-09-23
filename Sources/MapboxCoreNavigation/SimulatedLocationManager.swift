@@ -71,7 +71,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
     }
     
-    // MARK: Simulation Controls
+    // MARK: Specifying Simulation
     
     /**
      Specify the multiplier to use when calculating speed based on the RouteLeg’s `expectedSegmentTravelTimes`.

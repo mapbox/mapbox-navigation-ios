@@ -8,7 +8,7 @@ import CoreLocation
  */
 open class ReplayLocationManager: NavigationLocationManager {
     
-    // MARK: Simulation Controls
+    // MARK: Specifying Simulation
     
     /**
      `speedMultiplier` adjusts the speed of the replay.

@@ -7,7 +7,7 @@ import MapboxDirections
  */
 open class RouteLegProgress: Codable {
     
-    // MARK: Leg Information
+    // MARK: Details About the Leg
     
     /**
      Returns the current `RouteLeg`.
@@ -45,7 +45,7 @@ open class RouteLegProgress: Codable {
 
     public var userHasArrivedAtWaypoint = false
     
-    // MARK: Step(s) Parameters
+    // MARK: Details About the Leg’s Steps
     
     /**
      Index representing the current step.

@@ -55,7 +55,7 @@ open class PassiveLocationManager: NSObject {
      */
     public weak var delegate: PassiveLocationManagerDelegate?
     
-    // MARK: Controlling Location Manager
+    // MARK: Starting and Stopping the Location Manager
     
     /**
      Starts the generation of location updates. 
@@ -193,6 +193,60 @@ open class PassiveLocationManager: NSObject {
         NotificationCenter.default.post(name: .passiveLocationManagerDidUpdate, object: self, userInfo: userInfo)
     }
     
+    /**
+     Initializes the location manager with the given directions service.
+     
+     - parameter directions: The directions service that allows the location manager to access road network data. If this argument is omitted, the shared value of `NavigationSettings.directions` will be used.
+     - parameter systemLocationManager: The system location manager that provides raw locations for the receiver to match against the road network.
+     - parameter eventsManagerType: An optional events manager type to use.
+     - parameter userInfo: An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
+     
+     - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
+     */
+    public required init(directions: Directions = NavigationSettings.shared.directions,
+                         systemLocationManager: NavigationLocationManager? = nil,
+                         eventsManagerType: NavigationEventsManager.Type? = nil,
+                         userInfo: [String: String?]? = nil) {
+        self.directions = directions
+        
+        self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
+        
+        super.init()
+        
+        self.systemLocationManager.delegate = self
+
+        let resolvedEventsManagerType = eventsManagerType ?? NavigationEventsManager.self
+        let eventsManager = resolvedEventsManagerType.init(passiveNavigationDataSource: self,
+                                                           accessToken: directions.credentials.accessToken)
+        eventsManager.userInfo = userInfo
+        _eventsManager = eventsManager
+
+        subscribeNotifications()
+
+        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
+    }
+    
+    deinit {
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+        eventsManager.withBackupDataSource(active: nil, passive: self) {
+            if self.lastRawLocation != nil {
+                self.eventsManager.sendPassiveNavigationStop()
+            }
+        }
+        unsubscribeNotifications()
+    }
+    
+    private func subscribeNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationStatusDidChange),
+                                               name: .navigationStatusDidChange,
+                                               object: nil)
+    }
+    
+    private func unsubscribeNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
     // MARK: Accessing Relevant Routing Data
     
     /**
@@ -263,62 +317,6 @@ open class PassiveLocationManager: NSObject {
      */
     public static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
         Navigator.shared.stopRecordingHistory(writingFileWith: completionHandler)
-    }
-    
-    // MARK: Serving The Lifecycle
-    
-    /**
-     Initializes the location manager with the given directions service.
-     
-     - parameter directions: The directions service that allows the location manager to access road network data. If this argument is omitted, the shared value of `NavigationSettings.directions` will be used.
-     - parameter systemLocationManager: The system location manager that provides raw locations for the receiver to match against the road network.
-     - parameter eventsManagerType: An optional events manager type to use.
-     - parameter userInfo: An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
-     
-     - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
-     */
-    public required init(directions: Directions = NavigationSettings.shared.directions,
-                         systemLocationManager: NavigationLocationManager? = nil,
-                         eventsManagerType: NavigationEventsManager.Type? = nil,
-                         userInfo: [String: String?]? = nil) {
-        self.directions = directions
-        
-        self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
-        
-        super.init()
-        
-        self.systemLocationManager.delegate = self
-
-        let resolvedEventsManagerType = eventsManagerType ?? NavigationEventsManager.self
-        let eventsManager = resolvedEventsManagerType.init(passiveNavigationDataSource: self,
-                                                           accessToken: directions.credentials.accessToken)
-        eventsManager.userInfo = userInfo
-        _eventsManager = eventsManager
-
-        subscribeNotifications()
-
-        BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: sessionUUID)
-    }
-    
-    deinit {
-        BillingHandler.shared.stopBillingSession(with: sessionUUID)
-        eventsManager.withBackupDataSource(active: nil, passive: self) {
-            if self.lastRawLocation != nil {
-                self.eventsManager.sendPassiveNavigationStop()
-            }
-        }
-        unsubscribeNotifications()
-    }
-    
-    private func subscribeNotifications() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(navigationStatusDidChange),
-                                               name: .navigationStatusDidChange,
-                                               object: nil)
-    }
-    
-    private func unsubscribeNotifications() {
-        NotificationCenter.default.removeObserver(self)
     }
 }
 

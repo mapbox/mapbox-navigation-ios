@@ -6,7 +6,7 @@ import Dispatch
  */
 public class DispatchTimer {
     /**
-     Describes related `DispatchTimer`'s state.
+     The state of a `DispatchTimer`.
      */
     public enum State {
         /**

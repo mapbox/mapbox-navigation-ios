@@ -40,26 +40,12 @@ open class RouteProgress: Codable {
         return newOptions
     }
     
-    // MARK: Interacting with Route
+    // MARK: Route Statistics
     
     /**
-     Returns the current `Route`.
+     Returns the current `RouteOptions`.
      */
-    public var route: Route
-    
     public let routeOptions: RouteOptions
-
-    /**
-     Updates the current route with attributes from the given skeletal route.
-     */
-    public func refreshRoute(with refreshedRoute: RefreshedRoute, at location: CLLocation) {
-        route.refreshLegAttributes(from: refreshedRoute)
-        currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
-                                              stepIndex: currentLegProgress.stepIndex,
-                                              spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)
-        calculateLegsCongestion()
-        updateDistanceTraveled(with: location)
-    }
     
     /**
      Total distance traveled by user along all legs.
@@ -68,25 +54,6 @@ open class RouteProgress: Codable {
         return route.legs.prefix(upTo: legIndex).map { $0.distance }.reduce(0, +) + currentLegProgress.distanceTraveled
     }
     
-    /**
-     Increments the progress according to new location specified.
-     - parameter location: Updated user location.
-     */
-    public func updateDistanceTraveled(with location: CLLocation) {
-        let stepProgress = currentLegProgress.currentStepProgress
-        let step = stepProgress.step
-        
-        //Increment the progress model
-        guard let polyline = step.shape else {
-            preconditionFailure("Route steps used for navigation must have shape data")
-        }
-        if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
-            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
-            let distanceTraveled = step.distance - remainingDistance
-            stepProgress.distanceTraveled = distanceTraveled
-        }
-    }
-
     /**
      Total seconds remaining on all legs.
      */
@@ -149,7 +116,45 @@ open class RouteProgress: Codable {
         return LineString(priorCoordinates + (currentShape?.coordinates ?? []) + upcomingCoordinates)
     }
     
-    // MARK: Leg Stats
+    // MARK: Updating the RouteProgress
+
+    /**
+     Returns the current `Route`.
+     */
+    public var route: Route
+    
+    /**
+     Updates the current route with attributes from the given skeletal route.
+     */
+    public func refreshRoute(with refreshedRoute: RefreshedRoute, at location: CLLocation) {
+        route.refreshLegAttributes(from: refreshedRoute)
+        currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
+                                              stepIndex: currentLegProgress.stepIndex,
+                                              spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)
+        calculateLegsCongestion()
+        updateDistanceTraveled(with: location)
+    }
+    
+    /**
+     Increments the progress according to new location specified.
+     - parameter location: Updated user location.
+     */
+    public func updateDistanceTraveled(with location: CLLocation) {
+        let stepProgress = currentLegProgress.currentStepProgress
+        let step = stepProgress.step
+        
+        //Increment the progress model
+        guard let polyline = step.shape else {
+            preconditionFailure("Route steps used for navigation must have shape data")
+        }
+        if let closestCoordinate = polyline.closestCoordinate(to: location.coordinate) {
+            let remainingDistance = polyline.distance(from: closestCoordinate.coordinate)!
+            let distanceTraveled = step.distance - remainingDistance
+            stepProgress.distanceTraveled = distanceTraveled
+        }
+    }
+    
+    // MARK: Leg Statistics
     
     /**
      Index representing current `RouteLeg`.
@@ -205,7 +210,7 @@ open class RouteProgress: Codable {
         return legIndex + 1 < route.legs.endIndex ? route.legs[legIndex + 1] : nil
     }
     
-    // MARK: Step Stats
+    // MARK: Step Statistics
     /**
      Returns the remaining steps left on the current route
      */
@@ -231,7 +236,7 @@ open class RouteProgress: Codable {
         return currentLegProgress.upcomingStep ?? upcomingLeg?.steps.first
     }
     
-    // MARK: Congestion Info
+    // MARK: Leg Attributes
     
     /**
      Tuple containing a `CongestionLevel` and a corresponding `TimeInterval` representing the expected travel time for this segment.

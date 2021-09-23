@@ -66,7 +66,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      */
     func router(_ router: Router, didFailToRerouteWith error: Error)
 
-    // MARK: Progressing the Route and Arriving Events
+    // MARK: Monitoring Route Progress and Updates
     
     /**
      Called immediately after the router refreshes the route.

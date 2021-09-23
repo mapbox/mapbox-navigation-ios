@@ -2,9 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 
-// MARK: Parameterizing RouteController
-
-// MARK: Rerouting logic
+// MARK: RouteController Rerouting logic
 /**
  Maximum number of meters the user can travel away from step before `RouteControllerShouldReroute` is emitted.
  */
@@ -54,7 +52,7 @@ public var RouteControllerIncorrectCourseMultiplier: Int = 4
 
 let FasterRouteFoundEvent = "navigation.fasterRoute"
 
-// MARK: Tracking Step Progress
+// MARK: Tracking RouteController Step Progress
 
 /**
  Threshold user must be in within to count as completing a step. One of two heuristics used to know when a user completes a step, see `RouteControllerManeuverZoneRadius`.
@@ -68,7 +66,7 @@ public var RouteControllerMaximumAllowedDegreeOffsetForTurnCompletion: Double = 
  */
 public var RouteControllerManeuverZoneRadius: CLLocationDistance = 40
 
-// MARK: Notifications Alerting
+// MARK: RouteController Notifications Alerting
 
 /**
  Number of seconds left on step when a `AlertLevel.medium` alert is emitted.
@@ -93,7 +91,7 @@ public let RouteControllerLinkedInstructionBufferMultiplier: Double = 1.2
 public var RouteControllerMinimumDistanceForContinueInstruction: CLLocationDistance = 2_000
 
 
-// MARK: Configuring Route Snapping (CLLocation)
+// MARK: Configuring Route Snapping (CLLocation) for RouteController
 
 /**
  The minimum speed value before the user's actual location can be considered over the snapped location.
@@ -267,7 +265,7 @@ extension RouteController {
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
         
-        // MARK: Marking Rerouting
+        // MARK: Monitoring Rerouting
         
         /**
          A key in the user info dictionary of a `Notification.Name.routeControllerDidReroute` notification. The corresponding value is an `NSNumber` instance containing a Boolean value indicating whether `RouteController` proactively rerouted the user onto a faster route.
@@ -363,7 +361,7 @@ extension MapboxNavigationService {
 
 public extension Notification.Name {
     
-    // MARK: Electronic Horizon Messaging
+    // MARK: Electronic Horizon Notifications
     
     /**
      Posted when the user’s position in the electronic horizon changes. This notification may be posted multiple times after `electronicHorizonDidEnterRoadObject` until the user transitions to a new electronic horizon.
@@ -440,7 +438,7 @@ extension RoadGraph {
 
 public extension Notification.Name {
     
-    // MARK: Switching Navigation Tiles Versions
+    // MARK: Switching Navigation Tile Versions
     
     /**
      :nodoc:

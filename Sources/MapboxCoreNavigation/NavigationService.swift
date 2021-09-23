@@ -212,7 +212,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         poorGPSTimer.reset()
     }
     
-    // MARK: Controlling Navigation Service
+    // MARK: Starting and Stopping Navigation
     
     public func start() {
         // Feed the first location to the router if router doesn't have a location yet. See #1790, #3237 for reference.
@@ -262,6 +262,91 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
         eventsManager.sendCancelEvent(rating: feedback?.rating, comment: feedback?.comment)
         stop()
+    }
+    
+    /**
+     Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
+     
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
+     */
+    convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions options: RouteOptions) {
+        self.init(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
+    }
+    
+    /**
+     Intializes a new `NavigationService`.
+     
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter directions: The Directions object that created `route`. If this argument is omitted, the shared value of `NavigationSettings.directions` will be used.
+     - parameter locationSource: An optional override for the default `NaviationLocationManager`.
+     - parameter eventsManagerType: An optional events manager type to use while tracking the route.
+     - parameter simulationMode: The simulation mode desired.
+     - parameter routerType: An optional router type to use for traversing the route.
+     */
+    required public init(routeResponse: RouteResponse,
+                         routeIndex: Int,
+                         routeOptions: RouteOptions,
+                         directions: Directions? = nil,
+                         locationSource: NavigationLocationManager? = nil,
+                         eventsManagerType: NavigationEventsManager.Type? = nil,
+                         simulating simulationMode: SimulationMode = .onPoorGPS,
+                         routerType: Router.Type? = nil) {
+        nativeLocationSource = locationSource ?? NavigationLocationManager()
+        self.directions = directions ?? NavigationSettings.shared.directions
+        self.simulationMode = simulationMode
+        super.init()
+        resumeNotifications()
+        
+        _poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
+            guard let mode = self?.simulationMode, mode == .onPoorGPS else { return }
+            self?.simulate(intent: .poorGPS)
+        }
+        
+        let routerType = routerType ?? DefaultRouter.self
+        _router = routerType.init(alongRouteAtIndex: routeIndex, in: routeResponse, options: routeOptions, directions: self.directions, dataSource: self)
+        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
+        
+        let eventType = eventsManagerType ?? NavigationEventsManager.self
+        _eventsManager = eventType.init(activeNavigationDataSource: self,
+                                        accessToken: self.directions.credentials.accessToken)
+        locationManager.activityType = routeOptions.activityType
+        bootstrapEvents()
+        
+        router.delegate = self
+        nativeLocationSource.delegate = self
+        
+        checkForUpdates()
+        checkForLocationUsageDescription()
+    }
+    
+    deinit {
+        suspendNotifications()
+        eventsManager.withBackupDataSource(active: self, passive: nil) {
+            endNavigation()
+        }
+        nativeLocationSource.delegate = nil
+        simulatedLocationSource?.delegate = nil
+    }
+    
+    private func bootstrapEvents() {
+        eventsManager.activeNavigationDataSource = self
+        eventsManager.resetSession()
+    }
+    
+    func resumeNotifications() {
+        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
+    }
+    
+    func suspendNotifications() {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func applicationWillTerminate(_ notification: NSNotification) {
+        endNavigation()
     }
     
     // MARK: Managing Location
@@ -330,93 +415,6 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
         router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions)
-    }
-
-    private func bootstrapEvents() {
-        eventsManager.activeNavigationDataSource = self
-        eventsManager.resetSession()
-    }
-    
-    /**
-     Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
-     
-     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
-     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
-     - parameter routeOptions: The route options used to get the route.
-     */
-    convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions options: RouteOptions) {
-        self.init(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: options, directions: nil, locationSource: nil, eventsManagerType: nil)
-    }
-    
-    // MARK: Serving the Lifecycle
-    
-    /**
-     Intializes a new `NavigationService`.
-     
-     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
-     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
-     - parameter routeOptions: The route options used to get the route.
-     - parameter directions: The Directions object that created `route`. If this argument is omitted, the shared value of `NavigationSettings.directions` will be used.
-     - parameter locationSource: An optional override for the default `NaviationLocationManager`.
-     - parameter eventsManagerType: An optional events manager type to use while tracking the route.
-     - parameter simulationMode: The simulation mode desired.
-     - parameter routerType: An optional router type to use for traversing the route.
-     */
-    required public init(routeResponse: RouteResponse,
-                         routeIndex: Int,
-                         routeOptions: RouteOptions,
-                         directions: Directions? = nil,
-                         locationSource: NavigationLocationManager? = nil,
-                         eventsManagerType: NavigationEventsManager.Type? = nil,
-                         simulating simulationMode: SimulationMode = .onPoorGPS,
-                         routerType: Router.Type? = nil) {
-        nativeLocationSource = locationSource ?? NavigationLocationManager()
-        self.directions = directions ?? NavigationSettings.shared.directions
-        self.simulationMode = simulationMode
-        super.init()
-        resumeNotifications()
-        
-        _poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
-            guard let mode = self?.simulationMode, mode == .onPoorGPS else { return }
-            self?.simulate(intent: .poorGPS)
-        }
-        
-        let routerType = routerType ?? DefaultRouter.self
-        _router = routerType.init(alongRouteAtIndex: routeIndex, in: routeResponse, options: routeOptions, directions: self.directions, dataSource: self)
-        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
-        
-        let eventType = eventsManagerType ?? NavigationEventsManager.self
-        _eventsManager = eventType.init(activeNavigationDataSource: self,
-                                        accessToken: self.directions.credentials.accessToken)
-        locationManager.activityType = routeOptions.activityType
-        bootstrapEvents()
-        
-        router.delegate = self
-        nativeLocationSource.delegate = self
-        
-        checkForUpdates()
-        checkForLocationUsageDescription()
-    }
-    
-    deinit {
-        suspendNotifications()
-        eventsManager.withBackupDataSource(active: self, passive: nil) {
-            endNavigation()
-        }
-        nativeLocationSource.delegate = nil
-        simulatedLocationSource?.delegate = nil
-    }
-    
-    func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(applicationWillTerminate(_:)), name: UIApplication.willTerminateNotification, object: nil)
-    }
-    
-    func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
-    @objc private func applicationWillTerminate(_ notification: NSNotification) {
-        endNavigation()
     }
 }
 

@@ -71,7 +71,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error)
     
-    // MARK: Progressing the Route and Arriving Events
+    // MARK: Monitoring Route Progress and Updates
     
     /**
      Called immediately after the navigation service refreshes the route.
@@ -166,7 +166,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationServiceShouldDisableBatteryMonitoring(_ service: NavigationService) -> Bool
     
-    // MARK: Simulation Messages
+    // MARK: Simulating a Route
     
     /**
      Called when the navigation service is about to begin location simulation.
