@@ -142,11 +142,39 @@ public class CarPlayNavigationViewController: UIViewController {
         updateManeuvers(navigationService.routeProgress)
         navigationService.start()
         currentLegIndexMapped = navigationService.router.routeProgress.legIndex
+        
+        updateTripEstimateStyle(traitCollection.userInterfaceStyle)
     }
     
     override public func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         suspendNotifications()
+    }
+    
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            updateTripEstimateStyle(traitCollection.userInterfaceStyle)
+        }
+    }
+    
+    /**
+     Updates `CPMapTemplate.tripEstimateStyle` based on provided `UIUserInterfaceStyle` value.
+     
+     - parameter userInterfaceStyle: `UIUserInterfaceStyle`, which is currently used on CarPlay.
+     */
+    func updateTripEstimateStyle(_ userInterfaceStyle: UIUserInterfaceStyle) {
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            mapTemplate.tripEstimateStyle = .dark
+        case .unspecified:
+            fallthrough
+        case .light:
+            fallthrough
+        default:
+            mapTemplate.tripEstimateStyle = .light
+        }
     }
     
     // MARK: - Public API methods
