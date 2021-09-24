@@ -192,7 +192,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let geometryFramingAfterManeuver = followingCameraOptions.geometryFramingAfterManeuver
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
             let pitch = followingCameraOptions.defaultPitch * pitchСoefficient
-            let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+            var carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+            carPlayCameraPadding.bottom += 25.0
             
             if geometryFramingAfterManeuver.enabled {
                 let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -279,10 +280,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             followingMobileCamera.anchor = followingMobileCameraAnchor
             
-            followingCarPlayCamera.anchor = self.anchor(pitchСoefficient,
-                                                        maxPitch: followingCameraOptions.defaultPitch,
-                                                        bounds: mapView.bounds,
-                                                        edgeInsets: carPlayCameraPadding)
+            let followingCarPlayCameraAnchor = self.anchor(pitchСoefficient,
+                                                           maxPitch: followingCameraOptions.defaultPitch,
+                                                           bounds: mapView.bounds,
+                                                           edgeInsets: carPlayCameraPadding)
+            
+            followingCarPlayCamera.anchor = followingCarPlayCameraAnchor
             
             if options.followingCameraOptions.pitchUpdatesAllowed {
                 followingMobileCamera.pitch = CGFloat(pitch)
@@ -294,6 +297,16 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                              left: viewportPadding.left,
                                                              bottom: UIScreen.main.bounds.height - followingMobileCameraAnchor.y + 1.0,
                                                              right: viewportPadding.right)
+                
+                if let mainCarPlayScreen = UIScreen.mainCarPlay {
+                    followingCarPlayCamera.padding = UIEdgeInsets(top: followingCarPlayCameraAnchor.y,
+                                                                  left: carPlayCameraPadding.left,
+                                                                  bottom: mainCarPlayScreen.bounds.height - followingCarPlayCameraAnchor.y + 1.0,
+                                                                  right: carPlayCameraPadding.right)
+                } else {
+                    followingCarPlayCamera.padding = carPlayCameraPadding
+                }
+                
                 followingCarPlayCamera.padding = carPlayCameraPadding
             }
         }
