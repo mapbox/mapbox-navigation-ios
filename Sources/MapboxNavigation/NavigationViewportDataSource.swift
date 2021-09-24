@@ -306,8 +306,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 } else {
                     followingCarPlayCamera.padding = carPlayCameraPadding
                 }
-                
-                followingCarPlayCamera.padding = carPlayCameraPadding
             }
         }
     }
