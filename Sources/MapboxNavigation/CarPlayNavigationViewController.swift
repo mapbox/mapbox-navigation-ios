@@ -168,10 +168,6 @@ public class CarPlayNavigationViewController: UIViewController {
         switch traitCollection.userInterfaceStyle {
         case .dark:
             mapTemplate.tripEstimateStyle = .dark
-        case .unspecified:
-            fallthrough
-        case .light:
-            fallthrough
         default:
             mapTemplate.tripEstimateStyle = .light
         }
