@@ -23,7 +23,7 @@
 * MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.8](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.0.0-rc.8) instead of [Mapbox Maps SDK for iOS v6._x_](https://github.com/mapbox/mapbox-gl-native-ios/). Consult the “[Migrate to v10](https://docs.mapbox.com/ios/beta/maps/guides/migrate-to-v10/)” guide for tips on upgrading your runtime styling and other map-related code. ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
 * MapboxCoreNavigation no longer depends on [MapboxAccounts](https://github.com/mapbox/mapbox-accounts-ios/). If you previously installed MapboxCoreNavigation using Carthage, remove MapboxAccounts.framework from your application’s Link Binary With Libraries build phase. ([#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829))
 * MapboxCoreNavigation now depends on [MapboxMobileEvents v1._x_](https://github.com/mapbox/mapbox-events-ios/releases/tag/v1.0.0). The dependency on MapboxMobileEvents is subject to change or removal in a future minor release of MapboxCoreNavigation, so your Podfile, Cartfile, or Package.swift should not explicitly depend on MapboxMobileEvents. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
-* MapboxCoreNavigation now depends on [MapboxDirections v2.0.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.0.0-rc.1). ([#3325](https://github.com/mapbox/mapbox-navigation-ios/pull/3325))
+* MapboxCoreNavigation now depends on [MapboxDirections v2.0.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.0.0-rc.2). ([#3402](https://github.com/mapbox/mapbox-navigation-ios/pull/3402))
 * MapboxCoreNavigation now depends on [Turf v2.0.0-rc.1](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0-rc.1). ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
 * MapboxCoreNavigation now depends on [MapboxNavigationNative v66._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/66.0.0). ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
 * MapboxCoreNavigation now depends on [MapboxCommon v18._x_](https://github.com/mapbox/mapbox-common-ios/releases/tag/v18.0.0). ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
@@ -172,7 +172,7 @@
 * Renamed the `FeedbackViewController(eventsManager:)` initializer to  `FeedbackViewController(eventsManager:type:)`. You can now customize the view controller to show only the feedback types specific to passive navigation. ([#3323](https://github.com/mapbox/mapbox-navigation-ios/pull/3323))
 * Renamed the `FeedbackType` enumeration to `ActiveNavigationFeedbackType` and the `EventsManagerDataSource` protocol to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
 * Renamed the user-facing feedback categories and subcategories for active turn-by-turn navigation that are represented at runtime by the `ActiveNavigationFeedbackType` enumeration. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
-* You can now pass your own screenshot to the `NavigationEventsManager.createFeedback()` when a user submits a feedback. Screenshots help Mapbox to determine where issues exist for review and correction.
+* Added the ability to pass your own screenshot to the `NavigationEventsManager.createFeedback()` when a user submits a feedback. Screenshots help Mapbox to determine where issues exist for review and correction. ([#3380]((https://github.com/mapbox/mapbox-navigation-ios/pull/3380))
 
 ### Other changes
 
