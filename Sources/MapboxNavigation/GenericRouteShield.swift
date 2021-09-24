@@ -94,21 +94,25 @@ public class GenericRouteShield: StylableView {
     /**
      This generates the cache key needed to hold the `GenericRouteShield`'s `imageRepresentation` in the `ImageCache` caching engine.
      */
-    static func criticalHash(dataSource: DataSource, userInterfaceIdiom: UIUserInterfaceIdiom) -> String {
+    static func criticalHash(dataSource: DataSource, traitCollection: UITraitCollection) -> String {
         var appearance = GenericRouteShield.appearance()
-        if userInterfaceIdiom == .carPlay {
-            appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: userInterfaceIdiom))
+        if traitCollection.userInterfaceIdiom == .carPlay {
+            appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom))
         }
         
-        let criticalProperties: [AnyHashable?] = [
+        var criticalProperties: [AnyHashable?] = [
             dataSource.font.pointSize,
             appearance.backgroundColor,
             appearance.foregroundColor,
             appearance.borderColor,
             appearance.borderWidth,
             appearance.cornerRadius,
-            userInterfaceIdiom.rawValue
+            traitCollection.userInterfaceIdiom.rawValue
         ]
+        
+        if #available(iOS 12.0, *) {
+            criticalProperties.append(traitCollection.userInterfaceStyle.rawValue)
+        }
         
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0) }))
     }

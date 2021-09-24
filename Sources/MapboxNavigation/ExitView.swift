@@ -146,13 +146,13 @@ public class ExitView: StylableView {
      */
     static func criticalHash(side: ExitSide,
                              dataSource: DataSource,
-                             userInterfaceIdiom: UIUserInterfaceIdiom) -> String {
+                             traitCollection: UITraitCollection) -> String {
         var appearance = ExitView.appearance()
-        if userInterfaceIdiom == .carPlay {
-            appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: userInterfaceIdiom))
+        if traitCollection.userInterfaceIdiom == .carPlay {
+            appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom))
         }
         
-        let criticalProperties: [AnyHashable?] = [
+        var criticalProperties: [AnyHashable?] = [
             side,
             dataSource.font.pointSize,
             appearance.backgroundColor,
@@ -160,8 +160,12 @@ public class ExitView: StylableView {
             appearance.borderColor,
             appearance.borderWidth,
             appearance.cornerRadius,
-            userInterfaceIdiom.rawValue
+            traitCollection.userInterfaceIdiom.rawValue,
         ]
+        
+        if #available(iOS 12.0, *) {
+            criticalProperties.append(traitCollection.userInterfaceStyle.rawValue)
+        }
         
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
     }

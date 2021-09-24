@@ -31,12 +31,12 @@ class InstructionPresenter {
     required init(_ instruction: VisualInstruction,
                   dataSource: DataSource,
                   imageRepository: ImageRepository = .shared,
-                  userInterfaceIdiom: UIUserInterfaceIdiom,
+                  traitCollection: UITraitCollection,
                   downloadCompletion: ShieldDownloadCompletion?) {
         self.instruction = instruction
         self.dataSource = dataSource
         self.imageRepository = imageRepository
-        self.userInterfaceIdiom = userInterfaceIdiom
+        self.traitCollection = traitCollection
         self.onShieldDownload = downloadCompletion
     }
 
@@ -47,7 +47,7 @@ class InstructionPresenter {
 
     private let imageRepository: ImageRepository
     
-    private let userInterfaceIdiom: UIUserInterfaceIdiom
+    private let traitCollection: UITraitCollection
     
     func attributedText() -> NSAttributedString {
         guard let source = self.dataSource,
@@ -203,7 +203,7 @@ class InstructionPresenter {
                                dataSource: DataSource,
                                cacheKey: String) -> NSAttributedString? {
         let additionalKey = GenericRouteShield.criticalHash(dataSource: dataSource,
-                                                            userInterfaceIdiom: userInterfaceIdiom)
+                                                            traitCollection: traitCollection)
         let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
@@ -213,8 +213,8 @@ class InstructionPresenter {
             let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
             
             var appearance = GenericRouteShield.appearance()
-            if userInterfaceIdiom == .carPlay {
-                appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: userInterfaceIdiom))
+            if traitCollection.userInterfaceIdiom == .carPlay {
+                appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom))
             }
             
             view.foregroundColor = appearance.foregroundColor
@@ -238,26 +238,26 @@ class InstructionPresenter {
                             cacheKey: String) -> NSAttributedString? {
         let additionalKey = ExitView.criticalHash(side: side,
                                                   dataSource: dataSource,
-                                                  userInterfaceIdiom: userInterfaceIdiom)
+                                                  traitCollection: traitCollection)
         let attachment = ExitAttachment()
 
         let key = [cacheKey, additionalKey].joined(separator: "-")
         if let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
-            let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
+            let exitView = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
             
             var appearance = ExitView.appearance()
-            if userInterfaceIdiom == .carPlay {
-                appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: userInterfaceIdiom))
+            if traitCollection.userInterfaceIdiom == .carPlay {
+                appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom))
             }
             
-            view.foregroundColor = appearance.foregroundColor
-            view.borderWidth = appearance.borderWidth
-            view.borderColor = appearance.borderColor
-            view.cornerRadius = appearance.cornerRadius
+            exitView.foregroundColor = appearance.foregroundColor
+            exitView.borderWidth = appearance.borderWidth
+            exitView.borderColor = appearance.borderColor
+            exitView.cornerRadius = appearance.cornerRadius
             
-            guard let image = takeSnapshot(on: view) else { return nil }
+            guard let image = takeSnapshot(on: exitView) else { return nil }
             imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
         }
