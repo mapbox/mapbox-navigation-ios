@@ -19,7 +19,7 @@ class InstructionPresenterTests: TestCase {
 
         let presenter = InstructionPresenter(exitInstruction,
                                              dataSource: label,
-                                             userInterfaceIdiom: .phone,
+                                             traitCollection: UITraitCollection(userInterfaceIdiom: .phone),
                                              downloadCompletion: nil)
         
         let attributed = presenter.attributedText()
@@ -46,7 +46,7 @@ class InstructionPresenterTests: TestCase {
             for instruction in instructions {
                 let presenter = InstructionPresenter(instruction,
                                                      dataSource: label,
-                                                     userInterfaceIdiom: .phone,
+                                                     traitCollection: UITraitCollection(userInterfaceIdiom: .phone),
                                                      downloadCompletion: nil)
                 label.attributedText = presenter.attributedText()
             }
