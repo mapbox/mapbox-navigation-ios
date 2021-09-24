@@ -55,7 +55,8 @@ public class InstructionsCardView: BaseInstructionsBannerView {
         secondaryLabel.showHighlightedTextColor = false
     }
     
-    // MARK: - Layout
+    // MARK: Layout
+    
     override func setupLayout() {
         // firstColumnWidth is the width of the left side of the banner containing the maneuver view and distance label
         let firstColumnWidth = BaseInstructionsBannerView.maneuverViewSize.width + BaseInstructionsBannerView.padding * 3

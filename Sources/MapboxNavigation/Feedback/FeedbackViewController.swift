@@ -62,6 +62,9 @@ public extension FeedbackViewControllerDelegate {
  A view controller containing a grid of buttons the user can use to denote an issue their current navigation experience.
  */
 public class FeedbackViewController: UIViewController, DismissDraggable, UIGestureRecognizerDelegate {
+    
+    // MARK: UI Configuration
+    
     static let sceneTitle = NSLocalizedString("FEEDBACK_TITLE", value: "Report Problem", comment: "Title of view controller for sending feedback")
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
@@ -76,15 +79,6 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         type.feedbackItems
     }
 
-    /**
-     Controls whether or not the feedback view controller shows a second level of detail for feedback items.
-     When disabled, feedback will be submitted on a single tap of a top level category.
-     When enabled, a first tap reveals an instance of FeedbackSubtypeViewController. A second tap on an item there will submit a feedback.
-     */
-    public var detailedFeedbackEnabled: Bool = false
-    
-    public weak var delegate: FeedbackViewControllerDelegate?
-    
     lazy var collectionView: UICollectionView = {
         let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -119,10 +113,37 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         return fullHeight
     }
     
+    // MARK: Feedback Configuration
+    
+    /**
+     Controls whether or not the feedback view controller shows a second level of detail for feedback items.
+     When disabled, feedback will be submitted on a single tap of a top level category.
+     When enabled, a first tap reveals an instance of FeedbackSubtypeViewController. A second tap on an item there will submit a feedback.
+     */
+    public var detailedFeedbackEnabled: Bool = false
+    
     /**
      The events manager used to send feedback events.
      */
     public weak var eventsManager: NavigationEventsManager?
+    
+    /**
+     View controller's delegate.
+     */
+    public weak var delegate: FeedbackViewControllerDelegate?
+    
+    /**
+     Instantly dismisses the FeedbackViewController if it is currently presented.
+     */
+    @objc public func dismissFeedback() {
+        dismissFeedbackItem()
+    }
+    
+    func dismissFeedbackItem() {
+        delegate?.feedbackViewControllerDidCancel(self)
+        currentFeedback = nil
+        dismiss(animated: true, completion: nil)
+    }
     
     /**
      Current feedback.
@@ -197,13 +218,6 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         present(controller, animated: true, completion: nil)
     }
     
-    /**
-     Instantly dismisses the FeedbackViewController if it is currently presented.
-     */
-    @objc public func dismissFeedback() {
-        dismissFeedbackItem()
-    }
-    
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
         // Only respond to touches outside/behind the view
         let isDescendant = touch.view?.isDescendant(of: view) ?? true
@@ -240,12 +254,6 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
             delegate?.feedbackViewController(self, didSend: item, feedback: feedback)
             eventsManager?.sendFeedback(feedback, type: item.type)
         }
-    }
-    
-    func dismissFeedbackItem() {
-        delegate?.feedbackViewControllerDidCancel(self)
-        currentFeedback = nil
-        dismiss(animated: true, completion: nil)
     }
 }
 

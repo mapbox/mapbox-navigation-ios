@@ -1,6 +1,9 @@
 import UIKit
 
 extension Bundle {
+    
+    // MARK: Accessing Mapbox-Specific Bundles
+    
     /**
      The Mapbox Navigation framework bundle.
      */

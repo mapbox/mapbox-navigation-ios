@@ -7,6 +7,8 @@ import MapboxDirections
 @available(iOS 12.0, *)
 public protocol CarPlaySearchControllerDelegate: CPSearchTemplateDelegate {
     
+    // MARK: Previewing the Route
+    
     /**
      Method, which is called whenever user selects search result.
      
@@ -14,6 +16,8 @@ public protocol CarPlaySearchControllerDelegate: CPSearchTemplateDelegate {
      - parameter completionHandler: A block object to be executed when route preview finishes.
      */
     func previewRoutes(to waypoint: Waypoint, completionHandler: @escaping () -> Void)
+    
+    // MARK: Templates Events
     
     /**
      Method, which is called whenever `CPSearchTemplate` is presented to give user the
@@ -41,6 +45,8 @@ public protocol CarPlaySearchControllerDelegate: CPSearchTemplateDelegate {
      animated or not.
      */
     func popTemplate(animated: Bool)
+    
+    // MARK: Interacting with Search Results
     
     /**
      The most recent search results.

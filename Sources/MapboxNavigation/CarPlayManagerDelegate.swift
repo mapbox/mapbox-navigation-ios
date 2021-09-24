@@ -13,6 +13,9 @@ import MapboxMaps
  */
 @available(iOS 12.0, *)
 public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
+    
+    // MARK: Customizing the Bar Buttons
+    
     /**
      Offers the delegate an opportunity to provide a customized list of leading bar buttons at the root of the template stack for the given activity.
      
@@ -53,27 +56,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, mapButtonsCompatibleWith traitCollection: UITraitCollection, in carPlayTemplate: CPTemplate, for activity: CarPlayActivity) -> [CPMapButton]?
     
-    /**
-     Asks the delegate to provide a navigation service. In multi-screen applications this should be the same instance used to guide the user along the route on the phone.
-     
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter routeResponse: The `RouteResponse` containing a route for which the returned route controller will manage location updates.
-     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
-     - parameter routeOptions: the options that were specified for the route request.
-     - parameter desiredSimulationMode: The desired simulation mode to use.
-     - returns: A navigation service that manages location updates along `route`.
-     */
-    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService?
-    
-    /**
-     Called when the CarPlay manager fails to fetch a route.
-     - parameter carPlayManager: The CarPlay manager instance.
-     - parameter waypoints: the waypoints for which a route could not be retrieved.
-     - parameter options: The route options that were attached to the route request.
-     - parameter error: The error returned from the directions API.
-     - returns: Optionally, a `CPNavigationAlert` to present to the user. If this method returns an alert, the CarPlay manager will transition back to the map template and display the alert. If it returns `nil`, the CarPlay manager will do nothing.
-     */
-    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert?
+    // MARK: Previewing a Route
     
     /**
      Offers the delegate the opportunity to customize a trip before it is presented to the user to preview.
@@ -104,6 +87,30 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter routeChoice: The possible route for the chosen trip.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, selectedPreviewFor trip: CPTrip, using routeChoice: CPRouteChoice)
+    
+    // MARK: Monitoring Route Progress and Updates
+    
+    /**
+     Asks the delegate to provide a navigation service. In multi-screen applications this should be the same instance used to guide the user along the route on the phone.
+     
+     - parameter carPlayManager: The CarPlay manager instance.
+     - parameter routeResponse: The `RouteResponse` containing a route for which the returned route controller will manage location updates.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: the options that were specified for the route request.
+     - parameter desiredSimulationMode: The desired simulation mode to use.
+     - returns: A navigation service that manages location updates along `route`.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService?
+    
+    /**
+     Called when the CarPlay manager fails to fetch a route.
+     - parameter carPlayManager: The CarPlay manager instance.
+     - parameter waypoints: the waypoints for which a route could not be retrieved.
+     - parameter options: The route options that were attached to the route request.
+     - parameter error: The error returned from the directions API.
+     - returns: Optionally, a `CPNavigationAlert` to present to the user. If this method returns an alert, the CarPlay manager will transition back to the map template and display the alert. If it returns `nil`, the CarPlay manager will do nothing.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager, didFailToFetchRouteBetween waypoints: [Waypoint]?, options: RouteOptions, error: DirectionsError) -> CPNavigationAlert?
     
     /**
      Called when navigation begins so that the containing app can update accordingly.
@@ -161,6 +168,8 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
                         didAdd finalDestinationAnnotation: PointAnnotation,
                         to parentViewController: UIViewController,
                         pointAnnotationManager: PointAnnotationManager)
+    
+    // MARK: Transitioning Between Templates
     
     /**
      Called when a template presented by the `CarPlayManager` is about to appear on the screen.

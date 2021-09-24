@@ -9,9 +9,53 @@ import MapboxCoreNavigation
  This class is an alternative to the more traditional banner interface provided by the `TopBannerViewController` class. To use `InstructionsCardViewController`, create an instance of it and pass it into the `NavigationOptions(styles:navigationService:voiceController:topBanner:bottomBanner:)` method.
  */
 open class InstructionsCardViewController: UIViewController {
-    typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
+    
+    // MARK: Retrieving Maneuver Data
     
     public var routeProgress: RouteProgress?
+    public var currentStepIndex: Int?
+    public var steps: [RouteStep]? {
+        guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
+        var mutatedSteps = steps
+        if mutatedSteps.count > 1 {
+            mutatedSteps = Array(mutatedSteps.suffix(from: stepIndex))
+            mutatedSteps.removeLast()
+        }
+        return mutatedSteps
+    }
+    
+    open func reloadDataSource() {
+        if currentStepIndex == nil, let progress = routeProgress {
+            currentStepIndex = progress.currentLegProgress.stepIndex
+            instructionCollectionView.reloadData()
+        } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
+            currentStepIndex = progress.currentLegProgress.stepIndex
+            instructionCollectionView.reloadData()
+        } else {
+            updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
+        }
+    }
+    
+    // MARK: Viewing Instructions
+    
+    typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
+    
+    public private(set) var isInPreview = false
+    
+    /**
+     The InstructionsCardCollection delegate.
+     */
+    public weak var cardCollectionDelegate: InstructionsCardCollectionDelegate?
+    
+    var currentInstruction: VisualInstructionBanner?
+    var instructionCollectionView: UICollectionView!
+    var instructionsCardLayout: InstructionsCardCollectionLayout!
+    
+    fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
+    fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
+    fileprivate let cardCollectionCellIdentifier = NSStringFromClass(InstructionsCardCell.self)
+    fileprivate let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
+    
     var cardSize: CGSize {
         var cardSize = CGSize(width: Int(floor(UIScreen.main.bounds.width * 0.8)), height: 140)
         
@@ -23,9 +67,6 @@ open class InstructionsCardViewController: UIViewController {
         return cardSize
     }
     
-    var instructionCollectionView: UICollectionView!
-    var instructionsCardLayout: InstructionsCardCollectionLayout!
-    
     lazy var junctionView: JunctionView = {
         let view: JunctionView = .forAutoLayout()
         view.isHidden = true
@@ -33,54 +74,42 @@ open class InstructionsCardViewController: UIViewController {
         return view
     }()
     
-    public private(set) var isInPreview = false
-    public var currentStepIndex: Int?
-    
-    var currentInstruction: VisualInstructionBanner?
-    
-    public var steps: [RouteStep]? {
-        guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
-        var mutatedSteps = steps
-        if mutatedSteps.count > 1 {
-            mutatedSteps = Array(mutatedSteps.suffix(from: stepIndex))
-            mutatedSteps.removeLast()
+    open func updateCurrentVisibleInstructionCard(for instruction: VisualInstructionBanner) {
+        guard let remainingStepsCount = routeProgress?.currentLegProgress.remainingSteps.endIndex else { return }
+        let indexPath = IndexPath(row: 0, section: 0)
+        if indexPath.row < remainingStepsCount, let container = instructionContainerView(at: indexPath) {
+            container.updateInstruction(instruction)
         }
-        return mutatedSteps
     }
     
-    var distancesFromCurrentLocationToManeuver: [CLLocationDistance]? {
-        guard let progress = routeProgress, let steps = steps else { return nil }
-        let distanceRemaining = progress.currentLegProgress.currentStepProgress.distanceRemaining
-        let distanceBetweenSteps = [distanceRemaining] + progress.remainingSteps.map {$0.distance}
-        guard let firstDistance = distanceBetweenSteps.first else { return nil }
-        
-        var distancesFromCurrentLocationToManeuver = [CLLocationDistance]()
-        distancesFromCurrentLocationToManeuver.reserveCapacity(steps.count)
-        
-        var cumulativeDistance: CLLocationDistance = firstDistance > 5 ? firstDistance : 0
-        distancesFromCurrentLocationToManeuver.append(cumulativeDistance)
-        
-        for index in 1..<distanceBetweenSteps.endIndex {
-            let safeIndex = index < distanceBetweenSteps.endIndex ? index : distanceBetweenSteps.endIndex - 1
-            let previousDistance = distanceBetweenSteps[safeIndex-1]
-            let currentDistance = distanceBetweenSteps[safeIndex]
-            let cardDistance = previousDistance + currentDistance
-            cumulativeDistance += cardDistance > 5 ? cardDistance : 0
-            distancesFromCurrentLocationToManeuver.append(cumulativeDistance)
+    open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
+        guard let legProgress = routeProgress?.currentLegProgress else { return }
+        let remainingSteps = legProgress.remainingSteps
+        guard let currentCardStep = remainingSteps.first else { return }
+        for index in indexPaths.startIndex..<indexPaths.endIndex {
+            let indexPath = indexPaths[index]
+            if let container = instructionContainerView(at: indexPath), indexPath.row < remainingSteps.endIndex {
+                let visibleStep = remainingSteps[indexPath.row]
+                let distance = currentCardStep == visibleStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
+                container.updateInstructionCard(distance: distance)
+            }
         }
-        
-        return distancesFromCurrentLocationToManeuver
     }
     
-    /**
-     The InstructionsCardCollection delegate.
-     */
-    public weak var cardCollectionDelegate: InstructionsCardCollectionDelegate?
+    public func stopPreview() {
+        guard isInPreview else { return }
+        instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+        isInPreview = false
+    }
     
-    fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
-    fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
-    fileprivate let cardCollectionCellIdentifier = NSStringFromClass(InstructionsCardCell.self)
-    fileprivate let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
+    public func instructionContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
+        guard let cell = instructionCollectionView.cellForItem(at: indexPath),
+              cell.subviews.count > 1 else {
+            return nil
+        }
+        
+        return cell.subviews.compactMap{ $0 as? InstructionsCardContainerView }.first
+    }
     
     override open func viewDidLoad() {
         super.viewDidLoad()
@@ -114,21 +143,6 @@ open class InstructionsCardViewController: UIViewController {
         removeObservers()
     }
     
-    // MARK: - Notification observer methods
-    
-    func addObservers() {
-        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
-    }
-    
-    func removeObservers() {
-        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
-    }
-    
-    @objc func orientationDidChange(_ notification: Notification) {
-        instructionsCardLayout.invalidateLayout()
-        handlePagingforScrollToItem(indexPath: indexBeforeSwipe)
-    }
-    
     open override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         instructionsCardLayout.invalidateLayout()
@@ -159,46 +173,12 @@ open class InstructionsCardViewController: UIViewController {
         NSLayoutConstraint.activate(junctionViewConstraints)
     }
     
-    open func reloadDataSource() {
-        if currentStepIndex == nil, let progress = routeProgress {
-            currentStepIndex = progress.currentLegProgress.stepIndex
-            instructionCollectionView.reloadData()
-        } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
-            currentStepIndex = progress.currentLegProgress.stepIndex
-            instructionCollectionView.reloadData()
-        } else {
-            updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
-        }
-    }
-    
-    open func updateCurrentVisibleInstructionCard(for instruction: VisualInstructionBanner) {
-        guard let remainingStepsCount = routeProgress?.currentLegProgress.remainingSteps.endIndex else { return }
-        let indexPath = IndexPath(row: 0, section: 0)
-        if indexPath.row < remainingStepsCount, let container = instructionContainerView(at: indexPath) {
-            container.updateInstruction(instruction)
-        }
-    }
-    
-    open func updateVisibleInstructionCards(at indexPaths: [IndexPath]) {
-        guard let legProgress = routeProgress?.currentLegProgress else { return }
-        let remainingSteps = legProgress.remainingSteps
-        guard let currentCardStep = remainingSteps.first else { return }
-        for index in indexPaths.startIndex..<indexPaths.endIndex {
-            let indexPath = indexPaths[index]
-            if let container = instructionContainerView(at: indexPath), indexPath.row < remainingSteps.endIndex {
-                let visibleStep = remainingSteps[indexPath.row]
-                let distance = currentCardStep == visibleStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
-                container.updateInstructionCard(distance: distance)
-            }
-        }
-    }
-    
     func snapToIndexPath(_ indexPath: IndexPath) {
         guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
         handlePagingforScrollToItem(indexPath: indexPath)
     }
     
-    public func handlePagingforScrollToItem(indexPath: IndexPath) {
+    func handlePagingforScrollToItem(indexPath: IndexPath) {
         if #available(iOS 14.0, *) {
             instructionsCardLayout.collectionView?.isPagingEnabled = false
             instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
@@ -206,21 +186,6 @@ open class InstructionsCardViewController: UIViewController {
             return
         }
         instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
-    }
-    
-    public func stopPreview() {
-        guard isInPreview else { return }
-        instructionCollectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
-        isInPreview = false
-    }
-    
-    public func instructionContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
-        guard let cell = instructionCollectionView.cellForItem(at: indexPath),
-              cell.subviews.count > 1 else {
-            return nil
-        }
-        
-        return cell.subviews.compactMap{ $0 as? InstructionsCardContainerView }.first
     }
     
     fileprivate func snappedIndexPath() -> IndexPath {
@@ -260,6 +225,21 @@ open class InstructionsCardViewController: UIViewController {
             }
         }
         return scrollTargetIndexPath
+    }
+    
+    // MARK: Notification Observer Methods
+    
+    func addObservers() {
+        NotificationCenter.default.addObserver(self, selector: #selector(orientationDidChange(_:)), name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    func removeObservers() {
+        NotificationCenter.default.removeObserver(self, name: UIDevice.orientationDidChangeNotification, object: nil)
+    }
+    
+    @objc func orientationDidChange(_ notification: Notification) {
+        instructionsCardLayout.invalidateLayout()
+        handlePagingforScrollToItem(indexPath: indexBeforeSwipe)
     }
 }
 
@@ -323,6 +303,9 @@ extension InstructionsCardViewController: UICollectionViewDelegateFlowLayout {
 }
 
 extension InstructionsCardViewController: NavigationComponent {
+    
+    // MARK: NavigationComponent Implementation
+    
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         reloadDataSource()
@@ -344,6 +327,9 @@ extension InstructionsCardViewController: NavigationComponent {
 }
 
 extension InstructionsCardViewController: InstructionsCardContainerViewDelegate {
+    
+    // MARK: InstructionsCardContainerViewDelegate Implementation
+    
     public func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return cardCollectionDelegate?.primaryLabel(primaryLabel, willPresent: instruction, as: presented)
     }
@@ -354,6 +340,9 @@ extension InstructionsCardViewController: InstructionsCardContainerViewDelegate 
 }
 
 extension InstructionsCardViewController: NavigationMapInteractionObserver {
+    
+    // MARK: NavigationMapInteractionObserver Implementation
+    
     public func navigationViewController(didCenterOn location: CLLocation) {
         stopPreview()
     }
