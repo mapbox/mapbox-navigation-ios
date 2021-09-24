@@ -72,6 +72,11 @@ open class DayStyle: Style {
         statusBarStyle = .default
     }
     
+    @available(iOS 12.0, *)
+    open override func apply(_ userInterfaceStyle: UIUserInterfaceStyle?) {
+        styleInstructions(userInterfaceStyle)
+    }
+    
     open override func apply() {
         super.apply()
         
@@ -118,18 +123,29 @@ open class DayStyle: Style {
         EndOfRouteStaticLabel.appearance().normalTextColor = #colorLiteral(red: 0.217173934, green: 0.3645851612, blue: 0.489295125, alpha: 1)
         EndOfRouteTitleLabel.appearance().normalFont = .systemFont(ofSize: 36.0)
         EndOfRouteTitleLabel.appearance().normalTextColor = .black
+        
+        // On iOS, for Day style, regardless of currently used `UIUserInterfaceStyle`, `ExitView` and
+        // `GenericRouteShield` use black color as a default one.
         ExitView.appearance().backgroundColor = .clear
         ExitView.appearance().borderWidth = 1.0
         ExitView.appearance().cornerRadius = 5.0
         ExitView.appearance().foregroundColor = .black
-        ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
-        FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        FloatingButton.appearance().tintColor = tintColor
+        ExitView.appearance().borderColor = .black
+        
         GenericRouteShield.appearance().backgroundColor = .clear
         GenericRouteShield.appearance().borderWidth = 1.0
         GenericRouteShield.appearance().cornerRadius = 5.0
         GenericRouteShield.appearance().foregroundColor = .black
-        GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).foregroundColor = .white
+        GenericRouteShield.appearance().borderColor = .black
+        
+        if #available(iOS 12.0, *) {
+            styleInstructions(UIScreen.mainCarPlay?.traitCollection.userInterfaceStyle)
+        } else {
+            setDefaultCarPlayInstructionsStyling()
+        }
+        
+        FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        FloatingButton.appearance().tintColor = tintColor
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).customBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).highlightedBackgroundColor = UIColor(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
@@ -236,5 +252,53 @@ open class DayStyle: Style {
         WayNameLabel.appearance().normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
         WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
+    }
+    
+    @available(iOS 12.0, *)
+    func styleInstructions(_ userInterfaceStyle: UIUserInterfaceStyle?) {
+        guard let userInterfaceStyle = userInterfaceStyle else { return }
+        
+        let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+        
+        ExitView.appearance(for: carPlayTraitCollection).backgroundColor = .clear
+        ExitView.appearance(for: carPlayTraitCollection).borderWidth = 1.0
+        ExitView.appearance(for: carPlayTraitCollection).cornerRadius = 5.0
+        
+        GenericRouteShield.appearance(for: carPlayTraitCollection).backgroundColor = .clear
+        GenericRouteShield.appearance(for: carPlayTraitCollection).borderWidth = 1.0
+        GenericRouteShield.appearance(for: carPlayTraitCollection).cornerRadius = 5.0
+        
+        // On CarPlay, `ExitView` and `GenericRouteShield` styling depends on `UIUserInterfaceStyle`,
+        // which was set on CarPlay external screen.
+        // In case if it was set to `UIUserInterfaceStyle.light` white color will be used, otherwise
+        // black.
+        // Due to iOS issue (`UIScreen.screens` returns CarPlay screen `traitCollection`
+        // property of which returns incorrect value), this property has to be taken from
+        // `UITraitEnvironment.traitCollectionDidChange(_:)`.
+        switch userInterfaceStyle {
+        case .dark:
+            let defaultColor = UIColor.white
+            
+            ExitView.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
+            ExitView.appearance(for: carPlayTraitCollection).borderColor = defaultColor
+            
+            GenericRouteShield.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
+            GenericRouteShield.appearance(for: carPlayTraitCollection).borderColor = defaultColor
+        case .light:
+            fallthrough
+        default:
+            setDefaultCarPlayInstructionsStyling()
+        }
+    }
+    
+    func setDefaultCarPlayInstructionsStyling() {
+        let defaultColor = UIColor.black
+        let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+        
+        ExitView.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
+        ExitView.appearance(for: carPlayTraitCollection).borderColor = defaultColor
+        
+        GenericRouteShield.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
+        GenericRouteShield.appearance(for: carPlayTraitCollection).borderColor = defaultColor
     }
 }

@@ -49,6 +49,9 @@ open class Style: NSObject {
      */
     @objc open func apply() { }
     
+    @available(iOS 12.0, *)
+    open func apply(_ userInterfaceStyle: UIUserInterfaceStyle? = nil) { }
+    
     @objc public required override init() { }
 }
 
