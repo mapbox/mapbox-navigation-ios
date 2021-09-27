@@ -25,7 +25,7 @@
 * MapboxCoreNavigation now depends on [MapboxMobileEvents v1._x_](https://github.com/mapbox/mapbox-events-ios/releases/tag/v1.0.0). The dependency on MapboxMobileEvents is subject to change or removal in a future minor release of MapboxCoreNavigation, so your Podfile, Cartfile, or Package.swift should not explicitly depend on MapboxMobileEvents. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
 * MapboxCoreNavigation now depends on [MapboxDirections v2.0.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.0.0-rc.2). ([#3391](https://github.com/mapbox/mapbox-navigation-ios/pull/3391))
 * MapboxCoreNavigation now depends on [Turf v2.0.0-rc.1](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0-rc.1). ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
-* MapboxCoreNavigation now depends on [MapboxNavigationNative v66._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/66.0.0). ([#3342](https://github.com/mapbox/mapbox-navigation-ios/pull/3342))
+* MapboxCoreNavigation now depends on [MapboxNavigationNative v67._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/67.0.0). ([#3391](https://github.com/mapbox/mapbox-navigation-ios/pull/3391))
 * MapboxCoreNavigation now depends on [MapboxCommon v19._x_](https://github.com/mapbox/mapbox-common-ios/releases/tag/v19.0.0). ([#3391](https://github.com/mapbox/mapbox-navigation-ios/pull/3391))
 * Removed the optional dependency on [MapboxGeocoder.swift](https://github.com/mapbox/MapboxGeocoder.swift/). ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999), [#3183](https://github.com/mapbox/mapbox-navigation-ios/issues/3183))
 
