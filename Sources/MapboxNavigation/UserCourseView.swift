@@ -21,6 +21,8 @@ public extension CourseUpdatable {
             let angle = CGFloat(CLLocationDegrees(direction - location.course).toRadians())
             if let self = self as? UserPuckCourseView {
                 self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            } else if !(self is UserHaloCourseView) {
+                self.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
             }
             
             // `UserCourseView` pitch is changed only during transition to the overview mode.
