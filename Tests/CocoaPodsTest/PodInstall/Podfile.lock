@@ -2,12 +2,12 @@ PODS:
   - MapboxCommon (18.0.0)
   - MapboxCoreMaps (10.0.0-rc.8):
     - MapboxCommon (~> 18.0)
-  - MapboxCoreNavigation (2.0.0-rc.2):
-    - MapboxDirections-pre (= 2.0.0-rc.1)
+  - MapboxCoreNavigation (2.0.0-rc.3):
+    - MapboxDirections-pre (= 2.0.0-rc.2)
     - MapboxMobileEvents (~> 1.0.0)
     - MapboxNavigationNative (~> 66.0)
     - Turf (= 2.0.0-rc.1)
-  - MapboxDirections-pre (2.0.0-rc.1):
+  - MapboxDirections-pre (2.0.0-rc.2):
     - Polyline (~> 5.0)
     - Turf (~> 2.0.0-rc.1)
   - MapboxMaps (10.0.0-rc.8):
@@ -16,13 +16,13 @@ PODS:
     - MapboxMobileEvents (= 1.0.3)
     - Turf (= 2.0.0-rc.1)
   - MapboxMobileEvents (1.0.3)
-  - MapboxNavigation (2.0.0-rc.2):
-    - MapboxCoreNavigation (= 2.0.0-rc.2)
+  - MapboxNavigation (2.0.0-rc.3):
+    - MapboxCoreNavigation (= 2.0.0-rc.3)
     - MapboxMaps (= 10.0.0-rc.8)
     - MapboxMobileEvents (~> 1.0.0)
     - MapboxSpeech-pre (= 2.0.0-rc.1)
     - Solar-dev (~> 3.0)
-  - MapboxNavigationNative (66.0.1):
+  - MapboxNavigationNative (66.0.3):
     - MapboxCommon (~> 18.0)
   - MapboxSpeech-pre (2.0.0-rc.1)
   - Polyline (5.0.2)
@@ -55,12 +55,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   MapboxCommon: ea974a60b24bf4ce16314a5c99384512e7d5aa4e
   MapboxCoreMaps: 130eab4f9861dbb9b09b5e25b65ce701dec4a91a
-  MapboxCoreNavigation: 84980abf07a94972634ed1e27a99b403c477061b
-  MapboxDirections-pre: 25013fec9715dbc17c1c1798da3105e9b3140cd9
+  MapboxCoreNavigation: 04ccf98966e95d09635e966fc2743894c415f685
+  MapboxDirections-pre: e8f26bcf4324e6d7317bfb46ca9439eb7eb8ffeb
   MapboxMaps: 10ffa18d5543a7ac5a2d4973647197f15e624baa
   MapboxMobileEvents: 852274da39a3ed9a56dfff3bab64a055d23768c7
-  MapboxNavigation: 265f6a34546c6258d58f1818d879c99fdd0732e6
-  MapboxNavigationNative: 9579d1b04221fee5f8bd01c7da33c278145d2c09
+  MapboxNavigation: cc3819653019f13b0689c15949c178d7a738b88a
+  MapboxNavigationNative: c8a72b040bb8ac8fd0cc0ad75bae235e51be0f59
   MapboxSpeech-pre: c2739e843762ac6b222fb7132ac71903aa750af3
   Polyline: fce41d72e1146c41c6d081f7656827226f643dff
   Solar-dev: 4612dc9878b9fed2667d23b327f1d4e54e16e8d0

@@ -77,7 +77,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     func subscribeForNotifications(_ viewportDataSourceType: ViewportDataSourceType = .passive) {
         switch viewportDataSourceType {
         case .raw:
-            self.mapView?.location.addLocationConsumer(newConsumer: self)
+            mapView?.location.addLocationConsumer(newConsumer: self)
         case .passive:
             NotificationCenter.default.addObserver(self,
                                                    selector: #selector(progressDidChange(_:)),
@@ -192,7 +192,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let geometryFramingAfterManeuver = followingCameraOptions.geometryFramingAfterManeuver
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
             let pitch = followingCameraOptions.defaultPitch * pitchСoefficient
-            let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+            var carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+            
+            // Bottom of the viewport on CarPlay should be placed at the same level with
+            // trip estimate view.
+            carPlayCameraPadding.bottom += 25.0
             
             if geometryFramingAfterManeuver.enabled {
                 let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -240,21 +244,21 @@ public class NavigationViewportDataSource: ViewportDataSource {
             if options.followingCameraOptions.zoomUpdatesAllowed {
                 let defaultZoomLevel = 12.0
                 
-                followingMobileCamera.zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                       pitch: pitch,
-                                                       maxPitch: followingCameraOptions.defaultPitch,
-                                                       edgeInsets: viewportPadding,
-                                                       defaultZoomLevel: defaultZoomLevel,
-                                                       maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
-                                                       minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
+                followingMobileCamera.zoom = zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+                                                  pitch: pitch,
+                                                  maxPitch: followingCameraOptions.defaultPitch,
+                                                  edgeInsets: viewportPadding,
+                                                  defaultZoomLevel: defaultZoomLevel,
+                                                  maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
+                                                  minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
                 
-                followingCarPlayCamera.zoom = self.zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                        pitch: pitch,
-                                                        maxPitch: followingCameraOptions.defaultPitch,
-                                                        edgeInsets: carPlayCameraPadding,
-                                                        defaultZoomLevel: defaultZoomLevel,
-                                                        maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
-                                                        minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
+                followingCarPlayCamera.zoom = zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
+                                                   pitch: pitch,
+                                                   maxPitch: followingCameraOptions.defaultPitch,
+                                                   edgeInsets: carPlayCameraPadding,
+                                                   defaultZoomLevel: defaultZoomLevel,
+                                                   maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
+                                                   minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
             }
             
             if options.followingCameraOptions.bearingUpdatesAllowed {
@@ -272,17 +276,19 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 followingCarPlayCamera.bearing = bearing
             }
             
-            let followingMobileCameraAnchor = self.anchor(pitchСoefficient,
-                                                          maxPitch: followingCameraOptions.defaultPitch,
-                                                          bounds: mapView.bounds,
-                                                          edgeInsets: viewportPadding)
+            let followingMobileCameraAnchor = anchor(pitchСoefficient,
+                                                     maxPitch: followingCameraOptions.defaultPitch,
+                                                     bounds: mapView.bounds,
+                                                     edgeInsets: viewportPadding)
             
             followingMobileCamera.anchor = followingMobileCameraAnchor
             
-            followingCarPlayCamera.anchor = self.anchor(pitchСoefficient,
-                                                        maxPitch: followingCameraOptions.defaultPitch,
-                                                        bounds: mapView.bounds,
-                                                        edgeInsets: carPlayCameraPadding)
+            let followingCarPlayCameraAnchor = anchor(pitchСoefficient,
+                                                      maxPitch: followingCameraOptions.defaultPitch,
+                                                      bounds: mapView.bounds,
+                                                      edgeInsets: carPlayCameraPadding)
+            
+            followingCarPlayCamera.anchor = followingCarPlayCameraAnchor
             
             if options.followingCameraOptions.pitchUpdatesAllowed {
                 followingMobileCamera.pitch = CGFloat(pitch)
@@ -294,7 +300,15 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                              left: viewportPadding.left,
                                                              bottom: UIScreen.main.bounds.height - followingMobileCameraAnchor.y + 1.0,
                                                              right: viewportPadding.right)
-                followingCarPlayCamera.padding = carPlayCameraPadding
+                
+                if let mainCarPlayScreen = UIScreen.mainCarPlay {
+                    followingCarPlayCamera.padding = UIEdgeInsets(top: followingCarPlayCameraAnchor.y,
+                                                                  left: carPlayCameraPadding.left,
+                                                                  bottom: mainCarPlayScreen.bounds.height - followingCarPlayCameraAnchor.y + 1.0,
+                                                                  right: carPlayCameraPadding.right)
+                } else {
+                    followingCarPlayCamera.padding = carPlayCameraPadding
+                }
             }
         }
     }
@@ -331,20 +345,20 @@ public class NavigationViewportDataSource: ViewportDataSource {
         }
         
         if overviewCameraOptions.zoomUpdatesAllowed {
-            overviewMobileCamera.zoom = self.zoom(remainingCoordinatesOnRoute,
-                                                  edgeInsets: viewportPadding,
-                                                  maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
+            overviewMobileCamera.zoom = zoom(remainingCoordinatesOnRoute,
+                                             edgeInsets: viewportPadding,
+                                             maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
             
-            overviewCarPlayCamera.zoom = self.zoom(remainingCoordinatesOnRoute,
-                                                   edgeInsets: carPlayCameraPadding,
-                                                   maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
+            overviewCarPlayCamera.zoom = zoom(remainingCoordinatesOnRoute,
+                                              edgeInsets: carPlayCameraPadding,
+                                              maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
         }
         
-        overviewMobileCamera.anchor = self.anchor(bounds: mapView.bounds,
-                                                  edgeInsets: viewportPadding)
+        overviewMobileCamera.anchor = anchor(bounds: mapView.bounds,
+                                             edgeInsets: viewportPadding)
         
-        overviewCarPlayCamera.anchor = self.anchor(bounds: mapView.bounds,
-                                                   edgeInsets: carPlayCameraPadding)
+        overviewCarPlayCamera.anchor = anchor(bounds: mapView.bounds,
+                                              edgeInsets: carPlayCameraPadding)
         
         if overviewCameraOptions.bearingUpdatesAllowed {
             // In case if `NavigationCamera` is already in `NavigationCameraState.overview` value

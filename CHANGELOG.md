@@ -56,7 +56,7 @@
 * Removed the `NavigationMapView.userCourseView` property in favor of the associated value when `NavigationMapView.userLocationStyle` is set to `UserLocationStyle.courseView(_:)`. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
 * If you need to customize the appearance of the user location indicator, you can subclass `UserPuckCourseView` and `UserHaloCourseView` as a starting point. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
 * Added the `UserHaloCourseView.haloBorderWidth` property for changing the width of the ring around the halo view. ([#3309](https://github.com/mapbox/mapbox-navigation-ios/pull/3309))
-* Fixed an issue where setting  `UserPuckCourseView.puckColor` in a `Style` subclass had no effect. ([#3306](https://github.com/mapbox/mapbox-navigation-ios/pull/3306))
+* Fixed an issue where setting `UserPuckCourseView.puckColor` in a `Style` subclass had no effect. ([#3306](https://github.com/mapbox/mapbox-navigation-ios/pull/3306))
 * Fixed a memory leak in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
 
 #### Route overlay
@@ -78,7 +78,7 @@
 
 * Removed the `InstructionsBannerViewDelegate.didDragInstructionsBanner(_:)` method. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Removed the `StatusView.delegate` and `StatusView.canChangeValue` properties and the `StatusViewDelegate` and `DeprecatedStatusViewDelegate` protocols. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
-* Removed the  `BottomBannerViewController(delegate:)` initializer. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
+* Removed the `BottomBannerViewController(delegate:)` initializer. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
 * The top banner can now show a wider variety of turn lane configurations, such as combination U-turn/left turn lanes and combination through/slight right turn lanes. ([#2882](https://github.com/mapbox/mapbox-navigation-ios/pull/2882))
 * Fixed an issue where the current road name label flashed when the camera state changed or the user traveled onto an unnamed road. ([#2958](https://github.com/mapbox/mapbox-navigation-ios/pull/2958))
 * Fixed an issue where the current road name label sometimes displayed the name of an intersecting road instead of the current road or blinked in and out. ([#3257](https://github.com/mapbox/mapbox-navigation-ios/pull/3257))
@@ -158,6 +158,7 @@
 * Renamed the `CarPlayManagerDelegate.carPlayManager(_:navigationServiceAlong:routeIndex:routeOptions:desiredSimulationMode:)` method to `CarPlayManagerDelegate.carPlayManager(_:navigationServiceFor:routeIndex:routeOptions:desiredSimulationMode:)`. It now returns an optional `NavigationService`; if it is `nil`, a `MapboxNavigationService` will be used by default. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
 * Renamed the `CarPlayManagerDelegate.carplayManagerShouldDisableIdleTimer(_:)` method to `CarPlayManagerDelegate.carPlayManagerShouldDisableIdleTimer(_:)`. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
 * Added the `CarPlayManagerDelegate.carPlayManager(_:templateWillAppear:animated:)`, `CarPlayManagerDelegate.carPlayManager(_:templateDidAppear:animated:)`, `CarPlayManagerDelegate.carPlayManager(_:templateWillDisappear:animated:)`, and `CarPlayManagerDelegate.carPlayManager(_:templateDidDisappear:animated:)` methods to pass through the corresponding methods from `CPInterfaceControllerDelegate`. ([#3219](https://github.com/mapbox/mapbox-navigation-ios/pull/3219))
+* Fixed an issue where `CPMapTemplate.tripEstimateStyle` uses dark appearance even if light appearance is selected. ([#3397](https://github.com/mapbox/mapbox-navigation-ios/pull/3397))
 
 ### User feedback
 
@@ -166,13 +167,13 @@
 * Removed the `EventsManager` type alias. ([#2993](https://github.com/mapbox/mapbox-navigation-ios/pull/2993))
 * Feedback events now include a snapshot of `NavigationViewController` that is taken sooner, when the problem is more likely to be apparent. ([#3049](https://github.com/mapbox/mapbox-navigation-ios/pull/3049))
 * You can now manage the feedback event lifecycle, allowing the user to submit additional details later. Use `NavigationEventsManager.createFeedback()` to create a `FeedbackEvent` and `NavigationEventsManager.sendActiveNavigationFeedback(_:type:description:)` to send it to Mapbox. `FeedbackEvent` conforms to the `Codable` protocol, so your application can store incomplete feedback across sessions if necessary. ([#3154](https://github.com/mapbox/mapbox-navigation-ios/pull/3154), [#3318](https://github.com/mapbox/mapbox-navigation-ios/pull/3318))
-* To submit feedback during passive navigation, use  `NavigationEventsManager.createFeedback()` to create a `FeedbackEvent` and `NavigationEventsManager.sendPassiveNavigationFeedback(_:type:description:)` to send it to Mapbox. This method accepts `PassiveNavigationFeedbackType` with feedback types specific to the passive navigation. ([#3154](https://github.com/mapbox/mapbox-navigation-ios/pull/3154), [#3318](https://github.com/mapbox/mapbox-navigation-ios/pull/3318))
+* To submit feedback during passive navigation, use `NavigationEventsManager.createFeedback()` to create a `FeedbackEvent` and `NavigationEventsManager.sendPassiveNavigationFeedback(_:type:description:)` to send it to Mapbox. This method accepts `PassiveNavigationFeedbackType` with feedback types specific to the passive navigation. ([#3154](https://github.com/mapbox/mapbox-navigation-ios/pull/3154), [#3318](https://github.com/mapbox/mapbox-navigation-ios/pull/3318))
 * Added an optional `NavigationEventsManager.userInfo` property that can be sent with all navigation events. The new property can contain application metadata, such as the application name and version, that is included in each event to help Mapbox triage and diagnose unexpected behavior. ([#3007](https://github.com/mapbox/mapbox-navigation-ios/pull/3007)).
 * Fixed a missing feedback subtype description for `LooksIncorrectSubtype.incorrectSpeedLimit` and all “other” subtypes. ([#3238](https://github.com/mapbox/mapbox-navigation-ios/pull/3238))
-* Renamed the `FeedbackViewController(eventsManager:)` initializer to  `FeedbackViewController(eventsManager:type:)`. You can now customize the view controller to show only the feedback types specific to passive navigation. ([#3323](https://github.com/mapbox/mapbox-navigation-ios/pull/3323))
+* Renamed the `FeedbackViewController(eventsManager:)` initializer to `FeedbackViewController(eventsManager:type:)`. You can now customize the view controller to show only the feedback types specific to passive navigation. ([#3323](https://github.com/mapbox/mapbox-navigation-ios/pull/3323))
 * Renamed the `FeedbackType` enumeration to `ActiveNavigationFeedbackType` and the `EventsManagerDataSource` protocol to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
 * Renamed the user-facing feedback categories and subcategories for active turn-by-turn navigation that are represented at runtime by the `ActiveNavigationFeedbackType` enumeration. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
-* You can now pass your own screenshot to the `NavigationEventsManager.createFeedback()` when a user submits a feedback. Screenshots help Mapbox to determine where issues exist for review and correction.
+* Added the ability to pass your own screenshot to the `NavigationEventsManager.createFeedback()` when a user submits a feedback. Screenshots help Mapbox to determine where issues exist for review and correction. ([#3380]((https://github.com/mapbox/mapbox-navigation-ios/pull/3380))
 
 ### Other changes
 
