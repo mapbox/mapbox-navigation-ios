@@ -58,6 +58,7 @@
 * Added the `UserHaloCourseView.haloBorderWidth` property for changing the width of the ring around the halo view. ([#3309](https://github.com/mapbox/mapbox-navigation-ios/pull/3309))
 * Fixed an issue where setting `UserPuckCourseView.puckColor` in a `Style` subclass had no effect. ([#3306](https://github.com/mapbox/mapbox-navigation-ios/pull/3306))
 * Fixed a memory leak in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
+* Fixed the pitch issue of `UserHaloCourseView` when map tilted during active guidance navigation. ([#3407](https://github.com/mapbox/mapbox-navigation-ios/issues/3407))
 
 #### Route overlay
 
