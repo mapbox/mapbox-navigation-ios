@@ -61,24 +61,6 @@ open class UserHaloCourseView: UIView, CourseUpdatable {
         haloView.backgroundColor = .clear
         addSubview(haloView)
     }
-    
-    /**
-     Transforms the location of the user halo course view.
-     */
-    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
-        let duration: TimeInterval = animated ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            // `UserHaloCourseView` pitch is changed only during transition to the overview mode.
-            let pitch = CGFloat(navigationCameraState == .transitionToOverview ? 0.0 : CLLocationDegrees(pitch).toRadians())
-            var transform = CATransform3DRotate(CATransform3DIdentity, pitch, 1.0, 0, 0)
-
-            let isCameraFollowing = navigationCameraState == .following
-            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
-            transform = CATransform3DScale(transform, scale, scale, 1)
-            transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
-            self.layer.sublayerTransform = transform
-        }, completion: nil)
-    }
 }
 
 class UserHaloStyleKitView: UIView {
