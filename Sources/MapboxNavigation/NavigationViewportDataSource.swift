@@ -193,6 +193,9 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let pitchСoefficient = self.pitchСoefficient(routeProgress, currentCoordinate: location.coordinate)
             let pitch = followingCameraOptions.defaultPitch * pitchСoefficient
             var carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
+            
+            // Bottom of the viewport on CarPlay should be placed at the same level with
+            // trip estimate view.
             carPlayCameraPadding.bottom += 25.0
             
             if geometryFramingAfterManeuver.enabled {
