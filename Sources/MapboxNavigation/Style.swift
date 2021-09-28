@@ -49,8 +49,14 @@ open class Style: NSObject {
      */
     @objc open func apply() { }
     
+    /**
+     Applies the style based on provided `UITraitCollection`.
+     
+     - parameter traitCollection: `UITraitCollection` instance, properties of which
+     (e.g. `userInterfaceStyle`, `userInterfaceIdiom` etc), will be used for applying style.
+     */
     @available(iOS 12.0, *)
-    open func apply(_ userInterfaceStyle: UIUserInterfaceStyle? = nil) { }
+    open func apply(for traitCollection: UITraitCollection?) { }
     
     @objc public required override init() { }
 }

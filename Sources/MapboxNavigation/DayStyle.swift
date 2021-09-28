@@ -73,8 +73,8 @@ open class DayStyle: Style {
     }
     
     @available(iOS 12.0, *)
-    open override func apply(_ userInterfaceStyle: UIUserInterfaceStyle?) {
-        styleInstructions(userInterfaceStyle)
+    open override func apply(for traitCollection: UITraitCollection?) {
+        styleInstructions(traitCollection?.userInterfaceStyle)
     }
     
     open override func apply() {
