@@ -51,7 +51,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     weak var mapView: MapView?
     
-    // MARK: - Initializer methods
+    // MARK: Initializer Methods
     
     /**
      Initializer of `NavigationViewportDataSource` object.
@@ -72,7 +72,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         unsubscribeFromNotifications()
     }
     
-    // MARK: - Notifications observer methods
+    // MARK: Notifications Observer Methods
     
     func subscribeForNotifications(_ viewportDataSourceType: ViewportDataSourceType = .passive) {
         switch viewportDataSourceType {
@@ -115,7 +115,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         ])
     }
     
-    // MARK: - CameraOptions methods
+    // MARK: CameraOptions Methods
     
     func cameraOptions(_ rawLocation: CLLocation? = nil,
                        passiveLocation: CLLocation? = nil,
@@ -487,7 +487,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
 }
 
-// MARK: - LocationConsumer delegate
+// MARK: LocationConsumer Delegate
 
 extension NavigationViewportDataSource: LocationConsumer {
     

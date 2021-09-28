@@ -56,28 +56,6 @@ extension SpokenInstruction {
  You can also subclass `RouteVoiceController` to implement you own mechanism of monitoring navgiation events and calling `speechSynthesizer`.
  */
 open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
-    typealias AudioControlFailureHandler = (SpeechError) -> Void
-    
-    /**
-     `SpeechSynthesizing` implementation, used to vocalize the spoken instructions. Defaults to `MultiplexedSpeechSynthesizer`
-     */
-    public let speechSynthesizer: SpeechSynthesizing
-    /**
-     If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
-     */
-    public var playRerouteSound = true
-    
-    /**
-     Sound to play prior to reroute. Inherits volume level from `volume`.
-     */
-    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
-    
-    /**
-     Delegate used for getting metadata information about route vocalization
-     */
-    public weak var routeVoiceControllerDelegate: RouteVoiceControllerDelegate?
-    
-    var lastSpokenInstruction: SpokenInstruction?
     
     /**
      Default initializer for `RouteVoiceController`.
@@ -95,16 +73,6 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     @available(*, unavailable, message: "Use init(navigationService:) instead.")
     public override init() {
         fatalError()
-    }
-
-    private func verifyBackgroundAudio() {
-        guard UIApplication.shared.isKind(of: UIApplication.self) else {
-            return
-        }
-
-        if !Bundle.main.backgroundModes.contains("audio") {
-            assert(false, "This application’s Info.plist file must include “audio” in UIBackgroundModes. This background mode is used for spoken instructions while the application is in the background.")
-        }
     }
 
     deinit {
@@ -125,34 +93,18 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         NotificationCenter.default.removeObserver(self, name: .navigationSettingsDidChange, object: nil)
     }
     
-    @objc func didUpdateSettings(notification: NSNotification) {
-        if let isMuted = notification.userInfo?[NavigationSettings.StoredProperty.voiceMuted.key] as? Bool {
-            speechSynthesizer.muted = isMuted
-        }
-        if let volume = notification.userInfo?[NavigationSettings.StoredProperty.voiceVolume.key] as? Float {
-            speechSynthesizer.volume = volume
-        }
-    }
+    // MARK: Handling Audio Engine
     
-    @objc func didReroute(notification: NSNotification) {
-        // Play reroute sound when a faster route is found
-        if notification.userInfo?[RouteController.NotificationUserInfoKey.isProactiveKey] as! Bool {
-            pauseSpeechAndPlayReroutingDing(notification: notification)
-        }
-    }
+    typealias AudioControlFailureHandler = (SpeechError) -> Void
     
-    @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
-        guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
+    private func verifyBackgroundAudio() {
+        guard UIApplication.shared.isKind(of: UIApplication.self) else {
             return
         }
-        
-        speechSynthesizer.stopSpeaking()
-        
-        safeMixAudio(instruction: nil) {
-            routeVoiceControllerDelegate?.routeVoiceController(self, encountered: $0)
+
+        if !Bundle.main.backgroundModes.contains("audio") {
+            assert(false, "This application’s Info.plist file must include “audio” in UIBackgroundModes. This background mode is used for spoken instructions while the application is in the background.")
         }
-        
-        rerouteSoundPlayer.play()
     }
     
     func safeMixAudio(instruction: SpokenInstruction?, failure: AudioControlFailureHandler) {
@@ -170,7 +122,30 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         try audioSession.setCategory(.ambient, mode: audioSession.mode)
         try audioSession.setActive(true)
     }
-        
+    
+    // MARK: Speech Synthesizing
+    
+    /**
+     `SpeechSynthesizing` implementation, used to vocalize the spoken instructions. Defaults to `MultiplexedSpeechSynthesizer`
+     */
+    public let speechSynthesizer: SpeechSynthesizing
+    
+    /**
+     Delegate used for getting metadata information about route vocalization
+     */
+    public weak var routeVoiceControllerDelegate: RouteVoiceControllerDelegate?
+    
+    var lastSpokenInstruction: SpokenInstruction?
+    
+    @objc func didUpdateSettings(notification: NSNotification) {
+        if let isMuted = notification.userInfo?[NavigationSettings.StoredProperty.voiceMuted.key] as? Bool {
+            speechSynthesizer.muted = isMuted
+        }
+        if let volume = notification.userInfo?[NavigationSettings.StoredProperty.voiceVolume.key] as? Float {
+            speechSynthesizer.volume = volume
+        }
+    }
+    
     @objc open func didPassSpokenInstructionPoint(notification: NSNotification) {
         guard let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress else {
             assertionFailure("RouteProgress should be available.")
@@ -189,6 +164,39 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
         speechSynthesizer.speak(instruction,
                                 during: routeProgress.currentLegProgress,
                                 locale: locale)
+    }
+    
+    @objc func pauseSpeechAndPlayReroutingDing(notification: NSNotification) {
+        guard playRerouteSound && !NavigationSettings.shared.voiceMuted else {
+            return
+        }
+        
+        speechSynthesizer.stopSpeaking()
+        
+        safeMixAudio(instruction: nil) {
+            routeVoiceControllerDelegate?.routeVoiceController(self, encountered: $0)
+        }
+        
+        rerouteSoundPlayer.play()
+    }
+    
+    // MARK: Sounding Rerouting
+    
+    /**
+     If true, a noise indicating the user is going to be rerouted will play prior to rerouting.
+     */
+    public var playRerouteSound = true
+    
+    /**
+     Sound to play prior to reroute. Inherits volume level from `volume`.
+     */
+    public var rerouteSoundPlayer: AVAudioPlayer = try! AVAudioPlayer(data: NSDataAsset(name: "reroute-sound", bundle: .mapboxNavigation)!.data, fileTypeHint: AVFileType.mp3.rawValue)
+    
+    @objc func didReroute(notification: NSNotification) {
+        // Play reroute sound when a faster route is found
+        if notification.userInfo?[RouteController.NotificationUserInfoKey.isProactiveKey] as! Bool {
+            pauseSpeechAndPlayReroutingDing(notification: notification)
+        }
     }
 }
 
