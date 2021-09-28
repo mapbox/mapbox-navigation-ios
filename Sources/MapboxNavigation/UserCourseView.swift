@@ -12,12 +12,18 @@ public protocol CourseUpdatable where Self: UIView {
 }
 
 public extension CourseUpdatable {
-    
+    /**
+     Transforms the location of the user location indicator layer.
+     */
     func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
         let duration: TimeInterval = animated ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
             let angle = CGFloat(CLLocationDegrees(direction - location.course).toRadians())
-            self.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            if let self = self as? UserPuckCourseView {
+                self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            } else if !(self is UserHaloCourseView) {
+                self.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            }
             
             // `UserCourseView` pitch is changed only during transition to the overview mode.
             let pitch = CGFloat(navigationCameraState == .transitionToOverview ? 0.0 : CLLocationDegrees(pitch).toRadians())
@@ -48,27 +54,6 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
     }
     /// Time interval, after which Puck is considered 100% 'stale'
     public var staleInterval: TimeInterval = 60
-    
-    /**
-     Transforms the location of the user puck.
-     */
-    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
-        let duration: TimeInterval = animated ? 1 : 0
-        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
-            let angle = CGFloat(CLLocationDegrees(direction - location.course).toRadians())
-            self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
-            
-            // `UserCourseView` pitch is changed only during transition to the overview mode.
-            let pitch = CGFloat(navigationCameraState == .transitionToOverview ? 0.0 : CLLocationDegrees(pitch).toRadians())
-            var transform = CATransform3DRotate(CATransform3DIdentity, pitch, 1.0, 0, 0)
-            
-            let isCameraFollowing = navigationCameraState == .following
-            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
-            transform = CATransform3DScale(transform, scale, scale, 1)
-            transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
-            self.layer.sublayerTransform = transform
-        }, completion: nil)
-    }
     
     // Sets the color on the user puck
     @objc public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {
