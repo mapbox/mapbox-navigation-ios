@@ -61,7 +61,7 @@ class NativeHandlersFactory {
         TileStore.__create(forPath: tileStorePath)
     }()
     
-    // MARK: - Support objects
+    // MARK: - Support Objects
     
     lazy var settingsProfile: SettingsProfile = {
         SettingsProfile(application: .mobile,

@@ -11,6 +11,9 @@ import MapboxDirections
  - seealso: NavigationServiceDelegate
  */
 public protocol RouterDelegate: AnyObject, UnimplementedLogging {
+    
+    // MARK: Rerouting Logic
+    
     /**
      Returns whether the router should be allowed to calculate a new route.
      
@@ -63,6 +66,8 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      */
     func router(_ router: Router, didFailToRerouteWith error: Error)
 
+    // MARK: Monitoring Route Progress and Updates
+    
     /**
      Called immediately after the router refreshes the route.
      
@@ -82,20 +87,15 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     func router(_ router: Router, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
     
     /**
-     Called when the router detects that the user has passed a point at which an instruction should be displayed.
-     - parameter router: The router that passed the instruction point.
-     - parameter instruction: The instruction to be presented.
-     - parameter routeProgress: The route progress object that the router is updating.
+     Called when the router arrives at a waypoint.
+     
+     You can implement this method to allow the router to continue check and reroute the user if needed. By default, the user will not be rerouted when arriving at a waypoint.
+     
+     - parameter router: The router that has arrived at a waypoint.
+     - parameter waypoint: The waypoint that the controller has arrived at.
+     - returns: True to prevent the router from checking if the user should be rerouted.
      */
-    func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
-    
-    /**
-     Called when the router detects that the user has passed a point at which an instruction should be spoken.
-     - parameter router: The router that passed the instruction point.
-     - parameter instruction: The instruction to be spoken.
-     - parameter routeProgress: The route progress object that the router is updating.
-     */
-    func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
+    func router(_ router: Router, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
     
     /**
      Called as the router approaches a waypoint.
@@ -122,16 +122,23 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     func router(_ router: Router, didArriveAt waypoint: Waypoint) -> Bool
     
     /**
-     Called when the router arrives at a waypoint.
-     
-     You can implement this method to allow the router to continue check and reroute the user if needed. By default, the user will not be rerouted when arriving at a waypoint.
-     
-     - parameter router: The router that has arrived at a waypoint.
-     - parameter waypoint: The waypoint that the controller has arrived at.
-     - returns: True to prevent the router from checking if the user should be rerouted.
+     Called when the router detects that the user has passed a point at which an instruction should be displayed.
+     - parameter router: The router that passed the instruction point.
+     - parameter instruction: The instruction to be presented.
+     - parameter routeProgress: The route progress object that the router is updating.
      */
-    func router(_ router: Router, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool
+    func router(_ router: Router, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress)
+    
+    /**
+     Called when the router detects that the user has passed a point at which an instruction should be spoken.
+     - parameter router: The router that passed the instruction point.
+     - parameter instruction: The instruction to be spoken.
+     - parameter routeProgress: The route progress object that the router is updating.
+     */
+    func router(_ router: Router, didPassSpokenInstructionPoint instruction: SpokenInstruction, routeProgress: RouteProgress)
 
+    // MARK: Permissions Events
+    
     /**
      Called when the router will disable battery monitoring.
      

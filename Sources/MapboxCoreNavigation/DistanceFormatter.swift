@@ -97,6 +97,9 @@ extension NSAttributedString.Key {
  This class is limited to `UnitLength` and its behavior is more specific to distances than `MeasurementFormatter`. By default, the class automatically localizes and rounds the measurement using `Measurement.localized(into:)` and `Locale.nationalizedCurrent`. Measurements can be formatted into either strings or attributed strings.
  */
 open class DistanceFormatter: Formatter, NSSecureCoding {
+    
+    // MARK: Configuring the Formatting
+    
     public static var supportsSecureCoding = true
     
     /**
@@ -155,6 +158,8 @@ open class DistanceFormatter: Formatter, NSSecureCoding {
     public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
     }
+    
+    // MARK: Getting String Representation of Values
     
     /**
      Creates and returns a localized, formatted string representation of the given distance in meters.

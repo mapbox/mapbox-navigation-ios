@@ -5,12 +5,28 @@ import Dispatch
  `DispatchTimer` is a general-purpose wrapper over the `DispatchSourceTimer` mechanism in GCD.
  */
 public class DispatchTimer {
+    /**
+     The state of a `DispatchTimer`.
+     */
     public enum State {
-        case armed, disarmed
+        /**
+         Timer is active and has an event scheduled.
+         */
+        case armed
+        /**
+         Timer is idle
+         */
+        case disarmed
     }
     
     public typealias Payload = DispatchSource.DispatchSourceHandler
     public static let defaultAccuracy: DispatchTimeInterval = .milliseconds(500)
+    
+    /**
+     Timer current state.
+     */
+    private(set) public var state: State = .disarmed
+    
     var countdownInterval: DispatchTimeInterval {
         didSet {
             reset()
@@ -23,8 +39,6 @@ public class DispatchTimer {
     let timerQueue = DispatchQueue(label: "com.mapbox.coreNavigation.timer")
     let executionQueue: DispatchQueue
     let timer: DispatchSourceTimer
-    
-    private(set) public var state: State = .disarmed
     
     /**
      Initializes a new timer.
@@ -54,10 +68,6 @@ public class DispatchTimer {
         if state == .disarmed {
             timer.resume()
         }
-    }
-    
-    private func scheduleTimer() {
-        timer.schedule(deadline: deadline, repeating: repetitionInterval, leeway: accuracy)
     }
     
     /**
@@ -93,5 +103,9 @@ public class DispatchTimer {
         state = .disarmed
         timer.suspend()
         timer.setEventHandler {}
+    }
+    
+    private func scheduleTimer() {
+        timer.schedule(deadline: deadline, repeating: repetitionInterval, leeway: accuracy)
     }
 }
