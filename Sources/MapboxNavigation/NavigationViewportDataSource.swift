@@ -225,8 +225,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 if let boundingBox = BoundingBox(from: coordinatesToManeuver + coordinatesForManeuverFraming) {
                     let coordinates = [
                         center,
-                        boundingBox.northEast,
-                        boundingBox.southWest
+                        [boundingBox.northEast, boundingBox.southWest].centerCoordinate
                     ]
                     
                     let centerLineString = LineString(coordinates)
