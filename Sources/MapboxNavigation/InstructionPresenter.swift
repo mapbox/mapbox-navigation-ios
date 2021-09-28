@@ -210,19 +210,21 @@ class InstructionPresenter {
         if let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
-            let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
+            let genericRouteShield = GenericRouteShield(pointSize: dataSource.font.pointSize,
+                                                        text: text)
             
             var appearance = GenericRouteShield.appearance()
             if traitCollection.userInterfaceIdiom == .carPlay {
-                appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom))
+                let traitCollection = UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom)
+                appearance = GenericRouteShield.appearance(for: traitCollection)
             }
             
-            view.foregroundColor = appearance.foregroundColor
-            view.borderWidth = appearance.borderWidth
-            view.borderColor = appearance.borderColor
-            view.cornerRadius = appearance.cornerRadius
+            genericRouteShield.foregroundColor = appearance.foregroundColor
+            genericRouteShield.borderWidth = appearance.borderWidth
+            genericRouteShield.borderColor = appearance.borderColor
+            genericRouteShield.cornerRadius = appearance.cornerRadius
             
-            guard let image = takeSnapshot(on: view) else { return nil }
+            guard let image = takeSnapshot(on: genericRouteShield) else { return nil }
             imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
         }
@@ -245,11 +247,14 @@ class InstructionPresenter {
         if let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
-            let exitView = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
+            let exitView = ExitView(pointSize: dataSource.font.pointSize,
+                                    side: side,
+                                    text: text)
             
             var appearance = ExitView.appearance()
             if traitCollection.userInterfaceIdiom == .carPlay {
-                appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom))
+                let traitCollection = UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom)
+                appearance = ExitView.appearance(for: traitCollection)
             }
             
             exitView.foregroundColor = appearance.foregroundColor
