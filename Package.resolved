@@ -59,9 +59,9 @@
         "package": "MapboxMaps",
         "repositoryURL": "https://github.com/mapbox/mapbox-maps-ios.git",
         "state": {
-          "branch": null,
-          "revision": "3557fa41b15e465852b38b93cc00b52fc8b9d1aa",
-          "version": "10.0.0-rc.9"
+          "branch": "main",
+          "revision": "de3800d042e0c095321fefac4cbc6c03d40b75c1",
+          "version": null
         }
       },
       {
@@ -150,8 +150,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "555458bd67acce7322c513ddd3647c9a904f4197",
-          "version": "2.0.0-rc.1"
+          "revision": "007896bb945432d4683e114fcf2f089edff4ceeb",
+          "version": "2.0.0-rc.2"
         }
       }
     ]
