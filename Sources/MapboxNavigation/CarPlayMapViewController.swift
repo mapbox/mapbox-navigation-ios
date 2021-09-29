@@ -1,5 +1,5 @@
 import Foundation
-import MapboxMaps
+@_spi(Restricted) import MapboxMaps
 import MapboxCoreNavigation
 import MapboxDirections
 
@@ -203,8 +203,8 @@ public class CarPlayMapViewController: UIViewController {
         
         navigationMapView.userLocationStyle = .puck2D()
         
-        navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
-        navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
+        navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
+        navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden
         
         self.view = navigationMapView
     }

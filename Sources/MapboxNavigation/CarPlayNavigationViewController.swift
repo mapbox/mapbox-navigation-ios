@@ -1,7 +1,7 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
-import MapboxMaps
+@_spi(Restricted) import MapboxMaps
 
 #if canImport(CarPlay)
 import CarPlay
@@ -379,8 +379,8 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
-        navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
-        navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
+        navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
+        navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden
         
         navigationMapView.navigationCamera.follow()
         

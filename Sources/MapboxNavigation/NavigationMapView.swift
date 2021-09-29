@@ -788,7 +788,8 @@ open class NavigationMapView: UIView {
            let destinationCoordinate = lastLeg.destination?.coordinate {
             let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
             var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
-            destinationAnnotation.image = .default
+            let markerImage = UIImage(named: "default_marker", in: .mapboxNavigation, compatibleWith: nil)!
+            destinationAnnotation.image = .init(image: markerImage, name: ImageIdentifier.markerImage)
             
             // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
             // and add it only after fully loading `MapView` style.
@@ -902,7 +903,7 @@ open class NavigationMapView: UIView {
               let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
         do {
-            try mapView.mapboxMap.style.addImage(triangleImage, id: NavigationMapView.ImageIdentifier.arrowImage)
+            try mapView.mapboxMap.style.addImage(triangleImage, id: NavigationMapView.ImageIdentifier.arrowImage, stretchX: [], stretchY: [])
             let step = route.legs[legIndex].steps[stepIndex]
             let maneuverCoordinate = step.maneuverLocation
             guard step.maneuverType != .arrive else { return }
@@ -1252,12 +1253,8 @@ open class NavigationMapView: UIView {
         }
         
         let routeDurationAnnotationsLayerIdentifier = NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer
-        var shapeLayer: SymbolLayer
-        if let layer = try? style.layer(withId: routeDurationAnnotationsLayerIdentifier) as SymbolLayer {
-            shapeLayer = layer
-        } else {
-            shapeLayer = SymbolLayer(id: routeDurationAnnotationsLayerIdentifier)
-        }
+        var shapeLayer = try style.layer(withId: routeDurationAnnotationsLayerIdentifier) as? SymbolLayer ??
+            SymbolLayer(id: routeDurationAnnotationsLayerIdentifier)
 
         shapeLayer.source = routeDurationAnnotationsSourceIdentifier
 
