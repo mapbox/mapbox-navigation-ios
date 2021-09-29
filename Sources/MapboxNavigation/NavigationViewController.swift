@@ -145,9 +145,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var showsEndOfRouteFeedback: Bool {
         get {
-            arrivalController?.showsEndOfRoute ?? false
+            loadViewIfNeeded()
+            return arrivalController?.showsEndOfRoute ?? false
         }
         set {
+            loadViewIfNeeded()
             arrivalController?.showsEndOfRoute = newValue
         }
     }
