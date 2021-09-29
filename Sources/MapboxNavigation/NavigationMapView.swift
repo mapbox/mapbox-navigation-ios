@@ -739,8 +739,8 @@ open class NavigationMapView: UIView {
         for (waypointIndex, waypoint) in waypoints.enumerated() {
             var feature = Feature(geometry: .point(Point(waypoint.coordinate)))
             feature.properties = [
-                "waypointCompleted": waypointIndex < legIndex,
-                "name": waypointIndex + 1
+                "waypointCompleted": .boolean(waypointIndex < legIndex),
+                "name": .number(Double(waypointIndex + 1)),
             ]
             features.append(feature)
         }
@@ -754,7 +754,7 @@ open class NavigationMapView: UIView {
                 let waypointSourceIdentifier = NavigationMapView.SourceIdentifier.waypointSource
                 
                 if mapView.mapboxMap.style.sourceExists(withId: waypointSourceIdentifier) {
-                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: waypointSourceIdentifier, geoJSON: shape)
+                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: waypointSourceIdentifier, geoJSON: .featureCollection(shape))
                 } else {
                     var waypointSource = GeoJSONSource()
                     waypointSource.data = .featureCollection(shape)
@@ -935,7 +935,7 @@ open class NavigationMapView: UIView {
                 var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSource) {
                     let geoJSON = Feature(geometry: .lineString(shaftPolyline))
-                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSource, geoJSON: geoJSON)
+                    try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSource, geoJSON: .feature(geoJSON))
                 } else {
                     arrowLayer.minZoom = Double(minimumZoomLevel)
                     arrowLayer.lineCap = .constant(.butt)
@@ -961,7 +961,7 @@ open class NavigationMapView: UIView {
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource) {
                     let geoJSON = Feature(geometry: .lineString(shaftPolyline))
                     try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource,
-                                                                    geoJSON: geoJSON)
+                                                                    geoJSON: .feature(geoJSON))
                 } else {
                     arrowStrokeLayer.minZoom = arrowLayer.minZoom
                     arrowStrokeLayer.lineCap = arrowLayer.lineCap
@@ -982,7 +982,7 @@ open class NavigationMapView: UIView {
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource) {
                     let geoJSON = Feature.init(geometry: Geometry.point(point))
                     try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource,
-                                                                    geoJSON: geoJSON)
+                                                                    geoJSON: .feature(geoJSON))
                     
                     try mapView.mapboxMap.style.setLayerProperty(for: NavigationMapView.LayerIdentifier.arrowSymbolLayer,
                                                                  property: "icon-rotate",
@@ -1223,7 +1223,13 @@ open class NavigationMapView: UIView {
             }
 
             // set the feature attributes which will be used in styling the symbol style layer
-            feature.properties = ["selected": index == 0, "tailPosition": tailPosition.rawValue, "text": labelText, "imageName": imageName, "sortOrder": index == 0 ? index : -index]
+            feature.properties = [
+                "selected": .boolean(index == 0),
+                "tailPosition": .number(Double(tailPosition.rawValue)),
+                "text": .string(labelText),
+                "imageName": .string(imageName),
+                "sortOrder": .number(Double(index == 0 ? index : -index)),
+            ]
 
             features.append(feature)
         }
@@ -1244,7 +1250,7 @@ open class NavigationMapView: UIView {
         
         let routeDurationAnnotationsSourceIdentifier = NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource
         if style.sourceExists(withId: routeDurationAnnotationsSourceIdentifier) {
-            try style.updateGeoJSONSource(withId: routeDurationAnnotationsSourceIdentifier, geoJSON: features)
+            try style.updateGeoJSONSource(withId: routeDurationAnnotationsSourceIdentifier, geoJSON: .featureCollection(features))
         } else {
             var dataSource = GeoJSONSource()
             dataSource.data = .featureCollection(features)
@@ -1381,7 +1387,7 @@ open class NavigationMapView: UIView {
                     
                     var feature = Feature(geometry: .point(Point(coordinateFromStart)))
                     feature.properties = [
-                        "instruction": instruction.text
+                        "instruction": .string(instruction.text),
                     ]
                     featureCollection.features.append(feature)
                 }
@@ -1390,7 +1396,7 @@ open class NavigationMapView: UIView {
         
         do {
             if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource) {
-                try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource, geoJSON: featureCollection)
+                try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.voiceInstructionSource, geoJSON: .featureCollection(featureCollection))
             } else {
                 var source = GeoJSONSource()
                 source.data = .featureCollection(featureCollection)
