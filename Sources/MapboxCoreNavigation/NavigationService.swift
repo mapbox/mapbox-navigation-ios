@@ -412,9 +412,11 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
         return TunnelAuthority.isInTunnel(at: location, along: progress)
     }
-    
-    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
-        router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions)
+
+    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                            routeOptions: RouteOptions?,
+                            completion: @escaping (Bool) -> Void) {
+        router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, completion: completion)
     }
 }
 

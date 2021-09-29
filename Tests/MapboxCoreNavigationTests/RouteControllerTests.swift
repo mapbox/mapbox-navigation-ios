@@ -60,8 +60,12 @@ class RouteControllerTests: TestCase {
         let speedMultiplier: TimeInterval = 100
         locationManager.speedMultiplier = speedMultiplier
         locationManager.startUpdatingLocation()
+        locationManager.onCompletedLoop = { _ in
+            return false
+        }
 
-        waitForExpectations(timeout: TimeInterval(locationManager.locations.count) / speedMultiplier + 1, handler: nil)
+        waitForExpectations(timeout: TimeInterval(locationManager.locations.count) / speedMultiplier + 5,
+                            handler: nil)
 
         let expectedCoordinates = locations.map(\.coordinate)
         XCTAssertEqual(expectedCoordinates, actualCoordinates)
@@ -142,10 +146,16 @@ class RouteControllerTests: TestCase {
                                                    error: nil)
         }
 
-        let speedMultiplier: TimeInterval = 100
-        locationManager.speedMultiplier = speedMultiplier
+        let replayFinished = expectation(description: "Replay Finished")
+        locationManager.speedMultiplier = 100
+        locationManager.onCompletedLoop = { _ in
+            replayFinished.fulfill()
+            return false
+        }
         locationManager.startUpdatingLocation()
-        waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
+        wait(for: [replayFinished], timeout: TimeInterval(replyLocations.count) / locationManager.speedMultiplier + 1)
+
+        waitForExpectations(timeout: 10, handler: nil)
     }
 }
 

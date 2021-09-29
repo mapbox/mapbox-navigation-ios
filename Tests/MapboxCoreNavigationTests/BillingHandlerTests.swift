@@ -615,9 +615,12 @@ final class BillingHandlerUnitTests: TestCase {
                                               options: initialRouteOptions,
                                               dataSource: dataSource)
 
+
         routeController.updateRoute(with: IndexedRouteResponse(routeResponse: newRouteResponse,
                                                                routeIndex: 0),
-                                    routeOptions: newRouteOptions)
+                                    routeOptions: newRouteOptions) { success in
+            XCTAssertTrue(success)
+        }
         billingServiceMock.assertEvents(expectedEvents)
     }
 

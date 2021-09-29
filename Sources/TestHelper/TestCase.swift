@@ -23,6 +23,8 @@ open class TestCase: XCTestCase {
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
         billingServiceMock = .init()
         BillingHandler.__replaceSharedInstance(with: BillingHandler.__createMockedHandler(with: billingServiceMock))
+        Navigator._recreateNavigator()
+        Navigator.shared.navigator.resetRideSession()
     }
 
     /// Prepares tests for execution. Should be called once before any test runs.
@@ -36,5 +38,6 @@ open class TestCase: XCTestCase {
         #endif
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationWhenInUseUsageDescription")
         UserDefaults.standard.set("Location Usage Description", forKey: "NSLocationAlwaysAndWhenInUseUsageDescription")
+        RouteController.historyDirectoryURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     }
 }

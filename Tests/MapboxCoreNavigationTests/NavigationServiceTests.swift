@@ -23,8 +23,14 @@ class NavigationServiceTests: TestCase {
 
     var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations)!
     
-    func createDependencies() -> (navigationService: NavigationService, routeLocations: RouteLocations) {
-        let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, directions: directionsClientSpy, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .never)
+    func createDependencies(locationSource: NavigationLocationManager? = nil) -> (navigationService: NavigationService, routeLocations: RouteLocations) {
+        let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                                        routeIndex: 0,
+                                                        routeOptions: routeOptions,
+                                                        directions: directionsClientSpy,
+                                                        locationSource: locationSource,
+                                                        eventsManagerType: NavigationEventsManagerSpy.self,
+                                                        simulating: .never)
         navigationService.delegate = delegate
 
         let legProgress: RouteLegProgress = navigationService.router.routeProgress.currentLegProgress
@@ -53,32 +59,35 @@ class NavigationServiceTests: TestCase {
 
         directionsClientSpy.reset()
         delegate.reset()
-        dependencies = createDependencies()
     }
     
     override func tearDown() {
         super.tearDown()
-        Navigator.shared.navigator.resetRideSession()
-        Navigator._recreateNavigator()
         dependencies = nil
     }
 
     func testDefaultUserInterfaceUsage() {
+        dependencies = createDependencies()
+
         XCTAssertTrue(!dependencies.navigationService.eventsManager.usesDefaultUserInterface, "MapboxCoreNavigationTests shouldn't have an implicit dependency on MapboxNavigation due to removing the Example application target as the test host.")
     }
     
     func testUserIsOnRoute() {
+        dependencies = createDependencies()
+
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
 
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
-        
+
         waitForNavNativeCallbacks()
-        
+
         XCTAssertTrue(navigation.router.userIsOnRoute(firstLocation), "User should be on route")
     }
 
     func testUserIsOffRoute() {
+        dependencies = createDependencies()
+
         let navigation = dependencies.navigationService
         let route = navigation.route
         
@@ -134,6 +143,8 @@ class NavigationServiceTests: TestCase {
     }
 
     func testNotReroutingForAllSteps() {
+        dependencies = createDependencies()
+        
         let navigationService = dependencies.navigationService
         let route = navigationService.route
         
@@ -184,6 +195,8 @@ class NavigationServiceTests: TestCase {
     }
 
     func testSnappedAtEndOfStepLocationWhenMovingSlowly() {
+        dependencies = createDependencies()
+
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
 
@@ -236,6 +249,8 @@ class NavigationServiceTests: TestCase {
     }
 
     func testSnappedAtEndOfStepLocationWhenCourseIsSimilar() {
+        dependencies = createDependencies()
+
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
 
@@ -289,6 +304,8 @@ class NavigationServiceTests: TestCase {
     }
 
     func testSnappedLocationForUnqualifiedLocation() {
+        dependencies = createDependencies()
+
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
@@ -360,6 +377,8 @@ class NavigationServiceTests: TestCase {
 
     //TODO: Broken by PortableRoutecontroller & MBNavigator -- needs team discussion.
     func x_testLocationShouldUseHeading() {
+        dependencies = createDependencies()
+
         let navigation = dependencies.navigationService
         let firstLocation = dependencies.routeLocations.firstLocation
         navigation.locationManager!(navigation.locationManager, didUpdateLocations: [firstLocation])
@@ -387,7 +406,11 @@ class NavigationServiceTests: TestCase {
     }
 
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
-        let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, eventsManagerType: NavigationEventsManagerSpy.self, simulating: .always)
+        let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                                        routeIndex: 0,
+                                                        routeOptions: routeOptions,
+                                                        eventsManagerType: NavigationEventsManagerSpy.self,
+                                                        simulating: .always)
         navigationService.delegate = delegate
         let router = navigationService.router
 
@@ -397,14 +420,23 @@ class NavigationServiceTests: TestCase {
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: NavigationEventTypeRouteRetrieval))
 
-        router.updateRoute(with: .init(routeResponse: alternateRouteResponse, routeIndex: 0), routeOptions: nil)
+        let routeUpdated = expectation(description: "Route updated")
+        router.updateRoute(with: .init(routeResponse: alternateRouteResponse, routeIndex: 0), routeOptions: nil) {
+            success in
+            XCTAssertTrue(success)
+            routeUpdated.fulfill()
+        }
+        wait(for: [routeUpdated], timeout: 5)
 
         let simulatedLocationManager = navigationService.locationManager as! SimulatedLocationManager
 
-        XCTAssert(simulatedLocationManager.route == alternateRoute, "Simulated Location Manager should be updated with new route progress model")
+        XCTAssert(simulatedLocationManager.route == alternateRoute,
+                  "Simulated Location Manager should be updated with new route progress model")
     }
 
     func disabled_testReroutingFromALocationSendsEvents() {
+        dependencies = createDependencies()
+
         let navigationService = dependencies.navigationService
         let router = navigationService.router
         let testLocation = dependencies.routeLocations.firstLocation
@@ -466,19 +498,21 @@ class NavigationServiceTests: TestCase {
     }
 
     func testGeneratingAnArrivalEvent() {
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent()
+        let locationManager = ReplayLocationManager(locations: trace)
+        locationManager.startDate = Date()
+        dependencies = createDependencies(locationSource: locationManager)
         let navigation = dependencies.navigationService
 
-        let now = Date()
-        let trace = Fixture.generateTrace(for: route).shiftedToPresent()
-        trace.forEach {
-            navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0])
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        locationManager.speedMultiplier = 100
+        navigation.start()
+        let replyFinished = expectation(description: "Replay finished")
+        locationManager.onCompletedLoop = { _ in
+            replyFinished.fulfill()
+            return false
         }
+        wait(for: [replyFinished], timeout: 10)
 
-        // TODO: Verify why we need a second location update when routeState == .complete to trigger `MMEEventTypeNavigationArrive`
-        navigation.router.locationManager!(navigation.locationManager,
-                                            didUpdateLocations: [trace.last!.shifted(to: now + (trace.count + 1))])
-        
         // MARK: It queues and flushes a Depart event
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
         expectation(description: "Depart Event Flushed") {
@@ -492,7 +526,7 @@ class NavigationServiceTests: TestCase {
         expectation(description: "Arrival delegate message fired") {
             self.delegate.recentMessages.contains("navigationService(_:didArriveAt:)")
         }
-        waitForExpectations(timeout: 3.0, handler: nil)
+        waitForExpectations(timeout: 20, handler: nil)
 
         // MARK: It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
@@ -501,17 +535,24 @@ class NavigationServiceTests: TestCase {
     }
 
     func testNoReroutesAfterArriving() {
-        let navigation = dependencies.navigationService
-
-        // MARK: When navigation begins with a location update
         let now = Date()
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
+        let locationManager = ReplayLocationManager(locations: trace)
+        locationManager.startDate = Date()
+        locationManager.speedMultiplier = 100
 
-        trace.forEach {
-            navigation.router.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+        dependencies = createDependencies(locationSource: locationManager)
+
+        let navigation = dependencies.navigationService
+
+        let replayFinished = expectation(description: "Replay finished")
+        locationManager.onCompletedLoop = { _ in
+            replayFinished.fulfill()
+            return false
         }
-        
+        navigation.start()
+        wait(for: [replayFinished], timeout: 10)
+
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
         expectation(description: "Depart Event Flushed") {
             eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart)
@@ -526,6 +567,7 @@ class NavigationServiceTests: TestCase {
 
         // MARK: Continue off route after arrival
         let offRouteCoordinate = trace.map { $0.coordinate }.last!.coordinate(at: 200, facing: 0)
+
         let offRouteLocations = (0...3).map {
             CLLocation(coordinate: offRouteCoordinate, altitude: -1, horizontalAccuracy: 10, verticalAccuracy: -1, course: -1, speed: 10, timestamp: now + trace.count + $0)
         }
@@ -534,7 +576,7 @@ class NavigationServiceTests: TestCase {
             navigation.router.locationManager?(navigation.locationManager, didUpdateLocations: [$0])
             RunLoop.main.run(until: Date().addingTimeInterval(0.01))
         }
-        
+
         // Make sure configurable delegate is called
         expectation(description: "Should Prevent Reroutes delegate method called") {
             self.delegate.recentMessages.contains("navigationService(_:shouldPreventReroutesWhenArrivingAt:)")
@@ -565,18 +607,6 @@ class NavigationServiceTests: TestCase {
         XCTAssertNil(subject, "Expected RouteController not to live beyond autorelease pool")
     }
 
-    func testLegacyRouteControllerDoesNotHaveRetainCycle() {
-        weak var subject: RouteController? = nil
-
-        autoreleasepool {
-            let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, dataSource: fakeDataSource)
-            subject = routeController
-        }
-
-        XCTAssertNil(subject, "Expected LegacyRouteController not to live beyond autorelease pool")
-    }
-
     func testRouteControllerDoesNotRetainDataSource() {
         weak var subject: RouterDataSource? = nil
 
@@ -600,37 +630,49 @@ class NavigationServiceTests: TestCase {
     }
 
     func testMultiLegRoute() {
+        let route = Fixture.route(from: "multileg-route", options: routeOptions)
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+        let locationManager = ReplayLocationManager(locations: trace)
+        locationManager.startDate = Date()
+        locationManager.speedMultiplier = 100
+
+        dependencies = createDependencies(locationSource: locationManager)
+
         let routeOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
             CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
             CLLocationCoordinate2D(latitude: 47.212326, longitude: 9.512569),
         ])
-        let route = Fixture.route(from: "multileg-route", options: routeOptions)
         let routeResponse = Fixture.routeResponse(from: "multileg-route", options: routeOptions)
 
         let navigationService = dependencies.navigationService
         let routeController = navigationService.router as! RouteController
-        routeController.updateRoute(with: .init(routeResponse: routeResponse, routeIndex: 0), routeOptions: nil)
-        let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
-        
-        for (index, location) in trace.enumerated() {
-            navigationService.locationManager!(navigationService.locationManager, didUpdateLocations: [location])
-            
-            waitForNavNativeCallbacks()
-
-            if index < 31 {
+        let routeUpdated = expectation(description: "Route Updated")
+        routeController.updateRoute(with: .init(routeResponse: routeResponse, routeIndex: 0), routeOptions: nil) {
+            success in
+            XCTAssertTrue(success)
+            routeUpdated.fulfill()
+        }
+        wait(for: [routeUpdated], timeout: 5)
+        locationManager.onTick = { index, _ in
+            if index < 32 {
                 XCTAssertEqual(routeController.routeProgress.legIndex,0)
             } else {
                 XCTAssertEqual(routeController.routeProgress.legIndex, 1)
             }
         }
-        
-        waitForNavNativeCallbacks()
+        let replayFinished = expectation(description: "Replay finished")
+        locationManager.onCompletedLoop = { _ in
+            replayFinished.fulfill()
+            return false
+        }
+        navigationService.start()
+        wait(for: [replayFinished], timeout: 10)
 
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
     }
 
-    func disabled_testProactiveRerouting() {
+    func testProactiveRerouting() {
         typealias RouterComposition = Router & InternalRouter
 
         let options = NavigationRouteOptions(coordinates: [
@@ -640,38 +682,45 @@ class NavigationServiceTests: TestCase {
         let route = Fixture.route(from: "DCA-Arboretum", options: options)
         let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: options)
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
-        let duration = trace.last!.timestamp.timeIntervalSince(trace.first!.timestamp)
+        guard let firstLoction = trace.first,
+              let lastLocation = trace.last,
+              firstLoction != lastLocation else {
+                  XCTFail("Invalid trace"); return
+              }
+        let duration = lastLocation.timestamp.timeIntervalSince(firstLoction.timestamp)
 
         XCTAssert(duration > RouteControllerProactiveReroutingInterval + RouteControllerMinimumDurationRemainingForProactiveRerouting,
                   "Duration must greater than rerouting interval and minimum duration remaining for proactive rerouting")
 
         let directions = DirectionsSpy()
+        let locationManager = ReplayLocationManager(locations: trace)
+        locationManager.startDate = Date()
+        locationManager.speedMultiplier = 100
         let service = MapboxNavigationService(routeResponse: routeResponse,
                                               routeIndex: 0,
                                               routeOptions: options,
-                                              directions: directions)
+                                              directions: directions,
+                                              locationSource: locationManager)
         service.delegate = delegate
         let router = service.router
-        let locationManager = NavigationLocationManager()
 
-        let didRerouteExpectation = expectation(forNotification: .routeControllerDidReroute, object: router) { (notification) -> Bool in
+        let didRerouteExpectation = expectation(forNotification: .routeControllerDidReroute,
+                                                object: router) { (notification) -> Bool in
             let isProactive = notification.userInfo![RouteController.NotificationUserInfoKey.isProactiveKey] as? Bool
             return isProactive == true
         }
-        let rerouteExpectation = expectation(description: "Proactive reroute should trigger")
 
-        for location in trace {
-            service.router.locationManager!(locationManager, didUpdateLocations: [location])
-            
-            waitForNavNativeCallbacks()
-
-            let router = service.router as! RouterComposition
-
-            if router.lastRerouteLocation != nil {
-                rerouteExpectation.fulfill()
-                break
+        let rerouteTriggeredExpectation = expectation(description: "Proactive reroute triggered")
+        locationManager.onTick = { [unowned locationManager] _, _ in
+            if (router as! RouterComposition).lastRerouteLocation != nil {
+                locationManager.stopUpdatingLocation()
+                rerouteTriggeredExpectation.fulfill()
             }
         }
+
+        service.start()
+
+        wait(for: [rerouteTriggeredExpectation], timeout: 10)
 
         let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
         let fasterOptions = NavigationRouteOptions(coordinates: [
@@ -682,6 +731,72 @@ class NavigationServiceTests: TestCase {
         let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName, options: fasterOptions)
         directions.fireLastCalculateCompletion(with: waypointsForFasterRoute, routes: [fasterRoute], error: nil)
         
+        wait(for: [didRerouteExpectation], timeout: 10)
+        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
+    }
+
+    /// Disabled until upsteam fix is delivered: NavNative #4242
+    func disabled_testDeplayedProactiveRerouting() {
+        typealias RouterComposition = Router & InternalRouter
+
+        let options = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+        let route = Fixture.route(from: "DCA-Arboretum", options: options)
+        let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: options)
+        let trace = Fixture.generateTrace(for: route).shiftedToPresent()
+        guard let firstLoction = trace.first,
+              let lastLocation = trace.last,
+              firstLoction != lastLocation else {
+                  XCTFail("Invalid trace"); return
+              }
+        let duration = lastLocation.timestamp.timeIntervalSince(firstLoction.timestamp)
+
+        XCTAssert(duration > RouteControllerProactiveReroutingInterval + RouteControllerMinimumDurationRemainingForProactiveRerouting,
+                  "Duration must greater than rerouting interval and minimum duration remaining for proactive rerouting")
+
+        let directions = DirectionsSpy()
+        let locationManager = ReplayLocationManager(locations: trace)
+        locationManager.startDate = Date()
+        locationManager.speedMultiplier = 100
+        let service = MapboxNavigationService(routeResponse: routeResponse,
+                                              routeIndex: 0,
+                                              routeOptions: options,
+                                              directions: directions,
+                                              locationSource: locationManager)
+        service.delegate = delegate
+        let router = service.router
+
+        let didRerouteExpectation = expectation(forNotification: .routeControllerDidReroute,
+                                                object: router) { (notification) -> Bool in
+            let isProactive = notification.userInfo![RouteController.NotificationUserInfoKey.isProactiveKey] as? Bool
+            return isProactive == true
+        }
+        let rerouteExpectation = expectation(description: "Proactive reroute should trigger")
+
+        expectation(description: "Proactive reroute triggered") {
+            (router as? RouterComposition)?.lastRerouteLocation != nil
+        }
+
+        let replayFinished = expectation(description: "Replay finished")
+        locationManager.onCompletedLoop = { _ in
+            replayFinished.fulfill()
+            return false
+        }
+        service.start()
+
+        wait(for: [replayFinished], timeout: 10)
+
+        let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
+        let fasterOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.878206, longitude: -77.037265),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+        let fasterRoute = Fixture.route(from: fasterRouteName, options: fasterOptions)
+        let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName, options: fasterOptions)
+        directions.fireLastCalculateCompletion(with: waypointsForFasterRoute, routes: [fasterRoute], error: nil)
+
         waitForNavNativeCallbacks()
 
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))

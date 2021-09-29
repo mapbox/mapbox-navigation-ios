@@ -142,7 +142,9 @@ public protocol Router: CLLocationManagerDelegate {
     ///
     ///  - Important: Updating the route can have an impact on your usage costs.
     ///  From more info read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
-    func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?)
+    func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                     routeOptions: RouteOptions?,
+                     completion: @escaping (Bool) -> Void)
 }
 
 protocol InternalRouter: AnyObject {
@@ -160,7 +162,7 @@ protocol InternalRouter: AnyObject {
     
     var directions: Directions { get }
     
-    var routeProgress: RouteProgress { get set }
+    var routeProgress: RouteProgress { get }
     
     var indexedRouteResponse: IndexedRouteResponse { get set }
 }
@@ -251,39 +253,43 @@ extension InternalRouter where Self: Router {
         
         calculateRoutes(from: location, along: routeProgress) { [weak self] (session, result) in
             guard let self = self else { return }
-            self.isRerouting = false
-            
+
             guard case let .success(indexedResponse) = result else {
-                return
+                self.isRerouting = false; return
             }
             let response = indexedResponse.routeResponse
-            guard let route = response.routes?.first else { return }
+            guard let route = response.routes?.first else {
+                self.isRerouting = false; return
+            }
             
             self.lastProactiveRerouteDate = nil
             
             guard let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first else {
-                return
+                self.isRerouting = false; return
             }
             
             let routeIsFaster = firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval &&
                 currentUpcomingManeuver == firstLeg.steps[1] && route.expectedTravelTime <= 0.9 * durationRemaining
             
-            if routeIsFaster {
-                var routeOptions: RouteOptions?
-                if case let .route(options) = response.options {
-                    routeOptions = options
-                }
-                
-                // Prefer the most optimal route (the first one) over the route that matched the original choice.
-                self.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
-                
-                // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don’t announce it.
-                // FIXME: There must be a better way to skip a redundant initial instruction than to assume the old route’s spoken instruction index is appliable to the new route.
-                let spokenInstructionIndex = self.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
-                self.routeProgress = RouteProgress(route: route, options: routeOptions ?? self.routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
-                
-                self.announce(reroute: route, at: location, proactive: true)
+            guard routeIsFaster else {
+                self.isRerouting = false; return
             }
+            var routeOptions: RouteOptions?
+            if case let .route(options) = response.options {
+                routeOptions = options
+            }
+
+            // Prefer the most optimal route (the first one) over the route that matched the original choice.
+            print(">>> \(Date().timeIntervalSinceReferenceDate): About to update route response with refresh")
+
+            let indexedRouteResponse = IndexedRouteResponse(routeResponse: response, routeIndex: 0)
+            (self as! RouteController)
+                .updateRoute(with: indexedRouteResponse,
+                             routeOptions: routeOptions ?? self.routeProgress.routeOptions,
+                             isProactive: true) { success in
+                    print(">>> \(Date().timeIntervalSinceReferenceDate): Updated route response with refresh. Success: \(success)")
+                    self.isRerouting = false
+                }
         }
     }
     

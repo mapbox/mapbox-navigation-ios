@@ -41,14 +41,26 @@ open class ReplayLocationManager: NavigationLocationManager {
             synthesizedLocation = newValue
         }
     }
-    
+
     var currentIndex: Int = 0
     
     var startDate: Date?
     
     private var synthesizedLocation: CLLocation?
+
+    /**
+     A handler that is called when `ReplayLocationManager` finished replaying `locations` and about to start from the
+     beginning. Return false to stop replaying `locations` from the beginning.
+     */
+    var onCompletedLoop: ((ReplayLocationManager) -> Bool)?
+
+    /**
+     A handler that is called on each replayed location.
+     */
+    var onTick: ((_ index: Int, CLLocation) -> Void)?
     
     public init(locations: [CLLocation]) {
+        precondition(locations.count > 0)
         self.locations = locations.sorted { $0.timestamp < $1.timestamp }
         super.init()
     }
@@ -72,20 +84,27 @@ open class ReplayLocationManager: NavigationLocationManager {
         let location = locations[currentIndex]
         synthesizedLocation = location
         delegate?.locationManager?(self, didUpdateLocations: [location])
+        onTick?(currentIndex, location)
         NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
         
-        if currentIndex < locations.count - 1 {
-            let nextLocation = locations[currentIndex+1]
-            let interval = nextLocation.timestamp.timeIntervalSince(location.timestamp) / TimeInterval(speedMultiplier)
-            let intervalSinceStart = Date().timeIntervalSince(startDate)+interval
-            let actualInterval = nextLocation.timestamp.timeIntervalSince(locations.first!.timestamp)
-            let diff = min(max(0, intervalSinceStart-actualInterval), 0.9) // Don't try to resync more than 0.9 seconds per location update
-            let syncedInterval = interval-diff
-            
-            perform(#selector(tick), with: nil, afterDelay: syncedInterval)
-            currentIndex += 1
-        } else {
-            currentIndex = 0
+        if currentIndex >= locations.count - 1 {
+            let startFromBeginning = onCompletedLoop?(self) ?? true
+            if startFromBeginning {
+                currentIndex = 0
+            }
+            else {
+                return
+            }
         }
+        
+        let nextLocation = locations[currentIndex+1]
+        let interval = nextLocation.timestamp.timeIntervalSince(location.timestamp) / TimeInterval(speedMultiplier)
+        let intervalSinceStart = Date().timeIntervalSince(startDate)+interval
+        let actualInterval = nextLocation.timestamp.timeIntervalSince(locations.first!.timestamp)
+        let diff = min(max(0, intervalSinceStart-actualInterval), 0.9) // Don't try to resync more than 0.9 seconds per location update
+        let syncedInterval = interval-diff
+
+        perform(#selector(tick), with: nil, afterDelay: syncedInterval)
+        currentIndex += 1
     }
 }

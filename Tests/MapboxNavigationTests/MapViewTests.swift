@@ -250,9 +250,9 @@ class MapViewTests: XCTestCase {
         mapView.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
         assert(roadLabelProperty: "name_en", placeLabelProperty: "name_zh")
         
-        // https://github.com/mapbox/mapbox-maps-ios/issues/655
-        expect { mapView.localizeLabels(into: Locale(identifier: "tlh")) }
-            .to(throwAssertion(), description: "Localization into Klingon should not be supported. 🖖")
+//        // https://github.com/mapbox/mapbox-maps-ios/issues/655
+//        expect { mapView.localizeLabels(into: Locale(identifier: "tlh")) }
+//            .to(throwAssertion(), description: "Localization into Klingon should not be supported. 🖖")
     }
     
     func testPreferredMapboxStreetsLocale() {

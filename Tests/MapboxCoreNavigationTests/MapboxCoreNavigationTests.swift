@@ -36,7 +36,6 @@ class MapboxCoreNavigationTests: TestCase {
         super.tearDown()
         navigation = nil
         UserDefaults.resetStandardUserDefaults()
-        Navigator._recreateNavigator()
     }
     
     func testNavigationNotificationsInfoDict() {
@@ -209,11 +208,11 @@ class MapboxCoreNavigationTests: TestCase {
             return routeProgress?.currentLegProgress.stepIndex == 4
         }
         
-        navigation.start()
-        
+        navigation.start()        
         waitForExpectations(timeout: waitForInterval) { (error) in
             XCTAssertNil(error)
         }
+        navigation.stop()
     }
     
     func testShouldReroute() {
