@@ -196,7 +196,7 @@ class MapViewTests: XCTestCase {
         XCTAssertEqual(style.allLayerIdentifiers.count, 2)
         
         func textFieldExpression(layerIdentifier: String) -> Exp? {
-            let expressionArray = style.layerProperty(for: layerIdentifier, property: "text-field")
+            let expressionArray = style.layerProperty(for: layerIdentifier, property: "text-field").value
             
             var expressionData: Data? = nil
             XCTAssertNoThrow(expressionData = try JSONSerialization.data(withJSONObject: expressionArray, options: []))
