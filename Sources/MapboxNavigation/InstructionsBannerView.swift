@@ -192,7 +192,7 @@ open class BaseInstructionsBannerView: UIControl {
         distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
     
-    // MARK: - Layout
+    // MARK: Layout
     static let padding: CGFloat = 16
     static let maneuverViewSize = CGSize(width: 38, height: 38)
     static let stepListIndicatorViewSize = CGSize(width: 30, height: 5)

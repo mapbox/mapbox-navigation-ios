@@ -9,6 +9,8 @@ import MapboxMaps
  */
 public protocol CameraStateTransition: AnyObject {
     
+    // MARK: Updating the Camera
+    
     var mapView: MapView? { get }
     
     /**

@@ -13,6 +13,8 @@ import MapboxMaps
 @available(iOS 12.0, *)
 public class CarPlayManager: NSObject {
     
+    // MARK: CarPlay Infrastructure
+    
     /**
      A controller that manages the templates for constructing a scene’s user interface.
      */
@@ -24,29 +26,22 @@ public class CarPlayManager: NSObject {
     public fileprivate(set) var carWindow: UIWindow?
 
     /**
-     Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization.
-     */
-    public weak var delegate: CarPlayManagerDelegate?
-
-    /**
-     If set to `true`, turn-by-turn directions will simulate the user traveling along the selected route when initiated from CarPlay.
-     */
-    public var simulatesLocations = false
-
-    /**
-     A multiplier to be applied to the user's speed in simulation mode.
-     */
-    public var simulatedSpeedMultiplier = 1.0 {
-        didSet {
-            navigationService?.simulationSpeedMultiplier = simulatedSpeedMultiplier
-        }
-    }
-    
-    /**
      A template that displays a navigation overlay on the map.
      */
     public fileprivate(set) var mainMapTemplate: CPMapTemplate?
     
+    /**
+     A Boolean value indicating whether the phone is connected to CarPlay.
+     */
+    public static var isConnected = false
+    
+    // MARK: Navigation Configuration
+    
+    /**
+     Developers should assign their own object as a delegate implementing the CarPlayManagerDelegate protocol for customization.
+     */
+    public weak var delegate: CarPlayManagerDelegate?
+
     /**
      `UIViewController`, which provides a fully-featured turn-by-turn navigation UI for CarPlay.
      */
@@ -56,11 +51,6 @@ public class CarPlayManager: NSObject {
      Property, which contains type of `CarPlayNavigationViewController`.
      */
     public let carPlayNavigationViewControllerType: CarPlayNavigationViewController.Type
-
-    /**
-     A Boolean value indicating whether the phone is connected to CarPlay.
-     */
-    public static var isConnected = false
 
     /**
      The events manager used during turn-by-turn navigation while connected to
@@ -74,6 +64,105 @@ public class CarPlayManager: NSObject {
      */
     public let directions: Directions
 
+    private weak var navigationService: NavigationService?
+    private var idleTimerCancellable: IdleTimerManager.Cancellable?
+    
+    /**
+     Programatically begins a CarPlay turn-by-turn navigation session.
+     
+     - parameter currentLocation: The current location of the user. This will be used to initally draw the current location icon.
+     - parameter navigationService: The service with which to navigation. CarPlayNavigationViewController will observe the progress updates from this service.
+     - precondition: The NavigationViewController must be fully presented at the time of this call.
+     */
+    public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D,
+                                           navigationService: NavigationService) {
+        // Stop the background `PassiveLocationProvider` sending location and heading update `mapView` before turn-by-turn navigation session starts.
+        if let locationProvider = navigationMapView?.mapView.location.locationProvider {
+            locationProvider.stopUpdatingLocation()
+            locationProvider.stopUpdatingHeading()
+            if let passiveLocationProvider = locationProvider as? PassiveLocationProvider {
+                passiveLocationProvider.locationManager.pauseTripSession()
+            }
+        }
+        
+        var trip = CPTrip(routeResponse: navigationService.indexedRouteResponse.routeResponse)
+        trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
+        
+        self.navigationService = navigationService
+        
+        if let mapTemplate = mainMapTemplate, let routeChoice = trip.routeChoices.first {
+            self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
+        }
+    }
+    
+    /**
+     Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
+     
+     - parameter styles: The styles to display in the CarPlay interface. If this argument is omitted, `DayStyle` and `NightStyle` are displayed by default.
+     - parameter directions: The object that calculates routes when the user interacts with the CarPlay interface. If this argument is `nil` or omitted, the shared `Directions` object is used by default.
+     - parameter eventsManager: The events manager to use during turn-by-turn navigation while connected to CarPlay. If this argument is `nil` or omitted, a standard `NavigationEventsManager` object is used by default.
+     */
+    public convenience init(styles: [Style]? = nil,
+                            directions: Directions? = nil,
+                            eventsManager: NavigationEventsManager? = nil) {
+        self.init(styles: styles,
+                  directions: directions,
+                  eventsManager: eventsManager,
+                  carPlayNavigationViewControllerClass: nil)
+    }
+    
+    init(styles: [Style]? = nil,
+         directions: Directions? = nil,
+         eventsManager: NavigationEventsManager? = nil,
+         carPlayNavigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
+        self.styles = styles ?? [DayStyle(), NightStyle()]
+        let mapboxDirections = directions ?? NavigationSettings.shared.directions
+        self.directions = mapboxDirections
+        self.eventsManager = eventsManager ?? .init(activeNavigationDataSource: nil,
+                                                    accessToken: NavigationSettings.shared.directions.credentials.accessToken)
+        self.mapTemplateProvider = MapTemplateProvider()
+        self.carPlayNavigationViewControllerType = carPlayNavigationViewControllerClass ?? CarPlayNavigationViewController.self
+        
+        super.init()
+        
+        self.mapTemplateProvider.delegate = self
+    }
+    
+    
+    
+    func subscribeForNotifications() {
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(navigationCameraStateDidChange(_:)),
+                                               name: .navigationCameraStateDidChange,
+                                               object: carPlayNavigationViewController?.navigationMapView?.navigationCamera)
+    }
+    
+    func unsubscribeFromNotifications() {
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationCameraStateDidChange,
+                                                  object: carPlayNavigationViewController?.navigationMapView?.navigationCamera)
+    }
+    
+    @objc func navigationCameraStateDidChange(_ notification: Notification) {
+        guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
+        switch state {
+        case .idle:
+            break
+        case .transitionToFollowing, .following:
+            userTrackingButton.image = UIImage(named: "carplay_overview",
+                                               in: .mapboxNavigation,
+                                               compatibleWith: nil)
+            break
+        case .transitionToOverview, .overview:
+            userTrackingButton.image = UIImage(named: "carplay_locate",
+                                               in: .mapboxNavigation,
+                                               compatibleWith: nil)
+            break
+        }
+    }
+    
+    // MARK: Map Configuration
+    
     /**
      The styles displayed in the CarPlay interface.
      */
@@ -93,6 +182,33 @@ public class CarPlayManager: NSObject {
         }
         return nil
     }
+    
+    /**
+     The main `NavigationMapView` displayed inside CarPlay.
+     */
+    public var navigationMapView: NavigationMapView? {
+        return carPlayMapViewController?.navigationMapView
+    }
+
+    var mapTemplateProvider: MapTemplateProvider
+    
+    // MARK: Simulating a Route
+    
+    /**
+     If set to `true`, turn-by-turn directions will simulate the user traveling along the selected route when initiated from CarPlay.
+     */
+    public var simulatesLocations = false
+
+    /**
+     A multiplier to be applied to the user's speed in simulation mode.
+     */
+    public var simulatedSpeedMultiplier = 1.0 {
+        didSet {
+            navigationService?.simulationSpeedMultiplier = simulatedSpeedMultiplier
+        }
+    }
+    
+    // MARK: Customizing the Bar Buttons
 
     /**
      The bar button that exits the navigation session.
@@ -169,113 +285,9 @@ public class CarPlayManager: NSObject {
         
         return userTrackingButton
     }()
-    
-    /**
-     The main `NavigationMapView` displayed inside CarPlay.
-     */
-    public var navigationMapView: NavigationMapView? {
-        return carPlayMapViewController?.navigationMapView
-    }
-    
-    private weak var navigationService: NavigationService?
-    private var idleTimerCancellable: IdleTimerManager.Cancellable?
-    
-    var mapTemplateProvider: MapTemplateProvider
-    
-    /**
-     Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
-     
-     - parameter styles: The styles to display in the CarPlay interface. If this argument is omitted, `DayStyle` and `NightStyle` are displayed by default.
-     - parameter directions: The object that calculates routes when the user interacts with the CarPlay interface. If this argument is `nil` or omitted, the shared `Directions` object is used by default.
-     - parameter eventsManager: The events manager to use during turn-by-turn navigation while connected to CarPlay. If this argument is `nil` or omitted, a standard `NavigationEventsManager` object is used by default.
-     */
-    public convenience init(styles: [Style]? = nil,
-                            directions: Directions? = nil,
-                            eventsManager: NavigationEventsManager? = nil) {
-        self.init(styles: styles,
-                  directions: directions,
-                  eventsManager: eventsManager,
-                  carPlayNavigationViewControllerClass: nil)
-    }
-    
-    init(styles: [Style]? = nil,
-         directions: Directions? = nil,
-         eventsManager: NavigationEventsManager? = nil,
-         carPlayNavigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
-        self.styles = styles ?? [DayStyle(), NightStyle()]
-        let mapboxDirections = directions ?? NavigationSettings.shared.directions
-        self.directions = mapboxDirections
-        self.eventsManager = eventsManager ?? .init(activeNavigationDataSource: nil,
-                                                    accessToken: NavigationSettings.shared.directions.credentials.accessToken)
-        self.mapTemplateProvider = MapTemplateProvider()
-        self.carPlayNavigationViewControllerType = carPlayNavigationViewControllerClass ?? CarPlayNavigationViewController.self
-        
-        super.init()
-        
-        self.mapTemplateProvider.delegate = self
-    }
-    
-    /**
-     Programatically begins a carplay turn-by-turn navigation session.
-     
-     - parameter currentLocation: The current location of the user. This will be used to initally draw the current location icon.
-     - parameter navigationService: The service with which to navigation. CarPlayNavigationViewController will observe the progress updates from this service.
-     - precondition: The NavigationViewController must be fully presented at the time of this call.
-     */
-    public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D,
-                                           navigationService: NavigationService) {
-        // Stop the background `PassiveLocationProvider` sending location and heading update `mapView` before turn-by-turn navigation session starts.
-        if let locationProvider = navigationMapView?.mapView.location.locationProvider {
-            locationProvider.stopUpdatingLocation()
-            locationProvider.stopUpdatingHeading()
-            if let passiveLocationProvider = locationProvider as? PassiveLocationProvider {
-                passiveLocationProvider.locationManager.pauseTripSession()
-            }
-        }
-        
-        var trip = CPTrip(routeResponse: navigationService.indexedRouteResponse.routeResponse)
-        trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
-        
-        self.navigationService = navigationService
-        
-        if let mapTemplate = mainMapTemplate, let routeChoice = trip.routeChoices.first {
-            self.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
-        }
-    }
-    
-    func subscribeForNotifications() {
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(navigationCameraStateDidChange(_:)),
-                                               name: .navigationCameraStateDidChange,
-                                               object: carPlayNavigationViewController?.navigationMapView?.navigationCamera)
-    }
-    
-    func unsubscribeFromNotifications() {
-        NotificationCenter.default.removeObserver(self,
-                                                  name: .navigationCameraStateDidChange,
-                                                  object: carPlayNavigationViewController?.navigationMapView?.navigationCamera)
-    }
-    
-    @objc func navigationCameraStateDidChange(_ notification: Notification) {
-        guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
-        switch state {
-        case .idle:
-            break
-        case .transitionToFollowing, .following:
-            userTrackingButton.image = UIImage(named: "carplay_overview",
-                                               in: .mapboxNavigation,
-                                               compatibleWith: nil)
-            break
-        case .transitionToOverview, .overview:
-            userTrackingButton.image = UIImage(named: "carplay_locate",
-                                               in: .mapboxNavigation,
-                                               compatibleWith: nil)
-            break
-        }
-    }
 }
 
-// MARK: - CPApplicationDelegate methods
+// MARK: CPApplicationDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayManager: CPApplicationDelegate {
@@ -398,7 +410,7 @@ extension CarPlayManager: CPApplicationDelegate {
     }
 }
 
-// MARK: - CPInterfaceControllerDelegate methods
+// MARK: CPInterfaceControllerDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayManager: CPInterfaceControllerDelegate {
@@ -442,6 +454,8 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
 
 @available(iOS 12.0, *)
 extension CarPlayManager {
+    
+    // MARK: Route Preview
     
     /**
      Calculates routes to the given destination using the [Mapbox Directions API](https://www.mapbox.com/api-documentation/navigation/#directions) and previews them on a map.
@@ -576,7 +590,7 @@ extension CarPlayManager {
     }
 }
 
-// MARK: - CPMapTemplateDelegate methods
+// MARK: CPMapTemplateDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayManager: CPMapTemplateDelegate {
@@ -812,7 +826,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 }
 
-// MARK: - CarPlayNavigationViewControllerDelegate methods
+// MARK: CarPlayNavigationViewControllerDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
@@ -856,7 +870,7 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
     }
 }
 
-// MARK: - CarPlayMapViewControllerDelegate methods
+// MARK: CarPlayMapViewControllerDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayMapViewControllerDelegate {
@@ -871,7 +885,7 @@ extension CarPlayManager: CarPlayMapViewControllerDelegate {
     }
 }
 
-// MARK: - MapTemplateProviderDelegate methods
+// MARK: MapTemplateProviderDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayManager: MapTemplateProviderDelegate {

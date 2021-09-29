@@ -12,6 +12,7 @@ import CarPlay
 @available(iOS 12.0, *)
 public class CarPlayMapViewController: UIViewController {
     
+    // MARK: UI Elements Configuration
     /**
      The view controller’s delegate.
      */
@@ -23,6 +24,15 @@ public class CarPlayMapViewController: UIViewController {
      The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
      */
     public private(set) var styleManager: StyleManager?
+    
+    /**
+     A very coarse location manager used for distinguishing between daytime and nighttime.
+     */
+    fileprivate let coarseLocationManager: CLLocationManager = {
+        let coarseLocationManager = CLLocationManager()
+        coarseLocationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        return coarseLocationManager
+    }()
     
     /**
      A view that displays the current speed limit.
@@ -38,20 +48,13 @@ public class CarPlayMapViewController: UIViewController {
         }
     }
     
-    /**
-     A very coarse location manager used for distinguishing between daytime and nighttime.
-     */
-    fileprivate let coarseLocationManager: CLLocationManager = {
-        let coarseLocationManager = CLLocationManager()
-        coarseLocationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-        return coarseLocationManager
-    }()
-    
     var navigationMapView: NavigationMapView {
         get {
             return self.view as! NavigationMapView
         }
     }
+    
+    // MARK: Bar Buttons Configuration
     
     /**
      The map button for recentering the map view if a user action causes it to stop following the user.
@@ -120,7 +123,46 @@ public class CarPlayMapViewController: UIViewController {
      */
     public internal(set) var dismissPanningButton: CPMapButton?
     
-    // MARK: - Initialization methods
+    /**
+     Creates a new pan map button for the CarPlay map view controller.
+     
+     - parameter mapTemplate: The map template available to the pan map button for display.
+     - returns: `CPMapButton` instance.
+     */
+    @discardableResult public func panningInterfaceDisplayButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
+        let panButton = CPMapButton { [weak mapTemplate] _ in
+            guard let mapTemplate = mapTemplate else { return }
+            if !mapTemplate.isPanningInterfaceVisible {
+                mapTemplate.showPanningInterface(animated: true)
+            }
+        }
+        
+        let bundle = Bundle.mapboxNavigation
+        panButton.image = UIImage(named: "carplay_pan", in: bundle, compatibleWith: traitCollection)
+        
+        return panButton
+    }
+    
+    /**
+     Creates a new close button to dismiss the visible panning buttons on the map.
+     
+     - parameter mapTemplate: The map template available to the pan map button for display.
+     - returns: `CPMapButton` instance.
+     */
+    @discardableResult public func panningInterfaceDismissalButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
+        let defaultButtons = mapTemplate.mapButtons
+        let closeButton = CPMapButton { _ in
+            mapTemplate.mapButtons = defaultButtons
+            mapTemplate.dismissPanningInterface(animated: true)
+        }
+        
+        let bundle = Bundle.mapboxNavigation
+        closeButton.image = UIImage(named: "carplay_close", in: bundle, compatibleWith: traitCollection)
+        
+        return closeButton
+    }
+    
+    // MARK: Initialization Methods
     
     /**
      Initializes a new CarPlay map view controller.
@@ -151,40 +193,6 @@ public class CarPlayMapViewController: UIViewController {
     deinit {
         unsubscribeFromFreeDriveNotifications()
     }
-    
-    // MARK: - UIViewController lifecycle methods
-    
-    override public func loadView() {
-        setupNavigationMapView()
-        setupPassiveLocationProvider()
-    }
-    
-    override public func viewDidLoad() {
-        super.viewDidLoad()
-        
-        setupStyleManager()
-        setupSpeedLimitView()
-        navigationMapView.navigationCamera.follow()
-    }
-    
-    override public func viewSafeAreaInsetsDidChange() {
-        super.viewSafeAreaInsetsDidChange()
-        
-        guard let activeRoute = navigationMapView.routes?.first else {
-            navigationMapView.navigationCamera.follow()
-            return
-        }
-        
-        if navigationMapView.navigationCamera.state == .idle {
-            var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
-            cameraOptions.pitch = 0
-            navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
-            
-            navigationMapView.fitCamera(to: activeRoute)
-        }
-    }
-    
-    // MARK: - Setting-up methods
     
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
@@ -228,7 +236,7 @@ public class CarPlayMapViewController: UIViewController {
         subscribeForFreeDriveNotifications()
     }
     
-    // MARK: - Notifications observer methods
+    // MARK: Notifications Observer Methods
     
     func subscribeForFreeDriveNotifications() {
         NotificationCenter.default.addObserver(self,
@@ -248,47 +256,40 @@ public class CarPlayMapViewController: UIViewController {
         speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
     }
     
-    /**
-     Creates a new pan map button for the CarPlay map view controller.
-     
-     - parameter mapTemplate: The map template available to the pan map button for display.
-     - returns: `CPMapButton` instance.
-     */
-    @discardableResult public func panningInterfaceDisplayButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
-        let panButton = CPMapButton { [weak mapTemplate] _ in
-            guard let mapTemplate = mapTemplate else { return }
-            if !mapTemplate.isPanningInterfaceVisible {
-                mapTemplate.showPanningInterface(animated: true)
-            }
-        }
-        
-        let bundle = Bundle.mapboxNavigation
-        panButton.image = UIImage(named: "carplay_pan", in: bundle, compatibleWith: traitCollection)
-        
-        return panButton
+    // MARK: UIViewController Lifecycle Methods
+    
+    override public func loadView() {
+        setupNavigationMapView()
+        setupPassiveLocationProvider()
     }
     
-    /**
-     Creates a new close button to dismiss the visible panning buttons on the map.
-     
-     - parameter mapTemplate: The map template available to the pan map button for display.
-     - returns: `CPMapButton` instance.
-     */
-    @discardableResult public func panningInterfaceDismissalButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
-        let defaultButtons = mapTemplate.mapButtons
-        let closeButton = CPMapButton { _ in
-            mapTemplate.mapButtons = defaultButtons
-            mapTemplate.dismissPanningInterface(animated: true)
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setupStyleManager()
+        setupSpeedLimitView()
+        navigationMapView.navigationCamera.follow()
+    }
+    
+    override public func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        
+        guard let activeRoute = navigationMapView.routes?.first else {
+            navigationMapView.navigationCamera.follow()
+            return
         }
         
-        let bundle = Bundle.mapboxNavigation
-        closeButton.image = UIImage(named: "carplay_close", in: bundle, compatibleWith: traitCollection)
-        
-        return closeButton
+        if navigationMapView.navigationCamera.state == .idle {
+            var cameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
+            cameraOptions.pitch = 0
+            navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
+            
+            navigationMapView.fitCamera(to: activeRoute)
+        }
     }
 }
 
-// MARK: - StyleManagerDelegate methods
+// MARK: StyleManagerDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: StyleManagerDelegate {
@@ -319,7 +320,7 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     }
 }
 
-// MARK: - NavigationMapViewDelegate methods
+// MARK: NavigationMapViewDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayMapViewController: NavigationMapViewDelegate {

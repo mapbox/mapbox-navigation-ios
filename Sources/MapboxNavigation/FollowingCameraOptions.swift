@@ -6,6 +6,8 @@ import CoreLocation
  */
 public struct FollowingCameraOptions: Equatable {
 
+    // MARK: Restricting the Orientation
+    
     /**
      Pitch, which will be taken into account when preparing `CameraOptions` during active guidance
      navigation.
@@ -56,6 +58,8 @@ public struct FollowingCameraOptions: Equatable {
         }
     }
     
+    // MARK: Camera Frame Modification Flags
+    
     /**
      If `true`, `NavigationViewportDataSource` will continuously modify `CameraOptions.center` property
      when producing camera frame in `NavigationCameraState.following` state.
@@ -105,6 +109,8 @@ public struct FollowingCameraOptions: Equatable {
      Defaults to `true`.
      */
     public var paddingUpdatesAllowed: Bool = true
+    
+    // MARK: Emphasizing the Upcoming Maneuver
     
     /**
      Options, which allow to modify the framed route geometries based on the intersection density.

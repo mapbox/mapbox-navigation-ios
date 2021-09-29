@@ -7,7 +7,7 @@ import MapboxMaps
 /// This class manages various scenarious from moving camera to a specific region on demand and handling device rotation, up to reacting to active guidance events.
 class CameraController: NavigationComponent, NavigationComponentDelegate {
     
-    // MARK: - Properties
+    // MARK: Properties
     
     weak private(set) var navigationViewData: NavigationViewData!
     
@@ -25,7 +25,7 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         return navigationViewData.navigationView.bottomBannerContainerView
     }
     
-    // MARK: - Methods
+    // MARK: Methods
     
     init(_ navigationViewData: NavigationViewData) {
         self.navigationViewData = navigationViewData
@@ -140,13 +140,13 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         return insets
     }
     
-    // MARK: - NavigationComponent implementation
+    // MARK: NavigationComponent Implementation
     
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         updateNavigationCameraViewport()
     }
     
-    // MARK: - NavigationComponentDelegate implementation
+    // MARK: NavigationComponentDelegate Implementation
     
     func navigationViewDidLoad(_: UIView) {
         navigationViewData.navigationView.overviewButton.addTarget(self, action: #selector(overview(_:)), for: .touchUpInside)

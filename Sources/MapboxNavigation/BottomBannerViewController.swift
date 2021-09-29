@@ -19,6 +19,36 @@ public protocol BottomBannerViewControllerDelegate: AnyObject {
  */
 @IBDesignable
 open class BottomBannerViewController: UIViewController, NavigationComponent {
+    
+    var previousProgress: RouteProgress?
+    var timer: DispatchTimer?
+    
+    let dateFormatter = DateFormatter()
+    let dateComponentsFormatter = DateComponentsFormatter()
+    let distanceFormatter = DistanceFormatter()
+    
+    var verticalCompactConstraints = [NSLayoutConstraint]()
+    var verticalRegularConstraints = [NSLayoutConstraint]()
+    
+    var congestionLevel: CongestionLevel = .unknown {
+        didSet {
+            switch congestionLevel {
+            case .unknown:
+                timeRemainingLabel.textColor = timeRemainingLabel.trafficUnknownColor
+            case .low:
+                timeRemainingLabel.textColor = timeRemainingLabel.trafficLowColor
+            case .moderate:
+                timeRemainingLabel.textColor = timeRemainingLabel.trafficModerateColor
+            case .heavy:
+                timeRemainingLabel.textColor = timeRemainingLabel.trafficHeavyColor
+            case .severe:
+                timeRemainingLabel.textColor = timeRemainingLabel.trafficSevereColor
+            }
+        }
+    }
+    
+    // MARK: Child Views Configuration
+    
     /**
      A padded spacer view that covers the bottom safe area of the device, if any.
      */
@@ -59,38 +89,13 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
      */
     open var horizontalDividerView: SeparatorView!
     
+    // MARK: Setup and Initialization
+    
     /**
      The delegate for the view controller.
      - seealso: BottomBannerViewControllerDelegate
      */
     open weak var delegate: BottomBannerViewControllerDelegate?
-    
-    var previousProgress: RouteProgress?
-    var timer: DispatchTimer?
-    
-    let dateFormatter = DateFormatter()
-    let dateComponentsFormatter = DateComponentsFormatter()
-    let distanceFormatter = DistanceFormatter()
-    
-    var verticalCompactConstraints = [NSLayoutConstraint]()
-    var verticalRegularConstraints = [NSLayoutConstraint]()
-    
-    var congestionLevel: CongestionLevel = .unknown {
-        didSet {
-            switch congestionLevel {
-            case .unknown:
-                timeRemainingLabel.textColor = timeRemainingLabel.trafficUnknownColor
-            case .low:
-                timeRemainingLabel.textColor = timeRemainingLabel.trafficLowColor
-            case .moderate:
-                timeRemainingLabel.textColor = timeRemainingLabel.trafficModerateColor
-            case .heavy:
-                timeRemainingLabel.textColor = timeRemainingLabel.trafficHeavyColor
-            case .severe:
-                timeRemainingLabel.textColor = timeRemainingLabel.trafficSevereColor
-            }
-        }
-    }
     
     /**
      Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.
@@ -155,6 +160,8 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         distanceRemainingLabel.text = "4 mi"
         arrivalTimeLabel.text = "10:09"
     }
+    
+    // MARK: NavigationComponent support
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         refreshETA()

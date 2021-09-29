@@ -1,6 +1,9 @@
 import AVFoundation
 
 public extension AVAudioSession {
+    
+    // MARK: Adjusting the Volume
+    
     func tryDuckAudio() -> Error? {
         do {
             if #available(iOS 12.0, *) {

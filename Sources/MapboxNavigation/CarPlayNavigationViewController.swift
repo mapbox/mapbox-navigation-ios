@@ -14,28 +14,7 @@ import CarPlay
 @available(iOS 12.0, *)
 public class CarPlayNavigationViewController: UIViewController {
     
-    /**
-     The view controller’s delegate.
-     */
-    public weak var delegate: CarPlayNavigationViewControllerDelegate?
-    
-    /**
-     `CarPlayManager` instance, which contains main `UIWindow` content and is used by
-     `CarPlayNavigationViewController` for presentation.
-     */
-    public var carPlayManager: CarPlayManager
-    
-    /**
-     Provides all routing logic for the user.
-     
-     See `NavigationService` for more information.
-     */
-    public var navigationService: NavigationService
-    
-    /**
-     The map view showing the route and the user’s location.
-     */
-    public fileprivate(set) var navigationMapView: NavigationMapView?
+    // MARK: Child Views and Styling Configuration
     
     /**
      A view indicating what direction the vehicle is traveling towards, snapped
@@ -78,26 +57,254 @@ public class CarPlayNavigationViewController: UIViewController {
     }
     
     /**
+     Controls the styling of CarPlayNavigationViewController and its components.
+
+     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
+     */
+    public private(set) var styleManager: StyleManager?
+    
+    var mapTemplate: CPMapTemplate
+    var carInterfaceController: CPInterfaceController
+    
+    func setupOrnaments() {
+        let compassView = CarPlayCompassView()
+        view.addSubview(compassView)
+        compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
+        compassView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        self.compassView = compassView
+        
+        let speedLimitView = SpeedLimitView()
+        speedLimitView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(speedLimitView)
+        
+        speedLimitView.topAnchor.constraint(equalTo: compassView.bottomAnchor, constant: 8).isActive = true
+        speedLimitView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
+        speedLimitView.widthAnchor.constraint(equalToConstant: 30).isActive = true
+        speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        self.speedLimitView = speedLimitView
+    }
+    
+    func setupStyleManager() {
+        styleManager = StyleManager()
+        styleManager?.delegate = self
+        styleManager?.styles = self.styles
+    }
+    
+    /**
+     Updates `CPMapTemplate.tripEstimateStyle` based on provided `UIUserInterfaceStyle` value.
+     
+     - parameter userInterfaceStyle: `UIUserInterfaceStyle`, which is currently used on CarPlay.
+     */
+    func updateTripEstimateStyle(_ userInterfaceStyle: UIUserInterfaceStyle) {
+        switch traitCollection.userInterfaceStyle {
+        case .dark:
+            mapTemplate.tripEstimateStyle = .dark
+        default:
+            mapTemplate.tripEstimateStyle = .light
+        }
+    }
+    
+    // MARK: Collecting User Feedback
+    
+    /**
      Provides methods for creating and sending user feedback.
      */
     public var eventsManager: NavigationEventsManager {
         return navigationService.eventsManager
     }
     
+    var carFeedbackTemplate: CPGridTemplate!
+    
     /**
-     Controls the styling of CarPlayNavigationViewController and its components.
-
-     The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
+     Shows the interface for providing feedback about the route.
      */
-    public private(set) var styleManager: StyleManager?
+    public func showFeedback() {
+        carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
+    }
+    
+    func createFeedbackUI() -> CPGridTemplate {
+        let feedbackItems: [FeedbackItem] = [
+            ActiveNavigationFeedbackType.looksIncorrect(subtype: nil),
+            ActiveNavigationFeedbackType.confusingAudio(subtype: nil),
+            ActiveNavigationFeedbackType.illegalRoute(subtype: nil),
+            ActiveNavigationFeedbackType.roadClosure(subtype: nil),
+            ActiveNavigationFeedbackType.routeQuality(subtype: nil),
+            ActiveNavigationFeedbackType.positioning
+        ].map { $0.generateFeedbackItem() }
+        
+        let feedbackButtonHandler: (_ : CPGridButton) -> Void = { [weak self] (button) in
+            guard let self = self else { return }
+            self.carInterfaceController.popTemplate(animated: true)
+            
+            guard let feedback = self.eventsManager.createFeedback() else { return }
+            let foundItem = feedbackItems.filter { $0.image == button.image }
+            guard let feedbackItem = foundItem.first else { return }
+            self.eventsManager.sendFeedback(feedback, type: feedbackItem.type)
+            
+            let dismissTitle = NSLocalizedString("CARPLAY_DISMISS",
+                                                 bundle: .mapboxNavigation,
+                                                 value: "Dismiss",
+                                                 comment: "Title for dismiss button")
+            
+            let submittedTitle = NSLocalizedString("CARPLAY_SUBMITTED_FEEDBACK",
+                                                   bundle: .mapboxNavigation,
+                                                   value: "Submitted",
+                                                   comment: "Alert title that shows when feedback has been submitted")
+            
+            let action = CPAlertAction(title: dismissTitle,
+                                       style: .default,
+                                       handler: { _ in })
+            
+            let alert = CPNavigationAlert(titleVariants: [submittedTitle],
+                                          subtitleVariants: nil,
+                                          imageSet: nil,
+                                          primaryAction: action,
+                                          secondaryAction: nil,
+                                          duration: 2.5)
+            
+            self.mapTemplate.present(navigationAlert: alert, animated: true)
+        }
+        
+        let buttons: [CPGridButton] = feedbackItems.map {
+            return CPGridButton(titleVariants: [$0.title.components(separatedBy: "\n").joined(separator: " ")],
+                                image: $0.image,
+                                handler: feedbackButtonHandler)
+        }
+        
+        let gridTitle = NSLocalizedString("CARPLAY_FEEDBACK",
+                                          bundle: .mapboxNavigation,
+                                          value: "Feedback",
+                                          comment: "Title for feedback template in CarPlay")
+        
+        return CPGridTemplate(title: gridTitle, gridButtons: buttons)
+    }
+    
+    func endOfRouteFeedbackTemplate() -> CPGridTemplate {
+        let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
+            if let title = button.titleVariants.first {
+                let rating = Int(title.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
+                let endOfRouteFeedback = EndOfRouteFeedback(rating: rating, comment: nil)
+                self?.navigationService.endNavigation(feedback: endOfRouteFeedback)
+            }
+            
+            self?.carInterfaceController.popTemplate(animated: true)
+            self?.exitNavigation()
+        }
+        
+        var buttons: [CPGridButton] = []
+        let starImage = UIImage(named: "star",
+                                in: .mapboxNavigation,
+                                compatibleWith: nil)!
+        
+        for rating in 1...5 {
+            let title = NSLocalizedString("RATING_STARS_FORMAT",
+                                          bundle: .mapboxNavigation,
+                                          value: "%ld star(s) set.",
+                                          comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars")
+            let titleVariant = String.localizedStringWithFormat(title, rating)
+            let button = CPGridButton(titleVariants: [titleVariant],
+                                      image: starImage,
+                                      handler: buttonHandler)
+            buttons.append(button)
+        }
+        
+        let gridTitle = NSLocalizedString("CARPLAY_RATE_RIDE",
+                                          bundle: .mapboxNavigation,
+                                          value: "Rate your ride",
+                                          comment: "Title for rating template in CarPlay")
+        
+        return CPGridTemplate(title: gridTitle, gridButtons: buttons)
+    }
+    
+    func presentArrivalUI() {
+        let arrivalTitle = NSLocalizedString("CARPLAY_ARRIVED",
+                                             bundle: .mapboxNavigation,
+                                             value: "You have arrived",
+                                             comment: "Title on arrival action sheet")
+        
+        let arrivalMessage = NSLocalizedString("CARPLAY_ARRIVED_MESSAGE",
+                                               bundle: .mapboxNavigation,
+                                               value: "What would you like to do?",
+                                               comment: "Message on arrival action sheet")
+        
+        let exitTitle = NSLocalizedString("CARPLAY_EXIT_NAVIGATION",
+                                          bundle: .mapboxNavigation,
+                                          value: "Exit navigation",
+                                          comment: "Title on the exit button in the arrival form")
+        
+        let exitAction = CPAlertAction(title: exitTitle, style: .cancel) { (action) in
+            self.exitNavigation()
+            self.dismiss(animated: true)
+        }
+        
+        let rateTitle = NSLocalizedString("CARPLAY_RATE_TRIP",
+                                          bundle: .mapboxNavigation,
+                                          value: "Rate your trip",
+                                          comment: "Title on rate button in CarPlay")
+        
+        let rateAction = CPAlertAction(title: rateTitle, style: .default) { (action) in
+            self.carInterfaceController.pushTemplate(self.endOfRouteFeedbackTemplate(), animated: true)
+        }
+        
+        let alert = CPActionSheetTemplate(title: arrivalTitle,
+                                          message: arrivalMessage,
+                                          actions: [rateAction, exitAction])
+        
+        carInterfaceController.dismissTemplate(animated: true)
+        carInterfaceController.presentTemplate(alert, animated: true)
+    }
+    
+    // MARK: Navigating the Route
+    
+    /**
+     The view controller’s delegate.
+     */
+    public weak var delegate: CarPlayNavigationViewControllerDelegate?
+    
+    /**
+     `CarPlayManager` instance, which contains main `UIWindow` content and is used by
+     `CarPlayNavigationViewController` for presentation.
+     */
+    public var carPlayManager: CarPlayManager
+    
+    /**
+     Provides all routing logic for the user.
+     
+     See `NavigationService` for more information.
+     */
+    public var navigationService: NavigationService
+    
+    /**
+     The map view showing the route and the user’s location.
+     */
+    public fileprivate(set) var navigationMapView: NavigationMapView?
+    
+    
 
     var carSession: CPNavigationSession!
-    var mapTemplate: CPMapTemplate
-    var carFeedbackTemplate: CPGridTemplate!
-    var carInterfaceController: CPInterfaceController
     var currentLegIndexMapped: Int = 0
 
-    // MARK: - Initialization methods
+    /**
+     Begins a navigation session along the given trip.
+     
+     - parameter trip: The trip to begin navigating along.
+     */
+    public func startNavigationSession(for trip: CPTrip) {
+        carSession = mapTemplate.startNavigationSession(for: trip)
+    }
+    
+    /**
+     Ends the current navigation session.
+     
+     - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
+     */
+    public func exitNavigation(byCanceling canceled: Bool = false) {
+        carSession.finishTrip()
+        dismiss(animated: true) {
+            self.delegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
+        }
+    }
     
     /**
      Creates a new CarPlay navigation view controller for the given route controller and user interface.
@@ -129,8 +336,6 @@ public class CarPlayNavigationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // MARK: - UIViewController lifecycle methods
-    
     override public func viewDidLoad() {
         super.viewDidLoad()
         
@@ -158,52 +363,6 @@ public class CarPlayNavigationViewController: UIViewController {
             updateTripEstimateStyle(traitCollection.userInterfaceStyle)
         }
     }
-    
-    /**
-     Updates `CPMapTemplate.tripEstimateStyle` based on provided `UIUserInterfaceStyle` value.
-     
-     - parameter userInterfaceStyle: `UIUserInterfaceStyle`, which is currently used on CarPlay.
-     */
-    func updateTripEstimateStyle(_ userInterfaceStyle: UIUserInterfaceStyle) {
-        switch traitCollection.userInterfaceStyle {
-        case .dark:
-            mapTemplate.tripEstimateStyle = .dark
-        default:
-            mapTemplate.tripEstimateStyle = .light
-        }
-    }
-    
-    // MARK: - Public API methods
-    
-    /**
-     Begins a navigation session along the given trip.
-     
-     - parameter trip: The trip to begin navigating along.
-     */
-    public func startNavigationSession(for trip: CPTrip) {
-        carSession = mapTemplate.startNavigationSession(for: trip)
-    }
-    
-    /**
-     Ends the current navigation session.
-     
-     - parameter canceled: A Boolean value indicating whether this method is being called because the user intends to cancel the trip, as opposed to letting it run to completion.
-     */
-    public func exitNavigation(byCanceling canceled: Bool = false) {
-        carSession.finishTrip()
-        dismiss(animated: true) {
-            self.delegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
-        }
-    }
-    
-    /**
-     Shows the interface for providing feedback about the route.
-     */
-    public func showFeedback() {
-        carInterfaceController.pushTemplate(self.carFeedbackTemplate, animated: true)
-    }
-    
-    // MARK: - Setting-up methods
     
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: view.bounds, navigationCameraType: .carPlay)
@@ -235,32 +394,7 @@ public class CarPlayNavigationViewController: UIViewController {
         }
     }
     
-    func setupOrnaments() {
-        let compassView = CarPlayCompassView()
-        view.addSubview(compassView)
-        compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
-        compassView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
-        self.compassView = compassView
-        
-        let speedLimitView = SpeedLimitView()
-        speedLimitView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(speedLimitView)
-        
-        speedLimitView.topAnchor.constraint(equalTo: compassView.bottomAnchor, constant: 8).isActive = true
-        speedLimitView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -8).isActive = true
-        speedLimitView.widthAnchor.constraint(equalToConstant: 30).isActive = true
-        speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
-        
-        self.speedLimitView = speedLimitView
-    }
-    
-    func setupStyleManager() {
-        styleManager = StyleManager()
-        styleManager?.delegate = self
-        styleManager?.styles = self.styles
-    }
-    
-    // MARK: - Notifications observer methods
+    // MARK: Notifications Observer Methods
     
     func observeNotifications(_ service: NavigationService) {
         NotificationCenter.default.addObserver(self,
@@ -480,138 +614,6 @@ public class CarPlayNavigationViewController: UIViewController {
         carSession.upcomingManeuvers = maneuvers
     }
     
-    func createFeedbackUI() -> CPGridTemplate {
-        let feedbackItems: [FeedbackItem] = [
-            ActiveNavigationFeedbackType.looksIncorrect(subtype: nil),
-            ActiveNavigationFeedbackType.confusingAudio(subtype: nil),
-            ActiveNavigationFeedbackType.illegalRoute(subtype: nil),
-            ActiveNavigationFeedbackType.roadClosure(subtype: nil),
-            ActiveNavigationFeedbackType.routeQuality(subtype: nil),
-            ActiveNavigationFeedbackType.positioning
-        ].map { $0.generateFeedbackItem() }
-        
-        let feedbackButtonHandler: (_ : CPGridButton) -> Void = { [weak self] (button) in
-            guard let self = self else { return }
-            self.carInterfaceController.popTemplate(animated: true)
-            
-            guard let feedback = self.eventsManager.createFeedback() else { return }
-            let foundItem = feedbackItems.filter { $0.image == button.image }
-            guard let feedbackItem = foundItem.first else { return }
-            self.eventsManager.sendFeedback(feedback, type: feedbackItem.type)
-            
-            let dismissTitle = NSLocalizedString("CARPLAY_DISMISS",
-                                                 bundle: .mapboxNavigation,
-                                                 value: "Dismiss",
-                                                 comment: "Title for dismiss button")
-            
-            let submittedTitle = NSLocalizedString("CARPLAY_SUBMITTED_FEEDBACK",
-                                                   bundle: .mapboxNavigation,
-                                                   value: "Submitted",
-                                                   comment: "Alert title that shows when feedback has been submitted")
-            
-            let action = CPAlertAction(title: dismissTitle,
-                                       style: .default,
-                                       handler: { _ in })
-            
-            let alert = CPNavigationAlert(titleVariants: [submittedTitle],
-                                          subtitleVariants: nil,
-                                          imageSet: nil,
-                                          primaryAction: action,
-                                          secondaryAction: nil,
-                                          duration: 2.5)
-            
-            self.mapTemplate.present(navigationAlert: alert, animated: true)
-        }
-        
-        let buttons: [CPGridButton] = feedbackItems.map {
-            return CPGridButton(titleVariants: [$0.title.components(separatedBy: "\n").joined(separator: " ")],
-                                image: $0.image,
-                                handler: feedbackButtonHandler)
-        }
-        
-        let gridTitle = NSLocalizedString("CARPLAY_FEEDBACK",
-                                          bundle: .mapboxNavigation,
-                                          value: "Feedback",
-                                          comment: "Title for feedback template in CarPlay")
-        
-        return CPGridTemplate(title: gridTitle, gridButtons: buttons)
-    }
-    
-    func endOfRouteFeedbackTemplate() -> CPGridTemplate {
-        let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
-            if let title = button.titleVariants.first {
-                let rating = Int(title.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
-                let endOfRouteFeedback = EndOfRouteFeedback(rating: rating, comment: nil)
-                self?.navigationService.endNavigation(feedback: endOfRouteFeedback)
-            }
-            
-            self?.carInterfaceController.popTemplate(animated: true)
-            self?.exitNavigation()
-        }
-        
-        var buttons: [CPGridButton] = []
-        let starImage = UIImage(named: "star",
-                                in: .mapboxNavigation,
-                                compatibleWith: nil)!
-        
-        for rating in 1...5 {
-            let title = NSLocalizedString("RATING_STARS_FORMAT",
-                                          bundle: .mapboxNavigation,
-                                          value: "%ld star(s) set.",
-                                          comment: "Format for accessibility value of label indicating the existing rating; 1 = number of stars")
-            let titleVariant = String.localizedStringWithFormat(title, rating)
-            let button = CPGridButton(titleVariants: [titleVariant],
-                                      image: starImage,
-                                      handler: buttonHandler)
-            buttons.append(button)
-        }
-        
-        let gridTitle = NSLocalizedString("CARPLAY_RATE_RIDE",
-                                          bundle: .mapboxNavigation,
-                                          value: "Rate your ride",
-                                          comment: "Title for rating template in CarPlay")
-        
-        return CPGridTemplate(title: gridTitle, gridButtons: buttons)
-    }
-    
-    func presentArrivalUI() {
-        let arrivalTitle = NSLocalizedString("CARPLAY_ARRIVED",
-                                             bundle: .mapboxNavigation,
-                                             value: "You have arrived",
-                                             comment: "Title on arrival action sheet")
-        
-        let arrivalMessage = NSLocalizedString("CARPLAY_ARRIVED_MESSAGE",
-                                               bundle: .mapboxNavigation,
-                                               value: "What would you like to do?",
-                                               comment: "Message on arrival action sheet")
-        
-        let exitTitle = NSLocalizedString("CARPLAY_EXIT_NAVIGATION",
-                                          bundle: .mapboxNavigation,
-                                          value: "Exit navigation",
-                                          comment: "Title on the exit button in the arrival form")
-        
-        let exitAction = CPAlertAction(title: exitTitle, style: .cancel) { (action) in
-            self.exitNavigation()
-            self.dismiss(animated: true)
-        }
-        
-        let rateTitle = NSLocalizedString("CARPLAY_RATE_TRIP",
-                                          bundle: .mapboxNavigation,
-                                          value: "Rate your trip",
-                                          comment: "Title on rate button in CarPlay")
-        
-        let rateAction = CPAlertAction(title: rateTitle, style: .default) { (action) in
-            self.carInterfaceController.pushTemplate(self.endOfRouteFeedbackTemplate(), animated: true)
-        }
-        
-        let alert = CPActionSheetTemplate(title: arrivalTitle,
-                                          message: arrivalMessage,
-                                          actions: [rateAction, exitAction])
-        
-        carInterfaceController.dismissTemplate(animated: true)
-        carInterfaceController.presentTemplate(alert, animated: true)
-    }
-    
     func presentWaypointArrivalUI(for waypoint: Waypoint) {
         var title = NSLocalizedString("CARPLAY_ARRIVED",
                                       bundle: .mapboxNavigation,
@@ -638,7 +640,7 @@ public class CarPlayNavigationViewController: UIViewController {
     }
 }
 
-// MARK: - StyleManagerDelegate methods
+// MARK: StyleManagerDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: StyleManagerDelegate {
@@ -668,7 +670,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     }
 }
 
-// MARK: - NavigationServiceDelegate methods
+// MARK: NavigationServiceDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationServiceDelegate {
@@ -685,7 +687,7 @@ extension CarPlayNavigationViewController: NavigationServiceDelegate {
     }
 }
 
-// MARK: - NavigationMapViewDelegate methods
+// MARK: NavigationMapViewDelegate Methods
 
 @available(iOS 12.0, *)
 extension CarPlayNavigationViewController: NavigationMapViewDelegate {

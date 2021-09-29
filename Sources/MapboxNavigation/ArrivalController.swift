@@ -9,7 +9,7 @@ class ArrivalController: NavigationComponentDelegate {
     
     typealias EndOfRouteDismissalHandler = (EndOfRouteFeedback?) -> ()
     
-    // MARK: - Properties
+    // MARK: Properties
     
     weak private(set) var navigationViewData: NavigationViewData!
     
@@ -33,7 +33,7 @@ class ArrivalController: NavigationComponentDelegate {
         return viewController
     }()
     
-    // MARK: - Public methods
+    // MARK: Public Methods
     
     init(_ navigationViewData: NavigationViewData) {
         self.navigationViewData = navigationViewData
@@ -86,7 +86,7 @@ class ArrivalController: NavigationComponentDelegate {
         UIView.animate(withDuration: 0.3, animations: navigationViewData.containerViewController.view.layoutIfNeeded)
     }
     
-    // MARK: - Private methods
+    // MARK: Private Methods
     
     private func embedEndOfRoute(into viewController: UIViewController, onDismiss: EndOfRouteDismissalHandler? = nil) {
         let endOfRoute = endOfRouteViewController
@@ -107,7 +107,7 @@ class ArrivalController: NavigationComponentDelegate {
         return (stars - 1) * 25
     }
     
-    // MARK: - Keyboard handling
+    // MARK: Keyboard Handling
     
     fileprivate func subscribeToKeyboardNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(ArrivalController.keyboardWillShow(notification:)), name:UIResponder.keyboardWillShowNotification, object: nil)
@@ -146,7 +146,7 @@ class ArrivalController: NavigationComponentDelegate {
         UIView.animate(withDuration: duration, delay: 0, options: options, animations: navigationViewData.navigationView.layoutIfNeeded, completion: nil)
     }
     
-    // MARK: - NavigationComponentDelegate implementation
+    // MARK: NavigationComponentDelegate Implementation
     
     func navigationViewWillAppear(_: Bool) {
         subscribeToKeyboardNotifications()
