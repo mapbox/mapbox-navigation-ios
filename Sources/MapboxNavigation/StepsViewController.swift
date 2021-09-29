@@ -192,18 +192,24 @@ public class StepsViewController: UIViewController {
 extension StepsViewController: UITableViewDelegate {
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let legIndex = indexPath.section
         let cell = tableView.cellForRow(at: indexPath) as! StepTableViewCell
         // Since as we progress, steps are removed from the list, we need to map the row the user tapped to the actual step on the leg.
         // If the user selects a step on future leg, all steps are going to be there.
         var stepIndex: Int
-        if indexPath.section > 0 {
+        if legIndex > 0 {
             stepIndex = indexPath.row
         } else {
             stepIndex = indexPath.row + routeProgress.currentLegProgress.stepIndex
             // For the current leg, we need to know the upcoming step.
-            stepIndex += indexPath.row + 1 > sections[indexPath.section].count ? 0 : 1
+            stepIndex += indexPath.row + 1 > sections[legIndex].count ? 0 : 1
         }
-        delegate?.stepsViewController(self, didSelect: indexPath.section, stepIndex: stepIndex, cell: cell)
+        
+        if let stepCount = routeProgress.route.legs[safe: legIndex]?.steps.count {
+            guard stepIndex < stepCount else { return }
+        }
+
+        delegate?.stepsViewController(self, didSelect: legIndex, stepIndex: stepIndex, cell: cell)
     }
 }
 
