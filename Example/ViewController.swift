@@ -304,7 +304,8 @@ class ViewController: UIViewController {
         present(customViewController, animated: true) {
             if let destinationCoordinate = route.shape?.coordinates.last {
                 var destinationAnnotation = PointAnnotation(coordinate: destinationCoordinate)
-                destinationAnnotation.image = .default
+                let markerImage = UIImage(named: "default_marker", in: .mapboxNavigation, compatibleWith: nil)!
+                destinationAnnotation.image = .init(image: markerImage, name: "marker")
                 customViewController.destinationAnnotation = destinationAnnotation
             }
         }
