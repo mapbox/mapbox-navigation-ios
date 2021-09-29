@@ -71,15 +71,15 @@ open class WayNameView: UIView {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false
         
-        if let ref = feature.properties?["ref"] as? String,
-           let shield = feature.properties?["shield"] as? String,
-           let reflen = feature.properties?["reflen"] as? Int {
+        if case let .string(ref) = feature.properties?["ref"],
+           case let .string(shield) = feature.properties?["shield"],
+           case let .number(reflen) = feature.properties?["reflen"] {
             let textColor = roadShieldTextColor(line: feature) ?? .black
-            let imageName = "\(shield)-\(reflen)"
+            let imageName = "\(shield)-\(Int(reflen))"
             currentShieldName = roadShieldAttributedText(for: ref, textColor: textColor, style: style, imageName: imageName)
         }
         
-        if let roadName = feature.properties?["name"] as? String, !roadName.isEmpty {
+        if case let .string(roadName) = feature.properties?["name"], !roadName.isEmpty {
             currentRoadName = roadName
             self.text = roadName
             didSetup = true
@@ -96,12 +96,12 @@ open class WayNameView: UIView {
     }
     
     private func roadShieldTextColor(line: Turf.Feature) -> UIColor? {
-        guard let shield = line.properties?["shield"] as? String else {
+        guard case let .string(shield) = line.properties?["shield"] else {
             return nil
         }
         
         // shield_text_color is present in Mapbox Streets source v8 but not v7.
-        guard let shieldTextColor = line.properties?["shield_text_color"] as? String else {
+        guard case let .string(shieldTextColor) = line.properties?["shield_text_color"] else {
             let currentShield = HighwayShield.RoadType(rawValue: shield)
             return currentShield?.textColor
         }

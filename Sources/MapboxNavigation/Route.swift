@@ -70,8 +70,8 @@ extension Route {
                 legFeatures = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> Feature in
                     var feature = Feature(geometry: .lineString(LineString(congestionSegment.0)))
                     feature.properties = [
-                        CongestionAttribute: String(describing: congestionSegment.1),
-                        CurrentLegAttribute: currentLegAttribute
+                        CongestionAttribute: .string(congestionSegment.1.rawValue),
+                        CurrentLegAttribute: .boolean(currentLegAttribute),
                     ]
                     
                     return feature
@@ -79,7 +79,7 @@ extension Route {
             } else {
                 var feature = Feature(geometry: .lineString(LineString(shape.coordinates)))
                 feature.properties = [
-                    CurrentLegAttribute: currentLegAttribute
+                    CurrentLegAttribute: .boolean(currentLegAttribute),
                 ]
                 legFeatures = [feature]
             }
