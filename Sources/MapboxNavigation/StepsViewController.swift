@@ -205,10 +205,7 @@ extension StepsViewController: UITableViewDelegate {
             stepIndex += indexPath.row + 1 > sections[legIndex].count ? 0 : 1
         }
         
-        if let stepCount = routeProgress.route.legs[safe: legIndex]?.steps.count {
-            guard stepIndex < stepCount else { return }
-        }
-
+        guard checkSelectedIndex(legIndex: legIndex, stepIndex: stepIndex) else { return }
         delegate?.stepsViewController(self, didSelect: legIndex, stepIndex: stepIndex, cell: cell)
     }
 }
@@ -253,6 +250,12 @@ extension StepsViewController: UITableViewDataSource {
         // Hide cell separator if it’s the last row in a section
         let isLastRowInSection = indexPath.row == sections[indexPath.section].count - 1
         cell.separatorView.isHidden = isLastRowInSection
+    }
+    
+    func checkSelectedIndex(legIndex: Int, stepIndex: Int) -> Bool {
+        guard let stepCount = routeProgress.route.legs[safe: legIndex]?.steps.count,
+              stepIndex < stepCount else { return false }
+        return true
     }
 
     public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

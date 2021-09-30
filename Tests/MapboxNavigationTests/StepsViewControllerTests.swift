@@ -61,6 +61,21 @@ class StepsViewControllerTests: TestCase {
             }
         }
     }
+    
+    func testCheckSelectedIndex() {
+        let dataSource = RouteControllerDataSourceFake()
+        let routeController = RouteController(alongRouteAtIndex: 0, in: response, options: Constants.options, dataSource: dataSource)
+        let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
+        
+        var legIndex = routeController.route.legs.count - 1
+        var stepsIndex = routeController.route.legs[legIndex].steps.count
+        XCTAssertFalse(stepsViewController.checkSelectedIndex(legIndex: legIndex, stepIndex: stepsIndex), "Failed to check the step index when it's larger than or equal to the steps count.")
+        
+        legIndex = routeController.route.legs.count
+        stepsIndex = 0
+        XCTAssertFalse(stepsViewController.checkSelectedIndex(legIndex: legIndex, stepIndex: stepsIndex), "Failed to check the leg index when it's larger than or equal to the legs count.")
+        
+    }
 }
 
 extension StepsViewControllerTests {
