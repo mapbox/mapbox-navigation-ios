@@ -93,6 +93,12 @@ open class PassiveLocationManager: NSObject {
     }
 
     private func didUpdate(locations: [CLLocation], completion: UpdateLocationCompletionHandler? = nil) {
+        // NOTE: We should stop updating `navigator` with locations if billing session isn't running.
+        //       To be replaced by `Navigator` pause/resume functionality once available.
+        guard BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else {
+            completion?(.failure(PassiveLocationManagerError.sessionIsNotRunning)); return
+        }
+        
         for location in locations {
             navigator.updateLocation(for: FixLocation(location)) { success in
                 let result: Result<CLLocation, Error>
@@ -390,4 +396,6 @@ extension TileEndpointConfiguration {
 
 enum PassiveLocationManagerError: Error {
     case failedToChangeLocation
+    /// Location updates are not possible when session is paused.
+    case sessionIsNotRunning
 }

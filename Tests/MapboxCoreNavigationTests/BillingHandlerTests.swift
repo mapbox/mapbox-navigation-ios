@@ -264,7 +264,6 @@ final class BillingHandlerUnitTests: TestCase {
         class UpdatesSpy: PassiveLocationManagerDelegate {
             var onProgressUpdate: (() -> Void)?
 
-
             func passiveLocationManager(_ manager: PassiveLocationManager,
                                         didUpdateLocation location: CLLocation,
                                         rawLocation: CLLocation) {
@@ -299,6 +298,12 @@ final class BillingHandlerUnitTests: TestCase {
             .beginBillingSession(.freeDrive),
             .pauseBillingSession(.freeDrive)
         ])
+
+        XCTAssertNil(passiveLocationManager.rawLocation, "Location updates should be blocked")
+
+        passiveLocationManager.resumeTripSession()
+        locationManager.tick()
+        XCTAssertNotNil(passiveLocationManager.rawLocation)
     }
 
     func testTokens() {
