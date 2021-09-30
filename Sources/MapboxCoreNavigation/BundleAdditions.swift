@@ -127,38 +127,4 @@ extension Bundle {
             return nil
         }
     }
-    
-    // MARK: Accessing Suggested Tile Directory
-    
-    /**
-     Creates folder structure for the `suggestedTileURL` if possible.
-     
-     - returns: `True` if folder is created and available.
-     */
-    public func ensureSuggestedTileURLExists() -> Bool {
-        guard let tilePath = suggestedTileURL else { return false }
-        try? FileManager.default.createDirectory(at: tilePath, withIntermediateDirectories: true, attributes: nil)
-        return true
-    }
-    
-    /**
-     A file URL representing a directory in which the application can place downloaded tile files.
-     */
-    public var suggestedTileURL: URL? {
-        guard let cachesDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).first else {
-            return nil
-        }
-        
-        guard let bundleIdentifier = self.bundleIdentifier else { return nil }
-        let url = URL(fileURLWithPath: cachesDirectory, isDirectory: true).appendingPathComponent(bundleIdentifier)
-        
-        return url.appendingPathComponent("tiles")
-    }
-    
-    /**
-     A file URL at which the application can place a downloaded tile file with the given version identifier.
-     */
-    public func suggestedTileURL(version: String) -> URL? {
-        return suggestedTileURL?.appendingPathComponent(version)
-    }
 }
