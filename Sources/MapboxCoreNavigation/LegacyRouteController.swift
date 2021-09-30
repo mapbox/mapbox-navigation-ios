@@ -133,6 +133,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
+        BillingHandler.shared.beginNewBillingSessionIfRunning(with: sessionUUID)
+        completionHandler?(.success(routeProgress))
     }
 
     public var reroutingTolerance: CLLocationDistance {
