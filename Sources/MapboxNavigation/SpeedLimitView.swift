@@ -62,6 +62,15 @@ public class SpeedLimitView: UIView {
         }
     }
     
+    /**
+     Allows to completely hide `SpeedLimitView`.
+     */
+    public var isAlwaysHidden: Bool = false {
+        didSet {
+            update()
+        }
+    }
+    
     let measurementFormatter: MeasurementFormatter = {
         let formatter = MeasurementFormatter()
         // Mitigate rounding error when converting back and forth between kilometers per hour and miles per hour.
@@ -79,12 +88,6 @@ public class SpeedLimitView: UIView {
         super.init(coder: coder)
         
         isOpaque = false
-    }
-    
-    var isAlwaysHidden: Bool = false {
-        didSet {
-            update()
-        }
     }
     
     var canDraw: Bool {
