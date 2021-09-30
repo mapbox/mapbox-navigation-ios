@@ -64,7 +64,17 @@ class NavigationServiceTests: TestCase {
     }
 
     func testDefaultUserInterfaceUsage() {
-        XCTAssertTrue(!dependencies.navigationService.eventsManager.usesDefaultUserInterface, "MapboxCoreNavigationTests shouldn't have an implicit dependency on MapboxNavigation due to removing the Example application target as the test host.")
+        let usesDefaultUserInterface = dependencies.navigationService.eventsManager.usesDefaultUserInterface
+        
+        // When building via Xcode when using SPM `MapboxNavigation` bundle will be present.
+        if let _ = Bundle.mapboxNavigationIfInstalled {
+            // Even though `MapboxCoreNavigationTests` does not directly link `MapboxNavigation`, it uses
+            // `TestHelper`, which in turn uses `MapboxNavigation`. This means that its bundle will be present
+            // in `MapboxCoreNavigationTests.xctest`.
+            XCTAssertTrue(usesDefaultUserInterface, "Due to indirect linkage, `MapboxNavigation` will be linked to `MapboxCoreNavigationTests`.")
+        } else {
+            XCTAssertFalse(usesDefaultUserInterface, "MapboxCoreNavigationTests shouldn't have an implicit dependency on MapboxNavigation due to removing the Example application target as the test host.")
+        }
     }
     
     func testUserIsOnRoute() {

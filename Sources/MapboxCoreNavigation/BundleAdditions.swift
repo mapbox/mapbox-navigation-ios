@@ -39,21 +39,47 @@ extension Bundle {
     }
     
     /**
+     Provides `Bundle` instance, based on provided bundle name and class inside of it.
+     
+     - parameter `bundleName`: Name of the bundle.
+     - parameter `class`: Class, which is located inside of the bundle.
+     - returns: Instance of the bundle if it was found, otherwise `nil`.
+     */
+    static func bundle(for bundleName: String, class: AnyClass) -> Bundle? {
+        let candidates = [
+            // Bundle should be present here when the package is linked into an App.
+            Bundle.main.resourceURL,
+            
+            // Bundle should be present here when the package is linked into a framework.
+            Bundle(for: `class`).resourceURL
+        ]
+        
+        for candidate in candidates {
+            let bundlePath = candidate?.appendingPathComponent(bundleName + ".bundle")
+            if let bundle = bundlePath.flatMap(Bundle.init(url:)) {
+                return bundle
+            }
+        }
+        
+        return nil
+    }
+    
+    /**
      The Mapbox Navigation framework bundle, if installed.
      */
     class var mapboxNavigationIfInstalled: Bundle? {
         get {
-            #if SWIFT_PACKAGE
-            for bundleIdentifier in Bundle.allBundles.compactMap({ $0.bundleIdentifier }) {
-                if bundleIdentifier.contains("MapboxNavigation-MapboxNavigation") {
-                    return Bundle(identifier: bundleIdentifier)
-                }
+            // Assumption: MapboxNavigation.framework includes NavigationViewController and exposes
+            // it to the Objective-C runtime as MapboxNavigation.NavigationViewController.
+            guard let navigationViewControllerClass = NSClassFromString("MapboxNavigation.NavigationViewController") else {
+                return nil
             }
-            return nil
+            
+            #if SWIFT_PACKAGE
+            return Bundle.bundle(for: "MapboxNavigation_MapboxNavigation",
+                                 class: navigationViewControllerClass)
             #else
-            // Assumption: MapboxNavigation.framework includes NavigationViewController and exposes it to the Objective-C runtime as MapboxNavigation.NavigationViewController.
-            guard let NavigationViewController = NSClassFromString("MapboxNavigation.NavigationViewController") else { return nil }
-            return Bundle(for: NavigationViewController)
+            return Bundle(for: navigationViewControllerClass)
             #endif
         }
     }
@@ -77,7 +103,7 @@ extension Bundle {
     }()
     
     /**
-     Returns the value associated with the specific key in the Mapbox Navigation bundle's  information property list, if installed.
+     Returns the value associated with the specific key in the Mapbox Navigation bundle's information property list, if installed.
      */
     public class func string(forMapboxNavigationInfoDictionaryKey key: String) -> String? {
         if let stringForKey = Bundle.mapboxNavigationIfInstalled?.object(forInfoDictionaryKey: key) {
@@ -90,7 +116,7 @@ extension Bundle {
     }
     
     /**
-     Returns the value associated with the specific key in the Mapbox Core Navigation bundle's  information property list.
+     Returns the value associated with the specific key in the Mapbox Core Navigation bundle's information property list.
      */
     public class func string(forMapboxCoreNavigationInfoDictionaryKey key: String) -> String? {
         if let stringForKey = Bundle.mapboxCoreNavigation.object(forInfoDictionaryKey: key) {

@@ -201,6 +201,7 @@
 		8A6C468226C2FA2E00452EBE /* NavigationGeocodedPlacemarkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A6C468126C2FA2E00452EBE /* NavigationGeocodedPlacemarkTests.swift */; };
 		8A75A85D26C44612009CFE83 /* RecentItemTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A75A85C26C44612009CFE83 /* RecentItemTests.swift */; };
 		8A8C3D98260175D20071D274 /* CLLocationDirection+Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A8C3D97260175D20071D274 /* CLLocationDirection+Camera.swift */; };
+		8A9270EA2704F6CC00B606D9 /* BundleAdditionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */; };
 		8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA849E824E722410008EE59 /* WaypointStyle.swift */; };
 		8AAE94A126A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */; };
 		8AB316A926BA026B00C3AC76 /* MapTemplateProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316A826BA026B00C3AC76 /* MapTemplateProvider.swift */; };
@@ -701,6 +702,7 @@
 		8A6C468126C2FA2E00452EBE /* NavigationGeocodedPlacemarkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationGeocodedPlacemarkTests.swift; sourceTree = "<group>"; };
 		8A75A85C26C44612009CFE83 /* RecentItemTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentItemTests.swift; sourceTree = "<group>"; };
 		8A8C3D97260175D20071D274 /* CLLocationDirection+Camera.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CLLocationDirection+Camera.swift"; sourceTree = "<group>"; };
+		8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleAdditionsTests.swift; sourceTree = "<group>"; };
 		8AA849E824E722410008EE59 /* WaypointStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WaypointStyle.swift; sourceTree = "<group>"; };
 		8AAE94A026A60ADE00AA1127 /* CarPlayMapViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayMapViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8AB316A826BA026B00C3AC76 /* MapTemplateProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapTemplateProvider.swift; sourceTree = "<group>"; };
@@ -1831,6 +1833,7 @@
 				E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */,
 				E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */,
 				E2814D972693412E000AD987 /* BillingHandlerTests.swift */,
+				8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */,
 			);
 			name = MapboxCoreNavigationTests;
 			path = Tests/MapboxCoreNavigationTests;
@@ -2715,6 +2718,7 @@
 				352762A4225B751A0015B632 /* OptionsTests.swift in Sources */,
 				DA7A97CF26A7613D001B6A9A /* RouteOptionsTests.swift in Sources */,
 				8DB7EF6A2176674800DA83A3 /* MapboxNavigationServiceSpec.swift in Sources */,
+				8A9270EA2704F6CC00B606D9 /* BundleAdditionsTests.swift in Sources */,
 				B426FF0525FFD679001884C8 /* SimulatedLocationManagerTests.swift in Sources */,
 				35EF782A212C324E001B4BB5 /* TunnelAuthorityTests.swift in Sources */,
 				3A163AE0249901C300D66A0D /* RouteStateTests.swift in Sources */,
