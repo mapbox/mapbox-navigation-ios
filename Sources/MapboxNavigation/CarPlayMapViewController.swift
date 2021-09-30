@@ -10,7 +10,7 @@ import CarPlay
  `CarPlayMapViewController` is responsible for administering the Mapbox map, the interface styles and the map template buttons to display on CarPlay.
  */
 @available(iOS 12.0, *)
-public class CarPlayMapViewController: UIViewController {
+open class CarPlayMapViewController: UIViewController {
     
     // MARK: UI Elements Configuration
     /**
@@ -169,19 +169,24 @@ public class CarPlayMapViewController: UIViewController {
      
      - parameter styles: The interface styles initially available to the style manager for display.
      */
-    required init(styles: [Style]) {
+    public required init(styles: [Style]) {
         self.styles = styles
         
         super.init(nibName: nil, bundle: nil)
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        guard let styles = aDecoder.decodeObject(of: [NSArray.self, Style.self], forKey: "styles") as? [Style] else {
+    /**
+     Returns a `CarPlayMapViewController` object initialized from data in a given unarchiver.
+     
+     - parameter coder: An unarchiver object.
+     */
+    public required init?(coder decoder: NSCoder) {
+        guard let styles = decoder.decodeObject(of: [NSArray.self, Style.self], forKey: "styles") as? [Style] else {
             return nil
         }
         self.styles = styles
         
-        super.init(coder: aDecoder)
+        super.init(coder: decoder)
     }
     
     override public func encode(with aCoder: NSCoder) {
