@@ -295,7 +295,9 @@ final class BillingHandler {
                 switch error {
                 case .invalidSkuId:
                     preconditionFailure("Invalid sku_id: \(error)")
-                case .tokenValidationFailed, .resumeFailed, .unknown:
+                case .tokenValidationFailed:
+                    assertionFailure("Token validation failed. Please check that you have the correct Mapboox Access Token.")
+                case .resumeFailed, .unknown:
                     break
                 }
                 self?.failedToBeginBillingSession(with: uuid, with: error)
@@ -322,14 +324,16 @@ final class BillingHandler {
         lock.unlock()
 
         billingService.beginBillingSession(for: session.type) { [logger] error in
-            os_log("New trip session isn't started. Please check that you have the correct Mapboox Access Token",
+            os_log("New trip session isn't started. Please check that you have the correct Mapboox Access Token.",
                    log: logger,
                    type: .fault)
 
             switch error {
             case .invalidSkuId:
                 preconditionFailure("Invalid sku_id: \(error)")
-            case .tokenValidationFailed, .resumeFailed, .unknown:
+            case .tokenValidationFailed:
+                assertionFailure("Token validation failed. Please check that you have the correct Mapboox Access Token.")
+            case .resumeFailed, .unknown:
                 break
             }
         }
