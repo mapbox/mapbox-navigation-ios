@@ -150,14 +150,14 @@ final class BillingHandlerUnitTests: TestCase {
         let sessionFailed = expectation(description: "Session Failed")
         billingService.onBeginBillingSession = { _, onError in
             DispatchQueue.global().async {
-                onError(.tokenValidationFailed)
+                onError(.unknown)
                 sessionFailed.fulfill()
             }
         }
         let sessionUUID = UUID()
         handler.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
         XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .running)
-        waitForExpectations(timeout: 1, handler: nil)
+        waitForExpectations(timeout: 5, handler: nil)
         XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .stopped)
 
         billingService.assertEvents([
