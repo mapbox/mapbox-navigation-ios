@@ -216,6 +216,10 @@ open class RouteController: NSObject {
             let result: Result<RouteProgress, Error>
             if success {
                 result = .success(self.routeProgress)
+                /** NOTE:
+                 `navigator.changeRouteLeg(forRoute:leg:)` will return true if the leg actually changed.
+                 */
+                BillingHandler.shared.beginNewBillingSessionIfRunning(with: self.sessionUUID)                
             } else {
                 result = .failure(RouteControllerError.failedToChangeRouteLeg)
             }

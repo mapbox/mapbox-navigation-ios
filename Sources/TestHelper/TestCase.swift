@@ -23,6 +23,8 @@ open class TestCase: XCTestCase {
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
         billingServiceMock = .init()
         BillingHandler.__replaceSharedInstance(with: BillingHandler.__createMockedHandler(with: billingServiceMock))
+        Navigator.shared.navigator.resetRideSession()
+        Navigator._recreateNavigator()
     }
 
     /// Prepares tests for execution. Should be called once before any test runs.
