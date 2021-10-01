@@ -1104,7 +1104,7 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     
     public func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
         let progress = navigationService.routeProgress
-        guard stepIndex < progress.route.legs[legIndex].steps.count else { return }
+        guard progress.route.checkSelectedIndex(legIndex: legIndex, stepIndex: stepIndex) else { return }
         let legProgress = RouteLegProgress(leg: progress.route.legs[legIndex], stepIndex: stepIndex)
         let step = legProgress.currentStep
         self.preview(step: step, in: banner, remaining: progress.remainingSteps, route: progress.route)
