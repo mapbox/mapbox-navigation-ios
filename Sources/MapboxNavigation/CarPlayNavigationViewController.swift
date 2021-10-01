@@ -12,7 +12,7 @@ import CarPlay
  - seealso: `NavigationViewController`
  */
 @available(iOS 12.0, *)
-public class CarPlayNavigationViewController: UIViewController {
+open class CarPlayNavigationViewController: UIViewController {
     
     // MARK: Child Views and Styling Configuration
     
@@ -332,7 +332,7 @@ public class CarPlayNavigationViewController: UIViewController {
         carFeedbackTemplate = createFeedbackUI()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     

@@ -160,6 +160,7 @@
 * Renamed the `CarPlayManagerDelegate.carplayManagerShouldDisableIdleTimer(_:)` method to `CarPlayManagerDelegate.carPlayManagerShouldDisableIdleTimer(_:)`. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
 * Added the `CarPlayManagerDelegate.carPlayManager(_:templateWillAppear:animated:)`, `CarPlayManagerDelegate.carPlayManager(_:templateDidAppear:animated:)`, `CarPlayManagerDelegate.carPlayManager(_:templateWillDisappear:animated:)`, and `CarPlayManagerDelegate.carPlayManager(_:templateDidDisappear:animated:)` methods to pass through the corresponding methods from `CPInterfaceControllerDelegate`. ([#3219](https://github.com/mapbox/mapbox-navigation-ios/pull/3219))
 * Fixed an issue where `CPMapTemplate.tripEstimateStyle` uses dark appearance even if light appearance is selected. ([#3397](https://github.com/mapbox/mapbox-navigation-ios/pull/3397))
+* `CarPlayMapViewController` and `CarPlayNavigationViewController` are now subclassable. ([#3424](https://github.com/mapbox/mapbox-navigation-ios/pull/3424))
 
 ### User feedback
 
