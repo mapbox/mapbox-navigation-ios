@@ -215,7 +215,7 @@ class InstructionPresenter {
             
             var appearance = GenericRouteShield.appearance()
             if traitCollection.userInterfaceIdiom == .carPlay {
-                let traitCollection = UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom)
+                let traitCollection = UITraitCollection(userInterfaceIdiom: self.traitCollection.userInterfaceIdiom)
                 appearance = GenericRouteShield.appearance(for: traitCollection)
             }
             
@@ -253,7 +253,7 @@ class InstructionPresenter {
             
             var appearance = ExitView.appearance()
             if traitCollection.userInterfaceIdiom == .carPlay {
-                let traitCollection = UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom)
+                let traitCollection = UITraitCollection(userInterfaceIdiom: self.traitCollection.userInterfaceIdiom)
                 appearance = ExitView.appearance(for: traitCollection)
             }
             
