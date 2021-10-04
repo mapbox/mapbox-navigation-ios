@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import XCTest
 
 public class DirectionsSpy: Directions {
     /// Callback fired when there is a request to caclulate a new route.
@@ -28,14 +29,14 @@ public class DirectionsSpy: Directions {
         
         let session: Directions.Session = (options: options, credentials: credentials)
         guard let lastCalculateOptionsCompletion = lastCalculateOptionsCompletion else {
-            assert(false, "Can't fire a completion handler which doesn't exist!")
+            XCTFail("Can't fire a completion handler which doesn't exist!")
             return
         }
         
         if let error = error {
             lastCalculateOptionsCompletion(session, .failure(error))
         } else {
-            let response = RouteResponse(httpResponse: nil, routes: routes, waypoints: waypoints, options: .route(options), credentials: credentials)
+            let response = RouteResponse(httpResponse: nil, identifier: "mock", routes: routes, waypoints: waypoints, options: .route(options), credentials: credentials)
     
             lastCalculateOptionsCompletion(session, .success(response))
         }
@@ -47,5 +48,6 @@ public class DirectionsSpy: Directions {
     
     public func reset() {
         lastCalculateOptionsCompletion = nil
+        onCalculateRoute = nil
     }
 }

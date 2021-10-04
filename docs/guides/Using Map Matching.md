@@ -29,7 +29,8 @@ It is up to you to listen in on reroutes and:
 Once you have a fresh route after rerouting, you need to tell the UI to update according to this new route.
 
 ```
-yourNavigationViewController.navigationService.router.updateRoute(with: (route, 0), routeOptions: nil)
+yourNavigationViewController.navigationService.router.updateRoute(with: (route, 0), routeOptions: nil, completion: { success in 
+})
 ```
 
 This will cause a waterfall effect, everything downstream should react to the addition of a new route.

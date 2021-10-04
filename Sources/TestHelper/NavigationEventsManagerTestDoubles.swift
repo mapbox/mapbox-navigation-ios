@@ -106,6 +106,7 @@ class MMEEventsManagerSpy: MMEEventsManager {
         enqueuedEvents.forEach { (event: FakeTelemetryEvent) in
             flushedEvents.append(event)
         }
+        enqueuedEvents.removeAll()
     }
 
     public func hasFlushedEvent(with name: String) -> Bool {

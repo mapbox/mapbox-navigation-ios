@@ -542,87 +542,23 @@ final class BillingHandlerUnitTests: TestCase {
             }
         }
 
-        func generateSteps(from waypoints: [CLLocationCoordinate2D]) -> [RouteStep] {
-            var steps: [RouteStep] = []
-            for (waypointIdx, waypoint) in waypoints.enumerated() {
-                if waypointIdx == 0 {
-                    steps.append(.init(transportType: .automobile,
-                                       maneuverLocation: waypoint,
-                                       maneuverType: .depart,
-                                       instructions: UUID().uuidString,
-                                       drivingSide: .left,
-                                       distance: 2000,
-                                       expectedTravelTime: 60))
-                }
-                else if waypointIdx == waypoints.count - 1 {
-                    steps.append(.init(transportType: .automobile,
-                                       maneuverLocation: waypoint,
-                                       maneuverType: .arrive,
-                                       instructions: UUID().uuidString,
-                                       drivingSide: .left,
-                                       distance: 2000,
-                                       expectedTravelTime: 60))
-                }
-                else {
-                    steps.append(.init(transportType: .automobile,
-                                       maneuverLocation: waypoint,
-                                       maneuverType: .arrive,
-                                       instructions: UUID().uuidString,
-                                       drivingSide: .left,
-                                       distance: 2000,
-                                       expectedTravelTime: 60))
-                    steps.append(.init(transportType: .automobile,
-                                       maneuverLocation: waypoint,
-                                       maneuverType: .depart,
-                                       instructions: UUID().uuidString,
-                                       drivingSide: .left,
-                                       distance: 2000,
-                                       expectedTravelTime: 60))
-                }
-            }
-            return steps
-        }
-
-        func generateLegs(from steps: [RouteStep]) -> [RouteLeg] {
-            var legs: [RouteLeg] = []
-            for idx in stride(from: 0, to: steps.count, by: 2) {
-                legs.append(.init(steps: [steps[idx], steps[idx + 1]],
-                                  name: UUID().uuidString,
-                                  distance: 2000,
-                                  expectedTravelTime: 60,
-                                  profileIdentifier: DirectionsProfileIdentifier(rawValue: "automotive")))
-            }
-            return legs
-        }
-
-        func generateRoute(from legs: [RouteLeg],
-                           waypoints: [CLLocationCoordinate2D]) -> (RouteResponse, RouteOptions) {
-            let route = Route(legs: legs, shape: nil, distance: 20000, expectedTravelTime: 600)
-            let routeOptions = NavigationRouteOptions(coordinates: waypoints)
-            route.legs.populate(waypoints: routeOptions.waypoints)
-            let response = RouteResponse(httpResponse: nil,
-                                         routes: [route],
-                                         options: .route(routeOptions),
-                                         credentials: .mocked)
-            return (response, routeOptions)
-        }
-
-        let initialRouteSteps = generateSteps(from: initialRouteWaypoints)
-        let initialRouteLegs = generateLegs(from: initialRouteSteps)
-        let (initialRouteResponse, initialRouteOptions) = generateRoute(from: initialRouteLegs, waypoints: initialRouteWaypoints)
-        let newRouteSteps = generateSteps(from: newRouteWaypoints)
-        let newRouteLegs = generateLegs(from: newRouteSteps)
-        let (newRouteResponse, newRouteOptions) = generateRoute(from: newRouteLegs, waypoints: newRouteWaypoints)
+        let (initialRouteResponse, _) = Fixture.route(waypoints: initialRouteWaypoints)
+        let (newRouteResponse, _) = Fixture.route(waypoints: newRouteWaypoints)
 
         let dataSource = DataSource()
         let routeController = RouteController(alongRouteAtIndex: 0,
                                               in: initialRouteResponse,
-                                              options: initialRouteOptions,
+                                              options: NavigationRouteOptions(coordinates: initialRouteWaypoints),
                                               dataSource: dataSource)
 
+        let routeUpdated = expectation(description: "Route updated")
         routeController.updateRoute(with: IndexedRouteResponse(routeResponse: newRouteResponse,
                                                                routeIndex: 0),
-                                    routeOptions: newRouteOptions)
+                                    routeOptions: NavigationRouteOptions(coordinates: newRouteWaypoints)) { success in
+            XCTAssertTrue(success)
+            routeUpdated.fulfill()
+        }
+        wait(for: [routeUpdated], timeout: 10)
         billingServiceMock.assertEvents(expectedEvents)
     }
 
@@ -670,7 +606,6 @@ final class BillingHandlerUnitTests: TestCase {
             let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
 
             let routeResponse = Fixture.route(between: origin, and: destination, legsCount: legsCount).response
-            let routeCoordinates = Fixture.generateCoordinates(between: origin, and: destination, count: 100)
 
             let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 1000)
                 .map { CLLocation(coordinate: $0) }
@@ -678,7 +613,7 @@ final class BillingHandlerUnitTests: TestCase {
 
             let directions = DirectionsSpy()
 
-            let navOptions = NavigationRouteOptions(matchOptions: .init(coordinates: routeCoordinates))
+            let navOptions = NavigationRouteOptions(coordinates: [origin, destination])
             let routeController = RouteController(alongRouteAtIndex: 0,
                                                   in: routeResponse,
                                                   options: navOptions,
