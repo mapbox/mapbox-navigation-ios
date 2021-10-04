@@ -164,12 +164,9 @@ open class RouteProgress: Codable {
             assert(legIndex >= 0 && legIndex < route.legs.endIndex)
             // TODO: Set stepIndex to 0 or last index based on whether leg index was incremented or decremented.
             currentLegProgress = RouteLegProgress(leg: currentLeg)
-            
-            legIndexHandler?(oldValue, legIndex)
         }
     }
-    typealias LegIndexHandlerAction = (_ oldValue: Int, _ newValue: Int) -> ()
-    var legIndexHandler: LegIndexHandlerAction?
+
     /**
      If waypoints are provided in the `Route`, this will contain which leg the user is on.
      */

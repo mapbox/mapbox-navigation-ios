@@ -177,22 +177,28 @@ public class Fixture: NSObject {
                                               profileIdentifier: .automobile))
     }
 
-    public static func route(between origin: CLLocationCoordinate2D,
-                             and destination: CLLocationCoordinate2D,
-                             legsCount: Int = 1,
+    public static func route(waypoints: [CLLocationCoordinate2D],
                              profileIdentifier: DirectionsProfileIdentifier = .automobile,
                              transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {
-        precondition(legsCount > 0)
+        precondition(waypoints.count >= 2)
+        func routeDistance(between waypoints: [CLLocationCoordinate2D]) -> CLLocationDistance {
+            var routeDistance: CLLocationDistance = 0
+            var origin = waypoints[0]
+            for waypointIdx in 1..<waypoints.count {
+                let destination = waypoints[waypointIdx]
+                routeDistance += origin.distance(to: destination)
+                origin = destination
+            }
+            return routeDistance
+        }
+        let routeDistance = routeDistance(between: waypoints)
 
-        let routeDistance = origin.distance(to: destination)
-        let routeShape = LineString([origin, destination])
+        let routeShape = LineString(waypoints)
         var legs: [RouteLeg] = []
-        let direction = origin.direction(to: destination)
-        let distancePerLeg = routeDistance / Double(legsCount)
 
-        var legOrigin: CLLocationCoordinate2D = origin
-        for _ in 0..<legsCount {
-            let legDestination = legOrigin.coordinate(at: distancePerLeg, facing: direction)
+        var legOrigin: CLLocationCoordinate2D = waypoints[0]
+        for waypointIdx in 1..<waypoints.count {
+            let legDestination = waypoints[waypointIdx]
             let leg = generateLeg(between: legOrigin,
                                   and: legDestination,
                                   profileIdentifier: profileIdentifier,
@@ -205,9 +211,30 @@ public class Fixture: NSObject {
         let route = Route(legs: legs, shape: routeShape, distance: routeDistance, expectedTravelTime: 0)
         let response = RouteResponse(httpResponse: nil,
                                      routes: [route],
-                                     options: .route(.init(coordinates: [origin, destination])),
+                                     options: .route(.init(coordinates: waypoints)),
                                      credentials: .mocked)
         return (response: response, route: route)
+    }
+
+    public static func route(between origin: CLLocationCoordinate2D,
+                             and destination: CLLocationCoordinate2D,
+                             legsCount: Int = 1,
+                             profileIdentifier: DirectionsProfileIdentifier = .automobile,
+                             transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {
+        precondition(legsCount > 0)
+        var waypoints: [CLLocationCoordinate2D] = [origin]
+        let routeDistance = origin.distance(to: destination)
+        let direction = origin.direction(to: destination)
+        let distancePerLeg = routeDistance / Double(legsCount)
+
+        var legOrigin: CLLocationCoordinate2D = origin
+        for _ in 0..<legsCount {
+            let legDestination = legOrigin.coordinate(at: distancePerLeg, facing: direction)
+            waypoints.append(legDestination)
+            legOrigin = legDestination
+        }
+
+        return route(waypoints: waypoints, profileIdentifier: profileIdentifier, transportType: transportType)
     }
 
     public static func generateCoordinates(between start: CLLocationCoordinate2D,

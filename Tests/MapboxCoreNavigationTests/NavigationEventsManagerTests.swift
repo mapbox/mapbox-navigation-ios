@@ -44,7 +44,13 @@ class NavigationEventsManagerTests: TestCase {
             service.router.locationManager!(locationManager, didUpdateLocations: [location])
         }
 
-        service.router.updateRoute(with: .init(routeResponse: secondRouteResponse, routeIndex: 0), routeOptions: nil)
+        let routeUpdated = expectation(description: "Route Updated")
+        service.router.updateRoute(with: .init(routeResponse: secondRouteResponse, routeIndex: 0), routeOptions: nil) {
+            success in
+            XCTAssertTrue(success)
+            routeUpdated.fulfill()
+        }
+        wait(for: [routeUpdated], timeout: 1)
         
         for location in secondTrace {
             service.router.locationManager!(locationManager, didUpdateLocations: [location])

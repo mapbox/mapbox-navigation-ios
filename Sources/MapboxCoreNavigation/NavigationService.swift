@@ -59,14 +59,14 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      The route along which the user is expected to travel.
 
-     If you want to update the route, use `Router.updateRoute(with:routeOptions:)` method from `router`.
+     If you want to update the route, use `Router.updateRoute(with:routeOptions:completion:)` method from `router`.
      */
     var route: Route { get }
     
     /**
      The `RouteResponse` object containing active route, plus its index in this `RouteResponse`, if applicable.
 
-     If you want to update the route, use `Router.updateRoute(with:routeOptions:)` method from `router`.
+     If you want to update the route, use `Router.updateRoute(with:routeOptions:completion:)` method from `router`.
      */
     var indexedRouteResponse: IndexedRouteResponse { get }
     
@@ -412,9 +412,11 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public func isInTunnel(at location: CLLocation, along progress: RouteProgress) -> Bool {
         return TunnelAuthority.isInTunnel(at: location, along: progress)
     }
-    
-    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
-        router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions)
+
+    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                            routeOptions: RouteOptions?,
+                            completion: ((Bool) -> Void)?) {
+        router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, completion: completion)
     }
 }
 
