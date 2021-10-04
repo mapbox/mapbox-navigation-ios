@@ -121,14 +121,26 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
-    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
+    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                            routeOptions: RouteOptions?,
+                            completion: ((Bool) -> Void)?) {
+        updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, isProactive: false, completion: completion)
+    }
+
+    func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                     routeOptions: RouteOptions?,
+                     isProactive: Bool,
+                     completion: ((Bool) -> Void)?) {
         guard let routes = indexedRouteResponse.routeResponse.routes, routes.count > indexedRouteResponse.routeIndex else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
         let routeOptions = routeOptions ?? routeProgress.routeOptions
         routeProgress = RouteProgress(route: routes[indexedRouteResponse.routeIndex], options: routeOptions)
         self.indexedRouteResponse = indexedRouteResponse
+        announce(reroute: route, at: location, proactive: isProactive)
+        completion?(true)
     }
+
     
     public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
@@ -416,24 +428,21 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         self.lastRerouteLocation = location
 
         calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
-            guard let strongSelf = self else {
-                return
-            }
+            guard let self = self else { return }
             
-            strongSelf.isRerouting = false
             switch result {
             case let .failure(error):
-                strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
-                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                     RouteController.NotificationUserInfoKey.routingErrorKey: error,
-                 ])
-                 return
+                self.delegate?.router(self, didFailToRerouteWith: error)
+                NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
+                    RouteController.NotificationUserInfoKey.routingErrorKey: error,
+                ])
+                self.isRerouting = false
             case let .success(indexedResponse):
                 let response = indexedResponse.routeResponse
-                guard let route = response.routes?[indexedResponse.routeIndex] else { return }
                 guard case let .route(options) = response.options else { return }
-                strongSelf.updateRoute(with: indexedResponse, routeOptions: options)
-                strongSelf.announce(reroute: route, at: location, proactive: false)
+                self.updateRoute(with: indexedResponse, routeOptions: options, isProactive: false) { success in
+                    self.isRerouting = false
+                }
             }
         }
     }
