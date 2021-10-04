@@ -79,7 +79,7 @@ class RouteTests: TestCase {
         }
     }
     
-    func testCheckSelectedIndex() {
+    func testContainsStep() {
         guard let route = response.routes?.first else {
             XCTFail("Failed to get route.")
             return
@@ -87,11 +87,11 @@ class RouteTests: TestCase {
 
         var legIndex = route.legs.count - 1
         var stepsIndex = route.legs[legIndex].steps.count
-        XCTAssertFalse(route.checkSelectedIndex(legIndex: legIndex, stepIndex: stepsIndex), "Failed to check the step index when it's larger than or equal to the steps count.")
+        XCTAssertFalse(route.containsStep(at: legIndex, stepIndex: stepsIndex), "Failed to check the step index when it's larger than or equal to the steps count.")
         
         legIndex = route.legs.count
         stepsIndex = 0
-        XCTAssertFalse(route.checkSelectedIndex(legIndex: legIndex, stepIndex: stepsIndex), "Failed to check the leg index when it's larger than or equal to the legs count.")
+        XCTAssertFalse(route.containsStep(at: legIndex, stepIndex: stepsIndex), "Failed to check the leg index when it's larger than or equal to the legs count.")
         
     }
 }

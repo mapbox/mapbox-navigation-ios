@@ -897,7 +897,7 @@ open class NavigationMapView: UIView {
      - parameter stepIndex: Zero-based index of the `RouteStep` which contains the maneuver.
      */
     public func addArrow(route: Route, legIndex: Int, stepIndex: Int) {
-        guard route.checkSelectedIndex(legIndex: legIndex, stepIndex: stepIndex),
+        guard route.containsStep(at: legIndex, stepIndex: stepIndex),
               let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
         do {

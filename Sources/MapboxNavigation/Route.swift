@@ -159,11 +159,8 @@ extension Route {
     /**
      Returns true if both the legIndex and stepIndex are valid in the route.
      */
-    func checkSelectedIndex(legIndex: Int, stepIndex: Int) -> Bool {
-        guard let stepCount = legs[safe: legIndex]?.steps.count,
-              stepIndex < stepCount,
-              stepIndex >= 0 else { return false }
-        return true
+    func containsStep(at legIndex: Int, stepIndex: Int) -> Bool {
+        return legs[safe: legIndex]?.steps.indices.contains(stepIndex) ?? false
     }
 }
 
