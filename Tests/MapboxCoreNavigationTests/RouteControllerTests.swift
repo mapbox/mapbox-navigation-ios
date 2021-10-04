@@ -19,22 +19,10 @@ class RouteControllerTests: TestCase {
     }
     
     func testRouteSnappingOvershooting() {
-        let coordinates:[CLLocationCoordinate2D] = [
+        let options = NavigationMatchOptions(coordinates: [
             .init(latitude: 59.337928, longitude: 18.076841),
-            .init(latitude: 59.337661, longitude: 18.075897),
-            .init(latitude: 59.337129, longitude: 18.075478),
-            .init(latitude: 59.336866, longitude: 18.075273),
-            .init(latitude: 59.336623, longitude: 18.075806),
-            .init(latitude: 59.336391, longitude: 18.076943),
-            .init(latitude: 59.338731, longitude: 18.079343),
-            .init(latitude: 59.339058, longitude: 18.07774),
-            .init(latitude: 59.338901, longitude: 18.076929),
-            .init(latitude: 59.338333, longitude: 18.076467),
-            .init(latitude: 59.338156, longitude: 18.075723),
-            .init(latitude: 59.338311, longitude: 18.074968),
             .init(latitude: 59.33865, longitude: 18.074935),
-        ]
-        let options = NavigationMatchOptions(coordinates: coordinates)
+        ])
         let routeResponse = Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options)
         
         let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay")
@@ -60,8 +48,12 @@ class RouteControllerTests: TestCase {
         let speedMultiplier: TimeInterval = 100
         locationManager.speedMultiplier = speedMultiplier
         locationManager.startUpdatingLocation()
+        locationManager.onReplayLoopCompleted = { _ in
+            return false
+        }
 
-        waitForExpectations(timeout: TimeInterval(locationManager.locations.count) / speedMultiplier + 1, handler: nil)
+        waitForExpectations(timeout: TimeInterval(locationManager.locations.count) / speedMultiplier + 5,
+                            handler: nil)
 
         let expectedCoordinates = locations.map(\.coordinate)
         XCTAssertEqual(expectedCoordinates, actualCoordinates)
@@ -72,7 +64,6 @@ class RouteControllerTests: TestCase {
         let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
 
         let routeResponse = Fixture.route(between: origin, and: destination).response
-        let routeCoordinates = Fixture.generateCoordinates(between: origin, and: destination, count: 10)
 
         let overshootingDestination = CLLocationCoordinate2D(latitude: 0.002, longitude: 0.002)
         let replyLocations = Fixture.generateCoordinates(between: origin, and: overshootingDestination, count: 11).map {
@@ -81,7 +72,7 @@ class RouteControllerTests: TestCase {
 
         let directions = DirectionsSpy()
 
-        let navOptions = NavigationRouteOptions(matchOptions: .init(coordinates: routeCoordinates))
+        let navOptions = NavigationRouteOptions(coordinates: [origin, destination])
         let routeController = RouteController(alongRouteAtIndex: 0,
                                               in: routeResponse,
                                               options: navOptions,
@@ -142,10 +133,16 @@ class RouteControllerTests: TestCase {
                                                    error: nil)
         }
 
-        let speedMultiplier: TimeInterval = 100
-        locationManager.speedMultiplier = speedMultiplier
+        let replayFinished = expectation(description: "Replay Finished")
+        locationManager.speedMultiplier = 100
+        locationManager.onReplayLoopCompleted = { _ in
+            replayFinished.fulfill()
+            return false
+        }
         locationManager.startUpdatingLocation()
-        waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
+        wait(for: [replayFinished], timeout: TimeInterval(replyLocations.count) / locationManager.speedMultiplier + 1)
+
+        waitForExpectations(timeout: 10, handler: nil)
     }
 }
 

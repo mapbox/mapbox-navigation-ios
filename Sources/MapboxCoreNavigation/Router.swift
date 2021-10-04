@@ -78,12 +78,12 @@ public protocol Router: CLLocationManagerDelegate {
 
     /// The route along which the user is expected to travel.
     ///
-    /// You can update the route using `Router.updateRoute(with:routeOptions:)`.
+    /// You can update the route using `Router.updateRoute(with:routeOptions:completion:)`.
     var route: Route { get }
     
     /// The `RouteResponse` containing the route along which the user is expected to travel, plus its index in this `RouteResponse`, if applicable.
     ///
-    /// If you want to update the route use `Router.updateRoute(with:routeOptions:)` method.
+    /// If you want to update the route use `Router.updateRoute(with:routeOptions:completion:)` method.
     var indexedRouteResponse: IndexedRouteResponse { get }
     
     /**
@@ -124,7 +124,7 @@ public protocol Router: CLLocationManagerDelegate {
      */
     func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler?)
 
-    /// Replaces currently active route with the provided `IndexedRoute`.
+    /// Asynchronously replaces currently active route with the provided `IndexedRouteResponse`.
     ///
     /// You can use this method to perform manual reroutes. `delegate` will be notified about route change via
     /// `RouterDelegate.router(router:willRerouteFrom:)` and `RouterDelegate.router(_:didRerouteAlong:at:proactive:)`
@@ -135,6 +135,8 @@ public protocol Router: CLLocationManagerDelegate {
     ///   - routeOptions: Route options used to create the route. You can pass nil to reuse the `RouteOptions` from the
     ///   currently active route. If the new `indexedRoute` is for a different set of waypoints, `routeOptions` are
     ///   required.
+    ///   - completion: A completion that will be called when when a new route is applied with a boolean indicating
+    ///   whether the change was successful. Until completion is called `routeProgress` will represent the old route.
     ///
     ///  - Important: This method can interfere with `Route.reroute(from:along:)` method. Before updating the route
     ///  manually make sure that there is no reroute running by observing `RouterDelegate.router(_:willRerouteFrom:)`
@@ -142,7 +144,9 @@ public protocol Router: CLLocationManagerDelegate {
     ///
     ///  - Important: Updating the route can have an impact on your usage costs.
     ///  From more info read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
-    func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?)
+    func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                     routeOptions: RouteOptions?,
+                     completion: @escaping (Bool) -> Void)
 }
 
 protocol InternalRouter: AnyObject {
@@ -160,9 +164,14 @@ protocol InternalRouter: AnyObject {
     
     var directions: Directions { get }
     
-    var routeProgress: RouteProgress { get set }
+    var routeProgress: RouteProgress { get }
     
     var indexedRouteResponse: IndexedRouteResponse { get set }
+
+    func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                     routeOptions: RouteOptions?,
+                     isProactive: Bool,
+                     completion: @escaping (Bool) -> Void)
 }
 
 extension InternalRouter where Self: Router {
@@ -251,38 +260,38 @@ extension InternalRouter where Self: Router {
         
         calculateRoutes(from: location, along: routeProgress) { [weak self] (session, result) in
             guard let self = self else { return }
-            self.isRerouting = false
-            
+
             guard case let .success(indexedResponse) = result else {
-                return
+                self.isRerouting = false; return
             }
             let response = indexedResponse.routeResponse
-            guard let route = response.routes?.first else { return }
+            guard let route = response.routes?.first else {
+                self.isRerouting = false; return
+            }
             
             self.lastProactiveRerouteDate = nil
             
             guard let firstLeg = route.legs.first, let firstStep = firstLeg.steps.first else {
-                return
+                self.isRerouting = false; return
             }
             
             let routeIsFaster = firstStep.expectedTravelTime >= RouteControllerMediumAlertInterval &&
                 currentUpcomingManeuver == firstLeg.steps[1] && route.expectedTravelTime <= 0.9 * durationRemaining
             
-            if routeIsFaster {
-                var routeOptions: RouteOptions?
-                if case let .route(options) = response.options {
-                    routeOptions = options
-                }
-                
-                // Prefer the most optimal route (the first one) over the route that matched the original choice.
-                self.indexedRouteResponse = .init(routeResponse: response, routeIndex: 0)
-                
-                // If the upcoming maneuver in the new route is the same as the current upcoming maneuver, don’t announce it.
-                // FIXME: There must be a better way to skip a redundant initial instruction than to assume the old route’s spoken instruction index is appliable to the new route.
-                let spokenInstructionIndex = self.routeProgress.currentLegProgress.currentStepProgress.spokenInstructionIndex
-                self.routeProgress = RouteProgress(route: route, options: routeOptions ?? self.routeProgress.routeOptions, legIndex: 0, spokenInstructionIndex: spokenInstructionIndex)
-                
-                self.announce(reroute: route, at: location, proactive: true)
+            guard routeIsFaster else {
+                self.isRerouting = false; return
+            }
+            var routeOptions: RouteOptions?
+            if case let .route(options) = response.options {
+                routeOptions = options
+            }
+
+            // Prefer the most optimal route (the first one) over the route that matched the original choice.
+            let indexedRouteResponse = IndexedRouteResponse(routeResponse: response, routeIndex: 0)
+            self.updateRoute(with: indexedRouteResponse,
+                             routeOptions: routeOptions ?? self.routeProgress.routeOptions,
+                             isProactive: true) { success in
+                self.isRerouting = false
             }
         }
     }

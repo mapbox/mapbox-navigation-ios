@@ -114,7 +114,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      
      You can implement this method to prevent the router from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the router automatically advances to the next leg when arriving at a waypoint.
      
-     - postcondition: If you return false, you must manually advance to the next leg: obtain the value of the `routeProgress` property, then increment the `RouteProgress.legIndex` property.
+     - postcondition: If you return false, you must manually advance to the next leg using `Router.advanceLegIndex(completionHandler:)` method.
      - parameter router: The router that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the controller has arrived at.
      - returns: True to advance to the next leg, if any, or false to remain on the completed leg.

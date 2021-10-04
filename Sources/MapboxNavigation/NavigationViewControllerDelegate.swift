@@ -46,8 +46,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      Called when the user arrives at the destination waypoint for a route leg.
      
      This method is called when the navigation view controller arrives at the waypoint. You can implement this method to prevent the navigation view controller from automatically advancing to the next leg. For example, you can and show an interstitial sheet upon arrival and pause navigation by returning `false`, then continue the route when the user dismisses the sheet. If this method is unimplemented, the navigation view controller automatically advances to the next leg when arriving at a waypoint.
-     
-     - postcondition: If you return `false` within this method, you must manually advance to the next leg: obtain the value of the `navigationService` and its `NavigationService.routeProgress` property, then increment the `RouteProgress.legIndex` property.
+
+     - postcondition: If you return `false` within this method, you must manually advance to the next leg using `Router.advanceLegIndex(completionHandler:)` method. You can obtain `Router` from `navigationViewController.navigationService.router` property.
      - parameter navigationViewController: The navigation view controller that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the user has arrived at.
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.

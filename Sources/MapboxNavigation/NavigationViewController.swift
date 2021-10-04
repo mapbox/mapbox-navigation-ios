@@ -34,17 +34,21 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      A `RouteResponse` object constructed by [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) along with route index in it.
      
      In cases where you need to update the route after navigation has started, you can set a new route using
-     `Router.updateRoute(with:routeOptions:)` method in `NavigationViewController.navigationService.router` and
+     `Router.updateRoute(with:routeOptions:completion:)` method in `NavigationViewController.navigationService.router` and
      `NavigationViewController` will update its UI accordingly.
 
      For example:
      - If you update route with the same waypoints as the current one:
      ```swift
-     navigationViewController.navigationService.router.updateRoute(with: indexedRouteResponse, routeOptions: nil)
+     navigationViewController.navigationService.router.updateRoute(with: indexedRouteResponse,
+                                                                   routeOptions: nil,
+                                                                   completion: { success in })
      ```
      - In case you update route with different set of waypoints:
      ```swift
-     navigationViewController.navigationService.router.updateRoute(with: indexedRouteResponse, routeOptions: newRouteOptions)
+     navigationViewController.navigationService.router.updateRoute(with: indexedRouteResponse,
+                                                                   routeOptions: newRouteOptions,
+                                                                   completion: { success in })
      ```
      */
     public var indexedRouteResponse: IndexedRouteResponse {

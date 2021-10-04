@@ -36,7 +36,6 @@ class MapboxCoreNavigationTests: TestCase {
         super.tearDown()
         navigation = nil
         UserDefaults.resetStandardUserDefaults()
-        Navigator._recreateNavigator()
     }
     
     func testNavigationNotificationsInfoDict() {
@@ -209,11 +208,11 @@ class MapboxCoreNavigationTests: TestCase {
             return routeProgress?.currentLegProgress.stepIndex == 4
         }
         
-        navigation.start()
-        
+        navigation.start()        
         waitForExpectations(timeout: waitForInterval) { (error) in
             XCTAssertNil(error)
         }
+        navigation.stop()
     }
     
     func testShouldReroute() {
@@ -277,7 +276,6 @@ class MapboxCoreNavigationTests: TestCase {
         let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
 
         let routeResponse = Fixture.route(between: origin, and: destination).response
-        let routeCoordinates = Fixture.generateCoordinates(between: origin, and: destination, count: 100)
 
         let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 1000)
             .map { CLLocation(coordinate: $0) }
@@ -288,7 +286,7 @@ class MapboxCoreNavigationTests: TestCase {
         locationManager.speedMultiplier = speedMultiplier
         locationManager.startDate = Date()
 
-        let navOptions = NavigationRouteOptions(matchOptions: .init(coordinates: routeCoordinates))
+        let navOptions = NavigationRouteOptions(coordinates: [origin, destination])
 
         navigation = MapboxNavigationService(routeResponse: routeResponse,
                                              routeIndex: 0,
