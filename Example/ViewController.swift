@@ -525,7 +525,7 @@ class ViewController: UIViewController {
     }
 
     func navigationService(response: RouteResponse, routeIndex: Int, options: RouteOptions) -> NavigationService {
-        let mode: SimulationMode = simulationButton.isSelected ? .always : .onPoorGPS
+        let mode: SimulationMode = simulationButton.isSelected ? .always : .inTunnels
         
         return MapboxNavigationService(routeResponse: response, routeIndex: routeIndex, routeOptions: options, simulating: mode)
     }

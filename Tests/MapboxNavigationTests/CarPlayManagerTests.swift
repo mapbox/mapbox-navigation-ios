@@ -390,13 +390,13 @@ class CarPlayManagerSpec: QuickSpec {
                     manager!.simulatesLocations = false
                 }
 
-                it("starts navigation with a navigation service with simulation set to onPoorGPS by default") {
+                it("starts navigation with a navigation service with simulation set to inTunnels by default") {
                     action()
 
                     expect(delegate!.navigationInitiated).to(beTrue())
                     let service: MapboxNavigationService = delegate!.currentService! as! MapboxNavigationService
 
-                    expect(service.simulationMode).to(equal(.onPoorGPS))
+                    expect(service.simulationMode).to(equal(.inTunnels))
                 }
             }
         }
