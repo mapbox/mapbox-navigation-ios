@@ -284,10 +284,10 @@ open class DayStyle: Style {
             
             GenericRouteShield.appearance(for: carPlayTraitCollection).foregroundColor = defaultColor
             GenericRouteShield.appearance(for: carPlayTraitCollection).borderColor = defaultColor
-        case .light:
-            fallthrough
-        default:
+        case .light, .unspecified:
             setDefaultCarPlayInstructionsStyling()
+        @unknown default:
+            fatalError("Unknown userInterfaceStyle.")
         }
     }
     
