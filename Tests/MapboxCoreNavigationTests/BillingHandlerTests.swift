@@ -149,7 +149,7 @@ final class BillingHandlerUnitTests: TestCase {
     func testSessionBeginFailed() {
         let sessionFailed = expectation(description: "Session Failed")
         billingService.onBeginBillingSession = { _, onError in
-            DispatchQueue.global().async {
+            DispatchQueue.global().asyncAfter(deadline: .now() + 0.1) {
                 onError(.unknown)
                 sessionFailed.fulfill()
             }
@@ -157,7 +157,7 @@ final class BillingHandlerUnitTests: TestCase {
         let sessionUUID = UUID()
         handler.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
         XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .running)
-        waitForExpectations(timeout: 5, handler: nil)
+        waitForExpectations(timeout: 3, handler: nil)
         XCTAssertEqual(handler.sessionState(uuid: sessionUUID), .stopped)
 
         billingService.assertEvents([
