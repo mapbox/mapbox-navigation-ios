@@ -107,6 +107,9 @@
 * Added `SimulationMode.inTunnels` to enable simulating user location when loosing GPS signal while traversing tunnels. Simulation mode for default navigation service now can be configured using `NavigationOptons.simulationMode`. ([#3314](https://github.com/mapbox/mapbox-navigation-ios/pull/3314))
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Fixed a crash when navigating along a route 0 meters long (for example, because two waypoints snap to the same location). ([#3387](https://github.com/mapbox/mapbox-navigation-ios/pull/3387))
+* Renamed the `Router.updateRoute(with:routeOptions:)` method to `Router.updateRoute(with:routeOptions:completion:)`. The method is now asynchronous, with a new completion handler that is called when the update has completed. ([#3432](https://github.com/mapbox/mapbox-navigation-ios/pull/3432))
+* Fixed an issue where `RouteController` sometimes incorrectly reported the user’s location as being off-route. ([#3432](https://github.com/mapbox/mapbox-navigation-ios/pull/3432))
+* Fixed a crash due to an invalid `RouteProgress` object. ([#3432](https://github.com/mapbox/mapbox-navigation-ios/pull/3432))
 
 #### Passive navigation
 
