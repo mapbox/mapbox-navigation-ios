@@ -12,14 +12,26 @@ func instructionsView(size: CGSize = .iPhone6Plus) -> InstructionsBannerView {
 func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
                            _ maneuverDirection: ManeuverDirection = .left,
                            primaryInstruction: [VisualInstruction.Component],
-                           secondaryInstruction: [VisualInstruction.Component]?) -> VisualInstructionBanner {
-    let primary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: primaryInstruction)
+                           secondaryInstruction: [VisualInstruction.Component]?,
+                           drivingSide: DrivingSide = .right) -> VisualInstructionBanner {
+    let primary = VisualInstruction(text: "Instruction",
+                                    maneuverType: maneuverType,
+                                    maneuverDirection: maneuverDirection,
+                                    components: primaryInstruction)
     var secondary: VisualInstruction? = nil
     if let secondaryInstruction = secondaryInstruction {
-        secondary = VisualInstruction(text: "Instruction", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: secondaryInstruction)
+        secondary = VisualInstruction(text: "Instruction",
+                                      maneuverType: maneuverType,
+                                      maneuverDirection: maneuverDirection,
+                                      components: secondaryInstruction)
     }
     
-    return VisualInstructionBanner(distanceAlongStep: 482.803, primary: primary, secondary: secondary, tertiary: nil, quaternary: nil, drivingSide: .right)
+    return VisualInstructionBanner(distanceAlongStep: 482.803,
+                                   primary: primary,
+                                   secondary: secondary,
+                                   tertiary: nil,
+                                   quaternary: nil,
+                                   drivingSide: drivingSide)
 }
 
 class InstructionsBannerViewIntegrationTests: TestCase {
@@ -287,10 +299,19 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         
         label.availableBounds = { return label.frame }
         
-        let presenter = InstructionPresenter(exitInstruction, dataSource: label, downloadCompletion: nil)
+        let traitCollection = UITraitCollection(userInterfaceIdiom: .phone)
+        
+        let presenter = InstructionPresenter(exitInstruction,
+                                             dataSource: label,
+                                             traitCollection: traitCollection,
+                                             downloadCompletion: nil)
+        
         let attributed = presenter.attributedText()
         
-        let key = [exitCodeAttribute.cacheKey!, ExitView.criticalHash(side: .right, dataSource: label)].joined(separator: "-")
+        let key = [
+            exitCodeAttribute.cacheKey!,
+            ExitView.criticalHash(side: .right, dataSource: label, traitCollection: traitCollection)
+        ].joined(separator: "-")
         XCTAssertNotNil(imageRepository.cachedImageForKey(key), "Expected cached image")
         
         let spaceRange = NSMakeRange(1, 1)

@@ -28,10 +28,15 @@ class InstructionPresenter {
     private let instruction: VisualInstruction
     private weak var dataSource: DataSource?
 
-    required init(_ instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository = .shared, downloadCompletion: ShieldDownloadCompletion?) {
+    required init(_ instruction: VisualInstruction,
+                  dataSource: DataSource,
+                  imageRepository: ImageRepository = .shared,
+                  traitCollection: UITraitCollection,
+                  downloadCompletion: ShieldDownloadCompletion?) {
         self.instruction = instruction
         self.dataSource = dataSource
         self.imageRepository = imageRepository
+        self.traitCollection = traitCollection
         self.onShieldDownload = downloadCompletion
     }
 
@@ -42,17 +47,23 @@ class InstructionPresenter {
 
     private let imageRepository: ImageRepository
     
+    private let traitCollection: UITraitCollection
+    
     func attributedText() -> NSAttributedString {
-        guard let source = self.dataSource else {
+        guard let source = self.dataSource,
+              let attributedTextRepresentation = self.attributedTextRepresentation(of: instruction,
+                                                                                   dataSource: source,
+                                                                                   imageRepository: imageRepository,
+                                                                                   onImageDownload: completeShieldDownload).mutableCopy() as? NSMutableAttributedString else {
             return NSAttributedString()
         }
-        
-        let attributedTextRepresentation = self.attributedTextRepresentation(of: instruction, dataSource: source, imageRepository: imageRepository, onImageDownload: completeShieldDownload).mutableCopy() as! NSMutableAttributedString
         
         // Collect abbreviation priorities embedded in the attributed text representation.
         let wholeRange = NSRange(location: 0, length: attributedTextRepresentation.length)
         var priorities = IndexSet()
-        attributedTextRepresentation.enumerateAttribute(.abbreviationPriority, in: wholeRange, options: .longestEffectiveRangeNotRequired) { (priority, range, stop) in
+        attributedTextRepresentation.enumerateAttribute(.abbreviationPriority,
+                                                        in: wholeRange,
+                                                        options: .longestEffectiveRangeNotRequired) { (priority, range, stop) in
             if let priority = priority as? Int {
                 priorities.insert(priority)
             }
@@ -68,10 +79,14 @@ class InstructionPresenter {
             
             // Look for substrings with the current abbreviation priority and replace them with the embedded abbreviations.
             let wholeRange = NSRange(location: 0, length: attributedTextRepresentation.length)
-            attributedTextRepresentation.enumerateAttribute(.abbreviationPriority, in: wholeRange, options: []) { (priority, range, stop) in
+            attributedTextRepresentation.enumerateAttribute(.abbreviationPriority,
+                                                            in: wholeRange,
+                                                            options: []) { (priority, range, stop) in
                 var abbreviationRange = range
                 if priority as? Int == currentPriority,
-                   let abbreviation = attributedTextRepresentation.attribute(.abbreviation, at: range.location, effectiveRange: &abbreviationRange) as? String {
+                   let abbreviation = attributedTextRepresentation.attribute(.abbreviation,
+                                                                             at: range.location,
+                                                                             effectiveRange: &abbreviationRange) as? String {
                     assert(abbreviationRange == range, "Abbreviation and abbreviation priority should be applied to the same effective range.")
                     attributedTextRepresentation.replaceCharacters(in: abbreviationRange, with: abbreviation)
                 }
@@ -81,7 +96,10 @@ class InstructionPresenter {
         return attributedTextRepresentation
     }
     
-    func attributedTextRepresentation(of instruction: VisualInstruction, dataSource: DataSource, imageRepository: ImageRepository, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString {
+    func attributedTextRepresentation(of instruction: VisualInstruction,
+                                      dataSource: DataSource,
+                                      imageRepository: ImageRepository,
+                                      onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString {
         var components = instruction.components
         
         let isShield: (_ key: VisualInstruction.Component?) -> Bool = { (component) in
@@ -122,7 +140,11 @@ class InstructionPresenter {
                 return attributedString
             case .image(let image, let alternativeText):
                 // Ideally represent the image component as a shield image.
-                return self.attributedString(forShieldComponent: image, repository: imageRepository, dataSource: dataSource, cacheKey: component.cacheKey!, onImageDownload: onImageDownload)
+                return attributedString(forShieldComponent: image,
+                                        repository: imageRepository,
+                                        dataSource: dataSource,
+                                        cacheKey: component.cacheKey!,
+                                        onImageDownload: onImageDownload)
                     // Fall back to a generic shield if no shield image is available.
                     ?? genericShield(text: alternativeText.text, dataSource: dataSource, cacheKey: component.cacheKey!)
                     // Finally, fall back to a plain text representation if the generic shield couldn’t be rendered.
@@ -131,7 +153,10 @@ class InstructionPresenter {
                 preconditionFailure("Exit components should have been removed above")
             case .exitCode(let text):
                 let exitSide: ExitSide = instruction.maneuverDirection == .left ? .left : .right
-                return exitShield(side: exitSide, text: text.text, dataSource: dataSource, cacheKey: component.cacheKey!)
+                return exitShield(side: exitSide,
+                                  text: text.text,
+                                  dataSource: dataSource,
+                                  cacheKey: component.cacheKey!)
                     ?? NSAttributedString(string: text.text, attributes: defaultAttributes)
             case .lane(_, _, _):
                 preconditionFailure("Lane component has no attributed string representation.")
@@ -143,24 +168,28 @@ class InstructionPresenter {
         return attributedTextRepresentations.joined(separator: separator)
     }
     
-    func attributedString(forShieldComponent shield: VisualInstruction.Component.ImageRepresentation, repository:ImageRepository, dataSource: DataSource, cacheKey: String, onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
-        //If we have the shield already cached, use that.
+    func attributedString(forShieldComponent shield: VisualInstruction.Component.ImageRepresentation,
+                          repository: ImageRepository,
+                          dataSource: DataSource,
+                          cacheKey: String,
+                          onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
         if let cachedImage = repository.cachedImageForKey(cacheKey) {
             return attributedString(withFont: dataSource.font, shieldImage: cachedImage)
         }
         
-        // Let's download the shield
         shieldImageForComponent(representation: shield, in: repository, cacheKey: cacheKey, completion: onImageDownload)
         
-        //Return nothing in the meantime, triggering downstream behavior (generic shield or text)
+        // Return nothing in the meantime, triggering downstream behavior (generic shield or text).
         return nil
     }
     
-    
-    private func shieldImageForComponent(representation: VisualInstruction.Component.ImageRepresentation, in repository: ImageRepository, cacheKey: String, completion: @escaping ImageDownloadCompletion) {
+    private func shieldImageForComponent(representation: VisualInstruction.Component.ImageRepresentation,
+                                         in repository: ImageRepository,
+                                         cacheKey: String,
+                                         completion: @escaping ImageDownloadCompletion) {
         guard let imageURL = representation.imageURL(scale: VisualInstruction.Component.scale, format: .png) else { return }
         
-        repository.imageWithURL(imageURL, cacheKey: cacheKey, completion: completion )
+        repository.imageWithURL(imageURL, cacheKey: cacheKey, completion: completion)
     }
 
     private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
@@ -170,17 +199,42 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func genericShield(text: String, dataSource: DataSource, cacheKey: String) -> NSAttributedString? {
-        let additionalKey = GenericRouteShield.criticalHash(dataSource: dataSource)
+    private func genericShield(text: String,
+                               dataSource: DataSource,
+                               cacheKey: String) -> NSAttributedString? {
+        let additionalKey = GenericRouteShield.criticalHash(dataSource: dataSource,
+                                                            traitCollection: traitCollection)
         let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
         if let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
-            let view = GenericRouteShield(pointSize: dataSource.font.pointSize, text: text)
-            view.foregroundColor = dataSource.textColor
-            guard let image = takeSnapshot(on: view) else { return nil }
+            let genericRouteShield = GenericRouteShield(pointSize: dataSource.font.pointSize,
+                                                        text: text)
+            
+            var appearance = GenericRouteShield.appearance()
+            if traitCollection.userInterfaceIdiom == .carPlay {
+                let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+                
+                if #available(iOS 12.0, *) {
+                    let traitCollection = UITraitCollection(traitsFrom: [
+                        carPlayTraitCollection,
+                        UITraitCollection(userInterfaceStyle: self.traitCollection.userInterfaceStyle)
+                    ])
+                    
+                    appearance = GenericRouteShield.appearance(for: traitCollection)
+                } else {
+                    appearance = GenericRouteShield.appearance(for: carPlayTraitCollection)
+                }
+            }
+            
+            genericRouteShield.foregroundColor = appearance.foregroundColor
+            genericRouteShield.borderWidth = appearance.borderWidth
+            genericRouteShield.borderColor = appearance.borderColor
+            genericRouteShield.cornerRadius = appearance.cornerRadius
+            
+            guard let image = takeSnapshot(on: genericRouteShield) else { return nil }
             imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
         }
@@ -190,17 +244,45 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func exitShield(side: ExitSide = .right, text: String, dataSource: DataSource, cacheKey: String) -> NSAttributedString? {
-        let additionalKey = ExitView.criticalHash(side: side, dataSource: dataSource)
+    private func exitShield(side: ExitSide = .right,
+                            text: String,
+                            dataSource: DataSource,
+                            cacheKey: String) -> NSAttributedString? {
+        let additionalKey = ExitView.criticalHash(side: side,
+                                                  dataSource: dataSource,
+                                                  traitCollection: traitCollection)
         let attachment = ExitAttachment()
 
         let key = [cacheKey, additionalKey].joined(separator: "-")
         if let image = imageRepository.cachedImageForKey(key) {
             attachment.image = image
         } else {
-            let view = ExitView(pointSize: dataSource.font.pointSize, side: side, text: text)
-            view.foregroundColor = dataSource.textColor
-            guard let image = takeSnapshot(on: view) else { return nil }
+            let exitView = ExitView(pointSize: dataSource.font.pointSize,
+                                    side: side,
+                                    text: text)
+            
+            var appearance = ExitView.appearance()
+            if traitCollection.userInterfaceIdiom == .carPlay {
+                let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+                
+                if #available(iOS 12.0, *) {
+                    let traitCollection = UITraitCollection(traitsFrom: [
+                        carPlayTraitCollection,
+                        UITraitCollection(userInterfaceStyle: self.traitCollection.userInterfaceStyle)
+                    ])
+                    
+                    appearance = ExitView.appearance(for: traitCollection)
+                } else {
+                    appearance = ExitView.appearance(for: carPlayTraitCollection)
+                }
+            }
+            
+            exitView.foregroundColor = appearance.foregroundColor
+            exitView.borderWidth = appearance.borderWidth
+            exitView.borderColor = appearance.borderColor
+            exitView.cornerRadius = appearance.cornerRadius
+            
+            guard let image = takeSnapshot(on: exitView) else { return nil }
             imageRepository.storeImage(image, forKey: key, toDisk: false)
             attachment.image = image
         }
@@ -212,7 +294,7 @@ class InstructionPresenter {
     
     private func completeShieldDownload(_ image: UIImage?) {
         guard image != nil else { return }
-        //We *must* be on main thread here, because attributedText() looks at object properties only accessible on main thread.
+        // We *must* be on main thread here, because attributedText() looks at object properties only accessible on main thread.
         DispatchQueue.main.async {
             self.onShieldDownload?(self.attributedText()) //FIXME: Can we work with the image directly?
         }
@@ -247,9 +329,15 @@ class ImageInstruction: NSTextAttachment, ImagePresenter {
     var font: UIFont = UIFont.systemFont(ofSize: UIFont.systemFontSize)
     var text: String?
     
-    override func attachmentBounds(for textContainer: NSTextContainer?, proposedLineFragment lineFrag: CGRect, glyphPosition position: CGPoint, characterIndex charIndex: Int) -> CGRect {
+    override func attachmentBounds(for textContainer: NSTextContainer?,
+                                   proposedLineFragment lineFrag: CGRect,
+                                   glyphPosition position: CGPoint,
+                                   characterIndex charIndex: Int) -> CGRect {
         guard let image = image else {
-            return super.attachmentBounds(for: textContainer, proposedLineFragment: lineFrag, glyphPosition: position, characterIndex: charIndex)
+            return super.attachmentBounds(for: textContainer,
+                                          proposedLineFragment: lineFrag,
+                                          glyphPosition: position,
+                                          characterIndex: charIndex)
         }
         let yOrigin = (font.capHeight - image.size.height).rounded() / 2
         return CGRect(x: 0, y: yOrigin, width: image.size.width, height: image.size.height)
@@ -260,9 +348,3 @@ class TextInstruction: ImageInstruction {}
 class ShieldAttachment: ImageInstruction {}
 class GenericShieldAttachment: ShieldAttachment {}
 class ExitAttachment: ImageInstruction {}
-
-extension CGSize {
-    fileprivate static func +(lhs: CGSize, rhs: CGSize) -> CGSize {
-        return CGSize(width: lhs.width + rhs.width, height: lhs.height +  rhs.height)
-    }
-}

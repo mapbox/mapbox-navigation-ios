@@ -21,11 +21,16 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                 return
             }
             let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
-                self?.attributedText = attributedText
-                self?.imageDownloadCompletion?()
+                guard let self = self else { return }
+                self.attributedText = attributedText
+                self.imageDownloadCompletion?()
             }
             
-            let presenter = InstructionPresenter(instruction, dataSource: self, imageRepository: imageRepository, downloadCompletion: update)
+            let presenter = InstructionPresenter(instruction,
+                                                 dataSource: self,
+                                                 imageRepository: imageRepository,
+                                                 traitCollection: traitCollection,
+                                                 downloadCompletion: update)
             
             let attributed = presenter.attributedText()
             attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed

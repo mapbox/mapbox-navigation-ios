@@ -361,6 +361,7 @@ open class CarPlayNavigationViewController: UIViewController {
         
         if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
             updateTripEstimateStyle(traitCollection.userInterfaceStyle)
+            updateManeuvers(navigationService.routeProgress)
         }
     }
     
@@ -527,7 +528,6 @@ open class CarPlayNavigationViewController: UIViewController {
     func updateManeuvers(_ routeProgress: RouteProgress) {
         guard let visualInstruction = routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else { return }
         let step = navigationService.routeProgress.currentLegProgress.currentStep
-        let shieldHeight: CGFloat = 16
         let primaryManeuver = CPManeuver()
         let distance = Measurement(distance: step.distance).localized()
         primaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: step.expectedTravelTime)
@@ -550,6 +550,7 @@ open class CarPlayNavigationViewController: UIViewController {
         }
         
         // Over a certain height, CarPlay devices downsize the image and CarPlay simulators hide the image.
+        let shieldHeight: CGFloat = 16
         let maximumImageSize = CGSize(width: .infinity, height: shieldHeight)
         let imageRendererFormat = UIGraphicsImageRendererFormat(for: UITraitCollection(userInterfaceIdiom: .carPlay))
         if let window = carPlayManager.carWindow {
@@ -558,12 +559,15 @@ open class CarPlayNavigationViewController: UIViewController {
         
         if let attributedPrimary = visualInstruction.primaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                            shieldHeight: shieldHeight,
-                                                                                                           window: carPlayManager.carWindow) {
+                                                                                                           window: carPlayManager.carWindow,
+                                                                                                           instructionLabelType: PrimaryLabel.self) {
+            
             let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
             
             if let attributedSecondary = visualInstruction.secondaryInstruction?.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                                     shieldHeight: shieldHeight,
-                                                                                                                    window: carPlayManager.carWindow) {
+                                                                                                                    window: carPlayManager.carWindow,
+                                                                                                                    instructionLabelType: SecondaryLabel.self) {
                 instruction.append(NSAttributedString(string: "\n"))
                 instruction.append(attributedSecondary)
             }

@@ -17,7 +17,11 @@ class InstructionPresenterTests: TestCase {
         //FIXME: not ideal -- UIAutoLayout?
         label.availableBounds = { return CGRect(origin: .zero, size: CGSize.iPhoneX) }
 
-        let presenter = InstructionPresenter(exitInstruction, dataSource: label, downloadCompletion: nil)
+        let presenter = InstructionPresenter(exitInstruction,
+                                             dataSource: label,
+                                             traitCollection: UITraitCollection(userInterfaceIdiom: .phone),
+                                             downloadCompletion: nil)
+        
         let attributed = presenter.attributedText()
 
         let attachment = attributed.attribute(.attachment, at: 0, effectiveRange: nil)
@@ -40,7 +44,10 @@ class InstructionPresenterTests: TestCase {
         
         self.measure {
             for instruction in instructions {
-                let presenter = InstructionPresenter(instruction, dataSource: label, downloadCompletion: nil)
+                let presenter = InstructionPresenter(instruction,
+                                                     dataSource: label,
+                                                     traitCollection: UITraitCollection(userInterfaceIdiom: .phone),
+                                                     downloadCompletion: nil)
                 label.attributedText = presenter.attributedText()
             }
         }
