@@ -608,7 +608,7 @@ jobs:
             OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
             OUTPUT="${OUTPUT:-documentation}"
             echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
-            scripts/document.sh
+            OUTPUT="${OUTPUT}" scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
       - *save-cache-podmaster
       - *save-cache-cocoapods-installation
       - when:
