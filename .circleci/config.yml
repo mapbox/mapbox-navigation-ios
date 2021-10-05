@@ -607,9 +607,9 @@ jobs:
           name: Generate docs
           command: |
             OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
-            OUTPUT="${OUTPUT:-documentation}"
+            export OUTPUT="${OUTPUT:-documentation}"
             echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
-            OUTPUT="${OUTPUT}" scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
+            ./scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
             git checkout -- Sources
       - *save-cache-podmaster
       - *save-cache-cocoapods-installation
@@ -622,15 +622,10 @@ jobs:
             - run:
                 name: Push docs to publisher-production
                 command: |
-                  git remote set-url origin https://x-access-token:$(mbx-ci github writer token)@github.com/mapbox/mapbox-navigation-ios.git
+                  git remote set-url origin "https://x-access-token:$(mbx-ci github writer token)@github.com/mapbox/mapbox-navigation-ios.git"
                   git config user.email "release-bot@mapbox.com"
                   git config user.name "Mapbox Releases"
-                  git checkout publisher-production
-                  BRANCH="docs-${OUTPUT}" # push directly to publisher-production when verified on a release tag
-                  git checkout "${BRANCH}" || git checkout -b "${BRANCH}"
-                  git add "${OUTPUT}"
-                  git commit -m "v${OUTPUT}"
-                  git push origin "${BRANCH}"
+                  VERSION="${OUTPUT}" scripts/publish-docs.sh
             - notify-build-finished:
                 notify_success: true
       - notify-build-finished
@@ -714,7 +709,7 @@ workflows:
       - spm-core-integration-test-job:
           name: "Xcode 13; iOS 15.0; SPM Core test"
       - generate-docs-job:
-          name: Generate docs and push it for release tag
+          name: Generate/Publish Documentation
           context: Slack Orb
           filters:
             tags:
