@@ -215,8 +215,18 @@ class InstructionPresenter {
             
             var appearance = GenericRouteShield.appearance()
             if traitCollection.userInterfaceIdiom == .carPlay {
-                let traitCollection = UITraitCollection(userInterfaceIdiom: self.traitCollection.userInterfaceIdiom)
-                appearance = GenericRouteShield.appearance(for: traitCollection)
+                let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+                
+                if #available(iOS 12.0, *) {
+                    let traitCollection = UITraitCollection(traitsFrom: [
+                        carPlayTraitCollection,
+                        UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
+                    ])
+                    
+                    appearance = GenericRouteShield.appearance(for: traitCollection)
+                } else {
+                    appearance = GenericRouteShield.appearance(for: carPlayTraitCollection)
+                }
             }
             
             genericRouteShield.foregroundColor = appearance.foregroundColor
@@ -253,8 +263,18 @@ class InstructionPresenter {
             
             var appearance = ExitView.appearance()
             if traitCollection.userInterfaceIdiom == .carPlay {
-                let traitCollection = UITraitCollection(userInterfaceIdiom: self.traitCollection.userInterfaceIdiom)
-                appearance = ExitView.appearance(for: traitCollection)
+                let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+                
+                if #available(iOS 12.0, *) {
+                    let traitCollection = UITraitCollection(traitsFrom: [
+                        carPlayTraitCollection,
+                        UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
+                    ])
+                    
+                    appearance = ExitView.appearance(for: traitCollection)
+                } else {
+                    appearance = ExitView.appearance(for: carPlayTraitCollection)
+                }
             }
             
             exitView.foregroundColor = appearance.foregroundColor

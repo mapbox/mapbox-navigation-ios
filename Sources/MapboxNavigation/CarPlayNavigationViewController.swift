@@ -361,7 +361,6 @@ open class CarPlayNavigationViewController: UIViewController {
         
         if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
             updateTripEstimateStyle(traitCollection.userInterfaceStyle)
-            styleManager?.currentStyle?.apply(for: traitCollection)
             updateManeuvers(navigationService.routeProgress)
         }
     }

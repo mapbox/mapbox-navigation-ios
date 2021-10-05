@@ -187,7 +187,6 @@
 * Fixed a potential memory leak when using `MultiplexedSpeechSynthesizer`. ([#3005](https://github.com/mapbox/mapbox-navigation-ios/pull/3005))
 * Fixed a thread-safety issue in `UnimplementedLogging` protocol implementation. ([#3024](https://github.com/mapbox/mapbox-navigation-ios/pull/3024))
 * Fixed an issue where `UIApplication.shared.isIdleTimerDisabled` was not properly set in some cases. ([#3245](https://github.com/mapbox/mapbox-navigation-ios/pull/3245))
-* Added `Style.apply(for:)`, which allows to apply style based on provided `UITraitCollection` value. ([#3341](https://github.com/mapbox/mapbox-navigation-ios/pull/3341))
 
 ## v1.4.1
 
