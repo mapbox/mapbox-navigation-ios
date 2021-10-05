@@ -283,28 +283,9 @@ open class DayStyle: Style {
         case .dark:
             let defaultColor = UIColor.white
             
-            let carPlayLightTraitCollection = UITraitCollection(traitsFrom: [
-                carPlayTraitCollection,
-                UITraitCollection(userInterfaceStyle: .dark)
-            ])
-            
-            ExitView.appearance(for: carPlayLightTraitCollection).backgroundColor = .clear
-            ExitView.appearance(for: carPlayLightTraitCollection).borderWidth = 1.0
-            ExitView.appearance(for: carPlayLightTraitCollection).cornerRadius = 5.0
-            ExitView.appearance(for: carPlayLightTraitCollection).foregroundColor = defaultColor
-            ExitView.appearance(for: carPlayLightTraitCollection).borderColor = defaultColor
-            
-            GenericRouteShield.appearance(for: carPlayLightTraitCollection).backgroundColor = .clear
-            GenericRouteShield.appearance(for: carPlayLightTraitCollection).borderWidth = 1.0
-            GenericRouteShield.appearance(for: carPlayLightTraitCollection).cornerRadius = 5.0
-            GenericRouteShield.appearance(for: carPlayLightTraitCollection).foregroundColor = defaultColor
-            GenericRouteShield.appearance(for: carPlayLightTraitCollection).borderColor = defaultColor
-        case .light, .unspecified:
-            let defaultColor = UIColor.black
-            
             let carPlayDarkTraitCollection = UITraitCollection(traitsFrom: [
                 carPlayTraitCollection,
-                UITraitCollection(userInterfaceStyle: .light)
+                UITraitCollection(userInterfaceStyle: .dark)
             ])
             
             ExitView.appearance(for: carPlayDarkTraitCollection).backgroundColor = .clear
@@ -318,6 +299,25 @@ open class DayStyle: Style {
             GenericRouteShield.appearance(for: carPlayDarkTraitCollection).cornerRadius = 5.0
             GenericRouteShield.appearance(for: carPlayDarkTraitCollection).foregroundColor = defaultColor
             GenericRouteShield.appearance(for: carPlayDarkTraitCollection).borderColor = defaultColor
+        case .light, .unspecified:
+            let defaultColor = UIColor.black
+            
+            let carPlayLightTraitCollection = UITraitCollection(traitsFrom: [
+                carPlayTraitCollection,
+                UITraitCollection(userInterfaceStyle: .light)
+            ])
+            
+            ExitView.appearance(for: carPlayLightTraitCollection).backgroundColor = .clear
+            ExitView.appearance(for: carPlayLightTraitCollection).borderWidth = 1.0
+            ExitView.appearance(for: carPlayLightTraitCollection).cornerRadius = 5.0
+            ExitView.appearance(for: carPlayLightTraitCollection).foregroundColor = defaultColor
+            ExitView.appearance(for: carPlayLightTraitCollection).borderColor = defaultColor
+            
+            GenericRouteShield.appearance(for: carPlayLightTraitCollection).backgroundColor = .clear
+            GenericRouteShield.appearance(for: carPlayLightTraitCollection).borderWidth = 1.0
+            GenericRouteShield.appearance(for: carPlayLightTraitCollection).cornerRadius = 5.0
+            GenericRouteShield.appearance(for: carPlayLightTraitCollection).foregroundColor = defaultColor
+            GenericRouteShield.appearance(for: carPlayLightTraitCollection).borderColor = defaultColor
         @unknown default:
             fatalError("Unknown userInterfaceStyle.")
         }

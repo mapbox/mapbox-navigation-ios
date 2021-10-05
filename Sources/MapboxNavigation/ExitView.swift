@@ -149,7 +149,16 @@ public class ExitView: StylableView {
                              traitCollection: UITraitCollection) -> String {
         var appearance = ExitView.appearance()
         if traitCollection.userInterfaceIdiom == .carPlay {
-            appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: traitCollection.userInterfaceIdiom))
+            if #available(iOS 12.0, *) {
+                let carPlayTraitCollection = UITraitCollection(traitsFrom: [
+                    UITraitCollection(userInterfaceIdiom: .carPlay),
+                    UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
+                ])
+                
+                appearance = ExitView.appearance(for: carPlayTraitCollection)
+            } else {
+                appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay))
+            }
         }
         
         var criticalProperties: [AnyHashable?] = [
