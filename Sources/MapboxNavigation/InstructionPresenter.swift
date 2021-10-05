@@ -220,7 +220,7 @@ class InstructionPresenter {
                 if #available(iOS 12.0, *) {
                     let traitCollection = UITraitCollection(traitsFrom: [
                         carPlayTraitCollection,
-                        UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
+                        UITraitCollection(userInterfaceStyle: self.traitCollection.userInterfaceStyle)
                     ])
                     
                     appearance = GenericRouteShield.appearance(for: traitCollection)
@@ -268,7 +268,7 @@ class InstructionPresenter {
                 if #available(iOS 12.0, *) {
                     let traitCollection = UITraitCollection(traitsFrom: [
                         carPlayTraitCollection,
-                        UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
+                        UITraitCollection(userInterfaceStyle: self.traitCollection.userInterfaceStyle)
                     ])
                     
                     appearance = ExitView.appearance(for: traitCollection)
