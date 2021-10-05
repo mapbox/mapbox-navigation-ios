@@ -191,7 +191,6 @@ public class Fixture: NSObject {
             }
             return routeDistance
         }
-        let routeDistance = routeDistance(between: waypoints)
 
         let routeShape = LineString(waypoints)
         var legs: [RouteLeg] = []
@@ -208,7 +207,10 @@ public class Fixture: NSObject {
             legOrigin = legDestination
         }
 
-        let route = Route(legs: legs, shape: routeShape, distance: routeDistance, expectedTravelTime: 0)
+        let route = Route(legs: legs,
+                          shape: routeShape,
+                          distance: routeDistance(between: waypoints),
+                          expectedTravelTime: 0)
         let response = RouteResponse(httpResponse: nil,
                                      routes: [route],
                                      options: .route(.init(coordinates: waypoints)),
