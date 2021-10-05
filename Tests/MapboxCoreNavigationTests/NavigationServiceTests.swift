@@ -765,7 +765,7 @@ class NavigationServiceTests: TestCase {
         XCTAssertEqual(_unimplementedLoggingState.countWarned(forTypeDescription: "DummyType"), 3)
     }
     
-    func waitForNavNativeCallbacks(timeout: TimeInterval = 0.1) {
+    func waitForNavNativeCallbacks(timeout: TimeInterval = 0.2) {
         let waitExpectation = expectation(description: "Waiting for the NatNative callback")
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
     }
