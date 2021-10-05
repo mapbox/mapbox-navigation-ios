@@ -276,8 +276,9 @@ open class DayStyle: Style {
         // In case if it was set to `UIUserInterfaceStyle.light` white color will be used, otherwise
         // black.
         // Due to iOS issue (`UIScreen.screens` returns CarPlay screen `traitCollection`
-        // property of which returns incorrect value), this property has to be taken from
-        // `UITraitEnvironment.traitCollectionDidChange(_:)`.
+        // property of which returns incorrect value), this property has to be taken from callbacks
+        // similar to: `UITraitEnvironment.traitCollectionDidChange(_:)`, or by creating `UITraitCollection`
+        // directly.
         switch traitCollection.userInterfaceStyle {
         case .dark:
             let defaultColor = UIColor.white
