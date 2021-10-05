@@ -177,7 +177,8 @@ step-library:
       run:
         name: Install cocoapods
         command: |
-          bundle check || bundle install --path vendor/bundle --clean
+          bundle config set path 'vendor/bundle'
+          bundle check || bundle install
 
   - &save-cache-cocoapods-installation
       save_cache:
@@ -609,6 +610,7 @@ jobs:
             OUTPUT="${OUTPUT:-documentation}"
             echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
             OUTPUT="${OUTPUT}" scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
+            git checkout -- Sources
       - *save-cache-podmaster
       - *save-cache-cocoapods-installation
       - when:
@@ -622,8 +624,7 @@ jobs:
                 command: |
                   git remote set-url origin https://x-access-token:$(mbx-ci github writer token)@github.com/mapbox/mapbox-navigation-ios.git
                   git config user.email "release-bot@mapbox.com"
-                  git config user.name "Release SDK bot"
-                  git checkout -- Sources
+                  git config user.name "Mapbox Releases"
                   git checkout publisher-production
                   BRANCH="docs-${OUTPUT}" # push directly to publisher-production when verified on a release tag
                   git checkout "${BRANCH}" || git checkout -b "${BRANCH}"

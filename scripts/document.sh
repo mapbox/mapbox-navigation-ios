@@ -4,6 +4,8 @@ set -e
 set -o pipefail
 set -u
 
+bundle check || bundle install
+
 BRANCH=$( git describe --tags --match=v*.*.* --abbrev=0 )
 SHORT_VERSION=$( echo ${BRANCH} | sed 's/^v//' )
 RELEASE_VERSION=$( echo ${SHORT_VERSION} | sed -e 's/-.*//' )
