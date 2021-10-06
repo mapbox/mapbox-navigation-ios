@@ -1,5 +1,5 @@
 import XCTest
-import MapboxCoreNavigation
+@testable import MapboxCoreNavigation
 import MapboxDirections
 import MapboxMobileEvents
 import CarPlay
@@ -256,6 +256,13 @@ class CarPlayManagerSpec: QuickSpec {
         var delegate: TestCarPlayManagerDelegate?
 
         beforeEach {
+            NavigationSettings.shared.initialize(directions: .mocked,
+                                                 tileStoreConfiguration: .default)
+            let mockedHandler = BillingHandler.__createMockedHandler(with: BillingServiceMock())
+            BillingHandler.__replaceSharedInstance(with: mockedHandler)
+            Navigator.shared.navigator.resetRideSession()
+            Navigator._recreateNavigator()
+            
             CarPlayMapViewController.swizzleMethods()
             let directionsSpy = DirectionsSpy()
             manager = CarPlayManager(styles: nil, directions: directionsSpy, eventsManager: nil)
