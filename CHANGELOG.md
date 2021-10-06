@@ -164,6 +164,7 @@
 * Added the `CarPlayManagerDelegate.carPlayManager(_:templateWillAppear:animated:)`, `CarPlayManagerDelegate.carPlayManager(_:templateDidAppear:animated:)`, `CarPlayManagerDelegate.carPlayManager(_:templateWillDisappear:animated:)`, and `CarPlayManagerDelegate.carPlayManager(_:templateDidDisappear:animated:)` methods to pass through the corresponding methods from `CPInterfaceControllerDelegate`. ([#3219](https://github.com/mapbox/mapbox-navigation-ios/pull/3219))
 * Fixed an issue where `CPMapTemplate.tripEstimateStyle` uses dark appearance even if light appearance is selected. ([#3397](https://github.com/mapbox/mapbox-navigation-ios/pull/3397))
 * `CarPlayMapViewController` and `CarPlayNavigationViewController` are now subclassable. ([#3424](https://github.com/mapbox/mapbox-navigation-ios/pull/3424))
+* Added `CPInterfaceController.safePopTemplate(animated:)`, which allows to safely pop back a `CPTemplate` by a single level in the template navigation hierarchy. ([#3426](https://github.com/mapbox/mapbox-navigation-ios/pull/3426))
 
 ### User feedback
 
