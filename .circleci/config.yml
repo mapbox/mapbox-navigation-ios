@@ -614,10 +614,7 @@ jobs:
       - *save-cache-podmaster
       - *save-cache-gems
       - when:
-          condition:
-            matches:
-              pattern: "^v\\d+\\.\\d+\\.\\d+(-.+)?$"
-              value: << pipeline.git.tag >>
+          condition: << pipeline.git.tag >>
           steps:
             - run:
                 name: Push docs to publisher-production
@@ -713,7 +710,7 @@ workflows:
           context: Slack Orb
           filters:
             tags:
-              only: /.*/
+              only: /^v\d+\.\d+\.\d+(-.+)?$/
         
       - ios-trigger-metrics:
           filters:
