@@ -90,8 +90,9 @@ open class InstructionsCardViewController: UIViewController {
             let indexPath = indexPaths[index]
             if let container = instructionContainerView(at: indexPath), indexPath.row < remainingSteps.count {
                 let visibleStep = remainingSteps[indexPath.row]
-                let distance = currentCardStep == visibleStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
-                container.updateInstructionCard(distance: distance)
+                let isCurrentCardStep = currentCardStep == visibleStep
+                let distance = isCurrentCardStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
+                container.updateInstructionCard(distance: distance, isCurrentCardStep: isCurrentCardStep)
             }
         }
     }
@@ -280,7 +281,7 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         
         let step = steps[indexPath.row]
         if indexPath.row == 0 {
-            cell.configure(for: step, distance: distanceRemaining, instruction: self.currentInstruction)
+            cell.configure(for: step, distance: distanceRemaining, instruction: self.currentInstruction, isCurrentCardStep: true)
         } else {
             cell.configure(for: step, distance: step.distance)
         }
