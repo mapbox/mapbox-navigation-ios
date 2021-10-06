@@ -256,7 +256,7 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
     }
     
     func popTemplate(animated: Bool) {
-        carPlayManager.interfaceController?.popTemplate(animated: animated)
+        carPlayManager.interfaceController?.safePopTemplate(animated: animated)
     }
     
     func forwardGeocodeOptions(_ searchText: String) -> ForwardGeocodeOptions {

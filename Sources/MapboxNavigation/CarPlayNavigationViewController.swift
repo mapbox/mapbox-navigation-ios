@@ -135,7 +135,7 @@ open class CarPlayNavigationViewController: UIViewController {
         
         let feedbackButtonHandler: (_ : CPGridButton) -> Void = { [weak self] (button) in
             guard let self = self else { return }
-            self.carInterfaceController.popTemplate(animated: true)
+            self.carInterfaceController.safePopTemplate(animated: true)
             
             guard let feedback = self.eventsManager.createFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
@@ -182,14 +182,16 @@ open class CarPlayNavigationViewController: UIViewController {
     
     func endOfRouteFeedbackTemplate() -> CPGridTemplate {
         let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
+            guard let self = self else { return }
+            
             if let title = button.titleVariants.first {
                 let rating = Int(title.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
                 let endOfRouteFeedback = EndOfRouteFeedback(rating: rating, comment: nil)
-                self?.navigationService.endNavigation(feedback: endOfRouteFeedback)
+                self.navigationService.endNavigation(feedback: endOfRouteFeedback)
             }
             
-            self?.carInterfaceController.popTemplate(animated: true)
-            self?.exitNavigation()
+            self.carInterfaceController.safePopTemplate(animated: true)
+            self.exitNavigation()
         }
         
         var buttons: [CPGridButton] = []
@@ -639,6 +641,7 @@ open class CarPlayNavigationViewController: UIViewController {
         }
         
         let waypointArrival = CPAlertTemplate(titleVariants: [title], actions: [continueAlert])
+        // Template has to be dismissed because only one template may be presented at a time.
         carInterfaceController.dismissTemplate(animated: true)
         carInterfaceController.presentTemplate(waypointArrival, animated: true)
     }
