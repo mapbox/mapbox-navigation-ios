@@ -168,19 +168,19 @@ step-library:
           - nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Tests/CocoaPodsTest/PodInstall/Podfile.lock" }}
           - nav-cache-pod-v1
 
-  - &restore-cache-cocoapods-installation
+  - &restore-cache-gems
       restore_cache:
         keys:
           - 1-gems-{{ checksum "Gemfile.lock" }}
 
-  - &install-cocoapods-installation
+  - &install-gems
       run:
         name: Install cocoapods
         command: |
           bundle config set path 'vendor/bundle'
           bundle check || bundle install
 
-  - &save-cache-cocoapods-installation
+  - &save-cache-gems
       save_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:
@@ -282,12 +282,12 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *install-cocoapods-installation
+      - *install-gems
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - *update-carthage-version
       - *restore-cache-podmaster
-      - *restore-cache-cocoapods-installation
+      - *restore-cache-gems
       - *restore-cache-cocoapods
       - when:
           condition: << parameters.update >>
@@ -309,7 +309,7 @@ jobs:
             - run: bundle exec pod lib lint MapboxCoreNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-cocoapods
-      - *save-cache-cocoapods-installation
+      - *save-cache-gems
       - notify-build-finished
 
 
@@ -598,11 +598,11 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *install-cocoapods-installation
+      - *install-gems
       - *prepare-netrc-file
       - *install-mbx-ci
       - *restore-cache-podmaster
-      - *restore-cache-cocoapods-installation
+      - *restore-cache-gems
       - run:
           name: Generate docs
           command: |
@@ -612,11 +612,11 @@ jobs:
             ./scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
             git checkout -- Sources
       - *save-cache-podmaster
-      - *save-cache-cocoapods-installation
+      - *save-cache-gems
       - when:
           condition:
             matches:
-              pattern: "^v.*\\..*\\..*$"
+              pattern: "^v\\d+\\.\\d+\\.\\d+(-.+)?$"
               value: << pipeline.git.tag >>
           steps:
             - run:
