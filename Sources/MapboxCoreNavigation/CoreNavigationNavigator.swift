@@ -135,24 +135,12 @@ class Navigator {
      Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
 
      - parameter type: The event type in the events log for your custom event.
-     - parameter value: The JSON-serializable value to attach to the event.
+     - parameter jsonString: The string value that contains a valid JSON to attach to the event.
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
-    func pushHistoryEvent(type: String, value: [String: Any?]? = nil) {
-        let eventJson: String?
-        if let value = value {
-            guard let jsonData = try? JSONSerialization.data(withJSONObject: value, options: []),
-                  let jsonString = String(data: jsonData, encoding: .utf8)
-            else {
-                assertionFailure("Failed to serialize event value into JSON string")
-                return
-            }
-            eventJson = jsonString
-        } else {
-            eventJson = nil
-        }
-        historyRecorder?.pushHistory(forEventType: type, eventJson: eventJson ?? "")
+    func pushHistoryEvent(type: String, jsonString: String? = nil) {
+        historyRecorder?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
     }
     
     /**
