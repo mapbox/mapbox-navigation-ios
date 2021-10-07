@@ -303,6 +303,18 @@ open class PassiveLocationManager: NSObject {
     public static func startRecordingHistory() {
         Navigator.shared.startRecordingHistory()
     }
+
+    /**
+     Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
+
+     - parameter type: The event type in the events log for your custom event.
+     - parameter value: The JSON-serializable value to attach to the event.
+
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     */
+    public static func pushHistoryEvent(type: String, value: [String: Any?]? = nil) {
+        Navigator.shared.pushHistoryEvent(type: type, value: value)
+    }
     
     /**
      A closure to be called when history writing ends.
