@@ -175,7 +175,7 @@ step-library:
 
   - &install-gems
       run:
-        name: Install cocoapods
+        name: Install Gems
         command: |
           bundle config set path 'vendor/bundle'
           bundle check || bundle install
@@ -282,13 +282,13 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
+      - *restore-cache-gems
+      - *restore-cache-podmaster
+      - *restore-cache-cocoapods
       - *install-gems
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - *update-carthage-version
-      - *restore-cache-podmaster
-      - *restore-cache-gems
-      - *restore-cache-cocoapods
       - when:
           condition: << parameters.update >>
           steps:
@@ -598,11 +598,11 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
+      - *restore-cache-gems
+      - *restore-cache-podmaster
       - *install-gems
       - *prepare-netrc-file
       - *install-mbx-ci
-      - *restore-cache-podmaster
-      - *restore-cache-gems
       - run:
           name: Generate docs
           command: |
@@ -706,7 +706,7 @@ workflows:
       - spm-core-integration-test-job:
           name: "Xcode 13; iOS 15.0; SPM Core test"
       - generate-docs-job:
-          name: Generate/Publish Documentation
+          name: Generate / Publish Documentation
           context: Slack Orb
           filters:
             tags:
