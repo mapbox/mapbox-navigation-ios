@@ -63,6 +63,13 @@ open class NavigationEventsManager {
     // MARK: Storing Data and Datasources
     
     private var sessionState = SessionState()
+
+    /**
+     The unique identifier of the navigation session used for events.
+     */
+    public var sessionId: String {
+        sessionState.identifier.uuidString
+    }
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
