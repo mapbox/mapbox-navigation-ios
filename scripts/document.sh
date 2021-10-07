@@ -4,22 +4,14 @@ set -e
 set -o pipefail
 set -u
 
-if [ -z `which jazzy` ]; then
-    echo "Installing jazzy…"
-    gem install jazzy
-    if [ -z `which jazzy` ]; then
-        echo "Unable to install jazzy. See https://github.com/mapbox/mapbox-gl-native-ios/blob/master/platform/ios/INSTALL.md"
-        exit 1
-    fi
-fi
-
-
-OUTPUT=${OUTPUT:-documentation}
+bundle check || bundle install
 
 BRANCH=$( git describe --tags --match=v*.*.* --abbrev=0 )
 SHORT_VERSION=$( echo ${BRANCH} | sed 's/^v//' )
 RELEASE_VERSION=$( echo ${SHORT_VERSION} | sed -e 's/-.*//' )
 MINOR_VERSION=$( echo ${SHORT_VERSION} | grep -Eo '^\d+\.\d+' )
+
+OUTPUT=${OUTPUT:-${SHORT_VERSION:-documentation}}
 
 DEFAULT_THEME="docs/theme"
 THEME=${JAZZY_THEME:-$DEFAULT_THEME}
@@ -53,7 +45,7 @@ find Sources/Mapbox{Core,}Navigation/ -name '*.swift' -exec \
 find Sources/Mapbox{Core,}Navigation/ -name '*.[hm]' -exec \
     perl -pi -e 's/([<"])MapboxCoreNavigation\b/$1MapboxNavigation/' {} \;
 
-jazzy \
+bundle exec jazzy \
     --podspec MapboxNavigation-Documentation.podspec \
     --config docs/jazzy.yml \
     --sdk iphonesimulator \

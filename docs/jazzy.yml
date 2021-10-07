@@ -63,9 +63,6 @@ custom_categories:
       - NavigationMapView
       - NavigationMapViewDelegate
       - MapView
-      - AccountManager
-      - PointAnnotation
-      - Style
       - PassiveLocationProvider
       - NavigationLocationProvider
       - WaypointStyle
@@ -152,7 +149,7 @@ custom_categories:
       - FeedbackItem
       - ActiveNavigationFeedbackType
       - PassiveNavigationFeedbackType
-      - IncorrectVisualSubtype
+      - PassiveNavigationIncorrectVisualSubtype
       - ConfusingAudioSubtype
       - RouteQualitySubtype
       - IllegalRouteSubtype
@@ -181,11 +178,6 @@ custom_categories:
       - DistancedRoadObject
       - RoadObjectMatcher
       - RoadObjectStore
-      - RoadObject.Location
-      - RoadObject.Kind
       - RoadObjectMatcherDelegate
       - RoadObjectStoreDelegate
-      - RoadObject.EdgeLocation
       - RoadObjectMatcherError
-      - RoadObject.Position
-      - RoadObject.Identifier
