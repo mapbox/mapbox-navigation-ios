@@ -300,11 +300,11 @@ open class RouteController: NSObject {
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
         
+        updateIndexes(status: status, progress: routeProgress)
+        updateRouteLegProgress(status: status)
         let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
             ?? DefaultBehavior.shouldRerouteFromLocation
         
-        updateIndexes(status: status, progress: routeProgress)
-        updateRouteLegProgress(status: status)
         updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
         updateRoadName(status: status)
