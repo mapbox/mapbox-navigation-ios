@@ -510,7 +510,7 @@ open class RouteController: NSObject {
     }
 }
 
-extension RouteController: NavigationHistoryRecording { }
+extension RouteController: HistoryRecording { }
 
 extension RouteController: Router {
     

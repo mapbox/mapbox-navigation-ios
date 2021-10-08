@@ -285,7 +285,7 @@ open class PassiveLocationManager: NSObject {
     }
 }
 
-extension PassiveLocationManager: NavigationHistoryRecording { }
+extension PassiveLocationManager: HistoryRecording { }
 
 extension PassiveLocationManager: CLLocationManagerDelegate {
     

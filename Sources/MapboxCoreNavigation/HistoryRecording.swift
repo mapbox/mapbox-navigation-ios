@@ -1,9 +1,9 @@
 import Foundation
 
 /**
- Recording History to Diagnose Problems
+ Types that conform to this protocol record low-level details as the user goes through a trip for debugging purposes.
  */
-public protocol NavigationHistoryRecording {
+public protocol HistoryRecording {
     /**
      A closure to be called when history writing ends.
 
@@ -49,9 +49,9 @@ public protocol NavigationHistoryRecording {
 }
 
 /*
- The default implementation of `NavigationHistoryRecording` protocol.
+ The default implementation of `HistoryRecording` protocol.
  */
-public extension NavigationHistoryRecording {
+public extension HistoryRecording {
     static var historyDirectoryURL: URL? {
         get {
             Navigator.historyDirectoryURL
@@ -85,9 +85,9 @@ public extension NavigationHistoryRecording {
 }
 
 /*
- Convenience methods for `NavigationHistoryRecording` protocol.
+ Convenience methods for `HistoryRecording` protocol.
  */
-public extension NavigationHistoryRecording {
+public extension HistoryRecording {
     /**
      Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
 
