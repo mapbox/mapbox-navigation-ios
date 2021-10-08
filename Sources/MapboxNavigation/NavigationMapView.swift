@@ -20,8 +20,8 @@ open class NavigationMapView: UIView {
     struct FrameIntervalOptions {
         static let durationUntilNextManeuver: TimeInterval = 7
         static let durationSincePreviousManeuver: TimeInterval = 3
-        static let defaultFramesPerSecond = PreferredFPS.normal
-        static let pluggedInFramesPerSecond = PreferredFPS.maximum
+        static let defaultFramesPerSecond = 30
+        static let pluggedInFramesPerSecond = 60
     }
     
     /**
@@ -29,7 +29,7 @@ open class NavigationMapView: UIView {
      
      This property takes effect when the application has limited resources for animation, such as when the device is running on battery power. By default, this property is set to `PreferredFPS.normal`.
      */
-    public var minimumFramesPerSecond = PreferredFPS.normal
+    public var minimumFramesPerSecond = FrameIntervalOptions.defaultFramesPerSecond
     
     /**
      Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
