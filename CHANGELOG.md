@@ -181,6 +181,7 @@
 * Renamed the `FeedbackType` enumeration to `ActiveNavigationFeedbackType` and the `EventsManagerDataSource` protocol to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
 * Renamed the user-facing feedback categories and subcategories for active turn-by-turn navigation that are represented at runtime by the `ActiveNavigationFeedbackType` enumeration. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
 * Added the ability to pass your own screenshot to the `NavigationEventsManager.createFeedback()` when a user submits a feedback. Screenshots help Mapbox to determine where issues exist for review and correction. ([#3380]((https://github.com/mapbox/mapbox-navigation-ios/pull/3380))
+* Added `NavigationEventsManager.sessionId`, which allows getting session identifier used in feedback and other events. ([#3449](https://github.com/mapbox/mapbox-navigation-ios/pull/3449))
 
 ### Other changes
 
