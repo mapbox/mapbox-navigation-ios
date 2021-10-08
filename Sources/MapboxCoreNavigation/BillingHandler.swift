@@ -76,7 +76,7 @@ private final class ProductionBillingService: BillingService {
     }
 
     func getSKUTokenIfValid(for sessionType: BillingHandler.SessionType) -> String {
-        TokenGenerator.getSKUTokenIfValid(for: tripSku(for: sessionType))
+        MapboxCommon_Private.BillingService.getSessionSKUTokenIfValid(for: tripSku(for: sessionType))
     }
 
     func beginBillingSession(for sessionType: BillingHandler.SessionType,
