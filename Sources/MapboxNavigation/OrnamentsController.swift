@@ -267,7 +267,7 @@ extension NavigationMapView {
 
                     for queriedFeature in queriedFeatures {
                         // Calculate the Levenshtein–Damerau edit distance between the road name from status and the feature property road name, and then use the smallest one for the road label.
-                        if case let .string(roadName) = queriedFeature.feature?.properties?["name"],
+                        if case let .string(roadName) = queriedFeature.feature.properties?["name"],
                            let roadNameFromStatus = self.roadNameFromStatus {
                             let stringEditDistance = roadNameFromStatus.minimumEditDistance(to: roadName)
                             if stringEditDistance < minimumEditDistance {
@@ -280,17 +280,15 @@ extension NavigationMapView {
 
                         var lineStrings: [LineString] = []
                         
-                        if let feature = queriedFeature.feature {
-                            switch feature.geometry {
-                            case .lineString(let lineString):
-                                lineStrings.append(lineString)
-                            case .multiLineString(let multiLineString):
-                                for coordinates in multiLineString.coordinates {
-                                    lineStrings.append(LineString(coordinates))
-                                }
-                            default:
-                                break
+                        switch queriedFeature.feature.geometry {
+                        case .lineString(let lineString):
+                            lineStrings.append(lineString)
+                        case .multiLineString(let multiLineString):
+                            for coordinates in multiLineString.coordinates {
+                                lineStrings.append(LineString(coordinates))
                             }
+                        default:
+                            break
                         }
                         
                         for lineString in lineStrings {
