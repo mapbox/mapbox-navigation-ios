@@ -60,18 +60,27 @@ public extension NavigationHistoryRecording {
     }
 
     static func startRecordingHistory() {
-        Navigator.shared.startRecordingHistory()
+        Navigator.shared.historyRecorder?.startRecording()
     }
 
     static func pushHistoryEvent(type: String, jsonString: String?) {
-        Navigator.shared.pushHistoryEvent(type: type, jsonString: jsonString)
+        Navigator.shared.historyRecorder?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
     }
 
     static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
-        Navigator.shared.stopRecordingHistory(writingFileWith: completionHandler)
+        Navigator.shared.historyRecorder?.stopRecording { (path) in
+            if let path = path {
+                completionHandler(URL(fileURLWithPath: path))
+            } else {
+                completionHandler(nil)
+            }
+        }
     }
 }
 
+/*
+ Convenience methods for `NavigationHistoryRecording` protocol.
+ */
 public extension NavigationHistoryRecording {
     /**
      Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
