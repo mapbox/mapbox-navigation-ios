@@ -89,7 +89,7 @@
 * Fixed an issue where some banner instructions were occasionally skipped. ([#3265](https://github.com/mapbox/mapbox-navigation-ios/pull/3265))
 * Improved the current road name label’s performance and fixed a potential crash when updating it. ([#3340](https://github.com/mapbox/mapbox-navigation-ios/pull/3340))
 * Fixed an issue where arrival guidance card appears too early. ([#3383](https://github.com/mapbox/mapbox-navigation-ios/pull/3383))
-* Fixed an issue where the non current guidance cards highlighted. ([#3442](https://github.com/mapbox/mapbox-navigation-ios/pull/3442))
+* Fixed an issue where the noncurrent guidance cards were highlighted. ([#3442](https://github.com/mapbox/mapbox-navigation-ios/pull/3442))
 
 ### Location tracking
 
