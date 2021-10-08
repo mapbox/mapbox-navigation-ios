@@ -6,6 +6,7 @@ public class DirectionsSpy: Directions {
     /// Callback fired when there is a request to caclulate a new route.
     public var onCalculateRoute: (() -> Void)?
     public var lastCalculateOptionsCompletion: RouteCompletionHandler?
+    public var lastCalculateOptions: DirectionsOptions?
     
     override public func calculate(_ options: MatchOptions, completionHandler: @escaping Directions.MatchCompletionHandler) -> URLSessionDataTask {
         assert(false, "Not ready to handle \(#function)")
@@ -14,6 +15,7 @@ public class DirectionsSpy: Directions {
     
     override public func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
         lastCalculateOptionsCompletion = completionHandler
+        lastCalculateOptions = options
         onCalculateRoute?()
         return DummyURLSessionDataTask()
     }
