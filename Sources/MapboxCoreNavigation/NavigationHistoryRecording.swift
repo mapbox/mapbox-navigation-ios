@@ -70,7 +70,11 @@ public extension NavigationHistoryRecording {
     }
 
     static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
-        Navigator.shared.historyRecorder?.stopRecording { (path) in
+        guard let historyRecorder = Navigator.shared.historyRecorder else {
+            completionHandler(nil)
+            return
+        }
+        historyRecorder.stopRecording { (path) in
             if let path = path {
                 completionHandler(URL(fileURLWithPath: path))
             } else {
