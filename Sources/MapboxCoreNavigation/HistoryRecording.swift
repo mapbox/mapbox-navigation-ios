@@ -92,24 +92,36 @@ public extension HistoryRecording {
      Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
 
      - parameter type: The event type in the events log for your custom event.
-     - parameter value: The value that implements `Encodable` protocol and can be encoded into a valid JSON to attach to the event.
+     - parameter jsonData: The data value that contains a valid JSON to attach to the event.
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
-    static func pushHistoryEvent<Value: Encodable>(type: String, value: Value? = nil) {
-        let jsonString: String?
-        if let value = value {
-            guard let data = try? JSONEncoder().encode(value),
-                  let string = String(data: data, encoding: .utf8)
-            else {
-                assertionFailure("Failed to serialize value")
+    static func pushHistoryEvent(type: String, jsonData: Data?) {
+        var jsonString: String?
+        if let jsonData = jsonData {
+            guard let value = String(data: jsonData, encoding: .utf8) else {
+                assertionFailure("Failed to decode string")
                 return
             }
-            jsonString = string
-        } else {
-            jsonString = nil
+            jsonString = value
         }
         pushHistoryEvent(type: type, jsonString: jsonString)
+    }
+
+    /**
+     Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
+
+     - parameter type: The event type in the events log for your custom event.
+     - parameter value: The value that implements `Encodable` protocol and can be encoded into a valid JSON to attach to the event.
+     - parameter encoder: The instance of `JSONEncoder` to be used for the value encoding. If this argument is omitted, the default `JSONEncoder` will be used.
+
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     */
+    static func pushHistoryEvent<Value: Encodable>(type: String, value: Value?, encoder: JSONEncoder? = nil) throws {
+        let data = try value.map { value -> Data in
+            try (encoder ?? JSONEncoder()).encode(value)
+        }
+        pushHistoryEvent(type: type, jsonData: data)
     }
 
     /**
@@ -120,19 +132,10 @@ public extension HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
-    static func pushHistoryEvent(type: String, dictionary value: [String: Any?]? = nil) {
-        let jsonString: String?
-        if let value = value {
-            guard let data = try? JSONSerialization.data(withJSONObject: value, options: []),
-                  let string = String(data: data, encoding: .utf8)
-            else {
-                assertionFailure("Failed to serialize value")
-                return
-            }
-            jsonString = string
-        } else {
-            jsonString = nil
+    static func pushHistoryEvent(type: String, dictionary value: [String: Any?]?) throws {
+        let data = try value.map { value -> Data in
+            try JSONSerialization.data(withJSONObject: value, options: [])
         }
-        pushHistoryEvent(type: type, jsonString: jsonString)
+        pushHistoryEvent(type: type, jsonData: data)
     }
 }
