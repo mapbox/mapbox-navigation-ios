@@ -196,7 +196,7 @@ open class RouteController: NSObject {
      Asynchronously updates NavNative navigator with the new `RouteProgress`.
 
      - parameter progress: New route progress to apply to the navigator.
-     - parameter completion: A completion that will be called once the navigator is update with a boolean indicating
+     - parameter completion: A completion that will be called once the navigator is updated with a boolean indicating
      whether the change was successful.
      */
     private func updateNavigator(with progress: RouteProgress,
