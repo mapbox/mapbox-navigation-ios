@@ -724,6 +724,10 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController(self, willRerouteFrom: location)
     }
     
+    public func navigationService(_ service: NavigationService, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset {
+        return delegate?.navigationViewController(self, maneuverOffsetWhenReroutingFrom: location) ?? RouteController.DefaultBehavior.reroutingManeuverRadius
+    }
+    
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         for component in navigationComponents {
             component.navigationService(service, didRerouteAlong: route, at: location, proactive: proactive)

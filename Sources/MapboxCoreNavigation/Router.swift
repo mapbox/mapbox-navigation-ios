@@ -336,6 +336,18 @@ extension InternalRouter where Self: Router {
         routeTask?.cancel()
         let options = progress.reroutingOptions(from: origin)
         
+        if isRerouting {
+            switch (delegate?.router(self, maneuverOffsetWhenReroutingFrom: origin) ?? RouteController.DefaultBehavior.reroutingManeuverRadius) {
+            case .disabled:
+                options.avoidManeuversInOriginRadius = nil
+            case .radius(let distance):
+                options.avoidManeuversInOriginRadius = distance
+            case .default:
+                // do nothing
+                break
+            }
+        }
+        
         lastRerouteLocation = origin
         
         routeTask = routingProvider.calculateRoutes(options: options) {(session, result) in
