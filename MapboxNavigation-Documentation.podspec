@@ -48,7 +48,7 @@ Pod::Spec.new do |s|
   s.dependency "MapboxDirections-pre", "2.0.0-rc.3"
   s.dependency "MapboxMaps", "10.0.0-rc.9"
   s.dependency "MapboxMobileEvents", "~> 1.0.0"
-  s.dependency "MapboxNavigationNative", "~> 68.0"
+  s.dependency "MapboxNavigationNative", "~> 69.0"
   s.dependency "Solar-dev", "~> 3.0"
   s.dependency "MapboxSpeech-pre", "2.0.0-rc.1"
 
