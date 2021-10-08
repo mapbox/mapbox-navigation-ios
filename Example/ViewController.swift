@@ -647,4 +647,14 @@ extension ViewController: NavigationViewControllerDelegate {
         dismissActiveNavigationViewController()
         clearNavigationMapView()
     }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset {
+        
+        guard let currentSpeed = navigationViewController.navigationService.router.location?.speed else {
+            return .default
+        }
+        
+        // allowing at least 8 seconds for user to react to new route
+        return .radius(currentSpeed * 8)
+    }
 }

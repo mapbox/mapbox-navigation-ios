@@ -1,6 +1,27 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import Turf
+
+/**
+ Configuration for offsetting first route maneuver during rerouting.
+ */
+public enum ReroutingManeuverOffset {
+    /**
+     Leaves original `RouteOptions.avoidManeuversInOriginRadius` to be used for rerouting attempt.
+     */
+    case `default`
+    /**
+     Disables offsetting the maneuver.
+     */
+    case disabled
+    /**
+     Sets offset radius (in meters).
+     
+     Equivalent to setting `RouteOptions.avoidManeuversInOriginRadius` to the same radius at the beginning.
+     */
+    case radius(LocationDistance)
+}
 
 /**
  A router delegate interacts with one or more `Router` instances, such as `RouteController` objects, during turn-by-turn navigation. This protocol is similar to `NavigationServiceDelegate`, which is the main way that your application can synchronize its state with the SDK’s location-related functionality. Normally, you should not need to make a class conform to the `RouterDelegate` protocol or call any of its methods directly, but you would need to call this protocol’s methods if you implement a custom `Router` class.
@@ -28,12 +49,25 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately before the router calculates a new route.
      
-     This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:didRerouteAlong:)` is called.
+     This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:maneuverOffsetWhenReroutingFrom:)` is called.
      
      - parameter router: The router that will calculate a new route.
      - parameter location: The user’s current location.
      */
     func router(_ router: Router, willRerouteFrom location: CLLocation)
+    
+    /**
+     Configures distance (in meters) before the first maneuver in requested reroute.
+     
+     If implemented, this method allows to override set `RouteOptions.avoidManeuversInOriginRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
+     
+     This method is called after `router(_:willRerouteFrom:)` is called, and before `router(_:didRerouteAlong:)` is called.
+     
+     - parameter router: The router that has detected the need to calculate a new route.
+     - parameter location: The user’s current location.
+     - returns: `ReroutingManeuverOffset` value which overrides or leaves maneuvers offset as it was originally set.
+     */
+    func router(_ router: Router, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -49,7 +83,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately after the router receives a new route.
      
-     This method is called after `router(_:willRerouteFrom:)` method is called.
+     This method is called after `router(_:maneuverOffsetWhenReroutingFrom:)` method is called.
      
      - parameter router: The router that has calculated a new route.
      - parameter route: The new route.
@@ -59,7 +93,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the router fails to receive a new route.
      
-     This method is called after `router(_:willRerouteFrom:)`.
+     This method is called after `router(_:maneuverOffsetWhenReroutingFrom:)`.
      
      - parameter router: The router that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -158,6 +192,11 @@ public extension RouterDelegate {
     
     func router(_ router: Router, willRerouteFrom location: CLLocation) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+    }
+    
+    func router(_ router: Router, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+        return RouteController.DefaultBehavior.reroutingManeuverRadius
     }
     
     func router(_ router: Router, shouldDiscard location: CLLocation) -> Bool {

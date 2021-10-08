@@ -93,7 +93,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called immediately before the navigation view controller calculates a new route.
      
-     This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationViewController(_:didRerouteAlong:)` is called.
+     This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationViewController(_:maneuverOffsetWhenReroutingFrom:)` is called.
      
      - parameter navigationViewController: The navigation view controller that will calculate a new route.
      - parameter location: The user’s current location.
@@ -101,9 +101,22 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
     
     /**
+     Configures distance (in meters) before the first maneuver in requested reroute.
+     
+     If implemented, this method allows to override set `RouteOptions.avoidManeuversInOriginRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
+     
+     This method is called after `navigationViewController(_:willRerouteFrom:)` is called, and before `navigationViewController(_:didRerouteAlong:)` is called.
+     
+     - parameter router: The router that has detected the need to calculate a new route.
+     - parameter location: The user’s current location.
+     - returns: `ReroutingManeuverOffset` value which overrides or leaves maneuvers offset as it was originally set.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset
+    
+    /**
      Called immediately after the navigation view controller receives a new route.
      
-     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
+     This method is called after `navigationViewController(_:maneuverOffsetWhenReroutingFrom:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter route: The new route.
@@ -113,7 +126,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller fails to receive a new route.
      
-     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
+     This method is called after `navigationViewController(_:maneuverOffsetWhenReroutingFrom:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -265,6 +278,11 @@ public extension NavigationViewControllerDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        return RouteController.DefaultBehavior.reroutingManeuverRadius
     }
     
     /**
