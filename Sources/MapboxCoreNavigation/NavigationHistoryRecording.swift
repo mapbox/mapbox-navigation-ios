@@ -12,7 +12,9 @@ public protocol NavigationHistoryRecording {
     typealias HistoryFileWritingCompletionHandler = (_ historyFileURL: URL?) -> Void
 
     /**
-     Path to the directory where history could be stored when `PassiveLocationManager.writeHistory(completionHandler:)` is called.
+     Path to the directory where history file could be stored when `Navigator.stopRecordingHistory(writingFileWith:)` is called.
+
+     Setting `nil` disables history recording. Defaults to `nil`.
      */
     static var historyDirectoryURL: URL? { get set }
 
