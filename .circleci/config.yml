@@ -168,18 +168,19 @@ step-library:
           - nav-cache-pod-v1-{{ .Environment.CIRCLE_JOB }}-{{ checksum "Tests/CocoaPodsTest/PodInstall/Podfile.lock" }}
           - nav-cache-pod-v1
 
-  - &restore-cache-cocoapods-installation
+  - &restore-cache-gems
       restore_cache:
         keys:
           - 1-gems-{{ checksum "Gemfile.lock" }}
 
-  - &install-cocoapods-installation
+  - &install-gems
       run:
-        name: Install cocoapods
+        name: Install Gems
         command: |
-          bundle check || bundle install --path vendor/bundle --clean
+          bundle config set path 'vendor/bundle'
+          bundle check || bundle install
 
-  - &save-cache-cocoapods-installation
+  - &save-cache-gems
       save_cache:
           key: 1-gems-{{ checksum "Gemfile.lock" }}
           paths:
@@ -236,6 +237,13 @@ step-library:
         name: Add GitHub to known hosts
         command: |
           for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
+          
+  - &install-mbx-ci
+      run:
+        name: Install mbx-ci
+        command: |
+          curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > /usr/local/bin/mbx-ci
+          chmod 755 /usr/local/bin/mbx-ci
 
   - &build-Example
       run:
@@ -274,13 +282,13 @@ jobs:
       HOMEBREW_NO_AUTO_UPDATE: 1
     steps:
       - checkout
-      - *install-cocoapods-installation
+      - *restore-cache-gems
+      - *restore-cache-podmaster
+      - *restore-cache-cocoapods
+      - *install-gems
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - *update-carthage-version
-      - *restore-cache-podmaster
-      - *restore-cache-cocoapods-installation
-      - *restore-cache-cocoapods
       - when:
           condition: << parameters.update >>
           steps:
@@ -301,7 +309,7 @@ jobs:
             - run: bundle exec pod lib lint MapboxCoreNavigation.podspec
       - *save-cache-podmaster
       - *save-cache-cocoapods
-      - *save-cache-cocoapods-installation
+      - *save-cache-gems
       - notify-build-finished
 
 
@@ -579,6 +587,45 @@ jobs:
           name: Build SPM Core integration test
           command: cd Tests/SPMTest/CoreSPMTest && xcodebuild -scheme CoreSPMTest -destination "platform=iOS Simulator,OS=15.0,name=iPhone 13 Pro Max" build
       
+  generate-docs-job:
+    parameters:
+      xcode:
+        type: string
+        default: "12.4.0"
+    macos:
+      xcode: << parameters.xcode >>
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *restore-cache-gems
+      - *restore-cache-podmaster
+      - *install-gems
+      - *prepare-netrc-file
+      - *install-mbx-ci
+      - run:
+          name: Generate docs
+          command: |
+            OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
+            export OUTPUT="${OUTPUT:-documentation}"
+            echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
+            ./scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
+            git checkout -- Sources
+      - *save-cache-podmaster
+      - *save-cache-gems
+      - when:
+          condition: << pipeline.git.tag >>
+          steps:
+            - run:
+                name: Push docs to publisher-production
+                command: |
+                  git remote set-url origin "https://x-access-token:$(mbx-ci github writer token)@github.com/mapbox/mapbox-navigation-ios.git"
+                  git config user.email "release-bot@mapbox.com"
+                  git config user.name "Mapbox Releases"
+                  VERSION="${OUTPUT}" scripts/publish-docs.sh
+            - notify-build-finished:
+                notify_success: true
+      - notify-build-finished
 
 workflows:
   extended-workflow:
@@ -658,6 +705,13 @@ workflows:
           context: Slack Orb
       - spm-core-integration-test-job:
           name: "Xcode 13; iOS 15.0; SPM Core test"
+      - generate-docs-job:
+          name: Generate / Publish Documentation
+          context: Slack Orb
+          filters:
+            tags:
+              only: /^v\d+\.\d+\.\d+(-.+)?$/
+        
       - ios-trigger-metrics:
           filters:
             branches:

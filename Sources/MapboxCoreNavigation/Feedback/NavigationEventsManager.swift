@@ -63,6 +63,13 @@ open class NavigationEventsManager {
     // MARK: Storing Data and Datasources
     
     private var sessionState = SessionState()
+
+    /**
+     The unique identifier of the navigation session used for events.
+     */
+    public var sessionId: String {
+        sessionState.identifier.uuidString
+    }
     
     var outstandingFeedbackEvents = [CoreFeedbackEvent]()
     
@@ -266,8 +273,12 @@ open class NavigationEventsManager {
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
         eventDictionary["feedbackId"] = event.identifier.uuidString
-        eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
-        eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
+        eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects
+            .filter { $0.timestamp <= event.timestamp }
+            .map { EventLocation($0).dictionaryRepresentation }
+        eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects
+            .filter { $0.timestamp > event.timestamp }
+            .map { EventLocation($0).dictionaryRepresentation }
         return eventDictionary
     }
     

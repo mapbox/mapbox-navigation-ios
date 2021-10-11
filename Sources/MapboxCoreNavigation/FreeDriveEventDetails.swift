@@ -74,7 +74,9 @@ struct FreeDriveEventDetails: GlobalEventDetails {
         try container.encode(NavigationEventsManager.applicationSessionIdentifier, forKey: .navigatorSessionIdentifier)
         try container.encodeIfPresent(appMetadata, forKey: .appMetadata)
         try container.encodeIfPresent(event, forKey: .event)
-        try container.encodeIfPresent(location?.dictionaryRepresentation, forKey: .location)
+        if let location = location.flatMap(EventLocation.init(_:)) {
+            try container.encode(location, forKey: .location)
+        }
         try container.encodeIfPresent(startTimestamp?.ISO8601, forKey: .startTimestamp)
     }
 }

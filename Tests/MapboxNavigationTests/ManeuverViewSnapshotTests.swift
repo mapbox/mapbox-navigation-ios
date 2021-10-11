@@ -19,9 +19,17 @@ class ManeuverViewSnapshotTests: TestCase {
         DayStyle().apply()
     }
     
-    func maneuverInstruction(_ maneuverType: ManeuverType?, _ maneuverDirection: ManeuverDirection?, _ degrees: CLLocationDegrees = 180) -> VisualInstruction {
-        let component = VisualInstruction.Component.delimiter(text: .init(text: "", abbreviation: nil, abbreviationPriority: nil))
-        return VisualInstruction(text: "", maneuverType: maneuverType, maneuverDirection: maneuverDirection, components: [component], degrees: degrees)
+    func maneuverInstruction(_ maneuverType: ManeuverType?,
+                             _ maneuverDirection: ManeuverDirection?,
+                             _ degrees: CLLocationDegrees = 180) -> VisualInstruction {
+        let component = VisualInstruction.Component.delimiter(text: .init(text: "",
+                                                                          abbreviation: nil,
+                                                                          abbreviationPriority: nil))
+        return VisualInstruction(text: "",
+                                 maneuverType: maneuverType,
+                                 maneuverDirection: maneuverDirection,
+                                 components: [component],
+                                 degrees: degrees)
     }
 
     func testStraightRoundabout() {
@@ -60,18 +68,19 @@ class ManeuverViewSnapshotTests: TestCase {
     }
 
     func testLeftUTurn() {
-        maneuverView.drivingSide = .right
         maneuverView.visualInstruction = maneuverInstruction(.turn, .uTurn)
-        let image = UIImage(view: maneuverView)!
-        let flipped = UIImage(cgImage: image.cgImage!, scale: UIScreen.main.scale, orientation: .upMirrored)
-        let imageView = UIImageView(image: flipped)
-        assertImageSnapshot(matching: imageView, as: .image(precision: 0.95))
+        maneuverView.drivingSide = .right
+        
+        assertImageSnapshot(matching: UIImageView(image: maneuverView.imageRepresentation),
+                            as: .image(precision: 0.95))
     }
 
     func testRightUTurn() {
-        maneuverView.drivingSide = .left
         maneuverView.visualInstruction = maneuverInstruction(.turn, .uTurn)
-        assertImageSnapshot(matching: maneuverView.layer, as: .image(precision: 0.95))
+        maneuverView.drivingSide = .left
+
+        assertImageSnapshot(matching: UIImageView(image: maneuverView.imageRepresentation),
+                            as: .image(precision: 0.95))
     }
 
     func testRoundabout() {
@@ -88,22 +97,5 @@ class ManeuverViewSnapshotTests: TestCase {
         }
 
         assertImageSnapshot(matching: views.layer, as: .image(precision: 0.95))
-    }
-}
-
-extension UIImage {
-    convenience init?(view: UIView) {
-        let rendererFormat = UIGraphicsImageRendererFormat.default()
-        rendererFormat.opaque = view.isOpaque
-        rendererFormat.scale = 3
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: 50, height: 50), format: rendererFormat)
-
-        let snapshotImage = renderer.image { c in
-            view.layer.render(in: c.cgContext)
-        }
-        guard let cgImage = snapshotImage.cgImage else {
-            return nil
-        }
-        self.init(cgImage: cgImage, scale: 3, orientation: .up)        
     }
 }

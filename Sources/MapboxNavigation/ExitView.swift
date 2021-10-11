@@ -81,7 +81,7 @@ public class ExitView: StylableView {
     }
     
     required public init?(coder aDecoder: NSCoder) {
-        pointSize = 0.0        
+        pointSize = 0.0
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -95,7 +95,6 @@ public class ExitView: StylableView {
         translatesAutoresizingMaskIntoConstraints = false
         layer.masksToBounds = true
 
-        //build view hierarchy
         let children = [imageView, exitNumberLabel]
         addSubviews(children)
         buildConstraints()
@@ -125,6 +124,7 @@ public class ExitView: StylableView {
         
         addConstraints(constraints)
     }
+    
     func rightExitConstraints() -> [NSLayoutConstraint] {
         let labelLeading = exitNumberLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8)
         let spacing = self.spacing(for: .right)
@@ -144,23 +144,38 @@ public class ExitView: StylableView {
     /**
      This generates the cache key needed to hold the `ExitView`'s `imageRepresentation` in the `ImageCache` caching engine.
      */
-    static func criticalHash(side: ExitSide, dataSource: DataSource) -> String {
-        let proxy = ExitView.appearance()
-        var backgroundColor = proxy.backgroundColor
-        var foregroundColor = proxy.foregroundColor
-        let performAsCurrentSelector = Selector(("performAsCurrentTraitCollection:" as NSString) as String)
-        if #available(iOS 13.0, *) {
-            if let currentTraitCollection = UIApplication.shared.keyWindow?.traitCollection, currentTraitCollection.responds(to: performAsCurrentSelector), let backgroundCGColor = backgroundColor?.cgColor, let foregroundCGColor = foregroundColor?.cgColor {
-
-                let colorCopyingClosure = {
-                    backgroundColor = UIColor(cgColor: backgroundCGColor)
-                    foregroundColor = UIColor(cgColor: foregroundCGColor)
-                }
-                let colorCopyingBlock: @convention(block) () -> Void = colorCopyingClosure
-                currentTraitCollection.perform(performAsCurrentSelector, with: colorCopyingBlock)
+    static func criticalHash(side: ExitSide,
+                             dataSource: DataSource,
+                             traitCollection: UITraitCollection) -> String {
+        var appearance = ExitView.appearance()
+        if traitCollection.userInterfaceIdiom == .carPlay {
+            if #available(iOS 12.0, *) {
+                let carPlayTraitCollection = UITraitCollection(traitsFrom: [
+                    UITraitCollection(userInterfaceIdiom: .carPlay),
+                    UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
+                ])
+                
+                appearance = ExitView.appearance(for: carPlayTraitCollection)
+            } else {
+                appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay))
             }
         }
-        let criticalProperties: [AnyHashable?] = [side, dataSource.font.pointSize, backgroundColor, foregroundColor, proxy.borderWidth, proxy.cornerRadius]
+        
+        var criticalProperties: [AnyHashable?] = [
+            side,
+            dataSource.font.pointSize,
+            appearance.backgroundColor,
+            appearance.foregroundColor,
+            appearance.borderColor,
+            appearance.borderWidth,
+            appearance.cornerRadius,
+            traitCollection.userInterfaceIdiom.rawValue,
+        ]
+        
+        if #available(iOS 12.0, *) {
+            criticalProperties.append(traitCollection.userInterfaceStyle.rawValue)
+        }
+        
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
     }
 }

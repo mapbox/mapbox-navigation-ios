@@ -41,11 +41,11 @@ public class InstructionsCardCell: UICollectionViewCell {
         /* TODO: Smoothen animation here. */
     }
     
-    public func configure(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil) {
+    public func configure(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil, isCurrentCardStep: Bool = false) {
         addSubview(container)
         setupConstraints()
         container.prepareLayout()
-        container.updateInstruction(for: step, distance: distance, instruction: instruction)
+        container.updateInstruction(for: step, distance: distance, instruction: instruction, isCurrentCardStep: isCurrentCardStep)
     }
 }
 

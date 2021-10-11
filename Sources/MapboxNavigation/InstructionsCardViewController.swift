@@ -75,7 +75,7 @@ open class InstructionsCardViewController: UIViewController {
     }()
     
     open func updateCurrentVisibleInstructionCard(for instruction: VisualInstructionBanner) {
-        guard let remainingStepsCount = routeProgress?.currentLegProgress.remainingSteps.endIndex else { return }
+        guard let remainingStepsCount = routeProgress?.currentLegProgress.remainingSteps.count else { return }
         let indexPath = IndexPath(row: 0, section: 0)
         if indexPath.row < remainingStepsCount, let container = instructionContainerView(at: indexPath) {
             container.updateInstruction(instruction)
@@ -88,10 +88,11 @@ open class InstructionsCardViewController: UIViewController {
         guard let currentCardStep = remainingSteps.first else { return }
         for index in indexPaths.startIndex..<indexPaths.endIndex {
             let indexPath = indexPaths[index]
-            if let container = instructionContainerView(at: indexPath), indexPath.row < remainingSteps.endIndex {
+            if let container = instructionContainerView(at: indexPath), indexPath.row < remainingSteps.count {
                 let visibleStep = remainingSteps[indexPath.row]
-                let distance = currentCardStep == visibleStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
-                container.updateInstructionCard(distance: distance)
+                let isCurrentCardStep = currentCardStep == visibleStep
+                let distance = isCurrentCardStep ? legProgress.currentStepProgress.distanceRemaining : visibleStep.distance
+                container.updateInstructionCard(distance: distance, isCurrentCardStep: isCurrentCardStep)
             }
         }
     }
@@ -257,7 +258,7 @@ extension InstructionsCardViewController: UICollectionViewDelegate {
         let previewIndex = indexPath.row
         
         assert(previewIndex >= 0, "Preview Index should not be negative")
-        if isInPreview, let steps = steps, previewIndex >= 0, previewIndex < steps.endIndex {
+        if isInPreview, let steps = steps, previewIndex >= 0, previewIndex < steps.count {
             let step = steps[previewIndex]
             cardCollectionDelegate?.instructionsCardCollection(self, didPreview: step)
         }
@@ -272,7 +273,7 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardCollectionCellIdentifier, for: indexPath) as! InstructionsCardCell
         
-        guard let steps = steps, indexPath.row < steps.endIndex, let distanceRemaining = routeProgress?.currentLegProgress.currentStepProgress.distanceRemaining else {
+        guard let steps = steps, indexPath.row < steps.count, let distanceRemaining = routeProgress?.currentLegProgress.currentStepProgress.distanceRemaining else {
             return cell
         }
         
@@ -280,7 +281,7 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
         
         let step = steps[indexPath.row]
         if indexPath.row == 0 {
-            cell.configure(for: step, distance: distanceRemaining, instruction: self.currentInstruction)
+            cell.configure(for: step, distance: distanceRemaining, instruction: self.currentInstruction, isCurrentCardStep: true)
         } else {
             cell.configure(for: step, distance: step.distance)
         }

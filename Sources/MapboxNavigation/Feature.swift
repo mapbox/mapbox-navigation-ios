@@ -10,12 +10,7 @@ extension Feature {
         case .string(let identifier):
             return Int64(identifier)
         case .number(let identifier):
-            switch identifier {
-            case .double(let identifier):
-                return Int64(identifier)
-            case .int(let identifier):
-                return Int64(identifier)
-            }
+            return Int64(identifier)
         }
     }
 }

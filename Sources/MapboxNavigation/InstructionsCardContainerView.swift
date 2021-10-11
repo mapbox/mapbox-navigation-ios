@@ -78,13 +78,13 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     
     public weak var delegate: InstructionsCardContainerViewDelegate?
 
-    public func updateInstruction(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil) {
+    public func updateInstruction(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil, isCurrentCardStep: Bool = false) {
         instructionsCardView.updateDistanceFromCurrentLocation(distance)
         instructionsCardView.step = step
         
         guard let instruction = instruction ?? step.instructionsDisplayedAlongStep?.last else { return }
         updateInstruction(instruction)
-        updateInstructionCard(distance: distance)
+        updateInstructionCard(distance: distance, isCurrentCardStep: isCurrentCardStep)
     }
     
     public func updateInstruction(_ instruction: VisualInstructionBanner) {
@@ -94,8 +94,8 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         nextBannerView.update(for: instruction)
     }
     
-    public func updateInstructionCard(distance: CLLocationDistance) {
-        let highlightEnabled = distance < InstructionsCardConstants.highlightDistance
+    public func updateInstructionCard(distance: CLLocationDistance, isCurrentCardStep: Bool = false) {
+        let highlightEnabled = isCurrentCardStep ? distance < InstructionsCardConstants.highlightDistance : false
         updateBackgroundColor(highlightEnabled: highlightEnabled)
         instructionsCardView.updateDistanceFromCurrentLocation(distance)
     }

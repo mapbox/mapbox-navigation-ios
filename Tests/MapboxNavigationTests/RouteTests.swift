@@ -78,4 +78,20 @@ class RouteTests: TestCase {
             XCTAssertLessThan(lastIndexedCoordinate!.coordinate.distance(to: maneuverPolyline.coordinates.last!), 1, "End of maneuver polyline for step \(stepIndex) is \(lastIndexedCoordinate!.coordinate.distance(to: maneuverPolyline.coordinates.last!)) away from outlet from intersection.")
         }
     }
+    
+    func testContainsStep() {
+        guard let route = response.routes?.first else {
+            XCTFail("Failed to get route.")
+            return
+        }
+
+        var legIndex = route.legs.count - 1
+        var stepsIndex = route.legs[legIndex].steps.count
+        XCTAssertFalse(route.containsStep(at: legIndex, stepIndex: stepsIndex), "Failed to check the step index when it's larger than or equal to the steps count.")
+        
+        legIndex = route.legs.count
+        stepsIndex = 0
+        XCTAssertFalse(route.containsStep(at: legIndex, stepIndex: stepsIndex), "Failed to check the leg index when it's larger than or equal to the legs count.")
+        
+    }
 }

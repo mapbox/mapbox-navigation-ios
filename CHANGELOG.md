@@ -20,13 +20,13 @@
 
 #### Dependencies
 
-* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.9](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.0.0-rc.9) instead of [Mapbox Maps SDK for iOS v6._x_](https://github.com/mapbox/mapbox-gl-native-ios/). Consult the “[Migrate to v10](https://docs.mapbox.com/ios/beta/maps/guides/migrate-to-v10/)” guide for tips on upgrading your runtime styling and other map-related code. ([#3391](https://github.com/mapbox/mapbox-navigation-ios/pull/3391))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.0.0) instead of [Mapbox Maps SDK for iOS v6._x_](https://github.com/mapbox/mapbox-gl-native-ios/). Consult the “[Migrate to v10](https://docs.mapbox.com/ios/beta/maps/guides/migrate-to-v10/)” guide for tips on upgrading your runtime styling and other map-related code. ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
 * MapboxCoreNavigation no longer depends on [MapboxAccounts](https://github.com/mapbox/mapbox-accounts-ios/). If you previously installed MapboxCoreNavigation using Carthage, remove MapboxAccounts.framework from your application’s Link Binary With Libraries build phase. ([#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829))
-* MapboxCoreNavigation now depends on [MapboxMobileEvents v1._x_](https://github.com/mapbox/mapbox-events-ios/releases/tag/v1.0.0). The dependency on MapboxMobileEvents is subject to change or removal in a future minor release of MapboxCoreNavigation, so your Podfile, Cartfile, or Package.swift should not explicitly depend on MapboxMobileEvents. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
-* MapboxCoreNavigation now depends on [MapboxDirections v2.0.0-rc.3](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.0.0-rc.3). ([#3419](https://github.com/mapbox/mapbox-navigation-ios/pull/3419))
-* MapboxCoreNavigation now depends on [Turf v2.0.0-rc.1](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0-rc.1). ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
-* MapboxCoreNavigation now depends on [MapboxNavigationNative v68._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/68.0.0). ([#3419](https://github.com/mapbox/mapbox-navigation-ios/pull/3419))
-* MapboxCoreNavigation now depends on [MapboxCommon v19._x_](https://github.com/mapbox/mapbox-common-ios/releases/tag/v19.0.0). ([#3391](https://github.com/mapbox/mapbox-navigation-ios/pull/3391))
+* MapboxCoreNavigation now depends on [MapboxMobileEvents v1._x_](https://github.com/mapbox/mapbox-events-ios/releases/tag/v1.0.5). The dependency on MapboxMobileEvents is subject to change or removal in a future minor release of MapboxCoreNavigation, so your Podfile, Cartfile, or Package.swift should not explicitly depend on MapboxMobileEvents. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
+* MapboxCoreNavigation now depends on [MapboxDirections v2.0.0-rc.4](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.0.0-rc.4). ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
+* MapboxCoreNavigation now depends on [Turf v2.0.0](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0). ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
+* MapboxCoreNavigation now depends on [MapboxNavigationNative v69._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/69.0.0). ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
+* MapboxCoreNavigation now depends on [MapboxCommon v20._x_](https://github.com/mapbox/mapbox-common-ios/releases/tag/v20.0.0). ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
 * Removed the optional dependency on [MapboxGeocoder.swift](https://github.com/mapbox/MapboxGeocoder.swift/). ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999), [#3183](https://github.com/mapbox/mapbox-navigation-ios/issues/3183))
 
 ### Map
@@ -89,6 +89,7 @@
 * Fixed an issue where some banner instructions were occasionally skipped. ([#3265](https://github.com/mapbox/mapbox-navigation-ios/pull/3265))
 * Improved the current road name label’s performance and fixed a potential crash when updating it. ([#3340](https://github.com/mapbox/mapbox-navigation-ios/pull/3340))
 * Fixed an issue where arrival guidance card appears too early. ([#3383](https://github.com/mapbox/mapbox-navigation-ios/pull/3383))
+* Fixed an issue where the noncurrent guidance cards were highlighted. ([#3442](https://github.com/mapbox/mapbox-navigation-ios/pull/3442))
 
 ### Location tracking
 
@@ -103,6 +104,7 @@
 * The `NavigationService.router` and `MapboxNavigationService.router` properties are no longer unsafe-unowned. ([#3055](https://github.com/mapbox/mapbox-navigation-ios/pull/3055))
 * Fixed unnecessary rerouting when calling the `NavigationService.start()` method. ([#3239](https://github.com/mapbox/mapbox-navigation-ios/pull/3239))
 * Fixed an issue where `RouteController` or `PassiveLocationManager` sometimes snapped the user’s location assuming a path that violated a turn restriction. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
+* Added `SimulationMode.inTunnels` to enable simulating user location when loosing GPS signal while traversing tunnels. Simulation mode for default navigation service now can be configured using `NavigationOptons.simulationMode`. ([#3314](https://github.com/mapbox/mapbox-navigation-ios/pull/3314))
 * Improved performance and decreased memory usage when downloading routing tiles. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Fixed a crash when navigating along a route 0 meters long (for example, because two waypoints snap to the same location). ([#3387](https://github.com/mapbox/mapbox-navigation-ios/pull/3387))
 * Renamed `Router.updateRoute(with:routeOptions:)` to `Router.updateRoute(with:routeOptions:completion:)`. New `completion` block parameter is called when `Router` has changed the route along with a boolean that indicates whether the change was successful. ([#3432](https://github.com/mapbox/mapbox-navigation-ios/pull/3432))
@@ -137,6 +139,7 @@
 * Added the `TilesetDescriptorFactory` class for checking routing tiles in a `TileStore`. The tile storage location is determined by the `NavigationSettings.tileStoreConfiguration` property. ([#3015](https://github.com/mapbox/mapbox-navigation-ios/pull/3015), [#3164](https://github.com/mapbox/mapbox-navigation-ios/pull/3164), [#3215](https://github.com/mapbox/mapbox-navigation-ios/pull/3215))
 * Added the `Notification.Name.navigationDidSwitchToFallbackVersion` and `Notification.Name.navigationDidSwitchToTargetVersion` notifications, which are posted when `PassiveLocationManager` and `RouteController` fall back to an older set of navigation tiles present in the current tile storage. ([#3014](https://github.com/mapbox/mapbox-navigation-ios/pull/3014))
 * Added the `NavigationSettings.directions` and `NavigationSettings.tileStoreConfiguration` properties for ensuring consistent caching between instances of `PassiveLocationManager` and `RouteController`. The `directions` argument of `PassiveLocationManager(directions:systemLocationManager:)`, `RouteController(alongRouteAtIndex:in:options:directions:dataSource:)`, and `MapboxNavigationService(routeResponse:routeIndex:routeOptions:directions:locationSource:eventsManagerType:simulating:routerType:)` now defaults to `NavigationSettings.directions`. ([#3215](https://github.com/mapbox/mapbox-navigation-ios/pull/3215))
+* Removed `Bundle.ensureSuggestedTileURLExists()`, `Bundle.suggestedTileURL` and `Bundle.suggestedTileURL(version:)`. ([#3425](https://github.com/mapbox/mapbox-navigation-ios/pull/3425))
 
 ### Electronic horizon and route alerts
 
@@ -159,10 +162,13 @@
 * Added the `CarPlayMapViewControllerDelegate` protocol, which provides methods for reacting to events during the browsing and previewing activities. ([#3190](https://github.com/mapbox/mapbox-navigation-ios/pull/3190))
 * Added the `CarPlayMapViewControllerDelegate.carPlayMapViewController(_:didAdd:pointAnnotationManager:)`, `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:didAdd:pointAnnotationManager:)` and `CarPlayManager.carPlayManager(_:didAdd:to:pointAnnotationManager:)` delegate methods, which will be called whenever the `PointAnnotation` representing the final destination is added to `CarPlayMapViewController`, `CarPlayNavigationViewController` and `CarPlayManager`, respectively. ([#3190](https://github.com/mapbox/mapbox-navigation-ios/pull/3190))
 * A speed limit indicator now appears on the map during the browsing activity. ([#3197](https://github.com/mapbox/mapbox-navigation-ios/pull/3197))
+* A speed limit indicator now can be fully hidden by using `SpeedLimitView.isAlwaysHidden` property. ([#3429](https://github.com/mapbox/mapbox-navigation-ios/pull/3429))
 * Renamed the `CarPlayManagerDelegate.carPlayManager(_:navigationServiceAlong:routeIndex:routeOptions:desiredSimulationMode:)` method to `CarPlayManagerDelegate.carPlayManager(_:navigationServiceFor:routeIndex:routeOptions:desiredSimulationMode:)`. It now returns an optional `NavigationService`; if it is `nil`, a `MapboxNavigationService` will be used by default. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
 * Renamed the `CarPlayManagerDelegate.carplayManagerShouldDisableIdleTimer(_:)` method to `CarPlayManagerDelegate.carPlayManagerShouldDisableIdleTimer(_:)`. ([#3208](https://github.com/mapbox/mapbox-navigation-ios/pull/3208))
 * Added the `CarPlayManagerDelegate.carPlayManager(_:templateWillAppear:animated:)`, `CarPlayManagerDelegate.carPlayManager(_:templateDidAppear:animated:)`, `CarPlayManagerDelegate.carPlayManager(_:templateWillDisappear:animated:)`, and `CarPlayManagerDelegate.carPlayManager(_:templateDidDisappear:animated:)` methods to pass through the corresponding methods from `CPInterfaceControllerDelegate`. ([#3219](https://github.com/mapbox/mapbox-navigation-ios/pull/3219))
 * Fixed an issue where `CPMapTemplate.tripEstimateStyle` uses dark appearance even if light appearance is selected. ([#3397](https://github.com/mapbox/mapbox-navigation-ios/pull/3397))
+* `CarPlayMapViewController` and `CarPlayNavigationViewController` are now subclassable. ([#3424](https://github.com/mapbox/mapbox-navigation-ios/pull/3424))
+* Added `CPInterfaceController.safePopTemplate(animated:)`, which allows to safely pop back a `CPTemplate` by a single level in the template navigation hierarchy. ([#3426](https://github.com/mapbox/mapbox-navigation-ios/pull/3426))
 
 ### User feedback
 
@@ -178,6 +184,7 @@
 * Renamed the `FeedbackType` enumeration to `ActiveNavigationFeedbackType` and the `EventsManagerDataSource` protocol to `ActiveNavigationEventsManagerDataSource`. ([#3327](https://github.com/mapbox/mapbox-navigation-ios/pull/3327))
 * Renamed the user-facing feedback categories and subcategories for active turn-by-turn navigation that are represented at runtime by the `ActiveNavigationFeedbackType` enumeration. ([#3339]((https://github.com/mapbox/mapbox-navigation-ios/pull/3339))
 * Added the ability to pass your own screenshot to the `NavigationEventsManager.createFeedback()` when a user submits a feedback. Screenshots help Mapbox to determine where issues exist for review and correction. ([#3380]((https://github.com/mapbox/mapbox-navigation-ios/pull/3380))
+* Added `NavigationEventsManager.sessionId`, which allows getting session identifier used in feedback and other events. ([#3449](https://github.com/mapbox/mapbox-navigation-ios/pull/3449))
 
 ### Other changes
 

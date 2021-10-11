@@ -70,8 +70,8 @@ extension Route {
                 legFeatures = mergedCongestionSegments.map { (congestionSegment: CongestionSegment) -> Feature in
                     var feature = Feature(geometry: .lineString(LineString(congestionSegment.0)))
                     feature.properties = [
-                        CongestionAttribute: String(describing: congestionSegment.1),
-                        CurrentLegAttribute: currentLegAttribute
+                        CongestionAttribute: .string(congestionSegment.1.rawValue),
+                        CurrentLegAttribute: .boolean(currentLegAttribute),
                     ]
                     
                     return feature
@@ -79,7 +79,7 @@ extension Route {
             } else {
                 var feature = Feature(geometry: .lineString(LineString(shape.coordinates)))
                 feature.properties = [
-                    CurrentLegAttribute: currentLegAttribute
+                    CurrentLegAttribute: .boolean(currentLegAttribute),
                 ]
                 legFeatures = [feature]
             }
@@ -154,6 +154,13 @@ extension Route {
         return lines.compactMap { coordinateList -> LineString? in
             return LineString(coordinateList)
         }
+    }
+    
+    /**
+     Returns true if both the legIndex and stepIndex are valid in the route.
+     */
+    func containsStep(at legIndex: Int, stepIndex: Int) -> Bool {
+        return legs[safe: legIndex]?.steps.indices.contains(stepIndex) ?? false
     }
 }
 

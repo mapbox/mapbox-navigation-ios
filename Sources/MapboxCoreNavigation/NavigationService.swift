@@ -24,6 +24,11 @@ public enum SimulationMode: Int {
      A setting of `.never` will never enable the location simulator, regardless of circumstances.
      */
     case never
+    
+    /**
+     A setting of `.inTunnels` will enable simulation when two conditions are met: we do not recieve a location update after the `poorGPSPatience` threshold has elapsed and SDK detects current location as a [tunnel](https://wiki.openstreetmap.org/wiki/Key:tunnel).
+     */
+    case inTunnels
 }
 
 /**
@@ -126,7 +131,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     // MARK: Simulating Traversing
     
     /**
-     The default time interval before beginning simulation when the `.onPoorGPS` simulation option is enabled.
+     The default time interval before beginning simulation when the `.onPoorGPS` or `.inTunnels` simulation options are enabled.
      */
     static let defaultPoorGPSPatience: Double = 2.5 //seconds
     
@@ -147,7 +152,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
             switch simulationMode {
             case .always:
                 simulate()
-            case .onPoorGPS:
+            case .onPoorGPS, .inTunnels:
                 poorGPSTimer.arm()
             case .never:
                 poorGPSTimer.disarm()
@@ -201,7 +206,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     private func resetGPSCountdown() {
         //Sanity check: if we're not on this mode, we have no business here.
-        guard simulationMode == .onPoorGPS else { return }
+        guard simulationMode == .onPoorGPS || simulationMode == .inTunnels else { return }
         
         // Immediately end simulation if it is occuring.
         if isSimulating {
@@ -251,7 +256,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
         
-        if [.always, .onPoorGPS].contains(simulationMode) {
+        if [.always, .onPoorGPS, .inTunnels].contains(simulationMode) {
             endSimulation()
         }
         
@@ -293,17 +298,19 @@ public class MapboxNavigationService: NSObject, NavigationService {
                          directions: Directions? = nil,
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
-                         simulating simulationMode: SimulationMode = .onPoorGPS,
+                         simulating simulationMode: SimulationMode? = nil,
                          routerType: Router.Type? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
         self.directions = directions ?? NavigationSettings.shared.directions
-        self.simulationMode = simulationMode
+        self.simulationMode = simulationMode ?? .inTunnels
         super.init()
         resumeNotifications()
         
         _poorGPSTimer = DispatchTimer(countdown: poorGPSPatience.dispatchInterval)  { [weak self] in
-            guard let mode = self?.simulationMode, mode == .onPoorGPS else { return }
-            self?.simulate(intent: .poorGPS)
+            guard let self = self,
+                  self.simulationMode == .onPoorGPS ||
+                    (self.simulationMode == .inTunnels && self.isInTunnel(at: self.router.location!, along: self.routeProgress)) else { return }
+            self.simulate(intent: .poorGPS)
         }
         
         let routerType = routerType ?? DefaultRouter.self
@@ -364,7 +371,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private var nativeLocationSource: NavigationLocationManager
     
     /**
-     The active location simulator. Only used during `SimulationOption.always` and `SimluatedLocationManager.onPoorGPS`. If there is no simulation active, this property is `nil`.
+     The active location simulator. Only used during `SimulationOption.always`, `SimluatedLocationManager.onPoorGPS` and `SimluatedLocationManager.inTunnels`. If there is no simulation active, this property is `nil`.
      */
     private var simulatedLocationSource: SimulatedLocationManager?
     
@@ -444,7 +451,7 @@ extension MapboxNavigationService: CLLocationManagerDelegate {
         guard let location = locations.last else { return }
         
         //If this is a good organic update, reset the timer.
-        if simulationMode == .onPoorGPS,
+        if simulationMode == .onPoorGPS || simulationMode == .inTunnels,
             manager == nativeLocationSource,
             location.isQualified {
             //If the timer is disarmed, arm it. This is a good update.

@@ -1,7 +1,7 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
-import MapboxMaps
+@_spi(Restricted) import MapboxMaps
 
 #if canImport(CarPlay)
 import CarPlay
@@ -12,7 +12,7 @@ import CarPlay
  - seealso: `NavigationViewController`
  */
 @available(iOS 12.0, *)
-public class CarPlayNavigationViewController: UIViewController {
+open class CarPlayNavigationViewController: UIViewController {
     
     // MARK: Child Views and Styling Configuration
     
@@ -135,7 +135,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         let feedbackButtonHandler: (_ : CPGridButton) -> Void = { [weak self] (button) in
             guard let self = self else { return }
-            self.carInterfaceController.popTemplate(animated: true)
+            self.carInterfaceController.safePopTemplate(animated: true)
             
             guard let feedback = self.eventsManager.createFeedback() else { return }
             let foundItem = feedbackItems.filter { $0.image == button.image }
@@ -182,14 +182,16 @@ public class CarPlayNavigationViewController: UIViewController {
     
     func endOfRouteFeedbackTemplate() -> CPGridTemplate {
         let buttonHandler: (_: CPGridButton) -> Void = { [weak self] (button) in
+            guard let self = self else { return }
+            
             if let title = button.titleVariants.first {
                 let rating = Int(title.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
                 let endOfRouteFeedback = EndOfRouteFeedback(rating: rating, comment: nil)
-                self?.navigationService.endNavigation(feedback: endOfRouteFeedback)
+                self.navigationService.endNavigation(feedback: endOfRouteFeedback)
             }
             
-            self?.carInterfaceController.popTemplate(animated: true)
-            self?.exitNavigation()
+            self.carInterfaceController.safePopTemplate(animated: true)
+            self.exitNavigation()
         }
         
         var buttons: [CPGridButton] = []
@@ -332,7 +334,7 @@ public class CarPlayNavigationViewController: UIViewController {
         carFeedbackTemplate = createFeedbackUI()
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    public required init?(coder decoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -361,6 +363,7 @@ public class CarPlayNavigationViewController: UIViewController {
         
         if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
             updateTripEstimateStyle(traitCollection.userInterfaceStyle)
+            updateManeuvers(navigationService.routeProgress)
         }
     }
     
@@ -379,8 +382,8 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
-        navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
-        navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
+        navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
+        navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden
         
         navigationMapView.navigationCamera.follow()
         
@@ -527,7 +530,6 @@ public class CarPlayNavigationViewController: UIViewController {
     func updateManeuvers(_ routeProgress: RouteProgress) {
         guard let visualInstruction = routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else { return }
         let step = navigationService.routeProgress.currentLegProgress.currentStep
-        let shieldHeight: CGFloat = 16
         let primaryManeuver = CPManeuver()
         let distance = Measurement(distance: step.distance).localized()
         primaryManeuver.initialTravelEstimates = CPTravelEstimates(distanceRemaining: distance, timeRemaining: step.expectedTravelTime)
@@ -550,6 +552,7 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         // Over a certain height, CarPlay devices downsize the image and CarPlay simulators hide the image.
+        let shieldHeight: CGFloat = 16
         let maximumImageSize = CGSize(width: .infinity, height: shieldHeight)
         let imageRendererFormat = UIGraphicsImageRendererFormat(for: UITraitCollection(userInterfaceIdiom: .carPlay))
         if let window = carPlayManager.carWindow {
@@ -558,12 +561,15 @@ public class CarPlayNavigationViewController: UIViewController {
         
         if let attributedPrimary = visualInstruction.primaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                            shieldHeight: shieldHeight,
-                                                                                                           window: carPlayManager.carWindow) {
+                                                                                                           window: carPlayManager.carWindow,
+                                                                                                           instructionLabelType: PrimaryLabel.self) {
+            
             let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
             
             if let attributedSecondary = visualInstruction.secondaryInstruction?.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                                     shieldHeight: shieldHeight,
-                                                                                                                    window: carPlayManager.carWindow) {
+                                                                                                                    window: carPlayManager.carWindow,
+                                                                                                                    instructionLabelType: SecondaryLabel.self) {
                 instruction.append(NSAttributedString(string: "\n"))
                 instruction.append(attributedSecondary)
             }
@@ -635,6 +641,7 @@ public class CarPlayNavigationViewController: UIViewController {
         }
         
         let waypointArrival = CPAlertTemplate(titleVariants: [title], actions: [continueAlert])
+        // Template has to be dismissed because only one template may be presented at a time.
         carInterfaceController.dismissTemplate(animated: true)
         carInterfaceController.presentTemplate(waypointArrival, animated: true)
     }

@@ -40,10 +40,17 @@ open class NightStyle: DayStyle {
         EndOfRouteStaticLabel.appearance().alpha = 1.0
         EndOfRouteStaticLabel.appearance().textColor = UIColor.white.withAlphaComponent(0.9)
         EndOfRouteTitleLabel.appearance().textColor = .white
+        
+        // On iOS, for Night style, regardless of currently used `UIUserInterfaceStyle`, `ExitView` and
+        // `GenericRouteShield` use white color as a default one.
         ExitView.appearance().foregroundColor = .white
+        ExitView.appearance().borderColor = .white
+        
+        GenericRouteShield.appearance().foregroundColor = .white
+        GenericRouteShield.appearance().borderColor = .white
+        
         FloatingButton.appearance().backgroundColor = backgroundColor
         FloatingButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        GenericRouteShield.appearance().foregroundColor = .white
         InstructionsBannerView.appearance().backgroundColor = backgroundColor
         LaneView.appearance().primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         LaneView.appearance().secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
