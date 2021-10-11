@@ -52,8 +52,7 @@ class RouteControllerTests: TestCase {
             return false
         }
 
-        waitForExpectations(timeout: TimeInterval(locationManager.locations.count) / speedMultiplier + 5,
-                            handler: nil)
+        waitForExpectations(timeout: TimeInterval(locationManager.locations.count) / speedMultiplier + 1, handler: nil)
 
         let expectedCoordinates = locations.map(\.coordinate)
         XCTAssertEqual(expectedCoordinates, actualCoordinates)
