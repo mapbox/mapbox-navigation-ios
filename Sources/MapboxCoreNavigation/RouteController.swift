@@ -204,8 +204,9 @@ open class RouteController: NSObject {
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = progress.routeOptions
         guard let routeData = try? encoder.encode(progress.route),
-            let routeJSONString = String(data: routeData, encoding: .utf8) else {
-            return
+              let routeJSONString = String(data: routeData, encoding: .utf8) else {
+                  completion(false)
+                  return
         }
 
         let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
