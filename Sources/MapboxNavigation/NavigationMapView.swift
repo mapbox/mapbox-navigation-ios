@@ -383,6 +383,11 @@ open class NavigationMapView: UIView {
     }
     
     func updateUserCourseViewWithAccuracy() {
+        // check if custom course view is set
+        if userCourseView is UserHaloCourseView == false,
+           userCourseView is UserPuckCourseView == false {
+            return
+        }
         let frame = CGRect(origin: .zero, size: 75.0)
         let isHidden = userCourseView.isHidden
         switch userLocationStyle {
