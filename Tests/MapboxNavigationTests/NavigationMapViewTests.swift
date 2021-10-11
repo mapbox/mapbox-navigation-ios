@@ -569,4 +569,21 @@ class NavigationMapViewTests: TestCase {
                        NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation,
                        "Point annotation identifiers should be equal.")
     }
+
+    func testUserCourseView() {
+        navigationMapView.reducedAccuracyActivatedMode = false
+        XCTAssertEqual(navigationMapView.userCourseView, UserPuckCourseView())
+
+        navigationMapView.reducedAccuracyActivatedMode = true
+        XCTAssertEqual(navigationMapView.userCourseView, UserHaloCourseView())
+
+        // set custom user course view
+        navigationMapView.userCourseView = Fixture.customUserCourseView()
+
+        navigationMapView.reducedAccuracyActivatedMode = true
+        XCTAssertEqual(navigationMapView.userCourseView, CustomUserCourseView())
+
+        navigationMapView.reducedAccuracyActivatedMode = false
+        XCTAssertEqual(navigationMapView.userCourseView, CustomUserCourseView())
+    }
 }
