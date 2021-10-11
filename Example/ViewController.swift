@@ -54,20 +54,43 @@ class ViewController: UIViewController {
             }
         }
     }
+    
+    var currentRouteIndex = 0 {
+        didSet {
+            showCurrentRoute()
+        }
+    }
 
+    func showCurrentRoute() {
+        guard var prioritizedRoutes = routes else { return }
+        
+        prioritizedRoutes.insert(prioritizedRoutes.remove(at: currentRouteIndex),
+                                 at: 0)
+        
+        // Show congestion levels on alternative route lines if there're multiple routes in the response.
+        navigationMapView.showsCongestionForAlternativeRoutes = true
+        navigationMapView.show(prioritizedRoutes)
+        navigationMapView.showWaypoints(on: prioritizedRoutes.first!)
+        navigationMapView.showRouteDurations(along: prioritizedRoutes)
+    }
+    
+    var currentRoute: Route? {
+        return routes?[currentRouteIndex]
+    }
+    
+    var routes: [Route]? {
+        return response?.routes
+    }
+    
     var response: RouteResponse? {
         didSet {
-            guard let routes = response?.routes, let currentRoute = routes.first else {
+            guard let routes = response?.routes, !routes.isEmpty else {
                 clearNavigationMapView()
                 return
             }
             
             startButton.isEnabled = true
-            // Show congestion levels on alternative route lines if there're multiple routes in the response.
-            navigationMapView.showsCongestionForAlternativeRoutes = true
-            navigationMapView.show(routes)
-            navigationMapView.showWaypoints(on: currentRoute)
-            navigationMapView.showRouteDurations(along: routes)
+            currentRouteIndex = 0
         }
     }
     
@@ -260,8 +283,8 @@ class ViewController: UIViewController {
     func startNavigation(styles: [MapboxNavigation.Style]) {
         guard let response = response, case let .route(routeOptions) = response.options else { return }
         
-        let options = NavigationOptions(styles: styles, navigationService: navigationService(response: response, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
-        let navigationViewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(response: response, routeIndex: currentRouteIndex, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
+        let navigationViewController = NavigationViewController(for: response, routeIndex: currentRouteIndex, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
         // Example of building highlighting in 2D.
@@ -273,7 +296,7 @@ class ViewController: UIViewController {
     func startBasicNavigation() {
         guard let response = response, case let .route(routeOptions) = response.options else { return }
         
-        let service = navigationService(response: response, routeIndex: 0, options: routeOptions)
+        let service = navigationService(response: response, routeIndex: currentRouteIndex, options: routeOptions)
         let navigationViewController = self.navigationViewController(navigationService: service)
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
@@ -297,7 +320,7 @@ class ViewController: UIViewController {
               case let .route(routeOptions) = response.options,
               let customViewController = storyboard?.instantiateViewController(withIdentifier: "custom") as? CustomViewController else { return }
 
-        customViewController.indexedUserRouteResponse = .init(routeResponse: response, routeIndex: 0)
+        customViewController.indexedUserRouteResponse = .init(routeResponse: response, routeIndex: currentRouteIndex)
         customViewController.userRouteOptions = routeOptions
         customViewController.simulateLocation = simulationButton.isSelected
         
@@ -314,8 +337,8 @@ class ViewController: UIViewController {
         guard let response = response, case let .route(routeOptions) = response.options else { return }
 
         let styles = [CustomDayStyle(), CustomNightStyle()]
-        let options = NavigationOptions(styles: styles, navigationService: navigationService(response: response, routeIndex: 0, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
-        let navigationViewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(styles: styles, navigationService: navigationService(response: response, routeIndex: currentRouteIndex, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
+        let navigationViewController = NavigationViewController(for: response, routeIndex: currentRouteIndex, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
 
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
@@ -327,8 +350,8 @@ class ViewController: UIViewController {
         let instructionsCardCollection = InstructionsCardViewController()
         instructionsCardCollection.cardCollectionDelegate = self
         
-        let options = NavigationOptions(navigationService: navigationService(response: response, routeIndex: 0, options: routeOptions), topBanner: instructionsCardCollection, predictiveCacheOptions: PredictiveCacheOptions())
-        let navigationViewController = NavigationViewController(for: response, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
+        let options = NavigationOptions(navigationService: navigationService(response: response, routeIndex: currentRouteIndex, options: routeOptions), topBanner: instructionsCardCollection, predictiveCacheOptions: PredictiveCacheOptions())
+        let navigationViewController = NavigationViewController(for: response, routeIndex: currentRouteIndex, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self
         
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
@@ -556,9 +579,8 @@ extension ViewController: NavigationMapViewDelegate {
     }
 
     func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        guard let routes = response?.routes else { return }
-        guard let index = routes.firstIndex(where: { $0 === route }) else { return }
-        self.response?.routes?.swapAt(index, 0)
+        guard let index = routes?.firstIndex(where: { $0 === route }) else { return }
+        currentRouteIndex = index
     }
 
     private func presentWaypointRemovalAlert(completionHandler approve: @escaping ((UIAlertAction) -> Void)) {
