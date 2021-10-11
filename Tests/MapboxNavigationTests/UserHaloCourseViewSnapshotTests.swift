@@ -27,8 +27,8 @@ class UserHaloCourseViewSnapshotTests: TestCase {
         let frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
         
         let userHaloCourseView = UserHaloCourseView(frame: frame)
-        userHaloCourseView.haloColor = .blue.withAlphaComponent(0.2)
-        userHaloCourseView.haloRingColor = .green.withAlphaComponent(0.2)
+        userHaloCourseView.haloColor = UIColor.blue.withAlphaComponent(0.2)
+        userHaloCourseView.haloRingColor = UIColor.green.withAlphaComponent(0.2)
         userHaloCourseView.haloRadius = 45.0
         userHaloCourseView.haloBorderWidth = 5.0
         

@@ -71,14 +71,14 @@ open class UserHaloCourseView: UIView, CourseUpdatable {
             $0.removeFromSuperlayer()
         }
         
-        let haloPath = UIBezierPath(arcCenter: center,
+        let haloPath = UIBezierPath(arcCenter: CGPoint(x: bounds.midX, y: bounds.midY),
                                     radius: CGFloat(haloRadius),
                                     startAngle: 0,
                                     endAngle: 2.0 * CGFloat.pi,
                                     clockwise: true)
         haloLayer = CAShapeLayer()
         haloLayer.name = haloLayerName
-        haloLayer.frame = frame
+        haloLayer.frame = bounds
         haloLayer.path = haloPath.cgPath
         haloLayer.fillColor = haloColor.cgColor
         haloLayer.strokeColor = haloRingColor.cgColor
