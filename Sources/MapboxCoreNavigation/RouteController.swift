@@ -233,6 +233,10 @@ open class RouteController: NSObject {
                 }
                 completion(false)
             }
+            else {
+                assertionFailure("Invalid Expected value: \(result)")
+                completion(false)
+            }
         }
     }
     
