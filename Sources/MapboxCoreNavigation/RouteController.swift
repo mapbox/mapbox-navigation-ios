@@ -67,24 +67,11 @@ open class RouteController: NSObject {
     
     /**
      Details about the user’s progress along the current route, leg, and step.
+
+     To advance the route progress to next leg, use `RouteController.advanceLegIndex(completionHandler:)` method.
      */
-    public var routeProgress: RouteProgress {
-        _routeProgress
-    }
+    public private(set) var routeProgress: RouteProgress
 
-    private var _routeProgress: RouteProgress
-
-    func changeRouteProgress(_ routeProgress: RouteProgress,
-                             completion: @escaping (Bool) -> Void) {
-        updateNavigator(with: routeProgress) { [weak self] isSuccessful in
-            guard let self = self else { return }
-            if isSuccessful {
-                self._routeProgress = routeProgress
-            }
-            completion(isSuccessful)
-        }
-    }
-    
     /**
      The idealized user location. Snapped to the route line, if applicable, otherwise raw.
      - seeAlso: snappedLocation, rawLocation
@@ -142,6 +129,17 @@ open class RouteController: NSObject {
     public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
         updateRouteLeg(to: routeProgress.legIndex + 1) { result in
             completionHandler?(result)
+        }
+    }
+
+    func changeRouteProgress(_ routeProgress: RouteProgress,
+                             completion: @escaping (Bool) -> Void) {
+        updateNavigator(with: routeProgress) { [weak self] isSuccessful in
+            guard let self = self else { return }
+            if isSuccessful {
+                self.routeProgress = routeProgress
+            }
+            completion(isSuccessful)
         }
     }
     
@@ -463,7 +461,7 @@ open class RouteController: NSObject {
     required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
         self.directions = directions
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self._routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
