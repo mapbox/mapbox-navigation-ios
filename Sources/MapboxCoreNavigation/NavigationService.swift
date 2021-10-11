@@ -415,8 +415,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
 
     public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                             routeOptions: RouteOptions?,
-                            completion: @escaping (Bool) -> Void) {
-        router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, completion: completion)
+                            completion: ((Bool) -> Void)? = nil) {
+        if let completion = completion {
+            router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, completion: completion)
+        }
+        else {
+            router.updateRoute(with: indexedRouteResponse, routeOptions: routeOptions)
+        }
     }
 }
 

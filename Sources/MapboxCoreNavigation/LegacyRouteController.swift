@@ -122,10 +122,12 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
     
     public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
-                                routeOptions: RouteOptions?,
-                                completion: @escaping (Bool) -> Void) {
-            updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, isProactive: false, completion: completion)
+                            routeOptions: RouteOptions?,
+                            completion: ((Bool) -> Void)? = nil) {
+        updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, isProactive: false) {
+            completion?($0)
         }
+    }
 
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,

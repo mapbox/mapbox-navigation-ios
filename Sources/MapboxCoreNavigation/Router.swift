@@ -146,7 +146,14 @@ public protocol Router: CLLocationManagerDelegate {
     ///  From more info read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
-                     completion: @escaping (Bool) -> Void)
+                     completion: ((Bool) -> Void)?)
+}
+
+extension Router {
+    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                            routeOptions: RouteOptions?) {
+        updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, completion: nil)
+    }
 }
 
 protocol InternalRouter: AnyObject {
