@@ -62,17 +62,16 @@ class ViewController: UIViewController {
     }
 
     func showCurrentRoute() {
-        guard let currentRoute = currentRoute else { return }
+        guard var prioritizedRoutes = routes else { return }
         
-        var routes = [currentRoute]
-        routes.append(contentsOf: self.routes!.filter {
-            $0 != currentRoute
-        })
+        prioritizedRoutes.insert(prioritizedRoutes.remove(at: currentRouteIndex),
+                                 at: 0)
+        
         // Show congestion levels on alternative route lines if there're multiple routes in the response.
         navigationMapView.showsCongestionForAlternativeRoutes = true
-        navigationMapView.show(routes)
-        navigationMapView.showWaypoints(on: currentRoute)
-        navigationMapView.showRouteDurations(along: routes)
+        navigationMapView.show(prioritizedRoutes)
+        navigationMapView.showWaypoints(on: prioritizedRoutes.first!)
+        navigationMapView.showRouteDurations(along: prioritizedRoutes)
     }
     
     var currentRoute: Route? {
