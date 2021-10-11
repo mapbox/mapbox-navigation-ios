@@ -433,9 +433,9 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
             switch result {
             case let .failure(error):
                 self.delegate?.router(self, didFailToRerouteWith: error)
-                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                     RouteController.NotificationUserInfoKey.routingErrorKey: error,
-                 ])
+                NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
+                    RouteController.NotificationUserInfoKey.routingErrorKey: error,
+                ])
                 self.isRerouting = false
             case let .success(indexedResponse):
                 let response = indexedResponse.routeResponse
