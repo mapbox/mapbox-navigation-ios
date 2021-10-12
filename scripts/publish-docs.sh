@@ -16,8 +16,6 @@ fi
 
 
 git checkout publisher-production
-BRANCH="docs-${VERSION}" # push directly to publisher-production when verified on a release tag
-git checkout "${BRANCH}" || git checkout -b "${BRANCH}"
 git add "${VERSION}"
 git commit -m "v${VERSION} [skip ci]"
-git push origin "${BRANCH}"
+git push origin publisher-production
