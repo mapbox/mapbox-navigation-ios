@@ -277,12 +277,12 @@ class MapboxCoreNavigationTests: TestCase {
 
         let routeResponse = Fixture.route(between: origin, and: destination).response
 
-        let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 1000)
+        let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 100)
             .map { CLLocation(coordinate: $0) }
             .shiftedToPresent()
 
         let locationManager = ReplayLocationManager(locations: replyLocations)
-        let speedMultiplier: TimeInterval = 100
+        let speedMultiplier: TimeInterval = 50
         locationManager.speedMultiplier = speedMultiplier
         locationManager.startDate = Date()
 
@@ -327,7 +327,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation.delegate = responder
         navigation.start()
 
-        waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
+        waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
     }
     
     func testOrderOfExecution() {

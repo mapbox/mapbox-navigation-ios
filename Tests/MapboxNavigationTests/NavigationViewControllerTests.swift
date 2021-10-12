@@ -187,7 +187,7 @@ class NavigationViewControllerTests: TestCase {
         
         for location in locations {
             service.locationManager!(service.locationManager, didUpdateLocations: [location])
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+            RunLoop.main.run(until: Date().addingTimeInterval(0.05))
         }
 
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
