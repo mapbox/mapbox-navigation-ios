@@ -269,6 +269,8 @@ extension Navigator: ElectronicHorizonObserver {
 
 extension Navigator: NavigatorObserver {
     func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
+        assert(Thread.isMainThread)
+
         let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
             .originKey: origin,
             .statusKey: status,

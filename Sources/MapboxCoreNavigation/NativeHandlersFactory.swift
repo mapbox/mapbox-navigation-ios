@@ -42,9 +42,11 @@ class NativeHandlersFactory {
     }()
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
-        MapboxNavigationNative.Navigator(config: configHandle,
-                                         cache: cacheHandle,
-                                         historyRecorder: historyRecorder)
+        onMainQueueSync { // Make sure that Navigator pick ups Main Thread RunLoop.
+            MapboxNavigationNative.Navigator(config: configHandle,
+                                             cache: cacheHandle,
+                                             historyRecorder: historyRecorder)
+        }
     }()
     
     lazy var cacheHandle: CacheHandle = {
