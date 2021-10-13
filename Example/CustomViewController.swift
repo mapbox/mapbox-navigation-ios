@@ -50,6 +50,7 @@ class CustomViewController: UIViewController {
                                                     routeOptions: userRouteOptions!,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .inTunnels)
+        navigationService.delegate = self
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         
@@ -247,6 +248,7 @@ class CustomViewController: UIViewController {
 }
 
 extension CustomViewController: InstructionsBannerViewDelegate {
+    
     func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
         toggleStepsList()
     }
@@ -298,15 +300,32 @@ extension CustomViewController: InstructionsBannerViewDelegate {
 }
 
 extension CustomViewController: StepsViewControllerDelegate {
+    
     func didDismissStepsViewController(_ viewController: StepsViewController) {
         viewController.dismiss { [weak self] in
             self?.stepsViewController = nil
         }
     }
     
-    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
+    func stepsViewController(_ viewController: StepsViewController,
+                             didSelect legIndex: Int,
+                             stepIndex: Int,
+                             cell: StepTableViewCell) {
         viewController.dismiss { [weak self] in
             self?.stepsViewController = nil
+        }
+    }
+}
+
+extension CustomViewController: NavigationServiceDelegate {
+    
+    public func navigationServiceDidChangeAuthorization(_ service: NavigationService,
+                                                        didChangeAuthorizationFor locationManager: CLLocationManager) {
+        if #available(iOS 14.0, *),
+           locationManager.accuracyAuthorization == .reducedAccuracy {
+            navigationMapView?.reducedAccuracyActivatedMode = true
+        } else {
+            navigationMapView?.reducedAccuracyActivatedMode = false
         }
     }
 }
