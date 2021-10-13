@@ -2,8 +2,9 @@ import XCTest
 import Nimble
 import MapboxMaps
 @testable import MapboxNavigation
+import TestHelper
 
-class MapViewTests: XCTestCase {
+class MapViewTests: TestCase {
     
     override func setUp() {
         super.setUp()
