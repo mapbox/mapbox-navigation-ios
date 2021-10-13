@@ -58,6 +58,7 @@ custom_categories:
       - NavigationMatchOptions
       - SimulationMode
       - PassiveLocationManager
+      - HistoryRecording
   - name: Maps
     children:
       - NavigationMapView

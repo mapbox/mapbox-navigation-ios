@@ -114,44 +114,13 @@ class Navigator {
     // MARK: History
     
     /**
-     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
+     Path to the directory where history file could be stored when `HistoryRecording.stopRecordingHistory(writingFileWith:)` is called.
      
      Setting `nil` disables history recording. Defaults to `nil`.
      */
     static var historyDirectoryURL: URL? = nil
     
     private(set) var historyRecorder: HistoryRecorderHandle?
-    
-    /**
-     Starts recording history for debugging purposes.
-     
-     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
-     */
-    func startRecordingHistory() {
-        historyRecorder?.startRecording()
-    }
-    
-    /**
-     Stops recording history, asynchronously writing any recorded history to a file.
-     
-     Upon completion, the completion handler is called with the URL to a file in the directory specified by `Navigator.historyDirectoryURL`.
-     
-     This method immediately stops recording history, though the file may take longer to prepare.
-     
-     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
-     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
-     
-     - parameter completionHandler: A closure to be executed when the history file is ready.
-     */
-    func stopRecordingHistory(writingFileWith completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder?.stopRecording { (path) in
-            if let path = path {
-                completionHandler(URL(fileURLWithPath: path))
-            } else {
-                completionHandler(nil)
-            }
-        }
-    }
     
     // MARK: Electronic horizon
     
