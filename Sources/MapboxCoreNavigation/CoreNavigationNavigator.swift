@@ -94,19 +94,20 @@ class Navigator {
         
         roadObjectStore.native = navigator.roadObjectStore()
         roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
-        setupElectronicHorizonOptions()
+        if isSubscribedToElectronicHorizon {
+            startUpdatingElectronicHorizon(with: electronicHorizonOptions)
+        }
         
         subscribeNavigator()
     }
     
     private func subscribeNavigator() {
-        navigator.setElectronicHorizonObserverFor(self)
         navigator.addObserver(for: self)
         navigator.setFallbackVersionsObserverFor(self)
     }
     
     private func unsubscribeNavigator() {
-        navigator.setElectronicHorizonObserverFor(nil)
+        stopUpdatingElectronicHorizon()
         navigator.removeObserver(for: self)
         navigator.setFallbackVersionsObserverFor(nil)
     }
@@ -160,21 +161,30 @@ class Navigator {
     private(set) var roadObjectStore: RoadObjectStore
 
     private(set) var roadObjectMatcher: RoadObjectMatcher
-     
-    private func setupElectronicHorizonOptions() {
-        let nativeOptions = electronicHorizonOptions.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
-        
-        navigator.setElectronicHorizonOptionsFor(nativeOptions)
+    
+    private var isSubscribedToElectronicHorizon = false
+    
+    private var electronicHorizonOptions: ElectronicHorizonOptions? {
+        didSet {
+            let nativeOptions = electronicHorizonOptions.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
+            navigator.setElectronicHorizonOptionsFor(nativeOptions)
+        }
+    }
+    
+    func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions?) {
+        isSubscribedToElectronicHorizon = true
+        navigator.setElectronicHorizonObserverFor(self)
+        electronicHorizonOptions = options
+    }
+    
+    func stopUpdatingElectronicHorizon() {
+        isSubscribedToElectronicHorizon = false
+        navigator.setElectronicHorizonObserverFor(nil)
+        electronicHorizonOptions = nil
     }
     
     deinit {
         unsubscribeNavigator()
-    }
-    
-    var electronicHorizonOptions: ElectronicHorizonOptions? {
-        didSet {
-            setupElectronicHorizonOptions()
-        }
     }
 }
 
