@@ -340,11 +340,13 @@ extension InternalRouter where Self: Router {
         }
     }
     
-    func announceImpendingReroute(at location: CLLocation) {
-        delegate?.router(self, willRerouteFrom: location)
+    func announceImpendingReroute(at location: CLLocation) -> ReroutingRequest {
+        let rerouteRequest = delegate?.router(self, willRerouteFrom: location) ?? .default
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             RouteController.NotificationUserInfoKey.locationKey: location,
         ])
+        
+        return rerouteRequest
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {

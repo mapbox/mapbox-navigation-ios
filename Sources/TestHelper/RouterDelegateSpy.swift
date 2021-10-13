@@ -7,7 +7,7 @@ import Turf
 public final class RouterDelegateSpy: RouterDelegate {
     public var onDidRefresh: ((RouteProgress) -> Void)?
     public var onShouldRerouteFrom: ((CLLocation) -> Bool)?
-    public var onWillRerouteFrom: ((CLLocation) -> Void)?
+    public var onWillRerouteFrom: ((CLLocation) -> ReroutingRequest)?
     public var onShouldDiscard: ((CLLocation) -> Bool)?
     public var onDidRerouteAlong: (((route: Route, location: CLLocation?, proactive: Bool)) -> Void)?
     public var onDidFailToRerouteWith: ((Error) -> Void)?
@@ -34,8 +34,8 @@ public final class RouterDelegateSpy: RouterDelegate {
     }
 
     public func router(_ router: Router,
-                       willRerouteFrom location: CLLocation) {
-        onWillRerouteFrom?(location)
+                       willRerouteFrom location: CLLocation) -> ReroutingRequest {
+        return onWillRerouteFrom?(location) ?? .default
     }
     
     public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {

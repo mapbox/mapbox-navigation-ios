@@ -34,12 +34,17 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately before the navigation service calculates a new route.
      
+     This method also allows customizing the rerouting by providing custom `RouteResponse`. SDK will then treat it as if it was fetched as usual and apply as a reroute.
+     
+     - note: Multiple method calls will not interrupt the first ongoing request.
+     
      This method is called after `navigationService(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationService(_:initialManeuverBufferWhenReroutingFrom:)` is called.
      
      - parameter service: The navigation service that will calculate a new route.
      - parameter location: The user’s current location.
+     - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
      */
-    func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation)
+    func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) -> ReroutingRequest
     
     /**
      Configures distance (in meters) before the first maneuver in requested reroute.
@@ -239,8 +244,9 @@ public extension NavigationServiceDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
+    func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) -> ReroutingRequest {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
+        return .default
     }
     
     func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {

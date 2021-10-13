@@ -722,12 +722,12 @@ extension NavigationViewController: NavigationServiceDelegate {
         return componentsWantReroute && (delegate?.navigationViewController(self, shouldRerouteFrom: location) ?? defaultBehavior)
     }
     
-    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
+    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) -> ReroutingRequest {
         for component in navigationComponents {
-            component.navigationService(service, willRerouteFrom: location)
+            _ = component.navigationService(service, willRerouteFrom: location)
         }
         
-        delegate?.navigationViewController(self, willRerouteFrom: location)
+        return delegate?.navigationViewController(self, willRerouteFrom: location) ?? .default
     }
     
     public func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {

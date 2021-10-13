@@ -475,13 +475,13 @@ extension MapboxNavigationService: RouterDelegate {
     
     //MARK: RouteControllerDelegate Implementation
     
-    public func router(_ router: Router, willRerouteFrom location: CLLocation) {
+    public func router(_ router: Router, willRerouteFrom location: CLLocation) -> ReroutingRequest {
         //save any progress made by the router until now
         eventsManager.enqueueRerouteEvent()
         eventsManager.incrementDistanceTraveled(by: router.routeProgress.distanceTraveled)
         
         //notify our consumer
-        delegate?.navigationService(self, willRerouteFrom: location)
+        return delegate?.navigationService(self, willRerouteFrom: location) ?? .default
     }
     
     public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {

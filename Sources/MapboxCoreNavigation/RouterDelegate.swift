@@ -4,6 +4,45 @@ import MapboxDirections
 import Turf
 
 /**
+ Configuration for offsetting first route maneuver during rerouting.
+ */
+public enum ReroutingManeuverBuffer {
+    /**
+     Leaves original `RouteOptions.initialManeuverAvoidanceRadius` to be used for rerouting attempt.
+     */
+    case `default`
+    /**
+     Disables offsetting the maneuver.
+     */
+    case disabled
+    /**
+     Sets offset radius (in meters).
+     
+     Equivalent to setting `RouteOptions.initialManeuverAvoidanceRadius` to the same radius at the beginning.
+     */
+    case radius(LocationDistance)
+}
+
+/**
+ Configuration for a source to get new `Route` when rerouting occurs.
+ */
+public enum ReroutingRequest {
+    public typealias ReroutingRequestData = (options: RouteOptions, result: Result<RouteResponse, DirectionsError>)
+    
+    /**
+     Navigation SDK is responsible for rerouting request
+     */
+    case `default`
+
+    /**
+     Navigation SDK will use provided `ReroutingRequestData` for rerouting.
+     
+     - note: Associated callback will be executed on a background thread.
+     */
+    case custom(() -> ReroutingRequestData)
+}
+
+/**
  A router delegate interacts with one or more `Router` instances, such as `RouteController` objects, during turn-by-turn navigation. This protocol is similar to `NavigationServiceDelegate`, which is the main way that your application can synchronize its state with the SDK’s location-related functionality. Normally, you should not need to make a class conform to the `RouterDelegate` protocol or call any of its methods directly, but you would need to call this protocol’s methods if you implement a custom `Router` class.
  
  `MapboxNavigationService` is the only concrete implementation of a router delegate. Implement the `NavigationServiceDelegate` protocol instead to be notified when various significant events occur along the route tracked by a `NavigationService`.
@@ -28,13 +67,18 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
 
     /**
      Called immediately before the router calculates a new route.
+
+     This method also allows customizing the rerouting by providing custom `RouteResponse`. SDK will then treat it as if it was fetched as usual and apply as a reroute.
+     
+     - note: Multiple method calls will not interrupt the first ongoing request.
      
      This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:initialManeuverBufferWhenReroutingFrom:)` is called.
      
      - parameter router: The router that will calculate a new route.
      - parameter location: The user’s current location.
+     - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
      */
-    func router(_ router: Router, willRerouteFrom location: CLLocation)
+    func router(_ router: Router, willRerouteFrom location: CLLocation) -> ReroutingRequest
     
     /**
      Configures distance (in meters) before the first maneuver in requested reroute.
@@ -170,8 +214,9 @@ public extension RouterDelegate {
         return RouteController.DefaultBehavior.shouldRerouteFromLocation
     }
     
-    func router(_ router: Router, willRerouteFrom location: CLLocation) {
+    func router(_ router: Router, willRerouteFrom location: CLLocation) -> ReroutingRequest {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+        return .default
     }
     
     func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {

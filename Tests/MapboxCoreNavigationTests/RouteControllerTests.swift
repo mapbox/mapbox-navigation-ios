@@ -242,6 +242,61 @@ class RouteControllerTests: TestCase {
         locationManager.startUpdatingLocation()
         waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
     }
+    
+    func testReroutingWithCustomRoute() {
+        let origin = CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
+
+        let routeResponse = Fixture.route(between: origin, and: destination).response
+        let routeCoordinates = Fixture.generateCoordinates(between: origin, and: destination, count: 10)
+
+        let overshootingDestination = CLLocationCoordinate2D(latitude: 0.002, longitude: 0.002)
+        let replyLocations = Fixture.generateCoordinates(between: origin, and: overshootingDestination, count: 11).map {
+            CLLocation(coordinate: $0)
+        }.shiftedToPresent()
+
+        var newRoute: Route?
+        
+        let directions = DirectionsSpy()
+
+        let navOptions = NavigationRouteOptions(coordinates: routeCoordinates)
+        
+        let routeController = RouteController(alongRouteAtIndex: 0,
+                                              in: routeResponse,
+                                              options: navOptions,
+                                              directions: directions,
+                                              dataSource: self)
+
+        let routerDelegateSpy = RouterDelegateSpy()
+        routeController.delegate = routerDelegateSpy
+
+        let locationManager = ReplayLocationManager(locations: replyLocations)
+        locationManager.startDate = Date()
+        locationManager.delegate = routeController
+
+        routerDelegateSpy.onWillRerouteFrom = { location in
+            return .custom {
+                let newResponse = Fixture.route(between: location.coordinate, and: destination)
+                newRoute = newResponse.route
+                let newOptions = NavigationRouteOptions(coordinates: [location.coordinate, destination])
+                return (newOptions, .success(newResponse.response))
+            }
+        }
+        
+        let rerouteFinished = expectation(description: "Reroute finished")
+        rerouteFinished.assertForOverFulfill = false
+        
+        routerDelegateSpy.onDidRerouteAlong = { result in
+            XCTAssertEqual(result.route, newRoute!, "New route should be the custom one.")
+            
+            rerouteFinished.fulfill()
+        }
+        
+        let speedMultiplier: TimeInterval = 100
+        locationManager.speedMultiplier = speedMultiplier
+        locationManager.startUpdatingLocation()
+        waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
+    }
 }
 
 extension RouteControllerTests: RouterDataSource {

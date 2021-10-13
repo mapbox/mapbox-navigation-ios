@@ -93,12 +93,17 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called immediately before the navigation view controller calculates a new route.
      
+     This method also allows customizing the rerouting by providing custom `RouteResponse`. SDK will then treat it as if it was fetched as usual and apply as a reroute.
+     
+     - note: Multiple method calls will not interrupt the first ongoing request.
+     
      This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationViewController(_:initialManeuverBufferWhenReroutingFrom:)` is called.
      
      - parameter navigationViewController: The navigation view controller that will calculate a new route.
      - parameter location: The user’s current location.
+     - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
+    func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?) -> ReroutingRequest
     
     /**
      Configures distance (in meters) before the first maneuver in requested reroute.
@@ -276,8 +281,9 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?) {
+    func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?) -> ReroutingRequest {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        return .default
     }
     
     func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {

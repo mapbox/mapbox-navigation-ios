@@ -27,8 +27,9 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
         return true
     }
 
-    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
+    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) -> ReroutingRequest {
         recentMessages.append(#function)
+        return .default
     }
 
     public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {

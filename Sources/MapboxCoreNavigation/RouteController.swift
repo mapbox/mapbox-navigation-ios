@@ -639,7 +639,7 @@ extension RouteController: Router {
             }
         }
         
-        announceImpendingReroute(at: location)
+        let rerouteRequest = announceImpendingReroute(at: location)
         
         self.lastRerouteLocation = location
         
@@ -647,7 +647,7 @@ extension RouteController: Router {
         if isRerouting { return }
         isRerouting = true
         
-        calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
+        let calculationCompletion: IndexedRouteCompletionHandler = { [weak self] (session, result) in
             guard let self = self else { return }
 
             switch result {
@@ -666,6 +666,30 @@ extension RouteController: Router {
                     NotificationUserInfoKey.routingErrorKey: error,
                 ])
                 self.isRerouting = false
+            }
+        }
+        
+        switch rerouteRequest {
+        case .default:
+            calculateRoutes(from: location, along: progress, completion: calculationCompletion)
+        case .custom(let reroutingResult):
+            DispatchQueue.global().async {
+                let (options, result) = reroutingResult()
+                let session = Directions.Session(options: options,
+                                                 credentials: NavigationSettings.shared.directions.credentials)
+                
+                DispatchQueue.main.async {
+                    switch result {
+                    case .failure(let error):
+                        return calculationCompletion(session, .failure(error))
+                    case .success(let response):
+                        guard let mostSimilarIndex = response.routes?.index(mostSimilarTo: progress.route) else {
+                            return calculationCompletion(session, .failure(.unableToRoute))
+                        }
+                        
+                        return calculationCompletion(session, .success(.init(routeResponse: response, routeIndex: mostSimilarIndex)))
+                    }
+                }
             }
         }
     }

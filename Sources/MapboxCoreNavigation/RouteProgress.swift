@@ -25,7 +25,15 @@ open class RouteProgress: Codable {
         self.calculateLegsCongestion()
     }
     
-    func reroutingOptions(with current: CLLocation) -> RouteOptions {
+    /**
+     Current `RouteOptions`, optimized for rerouting.
+     
+     This method is useful for implementing custom rerouting. Resulting `RouteOptions` skip passed waypoints and include current user heading if possible.
+     
+     - parameter current: Current user location. Treated as route origin for rerouting.
+     - returns: Modified `RouteOptions`.
+     */
+    public func reroutingOptions(with current: CLLocation) -> RouteOptions {
         let oldOptions = routeOptions
         let user = Waypoint(coordinate: current.coordinate)
 
