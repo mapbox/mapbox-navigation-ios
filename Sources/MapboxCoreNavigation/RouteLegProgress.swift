@@ -17,31 +17,22 @@ open class RouteLegProgress: Codable {
     /**
      Total distance traveled in meters along current leg.
      */
-    public var distanceTraveled: CLLocationDistance {
-        return leg.steps.prefix(upTo: stepIndex).map { $0.distance }.reduce(0, +) + currentStepProgress.distanceTraveled
-    }
+    public var distanceTraveled: CLLocationDistance = 0
 
     /**
      Duration remaining in seconds on current leg.
      */
-    public var durationRemaining: TimeInterval {
-        return remainingSteps.map { $0.expectedTravelTime }.reduce(0, +) + currentStepProgress.durationRemaining
-    }
+    public var durationRemaining: TimeInterval = 0
 
     /**
      Distance remaining on the current leg.
      */
-    public var distanceRemaining: CLLocationDistance {
-        return remainingSteps.map { $0.distance }.reduce(0, +) + currentStepProgress.distanceRemaining
-    }
+    public var distanceRemaining: CLLocationDistance = 0
 
     /**
      Number between 0 and 1 representing how far along the current leg the user has traveled.
      */
-    public var fractionTraveled: Double {
-        guard leg.distance > 0 else { return 1 }
-        return distanceTraveled / leg.distance
-    }
+    public var fractionTraveled: Double = 0
 
     public var userHasArrivedAtWaypoint = false
     

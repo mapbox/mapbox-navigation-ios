@@ -50,31 +50,22 @@ open class RouteProgress: Codable {
     /**
      Total distance traveled by user along all legs.
      */
-    public var distanceTraveled: CLLocationDistance {
-        return route.legs.prefix(upTo: legIndex).map { $0.distance }.reduce(0, +) + currentLegProgress.distanceTraveled
-    }
+    public var distanceTraveled: CLLocationDistance = 0
     
     /**
      Total seconds remaining on all legs.
      */
-    public var durationRemaining: TimeInterval {
-        return route.legs.suffix(from: legIndex + 1).map { $0.expectedTravelTime }.reduce(0, +) + currentLegProgress.durationRemaining
-    }
+    public var durationRemaining: TimeInterval = 0
 
     /**
      Number between 0 and 1 representing how far along the `Route` the user has traveled.
      */
-    public var fractionTraveled: Double {
-        guard route.distance > 0 else { return 1 }
-        return distanceTraveled / route.distance
-    }
+    public var fractionTraveled: Double = 0
 
     /**
      Total distance remaining in meters along route.
      */
-    public var distanceRemaining: CLLocationDistance {
-        return route.distance - distanceTraveled
-    }
+    public var distanceRemaining: CLLocationDistance = 0
 
     /**
      The waypoints remaining on the current route.

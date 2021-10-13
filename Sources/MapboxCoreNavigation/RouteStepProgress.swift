@@ -39,24 +39,17 @@ open class RouteStepProgress: Codable {
     /**
      Total distance in meters remaining on current step.
      */
-    public var distanceRemaining: CLLocationDistance {
-        return step.distance - distanceTraveled
-    }
+    public var distanceRemaining: CLLocationDistance = 0
 
     /**
      Number between 0 and 1 representing fraction of current step traveled.
      */
-    public var fractionTraveled: Double {
-        guard step.distance > 0 else { return 1 }
-        return distanceTraveled / step.distance
-    }
+    public var fractionTraveled: Double = 0
 
     /**
      Number of seconds remaining on current step.
      */
-    public var durationRemaining: TimeInterval {
-        return (1 - fractionTraveled) * step.expectedTravelTime
-    }
+    public var durationRemaining: TimeInterval = 0
 
     // MARK: Intersections
     

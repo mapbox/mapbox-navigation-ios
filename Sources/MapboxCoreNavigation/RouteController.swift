@@ -276,7 +276,7 @@ open class RouteController: NSObject {
     private func update(to status: NavigationStatus) {
         guard let location = rawLocation else { return }
         // Notify observers if the step’s remaining distance has changed.
-        update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
+        update(with: status, rawLocation: location)
         
         let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
             ?? DefaultBehavior.shouldRerouteFromLocation
@@ -393,16 +393,29 @@ open class RouteController: NSObject {
         }
     }
     
-    private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert]) {
-        progress.updateDistanceTraveled(with: rawLocation)
-        progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
-        
+    private func update(with status: NavigationStatus, rawLocation: CLLocation) {
+        guard let info = status.activeGuidanceInfo else { return }
+        routeProgress.distanceTraveled = info.routeProgress.distanceTraveled
+        routeProgress.fractionTraveled = info.routeProgress.fractionTraveled
+        routeProgress.distanceRemaining = info.routeProgress.remainingDistance
+        routeProgress.durationRemaining = info.routeProgress.remainingDuration
+        routeProgress.currentLegProgress.distanceTraveled = info.legProgress.distanceTraveled
+        routeProgress.currentLegProgress.fractionTraveled = info.legProgress.fractionTraveled
+        routeProgress.currentLegProgress.distanceRemaining = info.legProgress.remainingDistance
+        routeProgress.currentLegProgress.durationRemaining = info.legProgress.remainingDuration
+        routeProgress.currentLegProgress.currentStepProgress.distanceTraveled = info.stepProgress.distanceTraveled
+        routeProgress.currentLegProgress.currentStepProgress.fractionTraveled = info.stepProgress.fractionTraveled
+        routeProgress.currentLegProgress.currentStepProgress.distanceRemaining = info.stepProgress.remainingDistance
+        routeProgress.currentLegProgress.currentStepProgress.durationRemaining = info.stepProgress.remainingDuration
+        routeProgress.upcomingRouteAlerts = status.upcomingRouteAlerts.map(RouteAlert.init)
+
+        let location = CLLocation(status.location)
         //Fire the delegate method
-        delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
+        delegate?.router(self, didUpdate: routeProgress, with: location, rawLocation: rawLocation)
         
         //Fire the notification (for now)
         NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-            NotificationUserInfoKey.routeProgressKey: progress,
+            NotificationUserInfoKey.routeProgressKey: routeProgress,
             NotificationUserInfoKey.locationKey: location, //guaranteed value
             NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
         ])
