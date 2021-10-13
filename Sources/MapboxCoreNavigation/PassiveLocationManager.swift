@@ -30,6 +30,26 @@ open class PassiveLocationManager: NSObject {
     public let systemLocationManager: NavigationLocationManager
 
     /**
+     The idealized user location. Snapped to the road network, if applicable, otherwise raw.
+     - seeAlso: rawLocation
+     */
+    public var location: CLLocation? {
+        return snappedLocation ?? rawLocation
+    }
+    
+    /**
+     The most recently received user location.
+     - note: This is a raw location received from `systemLocationManager` or set manually via `updateLocation(_:completion:)`. To obtain an idealized location, use the `location` property.
+     */
+    public private(set) var rawLocation: CLLocation?
+    
+    /**
+     The raw location, snapped to the road network.
+     - important: If the rawLocation is outside of the route snapping tolerances, this value is nil.
+     */
+    var snappedLocation: CLLocation?
+    
+    /**
      The events manager, responsible for all telemetry.
      */
     public var eventsManager: NavigationEventsManager { _eventsManager! }
@@ -63,8 +83,6 @@ open class PassiveLocationManager: NSObject {
     public func startUpdatingLocation() {
         systemLocationManager.startUpdatingLocation()
     }
-    
-    var lastRawLocation: CLLocation?
     
     /**
      A closure, which is called to report a result whether location update succeeded or not.
@@ -112,8 +130,8 @@ open class PassiveLocationManager: NSObject {
             }
         }
 
-        let isFirstLocation = lastRawLocation == nil
-        lastRawLocation = locations.last
+        let isFirstLocation = rawLocation == nil
+        rawLocation = locations.last
         if isFirstLocation {
             eventsManager.sendPassiveNavigationStart()
         }
@@ -173,13 +191,15 @@ open class PassiveLocationManager: NSObject {
     }
     
     private func update(to status: NavigationStatus) {
-        guard let lastRawLocation = lastRawLocation else { return }
+        guard let rawLocation = rawLocation else { return }
         
         let lastLocation = CLLocation(status.location)
         var speedLimit: Measurement<UnitSpeed>?
         var signStandard: SignStandard?
 
-        delegate?.passiveLocationManager(self, didUpdateLocation: lastLocation, rawLocation: lastRawLocation)
+        snappedLocation = lastLocation
+        
+        delegate?.passiveLocationManager(self, didUpdateLocation: lastLocation, rawLocation: rawLocation)
         let matches = status.mapMatcherOutput.matches.map {
             Match(legs: [], shape: nil, distance: -1, expectedTravelTime: -1, confidence: $0.proba, weight: .routability(value: 1))
         }
@@ -210,7 +230,7 @@ open class PassiveLocationManager: NSObject {
         
         var userInfo: [NotificationUserInfoKey: Any] = [
             .locationKey: lastLocation,
-            .rawLocationKey: lastRawLocation,
+            .rawLocationKey: rawLocation,
             .matchesKey: matches,
             .roadNameKey: status.roadName,
         ]
@@ -259,7 +279,7 @@ open class PassiveLocationManager: NSObject {
     deinit {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         eventsManager.withBackupDataSource(active: nil, passive: self) {
-            if self.lastRawLocation != nil {
+            if self.rawLocation != nil {
                 self.eventsManager.sendPassiveNavigationStop()
             }
         }
