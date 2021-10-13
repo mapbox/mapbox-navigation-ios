@@ -29,11 +29,11 @@ public protocol HistoryRecording {
      Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
 
      - parameter type: The event type in the events log for your custom event.
-     - parameter jsonString: The string value that contains a valid JSON to attach to the event.
+     - parameter jsonData: The data value that contains a valid JSON to attach to the event.
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
-    static func pushHistoryEvent(type: String, jsonString: String?)
+    static func pushHistoryEvent(type: String, jsonData: Data?) throws
 
     /**
      Stops recording history, asynchronously writing any recorded history to a file.
@@ -65,7 +65,15 @@ public extension HistoryRecording {
         Navigator.shared.historyRecorder?.startRecording()
     }
 
-    static func pushHistoryEvent(type: String, jsonString: String?) {
+    static func pushHistoryEvent(type: String, jsonData: Data?) throws {
+        var jsonString: String?
+        if let jsonData = jsonData {
+            guard let value = String(data: jsonData, encoding: .utf8) else {
+                assertionFailure("Failed to decode string")
+                return
+            }
+            jsonString = value
+        }
         Navigator.shared.historyRecorder?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
     }
 
@@ -92,26 +100,6 @@ public extension HistoryRecording {
      Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
 
      - parameter type: The event type in the events log for your custom event.
-     - parameter jsonData: The data value that contains a valid JSON to attach to the event.
-
-     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
-     */
-    static func pushHistoryEvent(type: String, jsonData: Data?) {
-        var jsonString: String?
-        if let jsonData = jsonData {
-            guard let value = String(data: jsonData, encoding: .utf8) else {
-                assertionFailure("Failed to decode string")
-                return
-            }
-            jsonString = value
-        }
-        pushHistoryEvent(type: type, jsonString: jsonString)
-    }
-
-    /**
-     Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
-
-     - parameter type: The event type in the events log for your custom event.
      - parameter value: The value that implements `Encodable` protocol and can be encoded into a valid JSON to attach to the event.
      - parameter encoder: The instance of `JSONEncoder` to be used for the value encoding. If this argument is omitted, the default `JSONEncoder` will be used.
 
@@ -121,7 +109,7 @@ public extension HistoryRecording {
         let data = try value.map { value -> Data in
             try (encoder ?? JSONEncoder()).encode(value)
         }
-        pushHistoryEvent(type: type, jsonData: data)
+        try pushHistoryEvent(type: type, jsonData: data)
     }
 
     /**
@@ -136,6 +124,6 @@ public extension HistoryRecording {
         let data = try value.map { value -> Data in
             try JSONSerialization.data(withJSONObject: value, options: [])
         }
-        pushHistoryEvent(type: type, jsonData: data)
+        try pushHistoryEvent(type: type, jsonData: data)
     }
 }
