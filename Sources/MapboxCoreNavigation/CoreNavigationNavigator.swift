@@ -114,7 +114,7 @@ class Navigator {
     // MARK: History
     
     /**
-     Path to the directory where history file could be stored when `Navigator.stopRecordingHistory(writingFileWith:)` is called.
+     Path to the directory where history file could be stored when `HistoryRecording.stopRecordingHistory(writingFileWith:)` is called.
      
      Setting `nil` disables history recording. Defaults to `nil`.
      */
