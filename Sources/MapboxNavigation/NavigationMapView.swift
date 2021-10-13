@@ -71,10 +71,20 @@ open class NavigationMapView: UIView {
      */
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
-            guard reducedAccuracyActivatedMode, let validUserCourseView = userCourseView else { return }
-            
-            userCourseView = UserHaloCourseView(frame: CGRect(origin: .zero, size: 75.0))
-            userCourseView?.isHidden = validUserCourseView.isHidden
+            if reducedAccuracyActivatedMode {
+                reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: CGRect(origin: .zero, size: 75.0))
+            } else {
+                reducedAccuracyUserHaloCourseView = nil
+            }
+        }
+    }
+    
+    /**
+     `UserHaloCourseView`, which is shown after enabling accuracy authorization permission on iOS 14 and higher.
+     */
+    var reducedAccuracyUserHaloCourseView: UserHaloCourseView? = nil {
+        didSet {
+            setupUserLocation()
         }
     }
 
@@ -131,27 +141,11 @@ open class NavigationMapView: UIView {
     public var pointAnnotationManager: PointAnnotationManager?
     
     /**
-     A `UserCourseView` used to indicate the user’s location and course on the map.
-     
-     The `UserCourseView`'s `UserCourseView.update(location:pitch:direction:animated:)` method is frequently called to ensure that its visual appearance matches the map’s camera.
-     */
-    var userCourseView: UserCourseView? {
-        didSet {
-            oldValue?.removeFromSuperview()
-            
-            if let userCourseView = userCourseView {
-                userCourseView.isHidden = false
-                mapView.addSubview(userCourseView)
-            }
-        }
-    }
-    
-    /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
      
      By default, this property is set to `UserLocationStyle.puck2D(configuration:)`, the bearing source is location course.
      */
-    public var userLocationStyle: UserLocationStyle? = .puck2D(configuration: nil) {
+    public var userLocationStyle: UserLocationStyle? = .puck2D() {
         didSet {
             setupUserLocation()
         }
@@ -277,20 +271,38 @@ open class NavigationMapView: UIView {
     }
     
     func setupUserLocation() {
-        switch userLocationStyle {
-        case .courseView(let courseView):
-            mapView.location.options.puckType = nil
-            userCourseView = courseView ?? UserPuckCourseView(frame: CGRect(origin: .zero, size: 75.0))
-        case .puck2D(configuration: let configuration):
-            userCourseView?.removeFromSuperview()
-            mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
-        case .puck3D(configuration: let configuration):
-            userCourseView?.removeFromSuperview()
-            mapView.location.options.puckType = .puck3D(configuration)
-        case .none:
-            userCourseView?.removeFromSuperview()
+        let emptyPuckConfiguration = Puck2DConfiguration(topImage: UIColor.clear.image(),
+                                                         bearingImage: UIColor.clear.image(),
+                                                         shadowImage: UIColor.clear.image(),
+                                                         scale: nil,
+                                                         showsAccuracyRing: false)
+        
+        let userCourseViewTag = 999
+        if let currentCourseView = mapView.viewWithTag(userCourseViewTag) {
+            currentCourseView.removeFromSuperview()
         }
-        mapView.location.options.puckBearingSource = .course
+        
+        if let reducedAccuracyUserHaloCourseView = reducedAccuracyUserHaloCourseView {
+            mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
+            
+            reducedAccuracyUserHaloCourseView.tag = userCourseViewTag
+            mapView.addSubview(reducedAccuracyUserHaloCourseView)
+        } else {
+            switch userLocationStyle {
+            case .courseView(let courseView):
+                mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
+                
+                courseView.tag = userCourseViewTag
+                mapView.addSubview(courseView)
+            case .puck2D(configuration: let configuration):
+                mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
+            case .puck3D(configuration: let configuration):
+                mapView.location.options.puckType = .puck3D(configuration)
+            case .none:
+                mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
+            }
+            mapView.location.options.puckBearingSource = .course
+        }
     }
     
     deinit {
@@ -458,30 +470,38 @@ open class NavigationMapView: UIView {
      - parameter animated: Property, which determines whether `UserLocationStyle` transition to new location will be animated.
      */
     public func moveUserLocation(to location: CLLocation, animated: Bool = false) {
-        guard CLLocationCoordinate2DIsValid(location.coordinate),
-              let userCourseView = userCourseView else { return }
+        guard CLLocationCoordinate2DIsValid(location.coordinate) else { return }
         
         mostRecentUserCourseViewLocation = location
         
+        if let reducedAccuracyUserHaloCourseView = reducedAccuracyUserHaloCourseView {
+            move(reducedAccuracyUserHaloCourseView, to: location, animated: animated)
+            return
+        }
+        
         switch userLocationStyle {
-        case .courseView:
-            // While animating to overview mode, don't animate the puck.
-            let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
-            UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
-                guard let self = self else { return }
-                let point = self.mapView.mapboxMap.point(for: location.coordinate)
-                self.userCourseView?.center = point
-            }
-            
-            let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
-            userCourseView.update(location: location,
-                                  pitch: cameraOptions.pitch!,
-                                  direction: cameraOptions.bearing!,
-                                  animated: animated,
-                                  navigationCameraState: navigationCamera.state)
+        case .courseView(let userCourseView):
+            move(userCourseView, to: location, animated: animated)
         default:
             break
         }
+    }
+    
+    func move(_ userCourseView: UserCourseView, to location: CLLocation, animated: Bool = false) {
+        // While animating to overview mode, don't animate the puck.
+        let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
+        UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
+            guard let self = self else { return }
+            let point = self.mapView.mapboxMap.point(for: location.coordinate)
+            userCourseView.center = point
+        }
+        
+        let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
+        userCourseView.update(location: location,
+                              pitch: cameraOptions.pitch!,
+                              direction: cameraOptions.bearing!,
+                              animated: animated,
+                              navigationCameraState: navigationCamera.state)
     }
     
     // MARK: Feature addition/removal methods
