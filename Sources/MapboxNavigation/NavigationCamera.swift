@@ -22,6 +22,8 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
         
         super.init()
         
+        self.viewportDataSource.delegate = self
+        
         setupGestureRecognizers()
         
         // Uncomment to be able to see `NavigationCameraDebugView`.
