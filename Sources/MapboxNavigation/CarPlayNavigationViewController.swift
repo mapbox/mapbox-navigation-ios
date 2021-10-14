@@ -369,6 +369,7 @@ open class CarPlayNavigationViewController: UIViewController {
     
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: view.bounds, navigationCameraType: .carPlay)
+        navigationMapView.userLocationStyle = .courseView()
         navigationMapView.delegate = self
         navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                                              viewportDataSourceType: .active)

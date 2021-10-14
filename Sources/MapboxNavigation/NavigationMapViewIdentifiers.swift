@@ -41,4 +41,6 @@ extension NavigationMapView {
     struct AnnotationIdentifier {
         static let finalDestinationAnnotation = "\(identifier)_finalDestinationAnnotation"
     }
+    
+    static let userCourseViewTag = 999
 }

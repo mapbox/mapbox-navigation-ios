@@ -223,6 +223,7 @@
 		8AD866FB25CA1BF10019A638 /* NavigationCameraState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866F025CA1BF10019A638 /* NavigationCameraState.swift */; };
 		8AD866FD25CA1BF10019A638 /* CameraStateTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866F225CA1BF10019A638 /* CameraStateTransition.swift */; };
 		8AD866FF25CA1BF10019A638 /* NavigationViewportDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866F425CA1BF10019A638 /* NavigationViewportDataSource.swift */; };
+		8AE8FB912717543100EA026A /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AE8FB902717543100EA026A /* UIColor.swift */; };
 		8AE9081225FAA53300F37077 /* Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AE9081125FAA53300F37077 /* Collection.swift */; };
 		8AEB28AA265FF39E00EC7892 /* CarPlaySearchControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEB28A9265FF39E00EC7892 /* CarPlaySearchControllerDelegate.swift */; };
 		8AEB28AC265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AEB28AB265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift */; };
@@ -728,6 +729,7 @@
 		8AD866F025CA1BF10019A638 /* NavigationCameraState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraState.swift; sourceTree = "<group>"; };
 		8AD866F225CA1BF10019A638 /* CameraStateTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraStateTransition.swift; sourceTree = "<group>"; };
 		8AD866F425CA1BF10019A638 /* NavigationViewportDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewportDataSource.swift; sourceTree = "<group>"; };
+		8AE8FB902717543100EA026A /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		8AE9081125FAA53300F37077 /* Collection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collection.swift; sourceTree = "<group>"; };
 		8AEB28A9265FF39E00EC7892 /* CarPlaySearchControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySearchControllerDelegate.swift; sourceTree = "<group>"; };
 		8AEB28AB265FF42500EC7892 /* CarPlayNavigationViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlayNavigationViewControllerDelegate.swift; sourceTree = "<group>"; };
@@ -1679,6 +1681,7 @@
 				B41299CC26D6DE4D004031A3 /* RouteProgress+Arrival.swift */,
 				B41299CE26D7101F004031A3 /* CLLocationCoordinate2D.swift */,
 				8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */,
+				8AE8FB902717543100EA026A /* UIColor.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2514,6 +2517,7 @@
 				43FB386923A202420064481E /* Route.swift in Sources */,
 				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
 				5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */,
+				8AE8FB912717543100EA026A /* UIColor.swift in Sources */,
 				3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */,
 				2B8098412411375700FED452 /* SpeechSynthesizing.swift in Sources */,
 				3EA9371104016CD402547F1A /* ImageCache.swift in Sources */,
