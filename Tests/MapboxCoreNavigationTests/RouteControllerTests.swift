@@ -60,12 +60,12 @@ class RouteControllerTests: TestCase {
 
     func testRerouteAfterArrival() {
         let origin = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
+        let destination = CLLocationCoordinate2D(latitude: 0.01, longitude: 0.01)
 
         let routeResponse = Fixture.route(between: origin, and: destination).response
 
-        let overshootingDestination = CLLocationCoordinate2D(latitude: 0.002, longitude: 0.002)
-        let replyLocations = Fixture.generateCoordinates(between: origin, and: overshootingDestination, count: 11).map {
+        let overshootingDestination = CLLocationCoordinate2D(latitude: 0.02, longitude: 0.02)
+        let replyLocations = Fixture.generateCoordinates(between: origin, and: overshootingDestination, count: 100).map {
             CLLocation(coordinate: $0)
         }.shiftedToPresent()
 
@@ -133,15 +133,15 @@ class RouteControllerTests: TestCase {
         }
 
         let replayFinished = expectation(description: "Replay Finished")
-        locationManager.speedMultiplier = 100
+        locationManager.speedMultiplier = 50
         locationManager.onReplayLoopCompleted = { _ in
             replayFinished.fulfill()
             return false
         }
         locationManager.startUpdatingLocation()
-        wait(for: [replayFinished], timeout: TimeInterval(replyLocations.count) / locationManager.speedMultiplier + 1)
+        wait(for: [replayFinished], timeout: locationManager.expectedReplayTime)
 
-        waitForExpectations(timeout: 10, handler: nil)
+        waitForExpectations(timeout: 1, handler: nil)
     }
 }
 
