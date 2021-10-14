@@ -94,14 +94,14 @@ class Navigator {
         
         roadObjectStore.native = navigator.roadObjectStore()
         roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
-        if isSubscribedToElectronicHorizon {
-            startUpdatingElectronicHorizon(with: electronicHorizonOptions)
-        }
         
         subscribeNavigator()
     }
     
     private func subscribeNavigator() {
+        if isSubscribedToElectronicHorizon {
+            startUpdatingElectronicHorizon(with: electronicHorizonOptions)
+        }
         navigator.addObserver(for: self)
         navigator.setFallbackVersionsObserverFor(self)
     }
