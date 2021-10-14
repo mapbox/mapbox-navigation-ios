@@ -33,7 +33,7 @@ extension NavigationMapView {
                                                     completion: { [weak self] result in
                                                         guard let _ = self else { return }
                                                         if case .success(let queriedFeatures) = result {
-                                                            if let identifier = queriedFeatures.first?.feature?.featureIdentifier {
+                                                            if let identifier = queriedFeatures.first?.feature.featureIdentifier {
                                                                 foundBuildingIds.insert(identifier)
                                                             }
                                                             group.leave()

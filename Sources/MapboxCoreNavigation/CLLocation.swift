@@ -4,25 +4,6 @@ import MapboxNavigationNative
 import Turf
 
 extension CLLocation {
-    
-    /// Returns a dictionary representation of the location.
-    public var dictionaryRepresentation: [String: Any] {
-        var locationDictionary: [String: Any] = [:]
-        locationDictionary["lat"] = coordinate.latitude
-        locationDictionary["lng"] = coordinate.longitude
-        locationDictionary["altitude"] = altitude
-        locationDictionary["timestamp"] = timestamp.ISO8601
-        locationDictionary["horizontalAccuracy"] = horizontalAccuracy
-        locationDictionary["verticalAccuracy"] = verticalAccuracy
-        if #available(iOS 13.4, *) {
-            locationDictionary["courseAccuracy"] = courseAccuracy
-        }
-        locationDictionary["course"] = course
-        locationDictionary["speed"] = speed
-        locationDictionary["speedAccuracy"] = speedAccuracy
-        return locationDictionary
-    }
-    
     convenience init(_ location: FixLocation) {
         if #available(iOS 13.4, *) {
             self.init(coordinate: location.coordinate,

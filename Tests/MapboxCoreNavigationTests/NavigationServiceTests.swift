@@ -512,31 +512,24 @@ class NavigationServiceTests: TestCase {
         dependencies = createDependencies(locationSource: locationManager)
         let navigation = dependencies.navigationService
 
-        locationManager.speedMultiplier = 100
+        locationManager.speedMultiplier = 50
         navigation.start()
         let replyFinished = expectation(description: "Replay finished")
         locationManager.onReplayLoopCompleted = { _ in
             replyFinished.fulfill()
             return false
         }
-        wait(for: [replyFinished], timeout: 10)
+        wait(for: [replyFinished], timeout: locationManager.expectedReplayTime)
 
-        // MARK: It queues and flushes a Depart event
+        // It queues and flushes a Depart event
         let eventsManagerSpy = navigation.eventsManager as! NavigationEventsManagerSpy
-        expectation(description: "Depart Event Flushed") {
-            eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart)
-        }
-        // MARK: When at a valid location just before the last location
-        expectation(description: "Pre-arrival delegate message fired") {
-            self.delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)")
-        }
-        // MARK: It tells the delegate that the user did arrive
-        expectation(description: "Arrival delegate message fired") {
-            self.delegate.recentMessages.contains("navigationService(_:didArriveAt:)")
-        }
-        waitForExpectations(timeout: 20, handler: nil)
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeNavigationDepart))
+        // When at a valid location just before the last location
+        XCTAssertTrue(self.delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"))
+        // It tells the delegate that the user did arrive
+        XCTAssertTrue(self.delegate.recentMessages.contains("navigationService(_:didArriveAt:)"))
 
-        // MARK: It enqueues and flushes an arrival event
+        // It enqueues and flushes an arrival event
         let expectedEventName = MMEEventTypeNavigationArrive
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
@@ -700,7 +693,7 @@ class NavigationServiceTests: TestCase {
         let directions = DirectionsSpy()
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.startDate = Date()
-        locationManager.speedMultiplier = 100
+        locationManager.speedMultiplier = 10
         let service = MapboxNavigationService(routeResponse: routeResponse,
                                               routeIndex: 0,
                                               routeOptions: options,
@@ -725,7 +718,7 @@ class NavigationServiceTests: TestCase {
 
         service.start()
 
-        wait(for: [rerouteTriggeredExpectation], timeout: 10)
+        wait(for: [rerouteTriggeredExpectation], timeout: 100)
 
         let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
         let fasterOptions = NavigationRouteOptions(coordinates: [

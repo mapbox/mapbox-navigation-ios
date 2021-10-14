@@ -231,19 +231,28 @@ extension NavigationMapView {
         var distanceTraveled = 0.0
         
         if let congestionFeatures = congestionFeatures {
-            let routeDistance = congestionFeatures.compactMap({ ($0.geometry.value as? LineString)?.distance() }).reduce(0, +)
+            let routeDistance = congestionFeatures.compactMap { feature -> LocationDistance? in
+                if case let .lineString(lineString) = feature.geometry {
+                    return lineString.distance()
+                } else {
+                    return nil
+                }
+            }.reduce(0, +)
             // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply its color to the `fractionTraveled` stop.
             var minimumSegment: (Double, UIColor) = isMain ? (0.0, .trafficUnknown) : (0.0, .alternativeTrafficUnknown)
 
             for (index, feature) in congestionFeatures.enumerated() {
                 var associatedFeatureColor = routeCasingColor
-                let congestionLevel = feature.properties?[CongestionAttribute] as? String
-                if let isCurrentLeg = feature.properties?[CurrentLegAttribute] as? Bool, isCurrentLeg {
+                if case let .string(congestionLevel) = feature.properties?[CongestionAttribute],
+                   case let .boolean(isCurrentLeg) = feature.properties?[CurrentLegAttribute],
+                   isCurrentLeg {
                     associatedFeatureColor = congestionColor(for: congestionLevel, isMain: isMain)
                 }
 
-                let lineString = feature.geometry.value as? LineString
-                guard let distance = lineString?.distance() else { return gradientStops }
+                guard case let .lineString(lineString) = feature.geometry,
+                      let distance = lineString.distance() else {
+                    return gradientStops
+                }
                 let minimumPercentGap = 0.0000000000000002
                 let stopGap = (routeDistance > 0.0) ? max(min(GradientCongestionFadingDistance, distance * 0.1) / routeDistance, minimumPercentGap) : minimumPercentGap
                 

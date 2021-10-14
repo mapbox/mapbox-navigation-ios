@@ -349,6 +349,7 @@
 		DA2A01F025F308B100AAB4C6 /* RoadGraphPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA2A01EF25F308B100AAB4C6 /* RoadGraphPath.swift */; };
 		DA3525702010A5210048DDFC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA35256E2010A5200048DDFC /* Localizable.stringsdict */; };
 		DA443DDE2278C90E00ED1307 /* CPTrip.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA443DDD2278C90E00ED1307 /* CPTrip.swift */; };
+		DA4A8EC02704FF950071C85C /* EventLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA4A8EBF2704FF950071C85C /* EventLocation.swift */; };
 		DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A525F07A6500F573EC /* RoadGraphPosition.swift */; };
 		DA5F44B025F07A6800F573EC /* RoadGraphEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44A925F07A6700F573EC /* RoadGraphEdge.swift */; };
 		DA5F44BA25F07AA500F573EC /* RoadGraphEdgeMetadata.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA5F44B925F07AA500F573EC /* RoadGraphEdgeMetadata.swift */; };
@@ -375,6 +376,7 @@
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 		E20E3AC526C50AC6002E13EE /* BillingServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */; };
 		E20F43C326BBD0A600346E71 /* RouterDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */; };
+		E23A76C62715E76A0098C23C /* ReplayLocationManager+TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */; };
 		E23D8B6B269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */; };
 		E26AB4FD269F7BCA00FD756B /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26AB4FC269F7BCA00FD756B /* TestCase.swift */; };
 		E2805A5826CB994500165DB9 /* NSLock+MapboxInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2805A5726CB994500165DB9 /* NSLock+MapboxInternal.swift */; };
@@ -890,6 +892,7 @@
 		DA352572201143BA0048DDFC /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Navigation.strings; sourceTree = "<group>"; };
 		DA352573201143D30048DDFC /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA443DDD2278C90E00ED1307 /* CPTrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPTrip.swift; sourceTree = "<group>"; };
+		DA4A8EBF2704FF950071C85C /* EventLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventLocation.swift; sourceTree = "<group>"; };
 		DA545ABC1FA9941F0090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA545AC01FA9A15A0090908E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA545AC21FA9A16D0090908E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -971,6 +974,7 @@
 		DAFEB36F2093A3EF00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = Resources/ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillingServiceMock.swift; sourceTree = "<group>"; };
 		E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterDelegateSpy.swift; sourceTree = "<group>"; };
+		E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ReplayLocationManager+TestSupport.swift"; sourceTree = "<group>"; };
 		E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TilesetDescriptorFactoryTests.swift; sourceTree = "<group>"; };
 		E26AB4FC269F7BCA00FD756B /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
 		E27A21F22654FB6800AA935F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1195,6 +1199,7 @@
 				C5CFE4871EF2FD4C006F48E8 /* MMEEventsManager.swift */,
 				354A9BC520EA991900F03325 /* SessionState.swift */,
 				417D127626E24D0800E0AB16 /* FreeDriveEventDetails.swift */,
+				DA4A8EBF2704FF950071C85C /* EventLocation.swift */,
 			);
 			name = Events;
 			sourceTree = "<group>";
@@ -1587,6 +1592,7 @@
 				B47C1AFF261FD0A30078546C /* TestHelper.h */,
 				E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */,
 				E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */,
+				E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */,
 			);
 			name = TestHelper;
 			path = Sources/TestHelper;
@@ -2594,6 +2600,7 @@
 				B47C1B47261FD3A90078546C /* Date.swift in Sources */,
 				B47C1B50261FD3B10078546C /* DirectionsSpy.swift in Sources */,
 				B47C1B6B261FD3C30078546C /* Fixture.swift in Sources */,
+				E23A76C62715E76A0098C23C /* ReplayLocationManager+TestSupport.swift in Sources */,
 				B47C1B59261FD3B70078546C /* DummyLocationManager.swift in Sources */,
 				B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */,
 				B47C1B1E261FD3290078546C /* CoreLocation.swift in Sources */,
@@ -2638,6 +2645,7 @@
 				8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */,
 				2E50E0DC264E49C8009D3848 /* RoadObjectMatcherDelegate.swift in Sources */,
 				DA5F44BA25F07AA500F573EC /* RoadGraphEdgeMetadata.swift in Sources */,
+				DA4A8EC02704FF950071C85C /* EventLocation.swift in Sources */,
 				DABA591525E58D5600D0C1DB /* Accounts.swift in Sources */,
 				8AFF2D2326F137CB008267BF /* RoadObjectKind.swift in Sources */,
 				118D883426F8CA0700B2ED7B /* FeedbackEvent.swift in Sources */,

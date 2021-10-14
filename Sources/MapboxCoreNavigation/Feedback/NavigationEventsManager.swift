@@ -273,8 +273,12 @@ open class NavigationEventsManager {
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
         eventDictionary["feedbackId"] = event.identifier.uuidString
-        eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects.filter { $0.timestamp <= event.timestamp}.map {$0.dictionaryRepresentation}
-        eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects.filter {$0.timestamp > event.timestamp}.map {$0.dictionaryRepresentation}
+        eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects
+            .filter { $0.timestamp <= event.timestamp }
+            .map { EventLocation($0).dictionaryRepresentation }
+        eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects
+            .filter { $0.timestamp > event.timestamp }
+            .map { EventLocation($0).dictionaryRepresentation }
         return eventDictionary
     }
     
