@@ -607,7 +607,7 @@ final class BillingHandlerUnitTests: TestCase {
 
             let routeResponse = Fixture.route(between: origin, and: destination, legsCount: legsCount).response
 
-            let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 1000)
+            let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 100)
                 .map { CLLocation(coordinate: $0) }
                 .shiftedToPresent()
 
@@ -634,10 +634,9 @@ final class BillingHandlerUnitTests: TestCase {
                 return true
             }
 
-            let speedMultiplier: TimeInterval = 100
-            locationManager.speedMultiplier = speedMultiplier
+            locationManager.speedMultiplier = 50
             locationManager.startUpdatingLocation()
-            waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
+            waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
         }
 
         var expectedEvents: [BillingServiceMock.Event] = []

@@ -23,8 +23,9 @@ class TokenTestViewController: UIViewController {
         
         HTTPStubs.stubRequests(passingTest: { (request) -> Bool in
             let isMapboxStyleURL = request.url?.isMapboxAPIURL ?? false
-            guard isMapboxStyleURL else { return true }
-            self.mapViewToken = request.url?.queryItem("sku")?.value
+            let mapViewToken = request.url?.queryItem("sku")?.value
+            guard isMapboxStyleURL, mapViewToken?.isEmpty == .some(false) else { return true }
+            self.mapViewToken = mapViewToken
             self.semaphore.signal()
             return true
         }) { (_) -> HTTPStubsResponse in

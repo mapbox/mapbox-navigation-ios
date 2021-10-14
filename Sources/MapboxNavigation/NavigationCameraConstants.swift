@@ -3,6 +3,8 @@ import MapboxMaps
 
 extension CameraOptions {
     
+    // MARK: Camera State Keys
+    
     /**
      Key, which is used to access `CameraOptions` provided via `ViewportDataSourceDelegate`
      so that it can be consumed by `NavigationCamera` in `NavigationCameraState.transitionToFollowing`
@@ -34,6 +36,8 @@ extension CameraOptions {
 
 extension Notification.Name {
 
+    // MARK: Observing Camera Updates
+    
     /**
      Posted when value of `NavigationCamera.state` property changes.
      

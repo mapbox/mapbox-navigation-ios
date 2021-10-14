@@ -129,16 +129,19 @@ class MapboxCoreNavigationTests: TestCase {
         }
         
         XCTAssertEqual(coordinates.count, 10, "Incorrect coordinates count.")
-        
+        let locationManager = ReplayLocationManager(locations: coordinates
+                                                        .map { CLLocation(coordinate: $0) }
+                                                        .shiftedToPresent())
         let navigationService = MapboxNavigationService(routeResponse: response,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
                                                         directions: directions,
+                                                        locationSource: locationManager,
                                                         simulating: .never)
         
         var receivedSpokenInstructions: [String] = []
         
-        let expectation = self.expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
+        let spokenInstructionExpectation = self.expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
                                            object: navigationService.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
@@ -152,26 +155,17 @@ class MapboxCoreNavigationTests: TestCase {
             // Navigator always returns first spoken instruction for the second step.
             return routeProgress?.currentLegProgress.stepIndex == 1
         }
-        
+
+        locationManager.startDate = Date()
+        locationManager.speedMultiplier = 10
+        let replayFinished = expectation(description: "Replay finished")
+        locationManager.onReplayLoopCompleted = { _ in
+            replayFinished.fulfill()
+            return false
+        }
         navigationService.start()
-        let currentDate = Date()
-        let locations = coordinates.enumerated().map {
-            CLLocation(coordinate: $0.element,
-                       altitude: -1,
-                       horizontalAccuracy: -1,
-                       verticalAccuracy: -1,
-                       timestamp: currentDate + $0.offset)
-        }
-        
-        // Iterate over all locations in the first step and first location in the second step and
-        // simulate location update.
-        for location in locations {
-            navigationService.router.locationManager?(navigationService.locationManager, didUpdateLocations: [location])
-            RunLoop.current.run(until: Date().addingTimeInterval(0.1))
-        }
-        
-        wait(for: [expectation], timeout: 10.0)
-        
+        wait(for: [replayFinished, spokenInstructionExpectation], timeout: locationManager.expectedReplayTime)
+
         let expectedSpokenInstructions = [
             "Head south on Taylor Street, then turn right onto California Street",
             "Turn right onto California Street",
@@ -277,12 +271,12 @@ class MapboxCoreNavigationTests: TestCase {
 
         let routeResponse = Fixture.route(between: origin, and: destination).response
 
-        let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 1000)
+        let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 100)
             .map { CLLocation(coordinate: $0) }
             .shiftedToPresent()
 
         let locationManager = ReplayLocationManager(locations: replyLocations)
-        let speedMultiplier: TimeInterval = 100
+        let speedMultiplier: TimeInterval = 50
         locationManager.speedMultiplier = speedMultiplier
         locationManager.startDate = Date()
 
@@ -327,7 +321,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation.delegate = responder
         navigation.start()
 
-        waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
+        waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
     }
     
     func testOrderOfExecution() {

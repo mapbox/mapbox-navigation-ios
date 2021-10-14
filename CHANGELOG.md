@@ -20,13 +20,13 @@
 
 #### Dependencies
 
-* MapboxNavigation now depends on [MapboxMaps v10.0.0-rc.9](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.0.0-rc.9) instead of [Mapbox Maps SDK for iOS v6._x_](https://github.com/mapbox/mapbox-gl-native-ios/). Consult the “[Migrate to v10](https://docs.mapbox.com/ios/beta/maps/guides/migrate-to-v10/)” guide for tips on upgrading your runtime styling and other map-related code. ([#3391](https://github.com/mapbox/mapbox-navigation-ios/pull/3391))
+* MapboxNavigation now depends on [MapboxMaps v10.0.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.0.0) instead of [Mapbox Maps SDK for iOS v6._x_](https://github.com/mapbox/mapbox-gl-native-ios/). Consult the “[Migrate to v10](https://docs.mapbox.com/ios/beta/maps/guides/migrate-to-v10/)” guide for tips on upgrading your runtime styling and other map-related code. ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
 * MapboxCoreNavigation no longer depends on [MapboxAccounts](https://github.com/mapbox/mapbox-accounts-ios/). If you previously installed MapboxCoreNavigation using Carthage, remove MapboxAccounts.framework from your application’s Link Binary With Libraries build phase. ([#2829](https://github.com/mapbox/mapbox-navigation-ios/pull/2829))
-* MapboxCoreNavigation now depends on [MapboxMobileEvents v1._x_](https://github.com/mapbox/mapbox-events-ios/releases/tag/v1.0.0). The dependency on MapboxMobileEvents is subject to change or removal in a future minor release of MapboxCoreNavigation, so your Podfile, Cartfile, or Package.swift should not explicitly depend on MapboxMobileEvents. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
-* MapboxCoreNavigation now depends on [MapboxDirections v2.0.0-rc.3](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.0.0-rc.3). ([#3419](https://github.com/mapbox/mapbox-navigation-ios/pull/3419))
-* MapboxCoreNavigation now depends on [Turf v2.0.0-rc.1](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0-rc.1). ([#3248](https://github.com/mapbox/mapbox-navigation-ios/pull/3248))
-* MapboxCoreNavigation now depends on [MapboxNavigationNative v68._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/68.0.0). ([#3419](https://github.com/mapbox/mapbox-navigation-ios/pull/3419))
-* MapboxCoreNavigation now depends on [MapboxCommon v19._x_](https://github.com/mapbox/mapbox-common-ios/releases/tag/v19.0.0). ([#3391](https://github.com/mapbox/mapbox-navigation-ios/pull/3391))
+* MapboxCoreNavigation now depends on [MapboxMobileEvents v1._x_](https://github.com/mapbox/mapbox-events-ios/releases/tag/v1.0.5). The dependency on MapboxMobileEvents is subject to change or removal in a future minor release of MapboxCoreNavigation, so your Podfile, Cartfile, or Package.swift should not explicitly depend on MapboxMobileEvents. ([#3320](https://github.com/mapbox/mapbox-navigation-ios/pull/3320))
+* MapboxCoreNavigation now depends on [MapboxDirections v2.0.0-rc.4](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.0.0-rc.4). ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
+* MapboxCoreNavigation now depends on [Turf v2.0.0](https://github.com/mapbox/turf-swift/releases/tag/v2.0.0). ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
+* MapboxCoreNavigation now depends on [MapboxNavigationNative v69._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/69.0.0). ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
+* MapboxCoreNavigation now depends on [MapboxCommon v20._x_](https://github.com/mapbox/mapbox-common-ios/releases/tag/v20.0.0). ([#3413](https://github.com/mapbox/mapbox-navigation-ios/pull/3413))
 * Removed the optional dependency on [MapboxGeocoder.swift](https://github.com/mapbox/MapboxGeocoder.swift/). ([#2999](https://github.com/mapbox/mapbox-navigation-ios/pull/2999), [#3183](https://github.com/mapbox/mapbox-navigation-ios/issues/3183))
 
 ### Map
@@ -53,7 +53,7 @@
 
 * Removed the `NavigationMapView.showsUserLocation` and `NavigationMapView.tracksUserCourse` properties in favor of `NavigationMapView.userLocationStyle`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Added the `NavigationMapView.userLocationStyle` property to customize how the user’s current location is displayed on the map. Set this property to `UserLocationStyle.puck2D(configuration:)` or `UserLocationStyle.puck3D(configuration:)` to use a location indicator layer (`LayerType.locationIndicator`) powered by the Mapbox Maps SDK instead of the default view-backed implementation. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
-* Removed the `NavigationMapView.userCourseView` property in favor of the associated value when `NavigationMapView.userLocationStyle` is set to `UserLocationStyle.courseView(_:)`. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968),[#3384](https://github.com/mapbox/mapbox-navigation-ios/pull/3384))
+* Removed the `NavigationMapView.userCourseView` property in favor of the associated value when `NavigationMapView.userLocationStyle` is set to `UserLocationStyle.courseView(_:)`. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968), [#3384](https://github.com/mapbox/mapbox-navigation-ios/pull/3384))
 * If you need to customize the appearance of the user location indicator, you can subclass `UserPuckCourseView` and `UserHaloCourseView` as a starting point. ([#2968](https://github.com/mapbox/mapbox-navigation-ios/pull/2968))
 * Added the `UserHaloCourseView.haloBorderWidth` property for changing the width of the ring around the halo view. ([#3309](https://github.com/mapbox/mapbox-navigation-ios/pull/3309))
 * Fixed an issue where setting `UserPuckCourseView.puckColor` in a `Style` subclass had no effect. ([#3306](https://github.com/mapbox/mapbox-navigation-ios/pull/3306))
@@ -90,6 +90,7 @@
 * Improved the current road name label’s performance and fixed a potential crash when updating it. ([#3340](https://github.com/mapbox/mapbox-navigation-ios/pull/3340))
 * Fixed an issue where arrival guidance card appears too early. ([#3383](https://github.com/mapbox/mapbox-navigation-ios/pull/3383))
 * Fixed an issue where the noncurrent guidance cards were highlighted. ([#3442](https://github.com/mapbox/mapbox-navigation-ios/pull/3442))
+* Fixed an issue where guidance cards for multi-leg routes could temporarily show fewer cards than available. ([#3451](https://github.com/mapbox/mapbox-navigation-ios/pull/3451))
 
 ### Location tracking
 
@@ -143,9 +144,10 @@
 
 ### Electronic horizon and route alerts
 
-* While a `RouteController`, `PassiveLocationProvider`, or `PassiveLocationManager` is tracking the user’s location, you can get notifications about location changes that indicate relevant details in the _electronic horizon_ – the upcoming portion of the routing graph – such as the names of cross streets and upcoming speed limit changes. To receive this information, observe the `Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, `Notification.Name.electronicHorizonDidExitRoadObject`, and `Notification.Name.electronicHorizonDidPassRoadObject` notifications. Use the `RouteController.roadGraph` or `PassiveLocationManager.roadGraph` property to get more information about the edges contained in these notifications. Optionally set the `RouteController.electronicHorizonOptions` or `PassiveLocationManager.electronicHorizonOptions` property to configure the extent of electronic horizon calculations. ([#2834](https://github.com/mapbox/mapbox-navigation-ios/pull/2834))
+* While a `RouteController`, `PassiveLocationProvider`, or `PassiveLocationManager` is tracking the user’s location, you can get notifications about location changes that indicate relevant details in the _electronic horizon_ – the upcoming portion of the routing graph – such as the names of cross streets and upcoming speed limit changes. To receive this information call `RouteController.startUpdatingElectronicHorizon(with:)` or `PassiveLocationManager.startUpdatingElectronicHorizon(with:)` methods and observe the `Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, `Notification.Name.electronicHorizonDidExitRoadObject`, and `Notification.Name.electronicHorizonDidPassRoadObject` notifications. Use the `RouteController.roadGraph` or `PassiveLocationManager.roadGraph` property to get more information about the edges contained in these notifications. ([#2834](https://github.com/mapbox/mapbox-navigation-ios/pull/2834))
 * Added the `RouteController.roadObjectMatcher` and `PassiveLocationManager.roadObjectMatcher` properties for creating user-defined road objects by matching location primitives to the road graph. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
 * Removed the `Alert` enumeration and the `RouteAlert.alert`, `RouteAlert.distance`, `RouteAlert.length`, `RouteAlert.beginCoordinate`, `RouteAlert.endCoordinate`, `RouteAlert.beginSegmentIndex`, and `RouteAlert.endSegmentIndex` properties in favor of a consolidated `RouteAlerts.roadObject` property. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
+* Added the `RouteController.startUpdatingElectronicHorizon(with:)`, `RouteController.stopUpdatingElectronicHorizon()`, `PassiveLocationManager.startUpdatingElectronicHorizon(with:)` and `PassiveLocationManager.stopUpdatingElectronicHorizon()` methods for managing electronic horizon updates. By default electronic horizon updates are disabled. ([#3475](https://github.com/mapbox/mapbox-navigation-ios/pull/3475))
 
 ### CarPlay
 

@@ -8,23 +8,40 @@ import MapboxDirections
  As the user approaches certain junctions, an enlarged illustration of the junction appears in this view to help the user understand a complex maneuver. A junction view only appears when the relevant data is available.
  */
 public class JunctionView: UIImageView {
-    var isCurrentlyVisible: Bool = false
-    var imageRepository: ImageRepository = .shared
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
+    // MARK: Displaying the Junction
     
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-    
-    func commonInit() {
-        let heightConstraint = heightAnchor.constraint(equalToConstant: 0)
-        heightConstraint.priority = UILayoutPriority(rawValue: 999)
-        heightConstraint.isActive = true
+    /**
+     Shows the junction view, optionally with a fade animation.
+     */
+    public func show(animated: Bool = false) {
+        guard !isCurrentlyVisible, isHidden else { return }
+        
+        let show = {
+            self.isHidden = false
+            if let height = self.image?.size.height {
+                let heightConstraint = self.heightAnchor.constraint(equalToConstant: height)
+                heightConstraint.priority = UILayoutPriority(rawValue: 999)
+                heightConstraint.isActive = true
+            }
+            
+        }
+        
+        let animate = {
+            show()
+            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseIn, animations: {
+                self.layoutIfNeeded()
+            }) { [weak self] (finished) in
+                self?.isCurrentlyVisible = true
+            }
+        }
+
+        if animated {
+            animate()
+        } else {
+            show()
+            isCurrentlyVisible = true
+        }
     }
     
     /**
@@ -66,39 +83,6 @@ public class JunctionView: UIImageView {
     }
     
     /**
-     Shows the junction view, optionally with a fade animation.
-     */
-    public func show(animated: Bool = false) {
-        guard !isCurrentlyVisible, isHidden else { return }
-        
-        let show = {
-            self.isHidden = false
-            if let height = self.image?.size.height {
-                let heightConstraint = self.heightAnchor.constraint(equalToConstant: height)
-                heightConstraint.priority = UILayoutPriority(rawValue: 999)
-                heightConstraint.isActive = true
-            }
-            
-        }
-        
-        let animate = {
-            show()
-            UIView.animate(withDuration: 0.3, delay: 0.0, options: .curveEaseIn, animations: {
-                self.layoutIfNeeded()
-            }) { [weak self] (finished) in
-                self?.isCurrentlyVisible = true
-            }
-        }
-
-        if animated {
-            animate()
-        } else {
-            show()
-            isCurrentlyVisible = true
-        }
-    }
-    
-    /**
      Hides the junction view.
      */
     public func hide(delay: TimeInterval = 0, animated: Bool = true) {
@@ -130,5 +114,24 @@ public class JunctionView: UIImageView {
             isCurrentlyVisible = false
             isHidden = true
         }
+    }
+    
+    var isCurrentlyVisible: Bool = false
+    var imageRepository: ImageRepository = .shared
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    func commonInit() {
+        let heightConstraint = heightAnchor.constraint(equalToConstant: 0)
+        heightConstraint.priority = UILayoutPriority(rawValue: 999)
+        heightConstraint.isActive = true
     }
 }

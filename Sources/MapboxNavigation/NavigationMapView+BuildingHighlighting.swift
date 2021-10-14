@@ -4,7 +4,7 @@ import Turf
 
 extension NavigationMapView {
     
-    // MARK: - Building Extrusion Highlighting methods
+    // MARK: Building Extrusion Highlighting
     
     /**
      Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2D or 3D depending on the `in3D` value.
@@ -33,7 +33,7 @@ extension NavigationMapView {
                                                     completion: { [weak self] result in
                                                         guard let _ = self else { return }
                                                         if case .success(let queriedFeatures) = result {
-                                                            if let identifier = queriedFeatures.first?.feature?.featureIdentifier {
+                                                            if let identifier = queriedFeatures.first?.feature.featureIdentifier {
                                                                 foundBuildingIds.insert(identifier)
                                                             }
                                                             group.leave()

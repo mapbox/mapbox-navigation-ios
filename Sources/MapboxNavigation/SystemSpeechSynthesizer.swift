@@ -8,7 +8,7 @@ import MapboxSpeech
  */
 open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
-    // MARK: - Properties
+    // MARK: Speech Configuration
     
     public weak var delegate: SpeechSynthesizingDelegate?
     public var muted: Bool = false {
@@ -27,13 +27,16 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
             // AVSpeechSynthesizer uses 'AVAudioSession.sharedInstance().outputVolume' by default
         }
     }
-    public var isSpeaking: Bool { return speechSynthesizer.isSpeaking }
+    
     public var locale: Locale? = Locale.autoupdatingCurrent
     
-    private var speechSynthesizer: AVSpeechSynthesizer
-    private var previousInstrcution: SpokenInstruction?
+    // MARK: Speaking Instructions
     
-    // MARK: - Lifecycle
+    public var isSpeaking: Bool { return speechSynthesizer.isSpeaking }
+    
+    private var speechSynthesizer: AVSpeechSynthesizer
+    
+    private var previousInstruction: SpokenInstruction?
     
     override public init() {
         speechSynthesizer = AVSpeechSynthesizer()
@@ -44,8 +47,6 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     deinit {
         interruptSpeaking()
     }
-    
-    // MARK: - Public methods
     
     open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
         // Do nothing
@@ -91,13 +92,13 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
                                         with: SpeechError.unsupportedLocale(locale: Locale.nationalizedCurrent))
             return
         }
-        if let previousInstrcution = previousInstrcution, speechSynthesizer.isSpeaking {
+        if let previousInstruction = previousInstruction, speechSynthesizer.isSpeaking {
             delegate?.speechSynthesizer(self,
-                                        didInterrupt: previousInstrcution,
+                                        didInterrupt: previousInstruction,
                                         with: modifiedInstruction)
         }
         
-        previousInstrcution = modifiedInstruction
+        previousInstruction = modifiedInstruction
         speechSynthesizer.speak(utteranceToSpeak)
     }
     
@@ -109,12 +110,10 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
         speechSynthesizer.stopSpeaking(at: .immediate)
     }
     
-    // MARK: - Methods
-    
     private func safeDuckAudio() {
         
         if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
-            guard let instruction = previousInstrcution else {
+            guard let instruction = previousInstruction else {
                 assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
                 return
             }
@@ -128,7 +127,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     private func safeUnduckAudio() {
         if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
-            guard let instruction = previousInstrcution else {
+            guard let instruction = previousInstruction else {
                 assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
                 return
             }
@@ -153,7 +152,7 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         safeUnduckAudio()
-        guard let instruction = previousInstrcution else {
+        guard let instruction = previousInstruction else {
             assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
             return
         }
@@ -168,7 +167,7 @@ extension SystemSpeechSynthesizer: AVSpeechSynthesizerDelegate {
     
     public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         safeUnduckAudio()
-        guard let instruction = previousInstrcution else {
+        guard let instruction = previousInstruction else {
             assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
             return
         }

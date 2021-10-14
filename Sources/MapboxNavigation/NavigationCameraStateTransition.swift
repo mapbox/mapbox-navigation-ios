@@ -7,6 +7,11 @@ import Turf
  */
 public class NavigationCameraStateTransition: CameraStateTransition {
 
+    // MARK: Transitioning State
+    
+    /**
+     A map view to which corresponding camera is related.
+     */
     public weak var mapView: MapView?
     
     var animatorCenter: BasicCameraAnimator?

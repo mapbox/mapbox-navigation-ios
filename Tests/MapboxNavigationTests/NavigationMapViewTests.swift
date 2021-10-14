@@ -176,7 +176,7 @@ class NavigationMapViewTests: TestCase {
     }
     
     func congestionLevel(_ feature: Turf.Feature) -> CongestionLevel? {
-        guard let congestionLevel = feature.properties?["congestion"] as? String else { return nil }
+        guard case let .string(congestionLevel) = feature.properties?["congestion"] else { return nil }
         
         return CongestionLevel(rawValue: congestionLevel)
     }
@@ -365,7 +365,7 @@ class NavigationMapViewTests: TestCase {
         let congestionSegment: CongestionSegment = (coordinates, CongestionLevel.low)
         var feature = Feature(geometry: .lineString(LineString(congestionSegment.0)))
         feature.properties = [
-            CongestionAttribute: String(describing: congestionSegment.1),
+            CongestionAttribute: .string(String(describing: congestionSegment.1)),
             CurrentLegAttribute: true
         ]
         let congestionFeatures:[Turf.Feature] = [feature]

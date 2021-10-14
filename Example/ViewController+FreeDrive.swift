@@ -84,13 +84,15 @@ extension ViewController {
         do {
             let style = navigationMapView.mapView.mapboxMap.style
             if style.sourceExists(withId: trackStyledFeature.sourceIdentifier) {
+                let feature = Feature(geometry: .lineString(trackStyledFeature.lineString))
                 try style.updateGeoJSONSource(withId: trackStyledFeature.sourceIdentifier,
-                                              geoJSON: Feature(geometry: .lineString(trackStyledFeature.lineString)))
+                                              geoJSON: .feature(feature))
             }
             
             if style.sourceExists(withId: rawTrackStyledFeature.sourceIdentifier) {
+                let feature = Feature(geometry: .lineString(rawTrackStyledFeature.lineString))
                 try style.updateGeoJSONSource(withId: rawTrackStyledFeature.sourceIdentifier,
-                                              geoJSON: Feature(geometry: .lineString(rawTrackStyledFeature.lineString)))
+                                              geoJSON: .feature(feature))
             }
         } catch {
             NSLog("Error occured while performing operation with source: \(error.localizedDescription).")
