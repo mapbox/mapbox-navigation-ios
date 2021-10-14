@@ -14,6 +14,7 @@ open class InstructionsCardViewController: UIViewController {
     
     public var routeProgress: RouteProgress?
     public var currentStepIndex: Int?
+    public var currentLegIndex: Int?
     public var steps: [RouteStep]? {
         guard let stepIndex = routeProgress?.currentLegProgress.stepIndex, let steps = routeProgress?.currentLeg.steps else { return nil }
         var mutatedSteps = steps
@@ -27,9 +28,14 @@ open class InstructionsCardViewController: UIViewController {
     open func reloadDataSource() {
         if currentStepIndex == nil, let progress = routeProgress {
             currentStepIndex = progress.currentLegProgress.stepIndex
+            currentLegIndex = progress.legIndex
             instructionCollectionView.reloadData()
-        } else if let progress = routeProgress, let stepIndex = currentStepIndex, stepIndex != progress.currentLegProgress.stepIndex {
+        } else if let progress = routeProgress,
+                  let stepIndex = currentStepIndex,
+                  let legIndex = currentLegIndex,
+                  (stepIndex != progress.currentLegProgress.stepIndex || legIndex != progress.legIndex) {
             currentStepIndex = progress.currentLegProgress.stepIndex
+            currentLegIndex = progress.legIndex
             instructionCollectionView.reloadData()
         } else {
             updateVisibleInstructionCards(at: instructionCollectionView.indexPathsForVisibleItems)
