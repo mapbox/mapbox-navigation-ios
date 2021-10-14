@@ -137,8 +137,10 @@ open class RouteController: NSObject {
       Pass `nil` to use the default configuration.
       Updates will be delivered in `Notification.Name.electronicHorizonDidUpdatePosition` notification.
       For more info, read the [Electronic Horizon Guide](https://docs.mapbox.com/ios/beta/navigation/guides/electronic-horizon/).
+
+     - parameter options: Options which will be used to configure electronic horizon updates.
       */
-     public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions) {
+     public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions? = nil) {
          Navigator.shared.startUpdatingElectronicHorizon(with: options)
      }
      
