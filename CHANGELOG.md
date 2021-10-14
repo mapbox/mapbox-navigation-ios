@@ -59,6 +59,7 @@
 * Fixed an issue where setting `UserPuckCourseView.puckColor` in a `Style` subclass had no effect. ([#3306](https://github.com/mapbox/mapbox-navigation-ios/pull/3306))
 * Fixed a memory leak in `UserCourseView`. ([#3120](https://github.com/mapbox/mapbox-navigation-ios/issues/3120))
 * Fixed the pitch issue of `UserHaloCourseView` when map tilted during active guidance navigation. ([#3407](https://github.com/mapbox/mapbox-navigation-ios/issues/3407))
+* Added the `UserPuckCourseView.minimizesInOverview` property, which allows to disable `UserPuckCourseView` minimization in case when navigation camera state is `NavigationCameraState.overview`. ([#3460](https://github.com/mapbox/mapbox-navigation-ios/issues/3460))
 
 #### Route overlay
 
