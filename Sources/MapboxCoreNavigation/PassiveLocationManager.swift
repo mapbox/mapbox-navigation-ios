@@ -138,6 +138,28 @@ open class PassiveLocationManager: NSObject {
     public func resumeTripSession() {
         BillingHandler.shared.resumeBillingSession(with: sessionUUID)
     }
+    
+    /**
+     Starts electronic horizon updates.
+
+     Pass `nil` to use the default configuration.
+     Updates will be delivered in `Notification.Name.electronicHorizonDidUpdatePosition` notification.
+     For more info, read the [Electronic Horizon Guide](https://docs.mapbox.com/ios/beta/navigation/guides/electronic-horizon/).
+
+     - parameter options: Options which will be used to configure electronic horizon updates.
+
+     - postcondition: To change electronic horizon options call this method again with new options.
+     */
+    public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions? = nil) {
+        Navigator.shared.startUpdatingElectronicHorizon(with: options)
+    }
+
+    /**
+     Stops electronic horizon updates.
+     */
+    public func stopUpdatingElectronicHorizon() {
+        Navigator.shared.stopUpdatingElectronicHorizon()
+    }
 
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
@@ -254,20 +276,6 @@ open class PassiveLocationManager: NSObject {
     }
     
     // MARK: Accessing Relevant Routing Data
-    
-    /**
-     A custom configuration for electronic horizon observations.
-     
-     Set this property to `nil` to use the default configuration.
-     */
-    public var electronicHorizonOptions: ElectronicHorizonOptions? {
-        get {
-            Navigator.shared.electronicHorizonOptions
-        }
-        set {
-            Navigator.shared.electronicHorizonOptions = newValue
-        }
-    }
     
     /// The road graph that is updated as the passive location manager tracks the user’s location.
     public var roadGraph: RoadGraph {
