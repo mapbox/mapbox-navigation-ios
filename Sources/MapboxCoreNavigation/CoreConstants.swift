@@ -232,9 +232,9 @@ public extension Notification.Name {
     /**
      Posted when `NavigationService` update the simulating status.
      
-     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.simulatingUpdateKey` and `MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey`.
+     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.simulationStateKey` and `MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey`.
      */
-    static let navigationServiceSimulatingDidChange: Notification.Name = .init(rawValue: "NavigationServiceSimulatingDidChange")
+    static let navigationServiceSimulationDidChange: Notification.Name = .init(rawValue: "NavigationServiceSimulationDidChange")
 }
 
 extension RouteController {
@@ -365,8 +365,8 @@ extension MapboxNavigationService {
         public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.navigationServiceSimulatingDidChange` notification. The corresponding value is a `SimulatingUpdate` indicating the current simulating update status. */
-        public static let simulatingUpdateKey: NotificationUserInfoKey = .init(rawValue: "simulatingUpdate")
+         A key in the user info dictionary of a `Notification.Name.navigationServiceSimulationDidChange` notification. The corresponding value is a `SimulationState` indicating the current simulation status. */
+        public static let simulationStateKey: NotificationUserInfoKey = .init(rawValue: "simulationState")
         
         /**
          A key in the user info dictionary of a `Notification.Name.navigationServiceSimulatingDidChange` notification. The corresponding value is a `Double` indicating the current simulated speed multiplier. */

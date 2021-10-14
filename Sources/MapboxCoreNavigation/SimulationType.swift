@@ -1,7 +1,18 @@
 import Foundation
 
+/**
+ The simulation intent type. Used for describing the intent to start simulation of the navigation service.
+ */
 public enum SimulationIntent: Int {
-    case manual, poorGPS
+    /**
+     The simulation starts because of manual choice.
+     */
+    case manual
+    
+    /**
+     The simulation starts because of poor GPS signal.
+     */
+    case poorGPS
 }
 
 /**
@@ -30,37 +41,37 @@ public enum SimulationMode: Int {
 }
 
 /**
- The simulating update type. Used for notifying users of the begin and end of navigation service simulating status.
+ The simulation state type. Used for notifying users of the change of navigation service simulation status.
  */
-public enum SimulatingUpdate: Int {
+public enum SimulationState: Int {
     
     /**
-     The navigation service will begin simulating.
+     The navigation service will begin simulation.
      */
-    case willBeginSimulating
+    case willBeginSimulation
     
     /**
-     The navigation service did begin simulating.
+     The navigation service did begin simulation.
      */
-    case didBeginSimulating
+    case didBeginSimulation
     
     /**
-     The navigation service is in simulating.
+     The navigation service is in simulation.
      */
-    case inSimulating
+    case inSimulation
     
     /**
-     The navigation service will end simulating.
+     The navigation service will end simulation.
      */
-    case willEndSimulating
+    case willEndSimulation
     
     /**
-     The navigation service did end simulating.
+     The navigation service did end simulation.
      */
-    case didEndSimulating
+    case didEndSimulation
     
     /**
-     The navigation service isn't in simulating.
+     The navigation service isn't in simulation.
      */
-    case notInSimulating
+    case notInSimulation
 }

@@ -51,6 +51,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     weak var mapView: MapView?
     
+    var viewportDataSourceType: ViewportDataSourceType = .passive
+    
     // MARK: Initializer Methods
     
     /**
@@ -64,8 +66,9 @@ public class NavigationViewportDataSource: ViewportDataSource {
      */
     public required init(_ mapView: MapView, viewportDataSourceType: ViewportDataSourceType = .passive) {
         self.mapView = mapView
+        self.viewportDataSourceType = viewportDataSourceType
         
-        subscribeForNotifications(viewportDataSourceType)
+        subscribeForNotifications()
     }
     
     deinit {
@@ -74,7 +77,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     // MARK: Notifications Observer Methods
     
-    func subscribeForNotifications(_ viewportDataSourceType: ViewportDataSourceType = .passive) {
+    func subscribeForNotifications() {
         switch viewportDataSourceType {
         case .raw:
             mapView?.location.addLocationConsumer(newConsumer: self)
@@ -92,15 +95,18 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
     
     func unsubscribeFromNotifications() {
-        mapView?.location.removeLocationConsumer(consumer: self)
-        
-        NotificationCenter.default.removeObserver(self,
-                                                  name: .routeControllerProgressDidChange,
-                                                  object: nil)
-        
-        NotificationCenter.default.removeObserver(self,
-                                                  name: .passiveLocationManagerDidUpdate,
-                                                  object: nil)
+        switch viewportDataSourceType {
+        case .raw:
+            mapView?.location.removeLocationConsumer(consumer: self)
+        case .passive:
+            NotificationCenter.default.removeObserver(self,
+                                                      name: .passiveLocationManagerDidUpdate,
+                                                      object: nil)
+        case .active:
+            NotificationCenter.default.removeObserver(self,
+                                                      name: .routeControllerProgressDidChange,
+                                                      object: nil)
+        }
     }
     
     @objc func progressDidChange(_ notification: NSNotification) {

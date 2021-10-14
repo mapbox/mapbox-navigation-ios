@@ -424,7 +424,7 @@ open class CarPlayNavigationViewController: UIViewController {
         
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(simulatingDidChange(_:)),
-                                               name: .navigationServiceSimulatingDidChange,
+                                               name: .navigationServiceSimulationDidChange,
                                                object: service)
     }
     
@@ -446,7 +446,7 @@ open class CarPlayNavigationViewController: UIViewController {
                                                   object: nil)
         
         NotificationCenter.default.removeObserver(self,
-                                                  name: .navigationServiceSimulatingDidChange,
+                                                  name: .navigationServiceSimulationDidChange,
                                                   object: nil)
     }
     
@@ -529,24 +529,25 @@ open class CarPlayNavigationViewController: UIViewController {
     }
     
     @objc func simulatingDidChange(_ notification: NSNotification) {
-        guard let simulatingUpdate = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulatingUpdateKey] as? SimulatingUpdate,
+        guard let simulationState = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulationStateKey] as? SimulationState,
               let simulatedSpeedMultiplier = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey] as? Double
               else { return }
         
-        switch simulatingUpdate {
-        case .willBeginSimulating:
+
+        switch simulationState {
+        case .willBeginSimulation:
             navigationMapView?.storeLocationProviderBeforeSimulation()
-        case .didBeginSimulating:
+        case .didBeginSimulation:
             setUpSimulatedLocationProvider(routeProgress: navigationService.routeProgress, speedMultiplier: simulatedSpeedMultiplier)
-        case .inSimulating:
+        case .inSimulation:
             if let simulatesLocation = navigationMapView?.simulatesLocation, !simulatesLocation {
                 navigationMapView?.storeLocationProviderBeforeSimulation()
             }
             setUpSimulatedLocationProvider(routeProgress: navigationService.routeProgress, speedMultiplier: simulatedSpeedMultiplier)
-        case .willEndSimulating:
+        case .willEndSimulation:
             navigationMapView?.useStoredLocationProvider()
-        case .didEndSimulating: break
-        case .notInSimulating:
+        case .didEndSimulation: break
+        case .notInSimulation:
             if let simulatesLocation = navigationMapView?.simulatesLocation, simulatesLocation {
                 navigationMapView?.useStoredLocationProvider()
             }
