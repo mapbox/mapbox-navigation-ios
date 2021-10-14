@@ -16,11 +16,13 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      */
     public required init(_ mapView: MapView, navigationCameraType: NavigationCameraType = .mobile) {
         self.mapView = mapView
-        self.viewportDataSource = NavigationViewportDataSource(mapView)
-        self.cameraStateTransition = NavigationCameraStateTransition(mapView)
-        self.type = navigationCameraType
+        viewportDataSource = NavigationViewportDataSource(mapView)
+        cameraStateTransition = NavigationCameraStateTransition(mapView)
+        type = navigationCameraType
         
         super.init()
+        
+        viewportDataSource.delegate = self
         
         setupGestureRecognizers()
         
