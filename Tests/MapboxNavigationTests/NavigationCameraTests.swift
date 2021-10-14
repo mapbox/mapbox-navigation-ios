@@ -155,7 +155,7 @@ extension LocationProviderMock: LocationProviderDelegate {
     }
 }
 
-class NavigationCameraTests: XCTestCase {
+class NavigationCameraTests: TestCase {
     
     override func setUp() {
         super.setUp()

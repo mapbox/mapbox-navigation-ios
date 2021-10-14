@@ -5,7 +5,7 @@ import MapboxCoreNavigation
 @testable import MapboxNavigation
 import CoreLocation
 
-final class EndOfRouteFeedbackTests: XCTestCase {
+final class EndOfRouteFeedbackTests: TestCase {
     func testDisableFeedback() {
         let startLocation = CLLocationCoordinate2D(latitude: 32.714719, longitude: -117.149368)
         let endLocation = CLLocationCoordinate2D(latitude: 32.714721,
