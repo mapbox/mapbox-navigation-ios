@@ -92,6 +92,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
     
     func unsubscribeFromNotifications() {
+        mapView?.location.removeLocationConsumer(consumer: self)
+        
         NotificationCenter.default.removeObserver(self,
                                                   name: .routeControllerProgressDidChange,
                                                   object: nil)

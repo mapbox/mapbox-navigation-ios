@@ -857,6 +857,8 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         if let passiveLocationProvider = navigationMapView?.mapView.location.locationProvider as? PassiveLocationProvider {
             passiveLocationProvider.locationManager.resumeTripSession()
         }
+        
+        self.carPlayNavigationViewController = nil
         delegate?.carPlayManagerDidEndNavigation(self)
     }
     

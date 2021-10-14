@@ -1121,6 +1121,7 @@ open class NavigationMapView: UIView {
      */
     public weak var delegate: NavigationMapViewDelegate?
     
+    var locationProvider: LocationProvider?
     var simulatesLocation: Bool = true
     
     /**
@@ -1293,6 +1294,7 @@ open class NavigationMapView: UIView {
         mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.ornaments.options.scaleBar.visibility = .hidden
+        storeLocationProviderBeforeSimulation()
         
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
@@ -1332,6 +1334,19 @@ open class NavigationMapView: UIView {
         
         navigationCamera = NavigationCamera(mapView, navigationCameraType: navigationCameraType)
         navigationCamera.follow()
+    }
+    
+    func storeLocationProviderBeforeSimulation() {
+        simulatesLocation = true
+        locationProvider = mapView.location.locationProvider
+        locationProvider?.stopUpdatingLocation()
+        locationProvider?.stopUpdatingHeading()
+    }
+
+    func useStoredLocationProvider() {
+        simulatesLocation = false
+        let locationProvider = self.locationProvider ?? AppleLocationProvider()
+        mapView.location.overrideLocationProvider(with: locationProvider)
     }
     
     func setupGestureRecognizers() {
