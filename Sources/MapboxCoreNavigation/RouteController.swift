@@ -288,11 +288,11 @@ open class RouteController: NSObject {
     }
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
+        assert(Thread.isMainThread)
+
         guard let userInfo = notification.userInfo,
               let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
-        onMainQueueSync {
-            self.update(to: status)
-        }
+        update(to: status)
     }
 
     private func update(to status: NavigationStatus) {
