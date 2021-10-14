@@ -3,7 +3,7 @@ import UIKit
 /// :nodoc:
 public class ManeuversStyleKit: NSObject {
 
-    //// Drawing Methods
+    // MARK: Drawing Methods
 
     @objc dynamic public class func drawArrow180right(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 32, height: 32), resizing: ResizingBehavior = .aspectFit, primaryColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), size: CGSize = CGSize(width: 32, height: 32)) {
         //// General Declarations

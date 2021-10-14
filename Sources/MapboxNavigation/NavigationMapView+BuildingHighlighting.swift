@@ -4,7 +4,7 @@ import Turf
 
 extension NavigationMapView {
     
-    // MARK: - Building Extrusion Highlighting methods
+    // MARK: Building Extrusion Highlighting
     
     /**
      Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2D or 3D depending on the `in3D` value.

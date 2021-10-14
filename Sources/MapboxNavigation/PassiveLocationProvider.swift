@@ -29,52 +29,24 @@ open class PassiveLocationProvider: NSObject, LocationProvider {
      */
     public weak var delegate: LocationProviderDelegate?
     
-    /**
-     The location provider's location manager, which detects the user’s location as it changes.
-     */
-    public let locationManager: PassiveLocationManager
-
-    public var authorizationStatus: CLAuthorizationStatus {
-        CLLocationManager.authorizationStatus()
-    }
-
-    public func requestAlwaysAuthorization() {
-        locationManager.systemLocationManager.requestAlwaysAuthorization()
-    }
-
-    public func requestWhenInUseAuthorization() {
-        locationManager.systemLocationManager.requestWhenInUseAuthorization()
-    }
-    
-    public var locationProviderOptions: LocationOptions
-    
-    public var accuracyAuthorization: CLAccuracyAuthorization {
-        if #available(iOS 14.0, *) {
-            return locationManager.systemLocationManager.accuracyAuthorization
-        } else {
-            return .fullAccuracy
-        }
-    }
-    
-    public var heading: CLHeading? {
-        return locationManager.systemLocationManager.heading
-    }
-    
     // TODO: Consider replacing with public property.
     public func setDelegate(_ delegate: LocationProviderDelegate) {
         self.delegate = delegate
     }
     
-    @available(iOS 14.0, *)
-    public func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
-        // CLLocationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey:) was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
-        let requestTemporaryFullAccuracyAuthorization = Selector(("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:" as NSString) as String)
-        guard locationManager.systemLocationManager.responds(to: requestTemporaryFullAccuracyAuthorization) else {
-            return
-        }
-        locationManager.systemLocationManager.perform(requestTemporaryFullAccuracyAuthorization, with: purposeKey)
-    }
+    /**
+     The location provider's location manager, which detects the user’s location as it changes.
+     */
+    public let locationManager: PassiveLocationManager
 
+    public var locationProviderOptions: LocationOptions
+    
+    // MARK: Heading And Location Updates
+    
+    public var heading: CLHeading? {
+        return locationManager.systemLocationManager.heading
+    }
+    
     public func startUpdatingLocation() {
         locationManager.startUpdatingLocation()
     }
@@ -102,6 +74,38 @@ open class PassiveLocationProvider: NSObject, LocationProvider {
 
     public func dismissHeadingCalibrationDisplay() {
         locationManager.systemLocationManager.dismissHeadingCalibrationDisplay()
+    }
+    
+    // MARK: Authorization Process
+    
+    public var authorizationStatus: CLAuthorizationStatus {
+        CLLocationManager.authorizationStatus()
+    }
+
+    public func requestAlwaysAuthorization() {
+        locationManager.systemLocationManager.requestAlwaysAuthorization()
+    }
+
+    public func requestWhenInUseAuthorization() {
+        locationManager.systemLocationManager.requestWhenInUseAuthorization()
+    }
+    
+    public var accuracyAuthorization: CLAccuracyAuthorization {
+        if #available(iOS 14.0, *) {
+            return locationManager.systemLocationManager.accuracyAuthorization
+        } else {
+            return .fullAccuracy
+        }
+    }
+    
+    @available(iOS 14.0, *)
+    public func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
+        // CLLocationManager.requestTemporaryFullAccuracyAuthorization(withPurposeKey:) was introduced in the iOS 14 SDK in Xcode 12, so Xcode 11 doesn’t recognize it.
+        let requestTemporaryFullAccuracyAuthorization = Selector(("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:" as NSString) as String)
+        guard locationManager.systemLocationManager.responds(to: requestTemporaryFullAccuracyAuthorization) else {
+            return
+        }
+        locationManager.systemLocationManager.perform(requestTemporaryFullAccuracyAuthorization, with: purposeKey)
     }
 }
 

@@ -8,9 +8,10 @@ import MapboxSpeech
  */
 open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
-    // MARK: - Properties
+    // MARK: Speech Configuration
     
     public weak var delegate: SpeechSynthesizingDelegate?
+    
     public var muted: Bool = false {
         didSet {
             updatePlayerVolume(audioPlayer)
@@ -21,9 +22,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             audioPlayer?.volume = volume
         }
     }
-    public var isSpeaking: Bool {
-        return audioPlayer?.isPlaying ?? false
-    }
+    
     public var locale: Locale? = Locale.autoupdatingCurrent
     
     /// Number of upcoming `Instructions` to be pre-fetched.
@@ -39,7 +38,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     /**
      Mapbox speech engine instance.
      
-     The speech synthesizer uses this object it to convert instruction text to audio.
+     The speech synthesizer uses this object to convert instruction text to audio.
      */
     public private(set) var remoteSpeechSynthesizer: SpeechSynthesizer
     
@@ -48,7 +47,11 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     private var previousInstruction: SpokenInstruction?
     
-    // MARK: - Lifecycle
+    // MARK: Instructions vocalization
+    
+    public var isSpeaking: Bool {
+        return audioPlayer?.isPlaying ?? false
+    }
     
     public init(accessToken: String? = nil, host: String? = nil) {
         self.cache = DataCache()
@@ -64,8 +67,6 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     deinit {
         deinitAudioPlayer()
     }
-    
-    // MARK: - Public methods
     
     open func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale? = nil) {
         
@@ -142,7 +143,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
     }
     
-    // MARK: - Private methods
+    // MARK: Private Methods
     
     /**
      Fetches and plays an instruction.

@@ -11,11 +11,17 @@ import MapboxMaps
  This class depends on `NavigationLocationManager` to detect the user’s location as it changes.
  */
 open class NavigationLocationProvider: NSObject, LocationProvider, CLLocationManagerDelegate {
+    
+    // MARK: Managing the Location Data
+    
     /**
      The location provider's location manager, which detects the user’s location as it changes.
      */
     public var locationManager: NavigationLocationManager
     
+    /**
+     Configuration for the `locationManager`.
+     */
     public var locationProviderOptions: LocationOptions {
         didSet {
             locationManager.distanceFilter = locationProviderOptions.distanceFilter
@@ -25,26 +31,38 @@ open class NavigationLocationProvider: NSObject, LocationProvider, CLLocationMan
     }
     
     /**
+     Starts the generation of location updates that report the device’s current location.
+     */
+    public func startUpdatingLocation() {
+        locationManager.startUpdatingLocation()
+    }
+    
+    /**
+     Stops the generation of location updates.
+     */
+    public func stopUpdatingLocation() {
+        locationManager.stopUpdatingLocation()
+    }
+    
+    /**
      The location provider's delegate.
      */
     public weak var delegate: LocationProviderDelegate?
     
-    public var authorizationStatus: CLAuthorizationStatus {
-        CLLocationManager.authorizationStatus()
+    public func setDelegate(_ delegate: LocationProviderDelegate) {
+        self.delegate = delegate
     }
     
-    public var accuracyAuthorization: CLAccuracyAuthorization {
-        if #available(iOS 14.0, *) {
-            return locationManager.accuracyAuthorization
-        } else {
-            return .fullAccuracy
-        }
-    }
-    
+    /**
+     The most recently reported heading.
+     */
     public var heading: CLHeading? {
         return locationManager.heading
     }
     
+    /**
+     Specifies a physical device orientation.
+     */
     public var headingOrientation: CLDeviceOrientation {
         get {
             locationManager.headingOrientation
@@ -54,6 +72,27 @@ open class NavigationLocationProvider: NSObject, LocationProvider, CLLocationMan
         }
     }
 
+    /**
+     Starts the generation of heading updates that reports the devices’s current heading.
+     */
+    public func startUpdatingHeading() {
+        locationManager.startUpdatingHeading()
+    }
+    
+    /**
+     Stops the generation of heading updates.
+     */
+    public func stopUpdatingHeading() {
+        locationManager.stopUpdatingHeading()
+    }
+    
+    /**
+     Dismisses immediately the heading calibration view from the screen.
+     */
+    public func dismissHeadingCalibrationDisplay() {
+        locationManager.dismissHeadingCalibrationDisplay()
+    }
+    
     /**
      Initializes the location provider with the given location manager.
      
@@ -67,18 +106,43 @@ open class NavigationLocationProvider: NSObject, LocationProvider, CLLocationMan
         locationManager.delegate = self
     }
     
-    public func setDelegate(_ delegate: LocationProviderDelegate) {
-        self.delegate = delegate
+    // MARK: Handling Authorization
+    
+    /**
+     Returns the current localization authorization status.
+     */
+    public var authorizationStatus: CLAuthorizationStatus {
+        CLLocationManager.authorizationStatus()
     }
     
+    /**
+     Returns the current accuracy authorization that the user has granted
+     */
+    public var accuracyAuthorization: CLAccuracyAuthorization {
+        if #available(iOS 14.0, *) {
+            return locationManager.accuracyAuthorization
+        } else {
+            return .fullAccuracy
+        }
+    }
+    
+    /**
+     Requests permission to use the location services whenever the app is running.
+     */
     public func requestAlwaysAuthorization() {
         locationManager.requestAlwaysAuthorization()
     }
     
+    /**
+     Requests permission to use the location services while the app is in the foreground.
+     */
     public func requestWhenInUseAuthorization() {
         locationManager.requestWhenInUseAuthorization()
     }
     
+    /**
+     Requests temporary permission for precise accuracy
+     */
     @available(iOS 14.0, *)
     public func requestTemporaryFullAccuracyAuthorization(withPurposeKey purposeKey: String) {
         let requestTemporaryFullAccuracyAuthorization = Selector(("requestTemporaryFullAccuracyAuthorizationWithPurposeKey:" as NSString) as String)
@@ -86,26 +150,6 @@ open class NavigationLocationProvider: NSObject, LocationProvider, CLLocationMan
             return
         }
         locationManager.perform(requestTemporaryFullAccuracyAuthorization, with: purposeKey)
-    }
-    
-    public func startUpdatingLocation() {
-        locationManager.startUpdatingLocation()
-    }
-    
-    public func stopUpdatingLocation() {
-        locationManager.stopUpdatingLocation()
-    }
-    
-    public func startUpdatingHeading() {
-        locationManager.startUpdatingHeading()
-    }
-    
-    public func stopUpdatingHeading() {
-        locationManager.stopUpdatingHeading()
-    }
-    
-    public func dismissHeadingCalibrationDisplay() {
-        locationManager.dismissHeadingCalibrationDisplay()
     }
 }
 

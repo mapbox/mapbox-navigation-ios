@@ -22,7 +22,7 @@ extension NavigationMapView {
         var distanceRemaining: Double
     }
     
-    // MARK: - Vanishing route line methods
+    // MARK: Customizing and Displaying the Route Line(s)
     
     func initPrimaryRoutePoints(route: Route) {
         routePoints = parseRoutePoints(route: route)

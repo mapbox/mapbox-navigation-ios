@@ -5,22 +5,8 @@ import MapboxDirections
 @IBDesignable
 open class ManeuverView: UIView {
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
-
-    @objc public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-
-    func commonInit() {
-        // Explicitly mark the view as non-opaque.
-        // This is needed to obtain correct compositing since we implement our own draw function that includes transparency.
-        isOpaque = false
-    }
-
+    // MARK: Color Setup
+    
     @objc public dynamic var primaryColor: UIColor = .defaultTurnArrowPrimary {
         didSet {
             setNeedsDisplay()
@@ -51,6 +37,8 @@ open class ManeuverView: UIView {
         }
     }
 
+    // MARK: Drawing Customization
+    
     public var isStart = false {
         didSet {
             setNeedsDisplay()
@@ -170,5 +158,21 @@ open class ManeuverView: UIView {
         }
 
         transform = CGAffineTransform(scaleX: flip ? -1 : 1, y: 1)
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+
+    @objc public required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+
+    func commonInit() {
+        // Explicitly mark the view as non-opaque.
+        // This is needed to obtain correct compositing since we implement our own draw function that includes transparency.
+        isOpaque = false
     }
 }

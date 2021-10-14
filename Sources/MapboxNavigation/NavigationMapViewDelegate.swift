@@ -10,6 +10,8 @@ import Turf
  */
 public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     
+    // MARK: Supplying Route Line(s) Data
+    
     /**
      Asks the receiver to return a `LineLayer` for the route line, given a layer identifier and a source identifier.
      This method is invoked when the map view loads and any time routes are added.
@@ -52,6 +54,8 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, casingShapeFor route: Route) -> LineString?
     
+    // MARK: Supplying Waypoint(s) Data
+    
     /**
      Asks the receiver to return a `CircleLayer` for waypoints, given an identifier and source.
      This method is invoked any time waypoints are added or shown.
@@ -83,6 +87,8 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
      - returns: Optionally, a `FeatureCollection` that defines the shape of the waypoint, or `nil` to use default behavior.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection?
+    
+    // MARK: Responding to Object Interaction
     
     /**
      Tells the receiver that the user has selected a route by interacting with the map view.

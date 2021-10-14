@@ -42,18 +42,55 @@ public extension CourseUpdatable {
  A view representing the user’s location on screen.
  */
 open class UserPuckCourseView: UIView, CourseUpdatable {
-    private var lastLocationUpdate: Date?
-    private var staleTimer: Timer!
-
-    /// Time interval tick at which Puck view is transitioning into 'stale' state
-    public var staleRefreshInterval: TimeInterval = 1 {
-        didSet {
-            staleTimer.invalidate()
-            initTimer()
-        }
+    /**
+     Transforms the location of the user puck.
+     */
+    public func update(location: CLLocation, pitch: CGFloat, direction: CLLocationDegrees, animated: Bool, navigationCameraState: NavigationCameraState) {
+        let duration: TimeInterval = animated ? 1 : 0
+        UIView.animate(withDuration: duration, delay: 0, options: [.beginFromCurrentState, .curveLinear], animations: {
+            let angle = CGFloat(CLLocationDegrees(direction - location.course).toRadians())
+            self.puckView.layer.setAffineTransform(CGAffineTransform.identity.rotated(by: -angle))
+            
+            // `UserCourseView` pitch is changed only during transition to the overview mode.
+            let pitch = CGFloat(navigationCameraState == .transitionToOverview ? 0.0 : CLLocationDegrees(pitch).toRadians())
+            var transform = CATransform3DRotate(CATransform3DIdentity, pitch, 1.0, 0, 0)
+            
+            let isCameraFollowing = navigationCameraState == .following
+            let scale = CGFloat(isCameraFollowing ? 1.0 : 0.5)
+            transform = CATransform3DScale(transform, scale, scale, 1)
+            transform.m34 = -1.0 / 1000 // (-1 / distance to projection plane)
+            self.layer.sublayerTransform = transform
+        }, completion: nil)
     }
-    /// Time interval, after which Puck is considered 100% 'stale'
-    public var staleInterval: TimeInterval = 60
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    deinit {
+        staleTimer.invalidate()
+        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
+    }
+    
+    func commonInit() {
+        isUserInteractionEnabled = false
+        backgroundColor = .clear
+        puckView = UserPuckStyleKitView(frame: bounds)
+        puckView.backgroundColor = .clear
+        addSubview(puckView)
+        
+        initTimer()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(locationDidUpdate(_ :)), name: .routeControllerProgressDidChange, object: nil)
+    }
+    
+    // MARK: Styling the Puck
     
     // Sets the color on the user puck
     @objc public dynamic var puckColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1) {
@@ -85,32 +122,20 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
     
     var puckView: UserPuckStyleKitView!
     
-    public override init(frame: CGRect) {
-        super.init(frame: frame)
-        commonInit()
-    }
+    // MARK: Tracking Stale State
     
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
+    private var lastLocationUpdate: Date?
+    private var staleTimer: Timer!
+
+    /// Time interval tick at which Puck view is transitioning into 'stale' state
+    public var staleRefreshInterval: TimeInterval = 1 {
+        didSet {
+            staleTimer.invalidate()
+            initTimer()
+        }
     }
-    
-    deinit {
-        staleTimer.invalidate()
-        NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
-    }
-    
-    func commonInit() {
-        isUserInteractionEnabled = false
-        backgroundColor = .clear
-        puckView = UserPuckStyleKitView(frame: bounds)
-        puckView.backgroundColor = .clear
-        addSubview(puckView)
-        
-        initTimer()
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(locationDidUpdate(_ :)), name: .routeControllerProgressDidChange, object: nil)
-    }
+    /// Time interval, after which Puck is considered 100% 'stale'
+    public var staleInterval: TimeInterval = 60
     
     private func initTimer() {
         staleTimer = Timer(timeInterval: staleRefreshInterval,

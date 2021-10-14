@@ -12,6 +12,9 @@ import Turf
  For convenience, several location-related methods in the `NavigationServiceDelegate` protocol have corresponding methods in this protocol.
  */
 public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
+    
+    // MARK: Monitoring Route Progress
+    
     /**
      Called when the navigation view controller is dismissed, such as when the user ends a trip.
      
@@ -29,6 +32,15 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter rawLocation: the raw location, from the location manager, associated with the progress update.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation)
+    
+    /**
+     Tells the receiver that the final destination `PointAnnotation` was added to the `NavigationViewController`.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter finalDestinationAnnotation: The point annotation that was added to the map view.
+     - parameter pointAnnotationManager: The object that manages the point annotation in the map view.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager)
     
     /**
      Called as the user approaches a waypoint.
@@ -53,6 +65,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: True to automatically advance to the next leg, or false to remain on the now completed leg.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didArriveAt waypoint: Waypoint) -> Bool
+    
+    // MARK: Rerouting and Refreshing the Route
     
     /**
      Returns whether the navigation view controller should be allowed to calculate a new route.
@@ -116,6 +130,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didRefresh routeProgress: RouteProgress)
     
+    // MARK: Customizing the Route Elements
+    
     /**
      Returns an `LineLayer` that determines the appearance of the route line.
      
@@ -177,17 +193,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection?
     
     /**
-     Allows the delegate to decide whether to ignore a location update.
-     
-     This method is called on every location update. By default, the navigation view controller ignores certain location updates that appear to be unreliable, as determined by the `CLLocation.isQualified` property.
-     
-     - parameter navigationViewController: The navigation view controller that discarded the location.
-     - parameter location: The location that will be discarded.
-     - returns: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
-    
-    /**
      Called to allow the delegate to customize the contents of the road name label that is displayed towards the bottom of the map view.
      
      This method is called on each location update. By default, the label displays the name of the road the user is currently traveling on.
@@ -198,14 +203,18 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, roadNameAt location: CLLocation) -> String?
     
+    // MARK: Filtering Location Updates
+    
     /**
-     Tells the receiver that the final destination `PointAnnotation` was added to the `NavigationViewController`.
+     Allows the delegate to decide whether to ignore a location update.
      
-     - parameter navigationViewController: The `NavigationViewController` object.
-     - parameter finalDestinationAnnotation: The point annotation that was added to the map view.
-     - parameter pointAnnotationManager: The object that manages the point annotation in the map view.
+     This method is called on every location update. By default, the navigation view controller ignores certain location updates that appear to be unreliable, as determined by the `CLLocation.isQualified` property.
+     
+     - parameter navigationViewController: The navigation view controller that discarded the location.
+     - parameter location: The location that will be discarded.
+     - returns: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager)
+    func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
 }
 
 public extension NavigationViewControllerDelegate {

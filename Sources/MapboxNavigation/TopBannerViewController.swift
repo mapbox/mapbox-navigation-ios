@@ -50,39 +50,14 @@ public extension TopBannerViewControllerDelegate {
  This class is the default top banner view controller used by `NavigationOptions` and `NavigationViewController`. `InstructionsCardViewController` provides an alternative, user notification–like interface.
  */
 open class TopBannerViewController: UIViewController {
+    
+    // MARK: Displaying Instructions
+    
     weak var delegate: TopBannerViewControllerDelegate? = nil
     
     lazy var topPaddingView: TopBannerView = .forAutoLayout()
     
-    lazy var stepsContainer: UIView = .forAutoLayout()
-    var stepsViewController: StepsViewController?
-    
     var routeProgress: RouteProgress?
-    
-    lazy var stepsContainerConstraints: [NSLayoutConstraint] = {
-        let constraints = [
-            stepsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            stepsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ]
-        return constraints
-    }()
-    
-    lazy var stepsContainerShowConstraints: [NSLayoutConstraint] = {
-        let constraints = [
-            stepsContainer.topAnchor.constraint(equalTo: informationStackView.bottomAnchor),
-            view.bottomAnchor.constraint(equalTo: self.parent!.view.bottomAnchor),
-            view.bottomAnchor.constraint(equalTo: stepsContainer.bottomAnchor)
-        ]
-        return constraints
-    }()
-    
-    lazy var stepsContainerHideConstraints: [NSLayoutConstraint] = {
-        let constraints = [
-            stepsContainer.bottomAnchor.constraint(equalTo: informationStackView.topAnchor),
-            informationStackBottomPinConstraint
-        ]
-        return constraints
-    }()
     
     lazy var informationStackBottomPinConstraint: NSLayoutConstraint = view.bottomAnchor.constraint(equalTo: informationStackView.bottomAnchor)
     
@@ -118,17 +93,6 @@ open class TopBannerViewController: UIViewController {
     private var secondaryChildren: [UIView] {
         return [lanesView, nextBannerView, statusView, junctionView]
     }
-    
-    public var isDisplayingPreviewInstructions: Bool {
-        return previewInstructionsView != nil
-    }
-    
-    private(set) public var isDisplayingSteps: Bool = false
-    
-    private(set) var previewSteps: [RouteStep]?
-    private(set) var currentPreviewStep: (RouteStep, Int)?
-    
-    private(set) var previewInstructionsView: StepInstructionsView?
     
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -184,6 +148,141 @@ open class TopBannerViewController: UIViewController {
         }
     }
     
+    
+    private func showSecondaryChildren(completion: CompletionHandler? = nil) {
+        statusView.isHidden = !statusView.isCurrentlyVisible
+        junctionView.isHidden = !junctionView.isCurrentlyVisible
+        lanesView.isHidden = !lanesView.isCurrentlyVisible
+        nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
+        
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
+            guard let children = self?.informationChildren else {
+                return
+            }
+            
+            for child in children {
+                child.alpha = 1.0
+            }
+        }, completion: { _ in
+            completion?()
+        })
+    }
+    
+    private func hideSecondaryChildren(completion: CompletionHandler? = nil) {
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: { [weak self] in
+            guard let children = self?.secondaryChildren else {
+                return
+            }
+            
+            for child in children {
+                child.alpha = 0.0
+            }
+        }) { [weak self] _ in
+            completion?()
+            guard let children = self?.secondaryChildren else {
+                return
+            }
+            
+            for child in children {
+                child.isHidden = true
+            }
+        }
+    }
+    
+    private func addInstructionsBanner() {
+        informationStackView.insertArrangedSubview(instructionsBannerView, at: 0)
+        instructionsBannerView.delegate = self
+        instructionsBannerView.swipeable = true
+    }
+    
+    // MARK: Previewing Steps
+    
+    public var isDisplayingPreviewInstructions: Bool {
+        return previewInstructionsView != nil
+    }
+    
+    private(set) var previewSteps: [RouteStep]?
+    private(set) var currentPreviewStep: (RouteStep, Int)?
+    
+    private(set) var previewInstructionsView: StepInstructionsView?
+    
+    public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep], completion: CompletionHandler? = nil) {
+        guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.firstIndex(of: step) else {
+            return // do nothing if there are no steps provided to us.
+        }
+        //this must happen before the preview steps are set
+        stopPreviewing(showingSecondaryChildren: false)
+        
+        previewSteps = steps
+        currentPreviewStep = (step, index)
+        
+        guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
+        
+        let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
+        instructionsView.heightAnchor.constraint(equalToConstant: instructionsBannerHeight).isActive = true
+        
+        instructionsView.delegate = self
+        instructionsView.distance = distance
+        instructionsView.swipeable = true
+        informationStackView.removeArrangedSubview(instructionsBannerView)
+        instructionsBannerView.removeFromSuperview()
+        informationStackView.insertArrangedSubview(instructionsView, at: 0)
+        instructionsView.update(for: instructions)
+        previewInstructionsView = instructionsView
+        
+        hideSecondaryChildren(completion: completion)
+    }
+    
+    public func stopPreviewing(showingSecondaryChildren: Bool = true) {
+        guard let view = previewInstructionsView else {
+            return
+        }
+        
+        previewSteps = nil
+        currentPreviewStep = nil
+        
+        informationStackView.removeArrangedSubview(view)
+        view.removeFromSuperview()
+        addInstructionsBanner()
+        previewInstructionsView = nil
+        
+        if showingSecondaryChildren {
+            showSecondaryChildren()
+        }
+    }
+    
+    // MARK: Viewing Steps the Table
+    
+    lazy var stepsContainer: UIView = .forAutoLayout()
+    var stepsViewController: StepsViewController?
+    
+    lazy var stepsContainerConstraints: [NSLayoutConstraint] = {
+        let constraints = [
+            stepsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            stepsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ]
+        return constraints
+    }()
+    
+    lazy var stepsContainerShowConstraints: [NSLayoutConstraint] = {
+        let constraints = [
+            stepsContainer.topAnchor.constraint(equalTo: informationStackView.bottomAnchor),
+            view.bottomAnchor.constraint(equalTo: self.parent!.view.bottomAnchor),
+            view.bottomAnchor.constraint(equalTo: stepsContainer.bottomAnchor)
+        ]
+        return constraints
+    }()
+    
+    lazy var stepsContainerHideConstraints: [NSLayoutConstraint] = {
+        let constraints = [
+            stepsContainer.bottomAnchor.constraint(equalTo: informationStackView.topAnchor),
+            informationStackBottomPinConstraint
+        ]
+        return constraints
+    }()
+    
+    private(set) public var isDisplayingSteps: Bool = false
+    
     public func displayStepsTable() {
         dismissStepsTable()
         
@@ -205,7 +304,7 @@ open class TopBannerViewController: UIViewController {
 
             var constraints = pinningConstraints + hideConstraints + self.stepsContainerConstraints
             
-            if let bannerHostHeight = self.view.superview?.superview?.frame.height { 
+            if let bannerHostHeight = self.view.superview?.superview?.frame.height {
                 let inset = self.instructionsBannerHeight + self.view.safeArea.top
                 stepsHeightPresizingConstraint = (child.view.heightAnchor.constraint(equalToConstant: bannerHostHeight - inset))
                 constraints.append(stepsHeightPresizingConstraint!)
@@ -274,96 +373,6 @@ open class TopBannerViewController: UIViewController {
             steps.dismiss()
             self.stepsViewController = nil
         }
-    }
-    private func showSecondaryChildren(completion: CompletionHandler? = nil) {
-        statusView.isHidden = !statusView.isCurrentlyVisible
-        junctionView.isHidden = !junctionView.isCurrentlyVisible
-        lanesView.isHidden = !lanesView.isCurrentlyVisible
-        nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
-        
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
-            guard let children = self?.informationChildren else {
-                return
-            }
-            
-            for child in children {
-                child.alpha = 1.0
-            }
-        }, completion: { _ in
-            completion?()
-        })
-    }
-    
-    private func hideSecondaryChildren(completion: CompletionHandler? = nil) {
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: { [weak self] in
-            guard let children = self?.secondaryChildren else {
-                return
-            }
-            
-            for child in children {
-                child.alpha = 0.0
-            }
-        }) { [weak self] _ in
-            completion?()
-            guard let children = self?.secondaryChildren else {
-                return
-            }
-            
-            for child in children {
-                child.isHidden = true
-            }
-        }
-    }
-    
-    public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep], completion: CompletionHandler? = nil) {
-        guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.firstIndex(of: step) else {
-            return // do nothing if there are no steps provided to us.
-        }
-        //this must happen before the preview steps are set
-        stopPreviewing(showingSecondaryChildren: false)
-        
-        previewSteps = steps
-        currentPreviewStep = (step, index)
-        
-        guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
-        
-        let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
-        instructionsView.heightAnchor.constraint(equalToConstant: instructionsBannerHeight).isActive = true
-        
-        instructionsView.delegate = self
-        instructionsView.distance = distance
-        instructionsView.swipeable = true
-        informationStackView.removeArrangedSubview(instructionsBannerView)
-        instructionsBannerView.removeFromSuperview()
-        informationStackView.insertArrangedSubview(instructionsView, at: 0)
-        instructionsView.update(for: instructions)
-        previewInstructionsView = instructionsView
-        
-        hideSecondaryChildren(completion: completion)
-    }
-    
-    public func stopPreviewing(showingSecondaryChildren: Bool = true) {
-        guard let view = previewInstructionsView else {
-            return
-        }
-        
-        previewSteps = nil
-        currentPreviewStep = nil
-        
-        informationStackView.removeArrangedSubview(view)
-        view.removeFromSuperview()
-        addInstructionsBanner()
-        previewInstructionsView = nil
-        
-        if showingSecondaryChildren {
-            showSecondaryChildren()
-        }
-    }
-    
-    private func addInstructionsBanner() {
-        informationStackView.insertArrangedSubview(instructionsBannerView, at: 0)
-        instructionsBannerView.delegate = self
-        instructionsBannerView.swipeable = true
     }
 }
 
