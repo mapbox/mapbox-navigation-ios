@@ -34,7 +34,12 @@ open class RouteProgress: Codable {
             user.headingAccuracy = RouteProgress.reroutingAccuracy
         }
         let newWaypoints = [user] + remainingWaypointsForCalculatingRoute()
-        let newOptions = oldOptions.copy() as! RouteOptions
+        let newOptions: RouteOptions
+        do {
+            newOptions = try oldOptions.copy()
+        } catch {
+            newOptions = oldOptions
+        }
         newOptions.waypoints = newWaypoints
 
         return newOptions
