@@ -133,23 +133,26 @@ open class RouteController: NSObject {
     }
     
     /**
-      Starts electronic horizon updates.
-      Pass `nil` to use the default configuration.
-      Updates will be delivered in `Notification.Name.electronicHorizonDidUpdatePosition` notification.
-      For more info, read the [Electronic Horizon Guide](https://docs.mapbox.com/ios/beta/navigation/guides/electronic-horizon/).
+     Starts electronic horizon updates.
+
+     Pass `nil` to use the default configuration.
+     Updates will be delivered in `Notification.Name.electronicHorizonDidUpdatePosition` notification.
+     For more info, read the [Electronic Horizon Guide](https://docs.mapbox.com/ios/beta/navigation/guides/electronic-horizon/).
 
      - parameter options: Options which will be used to configure electronic horizon updates.
-      */
-     public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions? = nil) {
-         Navigator.shared.startUpdatingElectronicHorizon(with: options)
-     }
-     
-     /**
-      Stops electronic horizon updates.
-      */
-     public func stopUpdatingElectronicHorizon() {
-         Navigator.shared.stopUpdatingElectronicHorizon()
-     }
+
+     - postcondition: To change electronic horizon options call this method again with new options.
+     */
+    public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions? = nil) {
+        Navigator.shared.startUpdatingElectronicHorizon(with: options)
+    }
+
+    /**
+     Stops electronic horizon updates.
+     */
+    public func stopUpdatingElectronicHorizon() {
+        Navigator.shared.stopUpdatingElectronicHorizon()
+    }
 
     func changeRouteProgress(_ routeProgress: RouteProgress,
                              completion: @escaping (Bool) -> Void) {
