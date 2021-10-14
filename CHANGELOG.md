@@ -124,10 +124,11 @@
 
 #### Rerouting
 
+* `RouteOptions` no longer conforms to `NSCopying`. Use `JSONEncoder` and `JSONDecoder` to get a copy of the `RouteOptions` object round-tripped through JSON. ([#3484](https://github.com/mapbox/mapbox-navigation-ios/pull/3484))
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)` method, which is called each time the user arrives at a waypoint. By default, this method returns true and prevents rerouting upon arriving. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
 * Renamed `RouteOptions.without(waypoint:)` to `RouteOptions.without(_:)`. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
 * Rerouting now uses a snapped location instead of a raw location from Core Location. ([#3361](https://github.com/mapbox/mapbox-navigation-ios/pull/3361))
-* Fixed an issue where a subclass of `NavigationRouteOptions` would turn into an ordinary `RouteOptions` when rerouting the user. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192))
+* Fixed an issue where a subclass of `NavigationRouteOptions` would turn into an ordinary `RouteOptions` when rerouting the user. ([#3192](https://github.com/mapbox/mapbox-navigation-ios/pull/3192), [#3484](https://github.com/mapbox/mapbox-navigation-ios/pull/3484))
 * Fixed an issue where the `RouteController.indexedRouteResponse` property would remain unchanged after the user is rerouted. ([#3344](https://github.com/mapbox/mapbox-navigation-ios/pull/3344]))
 * Fixed an issue where the `IndexedRouteResponse.routeIndex` of the `NavigationService.indexedRouteResponse` property would reset to zero after the user is rerouted. ([#3345](https://github.com/mapbox/mapbox-navigation-ios/pull/3345]))
 * Fixed an issue where the user would be rerouted even if `NavigationViewControllerDelegate.navigationViewController(_:shouldRerouteFrom:)` returned `false`. To implement reroute after arrival behavior, return `true` from this method and `false` from `NavigationViewControllerDelegate.navigationViewController(_:shouldPreventReroutesWhenArrivingAt:)`, then set `NavigationViewController.showsEndOfRouteFeedback` to `false`. ([#3195](https://github.com/mapbox/mapbox-navigation-ios/pull/3195))
