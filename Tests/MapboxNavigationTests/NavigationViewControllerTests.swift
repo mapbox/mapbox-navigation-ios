@@ -73,6 +73,7 @@ class NavigationViewControllerTests: TestCase {
             UNUserNotificationCenter.replaceWithMock()
 
             let fakeService = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, locationSource: NavigationLocationManagerStub(), simulating: .never)
+            fakeService.waitUnitInitialized()
             let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
             let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
             let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
@@ -117,7 +118,6 @@ class NavigationViewControllerTests: TestCase {
         newRoute = nil
         newRouteResponse = nil
         dependencies = nil
-        Navigator._recreateNavigator()
         UNUserNotificationCenter.removeMock()
     }
     

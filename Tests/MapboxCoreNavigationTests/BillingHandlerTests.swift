@@ -280,7 +280,7 @@ final class BillingHandlerUnitTests: TestCase {
             XCTFail("Updated on paused session isn't allowed")
         }
 
-        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay")
+        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: locations)
         locationManager.startDate = Date()
 

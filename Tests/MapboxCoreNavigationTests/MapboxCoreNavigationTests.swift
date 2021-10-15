@@ -83,40 +83,31 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testDepart() {
+        let coordinates = route.legs[0].steps[0].shape!.coordinates
+        let locationManager = ReplayLocationManager(locations: coordinates.map { CLLocation(coordinate: $0) })
+        locationManager.speedMultiplier = 10
+
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              directions: directions,
+                                             locationSource: locationManager,
                                              simulating: .never)
-        
-        // Coordinates from first step
-        let coordinates = route.legs[0].steps[0].shape!.coordinates
-        let now = Date()
-        let locations = coordinates.enumerated().map {
-            CLLocation(coordinate: $0.element,
-                       altitude: -1,
-                       horizontalAccuracy: 10,
-                       verticalAccuracy: -1,
-                       course: -1,
-                       speed: 10,
-                       timestamp: now + $0.offset)
-        }
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: navigation.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
             
             return routeProgress != nil && routeProgress?.currentLegProgress.userHasArrivedAtWaypoint == false
         }
-        
+
+        let replayFinished = expectation(description: "Replay finished")
+        locationManager.onReplayLoopCompleted = { _ in
+            replayFinished.fulfill()
+            return false
+        }
+        locationManager.locations.shiftToPresent()
         navigation.start()
-        
-        for location in locations {
-            navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
-        }
-        
-        waitForExpectations(timeout: waitForInterval) { (error) in
-            XCTAssertNil(error)
-        }
+        waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
     }
     
     func testNewStep() {
@@ -129,16 +120,14 @@ class MapboxCoreNavigationTests: TestCase {
         }
         
         XCTAssertEqual(coordinates.count, 10, "Incorrect coordinates count.")
-        let locationManager = ReplayLocationManager(locations: coordinates
-                                                        .map { CLLocation(coordinate: $0) }
-                                                        .shiftedToPresent())
+        let locationManager = ReplayLocationManager(locations: coordinates.map { CLLocation(coordinate: $0) })
         let navigationService = MapboxNavigationService(routeResponse: response,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
                                                         directions: directions,
                                                         locationSource: locationManager,
                                                         simulating: .never)
-        
+        navigationService.waitUnitInitialized()
         var receivedSpokenInstructions: [String] = []
         
         let spokenInstructionExpectation = self.expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
@@ -156,13 +145,14 @@ class MapboxCoreNavigationTests: TestCase {
             return routeProgress?.currentLegProgress.stepIndex == 1
         }
 
-        locationManager.startDate = Date()
-        locationManager.speedMultiplier = 10
         let replayFinished = expectation(description: "Replay finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.onReplayLoopCompleted = { (_: ReplayLocationManager) -> Bool in
             replayFinished.fulfill()
             return false
         }
+        locationManager.startDate = Date()
+        locationManager.speedMultiplier = 10
+        locationManager.locations.shiftToPresent()
         navigationService.start()
         wait(for: [replayFinished, spokenInstructionExpectation], timeout: locationManager.expectedReplayTime)
 

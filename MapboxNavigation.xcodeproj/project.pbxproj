@@ -379,6 +379,7 @@
 		E20F43C326BBD0A600346E71 /* RouterDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */; };
 		E23A76C62715E76A0098C23C /* ReplayLocationManager+TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */; };
 		E23D8B6B269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */; };
+		E25D0C162719BC4D00A98589 /* NavigationService++.swift in Sources */ = {isa = PBXBuildFile; fileRef = E25D0C152719BC4D00A98589 /* NavigationService++.swift */; };
 		E26AB4FD269F7BCA00FD756B /* TestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = E26AB4FC269F7BCA00FD756B /* TestCase.swift */; };
 		E2805A5826CB994500165DB9 /* NSLock+MapboxInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2805A5726CB994500165DB9 /* NSLock+MapboxInternal.swift */; };
 		E2814D982693412E000AD987 /* BillingHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2814D972693412E000AD987 /* BillingHandlerTests.swift */; };
@@ -978,6 +979,7 @@
 		E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterDelegateSpy.swift; sourceTree = "<group>"; };
 		E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ReplayLocationManager+TestSupport.swift"; sourceTree = "<group>"; };
 		E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TilesetDescriptorFactoryTests.swift; sourceTree = "<group>"; };
+		E25D0C152719BC4D00A98589 /* NavigationService++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationService++.swift"; sourceTree = "<group>"; };
 		E26AB4FC269F7BCA00FD756B /* TestCase.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCase.swift; sourceTree = "<group>"; };
 		E27A21F22654FB6800AA935F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E27A21FD265672D500AA935F /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1595,6 +1597,7 @@
 				E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */,
 				E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */,
 				E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */,
+				E25D0C152719BC4D00A98589 /* NavigationService++.swift */,
 			);
 			name = TestHelper;
 			path = Sources/TestHelper;
@@ -2595,6 +2598,7 @@
 			files = (
 				B47C1B62261FD3BD0078546C /* DummyURLSessionDataTask.swift in Sources */,
 				E20E3AC526C50AC6002E13EE /* BillingServiceMock.swift in Sources */,
+				E25D0C162719BC4D00A98589 /* NavigationService++.swift in Sources */,
 				E2C9D8A7268DCB7B005D8955 /* XCTestCase++.swift in Sources */,
 				E26AB4FD269F7BCA00FD756B /* TestCase.swift in Sources */,
 				B47C1B7D261FD3D50078546C /* NavigationEventsManagerTestDoubles.swift in Sources */,

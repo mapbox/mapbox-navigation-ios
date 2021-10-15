@@ -85,6 +85,7 @@ open class ReplayLocationManager: NavigationLocationManager {
         guard let startDate = startDate else { return }
 
         let location = locations[currentIndex]
+
         synthesizedLocation = location
         delegate?.locationManager?(self, didUpdateLocations: [location])
         onTick?(currentIndex, location)

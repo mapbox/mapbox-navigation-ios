@@ -176,4 +176,8 @@ extension Array where Element == CLLocation {
         
         return locations.map { CLLocation($0) }
     }
+
+    public mutating func shiftToPresent() {
+        self = shiftedToPresent()
+    }
 }

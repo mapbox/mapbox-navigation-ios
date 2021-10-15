@@ -31,6 +31,7 @@ class NavigationServiceTests: TestCase {
                                                         locationSource: locationSource,
                                                         eventsManagerType: NavigationEventsManagerSpy.self,
                                                         simulating: .never)
+        navigationService.waitUnitInitialized()
         navigationService.delegate = delegate
 
         let legProgress: RouteLegProgress = navigationService.router.routeProgress.currentLegProgress
@@ -632,7 +633,7 @@ class NavigationServiceTests: TestCase {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.startDate = Date()
-        locationManager.speedMultiplier = 100
+        locationManager.speedMultiplier = 50
 
         dependencies = createDependencies(locationSource: locationManager)
 
@@ -699,6 +700,7 @@ class NavigationServiceTests: TestCase {
                                               routeOptions: options,
                                               directions: directions,
                                               locationSource: locationManager)
+        service.waitUnitInitialized()
         service.delegate = delegate
         let router = service.router
 

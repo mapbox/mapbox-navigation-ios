@@ -142,13 +142,21 @@ class SpeechSynthesizersControllerTests: TestCase {
     }
     
     func testMapboxSpeechSynthesizer() {
-        
+        let locationManager = ReplayLocationManager(locations: [
+            CLLocation(coordinate: .init(latitude: 0, longitude: 0)),
+            CLLocation(coordinate: .init(latitude: 0.1, longitude: 0.1)),
+        ])
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
         let sut = MapboxSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: routeOptions, simulating: .always)
+        let dummyService = MapboxNavigationService(routeResponse: routeResponse,
+                                                   routeIndex: 0,
+                                                   routeOptions: routeOptions,
+                                                   locationSource: locationManager,
+                                                   simulating: .always)
         let routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: sut)
+
         XCTAssertNotNil(routeController)
 
         dummyService.start()
