@@ -11,6 +11,8 @@ extension RoadGraph {
      During active turn-by-turn navigation, the user-selected route and its metadata influence the path of the electronic horizon determined by `RouteController`. During passive navigation (free-driving), no route is actively selected, so `PassiveLocationManager` will determine the most probable path from the vehicle’s current location. You can receive notifications about changes in the current state of the electronic horizon by observing the `Notification.Name.electronicHorizonDidUpdatePosition`, `Notification.Name.electronicHorizonDidEnterRoadObject`, and `Notification.Name.electronicHorizonDidExitRoadObject` notifications.
 
      Use a `RoadGraph` object to get an edge with a given identifier.
+     
+     Note: The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
      */
     public struct Edge {
         /**

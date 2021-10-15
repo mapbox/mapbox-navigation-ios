@@ -150,6 +150,7 @@
 * Added the `RouteController.roadObjectMatcher` and `PassiveLocationManager.roadObjectMatcher` properties for creating user-defined road objects by matching location primitives to the road graph. ([#3004](https://github.com/mapbox/mapbox-navigation-ios/pull/3004))
 * Removed the `Alert` enumeration and the `RouteAlert.alert`, `RouteAlert.distance`, `RouteAlert.length`, `RouteAlert.beginCoordinate`, `RouteAlert.endCoordinate`, `RouteAlert.beginSegmentIndex`, and `RouteAlert.endSegmentIndex` properties in favor of a consolidated `RouteAlerts.roadObject` property. ([#2991](https://github.com/mapbox/mapbox-navigation-ios/pull/2991))
 * Added the `RouteController.startUpdatingElectronicHorizon(with:)`, `RouteController.stopUpdatingElectronicHorizon()`, `PassiveLocationManager.startUpdatingElectronicHorizon(with:)` and `PassiveLocationManager.stopUpdatingElectronicHorizon()` methods for managing electronic horizon updates. By default electronic horizon updates are disabled. ([#3475](https://github.com/mapbox/mapbox-navigation-ios/pull/3475))
+* Note: The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
 
 ### CarPlay
 
