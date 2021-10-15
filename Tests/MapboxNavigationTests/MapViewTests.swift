@@ -1,5 +1,4 @@
 import XCTest
-import Nimble
 import MapboxMaps
 @testable import MapboxNavigation
 import TestHelper
@@ -250,12 +249,8 @@ class MapViewTests: TestCase {
         // Simplified Chinese is broken: https://github.com/mapbox/mapbox-maps-ios/issues/652
         mapView.localizeLabels(into: Locale(identifier: "zh-Hans-CN"))
         assert(roadLabelProperty: "name_en", placeLabelProperty: "name_zh")
-
-#if arch(x86_64)
-        // https://github.com/mapbox/mapbox-maps-ios/issues/655
-        expect { mapView.localizeLabels(into: Locale(identifier: "tlh")) }
-            .to(throwAssertion(), description: "Localization into Klingon should not be supported. 🖖")
-#endif
+        
+        XCTAssertNoThrow(mapView.localizeLabels(into: Locale(identifier: "tlh")))
     }
     
     func testPreferredMapboxStreetsLocale() {
