@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## main
+
+### Packaging
+
+* MapboxCoreNavigation now depends on [MapboxNavigationNative v78._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/78.0.0). ([#3488](https://github.com/mapbox/mapbox-navigation-ios/pull/3488))
+
 ## v2.0.0
 
 ### Packaging
