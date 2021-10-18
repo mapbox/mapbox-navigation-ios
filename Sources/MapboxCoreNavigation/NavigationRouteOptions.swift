@@ -23,10 +23,12 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
             return $0
         }, profileIdentifier: profileIdentifier)
         includesAlternativeRoutes = true
-        if profileIdentifier == .walking {
-            attributeOptions = [.numericCongestionLevel, .expectedTravelTime]
+        attributeOptions = [.expectedTravelTime, .maximumSpeedLimit]
+        if profileIdentifier == .cycling {
+            // https://github.com/mapbox/mapbox-navigation-ios/issues/3495
+            attributeOptions.update(with: .congestionLevel)
         } else {
-            attributeOptions = [.numericCongestionLevel, .expectedTravelTime, .maximumSpeedLimit]
+            attributeOptions.update(with: .numericCongestionLevel)
         }
         includesExitRoundaboutManeuver = true
         if profileIdentifier == .automobileAvoidingTraffic {

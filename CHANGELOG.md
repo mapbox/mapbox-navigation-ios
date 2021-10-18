@@ -201,6 +201,7 @@
 * Fixed an issue where `UIApplication.shared.isIdleTimerDisabled` was not properly set in some cases. ([#3245](https://github.com/mapbox/mapbox-navigation-ios/pull/3245))
 * Fixed an issue where `LegacyRouteController` could not correctly handle arrival to the intermediate waypoint of a multi leg route. ([#3483](https://github.com/mapbox/mapbox-navigation-ios/pull/3483))
 * Added the `Notification.Name.navigationServiceSimulationDidChange` to detect when the navigation service changes the simulating status, including `MapboxNavigationService.NotificationUserInfoKey.simulationStateKey` and `MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey`. ([#3393](https://github.com/mapbox/mapbox-navigation-ios/pull/3393)).
+* By default, `NavigationRouteOptions` requests `AttributeOptions.maximumSpeedLimit` attributes along the route with the `DirectionsProfileIdentifier.walking` profile as with other profiles. ([#3496](https://github.com/mapbox/mapbox-navigation-ios/pull/3496))
 
 ## v1.4.1
 
