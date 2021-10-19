@@ -54,6 +54,7 @@
 * Changed the `NavigationViewController.pendingCamera` property’s type from `MGLMapCamera` to `CameraOptions`. ([#2808](https://github.com/mapbox/mapbox-navigation-ios/pull/2808))
 * Renamed the `CourseUpdatable.update(location:pitch:direction:animated:tracksUserCourse:)` method to `CourseUpdatable.update(location:pitch:direction:animated:navigationCameraState:)`. ([#2826](https://github.com/mapbox/mapbox-navigation-ios/pull/2826))
 * Eliminated redundant camera animations to conserve power. ([#3155](https://github.com/mapbox/mapbox-navigation-ios/pull/3155), [#3172](https://github.com/mapbox/mapbox-navigation-ios/pull/3172))
+* Fixed the camera shaking in mobile and CarPlay during active navigation in simulation mode. ([#3393](https://github.com/mapbox/mapbox-navigation-ios/pull/3393))
 
 #### User location indicator
 
@@ -205,6 +206,7 @@
 * Fixed a thread-safety issue in `UnimplementedLogging` protocol implementation. ([#3024](https://github.com/mapbox/mapbox-navigation-ios/pull/3024))
 * Fixed an issue where `UIApplication.shared.isIdleTimerDisabled` was not properly set in some cases. ([#3245](https://github.com/mapbox/mapbox-navigation-ios/pull/3245))
 * Fixed an issue where `LegacyRouteController` could not correctly handle arrival to the intermediate waypoint of a multi leg route. ([#3483](https://github.com/mapbox/mapbox-navigation-ios/pull/3483))
+* Added the `Notification.Name.navigationServiceSimulationDidChange` to detect when the navigation service changes the simulating status, including `MapboxNavigationService.NotificationUserInfoKey.simulationStateKey` and `MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey`. ([#3393](https://github.com/mapbox/mapbox-navigation-ios/pull/3393)).
 
 ## v1.4.1
 
