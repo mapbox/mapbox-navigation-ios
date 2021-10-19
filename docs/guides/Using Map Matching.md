@@ -22,14 +22,15 @@ It is up to you to listen in on reroutes and:
 
 1. Fetch a new route from your server.
 1. Make a map matching request against the Mapbox Map Matching appropriate.
-1. Update the `Router` with a the new route (covered below).
+1. Update the `Router` with the new route response (covered below).
 
 ### Update the Router
 
-Once you have a fresh route after rerouting, you need to tell the UI to update according to this new route.
+Once you have a fresh route response after rerouting, you need to tell the UI to update according to this new route reponse.
 
 ```
-yourNavigationViewController.navigationService.router.updateRoute(with: (route, 0), routeOptions: nil, completion: { success in 
+let indexedRouteResponse = IndexedRouteResponse(routeResponse: response, routeIndex: 0)
+yourNavigationViewController.navigationService.router.updateRoute(with: indexedRouteResponse, routeOptions: nil, completion: { success in 
 })
 ```
 
