@@ -26,7 +26,7 @@ It is up to you to listen in on reroutes and:
 
 ### Update the Router
 
-Once you have a fresh route response after rerouting, you need to tell the UI to update according to this new route reponse.
+Once you have a fresh route response after rerouting, you need to tell the UI to update according to this new route response.
 
 ```
 let indexedRouteResponse = IndexedRouteResponse(routeResponse: response, routeIndex: 0)
