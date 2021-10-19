@@ -533,7 +533,6 @@ open class CarPlayNavigationViewController: UIViewController {
         guard let simulationState = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulationStateKey] as? SimulationState,
               let simulatedSpeedMultiplier = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey] as? Double
               else { return }
-        
 
         switch simulationState {
         case .willBeginSimulation:
