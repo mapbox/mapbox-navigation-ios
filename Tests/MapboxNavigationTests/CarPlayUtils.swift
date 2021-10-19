@@ -82,8 +82,6 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
-        XCTAssertFalse(navigationInitiated)
-        navigationInitiated = true
         currentService = service
     }
     
@@ -98,6 +96,8 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        XCTAssertFalse(navigationInitiated)
+        navigationInitiated = true
         XCTAssertTrue(navigationInitiated)
     }
 }

@@ -594,6 +594,12 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         return bottomBanner
     }
     
+    func setUpSimulatedLocationProvider() {
+        let simulatedLocationManager = SimulatedLocationManager(routeProgress: navigationService.routeProgress)
+        simulatedLocationManager.speedMultiplier = navigationService.simulationSpeedMultiplier
+        navigationMapView?.mapView.location.overrideLocationProvider(with: NavigationLocationProvider(locationManager: simulatedLocationManager))
+    }
+    
     func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((NavigationViewController, UIViewController) -> [NSLayoutConstraint])?) {
         child.willMove(toParent: self)
         addChild(child)
@@ -923,29 +929,27 @@ extension NavigationViewController: NavigationServiceDelegate {
         for component in navigationComponents {
             component.navigationService(service, willBeginSimulating: progress, becauseOf: reason)
         }
-        navigationMapView?.simulatesLocation = true
+        navigationMapView?.storeLocationProviderBeforeSimulation()
     }
     
     public func navigationService(_ service: NavigationService, didBeginSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         for component in navigationComponents {
             component.navigationService(service, didBeginSimulating: progress, becauseOf: reason)
         }
-        let simulatedLocationProvider = NavigationLocationProvider(locationManager: SimulatedLocationManager(routeProgress: progress))
-        navigationMapView?.mapView.location.overrideLocationProvider(with: simulatedLocationProvider)
+        setUpSimulatedLocationProvider()
     }
     
     public func navigationService(_ service: NavigationService, willEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         for component in navigationComponents {
             component.navigationService(service, willEndSimulating: progress, becauseOf: reason)
         }
-        navigationMapView?.simulatesLocation = false
+        navigationMapView?.useStoredLocationProvider()
     }
     
     public func navigationService(_ service: NavigationService, didEndSimulating progress: RouteProgress, becauseOf reason: SimulationIntent) {
         for component in navigationComponents {
             component.navigationService(service, didEndSimulating: progress, becauseOf: reason)
         }
-        navigationMapView?.mapView.location.overrideLocationProvider(with: AppleLocationProvider())
     }
     
     public func navigationService(_ service: NavigationService, shouldPreventReroutesWhenArrivingAt waypoint: Waypoint) -> Bool {
@@ -1030,6 +1034,7 @@ extension NavigationViewController {
         statusView.showSimulationStatus(speed: displayValue)
 
         navigationService.simulationSpeedMultiplier = Double(displayValue)
+        setUpSimulatedLocationProvider()
     }
 }
 

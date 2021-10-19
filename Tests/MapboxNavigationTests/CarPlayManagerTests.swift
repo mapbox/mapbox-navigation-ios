@@ -367,6 +367,7 @@ class CarPlayManagerSpec: QuickSpec {
 
                 //simulate starting a fake trip
                 manager!.mapTemplate(fakeTemplate, startedTrip: fakeTrip, using: fakeRouteChoice)
+                _ = manager!.carPlayNavigationViewController!.view
                 let service = delegate!.currentService! as! MapboxNavigationService
                 service.start()
             }
