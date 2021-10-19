@@ -86,8 +86,10 @@ extension AppDelegate: CarPlayManagerDelegate {
                                        simulating: desiredSimulationMode)
     }
     
-    func carPlayManager(_ carPlayManager: CarPlayManager, didBeginNavigationWith service: NavigationService) {
-        currentAppRootViewController?.beginNavigationWithCarPlay(navigationService: service)
+    func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
+        if let service = navigationViewController.navigationService {
+            currentAppRootViewController?.beginNavigationWithCarPlay(navigationService: service)
+        }
         carPlayManager.carPlayNavigationViewController?.compassView.isHidden = false
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.

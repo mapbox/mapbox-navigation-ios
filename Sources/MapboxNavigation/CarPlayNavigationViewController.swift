@@ -348,6 +348,7 @@ open class CarPlayNavigationViewController: UIViewController {
         observeNotifications(navigationService)
         updateManeuvers(navigationService.routeProgress)
         navigationService.start()
+        carPlayManager.delegate?.carPlayManager(carPlayManager, didBeginNavigationWith: navigationService)
         currentLegIndexMapped = navigationService.router.routeProgress.legIndex
         navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation
         

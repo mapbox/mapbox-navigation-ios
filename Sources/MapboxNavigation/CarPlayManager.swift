@@ -638,7 +638,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         carPlayMapViewController.present(carPlayNavigationViewController, animated: true) { [weak self] in
             guard let self = self else { return }
-            self.delegate?.carPlayManager(self, didBeginNavigationWith: navigationService)
             self.delegate?.carPlayManager(self, didPresent: carPlayNavigationViewController)
         }
         
