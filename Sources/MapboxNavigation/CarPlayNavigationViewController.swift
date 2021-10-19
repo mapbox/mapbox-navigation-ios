@@ -348,7 +348,9 @@ open class CarPlayNavigationViewController: UIViewController {
         observeNotifications(navigationService)
         updateManeuvers(navigationService.routeProgress)
         navigationService.start()
+        carPlayManager.delegate?.carPlayManager(carPlayManager, didBeginNavigationWith: navigationService)
         currentLegIndexMapped = navigationService.router.routeProgress.legIndex
+        navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation
         
         updateTripEstimateStyle(traitCollection.userInterfaceStyle)
     }
@@ -420,6 +422,11 @@ open class CarPlayNavigationViewController: UIViewController {
                                                selector: #selector(visualInstructionDidChange(_:)),
                                                name: .routeControllerDidPassVisualInstructionPoint,
                                                object: service.router)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(simulationStateDidChange(_:)),
+                                               name: .navigationServiceSimulationDidChange,
+                                               object: service)
     }
     
     func suspendNotifications() {
@@ -437,6 +444,10 @@ open class CarPlayNavigationViewController: UIViewController {
         
         NotificationCenter.default.removeObserver(self,
                                                   name: .routeControllerDidPassVisualInstructionPoint,
+                                                  object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .navigationServiceSimulationDidChange,
                                                   object: nil)
     }
     
@@ -516,6 +527,37 @@ open class CarPlayNavigationViewController: UIViewController {
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: progress)
             navigationMapView?.travelAlongRouteLine(to: coordinate)
         }
+    }
+    
+    @objc func simulationStateDidChange(_ notification: NSNotification) {
+        guard let simulationState = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulationStateKey] as? SimulationState,
+              let simulatedSpeedMultiplier = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey] as? Double
+              else { return }
+
+        switch simulationState {
+        case .willBeginSimulation:
+            navigationMapView?.storeLocationProviderBeforeSimulation()
+        case .didBeginSimulation:
+            setUpSimulatedLocationProvider(routeProgress: navigationService.routeProgress, speedMultiplier: simulatedSpeedMultiplier)
+        case .inSimulation:
+            if let simulatesLocation = navigationMapView?.simulatesLocation, !simulatesLocation {
+                navigationMapView?.storeLocationProviderBeforeSimulation()
+            }
+            setUpSimulatedLocationProvider(routeProgress: navigationService.routeProgress, speedMultiplier: simulatedSpeedMultiplier)
+        case .willEndSimulation:
+            navigationMapView?.useStoredLocationProvider()
+        case .didEndSimulation: break
+        case .notInSimulation:
+            if let simulatesLocation = navigationMapView?.simulatesLocation, simulatesLocation {
+                navigationMapView?.useStoredLocationProvider()
+            }
+        }
+    }
+    
+    func setUpSimulatedLocationProvider(routeProgress: RouteProgress, speedMultiplier: Double) {
+        let simulatedLocationManager = SimulatedLocationManager(routeProgress: routeProgress)
+        simulatedLocationManager.speedMultiplier = speedMultiplier
+        navigationMapView?.mapView.location.overrideLocationProvider(with: NavigationLocationProvider(locationManager: simulatedLocationManager))
     }
     
     func updateRouteOnMap() {

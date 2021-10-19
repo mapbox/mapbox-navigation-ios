@@ -638,7 +638,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
         carPlayMapViewController.present(carPlayNavigationViewController, animated: true) { [weak self] in
             guard let self = self else { return }
-            self.delegate?.carPlayManager(self, didBeginNavigationWith: navigationService)
             self.delegate?.carPlayManager(self, didPresent: carPlayNavigationViewController)
         }
         
@@ -857,6 +856,8 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         if let passiveLocationProvider = navigationMapView?.mapView.location.locationProvider as? PassiveLocationProvider {
             passiveLocationProvider.locationManager.resumeTripSession()
         }
+        
+        self.carPlayNavigationViewController = nil
         delegate?.carPlayManagerDidEndNavigation(self)
     }
     
