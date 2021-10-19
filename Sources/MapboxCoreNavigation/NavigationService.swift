@@ -145,7 +145,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
             _simulationSpeedMultiplier = newValue
             simulatedLocationSource?.speedMultiplier = newValue
             let simulationState: SimulationState = isSimulating ? .inSimulation : .notInSimulation
-            announceSimulationDidChange(simulationState: simulationState)
+            announceSimulationDidChange(simulationState)
         }
     }
     
@@ -156,12 +156,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     private func simulate(intent: SimulationIntent = .manual) {
         guard !isSimulating else {
-            announceSimulationDidChange(simulationState: .inSimulation)
+            announceSimulationDidChange(.inSimulation)
             return
         }
         let progress = router.routeProgress
         delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
-        announceSimulationDidChange(simulationState: .willBeginSimulation)
+        announceSimulationDidChange(.willBeginSimulation)
         
         simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
         simulatedLocationSource?.delegate = self
@@ -169,27 +169,27 @@ public class MapboxNavigationService: NSObject, NavigationService {
         simulatedLocationSource?.startUpdatingLocation()
         simulatedLocationSource?.startUpdatingHeading()
         delegate?.navigationService(self, didBeginSimulating: progress, becauseOf: intent)
-        announceSimulationDidChange(simulationState: .didBeginSimulation)
+        announceSimulationDidChange(.didBeginSimulation)
     }
     
     private func endSimulation(intent: SimulationIntent = .manual) {
         guard isSimulating else {
-            announceSimulationDidChange(simulationState: .notInSimulation)
+            announceSimulationDidChange(.notInSimulation)
             return
         }
         let progress = router.routeProgress
         delegate?.navigationService(self, willEndSimulating: progress, becauseOf: intent)
-        announceSimulationDidChange(simulationState: .willEndSimulation)
+        announceSimulationDidChange(.willEndSimulation)
         
         simulatedLocationSource?.stopUpdatingLocation()
         simulatedLocationSource?.stopUpdatingHeading()
         simulatedLocationSource?.delegate = nil
         simulatedLocationSource = nil
         delegate?.navigationService(self, didEndSimulating: progress, becauseOf: intent)
-        announceSimulationDidChange(simulationState: .didEndSimulation)
+        announceSimulationDidChange(.didEndSimulation)
     }
 
-    private func announceSimulationDidChange(simulationState: SimulationState) {
+    private func announceSimulationDidChange(_ simulationState: SimulationState) {
         let userInfo: [NotificationUserInfoKey: Any] = [
             NotificationUserInfoKey.simulationStateKey: simulationState,
             NotificationUserInfoKey.simulatedSpeedMultiplierKey: _simulationSpeedMultiplier

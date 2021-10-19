@@ -370,7 +370,7 @@ extension MapboxNavigationService {
         
         /**
          A key in the user info dictionary of a `Notification.Name.navigationServiceSimulatingDidChange` notification. The corresponding value is a `Double` indicating the current simulated speed multiplier. */
-        public static let simulatedSpeedMultiplierKey: NotificationUserInfoKey = .init(rawValue: "simulatedSpeedMultiplie")
+        public static let simulatedSpeedMultiplierKey: NotificationUserInfoKey = .init(rawValue: "simulatedSpeedMultiplier")
     }
 }
 

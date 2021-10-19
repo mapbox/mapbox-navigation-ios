@@ -423,7 +423,7 @@ open class CarPlayNavigationViewController: UIViewController {
                                                object: service.router)
         
         NotificationCenter.default.addObserver(self,
-                                               selector: #selector(simulatingDidChange(_:)),
+                                               selector: #selector(simulationStateDidChange(_:)),
                                                name: .navigationServiceSimulationDidChange,
                                                object: service)
     }
@@ -528,7 +528,7 @@ open class CarPlayNavigationViewController: UIViewController {
         }
     }
     
-    @objc func simulatingDidChange(_ notification: NSNotification) {
+    @objc func simulationStateDidChange(_ notification: NSNotification) {
         guard let simulationState = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulationStateKey] as? SimulationState,
               let simulatedSpeedMultiplier = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey] as? Double
               else { return }
