@@ -232,10 +232,10 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-PodInstall/Pods-PodInstall-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/MapboxCoreNavigation/MapboxCoreNavigation.framework",
-				"${BUILT_PRODUCTS_DIR}/MapboxDirections-pre/MapboxDirections.framework",
+				"${BUILT_PRODUCTS_DIR}/MapboxDirections/MapboxDirections.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxMaps/MapboxMaps.framework",
 				"${BUILT_PRODUCTS_DIR}/MapboxNavigation/MapboxNavigation.framework",
-				"${BUILT_PRODUCTS_DIR}/MapboxSpeech-pre/MapboxSpeech.framework",
+				"${BUILT_PRODUCTS_DIR}/MapboxSpeech/MapboxSpeech.framework",
 				"${BUILT_PRODUCTS_DIR}/Polyline/Polyline.framework",
 				"${BUILT_PRODUCTS_DIR}/Solar-dev/Solar.framework",
 				"${BUILT_PRODUCTS_DIR}/Turf/Turf.framework",
