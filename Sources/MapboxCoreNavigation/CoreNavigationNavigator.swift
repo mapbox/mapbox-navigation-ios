@@ -94,19 +94,20 @@ class Navigator {
         
         roadObjectStore.native = navigator.roadObjectStore()
         roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
-        setupElectronicHorizonOptions()
         
         subscribeNavigator()
     }
     
     private func subscribeNavigator() {
-        navigator.setElectronicHorizonObserverFor(self)
+        if isSubscribedToElectronicHorizon {
+            startUpdatingElectronicHorizon(with: electronicHorizonOptions)
+        }
         navigator.addObserver(for: self)
         navigator.setFallbackVersionsObserverFor(self)
     }
     
     private func unsubscribeNavigator() {
-        navigator.setElectronicHorizonObserverFor(nil)
+        stopUpdatingElectronicHorizon()
         navigator.removeObserver(for: self)
         navigator.setFallbackVersionsObserverFor(nil)
     }
@@ -114,44 +115,13 @@ class Navigator {
     // MARK: History
     
     /**
-     Path to the directory where history file could be stored when `Navigator.writeHistory(completionHandler:)` is called.
+     Path to the directory where history file could be stored when `HistoryRecording.stopRecordingHistory(writingFileWith:)` is called.
      
      Setting `nil` disables history recording. Defaults to `nil`.
      */
     static var historyDirectoryURL: URL? = nil
     
     private(set) var historyRecorder: HistoryRecorderHandle?
-    
-    /**
-     Starts recording history for debugging purposes.
-     
-     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
-     */
-    func startRecordingHistory() {
-        historyRecorder?.startRecording()
-    }
-    
-    /**
-     Stops recording history, asynchronously writing any recorded history to a file.
-     
-     Upon completion, the completion handler is called with the URL to a file in the directory specified by `Navigator.historyDirectoryURL`.
-     
-     This method immediately stops recording history, though the file may take longer to prepare.
-     
-     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
-     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
-     
-     - parameter completionHandler: A closure to be executed when the history file is ready.
-     */
-    func stopRecordingHistory(writingFileWith completionHandler: @escaping (URL?) -> Void) {
-        historyRecorder?.stopRecording { (path) in
-            if let path = path {
-                completionHandler(URL(fileURLWithPath: path))
-            } else {
-                completionHandler(nil)
-            }
-        }
-    }
     
     // MARK: Electronic horizon
     
@@ -160,21 +130,30 @@ class Navigator {
     private(set) var roadObjectStore: RoadObjectStore
 
     private(set) var roadObjectMatcher: RoadObjectMatcher
-     
-    private func setupElectronicHorizonOptions() {
-        let nativeOptions = electronicHorizonOptions.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
-        
-        navigator.setElectronicHorizonOptionsFor(nativeOptions)
+    
+    private var isSubscribedToElectronicHorizon = false
+    
+    private var electronicHorizonOptions: ElectronicHorizonOptions? {
+        didSet {
+            let nativeOptions = electronicHorizonOptions.map(MapboxNavigationNative.ElectronicHorizonOptions.init)
+            navigator.setElectronicHorizonOptionsFor(nativeOptions)
+        }
+    }
+    
+    func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions?) {
+        isSubscribedToElectronicHorizon = true
+        navigator.setElectronicHorizonObserverFor(self)
+        electronicHorizonOptions = options
+    }
+    
+    func stopUpdatingElectronicHorizon() {
+        isSubscribedToElectronicHorizon = false
+        navigator.setElectronicHorizonObserverFor(nil)
+        electronicHorizonOptions = nil
     }
     
     deinit {
         unsubscribeNavigator()
-    }
-    
-    var electronicHorizonOptions: ElectronicHorizonOptions? {
-        didSet {
-            setupElectronicHorizonOptions()
-        }
     }
 }
 
@@ -269,6 +248,8 @@ extension Navigator: ElectronicHorizonObserver {
 
 extension Navigator: NavigatorObserver {
     func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
+        assert(Thread.isMainThread)
+
         let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
             .originKey: origin,
             .statusKey: status,

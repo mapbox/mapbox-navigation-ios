@@ -41,17 +41,13 @@ class CarPlayManagerTests: TestCase {
         simulateCarPlayConnection(manager!)
 
         let expectedEventName = MMEventTypeNavigationCarplayConnect
-        XCTAssertTrue(eventsManagerSpy!.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy!.hasFlushedEvent(with: expectedEventName))
-        XCTAssertEqual(eventsManagerSpy!.enqueuedEventCount(with: expectedEventName), 1)
-        XCTAssertEqual(eventsManagerSpy!.enqueuedEventCount(with: expectedEventName), 1)
     }
 
     func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
         simulateCarPlayDisconnection()
 
         let expectedEventName = MMEventTypeNavigationCarplayDisconnect
-        XCTAssertTrue(eventsManagerSpy!.hasEnqueuedEvent(with: expectedEventName))
         XCTAssertTrue(eventsManagerSpy!.hasFlushedEvent(with: expectedEventName))
     }
 

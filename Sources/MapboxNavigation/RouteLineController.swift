@@ -8,10 +8,7 @@ extension NavigationMapView {
     /// A component meant to assist displaying route line and related items like arrows, waypoints, annotations and other.
     class RouteOverlayController: NavigationComponent, NavigationComponentDelegate, LocationConsumer {
         
-        // MARK: - Properties
-        
         weak private(set) var navigationViewData: NavigationViewData!
-        var annotatesSpokenInstructions = false
         
         fileprivate var navigationMapView: NavigationMapView {
             return navigationViewData.navigationView.navigationMapView
@@ -21,38 +18,22 @@ extension NavigationMapView {
             navigationViewData.router
         }
         
-        var routeLineTracksTraversal: Bool {
-            get {
-                navigationMapView.routeLineTracksTraversal
-            }
-            set {
-                navigationMapView.routeLineTracksTraversal = newValue
-                if newValue {
-                    navigationMapView.mapView.location.addLocationConsumer(newConsumer: self)
-                } else {
-                    navigationMapView.mapView.location.removeLocationConsumer(consumer: self)
-                }
-            }
-        }
-        
-        private var currentLegIndexMapped = 0
-        private var currentStepIndexMapped = 0
-        
-        // MARK: - Lifecycle
-        
         init(_ navigationViewData: NavigationViewData) {
             self.navigationViewData = navigationViewData
         }
         
-        // MARK: - LocationConsumer method
+        // MARK: NavigationComponentDelegate implementation
         
-        internal func locationUpdate(newLocation: Location) {
-            if routeLineTracksTraversal {
-                navigationMapView.travelAlongRouteLine(to: newLocation.coordinate)
+        func navigationViewDidLoad(_ view: UIView) {
+            navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
+                self?.navigationMapView.localizeLabels()
+                self?.navigationMapView.mapView.showsTraffic = false
+                self?.showRouteIfNeeded()
+                
+                // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
+                // regarding building identification such highlighted building will disappear.
             }
         }
-        
-        // MARK: - Private methods
         
         private func showRouteIfNeeded() {
             guard navigationViewData.containerViewController.isViewLoaded else { return }
@@ -73,25 +54,12 @@ extension NavigationMapView {
             }
         }
         
-        private func updateMapOverlays(for routeProgress: RouteProgress) {
-            if routeProgress.currentLegProgress.followOnStep != nil {
-                navigationMapView.addArrow(route: routeProgress.route,
-                                           legIndex: routeProgress.legIndex,
-                                           stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
-            } else {
-                navigationMapView.removeArrow()
-            }
+        func navigationViewDidAppear(_ animated: Bool) {
+            currentLegIndexMapped = router.routeProgress.legIndex
+            currentStepIndexMapped = router.routeProgress.currentLegProgress.stepIndex
         }
         
-        // MARK: - NavigationComponent implementation
-        
-        func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
-            navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
-            if routeLineTracksTraversal {
-                navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-                navigationMapView.travelAlongRouteLine(to: router.location?.coordinate)
-            }
-        }
+        // MARK: NavigationComponent implementation
         
         func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
             currentStepIndexMapped = 0
@@ -146,22 +114,51 @@ extension NavigationMapView {
             }
         }
         
-        // MARK: - NavigationComponentDelegate implementation
-        
-        func navigationViewDidLoad(_ view: UIView) {
-            navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
-                self?.navigationMapView.localizeLabels()
-                self?.navigationMapView.mapView.showsTraffic = false
-                self?.showRouteIfNeeded()
-                
-                // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
-                // regarding building identification such highlighted building will disappear.
+        private func updateMapOverlays(for routeProgress: RouteProgress) {
+            if routeProgress.currentLegProgress.followOnStep != nil {
+                navigationMapView.addArrow(route: routeProgress.route,
+                                           legIndex: routeProgress.legIndex,
+                                           stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
+            } else {
+                navigationMapView.removeArrow()
             }
         }
         
-        func navigationViewDidAppear(_ animated: Bool) {
-            currentLegIndexMapped = router.routeProgress.legIndex
-            currentStepIndexMapped = router.routeProgress.currentLegProgress.stepIndex
+        // MARK: Annotations Overlay
+        
+        var annotatesSpokenInstructions = false
+        
+        private var currentLegIndexMapped = 0
+        private var currentStepIndexMapped = 0
+        
+        // MARK: Route Line Traversal Tracking
+        
+        var routeLineTracksTraversal: Bool {
+            get {
+                navigationMapView.routeLineTracksTraversal
+            }
+            set {
+                navigationMapView.routeLineTracksTraversal = newValue
+                if newValue {
+                    navigationMapView.mapView.location.addLocationConsumer(newConsumer: self)
+                } else {
+                    navigationMapView.mapView.location.removeLocationConsumer(consumer: self)
+                }
+            }
+        }
+        
+        internal func locationUpdate(newLocation: Location) {
+            if routeLineTracksTraversal {
+                navigationMapView.travelAlongRouteLine(to: newLocation.coordinate)
+            }
+        }
+        
+        func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
+            navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
+            if routeLineTracksTraversal {
+                navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+                navigationMapView.travelAlongRouteLine(to: router.location?.coordinate)
+            }
         }
     }
 }

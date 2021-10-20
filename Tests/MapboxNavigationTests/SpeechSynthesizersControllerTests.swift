@@ -61,6 +61,7 @@ class SpeechSynthesizersControllerTests: TestCase {
     }()
     
     override func setUp() {
+        super.setUp()
         synthesizers = [
             FailingSpeechSynthesizerMock(),
             FailingSpeechSynthesizerMock()
@@ -68,6 +69,7 @@ class SpeechSynthesizersControllerTests: TestCase {
     }
 
     override func tearDown() {
+        super.tearDown()
         synthesizers = []
         delegateErrorBlock = nil
         Navigator.shared.navigator.resetRideSession()

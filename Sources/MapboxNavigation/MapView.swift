@@ -71,12 +71,12 @@ extension MapView {
         
         for mapViewLayerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
             guard let sourceIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
-                                                                       property: "source") as? String,
+                                                                       property: "source").value as? String,
                   let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
-                                                                            property: "source-layer") as? String else { return false }
+                                                                            property: "source-layer").value as? String else { return false }
             
             if sourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
-                let visibility = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier, property: "visibility") as? String
+                let visibility = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier, property: "visibility").value as? String
                 
                 return visibility == "visible"
             }
@@ -97,9 +97,9 @@ extension MapView {
         
         for mapViewLayerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
             guard let sourceIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
-                                                                       property: "source") as? String,
+                                                                       property: "source").value as? String,
                   let sourceLayerIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
-                                                                            property: "source-layer") as? String else { return }
+                                                                            property: "source-layer").value as? String else { return }
             
             if sourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
                 let properties = [
@@ -174,7 +174,7 @@ extension MapView {
         
         for layer in mapboxMap.style.allLayerIdentifiers.reversed() {
             if !(layer.type.rawValue == "symbol") && !identifiers.contains(layer.id) {
-                let sourceLayer = mapboxMap.style.layerProperty(for: layer.id, property: "source-layer") as? String
+                let sourceLayer = mapboxMap.style.layerProperty(for: layer.id, property: "source-layer").value as? String
                 
                 if let sourceLayer = sourceLayer,
                    sourceLayer.isEmpty {
@@ -214,10 +214,10 @@ extension MapView {
         let localizableLayerIdentifiers = style.allLayerIdentifiers.lazy
             .filter { $0.type == .symbol }
             // We only know how to localize layers backed by the Mapbox Streets source.
-            .filter { style.layerProperty(for: $0.id, property: "source") as? String == mapboxStreetsSource.id }
+            .filter { style.layerProperty(for: $0.id, property: "source").value as? String == mapboxStreetsSource.id }
             // Road labels should match road signage, so they should not be localized.
             // TODO: Actively delocalize road labels into the “name” property: https://github.com/mapbox/mapbox-maps-ios/issues/653
-            .filter { style.layerProperty(for: $0.id, property: "source-layer") as? String != roadLabelSourceLayerIdentifier }
+            .filter { style.layerProperty(for: $0.id, property: "source-layer").value as? String != roadLabelSourceLayerIdentifier }
             .map { $0.id }
         try? style.localizeLabels(into: locale, forLayerIds: Array(localizableLayerIdentifiers))
     }

@@ -8,6 +8,7 @@ import MapboxMobileEvents
 import MapboxDirections
 import Polyline
 import Turf
+import os.log
 
 /**
  A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
@@ -26,6 +27,8 @@ open class RouteController: NSObject {
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
+
+    public static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "RouteController")
 
     private let sessionUUID: UUID = .init()
     
@@ -64,17 +67,11 @@ open class RouteController: NSObject {
     
     /**
      Details about the user’s progress along the current route, leg, and step.
+
+     To advance the route progress to next leg, use `RouteController.advanceLegIndex(completionHandler:)` method.
      */
-    public internal(set) var routeProgress: RouteProgress {
-        willSet {
-            resetObservation(for: newValue)
-        }
-        didSet {
-            updateNavigator(with: routeProgress)
-            updateObservation(for: routeProgress)
-        }
-    }
-    
+    public private(set) var routeProgress: RouteProgress
+
     /**
      The idealized user location. Snapped to the route line, if applicable, otherwise raw.
      - seeAlso: snappedLocation, rawLocation
@@ -135,6 +132,41 @@ open class RouteController: NSObject {
         }
     }
     
+    /**
+     Starts electronic horizon updates.
+
+     Pass `nil` to use the default configuration.
+     Updates will be delivered in `Notification.Name.electronicHorizonDidUpdatePosition` notification.
+     For more info, read the [Electronic Horizon Guide](https://docs.mapbox.com/ios/beta/navigation/guides/electronic-horizon/).
+
+     - parameter options: Options which will be used to configure electronic horizon updates.
+
+     - postcondition: To change electronic horizon options call this method again with new options.
+     
+     - note: The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
+     */
+    public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions? = nil) {
+        Navigator.shared.startUpdatingElectronicHorizon(with: options)
+    }
+
+    /**
+     Stops electronic horizon updates.
+     */
+    public func stopUpdatingElectronicHorizon() {
+        Navigator.shared.stopUpdatingElectronicHorizon()
+    }
+
+    func changeRouteProgress(_ routeProgress: RouteProgress,
+                             completion: @escaping (Bool) -> Void) {
+        updateNavigator(with: routeProgress) { [weak self] isSuccessful in
+            guard let self = self else { return }
+            if isSuccessful {
+                self.routeProgress = routeProgress
+            }
+            completion(isSuccessful)
+        }
+    }
+    
     // MARK: Controlling and Altering the Route
     
     public var reroutesProactively: Bool = true
@@ -182,22 +214,51 @@ open class RouteController: NSObject {
         }
     }
     
-    /// updateNavigator is used to pass the new progress model onto nav-native.
-    private func updateNavigator(with progress: RouteProgress) {
+    /**
+     Asynchronously updates NavNative navigator with the new `RouteProgress`.
+
+     - parameter progress: New route progress to apply to the navigator.
+     - parameter completion: A completion that will be called once the navigator is updated with a boolean indicating
+     whether the change was successful.
+     */
+    private func updateNavigator(with progress: RouteProgress,
+                                 completion: ((Bool) -> Void)?) {
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = progress.routeOptions
         guard let routeData = try? encoder.encode(progress.route),
-            let routeJSONString = String(data: routeData, encoding: .utf8) else {
-            return
+              let routeJSONString = String(data: routeData, encoding: .utf8) else {
+                  completion?(false)
+                  return
         }
 
-        let routeRequest = Directions().url(forCalculating: routeProgress.routeOptions).absoluteString
+        let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
         
         navigator.setRouteForRouteResponse(routeJSONString,
                                            route: 0,
-                                           leg: UInt32(routeProgress.legIndex),
+                                           leg: UInt32(progress.legIndex),
                                            routeRequest: routeRequest) { result in
-            // No-op
+            if result.isValue() {
+                if let routeInfo = result.value as? RouteInfo {
+                    os_log("Navigator updated to routeSequenceNumber = %{public}d",
+                           log: RouteController.log,
+                           type: .debug,
+                           routeInfo.routeSequenceNumber)
+                }
+                completion?(true)
+            }
+            else if result.isError() {
+                if let reason = result.error as? String {
+                    os_log("Failed to update navigator with reason: %{public}@",
+                           log: RouteController.log,
+                           type: .error,
+                           reason)
+                }
+                completion?(false)
+            }
+            else {
+                assertionFailure("Invalid Expected value: \(result)")
+                completion?(false)
+            }
         }
     }
     
@@ -229,11 +290,11 @@ open class RouteController: NSObject {
     }
     
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
+        assert(Thread.isMainThread)
+
         guard let userInfo = notification.userInfo,
               let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus else { return }
-        DispatchQueue.main.async { [weak self] in
-            self?.update(to: status)
-        }
+        update(to: status)
     }
 
     private func update(to status: NavigationStatus) {
@@ -241,11 +302,11 @@ open class RouteController: NSObject {
         // Notify observers if the step’s remaining distance has changed.
         update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
         
+        updateIndexes(status: status, progress: routeProgress)
+        updateRouteLegProgress(status: status)
         let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
             ?? DefaultBehavior.shouldRerouteFromLocation
         
-        updateIndexes(status: status, progress: routeProgress)
-        updateRouteLegProgress(status: status)
         updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
         updateRoadName(status: status)
@@ -261,13 +322,11 @@ open class RouteController: NSObject {
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
-        self.updateNavigator(with: self.routeProgress)
-        self.updateRouteLeg(to: self.routeProgress.legIndex)
+        updateNavigator(with: self.routeProgress, completion: nil)
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
-        self.updateNavigator(with: self.routeProgress)
-        self.updateRouteLeg(to: self.routeProgress.legIndex)
+        updateNavigator(with: self.routeProgress, completion: nil)
     }
     
     func updateIndexes(status: NavigationStatus, progress: RouteProgress) {
@@ -435,30 +494,14 @@ open class RouteController: NSObject {
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
-        updateNavigator(with: routeProgress)
-        updateObservation(for: routeProgress)
+        updateNavigator(with: routeProgress, completion: nil)
     }
     
     deinit {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
-        
-        resetObservation(for: routeProgress)
         unsubscribeNotifications()
     }
-    
-    func resetObservation(for progress: RouteProgress) {
-        progress.legIndexHandler = nil
-    }
-    
-    func updateObservation(for progress: RouteProgress) {
-        progress.legIndexHandler = { [weak self] (oldValue, newValue) in
-            guard newValue != oldValue else {
-                return
-            }
-            self?.updateRouteLeg(to: newValue)
-        }
-    }
-    
+
     private func subscribeNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(fallbackToOffline),
@@ -480,20 +523,6 @@ open class RouteController: NSObject {
     
     // MARK: Accessing Relevant Routing Data
     
-    /**
-     A custom configuration for electronic horizon observations.
-     
-     Set this property to `nil` to use the default configuration.
-     */
-    public var electronicHorizonOptions: ElectronicHorizonOptions? {
-        get {
-            Navigator.shared.electronicHorizonOptions
-        }
-        set {
-            Navigator.shared.electronicHorizonOptions = newValue
-        }
-    }
-    
     /// The road graph that is updated as the route controller tracks the user’s location.
     public var roadGraph: RoadGraph {
         return Navigator.shared.roadGraph
@@ -508,48 +537,9 @@ open class RouteController: NSObject {
     public var roadObjectMatcher: RoadObjectMatcher {
         return Navigator.shared.roadObjectMatcher
     }
-    
-    // MARK: Recording History to Diagnose Problems
-    
-    /**
-     Path to the directory where history could be stored when `RouteController.writeHistory(completionHandler:)` is called.
-     */
-    public static var historyDirectoryURL: URL? = nil {
-        didSet {
-            Navigator.historyDirectoryURL = historyDirectoryURL
-        }
-    }
-    
-    /**
-     Starts recording history for debugging purposes.
-     
-     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
-     */
-    public static func startRecordingHistory() {
-        Navigator.shared.startRecordingHistory()
-    }
-    
-    /**
-     A closure to be called when history writing ends.
-     
-     - parameter historyFileURL: A URL to the file that contains history data. This argument is `nil` if no history data has been written because history recording has not yet begun. Use the `startRecordingHistory()` method to begin recording before attempting to write a history file.
-     */
-    public typealias HistoryFileWritingCompletionHandler = (_ historyFileURL: URL?) -> Void
-    
-    /**
-     Stops recording history, asynchronously writing any recorded history to a file.
-     
-     Upon completion, the completion handler is called with the URL to a file in the directory specified by `RouteController.historyDirectoryURL`. The file contains details about the route controller’s activity that may be useful to include when reporting an issue to Mapbox.
-     
-     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
-     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
-     
-     - parameter completionHandler: A closure to be executed when the history file is ready.
-     */
-    public static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
-        Navigator.shared.stopRecordingHistory(writingFileWith: completionHandler)
-    }
 }
+
+extension RouteController: HistoryRecording { }
 
 extension RouteController: Router {
     
@@ -597,7 +587,7 @@ extension RouteController: Router {
             return userIsWithinRadiusOfDestination(location: location)
         }
         else {
-            let offRoute = status.routeState == .offRoute || status.routeState == .invalid
+            let offRoute = status.routeState == .offRoute
             return !offRoute
         }
     }
@@ -618,32 +608,38 @@ extension RouteController: Router {
         isRerouting = true
         
         calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
-            self?.isRerouting = false
-            
-            guard let strongSelf: RouteController = self else {
-                return
-            }
-            
+            guard let self = self else { return }
+
             switch result {
             case let .success(indexedResponse):
                 let response = indexedResponse.routeResponse
-                guard let route = response.routes?[indexedResponse.routeIndex] else { return }
-                guard case let .route(routeOptions) = response.options else { return } //TODO: Can a match hit this codepoint?
-                strongSelf.routeProgress = RouteProgress(route: route, options: routeOptions)
-                strongSelf.indexedRouteResponse = indexedResponse
-                strongSelf.announce(reroute: route, at: location, proactive: false)
-                
+                guard case let .route(routeOptions) = response.options else {
+                    //TODO: Can a match hit this codepoint?
+                    self.isRerouting = false; return
+                }
+                self.updateRoute(with: indexedResponse, routeOptions: routeOptions, isProactive: false) { success in
+                    self.isRerouting = false
+                }
             case let .failure(error):
-                strongSelf.delegate?.router(strongSelf, didFailToRerouteWith: error)
+                self.delegate?.router(self, didFailToRerouteWith: error)
                 NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
                     NotificationUserInfoKey.routingErrorKey: error,
                 ])
-                return
+                self.isRerouting = false
             }
         }
     }
 
-    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions?) {
+    public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                            routeOptions: RouteOptions?,
+                            completion: ((Bool) -> Void)?) {
+        updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, isProactive: false, completion: completion)
+    }
+
+    func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
+                     routeOptions: RouteOptions?,
+                     isProactive: Bool,
+                     completion: ((Bool) -> Void)?) {
         guard let routes = indexedRouteResponse.routeResponse.routes,
               routes.count > indexedRouteResponse.routeIndex else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
@@ -655,10 +651,14 @@ extension RouteController: Router {
         }
 
         let routeOptions = routeOptions ?? routeProgress.routeOptions
-        routeProgress = RouteProgress(route: route, options: routeOptions)
-        announce(reroute: route, at: location, proactive: false)
-        self.indexedRouteResponse = indexedRouteResponse
-        updateNavigator(with: routeProgress)
+        changeRouteProgress(RouteProgress(route: route, options: routeOptions)) { [weak self] success in
+            guard let self = self else { return }
+            if success {
+                self.announce(reroute: route, at: self.location, proactive: isProactive)
+                self.indexedRouteResponse = indexedRouteResponse
+            }
+            completion?(success)
+        }
     }
 
     private func shouldStartNewBillingSession(for newRoute: Route, routeOptions: RouteOptions?) -> Bool {

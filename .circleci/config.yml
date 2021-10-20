@@ -611,8 +611,12 @@ jobs:
             echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
             ./scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
             git checkout -- Sources
+            cp -a "$OUTPUT" /tmp/generated-docs
       - *save-cache-podmaster
       - *save-cache-gems
+      - store_artifacts:
+          path: /tmp/generated-docs
+          destination: docs
       - when:
           condition: << pipeline.git.tag >>
           steps:

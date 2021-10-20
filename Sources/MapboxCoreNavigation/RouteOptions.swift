@@ -27,27 +27,34 @@ extension RouteOptions {
         let subsequentWaypoints = reconstitutedWaypoints.dropFirst()
         return (legWaypoints, subsequentWaypoints.flatMap { $0 })
     }
-}
-
-extension RouteOptions: NSCopying {
-    open func copy(with zone: NSZone? = nil) -> Any {
-        do {
-            let encodedOptions = try JSONEncoder().encode(self)
-            return try JSONDecoder().decode(type(of: self), from: encodedOptions)
-        } catch {
-            preconditionFailure("Unable to copy \(type(of: self)) by round-tripping it through JSON: \(error)")
-        }
+    
+    /**
+     Returns a copy of the route options by roundtripping through JSON.
+     
+     - throws: An `EncodingError` or `DecodingError` if the route options could not be roundtripped through JSON.
+     */
+    func copy() throws -> Self {
+        // Work around <https://github.com/mapbox/mapbox-directions-swift/issues/564>.
+        let encodedOptions = try JSONEncoder().encode(self)
+        return try JSONDecoder().decode(type(of: self), from: encodedOptions)
     }
     
     /**
-     Returns a copy of RouteOptions without the specified waypoint.
+     Returns a copy of the route options without the specified waypoint.
+     
+     If the route options is unable to copy itself by round-tripping through JSON, this method mutates the receiver’s `waypoints` as a last resort.
      
      - parameter waypoint: the Waypoint to exclude.
      - returns: a copy of self excluding the specified waypoint.
      */
     public func without(_ waypoint: Waypoint) -> RouteOptions {
         let waypointsWithoutSpecified = waypoints.filter { $0 != waypoint }
-        let copy = self.copy() as! RouteOptions
+        let copy: RouteOptions
+        do {
+            copy = try self.copy()
+        } catch {
+            copy = self
+        }
         copy.waypoints = waypointsWithoutSpecified
         
         return copy

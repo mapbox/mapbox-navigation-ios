@@ -51,11 +51,17 @@ open class NavigationView: UIView {
         static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     }
     
-    lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
+    // MARK: Data Configuration
     
-    lazy var endOfRouteHideConstraint: NSLayoutConstraint? = self.endOfRouteView?.topAnchor.constraint(equalTo: self.bottomAnchor)
+    weak var delegate: NavigationViewDelegate? {
+        didSet {
+            updateDelegates()
+        }
+    }
     
-    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
+    private func updateDelegates() {
+        navigationMapView.delegate = delegate
+    }
     
     var tileStoreLocation: TileStoreConfiguration.Location? = .default
     private var _navigationMapView: NavigationMapView? = nil
@@ -71,6 +77,37 @@ open class NavigationView: UIView {
         
         return navigationMapView
     }()
+    
+    // MARK: End of Route UI
+    
+    lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
+    
+    lazy var endOfRouteHideConstraint: NSLayoutConstraint? = self.endOfRouteView?.topAnchor.constraint(equalTo: self.bottomAnchor)
+    
+    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
+    
+    var endOfRouteView: UIView? {
+        didSet {
+            if let active: [NSLayoutConstraint] = constraints(affecting: oldValue) {
+                NSLayoutConstraint.deactivate(active)
+            }
+            
+            oldValue?.removeFromSuperview()
+            if let eor = endOfRouteView { addSubview(eor) }
+            endOfRouteView?.translatesAutoresizingMaskIntoConstraints = false
+        }
+    }
+    
+    func constrainEndOfRoute() {
+        self.endOfRouteHideConstraint?.isActive = true
+        
+        endOfRouteView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
+        self.endOfRouteHeightConstraint?.isActive = true
+    }
+    
+    // MARK: Overlay Views
     
     lazy var floatingStackView: UIStackView = {
         let stackView = UIStackView(orientation: .vertical, autoLayout: true)
@@ -110,26 +147,22 @@ open class NavigationView: UIView {
     lazy var topBannerContainerView: BannerContainerView = .forAutoLayout()
     
     lazy var bottomBannerContainerView: BannerContainerView = .forAutoLayout()
-
-    weak var delegate: NavigationViewDelegate? {
-        didSet {
-            updateDelegates()
+    
+    func clearStackViews() {
+        let oldFloatingButtons: [UIView] = floatingStackView.subviews
+        for floatingButton in oldFloatingButtons {
+            floatingStackView.removeArrangedSubview(floatingButton)
+            floatingButton.removeFromSuperview()
         }
     }
     
-    var endOfRouteView: UIView? {
-        didSet {
-            if let active: [NSLayoutConstraint] = constraints(affecting: oldValue) {
-                NSLayoutConstraint.deactivate(active)
-            }
-            
-            oldValue?.removeFromSuperview()
-            if let eor = endOfRouteView { addSubview(eor) }
-            endOfRouteView?.translatesAutoresizingMaskIntoConstraints = false
+    func setupStackViews() {
+        if let buttons = floatingButtons {
+            floatingStackView.addArrangedSubviews(buttons)
         }
     }
     
-    // MARK: - Initialization methods
+    // MARK: Initialization methods
     
     convenience init(delegate: NavigationViewDelegate, frame: CGRect = .zero, tileStoreLocation: TileStoreConfiguration.Location? = .default, navigationMapView: NavigationMapView? = nil) {
         self.init(frame: frame, tileStoreLocation: tileStoreLocation, navigationMapView: navigationMapView)
@@ -162,20 +195,6 @@ open class NavigationView: UIView {
         setupConstraints()
     }
     
-    func clearStackViews() {
-        let oldFloatingButtons: [UIView] = floatingStackView.subviews
-        for floatingButton in oldFloatingButtons {
-            floatingStackView.removeArrangedSubview(floatingButton)
-            floatingButton.removeFromSuperview()
-        }
-    }
-    
-    func setupStackViews() {
-        if let buttons = floatingButtons {
-            floatingStackView.addArrangedSubviews(buttons)
-        }
-    }
-    
     func setupViews() {
         let children: [UIView] = [
             navigationMapView,
@@ -195,10 +214,6 @@ open class NavigationView: UIView {
         DayStyle().apply()
         [navigationMapView, topBannerContainerView, bottomBannerContainerView].forEach({ $0.prepareForInterfaceBuilder() })
         wayNameView.text = "Street Label"
-    }
-    
-    private func updateDelegates() {
-        navigationMapView.delegate = delegate
     }
 }
 
@@ -242,15 +257,6 @@ extension NavigationView {
             floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
             speedLimitView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
         }
-    }
-
-    func constrainEndOfRoute() {
-        self.endOfRouteHideConstraint?.isActive = true
-        
-        endOfRouteView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        
-        self.endOfRouteHeightConstraint?.isActive = true
     }
     
     func reinstallConstraints() {

@@ -9,7 +9,7 @@ extension NavigationMapView {
     /// A components, designed to help manage `NavigationMapView` ornaments logic.
     class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         
-        // MARK: - Properties
+        // MARK: Lifecycle Management
         
         weak var navigationViewData: NavigationViewData!
         weak var eventsManager: NavigationEventsManager!
@@ -21,46 +21,6 @@ extension NavigationMapView {
         fileprivate var navigationMapView: NavigationMapView {
             return navigationViewData.navigationView.navigationMapView
         }
-        
-        var detailedFeedbackEnabled: Bool = false
-        
-        var showsSpeedLimits: Bool = true {
-            didSet {
-                navigationView.speedLimitView.isAlwaysHidden = !showsSpeedLimits
-            }
-        }
-        
-        var floatingButtonsPosition: MapOrnamentPosition? {
-            get {
-                return navigationView.floatingButtonsPosition
-            }
-            set {
-                if let newPosition = newValue {
-                    navigationView.floatingButtonsPosition = newPosition
-                }
-            }
-        }
-        
-        var floatingButtons: [UIButton]? {
-            get {
-                return navigationView.floatingButtons
-            }
-            set {
-                navigationView.floatingButtons = newValue
-            }
-        }
-        
-        var reportButton: FloatingButton {
-            return navigationViewData.navigationView.reportButton
-        }
-        
-        typealias LabelRoadNameCompletionHandler = (_ defaultRoadNameAssigned: Bool) -> Void
-        
-        var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
-        
-        var roadNameFromStatus: String?
-        
-        // MARK: - Lifecycle
         
         init(_ navigationViewData: NavigationViewData, eventsManager: NavigationEventsManager) {
             self.navigationViewData = navigationViewData
@@ -89,50 +49,6 @@ extension NavigationMapView {
         
         @objc func orientationDidChange(_ notification: Notification) {
             updateMapViewOrnaments()
-        }
-        
-        @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
-            roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
-        }
-        
-        // MARK: - Methods
-        
-        @objc func toggleMute(_ sender: UIButton) {
-            sender.isSelected = !sender.isSelected
-            
-            let muted = sender.isSelected
-            NavigationSettings.shared.voiceMuted = muted
-        }
-        
-        @objc func feedback(_ sender: Any) {
-            let parent = navigationViewData.containerViewController
-            let feedbackViewController = FeedbackViewController(eventsManager: eventsManager)
-            feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
-            parent.present(feedbackViewController, animated: true)
-        }
-        
-        /**
-         Updates the current road name label to reflect the road on which the user is currently traveling.
-         
-         - parameter at: The user’s current location as provided by the system location management system. This has less priority then `snappedLocation` (see below) and is used only if method will attempt to resolve road name automatically.
-         - parameter suggestedName: The road name to put onto label. If not provided - method will attempt to extract the closest road name from map features.
-         - parameter snappedLocation: User's location, snapped to the road network. Has higher priority then `at` location.
-         */
-        func labelCurrentRoad(at rawLocation: CLLocation, suggestedName roadName: String?, for snappedLocation: CLLocation? = nil) {
-            guard navigationView.resumeButton.isHidden else { return }
-            
-            if let roadName = roadName {
-                navigationView.wayNameView.text = roadName.nonEmptyString
-                navigationView.wayNameView.isHidden = roadName.isEmpty
-                
-                return
-            }
-            
-            labelCurrentRoadFeature(at: snappedLocation ?? rawLocation)
-            
-            if let labelRoadNameCompletionHandler = labelRoadNameCompletionHandler {
-                labelRoadNameCompletionHandler(true)
-            }
         }
         
         func embedBanners(topBanner: ContainerViewController, bottomBanner: ContainerViewController) {
@@ -166,6 +82,116 @@ extension NavigationMapView {
             child.didMove(toParent: navigationViewData.containerViewController)
         }
         
+        // MARK: Feedback Collection
+        
+        var detailedFeedbackEnabled: Bool = false
+        
+        @objc func feedback(_ sender: Any) {
+            let parent = navigationViewData.containerViewController
+            let feedbackViewController = FeedbackViewController(eventsManager: eventsManager)
+            feedbackViewController.detailedFeedbackEnabled = detailedFeedbackEnabled
+            parent.present(feedbackViewController, animated: true)
+        }
+        
+        // MARK: Map View Ornaments Handlers
+        
+        var showsSpeedLimits: Bool = true {
+            didSet {
+                navigationView.speedLimitView.isAlwaysHidden = !showsSpeedLimits
+            }
+        }
+        
+        var floatingButtonsPosition: MapOrnamentPosition? {
+            get {
+                return navigationView.floatingButtonsPosition
+            }
+            set {
+                if let newPosition = newValue {
+                    navigationView.floatingButtonsPosition = newPosition
+                }
+            }
+        }
+        
+        var floatingButtons: [UIButton]? {
+            get {
+                return navigationView.floatingButtons
+            }
+            set {
+                navigationView.floatingButtons = newValue
+            }
+        }
+        
+        var reportButton: FloatingButton {
+            return navigationView.reportButton
+        }
+        
+        @objc func toggleMute(_ sender: UIButton) {
+            sender.isSelected = !sender.isSelected
+            
+            let muted = sender.isSelected
+            NavigationSettings.shared.voiceMuted = muted
+        }
+        
+        /**
+         Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
+         reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
+         */
+        private func updateMapViewOrnaments() {
+            let bottomBannerHeight = navigationViewData.navigationView.bottomBannerContainerView.bounds.height
+            let bottomBannerVerticalOffset = navigationViewData.navigationView.bounds.height - bottomBannerHeight - navigationViewData.navigationView.bottomBannerContainerView.frame.origin.y
+            let defaultOffset: CGFloat = 10.0
+            let x: CGFloat = defaultOffset
+            let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
+            
+            if #available(iOS 11.0, *) {
+                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
+            } else {
+                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y)
+            }
+            
+            if #available(iOS 11.0, *) {
+                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
+            } else {
+                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x, y: y)
+            }
+        }
+        
+        // MARK: Road Labelling
+        
+        typealias LabelRoadNameCompletionHandler = (_ defaultRoadNameAssigned: Bool) -> Void
+        
+        var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
+        
+        var roadNameFromStatus: String?
+        
+        @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
+            roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
+        }
+        
+        /**
+         Updates the current road name label to reflect the road on which the user is currently traveling.
+         
+         - parameter at: The user’s current location as provided by the system location management system. This has less priority then `snappedLocation` (see below) and is used only if method will attempt to resolve road name automatically.
+         - parameter suggestedName: The road name to put onto label. If not provided - method will attempt to extract the closest road name from map features.
+         - parameter snappedLocation: User's location, snapped to the road network. Has higher priority then `at` location.
+         */
+        func labelCurrentRoad(at rawLocation: CLLocation, suggestedName roadName: String?, for snappedLocation: CLLocation? = nil) {
+            guard navigationView.resumeButton.isHidden else { return }
+            
+            if let roadName = roadName {
+                navigationView.wayNameView.text = roadName.nonEmptyString
+                navigationView.wayNameView.isHidden = roadName.isEmpty
+                
+                return
+            }
+            
+            labelCurrentRoadFeature(at: snappedLocation ?? rawLocation)
+            
+            if let labelRoadNameCompletionHandler = labelRoadNameCompletionHandler {
+                labelRoadNameCompletionHandler(true)
+            }
+        }
+        
         private func labelCurrentRoadFeature(at location: CLLocation) {
             let router = navigationViewData.router
             guard
@@ -193,7 +219,7 @@ extension NavigationMapView {
             
             let identifierNamespace = Bundle.mapboxNavigation.bundleIdentifier ?? ""
             let roadLabelStyleLayerIdentifier = "\(identifierNamespace).roadLabels"
-            let roadLabelLayer = try? mapView.mapboxMap.style.layer(withId: roadLabelStyleLayerIdentifier) as LineLayer
+            let roadLabelLayer = try? mapView.mapboxMap.style.layer(withId: roadLabelStyleLayerIdentifier) as? LineLayer
             
             if roadLabelLayer == nil {
                 var streetLabelLayer = LineLayer(id: roadLabelStyleLayerIdentifier)
@@ -267,7 +293,7 @@ extension NavigationMapView {
 
                     for queriedFeature in queriedFeatures {
                         // Calculate the Levenshtein–Damerau edit distance between the road name from status and the feature property road name, and then use the smallest one for the road label.
-                        if let roadName = queriedFeature.feature?.properties?["name"] as? String,
+                        if case let .string(roadName) = queriedFeature.feature.properties?["name"],
                            let roadNameFromStatus = self.roadNameFromStatus {
                             let stringEditDistance = roadNameFromStatus.minimumEditDistance(to: roadName)
                             if stringEditDistance < minimumEditDistance {
@@ -280,21 +306,15 @@ extension NavigationMapView {
 
                         var lineStrings: [LineString] = []
                         
-                        if let feature = queriedFeature.feature {
-                            switch feature.geometry.type {
-                            case .LineString:
-                                if let lineString = feature.geometry.value as? LineString {
-                                    lineStrings.append(lineString)
-                                }
-                            case .MultiLineString:
-                                if let multiLineString = feature.geometry.value as? MultiLineString {
-                                    for coordinates in multiLineString.coordinates {
-                                        lineStrings.append(LineString(coordinates))
-                                    }
-                                }
-                            default:
-                                break
+                        switch queriedFeature.feature.geometry {
+                        case .lineString(let lineString):
+                            lineStrings.append(lineString)
+                        case .multiLineString(let multiLineString):
+                            for coordinates in multiLineString.coordinates {
+                                lineStrings.append(LineString(coordinates))
                             }
+                        default:
+                            break
                         }
                         
                         for lineString in lineStrings {
@@ -336,31 +356,7 @@ extension NavigationMapView {
             }
         }
         
-        /**
-         Method updates `logoView` and `attributionButton` margins to prevent incorrect alignment
-         reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
-         */
-        private func updateMapViewOrnaments() {
-            let bottomBannerHeight = navigationViewData.navigationView.bottomBannerContainerView.bounds.height
-            let bottomBannerVerticalOffset = navigationViewData.navigationView.bounds.height - bottomBannerHeight - navigationViewData.navigationView.bottomBannerContainerView.frame.origin.y
-            let defaultOffset: CGFloat = 10.0
-            let x: CGFloat = defaultOffset
-            let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
-            
-            if #available(iOS 11.0, *) {
-                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
-            } else {
-                navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y)
-            }
-            
-            if #available(iOS 11.0, *) {
-                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
-            } else {
-                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x, y: y)
-            }
-        }
-        
-        // MARK: - NavigationComponentDelegate implementation
+        // MARK: NavigationComponentDelegate implementation
         
         func navigationViewDidLoad(_: UIView) {
             navigationViewData.navigationView.muteButton.addTarget(self, action: #selector(toggleMute(_:)), for: .touchUpInside)
@@ -380,7 +376,7 @@ extension NavigationMapView {
             updateMapViewOrnaments()
         }
         
-        // MARK: - NavigationComponent implementation
+        // MARK: NavigationComponent implementation
         
         func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
             

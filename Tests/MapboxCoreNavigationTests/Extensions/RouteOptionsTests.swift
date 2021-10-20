@@ -28,7 +28,8 @@ class RouteOptionsTests: XCTestCase {
             .init(latitude: 1, longitude: 1),
         ]
         let options = GolfCartRouteOptions(coordinates: coordinates, profileIdentifier: .automobile)
-        let copy = options.copy() as? GolfCartRouteOptions
+        var copy: GolfCartRouteOptions?
+        XCTAssertNoThrow(copy = try options.copy())
         XCTAssertNotNil(copy)
         XCTAssertTrue(copy?.urlQueryItems.contains(URLQueryItem(name: "passengers", value: "3")) ?? false)
     }

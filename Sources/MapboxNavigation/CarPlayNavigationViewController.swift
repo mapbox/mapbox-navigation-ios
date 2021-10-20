@@ -1,7 +1,7 @@
 import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
-import MapboxMaps
+@_spi(Restricted) import MapboxMaps
 
 #if canImport(CarPlay)
 import CarPlay
@@ -369,6 +369,7 @@ open class CarPlayNavigationViewController: UIViewController {
     
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: view.bounds, navigationCameraType: .carPlay)
+        navigationMapView.userLocationStyle = .courseView()
         navigationMapView.delegate = self
         navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
                                                                                              viewportDataSourceType: .active)
@@ -382,8 +383,8 @@ open class CarPlayNavigationViewController: UIViewController {
         }
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
-        navigationMapView.mapView.ornaments.options.logo._visibility = .hidden
-        navigationMapView.mapView.ornaments.options.attributionButton._visibility = .hidden
+        navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
+        navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden
         
         navigationMapView.navigationCamera.follow()
         

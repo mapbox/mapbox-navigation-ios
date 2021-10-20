@@ -138,6 +138,30 @@ open class PassiveLocationManager: NSObject {
     public func resumeTripSession() {
         BillingHandler.shared.resumeBillingSession(with: sessionUUID)
     }
+    
+    /**
+     Starts electronic horizon updates.
+
+     Pass `nil` to use the default configuration.
+     Updates will be delivered in `Notification.Name.electronicHorizonDidUpdatePosition` notification.
+     For more info, read the [Electronic Horizon Guide](https://docs.mapbox.com/ios/beta/navigation/guides/electronic-horizon/).
+
+     - parameter options: Options which will be used to configure electronic horizon updates.
+
+     - postcondition: To change electronic horizon options call this method again with new options.
+     
+     - note: The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
+     */
+    public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions? = nil) {
+        Navigator.shared.startUpdatingElectronicHorizon(with: options)
+    }
+
+    /**
+     Stops electronic horizon updates.
+     */
+    public func stopUpdatingElectronicHorizon() {
+        Navigator.shared.stopUpdatingElectronicHorizon()
+    }
 
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
         guard let userInfo = notification.userInfo,
@@ -255,20 +279,6 @@ open class PassiveLocationManager: NSObject {
     
     // MARK: Accessing Relevant Routing Data
     
-    /**
-     A custom configuration for electronic horizon observations.
-     
-     Set this property to `nil` to use the default configuration.
-     */
-    public var electronicHorizonOptions: ElectronicHorizonOptions? {
-        get {
-            Navigator.shared.electronicHorizonOptions
-        }
-        set {
-            Navigator.shared.electronicHorizonOptions = newValue
-        }
-    }
-    
     /// The road graph that is updated as the passive location manager tracks the user’s location.
     public var roadGraph: RoadGraph {
         return Navigator.shared.roadGraph
@@ -283,48 +293,9 @@ open class PassiveLocationManager: NSObject {
     public var roadObjectMatcher: RoadObjectMatcher {
         return Navigator.shared.roadObjectMatcher
     }
-    
-    // MARK: Recording History to Diagnose Problems
-    
-    /**
-     Path to the directory where history could be stored when `PassiveLocationManager.writeHistory(completionHandler:)` is called.
-     */
-    public static var historyDirectoryURL: URL? = nil {
-        didSet {
-            Navigator.historyDirectoryURL = historyDirectoryURL
-        }
-    }
-    
-    /**
-     Starts recording history for debugging purposes.
-     
-     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
-     */
-    public static func startRecordingHistory() {
-        Navigator.shared.startRecordingHistory()
-    }
-    
-    /**
-     A closure to be called when history writing ends.
-     
-     - parameter historyFileURL: A URL to the file that contains history data. This argument is `nil` if no history data has been written because history recording has not yet begun. Use the `startRecordingHistory()` method to begin recording before attempting to write a history file.
-     */
-    public typealias HistoryFileWritingCompletionHandler = (_ historyFileURL: URL?) -> Void
-    
-    /**
-     Stops recording history, asynchronously writing any recorded history to a file.
-     
-     Upon completion, the completion handler is called with the URL to a file in the directory specified by `PassiveLocationManager.historyDirectoryURL`. The file contains details about the passive location manager’s activity that may be useful to include when reporting an issue to Mapbox.
-     
-     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
-     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
-     
-     - parameter completionHandler: A closure to be executed when the history file is ready.
-     */
-    public static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
-        Navigator.shared.stopRecordingHistory(writingFileWith: completionHandler)
-    }
 }
+
+extension PassiveLocationManager: HistoryRecording { }
 
 extension PassiveLocationManager: CLLocationManagerDelegate {
     

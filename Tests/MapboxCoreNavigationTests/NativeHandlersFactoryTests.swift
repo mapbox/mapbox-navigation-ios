@@ -23,6 +23,7 @@ class NativeHandlersFactoryTests: TestCase {
     var handlersFactory: NativeHandlersFactory!
     
     override func setUp() {
+        super.setUp()
         UserDefaults.standard.set(nil, forKey: customConfigKey)
         handlersFactory = NativeHandlersFactory(tileStorePath: "tile store path",
                                                 credentials: .mocked,

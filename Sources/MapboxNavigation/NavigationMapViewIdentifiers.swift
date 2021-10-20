@@ -31,6 +31,7 @@ extension NavigationMapView {
     
     struct ImageIdentifier {
         static let arrowImage = "triangle-tip-navigation"
+        static let markerImage = "default_marker"
     }
     
     struct ModelKeyIdentifier {
@@ -40,4 +41,6 @@ extension NavigationMapView {
     struct AnnotationIdentifier {
         static let finalDestinationAnnotation = "\(identifier)_finalDestinationAnnotation"
     }
+    
+    static let userCourseViewTag = 999
 }

@@ -11,7 +11,7 @@ open class UserHaloCourseView: UIView, CourseUpdatable {
      */
     @objc public dynamic var haloColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5) {
         didSet {
-            haloView.haloColor = haloColor
+            haloLayer.fillColor = haloColor.cgColor
         }
     }
 
@@ -20,7 +20,7 @@ open class UserHaloCourseView: UIView, CourseUpdatable {
      */
     @objc public dynamic var haloRingColor: UIColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.3) {
         didSet {
-            haloView.haloRingColor = haloRingColor
+            haloLayer.strokeColor = haloRingColor.cgColor
         }
     }
 
@@ -29,7 +29,7 @@ open class UserHaloCourseView: UIView, CourseUpdatable {
      */
     @objc public dynamic var haloRadius: Double = 100.0 {
         didSet {
-            haloView.haloRadius = haloRadius
+            updateHaloLayer()
         }
     }
     
@@ -38,11 +38,13 @@ open class UserHaloCourseView: UIView, CourseUpdatable {
      */
     @objc public dynamic var haloBorderWidth: Double = 5.0 {
         didSet {
-            haloView.haloBorderWidth = haloBorderWidth
+            haloLayer.lineWidth = CGFloat(haloBorderWidth)
         }
     }
-
-    var haloView: UserHaloStyleKitView!
+    
+    var haloLayer: CAShapeLayer!
+    
+    let haloLayerName = "halo_layer"
 
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -57,55 +59,37 @@ open class UserHaloCourseView: UIView, CourseUpdatable {
     func commonInit() {
         isUserInteractionEnabled = false
         backgroundColor = .clear
-        haloView = UserHaloStyleKitView(frame: bounds)
-        haloView.backgroundColor = .clear
-        addSubview(haloView)
-    }
-}
-
-class UserHaloStyleKitView: UIView {
-    
-    var haloColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5) {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-
-    var haloRingColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.3) {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-
-    var haloRadius: Double = 100.0 {
-        didSet {
-            setNeedsDisplay()
-        }
+        updateHaloLayer()
     }
     
-    var haloBorderWidth: Double = 5.0 {
-        didSet {
-            setNeedsDisplay()
+    /**
+     Allows to update halo layer (if it's present) by removing previous one and adding new `CAShapeLayer`.
+     */
+    func updateHaloLayer() {
+        let haloSublayers = layer.sublayers?.filter({ $0.name == haloLayerName })
+        haloSublayers?.forEach {
+            $0.removeFromSuperlayer()
         }
-    }
-
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        drawHaloView()
-    }
-
-    func drawHaloView() {
-        let haloPath = UIBezierPath(arcCenter: center,
+        
+        let haloPath = UIBezierPath(arcCenter: CGPoint(x: bounds.midX, y: bounds.midY),
                                     radius: CGFloat(haloRadius),
                                     startAngle: 0,
                                     endAngle: 2.0 * CGFloat.pi,
                                     clockwise: true)
-        let haloLayer = CAShapeLayer()
-        haloLayer.frame = frame
+        haloLayer = CAShapeLayer()
+        haloLayer.name = haloLayerName
+        haloLayer.frame = bounds
         haloLayer.path = haloPath.cgPath
         haloLayer.fillColor = haloColor.cgColor
         haloLayer.strokeColor = haloRingColor.cgColor
         haloLayer.lineWidth = CGFloat(haloBorderWidth)
         layer.addSublayer(haloLayer)
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        haloLayer.fillColor = haloColor.cgColor
+        haloLayer.strokeColor = haloRingColor.cgColor
     }
 }

@@ -187,7 +187,7 @@ class NavigationViewControllerTests: TestCase {
         
         for location in locations {
             service.locationManager!(service.locationManager, didUpdateLocations: [location])
-            RunLoop.main.run(until: Date().addingTimeInterval(0.01))
+            RunLoop.main.run(until: Date().addingTimeInterval(0.05))
         }
 
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willArriveAt:after:distance:)"), "Pre-arrival delegate message not fired.")
@@ -285,13 +285,13 @@ class NavigationViewControllerTests: TestCase {
             navigationViewController.navigationMapView?.pointAnnotationManager != nil
         }
         waitForExpectations(timeout: 5, handler: nil)
-        navigationViewController.navigationService.router.updateRoute(with: .init(routeResponse: initialRouteResponse, routeIndex: 0), routeOptions: nil)
-        expectation(description: "Annotations loaded") {
-            !navigationViewController.navigationMapView!.pointAnnotationManager!.annotations.isEmpty
-        }
-        waitForExpectations(timeout: 5, handler: nil)
+        navigationViewController.navigationService.router
+            .updateRoute(with: .init(routeResponse: initialRouteResponse, routeIndex: 0), routeOptions: nil) {
+                success in
+                XCTAssertTrue(success)
+                XCTAssertFalse(navigationViewController.navigationMapView!.pointAnnotationManager!.annotations.isEmpty)
+            }
         XCTAssertEqual(navigationViewController.routeResponse.identifier, initialRouteResponse.identifier)
-
 
         let annotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
 
@@ -299,14 +299,17 @@ class NavigationViewControllerTests: TestCase {
             return XCTFail("PointAnnotation is not valid.")
         }
 
-        XCTAssert(annotations
-                    .compactMap { $0.geometry.value as? Turf.Point }
-                    .contains { $0.coordinates.distance(to: firstDestination) < 1 },
+        XCTAssert(annotations.contains { $0.point.coordinates.distance(to: firstDestination) < 1 },
                   "Destination annotation does not exist on map")
-        
+
+        let routeUpdated = expectation(description: "Route updated")
         // Set the second route.
-        navigationViewController.navigationService.router.updateRoute(with: .init(routeResponse: newRouteResponse, routeIndex: 0), routeOptions: nil)
-        
+        navigationViewController.navigationService.router
+            .updateRoute(with: .init(routeResponse: newRouteResponse, routeIndex: 0), routeOptions: nil) { success in
+                XCTAssertTrue(success)
+                routeUpdated.fulfill()
+            }
+        wait(for: [routeUpdated], timeout: 5)
         let newAnnotations = navigationViewController.navigationMapView!.pointAnnotationManager!.annotations
         
         guard let secondDestination = newRoute.legs.last?.destination?.coordinate else {
@@ -314,9 +317,7 @@ class NavigationViewControllerTests: TestCase {
         }
         
         // Verify that there is a destination on the second route.
-        XCTAssert(newAnnotations
-                    .compactMap { $0.geometry.value as? Turf.Point }
-                    .contains { $0.coordinates.distance(to: secondDestination) < 1 },
+        XCTAssert(newAnnotations.contains { $0.point.coordinates.distance(to: secondDestination) < 1 },
                   "New destination annotation does not exist on map")
         XCTAssertEqual(navigationViewController.routeResponse.identifier,
                        newRouteResponse.identifier)
