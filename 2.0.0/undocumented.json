@@ -1,0 +1,2217 @@
+{
+  "warnings": [
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Accounts.swift",
+      "line": 12,
+      "symbol": "Accounts",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/BorderCrossing.swift",
+      "line": 16,
+      "symbol": "BorderCrossing.from",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/BorderCrossing.swift",
+      "line": 17,
+      "symbol": "BorderCrossing.to",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/CoreNavigationNavigator.swift",
+      "line": 160,
+      "symbol": "Navigator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/CoreNavigationNavigator.swift",
+      "line": 214,
+      "symbol": "Navigator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/CoreNavigationNavigator.swift",
+      "line": 249,
+      "symbol": "Navigator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/CoreNavigationNavigator.swift",
+      "line": 486,
+      "symbol": "Navigator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 22,
+      "symbol": "DispatchTimer.Payload",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/DispatchTimer.swift",
+      "line": 23,
+      "symbol": "DispatchTimer.defaultAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 103,
+      "symbol": "DistanceFormatter.supportsSecureCoding",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 152,
+      "symbol": "DistanceFormatter.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 158,
+      "symbol": "DistanceFormatter.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 225,
+      "symbol": "DistanceFormatter.string(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/DistanceFormatter.swift",
+      "line": 235,
+      "symbol": "DistanceFormatter.attributedString(for:withDefaultAttributes:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/EHorizon/ElectronicHorizonOptions.swift",
+      "line": 32,
+      "symbol": "ElectronicHorizonOptions.init(length:expansionLevel:branchLength:minTimeDeltaBetweenUpdates:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/EHorizon/RoadObjectStore.swift",
+      "line": 121,
+      "symbol": "RoadObjectStore.onRoadObjectAdded(forId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/EHorizon/RoadObjectStore.swift",
+      "line": 125,
+      "symbol": "RoadObjectStore.onRoadObjectUpdated(forId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/EHorizon/RoadObjectStore.swift",
+      "line": 129,
+      "symbol": "RoadObjectStore.onRoadObjectRemoved(forId:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 119,
+      "symbol": "LooksIncorrectSubtype.turnIconIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 120,
+      "symbol": "LooksIncorrectSubtype.streetNameIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 121,
+      "symbol": "LooksIncorrectSubtype.instructionUnnecessary",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 122,
+      "symbol": "LooksIncorrectSubtype.instructionMissing",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 123,
+      "symbol": "LooksIncorrectSubtype.maneuverIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 124,
+      "symbol": "LooksIncorrectSubtype.exitInfoIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 125,
+      "symbol": "LooksIncorrectSubtype.laneGuidanceIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 126,
+      "symbol": "LooksIncorrectSubtype.incorrectSpeedLimit",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 131,
+      "symbol": "ConfusingAudioSubtype.guidanceTooEarly",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 132,
+      "symbol": "ConfusingAudioSubtype.guidanceTooLate",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 133,
+      "symbol": "ConfusingAudioSubtype.pronunciationIncorrect",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 134,
+      "symbol": "ConfusingAudioSubtype.roadNameRepeated",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 135,
+      "symbol": "ConfusingAudioSubtype.instructionMissing",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 140,
+      "symbol": "RouteQualitySubtype.routeNonDrivable",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 141,
+      "symbol": "RouteQualitySubtype.routeNotPreferred",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 142,
+      "symbol": "RouteQualitySubtype.alternativeRouteNotExpected",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 143,
+      "symbol": "RouteQualitySubtype.routeIncludedMissingRoads",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 144,
+      "symbol": "RouteQualitySubtype.routeHadRoadsTooNarrowToPass",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 149,
+      "symbol": "IllegalRouteSubtype.routedDownAOneWay",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 150,
+      "symbol": "IllegalRouteSubtype.turnWasNotAllowed",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 151,
+      "symbol": "IllegalRouteSubtype.carsNotAllowedOnStreet",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 156,
+      "symbol": "RoadClosureSubtype.streetPermanentlyBlockedOff",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 161,
+      "symbol": "FeedbackSource.user",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 162,
+      "symbol": "FeedbackSource.reroute",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/ActiveNavigationFeedbackType.swift",
+      "line": 163,
+      "symbol": "FeedbackSource.unknown",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/EndOfRouteFeedback.swift",
+      "line": 17,
+      "symbol": "EndOfRouteFeedback.init(rating:comment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/EndOfRouteFeedback.swift",
+      "line": 21,
+      "symbol": "EndOfRouteFeedback.init(rating:comment:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/FeedbackScreenshotOption.swift",
+      "line": 7,
+      "symbol": "FeedbackScreenshotOption.automatic",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/FeedbackScreenshotOption.swift",
+      "line": 8,
+      "symbol": "FeedbackScreenshotOption.custom(_:)",
+      "symbol_kind": "source.lang.swift.decl.enumelement",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/FeedbackType.swift",
+      "line": 7,
+      "symbol": "FeedbackType.typeKey",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/FeedbackType.swift",
+      "line": 8,
+      "symbol": "FeedbackType.subtypeKey",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 12,
+      "symbol": "PassiveNavigationEventsManagerDataSource.rawLocation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 13,
+      "symbol": "PassiveNavigationEventsManagerDataSource.locationManagerType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 17,
+      "symbol": "PassiveLocationManager.rawLocation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 21,
+      "symbol": "PassiveLocationManager.locationManagerType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 30,
+      "symbol": "ActiveNavigationEventsManagerDataSource.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 31,
+      "symbol": "ActiveNavigationEventsManagerDataSource.router",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 32,
+      "symbol": "ActiveNavigationEventsManagerDataSource.desiredAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 33,
+      "symbol": "ActiveNavigationEventsManagerDataSource.locationManagerType",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 123,
+      "symbol": "NavigationEventsManager.init(activeNavigationDataSource:passiveNavigationDataSource:accessToken:mobileEventsManager:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 337,
+      "symbol": "NavigationEventsManager.sendCarPlayConnectEvent()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/NavigationEventsManager.swift",
+      "line": 343,
+      "symbol": "NavigationEventsManager.sendCarPlayDisconnectEvent()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/PassiveNavigationFeedbackType.swift",
+      "line": 27,
+      "symbol": "PassiveNavigationFeedbackType.typeKey",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Feedback/PassiveNavigationFeedbackType.swift",
+      "line": 44,
+      "symbol": "PassiveNavigationFeedbackType.subtypeKey",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/LegacyRouteController.swift",
+      "line": 12,
+      "symbol": "LegacyRouteController",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Locale.swift",
+      "line": 27,
+      "symbol": "Locale.usesMetric",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Locale.swift",
+      "line": 35,
+      "symbol": "Locale.usesMetric",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/MMEEventsManager.swift",
+      "line": 10,
+      "symbol": "MMEEventsManager.unrated",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/MinimumEditDistance.swift",
+      "line": 5,
+      "symbol": "String.minimumEditDistance(to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NativeHandlersFactory.swift",
+      "line": 5,
+      "symbol": "customConfigKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NativeHandlersFactory.swift",
+      "line": 6,
+      "symbol": "customConfigFeaturesKey",
+      "symbol_kind": "source.lang.swift.decl.var.global",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationLocationManager.swift",
+      "line": 11,
+      "symbol": "NavigationLocationManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationRouteOptions.swift",
+      "line": 67,
+      "symbol": "NavigationRouteOptions.init(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationRouteOptions.swift",
+      "line": 117,
+      "symbol": "NavigationMatchOptions.init(from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 416,
+      "symbol": "MapboxNavigationService.updateRoute(with:routeOptions:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 427,
+      "symbol": "MapboxNavigationService.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 431,
+      "symbol": "MapboxNavigationService.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 458,
+      "symbol": "MapboxNavigationService.locationManagerDidChangeAuthorization(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 556,
+      "symbol": "MapboxNavigationService.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationService.swift",
+      "line": 560,
+      "symbol": "MapboxNavigationService.desiredAccuracy",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/NavigationSettings.swift",
+      "line": 18,
+      "symbol": "NavigationSettings.StoredProperty",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/PassiveLocationManager.swift",
+      "line": 304,
+      "symbol": "PassiveLocationManager.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/PassiveLocationManager.swift",
+      "line": 308,
+      "symbol": "PassiveLocationManager.locationManager(_:didUpdateHeading:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/PassiveLocationManager.swift",
+      "line": 312,
+      "symbol": "PassiveLocationManager.locationManager(_:didFailWithError:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/PassiveLocationManager.swift",
+      "line": 316,
+      "symbol": "PassiveLocationManager.locationManager(_:didChangeAuthorization:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/PredictiveCacheManager.swift",
+      "line": 12,
+      "symbol": "PredictiveCacheManager.MapOptions",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/PredictiveCacheOptions.swift",
+      "line": 43,
+      "symbol": "PredictiveCacheOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 37,
+      "symbol": "ReplayLocationManager.location",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 63,
+      "symbol": "ReplayLocationManager.init(locations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 73,
+      "symbol": "ReplayLocationManager.startUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/ReplayLocationManager.swift",
+      "line": 79,
+      "symbol": "ReplayLocationManager.stopUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 23,
+      "symbol": "RouteController.DefaultBehavior",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 31,
+      "symbol": "RouteController.log",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 201,
+      "symbol": "RouteController.locationManager(_:didUpdateLocations:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 552,
+      "symbol": "RouteController.userIsOnRoute(_:status:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteController.swift",
+      "line": 595,
+      "symbol": "RouteController.reroute(from:along:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteLeg.swift",
+      "line": 5,
+      "symbol": "RouteLeg.shape",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteLegProgress.swift",
+      "line": 46,
+      "symbol": "RouteLegProgress.userHasArrivedAtWaypoint",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteLegProgress.swift",
+      "line": 112,
+      "symbol": "RouteLegProgress.upcomingStep",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 202,
+      "symbol": "RouteProgress.priorLeg",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteProgress.swift",
+      "line": 258,
+      "symbol": "RouteProgress.averageCongestionLevelRemainingOnLeg",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteStepProgress.swift",
+      "line": 158,
+      "symbol": "RouteStepProgress.keyPathsAffectingValueForRemainingVisualInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/RouteStepProgress.swift",
+      "line": 162,
+      "symbol": "RouteStepProgress.keyPathsAffectingValueForRemainingSpokenInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/Router.swift",
+      "line": 95,
+      "symbol": "Router.reroute(from:along:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 80,
+      "symbol": "SimulatedLocationManager.location",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 96,
+      "symbol": "SimulatedLocationManager.startUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 100,
+      "symbol": "SimulatedLocationManager.stopUpdatingLocation()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/SimulatedLocationManager.swift",
+      "line": 190,
+      "symbol": "SimulatedLocationManager.copy()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxCoreNavigation/TileStore.swift",
+      "line": 5,
+      "symbol": "TileStore.ContainsCompletion",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/AVAudioSession.swift",
+      "line": 7,
+      "symbol": "AVAudioSession.tryDuckAudio()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/AVAudioSession.swift",
+      "line": 21,
+      "symbol": "AVAudioSession.tryUnduckAudio()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 125,
+      "symbol": "BottomBannerViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 130,
+      "symbol": "BottomBannerViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/BottomBannerViewController.swift",
+      "line": 157,
+      "symbol": "BottomBannerViewController.prepareForInterfaceBuilder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 127,
+      "symbol": "BottomBannerViewController.reinstallConstraints()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/BottomBannerViewLayout.swift",
+      "line": 132,
+      "symbol": "BottomBannerViewController.traitCollectionDidChange(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CGSize.swift",
+      "line": 7,
+      "symbol": "CGSize.init(size:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Cache.swift",
+      "line": 3,
+      "symbol": "CompletionHandler",
+      "symbol_kind": "source.lang.swift.decl.typealias",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Cache.swift",
+      "line": 10,
+      "symbol": "BimodalCache.clearMemory()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Cache.swift",
+      "line": 11,
+      "symbol": "BimodalCache.clearDisk(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Cache.swift",
+      "line": 18,
+      "symbol": "BimodalImageCache.store(_:forKey:toDisk:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Cache.swift",
+      "line": 19,
+      "symbol": "BimodalImageCache.image(forKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Cache.swift",
+      "line": 26,
+      "symbol": "BimodalDataCache.store(_:forKey:toDisk:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Cache.swift",
+      "line": 27,
+      "symbol": "BimodalDataCache.data(forKey:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CameraStateTransition.swift",
+      "line": 14,
+      "symbol": "CameraStateTransition.mapView",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayCompassView.swift",
+      "line": 44,
+      "symbol": "CarPlayCompassView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayCompassView.swift",
+      "line": 49,
+      "symbol": "CarPlayCompassView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 295,
+      "symbol": "CarPlayManager.application(_:didConnectCarInterfaceController:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 321,
+      "symbol": "CarPlayManager.application(_:didDisconnectCarInterfaceController:from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 379,
+      "symbol": "CarPlayManager.resetPanButtons(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 418,
+      "symbol": "CarPlayManager.templateWillAppear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 427,
+      "symbol": "CarPlayManager.templateDidAppear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 439,
+      "symbol": "CarPlayManager.templateWillDisappear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 450,
+      "symbol": "CarPlayManager.templateDidDisappear(_:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 598,
+      "symbol": "CarPlayManager.mapTemplate(_:startedTrip:using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 685,
+      "symbol": "CarPlayManager.mapTemplate(_:selectedPreviewFor:using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 704,
+      "symbol": "CarPlayManager.mapTemplateDidCancelNavigation(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 717,
+      "symbol": "CarPlayManager.mapTemplate(_:didEndPanGestureWithVelocity:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 731,
+      "symbol": "CarPlayManager.mapTemplateDidShowPanningInterface(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 749,
+      "symbol": "CarPlayManager.mapTemplateWillDismissPanningInterface(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 753,
+      "symbol": "CarPlayManager.mapTemplate(_:didUpdatePanGestureWithTranslation:velocity:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 784,
+      "symbol": "CarPlayManager.mapTemplate(_:panWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 820,
+      "symbol": "CarPlayManager.mapTemplate(_:displayStyleFor:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 918,
+      "symbol": "CarPlayManager.templateApplicationScene(_:didConnectCarInterfaceController:to:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayManager.swift",
+      "line": 942,
+      "symbol": "CarPlayManager.templateApplicationScene(_:didDisconnectCarInterfaceController:from:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 192,
+      "symbol": "CarPlayMapViewController.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 266,
+      "symbol": "CarPlayMapViewController.loadView()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 271,
+      "symbol": "CarPlayMapViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayMapViewController.swift",
+      "line": 279,
+      "symbol": "CarPlayMapViewController.viewSafeAreaInsetsDidChange()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 337,
+      "symbol": "CarPlayNavigationViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 341,
+      "symbol": "CarPlayNavigationViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 358,
+      "symbol": "CarPlayNavigationViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlayNavigationViewController.swift",
+      "line": 363,
+      "symbol": "CarPlayNavigationViewController.traitCollectionDidChange(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 8,
+      "symbol": "CarPlaySearchController.CarPlayGeocodedPlacemarkKey",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 15,
+      "symbol": "CarPlaySearchController.searchTemplateSearchButtonPressed(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 26,
+      "symbol": "CarPlaySearchController.searchTemplateButton(searchTemplate:interfaceController:traitCollection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 47,
+      "symbol": "CarPlaySearchController.searchTemplate(_:updatedSearchText:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 55,
+      "symbol": "CarPlaySearchController.searchTemplate(_:selectedResult:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/CarPlaySearchController+CPSearchTemplateDelegate.swift",
+      "line": 69,
+      "symbol": "CarPlaySearchController.listTemplate(_:didSelect:completionHandler:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/DataCache.swift",
+      "line": 3,
+      "symbol": "DataCache",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/DateComponentsFormatter+NavigationAdditions.swift",
+      "line": 4,
+      "symbol": "DateComponentsFormatter.fullDateComponentsFormatter",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/DateComponentsFormatter+NavigationAdditions.swift",
+      "line": 11,
+      "symbol": "DateComponentsFormatter.shortDateComponentsFormatter",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/DateComponentsFormatter+NavigationAdditions.swift",
+      "line": 18,
+      "symbol": "DateComponentsFormatter.briefDateComponentsFormatter",
+      "symbol_kind": "source.lang.swift.decl.var.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/DayStyle.swift",
+      "line": 66,
+      "symbol": "DayStyle.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/EndOfRouteViewController.swift",
+      "line": 161,
+      "symbol": "EndOfRouteViewController",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ExitView.swift",
+      "line": 11,
+      "symbol": "ExitView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/ActiveNavigationFeedbackType+FeedbackItem.swift",
+      "line": 7,
+      "symbol": "ActiveNavigationFeedbackType.title",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackItemType.swift",
+      "line": 3,
+      "symbol": "FeedbackItemType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 5,
+      "symbol": "FeedbackViewController.animationController(forDismissed:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 9,
+      "symbol": "FeedbackViewController.animationController(forPresented:presenting:source:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 13,
+      "symbol": "FeedbackViewController.interactionControllerForDismissal(using:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 163,
+      "symbol": "FeedbackViewController.encode(with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 167,
+      "symbol": "FeedbackViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 185,
+      "symbol": "FeedbackViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 199,
+      "symbol": "FeedbackViewController.viewDidAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 204,
+      "symbol": "FeedbackViewController.viewWillTransition(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 221,
+      "symbol": "FeedbackViewController.gestureRecognizer(_:shouldReceive:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 261,
+      "symbol": "FeedbackViewController.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 272,
+      "symbol": "FeedbackViewController.numberOfSections(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 276,
+      "symbol": "FeedbackViewController.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 282,
+      "symbol": "FeedbackViewController.collectionView(_:didSelectItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewController.swift",
+      "line": 315,
+      "symbol": "FeedbackViewController.collectionView(_:layout:sizeForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Feedback/FeedbackViewControllerType.swift",
+      "line": 3,
+      "symbol": "FeedbackViewControllerType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/GenericRouteShield.swift",
+      "line": 11,
+      "symbol": "GenericRouteShield.foregroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/GenericRouteShield.swift",
+      "line": 57,
+      "symbol": "GenericRouteShield.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 55,
+      "symbol": "InstructionsCardContainerView.customBackgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 56,
+      "symbol": "InstructionsCardContainerView.highlightedBackgroundColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 79,
+      "symbol": "InstructionsCardContainerView.delegate",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 81,
+      "symbol": "InstructionsCardContainerView.updateInstruction(for:distance:instruction:isCurrentCardStep:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 90,
+      "symbol": "InstructionsCardContainerView.updateInstruction(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 97,
+      "symbol": "InstructionsCardContainerView.updateInstructionCard(distance:isCurrentCardStep:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 123,
+      "symbol": "InstructionsCardContainerView.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 132,
+      "symbol": "InstructionsCardContainerView.prepareLayout()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 136,
+      "symbol": "InstructionsCardContainerView.updateBackgroundColor(highlightEnabled:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardContainerView.swift",
+      "line": 210,
+      "symbol": "InstructionsCardContainerView.layoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 15,
+      "symbol": "InstructionsCardViewController.routeProgress",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 16,
+      "symbol": "InstructionsCardViewController.currentStepIndex",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 17,
+      "symbol": "InstructionsCardViewController.currentLegIndex",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 18,
+      "symbol": "InstructionsCardViewController.steps",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 28,
+      "symbol": "InstructionsCardViewController.reloadDataSource()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 49,
+      "symbol": "InstructionsCardViewController.isInPreview",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 83,
+      "symbol": "InstructionsCardViewController.updateCurrentVisibleInstructionCard(for:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 91,
+      "symbol": "InstructionsCardViewController.updateVisibleInstructionCards(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 106,
+      "symbol": "InstructionsCardViewController.stopPreview()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 112,
+      "symbol": "InstructionsCardViewController.instructionContainerView(at:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 121,
+      "symbol": "InstructionsCardViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 153,
+      "symbol": "InstructionsCardViewController.viewWillTransition(to:with:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 254,
+      "symbol": "InstructionsCardViewController.scrollViewWillBeginDragging(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 259,
+      "symbol": "InstructionsCardViewController.scrollViewWillEndDragging(_:withVelocity:targetContentOffset:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 275,
+      "symbol": "InstructionsCardViewController.collectionView(_:numberOfItemsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 279,
+      "symbol": "InstructionsCardViewController.collectionView(_:cellForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 300,
+      "symbol": "UICollectionViewFlowLayout.flipsHorizontallyInOppositeLayoutDirection",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/InstructionsCardViewController.swift",
+      "line": 306,
+      "symbol": "InstructionsCardViewController.collectionView(_:layout:sizeForItemAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/JunctionView.swift",
+      "line": 122,
+      "symbol": "JunctionView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/JunctionView.swift",
+      "line": 127,
+      "symbol": "JunctionView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/LanesStyleKit.swift",
+      "line": 8,
+      "symbol": "LanesStyleKit",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 10,
+      "symbol": "ManeuverView.primaryColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 16,
+      "symbol": "ManeuverView.secondaryColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 22,
+      "symbol": "ManeuverView.primaryColorHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 28,
+      "symbol": "ManeuverView.secondaryColorHighlighted",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 34,
+      "symbol": "ManeuverView.shouldShowHighlightedColors",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 42,
+      "symbol": "ManeuverView.isStart",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 48,
+      "symbol": "ManeuverView.isEnd",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 79,
+      "symbol": "ManeuverView.draw(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/ManeuverView.swift",
+      "line": 168,
+      "symbol": "ManeuverView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/MapboxSpeechSynthesizer.swift",
+      "line": 56,
+      "symbol": "MapboxSpeechSynthesizer.init(accessToken:host:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/MapboxSpeechSynthesizer.swift",
+      "line": 261,
+      "symbol": "MapboxSpeechSynthesizer.audioPlayerDidFinishPlaying(_:successfully:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/MultiplexedSpeechSynthesizer.swift",
+      "line": 49,
+      "symbol": "MultiplexedSpeechSynthesizer.speechSynthesizers",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/MultiplexedSpeechSynthesizer.swift",
+      "line": 79,
+      "symbol": "MultiplexedSpeechSynthesizer.init(_:accessToken:host:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationCameraConstants.swift",
+      "line": 59,
+      "symbol": "NavigationCamera.NotificationUserInfoKey",
+      "symbol_kind": "source.lang.swift.decl.struct",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationGeocodedPlacemark.swift",
+      "line": 104,
+      "symbol": "CLLocation.CodingKeys",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 42,
+      "symbol": "NavigationMapView.trafficUnknownColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 43,
+      "symbol": "NavigationMapView.trafficLowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 44,
+      "symbol": "NavigationMapView.trafficModerateColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 45,
+      "symbol": "NavigationMapView.trafficHeavyColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 46,
+      "symbol": "NavigationMapView.trafficSevereColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 47,
+      "symbol": "NavigationMapView.alternativeTrafficUnknownColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 48,
+      "symbol": "NavigationMapView.alternativeTrafficLowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 49,
+      "symbol": "NavigationMapView.alternativeTrafficModerateColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 50,
+      "symbol": "NavigationMapView.alternativeTrafficHeavyColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 51,
+      "symbol": "NavigationMapView.alternativeTrafficSevereColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 60,
+      "symbol": "NavigationMapView.routeCasingColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 61,
+      "symbol": "NavigationMapView.routeAlternateColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 62,
+      "symbol": "NavigationMapView.routeAlternateCasingColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 63,
+      "symbol": "NavigationMapView.traversedRouteColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 64,
+      "symbol": "NavigationMapView.maneuverArrowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 65,
+      "symbol": "NavigationMapView.maneuverArrowStrokeColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 506,
+      "symbol": "NavigationMapView.buildingDefaultColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 507,
+      "symbol": "NavigationMapView.buildingHighlightColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 632,
+      "symbol": "NavigationMapView.routeDurationAnnotationSelectedColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 633,
+      "symbol": "NavigationMapView.routeDurationAnnotationColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 634,
+      "symbol": "NavigationMapView.routeDurationAnnotationSelectedTextColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 635,
+      "symbol": "NavigationMapView.routeDurationAnnotationTextColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationMapView.swift",
+      "line": 1564,
+      "symbol": "NavigationMapView.gestureRecognizer(_:shouldRecognizeSimultaneouslyWith:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationOptions.swift",
+      "line": 69,
+      "symbol": "NavigationOptions.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 180,
+      "symbol": "NavigationView.init(frame:tileStoreLocation:navigationMapView:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 187,
+      "symbol": "NavigationView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationView.swift",
+      "line": 212,
+      "symbol": "NavigationView.prepareForInterfaceBuilder()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 289,
+      "symbol": "NavigationViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 332,
+      "symbol": "NavigationViewController.loadView()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 344,
+      "symbol": "NavigationViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 354,
+      "symbol": "NavigationViewController.viewWillAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 394,
+      "symbol": "NavigationViewController.viewDidAppear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 403,
+      "symbol": "NavigationViewController.viewWillDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 411,
+      "symbol": "NavigationViewController.viewDidDisappear(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 420,
+      "symbol": "NavigationViewController.viewDidLayoutSubviews()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 428,
+      "symbol": "NavigationViewController.preferredContentSizeDidChange(forChildContentContainer:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 698,
+      "symbol": "NavigationViewController.preferredStatusBarStyle",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 1045,
+      "symbol": "NavigationViewController.topBanner(_:didSwipeInDirection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 1088,
+      "symbol": "NavigationViewController.preview(step:in:remaining:route:animated:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 1120,
+      "symbol": "NavigationViewController.topBanner(_:didSelect:stepIndex:cell:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewController.swift",
+      "line": 1129,
+      "symbol": "NavigationViewController.topBanner(_:didDisplayStepsController:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NavigationViewportDataSource.swift",
+      "line": 502,
+      "symbol": "NavigationViewportDataSource.shouldTrackLocation",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/NightStyle.swift",
+      "line": 8,
+      "symbol": "NightStyle.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/RouteVoiceController.swift",
+      "line": 9,
+      "symbol": "NSAttributedString.pronounced(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/RouteVoiceController.swift",
+      "line": 149,
+      "symbol": "RouteVoiceController.didPassSpokenInstructionPoint(notification:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/SpeedLimitStyleKit.swift",
+      "line": 16,
+      "symbol": "SpeedLimitStyleKit",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/SpeedLimitView.swift",
+      "line": 106,
+      "symbol": "SpeedLimitView.draw(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 193,
+      "symbol": "StepsViewController.tableView(_:didSelectRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 216,
+      "symbol": "StepsViewController.numberOfSections(in:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 220,
+      "symbol": "StepsViewController.tableView(_:numberOfRowsInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 225,
+      "symbol": "StepsViewController.tableView(_:heightForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 229,
+      "symbol": "StepsViewController.tableView(_:cellForRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 234,
+      "symbol": "StepsViewController.tableView(_:willDisplay:forRowAt:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StepsViewController.swift",
+      "line": 257,
+      "symbol": "StepsViewController.tableView(_:titleForHeaderInSection:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Style.swift",
+      "line": 52,
+      "symbol": "Style.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Style.swift",
+      "line": 536,
+      "symbol": "BottomPaddingView",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StyleKitMarker.swift",
+      "line": 3,
+      "symbol": "StyleKitMarker",
+      "symbol_kind": "source.lang.swift.decl.class",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StyleManager.swift",
+      "line": 125,
+      "symbol": "StyleManager.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/StyleType.swift",
+      "line": 3,
+      "symbol": "StyleType",
+      "symbol_kind": "source.lang.swift.decl.enum",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 41,
+      "symbol": "SystemSpeechSynthesizer.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 145,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didStart:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 149,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didContinue:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 153,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didFinish:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 164,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didPause:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/SystemSpeechSynthesizer.swift",
+      "line": 168,
+      "symbol": "SystemSpeechSynthesizer.speechSynthesizer(_:didCancel:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 7,
+      "symbol": "TopBannerViewControllerDelegate",
+      "symbol_kind": "source.lang.swift.decl.protocol",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 21,
+      "symbol": "TopBannerViewControllerDelegate",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 97,
+      "symbol": "TopBannerViewController.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 105,
+      "symbol": "TopBannerViewController.viewDidLoad()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 200,
+      "symbol": "TopBannerViewController.isDisplayingPreviewInstructions",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 209,
+      "symbol": "TopBannerViewController.preview(step:maneuverStep:distance:steps:completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 236,
+      "symbol": "TopBannerViewController.stopPreviewing(showingSecondaryChildren:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 284,
+      "symbol": "TopBannerViewController.isDisplayingSteps",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 286,
+      "symbol": "TopBannerViewController.displayStepsTable()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/TopBannerViewController.swift",
+      "line": 341,
+      "symbol": "TopBannerViewController.dismissStepsTable(completion:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Transitioning.swift",
+      "line": 5,
+      "symbol": "DismissAnimator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/Transitioning.swift",
+      "line": 35,
+      "symbol": "PresentAnimator",
+      "symbol_kind": "source.lang.swift.decl.extension",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UIEdgeInsets.swift",
+      "line": 5,
+      "symbol": "UIEdgeInsets.+(_:_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.static",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 45,
+      "symbol": "UserPuckCourseView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 50,
+      "symbol": "UserPuckCourseView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 75,
+      "symbol": "UserPuckCourseView.puckColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 82,
+      "symbol": "UserPuckCourseView.stalePuckColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 89,
+      "symbol": "UserPuckCourseView.fillColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserCourseView.swift",
+      "line": 96,
+      "symbol": "UserPuckCourseView.shadowColor",
+      "symbol_kind": "source.lang.swift.decl.var.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserHaloCourseView.swift",
+      "line": 49,
+      "symbol": "UserHaloCourseView.init(frame:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserHaloCourseView.swift",
+      "line": 54,
+      "symbol": "UserHaloCourseView.init(coder:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    },
+    {
+      "file": "/Users/distiller/project/Sources/MapboxNavigation/UserHaloCourseView.swift",
+      "line": 89,
+      "symbol": "UserHaloCourseView.traitCollectionDidChange(_:)",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
+  ],
+  "source_directory": "/Users/distiller/project"
+}
