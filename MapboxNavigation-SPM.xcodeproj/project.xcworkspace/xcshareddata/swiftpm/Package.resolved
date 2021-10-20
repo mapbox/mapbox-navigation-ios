@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": null,
-          "revision": "2643fb851a5805fbb4348c08711c6c9cc7416321",
-          "version": "2.0.0-rc.4"
+          "revision": "f95be4f764acb0ea40ab11184e09825d3046d14f",
+          "version": "2.0.0"
         }
       },
       {
@@ -78,8 +78,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
           "branch": null,
-          "revision": "7b04b5173eb985a260083dfbeb9a3567d46a0333",
-          "version": "2.0.0-rc.1"
+          "revision": "b0a6008c184c1010dac11e14bf20afe4261d8c36",
+          "version": "2.0.0"
         }
       },
       {
