@@ -368,13 +368,19 @@ open class NavigationMapView: UIView {
                                           below parentLayerIndentifier: String? = nil,
                                           isMainRoute: Bool = true,
                                           legIndex: Int? = nil) -> String? {
-        guard let shape = route.shape else { return nil }
+        guard let defaultShape = route.shape else { return nil }
+        let shape = delegate?.navigationMapView(self, shapeFor: route) ?? defaultShape
         
-        let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, shapeFor: route) ?? shape)
+        let geoJSONSource = self.geoJSONSource(shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: true))
         
         do {
-            try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+            if mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
+                try mapView.mapboxMap.style.updateGeoJSONSource(withId: sourceIdentifier,
+                                                                geoJSON: .geometry(.lineString(shape)))
+            } else {
+                try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+            }
         } catch {
             NSLog("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).")
         }
@@ -446,13 +452,19 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addRouteCasingLayer(_ route: Route, below parentLayerIndentifier: String? = nil, isMainRoute: Bool = true) -> String? {
-        guard let shape = route.shape else { return nil }
+        guard let defaultShape = route.shape else { return nil }
+        let shape = delegate?.navigationMapView(self, casingShapeFor: route) ?? defaultShape
         
-        let geoJSONSource = self.geoJSONSource(delegate?.navigationMapView(self, casingShapeFor: route) ?? shape)
+        let geoJSONSource = self.geoJSONSource(shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: isMainRoute))
         
         do {
-            try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+            if mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
+                try mapView.mapboxMap.style.updateGeoJSONSource(withId: sourceIdentifier,
+                                                                geoJSON: .geometry(.lineString(shape)))
+            } else {
+                try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
+            }
         } catch {
             NSLog("Failed to add route casing source \(sourceIdentifier) with error: \(error.localizedDescription).")
         }
