@@ -122,6 +122,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     
     required public init() {
         super.init(frame: .zero)
+        commonInit()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -130,7 +131,11 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     }
     
     public func prepareLayout() {
-        commonInit()
+        instructionsCardView.prepareLayout()
+        setGradientLayer(for: self)
+        setGradientLayer(for: instructionsCardView)
+        setGradientLayer(for: lanesView)
+        setGradientLayer(for: nextBannerView)
     }
     
     public func updateBackgroundColor(highlightEnabled: Bool) {
@@ -142,13 +147,6 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     func commonInit() {
         addStackConstraints()
         setupInformationStackView()
-        setGradientLayer(for: self)
-        setGradientLayer(for: instructionsCardView)
-        setGradientLayer(for: lanesView)
-        setGradientLayer(for: nextBannerView)
-        
-        instructionsCardView.prepareLayout()
-        
         instructionsCardView.primaryLabel.instructionDelegate = self
         instructionsCardView.secondaryLabel.instructionDelegate = self
     }

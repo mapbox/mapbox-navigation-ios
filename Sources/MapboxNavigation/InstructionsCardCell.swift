@@ -4,7 +4,7 @@ import MapboxDirections
 
 /// :nodoc:
 public class InstructionsCardCell: UICollectionViewCell {
-    public var container: InstructionsCardContainerView!
+    public let container: InstructionsCardContainerView = .init()
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -17,8 +17,9 @@ public class InstructionsCardCell: UICollectionViewCell {
     }
     
     func commonInit() {
-        container = InstructionsCardContainerView()
         configureLayer()
+        addSubview(container)
+        setupConstraints()
     }
     
     func configureLayer() {
@@ -42,10 +43,10 @@ public class InstructionsCardCell: UICollectionViewCell {
     }
     
     public func configure(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil, isCurrentCardStep: Bool = false) {
-        addSubview(container)
-        setupConstraints()
-        container.prepareLayout()
-        container.updateInstruction(for: step, distance: distance, instruction: instruction, isCurrentCardStep: isCurrentCardStep)
+        container.updateInstruction(for: step,
+                                    distance: distance,
+                                    instruction: instruction,
+                                    isCurrentCardStep: isCurrentCardStep)
     }
 }
 
