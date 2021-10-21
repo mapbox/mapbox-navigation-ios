@@ -16,13 +16,13 @@ public class InstructionsCardCell: UICollectionViewCell {
         self.commonInit()
     }
     
-    func commonInit() {
+    private func commonInit() {
         configureLayer()
         addSubview(container)
         setupConstraints()
     }
     
-    func configureLayer() {
+    private func configureLayer() {
         backgroundColor = .clear
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 1, height: 2)
@@ -30,7 +30,7 @@ public class InstructionsCardCell: UICollectionViewCell {
         layer.shadowOpacity = 0.4
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         container.translatesAutoresizingMaskIntoConstraints = false
         container.topAnchor.constraint(equalTo: topAnchor, constant: 2).isActive = true
         container.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true

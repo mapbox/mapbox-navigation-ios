@@ -144,7 +144,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         highlightContainerView()
     }
     
-    func commonInit() {
+    private func commonInit() {
         addStackConstraints()
         setupInformationStackView()
         instructionsCardView.primaryLabel.instructionDelegate = self
@@ -228,7 +228,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         return firstLayer
     }
     
-    func highlightContainerView() {
+    private func highlightContainerView() {
         let duration = InstructionsCardConstants.highlightAnimationDuration
         let alphaComponent = InstructionsCardConstants.highlightedBackgroundAlphaComponent
         
@@ -261,7 +261,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
             }
             
             if let nextBannerGradientLayer = nextBannerGradientLayer {
-                self.hightlightNextBannerView(nextBannerGradientLayer, colors: colors)
+                self.highlightNextBannerView(nextBannerGradientLayer, colors: colors)
             }
             
             if let containerGradientLayer = containerGradientLayer {
@@ -276,25 +276,24 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         })
     }
     
-    fileprivate func highlightLanesView(_ gradientLayer: CAGradientLayer, colors: [CGColor]) {
+    private func highlightLanesView(_ gradientLayer: CAGradientLayer, colors: [CGColor]) {
         gradientLayer.colors = colors
         guard let stackView = lanesView.subviews.first as? UIStackView else {
             return
         }
         let laneViews: [LaneView] = stackView.subviews.compactMap { $0 as? LaneView }
         laneViews.forEach { laneView in
-            guard laneView.isValid else { return }
             laneView.showHighlightedColors = true
         }
     }
     
-    fileprivate func hightlightNextBannerView(_ gradientLayer: CAGradientLayer, colors: [CGColor]) {
+    private func highlightNextBannerView(_ gradientLayer: CAGradientLayer, colors: [CGColor]) {
         gradientLayer.colors = colors
         nextBannerView.maneuverView.shouldShowHighlightedColors = true
         nextBannerView.instructionLabel.showHighlightedTextColor = true
     }
     
-    fileprivate func highlightInstructionsCardView(colors: [CGColor]) {
+    private func highlightInstructionsCardView(colors: [CGColor]) {
         // primary & secondary labels
         instructionsCardView.primaryLabel.showHighlightedTextColor = true
         instructionsCardView.secondaryLabel.showHighlightedTextColor = true
