@@ -36,12 +36,6 @@ public class InstructionsCardCell: UICollectionViewCell {
         container.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         container.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
-    
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-        /* TODO: Smoothen animation here. */
-    }
-    
     public func configure(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil, isCurrentCardStep: Bool = false) {
         container.updateInstruction(for: step,
                                     distance: distance,
