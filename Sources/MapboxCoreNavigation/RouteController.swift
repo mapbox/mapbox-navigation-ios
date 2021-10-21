@@ -124,7 +124,10 @@ open class RouteController: NSObject {
      */
     public weak var delegate: RouterDelegate?
     
-    var heading: CLHeading?
+    /**
+     The route controller’s heading.
+     */
+    public var heading: CLHeading?
     var isFirstLocation: Bool = true
     
     /**
@@ -464,11 +467,18 @@ open class RouteController: NSObject {
         delegate?.router(self, didUpdate: progress, with: location, rawLocation: rawLocation)
         
         //Fire the notification (for now)
-        NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: [
-            NotificationUserInfoKey.routeProgressKey: progress,
-            NotificationUserInfoKey.locationKey: location, //guaranteed value
-            NotificationUserInfoKey.rawLocationKey: rawLocation, //raw
-        ])
+        
+        var userInfo: [RouteController.NotificationUserInfoKey: Any] = [
+            .routeProgressKey: progress,
+            .locationKey: location, // guaranteed value
+            .rawLocationKey: rawLocation, // raw
+        ]
+        userInfo[.headingKey] = heading
+        
+        // to do: DETERMINE IF THIS IS NEEDED
+        userInfo[.rawHeadingKey] = heading // heading snapping not yet implemented (an unnecessary?)
+        
+        NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: userInfo)
     }
     
     private func announcePassage(of spokenInstructionPoint: SpokenInstruction, routeProgress: RouteProgress) {
