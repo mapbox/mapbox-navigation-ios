@@ -132,8 +132,7 @@ class EndOfRouteViewController: UIViewController {
     }
     
     private func height(for height: ContainerHeight) -> CGFloat {
-        let window = UIApplication.shared.keyWindow
-        let bottomMargin = window!.safeArea.bottom
+        let bottomMargin = view.safeAreaInsets.bottom
         return height.rawValue + bottomMargin
     }
     
