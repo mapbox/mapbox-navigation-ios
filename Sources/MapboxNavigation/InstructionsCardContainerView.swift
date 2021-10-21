@@ -200,8 +200,6 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
             }
         }
         
-        view.layoutIfNeeded()
-        
         return view
     }
     
