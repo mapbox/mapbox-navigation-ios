@@ -52,7 +52,11 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     
     // MARK: Child Views Configuration
     
-    @objc dynamic public var customBackgroundColor: UIColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+    @objc dynamic public var customBackgroundColor: UIColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0) {
+        didSet {
+            prepareLayout()
+        }
+    }
     @objc dynamic public var highlightedBackgroundColor: UIColor = UIColor(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
     
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
