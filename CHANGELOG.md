@@ -6,6 +6,10 @@
 
 * MapboxCoreNavigation now depends on [MapboxNavigationNative v78._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/78.0.0). ([#3488](https://github.com/mapbox/mapbox-navigation-ios/pull/3488))
 
+### Banners and guidance instructions
+
+* Fixed Night Style for guidance instructions. ([#3503](https://github.com/mapbox/mapbox-navigation-ios/pull/3503))
+
 ## v2.0.0
 
 ### Packaging
