@@ -28,7 +28,7 @@ extension MapboxMaps.Style {
     func removeSources(_ identifiers: Set<String>) {
         identifiers.forEach {
             do {
-                if layerExists(withId: $0) {
+                if sourceExists(withId: $0) {
                     try removeSource(withId: $0)
                 }
             } catch {
