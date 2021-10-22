@@ -100,4 +100,4 @@ To install the MapboxCoreNavigation framework using [Swift Package Manager](http
 
 1. Enter `https://github.com/mapbox/mapbox-navigation-ios.git` as the package repository and click Next.
 
-1. Set Rules to Version, Up to Next Major, and enter `v2.0.0-beta.11` as the minimum version requirement. Click Next.
+1. Set Rules to Version, Up to Next Major, and enter `v2.0.0` as the minimum version requirement. Click Next.
