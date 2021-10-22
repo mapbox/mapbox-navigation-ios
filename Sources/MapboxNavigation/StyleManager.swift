@@ -202,6 +202,7 @@ open class StyleManager {
                 currentStyleType = style.styleType
                 currentStyle = style
                 delegate?.styleManager(self, didApply: style)
+                forceRefreshAppearance()
             }
             return
         }
@@ -213,6 +214,7 @@ open class StyleManager {
                 currentStyleType = style.styleType
                 currentStyle = style
                 delegate?.styleManager(self, didApply: style)
+                forceRefreshAppearance()
             }
             return
         }
