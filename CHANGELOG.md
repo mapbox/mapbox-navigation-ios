@@ -4,7 +4,7 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now depends on [MapboxNavigationNative v79._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/79.0.0). ([#3488](https://github.com/mapbox/mapbox-navigation-ios/pull/3488))
+* MapboxCoreNavigation now depends on [MapboxNavigationNative v79._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/79.0.0). ([#3509](https://github.com/mapbox/mapbox-navigation-ios/pull/3509))
 
 ### Other changes
 
