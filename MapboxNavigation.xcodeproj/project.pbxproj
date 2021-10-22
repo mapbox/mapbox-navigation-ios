@@ -217,6 +217,7 @@
 		8ACF0AAA2706394A00F30423 /* CPInterfaceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */; };
 		8AD12F4C26C193560008AE55 /* LeaksTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4826C193520008AE55 /* LeaksTests.swift */; };
 		8AD12F4D26C1A5C10008AE55 /* Snapshot++.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD12F4326C191080008AE55 /* Snapshot++.swift */; };
+		8AD6F25B272216A500326D13 /* MapViewStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD6F25A272216A500326D13 /* MapViewStyleTests.swift */; };
 		8AD866F625CA1BF10019A638 /* NavigationCamera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */; };
 		8AD866F725CA1BF10019A638 /* NavigationCameraStateTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */; };
 		8AD866F925CA1BF10019A638 /* ViewportDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD866EE25CA1BF00019A638 /* ViewportDataSource.swift */; };
@@ -724,6 +725,7 @@
 		8ACF0AA92706394A00F30423 /* CPInterfaceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPInterfaceController.swift; sourceTree = "<group>"; };
 		8AD12F4326C191080008AE55 /* Snapshot++.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Snapshot++.swift"; sourceTree = "<group>"; };
 		8AD12F4826C193520008AE55 /* LeaksTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeaksTests.swift; sourceTree = "<group>"; };
+		8AD6F25A272216A500326D13 /* MapViewStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewStyleTests.swift; sourceTree = "<group>"; };
 		8AD866EB25CA1BF00019A638 /* NavigationCamera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCamera.swift; sourceTree = "<group>"; };
 		8AD866EC25CA1BF00019A638 /* NavigationCameraStateTransition.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraStateTransition.swift; sourceTree = "<group>"; };
 		8AD866EE25CA1BF00019A638 /* ViewportDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewportDataSource.swift; sourceTree = "<group>"; };
@@ -1382,6 +1384,7 @@
 			isa = PBXGroup;
 			children = (
 				35F1F5921FD57EFD00F8E502 /* StyleManagerTests.swift */,
+				8AD6F25A272216A500326D13 /* MapViewStyleTests.swift */,
 			);
 			name = Style;
 			sourceTree = "<group>";
@@ -2557,6 +2560,7 @@
 				8DFD949E221F66BE00152F45 /* BottomBannerSnapshotTests.swift in Sources */,
 				355B469B22B902C9009CE634 /* SKUTests.swift in Sources */,
 				DAD17202214DB12B009C8161 /* CPMapTemplateTests.swift in Sources */,
+				8AD6F25B272216A500326D13 /* MapViewStyleTests.swift in Sources */,
 				2E82B9DE26E6237600B7837F /* CongestionLevelTests.swift in Sources */,
 				35EFD009207CA5E800BF3873 /* ManeuverViewSnapshotTests.swift in Sources */,
 				8AD12F4D26C1A5C10008AE55 /* Snapshot++.swift in Sources */,
