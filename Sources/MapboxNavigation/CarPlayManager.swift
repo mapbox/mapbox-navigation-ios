@@ -128,8 +128,6 @@ public class CarPlayManager: NSObject {
         self.mapTemplateProvider.delegate = self
     }
     
-    
-    
     func subscribeForNotifications() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigationCameraStateDidChange(_:)),
@@ -687,7 +685,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
                             using routeChoice: CPRouteChoice) {
         guard let carPlayMapViewController = carPlayMapViewController,
               let (routeResponse, routeIndex, _) = routeChoice.userInfo as? (RouteResponse, Int, RouteOptions),
-              let routes = routeResponse.routes,
+              var routes = routeResponse.routes,
               routes.indices.contains(routeIndex) else { return }
         
         let route = routes[routeIndex]
@@ -695,8 +693,12 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)
         
+        if let index = routes.firstIndex(where: { $0 === route }) {
+            routes.insert(routes.remove(at: index), at: 0)
+        }
+        
         let navigationMapView = carPlayMapViewController.navigationMapView
-        navigationMapView.showcase([route])
+        navigationMapView.showcase(routes)
         
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
     }
