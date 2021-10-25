@@ -14,10 +14,6 @@ public protocol PassiveNavigationEventsManagerDataSource: AnyObject {
 }
 
 extension PassiveLocationManager: PassiveNavigationEventsManagerDataSource {
-    public var rawLocation: CLLocation? {
-        return self.lastRawLocation
-    }
-
     public var locationManagerType: NavigationLocationManager.Type {
         return type(of: systemLocationManager)
     }

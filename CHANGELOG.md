@@ -14,6 +14,9 @@
 
 * Fixed an issue in CarPlay’s previewing activity where only the selected route was visible on the map, while other alternative routes were hidden. Now all the routes are visible simultaneously. ([#3511](https://github.com/mapbox/mapbox-navigation-ios/pull/3511))
 
+### Location tracking
+* Renamed `PassiveLocationManager`'s `lastRawLocation` to `rawLocation` and added `location` properties to expose latest cached raw and idealized locations respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
+
 ## v2.0.0
 
 ### Packaging
