@@ -106,7 +106,7 @@ extension NavigationMapView {
             }
             
             if routeLineTracksTraversal {
-                if progress.routeIsComplete {
+                if progress.routeIsComplete && (navigationMapView.routes != nil) {
                     navigationMapView.removeRoutes()
                 }
                 navigationMapView.updateUpcomingRoutePointIndex(routeProgress: progress)
