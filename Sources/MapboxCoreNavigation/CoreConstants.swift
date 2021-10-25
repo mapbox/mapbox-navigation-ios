@@ -213,6 +213,13 @@ public extension Notification.Name {
      */
     static let currentRoadNameDidChange: Notification.Name = .init(rawValue: "CurrentRoadNameDidChange")
     
+    /**
+     Posted when `RouteController` detects the arrival at waypoint.
+     
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.arriveAtWaypointKey`.
+     */
+    static let didArriveAtWaypoint: Notification.Name = .init(rawValue: "DidArriveAtWaypoint")
+    
     // MARK: Settings and Permissions Updates
     
     /**
@@ -271,6 +278,11 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `NSString` object representing the current road name.
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.didArriveAtWaypoint` notification. The corresponding value is a `MapboxDirections.Waypoint` object representing the current destination waypoint.
+         */
+        public static let arriveAtWaypointKey: NotificationUserInfoKey = .init(rawValue: "arriveAtWaypoint")
         
         // MARK: Monitoring Rerouting
         
