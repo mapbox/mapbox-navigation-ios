@@ -16,6 +16,7 @@
 
 ### Location tracking
 * Renamed `PassiveLocationManager`'s `lastRawLocation` to `rawLocation` and added `location` properties to expose latest cached raw and idealized locations respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
+* Fixed an issue where the route line flashing upon arrival at destination when `NavigationViewcontroller.routeLineTracksTraversal` enabled. ([#3516](https://github.com/mapbox/mapbox-navigation-ios/pull/3516))
 
 ## v2.0.0
 
