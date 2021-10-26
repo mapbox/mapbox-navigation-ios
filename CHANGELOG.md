@@ -9,6 +9,7 @@
 ### Location tracking
 
 * Fixed an issue where the route line flashing upon arrival at destination when `NavigationViewcontroller.routeLineTracksTraversal` enabled. ([#3516](https://github.com/mapbox/mapbox-navigation-ios/pull/3516))
+* Added the `Notification.Name.didArriveAtWaypoint` to detect the arrival of a waypoint posted by `RouteController`. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))
 
 ## v2.0.0
 

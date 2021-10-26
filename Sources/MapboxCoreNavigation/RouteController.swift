@@ -407,6 +407,7 @@ open class RouteController: NSObject {
                 previousArrivalWaypoint = currentDestination
                 legProgress.userHasArrivedAtWaypoint = true
                 
+                announceArrival(didArriveAt: currentDestination)
                 let advancesToNextLeg = delegate?.router(self, didArriveAt: currentDestination) ?? DefaultBehavior.didArriveAtWaypoint
                 guard !routeProgress.isFinalLeg && advancesToNextLeg else {
                     return
@@ -452,6 +453,11 @@ open class RouteController: NSObject {
         ]
         
         NotificationCenter.default.post(name: .routeControllerDidPassVisualInstructionPoint, object: self, userInfo: info)
+    }
+    
+    private func announceArrival(didArriveAt waypoint: MapboxDirections.Waypoint) {
+        let info: [NotificationUserInfoKey: Any] = [.waypointKey: waypoint]
+        NotificationCenter.default.post(name: .didArriveAtWaypoint, object: self, userInfo: info)
     }
     
     func geometryEncoding(_ routeShapeFormat: RouteShapeFormat) -> ActiveGuidanceGeometryEncoding {
