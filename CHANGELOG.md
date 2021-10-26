@@ -18,6 +18,10 @@
 * Renamed `PassiveLocationManager`'s `lastRawLocation` to `rawLocation` and added `location` properties to expose latest cached raw and idealized locations respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
 * Fixed an issue where the route line flashing upon arrival at destination when `NavigationViewcontroller.routeLineTracksTraversal` enabled. ([#3516](https://github.com/mapbox/mapbox-navigation-ios/pull/3516))
 
+## v2.0.1
+
+* Added the `Notification.Name.didArriveAtWaypoint` to detect the arrival of a waypoint posted by `RouteController`. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))
+
 ## v2.0.0
 
 ### Packaging
