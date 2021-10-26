@@ -771,7 +771,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             preconditionFailure("Current leg has no destination")
         }
         let preventRerouting = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
-        let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint
+        let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint && (progress.currentLegProgress.distanceRemaining <= 0)
 
         if snapsUserLocationAnnotationToRoute && (!userArrivedAtWaypoint || preventRerouting) {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation), for: location)
@@ -779,7 +779,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation))
         }
 
-        let movePuckToCurrentLocation = !(progress.routeIsComplete && snapsUserLocationAnnotationToRoute && preventRerouting)
+        let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
         if movePuckToCurrentLocation {
             navigationMapView?.moveUserLocation(to: location, animated: true)
         }
