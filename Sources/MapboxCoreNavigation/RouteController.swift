@@ -456,7 +456,7 @@ open class RouteController: NSObject {
     }
     
     private func announceArrival(didArriveAt waypoint: MapboxDirections.Waypoint) {
-        let info: [NotificationUserInfoKey: Any] = [.arriveAtWaypointKey: waypoint]
+        let info: [NotificationUserInfoKey: Any] = [.waypointKey: waypoint]
         NotificationCenter.default.post(name: .didArriveAtWaypoint, object: self, userInfo: info)
     }
     

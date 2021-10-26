@@ -216,7 +216,7 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` detects the arrival at waypoint.
      
-     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.arriveAtWaypointKey`.
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.waypointKey`.
      */
     static let didArriveAtWaypoint: Notification.Name = .init(rawValue: "DidArriveAtWaypoint")
     
@@ -282,7 +282,7 @@ extension RouteController {
         /**
          A key in the user info dictionary of a `Notification.Name.didArriveAtWaypoint` notification. The corresponding value is a `MapboxDirections.Waypoint` object representing the current destination waypoint.
          */
-        public static let arriveAtWaypointKey: NotificationUserInfoKey = .init(rawValue: "arriveAtWaypoint")
+        public static let waypointKey: NotificationUserInfoKey = .init(rawValue: "waypoint")
         
         // MARK: Monitoring Rerouting
         
