@@ -779,7 +779,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation))
         }
 
-        let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
+        let movePuckToCurrentLocation = !(progress.routeIsComplete && snapsUserLocationAnnotationToRoute && preventRerouting)
         if movePuckToCurrentLocation {
             navigationMapView?.moveUserLocation(to: location, animated: true)
         }
