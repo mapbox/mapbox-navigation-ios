@@ -216,13 +216,13 @@ extension AppDelegate: CarPlayManagerDelegate {
                 return nil
             }
             
-            var mapButtons = [
+            let mapButtons = [
                 carPlayMapViewController.recenterButton,
+                carPlayMapViewController.panningInterfaceDisplayButton(for: mapTemplate),
                 carPlayMapViewController.zoomInButton,
                 carPlayMapViewController.zoomOutButton
             ]
             
-            mapButtons.insert(carPlayMapViewController.panningInterfaceDisplayButton(for: mapTemplate), at: 1)
             return mapButtons
         case .previewing, .navigating, .panningInBrowsingMode:
             return nil

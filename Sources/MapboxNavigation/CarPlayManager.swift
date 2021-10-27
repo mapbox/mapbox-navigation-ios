@@ -63,6 +63,12 @@ public class CarPlayManager: NSObject {
      interface.
      */
     public let directions: Directions
+    
+    /**
+     Returns current `CarPlayActivity`, which is based on currently present `CPTemplate`. In case if
+     `CPTemplate` was not created by `CarPlayManager` `currentActivity` it'll be assigned to `nil`.
+     */
+    public private(set) var currentActivity: CarPlayActivity?
 
     private weak var navigationService: NavigationService?
     private var idleTimerCancellable: IdleTimerManager.Cancellable?
@@ -307,7 +313,7 @@ extension CarPlayManager: CPApplicationDelegate {
         window.rootViewController = carPlayMapViewController
         self.carWindow = window
 
-        let mapTemplate = self.mapTemplate(for: interfaceController)
+        let mapTemplate = previewMapTemplate()
         mainMapTemplate = mapTemplate
         interfaceController.setRootTemplate(mapTemplate, animated: false)
             
@@ -334,44 +340,43 @@ extension CarPlayManager: CPApplicationDelegate {
         idleTimerCancellable = nil
     }
 
-    func mapTemplate(for interfaceController: CPInterfaceController) -> CPMapTemplate {
+    func previewMapTemplate() -> CPMapTemplate {
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
-
-        reloadButtons(for: mapTemplate)
         
-        return mapTemplate
-    }
-    
-    func reloadButtons(for mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
+        let currentActivity: CarPlayActivity = .browsing
+        mapTemplate.userInfo = [
+            CarPlayManager.currentActivityKey: currentActivity
+        ]
+
+        guard let carPlayMapViewController = carPlayMapViewController else { return mapTemplate }
            
         let traitCollection = carPlayMapViewController.traitCollection
         
         if let leadingButtons = delegate?.carPlayManager(self,
                                                          leadingNavigationBarButtonsCompatibleWith: traitCollection,
                                                          in: mapTemplate,
-                                                         for: .browsing) {
+                                                         for: currentActivity) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
 
         if let trailingButtons = delegate?.carPlayManager(self,
                                                           trailingNavigationBarButtonsCompatibleWith: traitCollection,
                                                           in: mapTemplate,
-                                                          for: .browsing) {
+                                                          for: currentActivity) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
 
         if let mapButtons = delegate?.carPlayManager(self,
                                                      mapButtonsCompatibleWith: traitCollection,
                                                      in: mapTemplate,
-                                                     for: .browsing) {
+                                                     for: currentActivity) {
             mapTemplate.mapButtons = mapButtons
         } else if let mapButtons = browsingMapButtons(for: mapTemplate) {
             mapTemplate.mapButtons = mapButtons
         }
+        
+        return mapTemplate
     }
 
     public func resetPanButtons(_ mapTemplate: CPMapTemplate) {
@@ -419,6 +424,13 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         if template == interfaceController?.rootTemplate,
            let carPlayMapViewController = carPlayMapViewController {
             carPlayMapViewController.recenterButton.isHidden = true
+        }
+        
+        if let userInfo = template.userInfo as? Dictionary<String, Any>,
+           let currentActivity = userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity {
+            self.currentActivity = currentActivity
+        } else {
+            self.currentActivity = nil
         }
     }
     
@@ -621,7 +633,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
             navigationService.simulationSpeedMultiplier = simulatedSpeedMultiplier
         }
         popToRootTemplate(interfaceController: interfaceController, animated: false)
-        let navigationMapTemplate = self.mapTemplate(forNavigating: trip)
+        let navigationMapTemplate = self.navigationMapTemplate()
         interfaceController.setRootTemplate(navigationMapTemplate, animated: true)
 
         let carPlayNavigationViewController = carPlayNavigationViewControllerType.init(navigationService: navigationService,
@@ -644,16 +656,21 @@ extension CarPlayManager: CPMapTemplateDelegate {
         navigationMapView.removeWaypoints()
     }
 
-    func mapTemplate(forNavigating trip: CPTrip) -> CPMapTemplate {
+    func navigationMapTemplate() -> CPMapTemplate {
         let mapTemplate = CPMapTemplate()
         mapTemplate.mapDelegate = self
+        
+        let currentActivity: CarPlayActivity = .navigating
+        mapTemplate.userInfo = [
+            CarPlayManager.currentActivityKey: currentActivity
+        ]
 
         guard let carPlayMapViewController = carPlayMapViewController else { return mapTemplate }
         
         if let mapButtons = delegate?.carPlayManager(self,
                                                      mapButtonsCompatibleWith: carPlayMapViewController.traitCollection,
                                                      in: mapTemplate,
-                                                     for: .navigating) {
+                                                     for: currentActivity) {
             mapTemplate.mapButtons = mapButtons
         } else {
             mapTemplate.mapButtons = [userTrackingButton, showFeedbackButton]
@@ -662,7 +679,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         if let leadingButtons = delegate?.carPlayManager(self,
                                                          leadingNavigationBarButtonsCompatibleWith: carPlayMapViewController.traitCollection,
                                                          in: mapTemplate,
-                                                         for: .navigating) {
+                                                         for: currentActivity) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         } else {
             mapTemplate.leadingNavigationBarButtons.insert(muteButton, at: 0)
@@ -671,7 +688,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         if let trailingButtons = delegate?.carPlayManager(self,
                                                           trailingNavigationBarButtonsCompatibleWith: carPlayMapViewController.traitCollection,
                                                           in: mapTemplate,
-                                                          for: .navigating) {
+                                                          for: currentActivity) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         } else {
             mapTemplate.trailingNavigationBarButtons.append(exitButton)
@@ -735,10 +752,12 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         
+        let currentActivity: CarPlayActivity = .panningInBrowsingMode
+        
         if let mapButtons = delegate?.carPlayManager(self,
                                                      mapButtonsCompatibleWith: carPlayMapViewController.traitCollection,
                                                      in: mapTemplate,
-                                                     for: .panningInBrowsingMode) {
+                                                     for: currentActivity) {
             mapTemplate.mapButtons = mapButtons
         } else {
             let closeButton = carPlayMapViewController.dismissPanningButton ??
@@ -746,12 +765,21 @@ extension CarPlayManager: CPMapTemplateDelegate {
             carPlayMapViewController.dismissPanningButton = closeButton
             mapTemplate.mapButtons = [closeButton]
         }
+        
+        self.currentActivity = currentActivity
     }
     
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
         // TODO: Find a way to control `recenterButton` visibility.
     }
-
+    
+    public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
+        if let userInfo = mapTemplate.userInfo as? [String: Any],
+           let currentActivity = userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity {
+            self.currentActivity = currentActivity
+        }
+    }
+    
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
                             didUpdatePanGestureWithTranslation translation: CGPoint,
                             velocity: CGPoint) {
@@ -849,7 +877,7 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         mainMapTemplate = nil
         
         // Then (re-)create and assign new map template
-        let mapTemplate = self.mapTemplate(for: interfaceController)
+        let mapTemplate = previewMapTemplate()
         mainMapTemplate = mapTemplate
 
         interfaceController.setRootTemplate(mapTemplate, animated: true)
@@ -914,6 +942,8 @@ extension CarPlayManager: MapTemplateProviderDelegate {
     }
 }
 
+// MARK: CPTemplateApplicationSceneDelegate Methods
+
 @available(iOS 13.0, *)
 extension CarPlayManager {
     
@@ -934,7 +964,7 @@ extension CarPlayManager {
         window.rootViewController = carPlayMapViewController
         carWindow = window
 
-        let mapTemplate = self.mapTemplate(for: interfaceController)
+        let mapTemplate = previewMapTemplate()
         mainMapTemplate = mapTemplate
         interfaceController.setRootTemplate(mapTemplate, animated: false)
 
@@ -958,4 +988,12 @@ extension CarPlayManager {
 
         idleTimerCancellable = nil
     }
+}
+
+// MARK: CarPlayManager Constants
+
+@available(iOS 12.0, *)
+extension CarPlayManager {
+    
+    static let currentActivityKey = "CurrentActivityKey"
 }
