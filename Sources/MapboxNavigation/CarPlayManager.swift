@@ -66,7 +66,7 @@ public class CarPlayManager: NSObject {
     
     /**
      Returns current `CarPlayActivity`, which is based on currently present `CPTemplate`. In case if
-     `CPTemplate` was not created by `CarPlayManager` `currentActivity` it'll be assigned to `nil`.
+     `CPTemplate` was not created by `CarPlayManager` `currentActivity` will be assigned to `nil`.
      */
     public private(set) var currentActivity: CarPlayActivity?
 
