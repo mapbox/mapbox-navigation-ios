@@ -186,7 +186,9 @@
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
 			);
+			indentWidth = 4;
 			sourceTree = "<group>";
+			tabWidth = 4;
 		};
 		C5ADFBCA1DDCC7840011824B /* Products */ = {
 			isa = PBXGroup;
