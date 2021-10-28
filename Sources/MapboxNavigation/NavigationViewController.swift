@@ -236,6 +236,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                               routeProgress: navigationService.routeProgress)
         }
 
+        navigationMapView?.inActiveNavigation = true
         navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation
     }
     
