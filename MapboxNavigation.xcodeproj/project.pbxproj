@@ -385,6 +385,7 @@
 		E2805A5826CB994500165DB9 /* NSLock+MapboxInternal.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2805A5726CB994500165DB9 /* NSLock+MapboxInternal.swift */; };
 		E2814D982693412E000AD987 /* BillingHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2814D972693412E000AD987 /* BillingHandlerTests.swift */; };
 		E2842798265B907C003F86E4 /* UnimplementedLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */; };
+		E2B4B22A272A814600FF0F57 /* ReplayLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B4B228272A814600FF0F57 /* ReplayLocationManagerTests.swift */; };
 		E2C1CDA0265E22AA00E158E0 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; };
 		E2C1CDA1265E22AA00E158E0 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C1CDA4265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
@@ -988,6 +989,7 @@
 		E2805A5726CB994500165DB9 /* NSLock+MapboxInternal.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSLock+MapboxInternal.swift"; sourceTree = "<group>"; };
 		E2814D972693412E000AD987 /* BillingHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillingHandlerTests.swift; sourceTree = "<group>"; };
 		E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnimplementedLoggingTests.swift; sourceTree = "<group>"; };
+		E2B4B228272A814600FF0F57 /* ReplayLocationManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplayLocationManagerTests.swift; sourceTree = "<group>"; };
 		E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = Carthage/Build/MapboxDirections.xcframework; sourceTree = "<group>"; };
 		E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMobileEvents.xcframework; path = Carthage/Build/MapboxMobileEvents.xcframework; sourceTree = "<group>"; };
 		E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigationNative.xcframework; path = Carthage/Build/MapboxNavigationNative.xcframework; sourceTree = "<group>"; };
@@ -1853,6 +1855,7 @@
 				E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */,
 				E2814D972693412E000AD987 /* BillingHandlerTests.swift */,
 				8A9270E82704F6CC00B606D9 /* BundleAdditionsTests.swift */,
+				E2B4B228272A814600FF0F57 /* ReplayLocationManagerTests.swift */,
 			);
 			name = MapboxCoreNavigationTests;
 			path = Tests/MapboxCoreNavigationTests;
@@ -2733,6 +2736,7 @@
 				E2842798265B907C003F86E4 /* UnimplementedLoggingTests.swift in Sources */,
 				DAD903AF23E3DCC80057CF1F /* DateTests.swift in Sources */,
 				C551B0E620D42222009A986F /* NavigationLocationManagerTests.swift in Sources */,
+				E2B4B22A272A814600FF0F57 /* ReplayLocationManagerTests.swift in Sources */,
 				E23D8B6B269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift in Sources */,
 				359A8AED1FA78D3000BDB486 /* DistanceFormatterTests.swift in Sources */,
 				C52AC1261DF0E48600396B9F /* RouteProgressTests.swift in Sources */,
