@@ -552,22 +552,30 @@ jobs:
       - run:
           name: Generating MapboxCoreNavigation API Diff
           command: |
-            export GITHUB_TOKEN=$(mbx-ci github writer token)
+            export GITHUB_TOKEN=$(mbx-ci github issues token)
             LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json) 
-            if [ -z "$LOG" ]; then
-                gh pr comment $CIRCLE_PR_NUMBER -b "No breaking changes detected in MapboxCoreNavigation"
-            else
-                gh pr comment $CIRCLE_PR_NUMBER -F - \<<< "$LOG"
+            if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
+              if [ -z "$LOG" ]; then
+                gh pr comment -b "No breaking changes detected in MapboxCoreNavigation"
+              else
+                PR_COMMENT=$'# Breaking Changes in MapboxCoreNavigation\n\n'
+                PR_COMMENT+="$LOG"
+                gh pr comment -F - \<<< "$PR_COMMENT"
+              fi
             fi
       - run:
           name: Generating MapboxNavigation API Diff
           command: |
-            export GITHUB_TOKEN=$(mbx-ci github writer token)
+            export GITHUB_TOKEN=$(mbx-ci github issues token)
             LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json)
-            if [ -z "$LOG" ]; then
-                gh pr comment $CIRCLE_PR_NUMBER -b "No breaking changes detected in MapboxNavigation"
-            else
-                gh pr comment $CIRCLE_PR_NUMBER -F - \<<< "$LOG"
+            if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
+              if [ -z "$LOG" ]; then
+                gh pr comment -b "No breaking changes detected in MapboxNavigation"
+              else
+                PR_COMMENT=$'# Breaking Changes in MapboxNavigation\n\n'
+                PR_COMMENT+="$LOG"
+                gh pr comment -F - \<<< "$PR_COMMENT"
+              fi
             fi
 
   spm-core-integration-test-job:
