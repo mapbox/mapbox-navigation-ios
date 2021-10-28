@@ -11,19 +11,25 @@ class MapTemplateProvider: NSObject {
         let mapTemplate = createMapTemplate()
         mapTemplate.mapDelegate = mapDelegate
         
+        let currentActivity: CarPlayActivity = .previewing
+        
         if let leadingButtons = delegate?.mapTemplateProvider(self,
                                                               mapTemplate: mapTemplate,
                                                               leadingNavigationBarButtonsCompatibleWith: traitCollection,
-                                                              for: .previewing) {
+                                                              for: currentActivity) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         }
         
         if let trailingButtons = delegate?.mapTemplateProvider(self,
                                                                mapTemplate: mapTemplate,
                                                                trailingNavigationBarButtonsCompatibleWith: traitCollection,
-                                                               for: .previewing) {
+                                                               for: currentActivity) {
             mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
+        
+        mapTemplate.userInfo = [
+            CarPlayManager.currentActivityKey: currentActivity
+        ]
         
         return mapTemplate
     }
