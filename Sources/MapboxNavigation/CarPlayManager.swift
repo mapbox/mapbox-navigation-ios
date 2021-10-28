@@ -995,5 +995,5 @@ extension CarPlayManager {
 @available(iOS 12.0, *)
 extension CarPlayManager {
     
-    static let currentActivityKey = "CurrentActivityKey"
+    static let currentActivityKey = "com.mapbox.navigation.currentActivity"
 }
