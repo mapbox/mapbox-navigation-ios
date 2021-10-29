@@ -122,7 +122,7 @@ open class NavigationMapView: UIView {
         showWaypoints(on: activeRoute)
         
         navigationCamera.stop()
-        fitCamera(to: activeRoute, animated: animated)
+        fitCamera(to: routes, animated: animated)
     }
     
     /**
@@ -1544,10 +1544,14 @@ open class NavigationMapView: UIView {
         mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
-    func fitCamera(to route: Route, animated: Bool = false) {
-        guard let routeShape = route.shape, !routeShape.coordinates.isEmpty else { return }
+    func fitCamera(to routes: [Route], animated: Bool = false) {
+        for route in routes {
+            guard let routeShape = route.shape, !routeShape.coordinates.isEmpty else { return }
+        }
+
+        let multiLineString = MultiLineString(routes.map({route in route.shape!.coordinates}))
         let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
-        if let cameraOptions = mapView?.mapboxMap.camera(for: .lineString(routeShape),
+        if let cameraOptions = mapView?.mapboxMap.camera(for: .multiLineString(multiLineString),
                                                          padding: edgeInsets,
                                                          bearing: nil,
                                                          pitch: nil) {

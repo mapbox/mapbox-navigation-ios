@@ -289,7 +289,7 @@ open class CarPlayMapViewController: UIViewController {
             cameraOptions.pitch = 0
             navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
             
-            navigationMapView.fitCamera(to: activeRoute)
+            navigationMapView.fitCamera(to: navigationMapView.routes!)
         }
     }
 }
