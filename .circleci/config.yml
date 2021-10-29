@@ -4,6 +4,13 @@ orbs:
   slack: circleci/slack@4.4.2
 
 commands:
+  install-mbx-ci:
+    steps:
+      - run:
+          name: "Install MBX CI"
+          command: |
+            curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > /usr/local/bin/mbx-ci
+            chmod 755 /usr/local/bin/mbx-ci
   notify-build-finished:
       parameters:
         notify_success:
@@ -24,6 +31,12 @@ commands:
             template: basic_fail_1   
             branch_pattern: main
             mentions: '@here'
+  install-gh-cli:
+      steps:        
+        - run:
+            name: Install GitHub CLI
+            command: |
+              brew install gh
   restore-carthage-cache:
     parameters:
       xcode:
@@ -53,17 +66,22 @@ commands:
           condition: << parameters.is_template >>
           steps: 
             - save_cache:
-                key: nav-sdk-diff-cache-v5-{{ << parameters.key >> }}
+                key: nav-sdk-diff-cache-v7-{{ << parameters.key >> }}
                 paths:
                   - api_logs
+            - store_artifacts:
+                path: api_logs
+                destination: api_logs_base_api
       - unless:
           condition: << parameters.is_template >>
           steps:
             - save_cache:
-                key: nav-sdk-diff-cache-v5-<< parameters.key >>
+                key: nav-sdk-diff-cache-v7-<< parameters.key >>
                 paths:
                   - api_logs
-
+            - store_artifacts:
+                path: api_logs
+                destination: api_logs_<< parameters.key >>
   restore-api-diff-cache:
     parameters:
       key:
@@ -76,66 +94,36 @@ commands:
           condition: << parameters.is_template >>
           steps: 
             - restore_cache:
-                key: nav-sdk-diff-cache-v5-{{ << parameters.key >> }}
+                key: nav-sdk-diff-cache-v7-{{ << parameters.key >> }}
       - unless:
           condition: << parameters.is_template >>
           steps:
             - restore_cache:
-                key: nav-sdk-diff-cache-v5-<< parameters.key >>
+                key: nav-sdk-diff-cache-v7-<< parameters.key >>
 
   build-api-diff-cli-tool:
     description: "Builds CLI tool which produce diff reports"
     parameters:
-      sourcekitten-version:
-        type: string
-        default: "0.31.0"
       swift-api-diff-version:
         type: string
-        default: v1.0.0
+        default: "v2.0.0-rc.1"
     steps:
-      - restore-sourcekitten-cache:
-          version: << parameters.sourcekitten-version >>
-      - run:
-          name: Install Sourcekitten
-          command: if [ ! -d /usr/local/Cellar/sourcekitten/<< parameters.sourcekitten-version >> ]; then brew update && brew install sourcekitten; fi
-      - save-sourcekitten-cache:
-          version: << parameters.sourcekitten-version >>      
       - add_ssh_keys:
           fingerprints:
             - "8c:24:d5:99:22:42:45:8f:16:6f:8d:24:ee:08:97:13"
-      - run:
-          name: Checkout swift-api-diff CLI
-          command: cd Scripts && git clone git@github.com:mapbox/swift-api-diff.git --branch <<parameters.swift-api-diff-version>> --depth 1
       - restore_cache:
           key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
       - run:
-          name: Building API Diff Report
-          command: if [ ! -f "scripts/swift-api-diff/.build/release/swift-api-diff" ]; then cd scripts/swift-api-diff && swift build --configuration release; fi
+          name: Building API Diff Report if Needed
+          command: |
+            if [ ! -f "scripts/swift-api-diff/.build/release/swift-api-diff" ]; then 
+              cd scripts && git clone git@github.com:mapbox/swift-api-diff.git --branch <<parameters.swift-api-diff-version>> --depth 1
+              cd scripts/swift-api-diff && swift build --configuration release; 
+            fi
       - save_cache:
           key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
           paths:
             - scripts/swift-api-diff/.build/release/swift-api-diff
-
-  save-sourcekitten-cache:
-    description: "Save sourcekitten binary"
-    parameters:
-      version: 
-        type: string
-    steps:
-      - save_cache:
-          key: sourcekitten-v2-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-<< parameters.version >>
-          paths:
-            - /usr/local/Cellar/sourcekitten/<< parameters.version >>
-            - /usr/local/bin/sourcekitten
-
-  restore-sourcekitten-cache:    
-    description: "Restore sourcekitten binary"
-    parameters:
-      version: 
-        type: string
-    steps:
-      - restore_cache:
-          key: sourcekitten-v2-{{ .Environment.CIRCLE_PROJECT_REPONAME }}-<< parameters.version >>
 
   run_api_log_in_current_env:
     parameters:
@@ -146,10 +134,33 @@ commands:
     steps:
       - run:
           name: Generating MapboxCoreNavigation API Log
-          command: ./scripts/swift-api-diff/.build/release/swift-api-diff log ./ $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json doc --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff doc ./ $CIRCLE_WORKING_DIRECTORY/api_logs/core_navigation_log.json --module-name MapboxCoreNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
       - run:
           name: Generating MapboxNavigation API Log
-          command: ./scripts/swift-api-diff/.build/release/swift-api-diff log ./ $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json doc --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+          command: ./scripts/swift-api-diff/.build/release/swift-api-diff doc ./ $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+  run_breaking_changes_detector:
+    parameters:
+      module_name:
+        type: string
+      base_api_path:
+        type: string
+      new_api_path:
+        type: string
+    steps:
+      - run:
+          name: Generating << parameters.module_name >> API Diff
+          command: |
+            export GITHUB_TOKEN=$(mbx-ci github issues token)
+            LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes << parameters.base_api_path >> << parameters.new_api_path >>)
+            if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
+              if [ -z "$LOG" ]; then
+                gh pr comment -b "No breaking changes detected in << parameters.module_name >>"
+              else
+                PR_COMMENT=$'# Breaking Changes in << parameters.module_name >>\n\n'
+                PR_COMMENT+="$LOG"
+                gh pr comment -F - \<<< "$PR_COMMENT"
+              fi
+            fi
 
   carthage-bootstrap:
     steps:
@@ -237,13 +248,6 @@ step-library:
         name: Add GitHub to known hosts
         command: |
           for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
-          
-  - &install-mbx-ci
-      run:
-        name: Install mbx-ci
-        command: |
-          curl -Ls https://mapbox-release-engineering.s3.amazonaws.com/mbx-ci/latest/mbx-ci-darwin-amd64 > /usr/local/bin/mbx-ci
-          chmod 755 /usr/local/bin/mbx-ci
 
   - &build-Example
       run:
@@ -514,11 +518,6 @@ jobs:
             - run:
                 name: Checking out commit
                 command: git checkout << parameters.commit_hash >>      
-      - restore-carthage-cache:
-          xcode: << parameters.xcode >>
-      - carthage-bootstrap
-      - save-carthage-cache:
-          xcode: << parameters.xcode >>
       - build-api-diff-cli-tool
       - run:
           name: Move Xcode project aside
@@ -542,13 +541,13 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.4.0"
+        default: "13.0.0"
       device:
         type: string
-        default: "iPhone 12 Pro Max"
+        default: "iPhone 13 Pro Max"
       iOS:
         type: string
-        default: "14.4"
+        default: "15.0"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -556,7 +555,11 @@ jobs:
     steps:
       - checkout
       - *add-github-to-known-hosts
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
       - build-api-diff-cli-tool
+      - install-mbx-ci
+      - install-gh-cli
       - restore-api-diff-cache:
           key: .Environment.CIRCLE_SHA1
           is_template: true
@@ -569,13 +572,15 @@ jobs:
       - run:
           name: Pick old API
           command: mv api_logs old_api
-      - run:
-          name: Generating MapboxCoreNavigation API Diff
-          command: ./scripts/swift-api-diff/.build/release/swift-api-diff diff $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json
-      - run:
-          name: Generating MapboxNavigation API Diff
-          command: ./scripts/swift-api-diff/.build/release/swift-api-diff diff $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json -i $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json
-          
+      - run_breaking_changes_detector:
+          module_name: MapboxCoreNavigation
+          base_api_path: $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json
+          new_api_path: $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json
+      - run_breaking_changes_detector:
+          module_name: MapboxNavigation
+          base_api_path: $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json
+          new_api_path: $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json
+
   spm-core-integration-test-job:
     macos:
       xcode: "13.0.0"
@@ -602,7 +607,7 @@ jobs:
       - *restore-cache-podmaster
       - *install-gems
       - *prepare-netrc-file
-      - *install-mbx-ci
+      - install-mbx-ci
       - run:
           name: Generate docs
           command: |
@@ -655,20 +660,20 @@ workflows:
              branches:
                only:
                  - main
-  # api-diff-workflow:
-  #   jobs:
-  #     - get-api-log-job:
-  #         name: "Get old API logs"
-  #         is_base_api: true
-  #         commit_hash: ""
-  #     - get-api-log-job:
-  #         name: "Get new API logs"
-  #         commit_hash: << pipeline.git.revision >>
-  #     - api-diff-job:
-  #         name: "Verify no breaking API changes introduced"
-  #         requires:
-  #           - "Get old API logs"
-  #           - "Get new API logs"
+  api-diff-workflow:
+    jobs:
+      - get-api-log-job:
+          name: "Get old API logs"
+          is_base_api: true
+          commit_hash: ""
+      - get-api-log-job:
+          name: "Get new API logs"
+          commit_hash: << pipeline.git.revision >>
+      - api-diff-job:
+          name: "Create breaking changes PR comment"
+          requires:
+            - "Get old API logs"
+            - "Get new API logs"
   main-workflow:
     jobs:
       - build-job:
