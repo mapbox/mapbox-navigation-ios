@@ -22,12 +22,17 @@ open class CarPlayNavigationViewController: UIViewController {
      
      This view is hidden by default.
      */
-    public weak var compassView: CarPlayCompassView!
+    public var compassView: CarPlayCompassView!
     
     /**
      A view that displays the current speed limit.
      */
-    public weak var speedLimitView: SpeedLimitView!
+    public var speedLimitView: SpeedLimitView!
+    
+    /**
+     A view that displays the current road name.
+     */
+    public var wayNameView: WayNameView!
     
     /**
      The interface styles available for display.
@@ -83,6 +88,20 @@ open class CarPlayNavigationViewController: UIViewController {
         speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         self.speedLimitView = speedLimitView
+        
+        let wayNameView: WayNameView = .forAutoLayout(hidden: true)
+        wayNameView.clipsToBounds = true
+        wayNameView.label.textAlignment = .center
+        wayNameView.layer.borderWidth = 1.0
+        view.addSubview(wayNameView)
+        
+        NSLayoutConstraint.activate([
+            wayNameView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10.0),
+            wayNameView.leftAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leftAnchor, constant: 5.0),
+            wayNameView.rightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.rightAnchor, constant: -5.0)
+        ])
+        
+        self.wayNameView = wayNameView
     }
     
     func setupStyleManager() {
@@ -282,8 +301,6 @@ open class CarPlayNavigationViewController: UIViewController {
      */
     public fileprivate(set) var navigationMapView: NavigationMapView?
     
-    
-
     var carSession: CPNavigationSession!
     var currentLegIndexMapped: Int = 0
 
@@ -427,6 +444,11 @@ open class CarPlayNavigationViewController: UIViewController {
                                                selector: #selector(simulationStateDidChange(_:)),
                                                name: .navigationServiceSimulationDidChange,
                                                object: service)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didUpdateRoadName),
+                                               name: .currentRoadNameDidChange,
+                                               object: nil)
     }
     
     func suspendNotifications() {
@@ -448,6 +470,10 @@ open class CarPlayNavigationViewController: UIViewController {
         
         NotificationCenter.default.removeObserver(self,
                                                   name: .navigationServiceSimulationDidChange,
+                                                  object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .currentRoadNameDidChange,
                                                   object: nil)
     }
     
@@ -551,6 +577,15 @@ open class CarPlayNavigationViewController: UIViewController {
             if let simulatesLocation = navigationMapView?.simulatesLocation, simulatesLocation {
                 navigationMapView?.useStoredLocationProvider()
             }
+        }
+    }
+    
+    @objc func didUpdateRoadName(_ notification: Notification) {
+        if let roadName = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String {
+            wayNameView.text = roadName.nonEmptyString
+            wayNameView.isHidden = roadName.isEmpty
+        } else {
+            wayNameView.isHidden = true
         }
     }
     

@@ -13,6 +13,7 @@ import CarPlay
 open class CarPlayMapViewController: UIViewController {
     
     // MARK: UI Elements Configuration
+    
     /**
      The view controller’s delegate.
      */
@@ -37,7 +38,12 @@ open class CarPlayMapViewController: UIViewController {
     /**
      A view that displays the current speed limit.
      */
-    public weak var speedLimitView: SpeedLimitView!
+    public var speedLimitView: SpeedLimitView!
+    
+    /**
+     A view that displays the current road name.
+     */
+    public var wayNameView: WayNameView!
     
     /**
      The interface styles available to `styleManager` for display.
@@ -233,6 +239,20 @@ open class CarPlayMapViewController: UIViewController {
         self.speedLimitView = speedLimitView
     }
     
+    func setupWayNameView() {
+        let wayNameView: WayNameView = .forAutoLayout(hidden: true)
+        wayNameView.clipsToBounds = true
+        wayNameView.layer.borderWidth = 1.0
+        view.addSubview(wayNameView)
+        
+        NSLayoutConstraint.activate([
+            wayNameView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
+            wayNameView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
+        ])
+        
+        self.wayNameView = wayNameView
+    }
+    
     func setupPassiveLocationProvider() {
         let passiveLocationManager = PassiveLocationManager()
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
@@ -259,6 +279,13 @@ open class CarPlayMapViewController: UIViewController {
     @objc func didUpdatePassiveLocation(_ notification: Notification) {
         speedLimitView.signStandard = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
         speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
+        
+        if let roadName = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.roadNameKey] as? String {
+            wayNameView.text = roadName.nonEmptyString
+            wayNameView.isHidden = roadName.isEmpty
+        } else {
+            wayNameView.isHidden = true
+        }
     }
     
     // MARK: UIViewController Lifecycle Methods
@@ -273,6 +300,7 @@ open class CarPlayMapViewController: UIViewController {
         
         setupStyleManager()
         setupSpeedLimitView()
+        setupWayNameView()
         navigationMapView.navigationCamera.follow()
     }
     
