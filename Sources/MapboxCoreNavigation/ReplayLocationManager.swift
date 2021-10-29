@@ -53,7 +53,7 @@ open class ReplayLocationManager: NavigationLocationManager {
      A handler that is called when `ReplayLocationManager` finished replaying `locations` and about to start from the
      beginning. Return false to stop replaying `locations`.
      */
-    var onReplayLoopCompleted: ((ReplayLocationManager) -> Bool)?
+    public var onReplayLoopCompleted: ((ReplayLocationManager) -> Bool)?
 
     /**
      A handler that is called on each replayed location along with the location index in `locations` array.
@@ -84,12 +84,32 @@ open class ReplayLocationManager: NavigationLocationManager {
     @objc internal func tick() {
         guard let startDate = startDate else { return }
 
+        func sendTick(with location: CLLocation) {
+            synthesizedLocation = location
+            delegate?.locationManager?(self, didUpdateLocations: [location])
+            onTick?(currentIndex, location)
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
+        }
+
+        func scheduleNextTick(afterDelay delay: TimeInterval) {
+            perform(#selector(tick), with: nil, afterDelay: delay)
+        }
+
+        guard locations.count > 1 else {
+            sendTick(with: locations[0])
+            let startFromBeginning = onReplayLoopCompleted?(self) ?? true
+            if startFromBeginning {
+                // We can't calculate the delay from the next location as we have only one, so we fallback to 1s.
+                // The same time interval is used by CLLocationManager. We can make it customizable if there will be a
+                // need for this.
+                scheduleNextTick(afterDelay: 1)
+            }
+            return
+        }
+
         let location = locations[currentIndex]
-        synthesizedLocation = location
-        delegate?.locationManager?(self, didUpdateLocations: [location])
-        onTick?(currentIndex, location)
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
-        
+        sendTick(with: location)
+
         if currentIndex >= locations.count - 1 {
             let startFromBeginning = onReplayLoopCompleted?(self) ?? true
             if startFromBeginning {
@@ -99,7 +119,7 @@ open class ReplayLocationManager: NavigationLocationManager {
                 return
             }
         }
-        
+
         let nextLocation = locations[currentIndex+1]
         let interval = nextLocation.timestamp.timeIntervalSince(location.timestamp) / TimeInterval(speedMultiplier)
         let intervalSinceStart = Date().timeIntervalSince(startDate)+interval
@@ -107,7 +127,7 @@ open class ReplayLocationManager: NavigationLocationManager {
         let diff = min(max(0, intervalSinceStart-actualInterval), 0.9) // Don't try to resync more than 0.9 seconds per location update
         let syncedInterval = interval-diff
 
-        perform(#selector(tick), with: nil, afterDelay: syncedInterval)
+        scheduleNextTick(afterDelay: syncedInterval)
         currentIndex += 1
     }
 

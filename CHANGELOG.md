@@ -18,6 +18,8 @@
 ### Location tracking
 
 * Renamed `PassiveLocationManager`'s `lastRawLocation` to `rawLocation` and added `location` properties to expose latest cached raw and idealized locations respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
+* Fixed an issue where `ReplayLocationManager` would crash if initialized with just one location. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
+* Added a new property to `ReplayLocationManager.onReplayLoopCompleted` that allows you to stop the replay loop. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
 
 ## v2.0.1
 
