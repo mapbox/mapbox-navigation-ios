@@ -601,7 +601,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((NavigationViewController, UIViewController) -> [NSLayoutConstraint])?) {
-        child.willMove(toParent: self)
         addChild(child)
         container.addSubview(child.view)
         if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {

@@ -429,7 +429,6 @@ extension TopBannerViewController: NavigationComponent {
     }
     
     private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])? = nil) {
-        child.willMove(toParent: self)
         addChild(child)
         container.addSubview(child.view)
         if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {

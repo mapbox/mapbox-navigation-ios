@@ -73,7 +73,6 @@ extension NavigationMapView {
         }
         
         private func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((UIViewController, UIViewController) -> [NSLayoutConstraint])?) {
-            child.willMove(toParent: navigationViewData.containerViewController)
             navigationViewData.containerViewController.addChild(child)
             container.addSubview(child.view)
             if let childConstraints: [NSLayoutConstraint] = constraints?(navigationViewData.containerViewController, child) {
