@@ -673,6 +673,39 @@ class NavigationCameraTests: TestCase {
                        "OverviewCameraOptions instances should be equal.")
     }
     
+    func testInvalidCameraOptions() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        let navigationCameraStateTransition = NavigationCameraStateTransition(navigationMapView.mapView)
+        
+        let invalidCoordinates = [
+            CLLocationCoordinate2D(latitude: CLLocationDegrees.nan,
+                                   longitude: CLLocationDegrees.nan),
+            CLLocationCoordinate2D(latitude: Double.greatestFiniteMagnitude,
+                                   longitude: Double.greatestFiniteMagnitude),
+            CLLocationCoordinate2D(latitude: Double.leastNormalMagnitude,
+                                   longitude: Double.greatestFiniteMagnitude)
+        ]
+        
+        invalidCoordinates.forEach { invalidCoordinate in
+            let cameraOptions = CameraOptions(center: invalidCoordinate,
+                                              padding: .zero,
+                                              anchor: .zero,
+                                              zoom: 15.0,
+                                              bearing: 0.0,
+                                              pitch: 45.0)
+            
+            XCTAssertNoThrow(navigationCameraStateTransition.update(to: cameraOptions, state: .overview),
+                             "Update animation should not be performed for invalid coordinate.")
+            
+            XCTAssertNoThrow(navigationCameraStateTransition.transitionToOverview(cameraOptions, completion: {}),
+                             "Transition animation should not be performed for invalid coordinate.")
+            
+            XCTAssertNoThrow(navigationCameraStateTransition.transitionToFollowing(cameraOptions, completion: {}),
+                             "Transition animation should not be performed for invalid coordinate.")
+        }
+    }
+    
     // MARK: - Helper methods
     
     func route(from file: String) -> Route? {

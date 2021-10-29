@@ -85,6 +85,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     public func update(to cameraOptions: CameraOptions, state: NavigationCameraState) {
         guard let mapView = mapView,
               let center = cameraOptions.center,
+              CLLocationCoordinate2DIsValid(center),
               let zoom = cameraOptions.zoom,
               let bearing = (state == .overview) ? 0.0 : cameraOptions.bearing,
               let pitch = cameraOptions.pitch,
@@ -303,6 +304,7 @@ public class NavigationCameraStateTransition: CameraStateTransition {
     func transition(_ transitionParameters: TransitionParameters, completion: @escaping (() -> Void)) {
         guard let mapView = mapView,
               let center = transitionParameters.cameraOptions.center,
+              CLLocationCoordinate2DIsValid(center),
               let zoom = transitionParameters.cameraOptions.zoom,
               let bearing = transitionParameters.cameraOptions.bearing,
               let pitch = transitionParameters.cameraOptions.pitch,
