@@ -138,6 +138,29 @@ commands:
       - run:
           name: Generating MapboxNavigation API Log
           command: ./scripts/swift-api-diff/.build/release/swift-api-diff doc ./ $CIRCLE_WORKING_DIRECTORY/api_logs/navigation_log.json --module-name MapboxNavigation -- -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build
+  run_breaking_changes_detector:
+    parameters:
+      module_name:
+        type: string
+      base_api_path:
+        type: string
+      new_api_path:
+        type: string
+    steps:
+      - run:
+          name: Generating << parameters.module_name >> API Diff
+          command: |
+            export GITHUB_TOKEN=$(mbx-ci github issues token)
+            LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes << parameters.base_api_path >> << parameters.new_api_path >>)
+            if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
+              if [ -z "$LOG" ]; then
+                gh pr comment -b "No breaking changes detected in << parameters.module_name >>"
+              else
+                PR_COMMENT=$'# Breaking Changes in << parameters.module_name >>\n\n'
+                PR_COMMENT+="$LOG"
+                gh pr comment -F - \<<< "$PR_COMMENT"
+              fi
+            fi
 
   carthage-bootstrap:
     steps:
@@ -549,34 +572,14 @@ jobs:
       - run:
           name: Pick old API
           command: mv api_logs old_api
-      - run:
-          name: Generating MapboxCoreNavigation API Diff
-          command: |
-            export GITHUB_TOKEN=$(mbx-ci github issues token)
-            LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json) 
-            if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
-              if [ -z "$LOG" ]; then
-                gh pr comment -b "No breaking changes detected in MapboxCoreNavigation"
-              else
-                PR_COMMENT=$'# Breaking Changes in MapboxCoreNavigation\n\n'
-                PR_COMMENT+="$LOG"
-                gh pr comment -F - \<<< "$PR_COMMENT"
-              fi
-            fi
-      - run:
-          name: Generating MapboxNavigation API Diff
-          command: |
-            export GITHUB_TOKEN=$(mbx-ci github issues token)
-            LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json)
-            if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
-              if [ -z "$LOG" ]; then
-                gh pr comment -b "No breaking changes detected in MapboxNavigation"
-              else
-                PR_COMMENT=$'# Breaking Changes in MapboxNavigation\n\n'
-                PR_COMMENT+="$LOG"
-                gh pr comment -F - \<<< "$PR_COMMENT"
-              fi
-            fi
+      - run_breaking_changes_detector:
+          module_name: MapboxCoreNavigation
+          base_api_path: $CIRCLE_WORKING_DIRECTORY/old_api/core_navigation_log.json
+          new_api_path: $CIRCLE_WORKING_DIRECTORY/new_api/core_navigation_log.json
+      - run_breaking_changes_detector:
+          module_name: MapboxNavigation
+          base_api_path: $CIRCLE_WORKING_DIRECTORY/old_api/navigation_log.json
+          new_api_path: $CIRCLE_WORKING_DIRECTORY/new_api/navigation_log.json
 
   spm-core-integration-test-job:
     macos:
