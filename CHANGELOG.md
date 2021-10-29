@@ -2,15 +2,11 @@
 
 ## v2.0.1
 
-### CarPlay
-
-* Fixed an issue in CarPlay’s previewing activity where only the selected route was visible on the map, while other alternative routes were hidden. Now all the routes are visible simultaneously. ([#3511](https://github.com/mapbox/mapbox-navigation-ios/pull/3511))
+* Added the `Notification.Name.didArriveAtWaypoint` constant for notifications posted when the user arrives at a waypoint. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))
 * Added the `CarPlayManager.currentActivity` property to determine how a `CPTemplate` is being used. ([#3521](https://github.com/mapbox/mapbox-navigation-ios/pull/3521))
-
-### Location tracking
-
-* Added the `Notification.Name.didArriveAtWaypoint` to detect the arrival of a waypoint posted by `RouteController`. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))
-* Fixed an issue where the route line flashing upon arrival at destination when `NavigationViewcontroller.routeLineTracksTraversal` enabled. ([#3516](https://github.com/mapbox/mapbox-navigation-ios/pull/3516))
+* Fixed an issue where setting `StyleManager.styles` to an array of only one style did not immediately apply the style. ([#3508](https://github.com/mapbox/mapbox-navigation-ios/pull/3508))
+* Fixed an issue in CarPlay’s previewing activity where only the selected route was visible on the map, while other alternative routes were hidden. Now all the routes are visible simultaneously. ([#3511](https://github.com/mapbox/mapbox-navigation-ios/pull/3511))
+* Fixed an issue where the route line flashed when the user arrived at the destination if `NavigationViewcontroller.routeLineTracksTraversal` was enabled. ([#3516](https://github.com/mapbox/mapbox-navigation-ios/pull/3516))
 
 ## v2.0.0
 
