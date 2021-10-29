@@ -36,27 +36,24 @@ perl -pi -e "s/\\$\\{SHORT_VERSION\\}/${SHORT_VERSION}/" "${README}"
 # http://stackoverflow.com/a/4858011/4585461
 echo "## Changes in version ${RELEASE_VERSION}" >> "${README}"
 sed -n -e '/^## /{' -e ':a' -e 'n' -e '/^## /q' -e 'p' -e 'ba' -e '}' CHANGELOG.md >> "${README}"
-
-# Blow away any includes of MapboxCoreNavigation, because
-# MapboxNavigation-Documentation.podspec gloms the two targets into one.
-# https://github.com/mapbox/mapbox-navigation-ios/issues/2363
-find Sources/Mapbox{Core,}Navigation/ -name '*.swift' -exec \
-    perl -pi -e 's/\bMapboxCoreNavigation\b/MapboxNavigation/' {} \;
-find Sources/Mapbox{Core,}Navigation/ -name '*.[hm]' -exec \
-    perl -pi -e 's/([<"])MapboxCoreNavigation\b/$1MapboxNavigation/' {} \;
+    
+PROJECT="MapboxNavigation-SPM.xcodeproj"
+sourcekitten doc --module-name MapboxCoreNavigation -- -project "${PROJECT}" > core.json
+sourcekitten doc --module-name MapboxNavigation -- -project "${PROJECT}" > ui.json
 
 bundle exec jazzy \
-    --podspec MapboxNavigation-Documentation.podspec \
     --config docs/jazzy.yml \
     --sdk iphonesimulator \
-    --module-version ${SHORT_VERSION} \
     --github-file-prefix "https://github.com/mapbox/mapbox-navigation-ios/tree/${BRANCH}" \
     --readme ${README} \
     --documentation="docs/guides/*.md" \
     --root-url "${BASE_URL}/navigation/api/${RELEASE_VERSION}/" \
     --theme ${THEME} \
     --output ${OUTPUT} \
-    --module_version ${RELEASE_VERSION}
+    --module_version ${RELEASE_VERSION} \
+    --sourcekitten-sourcefile core.json,ui.json
+    
+rm core.json ui.json
 
 REPLACE_REGEXP='s/MapboxNavigation\s+(Docs|Reference)/Mapbox Navigation SDK for iOS $1/, '
 REPLACE_REGEXP+="s/<span class=\"kt\">(${DIRECTIONS_SYMBOLS})<\/span>/<span class=\"kt\"><a href=\"${BASE_URL//\//\\/}\/directions\/api\/${DIRECTIONS_VERSION}\/Classes\/\$1.html\">\$1<\/a><\/span>/, "
