@@ -246,6 +246,7 @@ open class InstructionsCardViewController: UIViewController {
     
     @objc func orientationDidChange(_ notification: Notification) {
         instructionsCardLayout.invalidateLayout()
+        guard let itemCount = steps?.count, itemCount >= 0 && indexBeforeSwipe.row < itemCount else { return }
         handlePagingforScrollToItem(indexPath: indexBeforeSwipe)
     }
 }
