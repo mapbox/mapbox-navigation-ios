@@ -43,7 +43,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Configures distance (in meters) before the first maneuver in requested reroute.
      
-     If implemented, this method allows to override set `RouteOptions.avoidManeuversInOriginRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
+     If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
      
      This method is called after `navigationService(_:willRerouteFrom:)` is called, and before `navigationService(_:didRerouteAlong:)` is called.
      

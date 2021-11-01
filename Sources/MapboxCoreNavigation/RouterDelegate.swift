@@ -8,7 +8,7 @@ import Turf
  */
 public enum ReroutingManeuverOffset {
     /**
-     Leaves original `RouteOptions.avoidManeuversInOriginRadius` to be used for rerouting attempt.
+     Leaves original `RouteOptions.initialManeuverAvoidanceRadius` to be used for rerouting attempt.
      */
     case `default`
     /**
@@ -18,7 +18,7 @@ public enum ReroutingManeuverOffset {
     /**
      Sets offset radius (in meters).
      
-     Equivalent to setting `RouteOptions.avoidManeuversInOriginRadius` to the same radius at the beginning.
+     Equivalent to setting `RouteOptions.initialManeuverAvoidanceRadius` to the same radius at the beginning.
      */
     case radius(LocationDistance)
 }
@@ -59,7 +59,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Configures distance (in meters) before the first maneuver in requested reroute.
      
-     If implemented, this method allows to override set `RouteOptions.avoidManeuversInOriginRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
+     If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
      
      This method is called after `router(_:willRerouteFrom:)` is called, and before `router(_:didRerouteAlong:)` is called.
      
