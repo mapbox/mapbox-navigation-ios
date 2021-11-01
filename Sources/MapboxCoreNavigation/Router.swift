@@ -313,9 +313,9 @@ extension InternalRouter where Self: Router {
         if isRerouting {
             switch (delegate?.router(self, maneuverOffsetWhenReroutingFrom: origin) ?? RouteController.DefaultBehavior.reroutingManeuverRadius) {
             case .disabled:
-                options.avoidManeuversInOriginRadius = nil
+                options.initialManeuverAvoidanceRadius = nil
             case .radius(let distance):
-                options.avoidManeuversInOriginRadius = distance
+                options.initialManeuverAvoidanceRadius = distance
             case .default:
                 // do nothing
                 break
