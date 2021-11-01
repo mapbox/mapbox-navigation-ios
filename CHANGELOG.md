@@ -67,6 +67,10 @@
 
 * Added the `RouterDelegate.router(_:initialManeuverBufferWhenReroutingFrom:)` method and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to configure rerouting buffering. ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
 
+### Other changes
+
+* Added `RouterDelegate.router(_:, maneuverOffsetWhenReroutingFrom:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to expose configuration of safe distance marging when reroute occures.  ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
+
 ## v2.0.1
 
 * Added the `Notification.Name.didArriveAtWaypoint` constant for notifications posted when the user arrives at a waypoint. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))
