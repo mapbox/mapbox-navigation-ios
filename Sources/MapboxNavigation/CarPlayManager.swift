@@ -399,15 +399,16 @@ extension CarPlayManager: CPApplicationDelegate {
         guard let carPlayMapViewController = carPlayMapViewController else {
             return nil
         }
-        var mapButtons = [
+        
+        let panMapButton = carPlayMapViewController.panningInterfaceDisplayButton(for: mapTemplate)
+        carPlayMapViewController.panMapButton = panMapButton
+        
+        let mapButtons = [
             carPlayMapViewController.recenterButton,
+            panMapButton,
             carPlayMapViewController.zoomInButton,
             carPlayMapViewController.zoomOutButton
         ]
-        let panMapButton = carPlayMapViewController.panMapButton ??
-            carPlayMapViewController.panningInterfaceDisplayButton(for: mapTemplate)
-        carPlayMapViewController.panMapButton = panMapButton
-        mapButtons.insert(panMapButton, at: 1)
         
         return mapButtons
     }
@@ -760,8 +761,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                                      for: currentActivity) {
             mapTemplate.mapButtons = mapButtons
         } else {
-            let closeButton = carPlayMapViewController.dismissPanningButton ??
-                carPlayMapViewController.panningInterfaceDismissalButton(for: mapTemplate)
+            let closeButton = carPlayMapViewController.panningInterfaceDismissalButton(for: mapTemplate)
             carPlayMapViewController.dismissPanningButton = closeButton
             mapTemplate.mapButtons = [closeButton]
         }
