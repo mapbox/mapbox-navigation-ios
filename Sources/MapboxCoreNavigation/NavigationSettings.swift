@@ -187,3 +187,18 @@ extension String {
         return "MB" + self
     }
 }
+
+extension MeasurementSystem {
+    /// :nodoc: Converts `LengthFormatter.Unit` into `MapboxDirections.MeasurementSystem`.
+    public init(_ lengthUnit: LengthFormatter.Unit) {
+        let metricUnits: [LengthFormatter.Unit] = [.kilometer, .centimeter, .meter, .millimeter]
+        self = metricUnits.contains(lengthUnit) ? .metric : .imperial
+    }
+}
+
+extension LengthFormatter.Unit {
+    /// :nodoc: Converts `MapboxDirections.MeasurementSystem` into `LengthFormatter.Unit`.
+    public init(_ measurementSystem: MeasurementSystem) {
+        self = measurementSystem == .metric ? .kilometer : .mile
+    }
+}

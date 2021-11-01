@@ -220,8 +220,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
                                        simulating: navigationOptions?.simulationMode)
         navigationService.delegate = self
         
-        NavigationSettings.shared.distanceUnit = routeOptions.locale.measuresDistancesInMetricUnits ? .kilometer : .mile
-        
+        NavigationSettings.shared.distanceUnit = .init(routeOptions.distanceMeasurementSystem)
+
         setupControllers(navigationOptions)
         setupStyleManager(navigationOptions)
         
