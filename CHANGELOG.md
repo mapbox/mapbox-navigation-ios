@@ -63,6 +63,10 @@
 * Renamed the `Locale.usesMetric` property to `Locale.measuresDistancesInMetricUnits`. `Locale.usesMetric` is still available but deprecated. ([#3547](https://github.com/mapbox/mapbox-navigation-ios/pull/3547))
 * Fixed an issue where the user interface did not necessarily display distances in the same units as the route by default. `NavigationRouteOptions` and `NavigationMatchOptions` now set `DirectionsOptions.distanceMeasurementSystem` to a default value matching the `NavigationSettings.distanceUnit` property. ([#3541](https://github.com/mapbox/mapbox-navigation-ios/pull/3541))
 
+### Other changes
+
+* Added `RouterDelegate.router(_:, maneuverOffsetWhenReroutingFrom:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to expose configuration of safe distance marging when reroute occures.  ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
+
 ## v2.0.1
 
 * Added the `Notification.Name.didArriveAtWaypoint` constant for notifications posted when the user arrives at a waypoint. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))
