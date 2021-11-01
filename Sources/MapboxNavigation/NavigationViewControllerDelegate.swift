@@ -103,7 +103,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Configures distance (in meters) before the first maneuver in requested reroute.
      
-     If implemented, this method allows to override set `RouteOptions.avoidManeuversInOriginRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
+     If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
      
      This method is called after `navigationViewController(_:willRerouteFrom:)` is called, and before `navigationViewController(_:didRerouteAlong:)` is called.
      

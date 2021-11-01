@@ -160,7 +160,7 @@ class RouteControllerTests: TestCase {
         let directions = DirectionsSpy()
 
         let navOptions = NavigationRouteOptions(coordinates: routeCoordinates)
-        navOptions.avoidManeuversInOriginRadius = 100
+        navOptions.initialManeuverAvoidanceRadius = 100
         
         let routeController = RouteController(alongRouteAtIndex: 0,
                                               in: routeResponse,
@@ -183,8 +183,8 @@ class RouteControllerTests: TestCase {
         calculateRouteCalled.assertForOverFulfill = false
         
         directions.onCalculateRoute = { [unowned directions] in
-            XCTAssertTrue((directions.lastCalculateOptions as? RouteOptions)?.avoidManeuversInOriginRadius == 500)
-            
+            XCTAssertTrue((directions.lastCalculateOptions as? RouteOptions)?.initialManeuverAvoidanceRadius == 500)
+
             calculateRouteCalled.fulfill()
         }
 
