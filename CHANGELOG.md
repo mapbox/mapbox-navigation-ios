@@ -48,6 +48,7 @@
 ### Other changes
 
 * Renamed the `Locale.usesMetric` property to `Locale.measuresDistancesInMetricUnits`. `Locale.usesMetric` is still available but deprecated. ([#3547](https://github.com/mapbox/mapbox-navigation-ios/pull/3547))
+* Fixed an issue where setting `DirectionsOptions.distanceMeasurementSystem` did not affect the units displayed in the user interface. ([#3541](https://github.com/mapbox/mapbox-navigation-ios/pull/3541))
 
 ## v2.0.1
 
