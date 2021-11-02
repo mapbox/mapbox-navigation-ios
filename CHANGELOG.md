@@ -14,7 +14,7 @@
 
 ### Banners and guidance instructions
 
-* Fixed the crash when scrolling the guidance cards while the orienttaion change during active navigation. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
+* Fixed the crash when scrolling the guidance cards while the orientaion changes. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
 
 ## v2.0.1
 
