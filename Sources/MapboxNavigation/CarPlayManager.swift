@@ -813,7 +813,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
         // In case if `CarPlayManager.carPlayNavigationViewController` is not `nil`, it means that
-        // active-guidance navigaiton is currently in progress. Is so, panning should be applied for
+        // active-guidance navigation is currently in progress. Is so, panning should be applied for
         // `NavigationMapView` instance there.
         guard let navigationMapView = carPlayNavigationViewController?.navigationMapView ??
                 carPlayMapViewController?.navigationMapView else { return }
