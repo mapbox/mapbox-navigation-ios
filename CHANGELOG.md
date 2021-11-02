@@ -12,6 +12,10 @@
 * Fixed an issue where `ReplayLocationManager` would crash if initialized with just one location. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
 * Added the `ReplayLocationManager.onReplayLoopCompleted` property that allows you to stop the location manager from looping back to the beginning of the route. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
 
+### Banners and guidance instructions
+
+* Fixed the crash when scrolling the guidance cards while the orientaion changes. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
+
 ## v2.0.1
 
 * Added the `Notification.Name.didArriveAtWaypoint` constant for notifications posted when the user arrives at a waypoint. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))

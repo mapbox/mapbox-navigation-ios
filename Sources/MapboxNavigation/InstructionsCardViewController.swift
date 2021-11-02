@@ -181,11 +181,11 @@ open class InstructionsCardViewController: UIViewController {
     }
     
     func snapToIndexPath(_ indexPath: IndexPath) {
-        guard let itemCount = steps?.count, itemCount >= 0 && indexPath.row < itemCount else { return }
         handlePagingforScrollToItem(indexPath: indexPath)
     }
     
     func handlePagingforScrollToItem(indexPath: IndexPath) {
+        guard let itemCount = steps?.count, indexPath.row < itemCount else { return }
         if #available(iOS 14.0, *) {
             instructionsCardLayout.collectionView?.isPagingEnabled = false
             instructionsCardLayout.collectionView?.scrollToItem(at: indexPath, at: direction, animated: true)
