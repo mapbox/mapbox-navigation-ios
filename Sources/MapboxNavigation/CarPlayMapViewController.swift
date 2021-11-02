@@ -151,7 +151,9 @@ open class CarPlayMapViewController: UIViewController {
      */
     @discardableResult public func panningInterfaceDismissalButton(for mapTemplate: CPMapTemplate) -> CPMapButton {
         let defaultButtons = mapTemplate.mapButtons
-        let closeButton = CPMapButton { _ in
+        let closeButton = CPMapButton { [weak mapTemplate] _ in
+            guard let mapTemplate = mapTemplate else { return }
+            
             mapTemplate.mapButtons = defaultButtons
             mapTemplate.dismissPanningInterface(animated: true)
         }
