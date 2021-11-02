@@ -812,13 +812,16 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate, panWith direction: CPMapTemplate.PanDirection) {
-        guard let carPlayMapViewController = carPlayMapViewController else { return }
+        // In case if `CarPlayManager.carPlayNavigationViewController` is not `nil`, it means that
+        // active-guidance navigaiton is currently in progress. Is so, panning should be applied for
+        // `NavigationMapView` instance there.
+        guard let navigationMapView = carPlayNavigationViewController?.navigationMapView ??
+                carPlayMapViewController?.navigationMapView else { return }
         
         // After `MapView` panning `NavigationCamera` should be moved to idle state to prevent any further changes.
-        navigationMapView?.navigationCamera.stop()
+        navigationMapView.navigationCamera.stop()
 
         // Determine the screen distance to pan by based on the distance from the visual center to the closest side.
-        let navigationMapView = carPlayMapViewController.navigationMapView
         let contentFrame = navigationMapView.bounds.inset(by: navigationMapView.mapView.safeAreaInsets)
         let increment = min(navigationMapView.bounds.width, navigationMapView.bounds.height) / 2.0
         
