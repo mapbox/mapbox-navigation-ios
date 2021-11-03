@@ -8,13 +8,17 @@
 
 ### Location tracking
 
-* Added the the `PassiveLocationManager.rawLocation` and `PassiveLocationManager.location` properties to get the latest raw and idealized locations, respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
+* Added the `PassiveLocationManager.rawLocation` and `PassiveLocationManager.location` properties to get the latest raw and idealized locations, respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
 * Fixed an issue where `ReplayLocationManager` would crash if initialized with just one location. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
 * Added the `ReplayLocationManager.onReplayLoopCompleted` property that allows you to stop the location manager from looping back to the beginning of the route. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
 
 ### Banners and guidance instructions
 
 * Fixed the crash when scrolling the guidance cards while the orientaion changes. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
+
+### CarPlay
+
+* Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating. ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
 
 ## v2.0.1
 

@@ -119,7 +119,7 @@ extension AppDelegate: CarPlayManagerDelegate {
                                                                             interfaceController: interfaceController,
                                                                             traitCollection: traitCollection)
             return [searchButton]
-        case .navigating, .previewing, .panningInBrowsingMode:
+        case .navigating, .previewing, .panningInBrowsingMode, .panningInNavigationMode:
             return nil
         }
     }
@@ -200,7 +200,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             }
             favoriteTemplateButton.image = UIImage(named: "carplay_star", in: nil, compatibleWith: traitCollection)
             return [favoriteTemplateButton]
-        case .navigating, .panningInBrowsingMode:
+        case .navigating, .panningInBrowsingMode, .panningInNavigationMode:
             return nil
         }
     }
@@ -224,7 +224,7 @@ extension AppDelegate: CarPlayManagerDelegate {
             ]
             
             return mapButtons
-        case .previewing, .navigating, .panningInBrowsingMode:
+        case .previewing, .navigating, .panningInBrowsingMode, .panningInNavigationMode:
             return nil
         }
     }
