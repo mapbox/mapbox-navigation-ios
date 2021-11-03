@@ -50,8 +50,8 @@ open class ReplayLocationManager: NavigationLocationManager {
     private var synthesizedLocation: CLLocation?
 
     /**
-     A handler that is called when `ReplayLocationManager` finished replaying `locations` and about to start from the
-     beginning. Return false to stop replaying `locations`.
+     A handler that is called when `ReplayLocationManager` finished replaying `locations`.
+     Return true to start replay from the beginning.
      */
     public var onReplayLoopCompleted: ((ReplayLocationManager) -> Bool)?
 
@@ -59,6 +59,8 @@ open class ReplayLocationManager: NavigationLocationManager {
      A handler that is called on each replayed location along with the location index in `locations` array.
      */
     var onTick: ((_ index: Int, CLLocation) -> Void)?
+
+    private var nextTickWorkItem: DispatchWorkItem?
     
     public init(locations: [CLLocation]) {
         self.locations = locations.sorted { $0.timestamp < $1.timestamp }
@@ -78,7 +80,7 @@ open class ReplayLocationManager: NavigationLocationManager {
     
     override open func stopUpdatingLocation() {
         startDate = nil
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
+        nextTickWorkItem?.cancel()
     }
     
     @objc internal func tick() {
@@ -88,21 +90,26 @@ open class ReplayLocationManager: NavigationLocationManager {
             synthesizedLocation = location
             delegate?.locationManager?(self, didUpdateLocations: [location])
             onTick?(currentIndex, location)
-            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(tick), object: nil)
+            nextTickWorkItem?.cancel()
         }
 
         func scheduleNextTick(afterDelay delay: TimeInterval) {
-            perform(#selector(tick), with: nil, afterDelay: delay)
+            let nextTickWorkItem = DispatchWorkItem(block: { [weak self] in
+                self?.tick()
+            })
+            self.nextTickWorkItem = nextTickWorkItem
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: nextTickWorkItem)
         }
 
         guard locations.count > 1 else {
             sendTick(with: locations[0])
-            let startFromBeginning = onReplayLoopCompleted?(self) ?? true
+            let startFromBeginning = onReplayLoopCompleted?(self) ?? false
             if startFromBeginning {
+                advanceLocationsForNextLoop()
                 // We can't calculate the delay from the next location as we have only one, so we fallback to 1s.
                 // The same time interval is used by CLLocationManager. We can make it customizable if there will be a
                 // need for this.
-                scheduleNextTick(afterDelay: 1)
+                scheduleNextTick(afterDelay: 1 / speedMultiplier)
             }
             return
         }
@@ -110,17 +117,19 @@ open class ReplayLocationManager: NavigationLocationManager {
         let location = locations[currentIndex]
         sendTick(with: location)
 
-        if currentIndex >= locations.count - 1 {
-            let startFromBeginning = onReplayLoopCompleted?(self) ?? true
+        var nextIndex = currentIndex + 1
+        if nextIndex == locations.count {
+            let startFromBeginning = onReplayLoopCompleted?(self) ?? false
             if startFromBeginning {
-                currentIndex = 0
+                advanceLocationsForNextLoop()
+                nextIndex = 0
             }
             else {
                 return
             }
         }
 
-        let nextLocation = locations[currentIndex+1]
+        let nextLocation = locations[nextIndex]
         let interval = nextLocation.timestamp.timeIntervalSince(location.timestamp) / TimeInterval(speedMultiplier)
         let intervalSinceStart = Date().timeIntervalSince(startDate)+interval
         let actualInterval = nextLocation.timestamp.timeIntervalSince(locations.first!.timestamp)
@@ -128,10 +137,26 @@ open class ReplayLocationManager: NavigationLocationManager {
         let syncedInterval = interval-diff
 
         scheduleNextTick(afterDelay: syncedInterval)
-        currentIndex += 1
+        currentIndex = nextIndex
     }
 
     private func verifyParameters() {
         precondition(!locations.isEmpty)
+    }
+
+    /// Shift `locations` so that sent locations always have increasing timestamps, taking into account location deltas.
+    private func advanceLocationsForNextLoop() {
+        /// Previous location that is used to calculate deltas between locations.
+        var previousOldLocation: CLLocation = locations.last!
+        /// Previous timestamp that is used to advance timestamps.
+        var previousNewLocationTimestamp = previousOldLocation.timestamp
+
+        for (idx, location) in locations.enumerated() {
+            let delta: TimeInterval = idx == 0 ? 1 : location.timestamp.timeIntervalSince(previousOldLocation.timestamp)
+            let newTimestamp = previousNewLocationTimestamp.addingTimeInterval(delta)
+            previousOldLocation = location
+            locations[idx] = location.shifted(to: newTimestamp)
+            previousNewLocationTimestamp = newTimestamp
+        }
     }
 }
