@@ -296,7 +296,7 @@ final class BillingHandler {
                 case .invalidSkuId:
                     preconditionFailure("Invalid sku_id: \(error)")
                 case .tokenValidationFailed:
-                    assertionFailure("Token validation failed. Please check that you have the correct Mapboox Access Token.")
+                    assertionFailure("Token validation failed. Please check that you have the correct Mapbox Access Token.")
                 case .resumeFailed, .unknown:
                     break
                 }
