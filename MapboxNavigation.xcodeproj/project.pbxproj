@@ -386,6 +386,7 @@
 		E2814D982693412E000AD987 /* BillingHandlerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2814D972693412E000AD987 /* BillingHandlerTests.swift */; };
 		E2842798265B907C003F86E4 /* UnimplementedLoggingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */; };
 		E2B4B22A272A814600FF0F57 /* ReplayLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2B4B228272A814600FF0F57 /* ReplayLocationManagerTests.swift */; };
+		E2BBB458273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2BBB457273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift */; };
 		E2C1CDA0265E22AA00E158E0 /* MapboxDirections.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; };
 		E2C1CDA1265E22AA00E158E0 /* MapboxDirections.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		E2C1CDA4265E22AF00E158E0 /* MapboxMobileEvents.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */; };
@@ -990,6 +991,7 @@
 		E2814D972693412E000AD987 /* BillingHandlerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillingHandlerTests.swift; sourceTree = "<group>"; };
 		E2842797265B907C003F86E4 /* UnimplementedLoggingTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnimplementedLoggingTests.swift; sourceTree = "<group>"; };
 		E2B4B228272A814600FF0F57 /* ReplayLocationManagerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReplayLocationManagerTests.swift; sourceTree = "<group>"; };
+		E2BBB457273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerDelegateSpy.swift; sourceTree = "<group>"; };
 		E2C1CD9F265E22AA00E158E0 /* MapboxDirections.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxDirections.xcframework; path = Carthage/Build/MapboxDirections.xcframework; sourceTree = "<group>"; };
 		E2C1CDA3265E22AF00E158E0 /* MapboxMobileEvents.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxMobileEvents.xcframework; path = Carthage/Build/MapboxMobileEvents.xcframework; sourceTree = "<group>"; };
 		E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = MapboxNavigationNative.xcframework; path = Carthage/Build/MapboxNavigationNative.xcframework; sourceTree = "<group>"; };
@@ -1602,6 +1604,7 @@
 				E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */,
 				E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */,
 				E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */,
+				E2BBB457273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift */,
 			);
 			name = TestHelper;
 			path = Sources/TestHelper;
@@ -2603,6 +2606,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E2BBB458273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift in Sources */,
 				B47C1B62261FD3BD0078546C /* DummyURLSessionDataTask.swift in Sources */,
 				E20E3AC526C50AC6002E13EE /* BillingServiceMock.swift in Sources */,
 				E2C9D8A7268DCB7B005D8955 /* XCTestCase++.swift in Sources */,

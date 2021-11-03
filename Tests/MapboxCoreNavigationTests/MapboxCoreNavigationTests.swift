@@ -156,7 +156,6 @@ class MapboxCoreNavigationTests: TestCase {
             return routeProgress?.currentLegProgress.stepIndex == 1
         }
 
-        locationManager.startDate = Date()
         locationManager.speedMultiplier = 10
         let replayFinished = expectation(description: "Replay finished")
         locationManager.onReplayLoopCompleted = { _ in
@@ -279,6 +278,7 @@ class MapboxCoreNavigationTests: TestCase {
         let speedMultiplier: TimeInterval = 50
         locationManager.speedMultiplier = speedMultiplier
         locationManager.startDate = Date()
+        locationManager.startUpdatingLocation()
 
         let navOptions = NavigationRouteOptions(coordinates: [origin, destination])
 
@@ -322,6 +322,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation.start()
 
         waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
+        navigation.stop()
     }
     
     func testOrderOfExecution() {
@@ -329,8 +330,7 @@ class MapboxCoreNavigationTests: TestCase {
         let directions = DirectionsSpy()
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
-        // ReplayLocationManager contains 411 location and at speed 100 it will take at most 5 second to stream all of them into the NavigationService
-        let waitExpectation = expectation(description: "Waiting for ReplayLocationManager")
+
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
@@ -384,10 +384,16 @@ class MapboxCoreNavigationTests: TestCase {
             
             return true
         }
-        
+        let replayFinished = expectation(description: "Replay Finished")
+        locationManager.onReplayLoopCompleted = { _ in
+            replayFinished.fulfill()
+            return false
+        }
+
         locationManager.startUpdatingLocation()
-        
-        _ = XCTWaiter.wait(for: [waitExpectation, spokenInstructionsExpectation, visualInstructionsExpectation], timeout: waitForInterval)
+
+        _ = XCTWaiter.wait(for: [replayFinished, spokenInstructionsExpectation, visualInstructionsExpectation],
+                              timeout: locationManager.expectedReplayTime)
         
         if points.isEmpty {
             XCTFail()
@@ -435,6 +441,7 @@ class MapboxCoreNavigationTests: TestCase {
                 XCTAssert(current.spokenInstructionIndex == 0)
             }
         }
+        locationManager.stopUpdatingLocation()
     }
     
     func testFailToReroute() {

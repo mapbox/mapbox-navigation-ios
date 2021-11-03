@@ -24,11 +24,9 @@ class RouteControllerTests: TestCase {
             .init(latitude: 59.33865, longitude: 18.074935),
         ])
         let routeResponse = Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options)
-        
-        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay")
-        let locationManager = ReplayLocationManager(locations: locations.shiftedToPresent())
+        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
+        let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
-        locationManager.startDate = Date()
         let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
         let routeController = RouteController(alongRouteAtIndex: 0, in: routeResponse, options: equivalentRouteOptions, dataSource: self)
         locationManager.delegate = routeController
@@ -45,14 +43,17 @@ class RouteControllerTests: TestCase {
             actualCoordinates.count == expectedTestCoordinatesCount
         }
 
-        let speedMultiplier: TimeInterval = 100
-        locationManager.speedMultiplier = speedMultiplier
-        locationManager.startUpdatingLocation()
+        let replayFinished = expectation(description: "Replay Finished")
         locationManager.onReplayLoopCompleted = { _ in
+            replayFinished.fulfill()
             return false
         }
 
-        waitForExpectations(timeout: TimeInterval(locationManager.locations.count) / speedMultiplier + 1, handler: nil)
+        let speedMultiplier: TimeInterval = 100
+        locationManager.speedMultiplier = speedMultiplier
+        locationManager.startUpdatingLocation()
+
+        waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
 
         let expectedCoordinates = locations.map(\.coordinate)
         XCTAssertEqual(expectedCoordinates, actualCoordinates)
