@@ -753,10 +753,21 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         
-        let currentActivity: CarPlayActivity = .panningInBrowsingMode
+        let traitCollection: UITraitCollection
+        let currentActivity: CarPlayActivity
+        if let carPlayNavigationViewController = carPlayNavigationViewController {
+            currentActivity = .panningInNavigationMode
+            traitCollection = carPlayNavigationViewController.traitCollection
+        } else if let carPlayMapViewController = self.carPlayMapViewController {
+            currentActivity = .panningInBrowsingMode
+            traitCollection = carPlayMapViewController.traitCollection
+        } else {
+            assertionFailure("Panning interface is only supported for free-drive or active-guidance navigation.")
+            return
+        }
         
         if let mapButtons = delegate?.carPlayManager(self,
-                                                     mapButtonsCompatibleWith: carPlayMapViewController.traitCollection,
+                                                     mapButtonsCompatibleWith: traitCollection,
                                                      in: mapTemplate,
                                                      for: currentActivity) {
             mapTemplate.mapButtons = mapButtons
