@@ -204,8 +204,8 @@ open class CarPlayMapViewController: UIViewController {
     func setupNavigationMapView() {
         let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds, navigationCameraType: .carPlay)
         navigationMapView.delegate = self
-        navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { _ in
-            navigationMapView.localizeLabels()
+        navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak navigationMapView] _ in
+            navigationMapView?.localizeLabels()
         }
         
         navigationMapView.userLocationStyle = .puck2D()
