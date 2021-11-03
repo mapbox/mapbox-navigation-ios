@@ -514,7 +514,7 @@ class NavigationServiceTests: TestCase {
         locationManager.speedMultiplier = 50
         navigation.start()
         let replyFinished = expectation(description: "Replay finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replyFinished.fulfill()
             return false
         }
@@ -544,7 +544,7 @@ class NavigationServiceTests: TestCase {
         let navigation = dependencies.navigationService
 
         let replayFinished = expectation(description: "Replay finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replayFinished.fulfill()
             return false
         }
@@ -657,7 +657,7 @@ class NavigationServiceTests: TestCase {
             }
         }
         let replayFinished = expectation(description: "Replay finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replayFinished.fulfill()
             return false
         }

@@ -44,7 +44,7 @@ class RouteControllerTests: TestCase {
         }
 
         let replayFinished = expectation(description: "Replay Finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replayFinished.fulfill()
             return false
         }
@@ -135,7 +135,7 @@ class RouteControllerTests: TestCase {
 
         let replayFinished = expectation(description: "Replay Finished")
         locationManager.speedMultiplier = 50
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replayFinished.fulfill()
             return false
         }

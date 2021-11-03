@@ -273,7 +273,7 @@ final class BillingHandlerUnitTests: TestCase {
         passiveLocationManager.delegate = updatesSpy
         passiveLocationManager.pauseTripSession()
 
-        locationManager.onReplayLoopCompleted = { _ in true }
+        locationManager.replayCompletionHandler = { _ in true }
         locationManager.speedMultiplier = 30
         updatesSpy.onProgressUpdate = {
             XCTFail("Updated on paused session isn't allowed")

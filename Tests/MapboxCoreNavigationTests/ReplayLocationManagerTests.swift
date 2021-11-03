@@ -17,7 +17,7 @@ final class ReplayLocationManagerTests: XCTestCase {
             previousLocation = location
             ticksCount += 1
         }
-        manager.onReplayLoopCompleted = { _ in true }
+        manager.replayCompletionHandler = { _ in true }
         manager.startUpdatingLocation()
         RunLoop.current.run(until: Date().addingTimeInterval(2))
         XCTAssertGreaterThan(ticksCount, 1)
@@ -30,7 +30,7 @@ final class ReplayLocationManagerTests: XCTestCase {
         manager.onTick = { _, _ in
             ticksCount += 1
         }
-        manager.onReplayLoopCompleted = { _ in return false }
+        manager.replayCompletionHandler = { _ in return false }
         manager.startUpdatingLocation()
         RunLoop.current.run(until: Date().addingTimeInterval(2))
         XCTAssertEqual(ticksCount, 1)
@@ -68,7 +68,7 @@ final class ReplayLocationManagerTests: XCTestCase {
             previousLocation = location
             ticksCount += 1
         }
-        manager.onReplayLoopCompleted = { _ in true }
+        manager.replayCompletionHandler = { _ in true }
         manager.startUpdatingLocation()
         RunLoop.current.run(until: Date().addingTimeInterval(0.2))
         XCTAssertGreaterThan(ticksCount, 1)

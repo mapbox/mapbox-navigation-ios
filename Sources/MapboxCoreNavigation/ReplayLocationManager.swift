@@ -53,7 +53,7 @@ open class ReplayLocationManager: NavigationLocationManager {
      A handler that is called when `ReplayLocationManager` finished replaying `locations`.
      Return true to start replay from the beginning.
      */
-    public var onReplayLoopCompleted: ((ReplayLocationManager) -> Bool)?
+    public var replayCompletionHandler: ((ReplayLocationManager) -> Bool)?
 
     /**
      A handler that is called on each replayed location along with the location index in `locations` array.
@@ -103,7 +103,7 @@ open class ReplayLocationManager: NavigationLocationManager {
 
         guard locations.count > 1 else {
             sendTick(with: locations[0])
-            let startFromBeginning = onReplayLoopCompleted?(self) ?? false
+            let startFromBeginning = replayCompletionHandler?(self) ?? false
             if startFromBeginning {
                 advanceLocationsForNextLoop()
                 // We can't calculate the delay from the next location as we have only one, so we fallback to 1s.
@@ -119,7 +119,7 @@ open class ReplayLocationManager: NavigationLocationManager {
 
         var nextIndex = currentIndex + 1
         if nextIndex == locations.count {
-            let startFromBeginning = onReplayLoopCompleted?(self) ?? false
+            let startFromBeginning = replayCompletionHandler?(self) ?? false
             if startFromBeginning {
                 advanceLocationsForNextLoop()
                 nextIndex = 0

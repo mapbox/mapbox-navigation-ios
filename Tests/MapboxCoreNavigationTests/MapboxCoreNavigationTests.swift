@@ -158,7 +158,7 @@ class MapboxCoreNavigationTests: TestCase {
 
         locationManager.speedMultiplier = 10
         let replayFinished = expectation(description: "Replay finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replayFinished.fulfill()
             return false
         }
@@ -385,7 +385,7 @@ class MapboxCoreNavigationTests: TestCase {
             return true
         }
         let replayFinished = expectation(description: "Replay Finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replayFinished.fulfill()
             return false
         }
