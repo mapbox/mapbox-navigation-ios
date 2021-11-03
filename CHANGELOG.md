@@ -18,7 +18,7 @@
 
 ### CarPlay
 
-* Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
+* Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating. ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
 
 ## v2.0.1
 
