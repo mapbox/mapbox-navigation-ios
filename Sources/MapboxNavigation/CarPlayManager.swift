@@ -138,29 +138,23 @@ public class CarPlayManager: NSObject {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(navigationCameraStateDidChange(_:)),
                                                name: .navigationCameraStateDidChange,
-                                               object: carPlayNavigationViewController?.navigationMapView?.navigationCamera)
+                                               object: carPlayMapViewController?.navigationMapView.navigationCamera)
     }
     
     func unsubscribeFromNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: .navigationCameraStateDidChange,
-                                                  object: carPlayNavigationViewController?.navigationMapView?.navigationCamera)
+                                                  object: carPlayMapViewController?.navigationMapView.navigationCamera)
     }
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
         guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
         switch state {
         case .idle:
-            break
+            carPlayMapViewController?.recenterButton.isHidden = false
         case .transitionToFollowing, .following:
-            userTrackingButton.image = UIImage(named: "carplay_overview",
-                                               in: .mapboxNavigation,
-                                               compatibleWith: nil)
-            break
+            carPlayMapViewController?.recenterButton.isHidden = true
         case .transitionToOverview, .overview:
-            userTrackingButton.image = UIImage(named: "carplay_locate",
-                                               in: .mapboxNavigation,
-                                               compatibleWith: nil)
             break
         }
     }
@@ -735,8 +729,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, didEndPanGestureWithVelocity velocity: CGPoint) {
-        // TODO: Find a way to control `recenterButton` visibility.
-
         // We want the panning surface to have "friction". If the user did not "flick" fast/hard enough, do not update the map with a final animation.
         guard sqrtf(Float(velocity.x * velocity.x + velocity.y * velocity.y)) > 100 else {
             return
@@ -781,7 +773,10 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplateWillDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        // TODO: Find a way to control `recenterButton` visibility.
+        if let carPlayMapViewController = carPlayMapViewController {
+            let shouldShowRecenterButton = carPlayMapViewController.navigationMapView.navigationCamera.state == .idle
+            carPlayMapViewController.recenterButton.isHidden = !shouldShowRecenterButton
+        }
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
@@ -983,6 +978,8 @@ extension CarPlayManager {
         interfaceController.setRootTemplate(mapTemplate, animated: false)
 
         eventsManager.sendCarPlayConnectEvent()
+        
+        subscribeForNotifications()
     }
 
     public func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
