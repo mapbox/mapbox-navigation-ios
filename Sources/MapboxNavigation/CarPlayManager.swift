@@ -332,6 +332,8 @@ extension CarPlayManager: CPApplicationDelegate {
         eventsManager.sendCarPlayDisconnectEvent()
 
         idleTimerCancellable = nil
+        
+        unsubscribeFromNotifications()
     }
 
     func previewMapTemplate() -> CPMapTemplate {
@@ -998,6 +1000,8 @@ extension CarPlayManager {
         eventsManager.sendCarPlayDisconnectEvent()
 
         idleTimerCancellable = nil
+        
+        unsubscribeFromNotifications()
     }
 }
 
