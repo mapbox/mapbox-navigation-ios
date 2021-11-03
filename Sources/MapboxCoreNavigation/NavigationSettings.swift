@@ -125,7 +125,7 @@ public class NavigationSettings {
      - note: Anything but `kilometer` and `mile` will fall back to the default measurement for the current locale.
         Meters and feets will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
      */
-    public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.usesMetric ? .kilometer : .mile {
+    public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.measuresDistancesInMetricUnits ? .kilometer : .mile {
         didSet {
             notifyChanged(property: .distanceUnit, value: distanceUnit.rawValue)
         }
@@ -139,7 +139,7 @@ public class NavigationSettings {
             case .mile:
                 return false
             default:
-                return Locale.current.usesMetric
+                return Locale.current.measuresDistancesInMetricUnits
             }
         }
     }

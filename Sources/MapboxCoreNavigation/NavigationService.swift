@@ -308,7 +308,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         
         let routerType = routerType ?? DefaultRouter.self
         _router = routerType.init(alongRouteAtIndex: routeIndex, in: routeResponse, options: routeOptions, directions: self.directions, dataSource: self)
-        NavigationSettings.shared.distanceUnit = routeOptions.locale.usesMetric ? .kilometer : .mile
+        NavigationSettings.shared.distanceUnit = routeOptions.locale.measuresDistancesInMetricUnits ? .kilometer : .mile
         
         let eventType = eventsManagerType ?? NavigationEventsManager.self
         _eventsManager = eventType.init(activeNavigationDataSource: self,

@@ -37,6 +37,10 @@
 * Fixed an issue where the entire route line was colored as `NavigationMapView.routeCasingColor` instead of `NavigationMapView.trafficUnknownColor` when traffic congestion data was missing. ([#3577](https://github.com/mapbox/mapbox-navigation-ios/pull/3577))
 * Fixed an issue where `RouteStepProgress.currentIntersection` was always returning invalid value, which in turn caused inability to correctly detect whether specific location along the route is in tunnel, or not. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
 
+### Other changes
+
+* Renamed the `Locale.usesMetric` property to `Locale.measuresDistancesInMetricUnits`. `Locale.usesMetric` is still available but deprecated. ([#3547](https://github.com/mapbox/mapbox-navigation-ios/pull/3547))
+
 ## v2.0.1
 
 * Added the `Notification.Name.didArriveAtWaypoint` constant for notifications posted when the user arrives at a waypoint. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))
