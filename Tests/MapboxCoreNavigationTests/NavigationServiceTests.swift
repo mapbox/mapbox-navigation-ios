@@ -689,7 +689,7 @@ class NavigationServiceTests: TestCase {
 
         let directions = DirectionsSpy()
         let locationManager = ReplayLocationManager(locations: trace)
-        locationManager.speedMultiplier = 10
+        locationManager.speedMultiplier = 100
         let service = MapboxNavigationService(routeResponse: routeResponse,
                                               routeIndex: 0,
                                               routeOptions: options,
