@@ -265,6 +265,7 @@ final class BillingHandlerUnitTests: TestCase {
 
         let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: locations)
+        locationManager.replayCompletionHandler = { _ in true }
 
         let passiveLocationManager = PassiveLocationManager(directions: DirectionsSpy(),
                                                             systemLocationManager: locationManager)
@@ -634,6 +635,71 @@ final class BillingHandlerUnitTests: TestCase {
         }
         expectedEvents.append(.stopBillingSession(.activeGuidance))
         billingServiceMock.assertEvents(expectedEvents)
+    }
+
+    func testPausedFreeDrivePausesNavNativeNavigator() {
+        let locationManager = ReplayLocationManager(locations: [.init(coordinate: .init(latitude: 0, longitude: 0))])
+        locationManager.speedMultiplier = 100
+        locationManager.replayCompletionHandler = { _ in true }
+
+        let passiveLocationManager = PassiveLocationManager(directions: .mocked,
+                                                            systemLocationManager: locationManager)
+        let updatesSpy = PassiveLocationManagerDelegateSpy()
+        passiveLocationManager.delegate = updatesSpy
+        let progressWorks = expectation(description: "Progress Works")
+        progressWorks.assertForOverFulfill = false
+        updatesSpy.onProgressUpdate = {
+            progressWorks.fulfill()
+        }
+
+        passiveLocationManager.startUpdatingLocation()
+        wait(for: [progressWorks], timeout: 2)
+
+        passiveLocationManager.pauseTripSession()
+
+        billingServiceMock.assertEvents([
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive)
+        ])
+
+        var updatesAfterPauseCount: Int = 0
+
+        updatesSpy.onProgressUpdate = {
+            updatesAfterPauseCount += 1
+        }
+
+        // Give NavNative a reasonable amount of time (a second) to allow sending progress updates after pause.
+        RunLoop.main.run(until: Date().addingTimeInterval(1))
+
+        let statusChangeSubscription = NotificationCenter.default.addObserver(forName: .navigationStatusDidChange,
+                                                                              object: nil,
+                                                                              queue: .main) { _ in
+            updatesAfterPauseCount += 1
+        }
+
+        withExtendedLifetime(statusChangeSubscription) { statusChangeSubscription in
+            // Force updates directly to MapboxNavigationNative.Navigator to check that this navigator is paused as well.
+            func forceSendNextLocation(idx: Int) {
+                guard let lastLocation = locationManager.location else {
+                    XCTFail("Unexpected nil location in ReplayLocationManager"); return
+                }
+                let nextLocation = lastLocation.shifted(to: lastLocation.timestamp.addingTimeInterval(TimeInterval(idx)))
+                MapboxCoreNavigation.Navigator.shared.navigator
+                    .updateLocation(for: FixLocation(nextLocation)) { success in
+                        XCTAssertTrue(success)
+                    }
+            }
+            forceSendNextLocation(idx: 1)
+            DispatchQueue.main.async {
+                forceSendNextLocation(idx: 2)
+            }
+            RunLoop.main.run(until: Date().addingTimeInterval(3))
+
+            // We expect at most one status update after
+            XCTAssertLessThanOrEqual(updatesAfterPauseCount, 1)
+
+            NotificationCenter.default.removeObserver(statusChangeSubscription)
+        }
     }
 }
 
