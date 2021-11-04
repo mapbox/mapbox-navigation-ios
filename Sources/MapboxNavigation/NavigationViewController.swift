@@ -783,7 +783,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             navigationMapView?.moveUserLocation(to: location, animated: true)
         }
 
-        attemptToHighlightBuildings(progress, with: location)
+        attemptToHighlightBuildings(progress)
         
         // Finally, pass the message onto the `NavigationViewControllerDelegate`.
         delegate?.navigationViewController(self, didUpdate: progress, with: location, rawLocation: rawLocation)
@@ -805,7 +805,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
-    private func attemptToHighlightBuildings(_ progress: RouteProgress, with location: CLLocation) {
+    private func attemptToHighlightBuildings(_ progress: RouteProgress) {
         // In case if distance was fully covered - do nothing.
         // FIXME: This check prevents issue which leads to highlighting random buildings after arrival to final destination.
         // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
