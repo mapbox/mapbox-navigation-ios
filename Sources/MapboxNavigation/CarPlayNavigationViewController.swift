@@ -57,6 +57,11 @@ open class CarPlayNavigationViewController: UIViewController {
     }
     
     /**
+     Controls whether dark style will be used whenever traversing through a tunnel. Defaults to `true`.
+     */
+    public var usesDarkStyleWhileInTunnel: Bool = true
+    
+    /**
      Controls the styling of CarPlayNavigationViewController and its components.
 
      The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
@@ -65,6 +70,8 @@ open class CarPlayNavigationViewController: UIViewController {
     
     var mapTemplate: CPMapTemplate
     var carInterfaceController: CPInterfaceController
+    
+    private var traversingTunnel = false
     
     func setupOrnaments() {
         let compassView = CarPlayCompassView()
@@ -471,6 +478,9 @@ open class CarPlayNavigationViewController: UIViewController {
             return
         }
         
+        // Check to see if we're in a tunnel.
+        checkTunnelState(at: location, along: routeProgress)
+        
         let legIndex = routeProgress.legIndex
         
         // Update the user puck
@@ -510,6 +520,23 @@ open class CarPlayNavigationViewController: UIViewController {
             }
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView?.travelAlongRouteLine(to: location.coordinate)
+        }
+    }
+    
+    private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
+        guard usesDarkStyleWhileInTunnel else { return }
+        let inTunnel = navigationService.isInTunnel(at: location, along: progress)
+        
+        // Entering tunnel
+        if !traversingTunnel, inTunnel {
+            traversingTunnel = true
+            styleManager?.applyStyle(type: .night)
+        }
+        
+        // Exiting tunnel
+        if traversingTunnel, !inTunnel {
+            traversingTunnel = false
+            styleManager?.timeOfDayChanged()
         }
     }
     
