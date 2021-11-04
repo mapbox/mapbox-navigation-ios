@@ -22,6 +22,10 @@
 
 * Fixed the crash when scrolling the guidance cards while the orientaion changes. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
 
+### Map
+
+* Added the `NavigationViewController.usesDarkStyleWhileInTunnel` and `CarPlayNavigationViewController.usesDarkStyleWhileInTunnel` properties, which allow to disable dark style usage, while traversing the tunnels. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
+
 ### CarPlay
 
 * Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating. ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
