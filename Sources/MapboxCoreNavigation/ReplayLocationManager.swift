@@ -106,9 +106,6 @@ open class ReplayLocationManager: NavigationLocationManager {
             let startFromBeginning = replayCompletionHandler?(self) ?? false
             if startFromBeginning {
                 advanceLocationsForNextLoop()
-                // We can't calculate the delay from the next location as we have only one, so we fallback to 1s.
-                // The same time interval is used by CLLocationManager. We can make it customizable if there will be a
-                // need for this.
                 scheduleNextTick(afterDelay: 1 / speedMultiplier)
             }
             return
