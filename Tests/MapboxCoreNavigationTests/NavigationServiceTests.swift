@@ -508,14 +508,13 @@ class NavigationServiceTests: TestCase {
     func testGeneratingAnArrivalEvent() {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: trace)
-        locationManager.startDate = Date()
         dependencies = createDependencies(locationSource: locationManager)
         let navigation = dependencies.navigationService
 
         locationManager.speedMultiplier = 50
         navigation.start()
         let replyFinished = expectation(description: "Replay finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replyFinished.fulfill()
             return false
         }
@@ -538,7 +537,6 @@ class NavigationServiceTests: TestCase {
         let now = Date()
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: trace)
-        locationManager.startDate = Date()
         locationManager.speedMultiplier = 100
 
         dependencies = createDependencies(locationSource: locationManager)
@@ -546,7 +544,7 @@ class NavigationServiceTests: TestCase {
         let navigation = dependencies.navigationService
 
         let replayFinished = expectation(description: "Replay finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replayFinished.fulfill()
             return false
         }
@@ -631,7 +629,6 @@ class NavigationServiceTests: TestCase {
         let route = Fixture.route(from: "multileg-route", options: routeOptions)
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let locationManager = ReplayLocationManager(locations: trace)
-        locationManager.startDate = Date()
         locationManager.speedMultiplier = 100
 
         dependencies = createDependencies(locationSource: locationManager)
@@ -660,7 +657,7 @@ class NavigationServiceTests: TestCase {
             }
         }
         let replayFinished = expectation(description: "Replay finished")
-        locationManager.onReplayLoopCompleted = { _ in
+        locationManager.replayCompletionHandler = { _ in
             replayFinished.fulfill()
             return false
         }
@@ -692,8 +689,7 @@ class NavigationServiceTests: TestCase {
 
         let directions = DirectionsSpy()
         let locationManager = ReplayLocationManager(locations: trace)
-        locationManager.startDate = Date()
-        locationManager.speedMultiplier = 10
+        locationManager.speedMultiplier = 100
         let service = MapboxNavigationService(routeResponse: routeResponse,
                                               routeIndex: 0,
                                               routeOptions: options,
@@ -718,7 +714,8 @@ class NavigationServiceTests: TestCase {
 
         service.start()
 
-        wait(for: [rerouteTriggeredExpectation], timeout: 100)
+        wait(for: [rerouteTriggeredExpectation], timeout: locationManager.expectedReplayTime)
+        locationManager.stopUpdatingLocation()
 
         let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
         let fasterOptions = NavigationRouteOptions(coordinates: [

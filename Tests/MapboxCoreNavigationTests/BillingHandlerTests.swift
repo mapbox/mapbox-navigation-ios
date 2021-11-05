@@ -261,28 +261,10 @@ final class BillingHandlerUnitTests: TestCase {
     }
 
     func testPausedPassiveLocationManagerDoNotUpdateStatus() {
-        class UpdatesSpy: PassiveLocationManagerDelegate {
-            var onProgressUpdate: (() -> Void)?
+        let updatesSpy = PassiveLocationManagerDelegateSpy()
 
-            func passiveLocationManager(_ manager: PassiveLocationManager,
-                                        didUpdateLocation location: CLLocation,
-                                        rawLocation: CLLocation) {
-                onProgressUpdate?()
-            }
-
-            func passiveLocationManagerDidChangeAuthorization(_ manager: PassiveLocationManager) {}
-            func passiveLocationManager(_ manager: PassiveLocationManager, didUpdateHeading newHeading: CLHeading) {}
-            func passiveLocationManager(_ manager: PassiveLocationManager, didFailWithError error: Error) {}
-        }
-
-        let updatesSpy = UpdatesSpy()
-        updatesSpy.onProgressUpdate = {
-            XCTFail("Updated on paused session isn't allowed")
-        }
-
-        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay")
+        let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: locations)
-        locationManager.startDate = Date()
 
         let passiveLocationManager = PassiveLocationManager(directions: DirectionsSpy(),
                                                             systemLocationManager: locationManager)
@@ -290,8 +272,13 @@ final class BillingHandlerUnitTests: TestCase {
         locationManager.delegate = passiveLocationManager
         passiveLocationManager.delegate = updatesSpy
         passiveLocationManager.pauseTripSession()
-        locationManager.tick()
 
+        locationManager.replayCompletionHandler = { _ in true }
+        locationManager.speedMultiplier = 30
+        updatesSpy.onProgressUpdate = {
+            XCTFail("Updated on paused session isn't allowed")
+        }
+        locationManager.startUpdatingLocation()
         RunLoop.main.run(until: Date().addingTimeInterval(0.1))
 
         billingServiceMock.assertEvents([
@@ -301,9 +288,11 @@ final class BillingHandlerUnitTests: TestCase {
 
         XCTAssertNil(passiveLocationManager.rawLocation, "Location updates should be blocked")
 
+        updatesSpy.onProgressUpdate = nil
         passiveLocationManager.resumeTripSession()
-        locationManager.tick()
+        RunLoop.main.run(until: Date().addingTimeInterval(0.1))
         XCTAssertNotNil(passiveLocationManager.rawLocation)
+        locationManager.stopUpdatingLocation()
     }
 
     func testTokens() {
@@ -624,7 +613,6 @@ final class BillingHandlerUnitTests: TestCase {
             routeController.delegate = routerDelegateSpy
 
             let locationManager = ReplayLocationManager(locations: replyLocations)
-            locationManager.startDate = Date()
             locationManager.delegate = routeController
 
             let arrivedAtWaypoint = expectation(description: "Arrive at waypoint")
@@ -637,6 +625,7 @@ final class BillingHandlerUnitTests: TestCase {
             locationManager.speedMultiplier = 50
             locationManager.startUpdatingLocation()
             waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
+            locationManager.stopUpdatingLocation()
         }
 
         var expectedEvents: [BillingServiceMock.Event] = []

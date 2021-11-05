@@ -10,7 +10,9 @@
 
 * Added the `PassiveLocationManager.rawLocation` and `PassiveLocationManager.location` properties to get the latest raw and idealized locations, respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
 * Fixed an issue where `ReplayLocationManager` would crash if initialized with just one location. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
-* Added the `ReplayLocationManager.onReplayLoopCompleted` property that allows you to stop the location manager from looping back to the beginning of the route. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
+* Added the `ReplayLocationManager.replayCompletionHandler` property that allows you to loop location. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528), [3550](https://github.com/mapbox/mapbox-navigation-ios/pull/3550))
+* Changed the behavior of `ReplayLocationManager` so that it doesn't loop locations by default. ([#3550](https://github.com/mapbox/mapbox-navigation-ios/pull/3550))
+* Fixed an issue where `ReplayLocationManager` didn't update location timestamps when a new loop started. ([#3550](https://github.com/mapbox/mapbox-navigation-ios/pull/3550))
 
 ### Banners and guidance instructions
 

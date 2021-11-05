@@ -20,9 +20,14 @@ open class TestCase: XCTestCase {
 
     open override func setUp() {
         super.setUp()
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
         billingServiceMock = .init()
         BillingHandler.__replaceSharedInstance(with: BillingHandler.__createMockedHandler(with: billingServiceMock))
+    }
+
+    open override func tearDown() {
+        super.tearDown()
+        // Reset navigator
+        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
         Navigator.shared.navigator.resetRideSession()
         Navigator._recreateNavigator()
     }
@@ -32,6 +37,7 @@ open class TestCase: XCTestCase {
         guard !isInitializationCompleted else { return }
         isInitializationCompleted = true
 
+        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
         DirectionsCredentials.injectSharedToken(.mockedAccessToken)
         #if canImport(MapboxMaps)
         ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
