@@ -6,6 +6,13 @@ set -u
 
 bundle check || bundle install
 
+SOURCEKITTEN_PATH="$(dirname "$(bundle exec gem which jazzy)")/../bin/sourcekitten"
+
+if [[ -z $(which "${SOURCEKITTEN_PATH}") ]]; then
+    echo "Unable to locate SourceKitten. See installation instructions at https://github.com/jpsim/SourceKitten#installation"
+    exit 1
+fi
+
 BRANCH=$( git describe --tags --match=v*.*.* --abbrev=0 )
 SHORT_VERSION=$( echo ${BRANCH} | sed 's/^v//' )
 RELEASE_VERSION=$( echo ${SHORT_VERSION} | sed -e 's/-.*//' )
@@ -39,8 +46,8 @@ sed -n -e '/^## /{' -e ':a' -e 'n' -e '/^## /q' -e 'p' -e 'ba' -e '}' CHANGELOG.
     
 PROJECT="MapboxNavigation-SPM.xcodeproj"
 DESTINATION="generic/platform=iOS"
-sourcekitten doc --module-name MapboxCoreNavigation -- -project "${PROJECT}" -destination "${DESTINATION}" -scheme MapboxCoreNavigation > core.json
-sourcekitten doc --module-name MapboxNavigation -- -project "${PROJECT}" -destination "${DESTINATION}" -scheme MapboxNavigation > ui.json
+"${SOURCEKITTEN_PATH}" doc --module-name MapboxCoreNavigation -- -project "${PROJECT}" -destination "${DESTINATION}" -scheme MapboxCoreNavigation > core.json
+"${SOURCEKITTEN_PATH}" doc --module-name MapboxNavigation -- -project "${PROJECT}" -destination "${DESTINATION}" -scheme MapboxNavigation > ui.json
 
 bundle exec jazzy \
     --config docs/jazzy.yml \

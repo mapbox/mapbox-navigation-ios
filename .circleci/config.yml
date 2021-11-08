@@ -37,11 +37,6 @@ commands:
             name: Install GitHub CLI
             command: |
               brew install gh
-  install-sourcekitten:
-    steps:
-      - run:
-          name: Install Sourcekitten
-          command: brew install sourcekitten
   restore-carthage-cache:
     parameters:
       xcode:
@@ -614,7 +609,6 @@ jobs:
       - *prepare-netrc-file
       - *add-github-to-known-hosts
       - install-mbx-ci
-      - install-sourcekitten
       - run:
           name: Generate docs
           command: |
