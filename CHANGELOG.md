@@ -2,6 +2,10 @@
 
 ## v2.1.0
 
+### Pricing
+
+* Fixed and issue where paused billing trip sessions might result in requests made inside NavNative billed per request. ([#3348](https://github.com/mapbox/mapbox-navigation-ios/pull/3558))
+
 ### Packaging
 
 * MapboxCoreNavigation now depends on [MapboxNavigationNative v79._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/79.0.0). ([#3509](https://github.com/mapbox/mapbox-navigation-ios/pull/3509))

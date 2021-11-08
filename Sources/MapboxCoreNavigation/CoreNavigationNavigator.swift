@@ -151,6 +151,14 @@ class Navigator {
         navigator.setElectronicHorizonObserverFor(nil)
         electronicHorizonOptions = nil
     }
+
+    func pause() {
+        navigator.pause()
+    }
+
+    func resume() {
+        navigator.resume()
+    }
     
     deinit {
         unsubscribeNavigator()
