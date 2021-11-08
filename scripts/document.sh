@@ -38,8 +38,9 @@ echo "## Changes in version ${RELEASE_VERSION}" >> "${README}"
 sed -n -e '/^## /{' -e ':a' -e 'n' -e '/^## /q' -e 'p' -e 'ba' -e '}' CHANGELOG.md >> "${README}"
     
 PROJECT="MapboxNavigation-SPM.xcodeproj"
-sourcekitten doc --module-name MapboxCoreNavigation -- -project "${PROJECT}" > core.json
-sourcekitten doc --module-name MapboxNavigation -- -project "${PROJECT}" > ui.json
+DESTINATION="generic/platform=iOS"
+sourcekitten doc --module-name MapboxCoreNavigation -- -project "${PROJECT}" -destination "${DESTINATION}" -scheme MapboxCoreNavigation > core.json
+sourcekitten doc --module-name MapboxNavigation -- -project "${PROJECT}" -destination "${DESTINATION}" -scheme MapboxNavigation > ui.json
 
 bundle exec jazzy \
     --config docs/jazzy.yml \
