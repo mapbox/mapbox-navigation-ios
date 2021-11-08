@@ -62,12 +62,14 @@ bundle exec jazzy \
     --sourcekitten-sourcefile core.json,ui.json \
     2>&1 | tee docs.output
     
+rm core.json ui.json
+    
 if egrep -e "(WARNING)|(USR)" docs.output; then
     echo "Please eliminate Jazzy warnings"
     exit 1
 fi
     
-rm core.json ui.json
+rm docs.output
 
 REPLACE_REGEXP='s/MapboxNavigation\s+(Docs|Reference)/Mapbox Navigation SDK for iOS $1/, '
 REPLACE_REGEXP+="s/<span class=\"kt\">(${DIRECTIONS_SYMBOLS})<\/span>/<span class=\"kt\"><a href=\"${BASE_URL//\//\\/}\/directions\/api\/${DIRECTIONS_VERSION}\/Classes\/\$1.html\">\$1<\/a><\/span>/, "
