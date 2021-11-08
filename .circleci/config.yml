@@ -37,6 +37,11 @@ commands:
             name: Install GitHub CLI
             command: |
               brew install gh
+  install-sourcekitten:
+    steps:
+      - run:
+          name: Install Sourcekitten
+          command: brew install sourcekitten
   restore-carthage-cache:
     parameters:
       xcode:
@@ -607,10 +612,13 @@ jobs:
       - *restore-cache-podmaster
       - *install-gems
       - *prepare-netrc-file
+      - *add-github-to-known-hosts
       - install-mbx-ci
+      - install-sourcekitten
       - run:
           name: Generate docs
           command: |
+            set -eou pipefail
             OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
             export OUTPUT="${OUTPUT:-documentation}"
             echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
