@@ -618,12 +618,10 @@ jobs:
       - run:
           name: Generate docs
           command: |
-            set -eou pipefail
             OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
             export OUTPUT="${OUTPUT:-documentation}"
             echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
-            ./scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
-            git checkout -- Sources
+            ./scripts/document.sh
             cp -a "$OUTPUT" /tmp/generated-docs
       - *save-cache-podmaster
       - *save-cache-gems

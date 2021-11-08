@@ -51,7 +51,13 @@ bundle exec jazzy \
     --theme ${THEME} \
     --output ${OUTPUT} \
     --module_version ${RELEASE_VERSION} \
-    --sourcekitten-sourcefile core.json,ui.json
+    --sourcekitten-sourcefile core.json,ui.json \
+    2>&1 | tee docs.output
+    
+if egrep -e "(WARNING)|(USR)" docs.output; then
+    echo "Please eliminate Jazzy warnings"
+    exit 1
+fi
     
 rm core.json ui.json
 
@@ -60,6 +66,5 @@ REPLACE_REGEXP+="s/<span class=\"kt\">(${DIRECTIONS_SYMBOLS})<\/span>/<span clas
 
 find ${OUTPUT} -name *.html -exec \
     perl -pi -e "$REPLACE_REGEXP" {} \;
-
 
 echo $SHORT_VERSION > $OUTPUT/latest_version
