@@ -194,55 +194,6 @@ class RouteControllerTests: TestCase {
         waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
     }
     
-    func testRerouteDangerousManeuverOverride() {
-        let origin = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
-
-        let routeResponse = Fixture.route(between: origin, and: destination).response
-        let routeCoordinates = Fixture.generateCoordinates(between: origin, and: destination, count: 10)
-
-        let overshootingDestination = CLLocationCoordinate2D(latitude: 0.002, longitude: 0.002)
-        let replyLocations = Fixture.generateCoordinates(between: origin, and: overshootingDestination, count: 11).map {
-            CLLocation(coordinate: $0)
-        }.shiftedToPresent()
-
-        let directions = DirectionsSpy()
-
-        let navOptions = NavigationRouteOptions(coordinates: routeCoordinates)
-        navOptions.avoidManeuversInOriginRadius = 100
-        
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: routeResponse,
-                                              options: navOptions,
-                                              directions: directions,
-                                              dataSource: self)
-
-        let routerDelegateSpy = RouterDelegateSpy()
-        routeController.delegate = routerDelegateSpy
-
-        let locationManager = ReplayLocationManager(locations: replyLocations)
-        locationManager.startDate = Date()
-        locationManager.delegate = routeController
-
-        routerDelegateSpy.onManeuverOffsetWhenRerouting = {
-            return .radius(500)
-        }
-        
-        let calculateRouteCalled = expectation(description: "Calculate route called")
-        calculateRouteCalled.assertForOverFulfill = false
-        
-        directions.onCalculateRoute = { [unowned directions] in
-            XCTAssertTrue((directions.lastCalculateOptions as? RouteOptions)?.avoidManeuversInOriginRadius == 500)
-            
-            calculateRouteCalled.fulfill()
-        }
-
-        let speedMultiplier: TimeInterval = 100
-        locationManager.speedMultiplier = speedMultiplier
-        locationManager.startUpdatingLocation()
-        waitForExpectations(timeout: TimeInterval(replyLocations.count) / speedMultiplier + 1, handler: nil)
-    }
-    
     func testReroutingWithCustomRoute() {
         let origin = CLLocationCoordinate2D(latitude: 0, longitude: 0)
         let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
