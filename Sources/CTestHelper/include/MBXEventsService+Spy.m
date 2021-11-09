@@ -1,8 +1,8 @@
-#import "MMEEventsManager+Spy.h"
+#import "MBXEventsService+Spy.h"
 
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wincomplete-implementation"
-@implementation MMEEventsManager (Spy)
+@implementation MBXEventsService (Spy)
 #pragma clang diagnostic pop
 
 + (instancetype)testableInstance {

@@ -1,6 +1,7 @@
 import Foundation
 import MapboxMobileEvents
 import MapboxDirections
+@_implementationOnly import MapboxCommon_Private
 
 let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
 let NavigationEventTypeFreeDrive = "navigation.freeDrive"
@@ -52,10 +53,14 @@ open class NavigationEventsManager {
     /**
      Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
      */
-    var usesDefaultUserInterface = {
-        return Bundle.mapboxNavigationIfInstalled != nil
+    let usesDefaultUserInterface = Bundle.mapboxNavigationIfInstalled != nil
+  
+//    let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+    lazy var userAgent = {
+        return usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
     }()
-    
+//    "mapbox-navigation-ui-ios"
+
     // MARK: Storing Data and Datasources
     
     private var sessionState = SessionState()
@@ -104,6 +109,9 @@ open class NavigationEventsManager {
     /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
     private var mobileEventsManager: MMEEventsManager!
 
+    /// :nodoc: the internal lower-level telemetry events service is an implementation detail which should not be manipulated directly
+    private var coreTelemetry: EventsService!
+    
     lazy var accessToken: String = {
         guard let token = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ??
                 Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAccessToken") as? String
@@ -119,13 +127,23 @@ open class NavigationEventsManager {
     public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
                          passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
                          accessToken possibleToken: String? = nil,
-                         mobileEventsManager: MMEEventsManager = .shared()) {
+                         coreTelemetry: AnyObject? = nil
+    ) {
         self.activeNavigationDataSource = activeNavigationDataSource
         self.passiveNavigationDataSource = passiveNavigationDataSource
         if let tokenOverride = possibleToken {
             accessToken = tokenOverride
         }
-        self.mobileEventsManager = mobileEventsManager
+
+        self.mobileEventsManager = .shared()
+
+        if let coreTelemetry = coreTelemetry as? EventsService {
+            self.coreTelemetry = coreTelemetry
+        } else {
+            let options = EventsServiceOptions(token: possibleToken ?? "", userAgentFragment: userAgent, baseURL: nil)
+            self.coreTelemetry = EventsService(options: options)
+        }
+
         start()
         resumeNotifications()
     }
@@ -146,13 +164,13 @@ open class NavigationEventsManager {
     }
 
     func start() {
-        let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-
         guard let stringForShortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
             preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
         mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
-        mobileEventsManager.sendTurnstileEvent()
+        
+        let turnstileEvent = TurnstileEvent(skuId: .nav2SesMAU, sdkIdentifier: userAgent, sdkVersion: String(describing:stringForShortVersion))
+        coreTelemetry.sendTurnstileEvent(for: turnstileEvent)
     }
     
     // MARK: Sending Feedback Events
@@ -332,38 +350,46 @@ open class NavigationEventsManager {
 
     public func sendCarPlayConnectEvent() {
         let date = Date()
-        mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayConnect, attributes: [MMEEventKeyEvent: MMEventTypeNavigationCarplayConnect, MMEEventKeyCreated: date.ISO8601])
-        mobileEventsManager.flush()
+        let attributes = [MMEEventKeyEvent: MMEventTypeNavigationCarplayConnect, MMEEventKeyCreated: date.ISO8601]
+                
+        let ctEvent = Event(priority: .immediate, attributes: attributes)
+        coreTelemetry.sendEvent(for: ctEvent)
     }
 
     public func sendCarPlayDisconnectEvent() {
         let date = Date()
-        mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayDisconnect, attributes: [MMEEventKeyEvent: MMEventTypeNavigationCarplayDisconnect, MMEEventKeyCreated: date.ISO8601])
-        mobileEventsManager.flush()
+        let attributes = [MMEEventKeyEvent: MMEventTypeNavigationCarplayDisconnect, MMEEventKeyCreated: date.ISO8601]
+
+        let ctEvent = Event(priority: .immediate, attributes: attributes)
+        coreTelemetry.sendEvent(for: ctEvent)
     }
     
     func sendRouteRetrievalEvent() {
         guard let attributes = (try? navigationRouteRetrievalEvent()?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeRouteRetrieval, attributes: attributes ?? [:])
-        mobileEventsManager.flush()
+
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        coreTelemetry.sendEvent(for: ctEvent)
     }
 
     func sendDepartEvent() {
         guard let attributes = (try? navigationDepartEvent()?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes ?? [:])
-        mobileEventsManager.flush()
+
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        coreTelemetry.sendEvent(for: ctEvent)
     }
     
     func sendArriveEvent() {
         guard let attributes = (try? navigationArriveEvent()?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes ?? [:])
-        mobileEventsManager.flush()
+
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        coreTelemetry.sendEvent(for: ctEvent)
     }
     
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
         guard let attributes = (try? navigationCancelEvent(rating: rating, comment: comment)?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes ?? [:])
-        mobileEventsManager.flush()
+
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        coreTelemetry.sendEvent(for: ctEvent)
     }
 
     func sendPassiveNavigationStart() {
@@ -373,14 +399,16 @@ open class NavigationEventsManager {
         }
 
         guard let attributes = (try? passiveNavigationEvent(type: .start)?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
-        mobileEventsManager.flush()
+        
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        coreTelemetry.sendEvent(for: ctEvent)
     }
 
     func sendPassiveNavigationStop() {
         guard let attributes = (try? passiveNavigationEvent(type: .stop)?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
-        mobileEventsManager.flush()
+
+        let ctEvent = Event(priority: .immediate, attributes: attributes ?? [:])
+        coreTelemetry.sendEvent(for: ctEvent)
     }
     
     func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
@@ -390,12 +418,11 @@ open class NavigationEventsManager {
                 outstandingFeedbackEvents.remove(at: index)
             }
             
-            let eventName = event.eventDictionary["event"] as! String
             let eventDictionary = navigationFeedbackEventWithLocationsAdded(event: event)
-            
-            mobileEventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
+                        
+            let ctEvent = Event(priority: .immediate, attributes: eventDictionary)
+            coreTelemetry.sendEvent(for: ctEvent)
         }
-        mobileEventsManager.flush()
     }
 
     func enqueueRerouteEvent() {

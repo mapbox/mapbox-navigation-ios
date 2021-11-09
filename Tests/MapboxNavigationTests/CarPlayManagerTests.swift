@@ -31,10 +31,10 @@ class CarPlayManagerTests: TestCase {
     
     func testEventsEnqueuedAndFlushedWhenCarPlayConnectedAndDisconnected() {
         simulateCarPlayConnection(carPlayManager)
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEventTypeNavigationCarplayConnect))
+        XCTAssertTrue(eventsManagerSpy.hasSentEvent(with: MMEventTypeNavigationCarplayConnect))
         
         simulateCarPlayDisconnection(carPlayManager)
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEventTypeNavigationCarplayDisconnect))
+        XCTAssertTrue(eventsManagerSpy.hasSentEvent(with: MMEventTypeNavigationCarplayDisconnect))
     }
     
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {

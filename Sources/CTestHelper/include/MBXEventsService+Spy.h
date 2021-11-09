@@ -1,9 +1,9 @@
 #import <Foundation/Foundation.h>
-@import MapboxMobileEvents;
+@import MapboxCommon_Private;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface MMEEventsManager (Spy)
+@interface MBXEventsService (Spy)
 
 - (instancetype)initShared;
 + (instancetype)testableInstance;

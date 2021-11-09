@@ -1,12 +1,14 @@
 import XCTest
 import MapboxMobileEvents
+@_implementationOnly import MapboxCommon_Private
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
 class NavigationEventsManagerTests: TestCase {
     func testMobileEventsManagerIsInitializedImmediately() {
-        let mobileEventsManagerSpy = MMEEventsManagerSpy()
-        let _ = NavigationEventsManager(accessToken: "example token", mobileEventsManager: mobileEventsManagerSpy)
+        let options = EventsServiceOptions(token: "example token", userAgentFragment: "example_fragment", baseURL: nil)
+        let eventsServiceSpy = EventsServiceSpy(options: options)
+        let _ = NavigationEventsManager(accessToken: "example token", coreTelemetry: eventsServiceSpy)
 
         let config = UserDefaults.mme_configuration()
         let token = config.mme_accessToken

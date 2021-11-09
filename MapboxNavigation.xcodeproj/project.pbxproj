@@ -176,6 +176,8 @@
 		5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */; };
 		5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */; };
 		5A43FC8B24B488DC00BF7943 /* PassiveLocationManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */; };
+		5EBE83532851F6B900E11D9C /* MBXEventsService+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = 5EBE83512851F6B800E11D9C /* MBXEventsService+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		5EBE83542851F6B900E11D9C /* MBXEventsService+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EBE83522851F6B900E11D9C /* MBXEventsService+Spy.m */; };
 		8A04DFBC275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */; };
 		8A0DA5F726A23FF800E7D360 /* route-for-navigation-camera.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */; };
 		8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0E0A51257AD9C300C2E924 /* NightStyle.swift */; };
@@ -331,8 +333,6 @@
 		B4319F2F27A35EA8005A706E /* SpriteRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4319F2E27A35EA8005A706E /* SpriteRepository.swift */; };
 		B44177F82649B08400781319 /* UserLocationStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = B44177F72649B08400781319 /* UserLocationStyle.swift */; };
 		B443A48B27BB0CB8000AF101 /* sprite-info.json in Resources */ = {isa = PBXBuildFile; fileRef = B443A48A27BB0CB8000AF101 /* sprite-info.json */; };
-		B456A8C12620C9C300FD86D8 /* MMEEventsManager+Spy.h in Headers */ = {isa = PBXBuildFile; fileRef = B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */; };
 		B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B456A8EB2620D26A00FD86D8 /* LeakTest.swift */; };
 		B456A9062620D73700FD86D8 /* CLHeadingPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B473E901278651DD00D9E821 /* NavigationLocationProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */; };
@@ -751,6 +751,8 @@
 		5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationProvider.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
 		5A43FC8A24B488DC00BF7943 /* PassiveLocationManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManagerTests.swift; sourceTree = "<group>"; };
+		5EBE83512851F6B800E11D9C /* MBXEventsService+Spy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "MBXEventsService+Spy.h"; path = "include/MBXEventsService+Spy.h"; sourceTree = "<group>"; };
+		5EBE83522851F6B900E11D9C /* MBXEventsService+Spy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "MBXEventsService+Spy.m"; path = "include/MBXEventsService+Spy.m"; sourceTree = "<group>"; };
 		8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBannerViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera.json"; sourceTree = "<group>"; };
 		8A0E0A51257AD9C300C2E924 /* NightStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightStyle.swift; sourceTree = "<group>"; };
@@ -918,8 +920,6 @@
 		B4319F2E27A35EA8005A706E /* SpriteRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpriteRepository.swift; sourceTree = "<group>"; };
 		B44177F72649B08400781319 /* UserLocationStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserLocationStyle.swift; sourceTree = "<group>"; };
 		B443A48A27BB0CB8000AF101 /* sprite-info.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "sprite-info.json"; sourceTree = "<group>"; };
-		B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "MMEEventsManager+Spy.m"; path = "include/MMEEventsManager+Spy.m"; sourceTree = "<group>"; };
-		B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "MMEEventsManager+Spy.h"; path = "include/MMEEventsManager+Spy.h"; sourceTree = "<group>"; };
 		B456A8EB2620D26A00FD86D8 /* LeakTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeakTest.swift; sourceTree = "<group>"; };
 		B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CLHeadingPrivate.h; path = include/CLHeadingPrivate.h; sourceTree = "<group>"; };
 		B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationProviderTests.swift; sourceTree = "<group>"; };
@@ -1760,8 +1760,8 @@
 			children = (
 				B47C1AAA261FCDF30078546C /* CTestHelper.h */,
 				B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */,
-				B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */,
-				B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */,
+				5EBE83512851F6B800E11D9C /* MBXEventsService+Spy.h */,
+				5EBE83522851F6B900E11D9C /* MBXEventsService+Spy.m */,
 			);
 			name = CTestHelper;
 			path = Sources/CTestHelper;
@@ -2211,9 +2211,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5EBE83532851F6B900E11D9C /* MBXEventsService+Spy.h in Headers */,
 				B47C1B05261FD0C00078546C /* TestHelper.h in Headers */,
 				B456A9062620D73700FD86D8 /* CLHeadingPrivate.h in Headers */,
-				B456A8C12620C9C300FD86D8 /* MMEEventsManager+Spy.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2875,9 +2875,9 @@
 				B47C1B7D261FD3D50078546C /* NavigationEventsManagerTestDoubles.swift in Sources */,
 				E20F43C326BBD0A600346E71 /* RouterDelegateSpy.swift in Sources */,
 				B47C1B8F261FD3E70078546C /* NavigationServiceTestDoubles.swift in Sources */,
-				B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */,
 				B47C1B47261FD3A90078546C /* Date.swift in Sources */,
 				B47C1B50261FD3B10078546C /* DirectionsSpy.swift in Sources */,
+				5EBE83542851F6B900E11D9C /* MBXEventsService+Spy.m in Sources */,
 				B47C1B6B261FD3C30078546C /* Fixture.swift in Sources */,
 				E23A76C62715E76A0098C23C /* ReplayLocationManager+TestSupport.swift in Sources */,
 				B47C1B59261FD3B70078546C /* DummyLocationManager.swift in Sources */,
