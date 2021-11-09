@@ -1,341 +1,336 @@
 import UIKit
 import MapboxDirections
 
-extension LaneIndication {
-    static let lefts: LaneIndication = [.sharpLeft, .left, .slightLeft]
-    static let rights: LaneIndication = [.sharpRight, .right, .slightRight]
+/**
+ A workaround for the fact that `LaneIndication` is an `OptionSet` and thus cannot be exhaustively switched on.
+ */
+enum SingularLaneIndication: Equatable {
+    case sharpRight
+    case right
+    case slightRight
+    case straightAhead
+    case slightLeft
+    case left
+    case sharpLeft
+    case uTurn
     
-    struct Ranking: Equatable {
-        let primary: LaneIndication
-        let secondary: LaneIndication?
-        let tertiary: LaneIndication?
-    }
-    
-    /**
-     Separates the indication into primary, secondary, and tertiary indications with a bias toward the given maneuver direction.
-     
-     The return values are influenced by the set of available drawing methods in LanesStyleKit.
-     */
-    func ranked(favoring maneuverDirection: ManeuverDirection?) -> Ranking {
-        var indications = self
-        
-        // There are only assets for the most common configurations, so prioritize the indication that matches the maneuver direction.
-        var primaryIndication: LaneIndication
-        // Prioritize matches with the maneuver direction.
-        if indications.contains(.straightAhead) && maneuverDirection ?? .straightAhead == .straightAhead {
-            primaryIndication = .straightAhead
-        } else if indications.contains(.slightLeft) && maneuverDirection ?? .slightLeft == .slightLeft {
-            primaryIndication = .slightLeft
-        } else if indications.contains(.slightRight) && maneuverDirection ?? .slightRight == .slightRight {
-            primaryIndication = .slightRight
-        } else if indications.isSubset(of: [.left, .straightAhead]) && maneuverDirection ?? .slightLeft == .slightLeft {
-            primaryIndication = .left
-        } else if indications.isSubset(of: [.right, .straightAhead]) && maneuverDirection ?? .slightRight == .slightRight {
-            primaryIndication = .right
-        } else if indications.contains(.left) && maneuverDirection ?? .left == .left {
-            primaryIndication = .left
-        } else if indications.contains(.right) && maneuverDirection ?? .right == .right {
-            primaryIndication = .right
-        } else if indications.contains(.sharpLeft) && maneuverDirection ?? .sharpLeft == .sharpLeft {
-            primaryIndication = .sharpLeft
-        } else if indications.contains(.sharpRight) && maneuverDirection ?? .sharpRight == .sharpRight {
-            primaryIndication = .sharpRight
-        } else if indications.contains(.left) && !indications.contains(.sharpLeft) && !indications.contains(.uTurn) && maneuverDirection ?? .sharpLeft == .sharpLeft {
-            primaryIndication = .left
-        } else if indications.contains(.right) && !indications.contains(.sharpRight) && !indications.contains(.uTurn) && maneuverDirection ?? .sharpRight == .sharpRight {
-            primaryIndication = .right
-        } else if !indications.isDisjoint(with: .lefts) && !indications.isDisjoint(with: .rights) && maneuverDirection?.isLeft ?? false {
-            primaryIndication = .left
-        } else if !indications.isDisjoint(with: .lefts) && !indications.isDisjoint(with: .rights) && maneuverDirection?.isRight ?? false {
-            primaryIndication = .right
-        } else if indications.contains(.uTurn) && maneuverDirection ?? .uTurn == .uTurn {
-            primaryIndication = .uTurn
-        } else {
-            // The lane doesn’t match the maneuver direction, so choose the least extreme indication.
-            // Most likely the lane will appear unhighlighted anyways.
-            if indications.contains(.straightAhead) {
-                primaryIndication = .straightAhead
-            } else if indications.contains(.slightLeft) {
-                primaryIndication = .slightLeft
-            } else if indications.contains(.slightRight) {
-                primaryIndication = .slightRight
-            } else if indications.contains(.left) {
-                primaryIndication = .left
-            } else if indications.contains(.right) {
-                primaryIndication = .right
-            } else if indications.contains(.sharpLeft) {
-                primaryIndication = .sharpLeft
-            } else if indications.contains(.sharpRight) {
-                primaryIndication = .sharpRight
-            } else if indications.contains(.uTurn) {
-                primaryIndication = .uTurn
-            } else {
-                // No indications to draw.
-                return Ranking(primary: [], secondary: nil, tertiary: nil)
-            }
-        }
-        
-        indications.remove(primaryIndication)
-        
-        // Some dual-use configurations are supported.
-        let secondaryIndication: LaneIndication?
-        if indications.contains(.straightAhead) {
-            secondaryIndication = .straightAhead
-        } else if !primaryIndication.isDisjoint(with: .rights) && indications.contains(.slightLeft) {
-            // No assets for slight or sharp opposite turns.
-            secondaryIndication = .left
-        } else if !primaryIndication.isDisjoint(with: .lefts) && indications.contains(.slightRight) {
-            // No assets for slight or sharp opposite turns.
-            secondaryIndication = .right
-        } else if indications.contains(.left) {
-            secondaryIndication = .left
-            // No assets for slight or sharp opposite turns.
-            if primaryIndication == .slightRight || primaryIndication == .sharpRight {
-                primaryIndication = .right
-            }
-        } else if indications.contains(.right) {
-            secondaryIndication = .right
-            // No assets for slight or sharp opposite turns.
-            if primaryIndication == .slightLeft || primaryIndication == .sharpLeft {
-                primaryIndication = .left
-            }
-        } else if !primaryIndication.isDisjoint(with: .rights) && indications.contains(.sharpLeft) {
-            // No assets for slight or sharp opposite turns.
-            secondaryIndication = .left
-        } else if !primaryIndication.isDisjoint(with: .lefts) && indications.contains(.sharpRight) {
-            // No assets for slight or sharp opposite turns.
-            secondaryIndication = .right
-        } else if indications.contains(.uTurn) {
-            secondaryIndication = .uTurn
-            // No asset for sharp turn or U-turn.
-            if primaryIndication == .sharpLeft {
-                primaryIndication = .left
-            } else if primaryIndication == .sharpRight {
-                primaryIndication = .right
-            }
-        } else if !primaryIndication.isDisjoint(with: .rights) && !indications.isDisjoint(with: .lefts) {
-            secondaryIndication = .left
-        } else if !primaryIndication.isDisjoint(with: .lefts) && !indications.isDisjoint(with: .rights) {
-            secondaryIndication = .right
-        } else if primaryIndication == .straightAhead && indications == .slightLeft {
-            secondaryIndication = .slightLeft
-        } else if primaryIndication == .straightAhead && indications == .slightRight {
-            secondaryIndication = .slightRight
-        } else {
-            secondaryIndication = nil
-        }
-        
-        if let secondaryIndication = secondaryIndication {
-            indications.remove(secondaryIndication)
-            
-            // Some triple-use configurations are supported.
-            let tertiaryIndication: LaneIndication?
-            if !primaryIndication.isSubset(of: [.straightAhead, .uTurn]) && !secondaryIndication.isSubset(of: [.straightAhead, .uTurn]) &&
-                indications.contains(.straightAhead) {
-                tertiaryIndication = .straightAhead
-            } else if (primaryIndication == .straightAhead && !secondaryIndication.isDisjoint(with: .rights) ||
-                        !primaryIndication.isDisjoint(with: .rights) && secondaryIndication == .straightAhead) &&
-                        !indications.isDisjoint(with: .lefts) {
-                tertiaryIndication = .left
-            } else if (primaryIndication == .straightAhead && !secondaryIndication.isDisjoint(with: .lefts) ||
-                        !primaryIndication.isDisjoint(with: .lefts) && secondaryIndication == .straightAhead) &&
-                        !indications.isDisjoint(with: .rights) {
-                tertiaryIndication = .right
-            } else if (primaryIndication == .straightAhead && !secondaryIndication.isSubset(of: [.straightAhead, .uTurn]) ||
-                        !primaryIndication.isSubset(of: [.straightAhead, .uTurn]) && secondaryIndication == .straightAhead) &&
-                        indications == .uTurn {
-                tertiaryIndication = .uTurn
-            } else {
-                tertiaryIndication = nil
-            }
-            return Ranking(primary: primaryIndication, secondary: secondaryIndication, tertiary: tertiaryIndication)
-        } else {
-            // No secondary indication to draw.
-            return Ranking(primary: primaryIndication, secondary: nil, tertiary: nil)
+    /// Converts the maneuver direction to a lane indication.
+    init?(_ maneuverDirection: ManeuverDirection) {
+        switch maneuverDirection {
+        case .sharpRight:
+            self = .sharpRight
+        case .right:
+            self = .right
+        case .slightRight:
+            self = .slightRight
+        case .straightAhead:
+            self = .straightAhead
+        case .slightLeft:
+            self = .slightLeft
+        case .left:
+            self = .left
+        case .sharpLeft:
+            self = .sharpLeft
+        case .uTurn:
+            self = .uTurn
         }
     }
 }
 
 /**
- A generalized representation of the drawing methods available in LanesStyleKit.
+ The classification of a maneuver direction relative to a dominant side.
  */
-enum LaneConfiguration: Equatable {
-    case straight
-    case slightTurn(side: DrivingSide)
-    case turn(side: DrivingSide)
-    case sharpTurn(side: DrivingSide)
-    case uTurn(side: DrivingSide)
+enum TurnClassification: Equatable {
+    case oppositeUTurn
+    case oppositeSharpTurn
+    case oppositeTurn
+    case oppositeSlightTurn
+    case straightAhead
+    case slightTurn
+    case turn
+    case sharpTurn
+    case uTurn
     
-    case straightOrSlightTurn(side: DrivingSide, straight: Bool, slightTurn: Bool)
-    case straightOrTurn(side: DrivingSide, straight: Bool, turn: Bool)
-    case straightOrSharpTurn(side: DrivingSide, straight: Bool, sharpTurn: Bool)
-    case straightOrUTurn(side: DrivingSide, straight: Bool, uTurn: Bool)
+    /**
+     Classifies the given lane indication relative to the dominant side.
+     */
+    init(laneIndication: SingularLaneIndication, dominantSide: DrivingSide, drivingSide: DrivingSide) {
+        switch (laneIndication, dominantSide, drivingSide) {
+        case (.straightAhead, _, _):
+            self = .straightAhead
+        case (.slightLeft, .left, _),
+             (.slightRight, .right, _):
+            self = .slightTurn
+        case (.slightLeft, .right, _),
+             (.slightRight, .left, _):
+            self = .oppositeSlightTurn
+        case (.left, .left, _),
+             (.right, .right, _):
+            self = .turn
+        case (.left, .right, _),
+             (.right, .left, _):
+            self = .oppositeTurn
+        case (.sharpLeft, .left, _),
+             (.sharpRight, .right, _):
+            self = .sharpTurn
+        case (.sharpLeft, .right, _),
+             (.sharpRight, .left, _):
+            self = .oppositeSharpTurn
+        case (.uTurn, .left, .right),
+             (.uTurn, .right, .left):
+            self = .uTurn
+        case (.uTurn, .right, .right),
+             (.uTurn, .left, .left):
+            self = .oppositeUTurn
+        }
+    }
+}
+
+extension LaneIndication {
+    /// The component lane indications in a fixed order.
+    var singularLaneIndications: [SingularLaneIndication] {
+        return [
+            contains(.sharpLeft) ? .sharpLeft : nil,
+            contains(.left) ? .left : nil,
+            contains(.slightLeft) ? .slightLeft : nil,
+            contains(.straightAhead) ? .straightAhead : nil,
+            contains(.slightRight) ? .slightRight : nil,
+            contains(.right) ? .right : nil,
+            contains(.sharpRight) ? .sharpRight : nil,
+            contains(.uTurn) ? .uTurn : nil,
+        ].compactMap { $0 }
+    }
     
-    case slightTurnOrTurn(side: DrivingSide, slightTurn: Bool, turn: Bool)
-    case slightTurnOrSharpTurn(side: DrivingSide, slightTurn: Bool, sharpTurn: Bool)
-    case slightTurnOrUTurn(side: DrivingSide, slightTurn: Bool, uTurn: Bool)
+    /// The side of the road that the user would maneuver toward.
+    func dominantSide(maneuverDirection: ManeuverDirection?, drivingSide: DrivingSide) -> DrivingSide {
+        let hasLeftwardIndication = !isDisjoint(with: .lefts) || (contains(.uTurn) && drivingSide == .right)
+        let hasRightwardIndication = !isDisjoint(with: .rights) || (contains(.uTurn) && drivingSide == .left)
+        if let maneuverDirection = maneuverDirection, hasLeftwardIndication && hasRightwardIndication {
+            let hasLeftwardManeuver = maneuverDirection.isLeft || (maneuverDirection == .uTurn && drivingSide == .right)
+            return hasLeftwardManeuver ? .left : .right
+        }
+        return hasLeftwardIndication ? .left : .right
+    }
+}
+
+extension LanesStyleKit {
+    /**
+     A generic classification of this class’s drawing methods by argument list.
+     
+     Asymmetric methods have a Boolean parameter to control horizontal flipping. Mixed methods have an extra parameter for the secondary color.
+     */
+    enum Method {
+        case symmetricOff((CGRect, LanesStyleKit.ResizingBehavior, UIColor, CGSize) -> Void)
+        case symmetricOn((CGRect, LanesStyleKit.ResizingBehavior, UIColor, CGSize) -> Void)
+        case asymmetricOff((CGRect, LanesStyleKit.ResizingBehavior, UIColor, CGSize, Bool) -> Void)
+        case asymmetricMixed((CGRect, LanesStyleKit.ResizingBehavior, UIColor, UIColor, CGSize, Bool) -> Void)
+        case asymmetricOn((CGRect, LanesStyleKit.ResizingBehavior, UIColor, CGSize, Bool) -> Void)
+    }
     
-    case turnOrSharpTurn(side: DrivingSide, turn: Bool, sharpTurn: Bool)
-    case turnOrUTurn(side: DrivingSide, turn: Bool, uTurn: Bool)
-    case turnOrOppositeTurn(side: DrivingSide)
+    /**
+     Returns the method that draws the given lane configuration.
+     
+     - parameter lane: The lane configuration to draw.
+     - parameter maneuverDirection: The direction that the user is expected to maneuver toward when using this lane.
+     - parameter drivingSide: The side of the road that the user drives on.
+     - returns: A `LanesStyleKit` method that draws the lane configuration.
+     */
+    static func styleKitMethod(lane: LaneIndication, maneuverDirection: ManeuverDirection?, drivingSide: DrivingSide) -> LanesStyleKit.Method {
+        // https://github.com/mapbox/navigation-ui-resources/blob/4a287b92ddeeec502bca9da849e505dcdf73e1ef/docs/lanes.md
+        let favoredIndication = maneuverDirection.flatMap { SingularLaneIndication($0) }
+        var laneIndications = lane.singularLaneIndications
+        if laneIndications.count > 3 {
+            laneIndications = Array(laneIndications.prefix(3))
+            if let favoredIndication = favoredIndication, !laneIndications.contains(favoredIndication) {
+                laneIndications = laneIndications.dropLast() + [favoredIndication]
+            }
+        }
+        let dominantSide = lane.dominantSide(maneuverDirection: maneuverDirection, drivingSide: drivingSide)
+        let turnClassifications = Set(laneIndications.map {
+            TurnClassification(laneIndication: $0, dominantSide: dominantSide, drivingSide: drivingSide)
+        })
+        let favoredTurnClassification = favoredIndication.map {
+            TurnClassification(laneIndication: $0, dominantSide: dominantSide, drivingSide: drivingSide)
+        }
+        guard let method = styleKitMethod(turnClassifications: turnClassifications, favoredTurnClassification: favoredTurnClassification) ??
+                favoredTurnClassification.map({ styleKitMethod(turnClassifications: [$0], favoredTurnClassification: $0) }) ??
+                styleKitMethod(turnClassifications: [.straightAhead], favoredTurnClassification: nil) else {
+            preconditionFailure("No StyleKit method for straight ahead.")
+        }
+        return method
+    }
     
-    case straightOrTurnOrOppositeTurn(side: DrivingSide, straight: Bool, turn: Bool)
-    case straightOrTurnOrUTurn(side: DrivingSide, straight: Bool, turn: Bool, uTurn: Bool)
-    
-    init?(rankedIndications: LaneIndication.Ranking, drivingSide: DrivingSide) {
-        switch (rankedIndications.primary, rankedIndications.secondary, rankedIndications.tertiary) {
-        // Single-use lanes
-        case (.straightAhead, .none, .none):
-            self = .straight
-        case (.slightLeft, .none, .none):
-            self = .slightTurn(side: .left)
-        case (.slightRight, .none, .none):
-            self = .slightTurn(side: .right)
-        case (.left, .none, .none):
-            self = .turn(side: .left)
-        case (.right, .none, .none):
-            self = .turn(side: .right)
-        case (.sharpLeft, .none, .none):
-            self = .sharpTurn(side: .left)
-        case (.sharpRight, .none, .none):
-            self = .sharpTurn(side: .right)
-        case (.uTurn, .none, .none):
-            // When you drive on the right, you U-turn to the left and vice versa.
-            self = .uTurn(side: drivingSide == .right ? .left : .right)
-        
-        // Dual-use lanes
-        case (.straightAhead, .some(.slightLeft), .none):
-            self = .straightOrSlightTurn(side: .left, straight: true, slightTurn: false)
-        case (.straightAhead, .some(.slightRight), .none):
-            self = .straightOrSlightTurn(side: .right, straight: true, slightTurn: false)
-        case (.slightLeft, .some(.straightAhead), .none):
-            self = .straightOrSlightTurn(side: .left, straight: false, slightTurn: true)
-        case (.slightRight, .some(.straightAhead), .none):
-            self = .straightOrSlightTurn(side: .right, straight: false, slightTurn: true)
-        case (.straightAhead, .some(.left), .none):
-            self = .straightOrTurn(side: .left, straight: true, turn: false)
-        case (.straightAhead, .some(.right), .none):
-            self = .straightOrTurn(side: .right, straight: true, turn: false)
-        case (.left, .some(.straightAhead), .none):
-            self = .straightOrTurn(side: .left, straight: false, turn: true)
-        case (.right, .some(.straightAhead), .none):
-            self = .straightOrTurn(side: .right, straight: false, turn: true)
-        case (.straightAhead, .some(.sharpLeft), .none):
-            self = .straightOrSharpTurn(side: .left, straight: true, sharpTurn: false)
-        case (.straightAhead, .some(.sharpRight), .none):
-            self = .straightOrSharpTurn(side: .right, straight: true, sharpTurn: false)
-        case (.sharpLeft, .some(.straightAhead), .none):
-            self = .straightOrSharpTurn(side: .left, straight: false, sharpTurn: true)
-        case (.sharpRight, .some(.straightAhead), .none):
-            self = .straightOrSharpTurn(side: .right, straight: false, sharpTurn: true)
-        case (.straightAhead, .some(.uTurn), .none):
-            // When you drive on the right, you U-turn to the left and vice versa.
-            self = .straightOrUTurn(side: drivingSide == .right ? .left : .right, straight: true, uTurn: false)
-        case (.uTurn, .some(.straightAhead), .none):
-            // When you drive on the right, you U-turn to the left and vice versa.
-            self = .straightOrUTurn(side: drivingSide == .right ? .left : .right, straight: false, uTurn: true)
-            
-        case (.slightLeft, .some(.left), .none):
-            self = .slightTurnOrTurn(side: .left, slightTurn: true, turn: false)
-        case (.slightRight, .some(.right), .none):
-            self = .slightTurnOrTurn(side: .right, slightTurn: true, turn: false)
-        case (.left, .some(.slightLeft), .none):
-            self = .slightTurnOrTurn(side: .left, slightTurn: false, turn: true)
-        case (.right, .some(.slightRight), .none):
-            self = .slightTurnOrTurn(side: .right, slightTurn: false, turn: true)
-        case (.slightLeft, .some(.sharpLeft), .none):
-            self = .slightTurnOrSharpTurn(side: .left, slightTurn: true, sharpTurn: false)
-        case (.slightRight, .some(.sharpRight), .none):
-            self = .slightTurnOrSharpTurn(side: .right, slightTurn: true, sharpTurn: false)
-        case (.sharpLeft, .some(.slightLeft), .none):
-            self = .slightTurnOrSharpTurn(side: .left, slightTurn: false, sharpTurn: true)
-        case (.sharpRight, .some(.slightRight), .none):
-            self = .slightTurnOrSharpTurn(side: .right, slightTurn: false, sharpTurn: true)
-        case (.slightLeft, .some(.uTurn), .none) where drivingSide == .right:
-            // When you drive on the right, you U-turn to the left.
-            self = .slightTurnOrUTurn(side: .left, slightTurn: true, uTurn: false)
-        case (.slightRight, .some(.uTurn), .none) where drivingSide == .left:
-            // When you drive on the left, you U-turn to the right.
-            self = .slightTurnOrUTurn(side: .right, slightTurn: true, uTurn: false)
-        case (.uTurn, .some(.slightLeft), .none) where drivingSide == .right:
-            // When you drive on the right, you U-turn to the left.
-            self = .slightTurnOrUTurn(side: .left, slightTurn: false, uTurn: true)
-        case (.uTurn, .some(.slightRight), .none) where drivingSide == .left:
-            // When you drive on the left, you U-turn to the right.
-            self = .slightTurnOrUTurn(side: .right, slightTurn: false, uTurn: true)
-            
-        case (.left, .some(.sharpLeft), .none):
-            self = .turnOrSharpTurn(side: .left, turn: true, sharpTurn: false)
-        case (.right, .some(.sharpRight), .none):
-            self = .turnOrSharpTurn(side: .right, turn: true, sharpTurn: false)
-        case (.sharpLeft, .some(.left), .none):
-            self = .turnOrSharpTurn(side: .left, turn: false, sharpTurn: true)
-        case (.sharpRight, .some(.right), .none):
-            self = .turnOrSharpTurn(side: .right, turn: false, sharpTurn: true)
-        case (.left, .some(.uTurn), .none) where drivingSide == .right:
-            // When you drive on the right, you U-turn to the left.
-            self = .turnOrUTurn(side: .left, turn: true, uTurn: false)
-        case (.right, .some(.uTurn), .none) where drivingSide == .left:
-            // When you drive on the left, you U-turn to the right.
-            self = .turnOrUTurn(side: .right, turn: true, uTurn: false)
-        case (.uTurn, .some(.left), .none) where drivingSide == .right:
-            // When you drive on the right, you U-turn to the left.
-            self = .turnOrUTurn(side: .left, turn: false, uTurn: true)
-        case (.uTurn, .some(.right), .none) where drivingSide == .left:
-            // When you drive on the left, you U-turn to the right.
-            self = .turnOrUTurn(side: .right, turn: false, uTurn: true)
-        case (.left, .some(.right), .none):
-            self = .turnOrOppositeTurn(side: .left)
-        case (.right, .some(.left), .none):
-            self = .turnOrOppositeTurn(side: .right)
-            
-        case (.straightAhead, .some(.left), .some(.right)),
-             (.straightAhead, .some(.right), .some(.left)):
-            self = .straightOrTurnOrOppositeTurn(side: .left, straight: true, turn: false)
-        case (.left, .some(.straightAhead), .some(.right)),
-             (.left, .some(.right), .some(.straightAhead)):
-            self = .straightOrTurnOrOppositeTurn(side: .left, straight: false, turn: true)
-        case (.right, .some(.straightAhead), .some(.left)),
-             (.right, .some(.left), .some(.straightAhead)):
-            self = .straightOrTurnOrOppositeTurn(side: .right, straight: false, turn: true)
-        case (.straightAhead, .some(.left), .some(.uTurn)) where drivingSide == .right,
-             (.straightAhead, .some(.right), .some(.uTurn)) where drivingSide == .right:
-            // When you drive on the right, you U-turn to the left.
-            self = .straightOrTurnOrUTurn(side: .left, straight: true, turn: false, uTurn: false)
-        case (.straightAhead, .some(.left), .some(.uTurn)) where drivingSide == .left,
-             (.straightAhead, .some(.right), .some(.uTurn)) where drivingSide == .left:
-            // When you drive on the left, you U-turn to the right.
-            self = .straightOrTurnOrUTurn(side: .right, straight: true, turn: false, uTurn: false)
-        case (.left, .some(.straightAhead), .some(.uTurn)) where drivingSide == .right,
-             (.left, .some(.uTurn), .some(.straightAhead)) where drivingSide == .right:
-            // When you drive on the right, you U-turn to the left.
-            self = .straightOrTurnOrUTurn(side: .left, straight: false, turn: true, uTurn: false)
-        case (.right, .some(.straightAhead), .some(.uTurn)) where drivingSide == .left,
-             (.right, .some(.uTurn), .some(.straightAhead)) where drivingSide == .left:
-            // When you drive on the left, you U-turn to the right.
-            self = .straightOrTurnOrUTurn(side: .right, straight: false, turn: true, uTurn: false)
-        case (.uTurn, .some(.straightAhead), .some(.left)) where drivingSide == .right,
-             (.uTurn, .some(.left), .some(.straightAhead)) where drivingSide == .right:
-            // When you drive on the right, you U-turn to the left.
-            self = .straightOrTurnOrUTurn(side: .left, straight: false, turn: false, uTurn: true)
-        case (.uTurn, .some(.straightAhead), .some(.right)) where drivingSide == .left,
-             (.uTurn, .some(.right), .some(.straightAhead)) where drivingSide == .left:
-            // When you drive on the left, you U-turn to the right.
-            self = .straightOrTurnOrUTurn(side: .right, straight: false, turn: false, uTurn: true)
-            
-        default:
+    /**
+     Returns the method that draws the given set of turn classifications, potentially highlighting the favored turn classification.
+     
+     - parameter turnClassifications: The turn classifications to draw.
+     - parameter favoredTurnClassifications: The turn classification to highlight if possible.
+     - returns: A `LanesStyleKit` method that draws the turn classifications.
+     */
+    static func styleKitMethod(turnClassifications: Set<TurnClassification>, favoredTurnClassification: TurnClassification?) -> LanesStyleKit.Method? {
+        switch (turnClassifications, favoredTurnClassification) {
+        // Single use
+        case ([.straightAhead], .straightAhead):
+            return .symmetricOn(drawLaneStraightUsingStraight)
+        case ([.straightAhead], _):
+            return .symmetricOff(drawLaneStraight)
+        case ([.slightTurn], .slightTurn):
+            return .asymmetricOn(drawLaneSlightTurnUsingSlightTurn)
+        case ([.slightTurn], _):
+            return .asymmetricOff(drawLaneSlightTurn)
+        case ([.turn], .turn):
+            return .asymmetricOn(drawLaneTurnUsingTurn)
+        case ([.turn], _):
+            return .asymmetricOff(drawLaneTurn)
+        case ([.sharpTurn], .sharpTurn):
+            return .asymmetricOn(drawLaneSharpTurnUsingSharpTurn)
+        case ([.sharpTurn], _):
+            return .asymmetricOff(drawLaneSharpTurn)
+        case ([.uTurn], .uTurn):
+            return .asymmetricOn(drawLaneUturnUsingUturn)
+        case ([.uTurn], _):
+            return .asymmetricOff(drawLaneUturn)
+
+        // Dual use allowing straight ahead
+        case ([.straightAhead, .slightTurn], .straightAhead):
+            return .asymmetricMixed(drawLaneStraightOrSlightTurnUsingStraight)
+        case ([.straightAhead, .slightTurn], .slightTurn):
+            return .asymmetricMixed(drawLaneStraightOrSlightTurnUsingSlightTurn)
+        case ([.straightAhead, .slightTurn], _):
+            return .asymmetricOff(drawLaneStraightOrSlightTurn)
+        case ([.straightAhead, .turn], .straightAhead):
+            return .asymmetricMixed(drawLaneStraightOrTurnUsingStraight)
+        case ([.straightAhead, .turn], .turn):
+            return .asymmetricMixed(drawLaneStraightOrTurnUsingTurn)
+        case ([.straightAhead, .turn], _):
+            return .asymmetricOff(drawLaneStraightOrTurn)
+        case ([.straightAhead, .sharpTurn], .straightAhead):
+            return .asymmetricMixed(drawLaneStraightOrSharpTurnUsingStraight)
+        case ([.straightAhead, .sharpTurn], .sharpTurn):
+            return .asymmetricMixed(drawLaneStraightOrSharpTurnUsingSharpTurn)
+        case ([.straightAhead, .sharpTurn], _):
+            return .asymmetricOff(drawLaneStraightOrSharpTurn)
+        case ([.straightAhead, .uTurn], .straightAhead):
+            return .asymmetricMixed(drawLaneStraightOrUturnUsingStraight)
+        case ([.straightAhead, .uTurn], .uTurn):
+            return .asymmetricMixed(drawLaneStraightOrUturnUsingUturn)
+        case ([.straightAhead, .uTurn], _):
+            return .asymmetricOff(drawLaneStraightOrUturn)
+
+        // Dual use allowing slight turn
+        case ([.slightTurn, .turn], .slightTurn):
+            return .asymmetricMixed(drawLaneSlightTurnOrTurnUsingSlightTurn)
+        case ([.slightTurn, .turn], .turn):
+            return .asymmetricMixed(drawLaneSlightTurnOrTurnUsingTurn)
+        case ([.slightTurn, .turn], _):
+            return .asymmetricOff(drawLaneSlightTurnOrTurn)
+        case ([.slightTurn, .sharpTurn], .slightTurn):
+            return .asymmetricMixed(drawLaneSlightTurnOrSharpTurnUsingSlightTurn)
+        case ([.slightTurn, .sharpTurn], .sharpTurn):
+            return .asymmetricMixed(drawLaneSlightTurnOrSharpTurnUsingSharpTurn)
+        case ([.slightTurn, .sharpTurn], _):
+            return .asymmetricOff(drawLaneSlightTurnOrSharpTurn)
+        case ([.slightTurn, .uTurn], .slightTurn):
+            return .asymmetricMixed(drawLaneSlightTurnOrUturnUsingSlightTurn)
+        case ([.slightTurn, .uTurn], .uTurn):
+            return .asymmetricMixed(drawLaneSlightTurnOrUturnUsingUturn)
+        case ([.slightTurn, .uTurn], _):
+            return .asymmetricOff(drawLaneSlightTurnOrUturn)
+
+        // Dual use allowing turn
+        case ([.turn, .sharpTurn], .turn):
+            return .asymmetricMixed(drawLaneTurnOrSharpTurnUsingTurn)
+        case ([.turn, .sharpTurn], .sharpTurn):
+            return .asymmetricMixed(drawLaneTurnOrSharpTurnUsingSharpTurn)
+        case ([.turn, .sharpTurn], _):
+            return .asymmetricOff(drawLaneTurnOrSharpTurn)
+        case ([.turn, .uTurn], .turn):
+            return .asymmetricMixed(drawLaneTurnOrUturnUsingTurn)
+        case ([.turn, .uTurn], .uTurn):
+            return .asymmetricMixed(drawLaneTurnOrUturnUsingUturn)
+        case ([.turn, .uTurn], _):
+            return .asymmetricOff(drawLaneTurnOrUturn)
+
+        // Dual use bilateral, asymmetric
+        case ([.oppositeTurn, .slightTurn], .slightTurn):
+            return .asymmetricMixed(drawLaneOppositeTurnOrSlightTurnUsingSlightTurn)
+        case ([.oppositeTurn, .slightTurn], _):
+            return .asymmetricOff(drawLaneOppositeTurnOrSlightTurn)
+        case ([.oppositeSlightTurn, .turn], .turn):
+            return .asymmetricMixed(drawLaneOppositeSlightTurnOrTurnUsingTurn)
+        case ([.oppositeSlightTurn, .turn], _):
+            return .asymmetricOff(drawLaneOppositeSlightTurnOrTurn)
+
+        // Dual use bilateral, symmetric
+        case ([.oppositeSlightTurn, .slightTurn], .slightTurn):
+            return .asymmetricMixed(drawLaneOppositeSlightTurnOrSlightTurnUsingSlightTurn)
+        case ([.oppositeSlightTurn, .slightTurn], _):
+            return .asymmetricOff(drawLaneOppositeSlightTurnOrSlightTurn)
+        case ([.oppositeTurn, .turn], .turn):
+            return .asymmetricMixed(drawLaneOppositeTurnOrTurnUsingTurn)
+        case ([.oppositeTurn, .turn], _):
+            return .asymmetricOff(drawLaneOppositeTurnOrTurn)
+
+        // Triple use unilateral
+        case ([.straightAhead, .slightTurn, .turn], .straightAhead):
+            return .asymmetricMixed(drawLaneStraightOrSlightTurnOrTurnUsingStraight)
+        case ([.straightAhead, .slightTurn, .turn], .slightTurn):
+            return .asymmetricMixed(drawLaneStraightOrSlightTurnOrTurnUsingSlightTurn)
+        case ([.straightAhead, .slightTurn, .turn], .turn):
+            return .asymmetricMixed(drawLaneStraightOrSlightTurnOrTurnUsingTurn)
+        case ([.straightAhead, .slightTurn, .turn], _):
+            return .asymmetricOff(drawLaneStraightOrSlightTurnOrTurn)
+        case ([.straightAhead, .turn, .uTurn], .straightAhead):
+            return .asymmetricMixed(drawLaneStraightOrTurnOrUturnUsingStraight)
+        case ([.straightAhead, .turn, .uTurn], .turn):
+            return .asymmetricMixed(drawLaneStraightOrTurnOrUturnUsingTurn)
+        case ([.straightAhead, .turn, .uTurn], .uTurn):
+            return .asymmetricMixed(drawLaneStraightOrTurnOrUturnUsingUturn)
+        case ([.straightAhead, .turn, .uTurn], _):
+            return .asymmetricOff(drawLaneStraightOrTurnOrUturn)
+
+        // Triple use bilateral, asymmetric
+        case ([.oppositeTurn, .straightAhead, .slightTurn], .straightAhead):
+            return .asymmetricMixed(drawLaneOppositeTurnOrStraightOrSlightTurnUsingStraight)
+        case ([.oppositeTurn, .straightAhead, .slightTurn], .slightTurn):
+            return .asymmetricMixed(drawLaneOppositeTurnOrStraightOrSlightTurnUsingSlightTurn)
+        case ([.oppositeTurn, .straightAhead, .slightTurn], _):
+            return .asymmetricOff(drawLaneOppositeTurnOrStraightOrSlightTurn)
+        case ([.oppositeSlightTurn, .straightAhead, .turn], .straightAhead):
+            return .asymmetricMixed(drawLaneOppositeSlightTurnOrStraightOrTurnUsingStraight)
+        case ([.oppositeSlightTurn, .straightAhead, .turn], .turn):
+            return .asymmetricMixed(drawLaneOppositeSlightTurnOrStraightOrTurnUsingTurn)
+        case ([.oppositeSlightTurn, .straightAhead, .turn], _):
+            return .asymmetricOff(drawLaneOppositeSlightTurnOrStraightOrTurn)
+
+        // Triple use bilateral, symmetric
+        case ([.oppositeSlightTurn, .straightAhead, .slightTurn], .straightAhead):
+            return .asymmetricMixed(drawLaneOppositeSlightTurnOrStraightOrSlightTurnUsingStraight)
+        case ([.oppositeSlightTurn, .straightAhead, .slightTurn], .slightTurn):
+            return .asymmetricMixed(drawLaneOppositeSlightTurnOrStraightOrSlightTurnUsingSlightTurn)
+        case ([.oppositeSlightTurn, .straightAhead, .slightTurn], _):
+            return .asymmetricOff(drawLaneOppositeSlightTurnOrStraightOrSlightTurn)
+        case ([.oppositeTurn, .straightAhead, .turn], .straightAhead):
+            return .asymmetricMixed(drawLaneOppositeTurnOrStraightOrTurnUsingStraight)
+        case ([.oppositeTurn, .straightAhead, .turn], .turn):
+            return .asymmetricMixed(drawLaneOppositeTurnOrStraightOrTurnUsingTurn)
+        case ([.oppositeTurn, .straightAhead, .turn], _):
+            return .asymmetricOff(drawLaneOppositeTurnOrStraightOrTurn)
+
+        case (_, _):
             return nil
         }
     }
 }
 
+extension LaneIndication {
+    static let lefts: LaneIndication = [.sharpLeft, .left, .slightLeft]
+    static let rights: LaneIndication = [.sharpRight, .right, .slightRight]
+}
+
 extension ManeuverDirection {
     var isLeft: Bool {
         return self == .sharpLeft || self == .left || self == .slightLeft
-    }
-    
-    var isRight: Bool {
-        return self == .sharpRight || self == .right || self == .slightRight
     }
 }
 
@@ -450,183 +445,22 @@ open class LaneView: UIView {
         
         let resizing = LanesStyleKit.ResizingBehavior.aspectFit
         let appropriateColor = isValid ? appropriatePrimaryColor : appropriateSecondaryColor
+        let size = CGSize(width: 32, height: 32)
         
-        let rankedIndications = indications.ranked(favoring: maneuverDirection)
-        guard let laneConfiguration = LaneConfiguration(rankedIndications: rankedIndications, drivingSide: drivingSide) else {
-            return
-        }
+        let isFlipped = indications.dominantSide(maneuverDirection: maneuverDirection, drivingSide: drivingSide) == .left
+        let styleKitMethod = LanesStyleKit.styleKitMethod(lane: indications, maneuverDirection: maneuverDirection, drivingSide: drivingSide)
         
-        switch laneConfiguration {
-        case .straight:
-            LanesStyleKit.drawLaneStraight(frame: bounds, resizing: resizing, primaryColor: appropriateColor)
-        case .slightTurn(side: let side):
-            LanesStyleKit.drawLaneSlightRight(frame: bounds, resizing: resizing, primaryColor: appropriateColor,
-                                              flipHorizontally: side == .left)
-        case .turn(side: let side):
-            LanesStyleKit.drawLaneRight(frame: bounds, resizing: resizing, primaryColor: appropriateColor,
-                                        flipHorizontally: side == .left)
-        case .sharpTurn(side: let side):
-            LanesStyleKit.drawLaneSharpRight(frame: bounds, resizing: resizing, primaryColor: appropriateColor, flipHorizontally: side == .left)
-        case .uTurn(side: let side):
-            LanesStyleKit.drawLaneUturn(frame: bounds, resizing: resizing, primaryColor: appropriateColor,
-                                        flipHorizontally: side == .left)
-        case .straightOrSlightTurn(side: let side, straight: let straight, slightTurn: let slightTurn):
-            if isValid && straight && !slightTurn {
-                LanesStyleKit.drawLaneStraightNotSlightRight(frame: bounds, resizing: resizing,
-                                                             primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                             flipHorizontally: side == .left)
-            } else if isValid && !straight && slightTurn {
-                LanesStyleKit.drawLaneSlightRightNotStraight(frame: bounds, resizing: resizing,
-                                                             primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                             flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneStraightNotSlightRight(frame: bounds, resizing: resizing,
-                                                             primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                             flipHorizontally: side == .left)
-            }
-        case .straightOrTurn(side: let side, straight: let straight, turn: let turn):
-            if isValid && straight && !turn {
-                LanesStyleKit.drawLaneStraightNotRight(frame: bounds, resizing: resizing,
-                                                       primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                       flipHorizontally: side == .left)
-            } else if isValid && !straight && turn {
-                LanesStyleKit.drawLaneRightNotStraight(frame: bounds, resizing: resizing,
-                                                       primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                       flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneStraightNotRight(frame: bounds, resizing: resizing,
-                                                       primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                       flipHorizontally: side == .left)
-            }
-        case .straightOrSharpTurn(side: let side, straight: let straight, sharpTurn: let sharpTurn):
-            if isValid && straight && !sharpTurn {
-                LanesStyleKit.drawLaneStraightNotSharpRight(frame: bounds, resizing: resizing,
-                                                            primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                            flipHorizontally: side == .left)
-            } else if isValid && !straight && sharpTurn {
-                LanesStyleKit.drawLaneSharpRightNotStraight(frame: bounds, resizing: resizing,
-                                                            primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                            flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneStraightNotSharpRight(frame: bounds, resizing: resizing,
-                                                            primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                            flipHorizontally: side == .left)
-            }
-        case .straightOrUTurn(side: let side, straight: let straight, uTurn: let uTurn):
-            if isValid && straight && !uTurn {
-                LanesStyleKit.drawLaneStraightNotUturn(frame: bounds, resizing: resizing,
-                                                       primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                       flipHorizontally: side == .left)
-            } else if isValid && !straight && uTurn {
-                LanesStyleKit.drawLaneUturnNotStraight(frame: bounds, resizing: resizing,
-                                                       primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                       flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneStraightNotUturn(frame: bounds, resizing: resizing,
-                                                       primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                       flipHorizontally: side == .left)
-            }
-        case .slightTurnOrTurn(side: let side, slightTurn: let slightTurn, turn: let turn):
-            if isValid && slightTurn && !turn {
-                LanesStyleKit.drawLaneSlightRightNotRight(frame: bounds, resizing: resizing,
-                                                          primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                          flipHorizontally: side == .left)
-            } else if isValid && !slightTurn && turn {
-                LanesStyleKit.drawLaneRightNotSlightRight(frame: bounds, resizing: resizing,
-                                                          primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                          flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneSlightRightNotRight(frame: bounds, resizing: resizing,
-                                                          primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                          flipHorizontally: side == .left)
-            }
-        case .slightTurnOrSharpTurn(side: let side, slightTurn: let slightTurn, sharpTurn: let sharpTurn):
-            if isValid && slightTurn && !sharpTurn {
-                LanesStyleKit.drawLaneSlightRightNotSharpRight(frame: bounds, resizing: resizing,
-                                                               primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                               flipHorizontally: side == .left)
-            } else if isValid && !slightTurn && sharpTurn {
-                LanesStyleKit.drawLaneSharpRightNotSlightRight(frame: bounds, resizing: resizing,
-                                                               primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                               flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneSlightRightNotSharpRight(frame: bounds, resizing: resizing,
-                                                               primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                               flipHorizontally: side == .left)
-            }
-        case .slightTurnOrUTurn(side: let side, slightTurn: let slightTurn, uTurn: let uTurn):
-            if isValid && slightTurn && !uTurn {
-                LanesStyleKit.drawLaneSlightRightNotUturn(frame: bounds, resizing: resizing,
-                                                          primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                          flipHorizontally: side == .left)
-            } else if isValid && !slightTurn && uTurn {
-                LanesStyleKit.drawLaneUturnNotSlightRight(frame: bounds, resizing: resizing,
-                                                          primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                          flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneSlightRightNotUturn(frame: bounds, resizing: resizing,
-                                                          primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                          flipHorizontally: side == .left)
-            }
-        case .turnOrSharpTurn(side: let side, turn: let turn, sharpTurn: let sharpTurn):
-            if isValid && turn && !sharpTurn {
-                LanesStyleKit.drawLaneRightNotSharpRight(frame: bounds, resizing: resizing,
-                                                         primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                         flipHorizontally: side == .left)
-            } else if isValid && !turn && sharpTurn {
-                LanesStyleKit.drawLaneRightNotSlightRight(frame: bounds, resizing: resizing,
-                                                          primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                          flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneRightNotSharpRight(frame: bounds, resizing: resizing,
-                                                         primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                         flipHorizontally: side == .left)
-            }
-        case .turnOrUTurn(side: let side, turn: let turn, uTurn: let uTurn):
-            if isValid && turn && !uTurn {
-                LanesStyleKit.drawLaneRightNotUturn(frame: bounds, resizing: resizing,
-                                                    primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                    flipHorizontally: side == .left)
-            } else if isValid && !turn && uTurn {
-                LanesStyleKit.drawLaneUturnNotRight(frame: bounds, resizing: resizing,
-                                                    primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor,
-                                                    flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted dual use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneRightNotUturn(frame: bounds, resizing: resizing,
-                                                    primaryColor: appropriateColor, secondaryColor: appropriateColor,
-                                                    flipHorizontally: side == .left)
-            }
-        case .turnOrOppositeTurn(side: let side):
-            LanesStyleKit.drawLaneRightNotLeft(frame: bounds, resizing: resizing, primaryColor: appropriateColor, secondaryColor: appropriateSecondaryColor, flipHorizontally: side == .left)
-        case .straightOrTurnOrOppositeTurn(side: let side, straight: let straight, turn: let turn):
-            if isValid && straight && !turn {
-                LanesStyleKit.drawLaneStraightNotLeftOrRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor, flipHorizontally: side == .left)
-            } else if isValid && !straight && turn {
-                LanesStyleKit.drawLaneRightNotLeftOrStraight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor, flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted triple use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneStraightNotLeftOrRight(frame: bounds, resizing: resizing, primaryColor: appropriateColor, secondaryColor: appropriateColor, flipHorizontally: side == .left)
-            }
-        case .straightOrTurnOrUTurn(side: let side, straight: let straight, turn: let turn, uTurn: let uTurn):
-            if isValid && straight && !turn && !uTurn {
-                LanesStyleKit.drawLaneStraightNotRightOrUturn(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor, flipHorizontally: side == .left)
-            } else if isValid && !straight && turn && !uTurn {
-                LanesStyleKit.drawLaneRightNotStraightOrUturn(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor, flipHorizontally: side == .left)
-            } else if isValid && !straight && !turn && uTurn {
-                LanesStyleKit.drawLaneUturnNotStraightOrRight(frame: bounds, resizing: resizing, primaryColor: appropriatePrimaryColor, secondaryColor: appropriateSecondaryColor, flipHorizontally: side == .left)
-            } else {
-                // No dedicated asset for an unhighlighted triple use lane, so use the unhighlighted color as both primary and secondary colors.
-                LanesStyleKit.drawLaneStraightNotRightOrUturn(frame: bounds, resizing: resizing, primaryColor: appropriateColor, secondaryColor: appropriateColor, flipHorizontally: side == .left)
-            }
+        switch styleKitMethod {
+        case let .symmetricOff(method):
+            method(bounds, resizing, appropriateColor, size)
+        case let .symmetricOn(method):
+            method(bounds, resizing, appropriateColor, size)
+        case let .asymmetricOff(method):
+            method(bounds, resizing, appropriateSecondaryColor, size, isFlipped)
+        case let .asymmetricMixed(method):
+            method(bounds, resizing, appropriatePrimaryColor, appropriateSecondaryColor, size, isFlipped)
+        case let .asymmetricOn(method):
+            method(bounds, resizing, appropriatePrimaryColor, size, isFlipped)
         }
     }
 }

@@ -24,6 +24,8 @@
 * Added the `TopBannerViewController.lanesView`, `TopBannerViewController.nextBannerView`, `TopBannerViewController.statusView` and `TopBannerViewController.junctionView` properties. ([#3575](https://github.com/mapbox/mapbox-navigation-ios/pull/3575))
 * The `InstructionsBannerViewDelegate` and `TopBannerViewControllerDelegate` protocols now conform to the `VisualInstructionDelegate` protocol. ([#3575](https://github.com/mapbox/mapbox-navigation-ios/pull/3575))
 * Fixed an issue where `VisualInstructionDelegate.label(_:willPresent:as:)` was never called. Your `NavigationViewControllerDelegate` class can now implement this method to customize the contents of a visual instruction during turn-by-turn navigation. ([#3575](https://github.com/mapbox/mapbox-navigation-ios/pull/3575))
+* Fixed an issue where certain dual- or triple-use lanes were blank in the tertiary instruction banner. ([#3569](https://github.com/mapbox/mapbox-navigation-ios/pull/3569), [mapbox/navigation-ui-resources#26](https://github.com/mapbox/navigation-ui-resources/pull/26))
+* Fixed an issue where dual-use slight turn lanes were sometimes depicted as normal turn lanes in the tertiary instruction banner. ([#3569](https://github.com/mapbox/mapbox-navigation-ios/pull/3569), [mapbox/navigation-ui-resources#26](https://github.com/mapbox/navigation-ui-resources/pull/26))
 
 ### Map
 
