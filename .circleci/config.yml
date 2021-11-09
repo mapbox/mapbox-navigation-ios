@@ -607,6 +607,7 @@ jobs:
       - *restore-cache-podmaster
       - *install-gems
       - *prepare-netrc-file
+      - *add-github-to-known-hosts
       - install-mbx-ci
       - run:
           name: Generate docs
@@ -614,8 +615,7 @@ jobs:
             OUTPUT=$( echo << pipeline.git.tag >> | sed 's/^v//' )
             export OUTPUT="${OUTPUT:-documentation}"
             echo "export OUTPUT=$OUTPUT" >> $BASH_ENV
-            ./scripts/document.sh 2>&1 | tee docs.output && ! egrep -e "(WARNING)|(USR)" docs.output
-            git checkout -- Sources
+            ./scripts/document.sh
             cp -a "$OUTPUT" /tmp/generated-docs
       - *save-cache-podmaster
       - *save-cache-gems

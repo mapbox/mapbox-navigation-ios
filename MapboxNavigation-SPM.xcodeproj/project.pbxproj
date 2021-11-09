@@ -61,7 +61,6 @@
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8DF8E4DE2202696800B29FEF /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		8DF8E4DF2202696800B29FEF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		8DF8E4E02202696800B29FEF /* MapboxNavigation-Documentation.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = "MapboxNavigation-Documentation.podspec"; sourceTree = "<group>"; };
 		8DF8E4E12202696800B29FEF /* MapboxCoreNavigation.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MapboxCoreNavigation.podspec; sourceTree = "<group>"; };
 		8DF8E4E22202696800B29FEF /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		8DF8E4E32202696800B29FEF /* Cartfile.private */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile.private; sourceTree = "<group>"; };
@@ -162,7 +161,6 @@
 				8DF8E4E42202696800B29FEF /* custom-navigation.md */,
 				8DF8E4E62202696800B29FEF /* LICENSE.md */,
 				8DF8E4E12202696800B29FEF /* MapboxCoreNavigation.podspec */,
-				8DF8E4E02202696800B29FEF /* MapboxNavigation-Documentation.podspec */,
 				8DF8E4E52202696800B29FEF /* MapboxNavigation.podspec */,
 				8DF8E4DF2202696800B29FEF /* README.md */,
 				43E69517233D297B0019BF6E /* cover.md */,
