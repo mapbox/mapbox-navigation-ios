@@ -248,7 +248,7 @@ extension NavigationMapView {
                     if case let .string(congestionLevel) = feature.properties?[CongestionAttribute] {
                         associatedFeatureColor = congestionColor(for: congestionLevel, isMain: isMain)
                     } else {
-                        associatedFeatureColor = congestionColor(isMain: isMain)
+                        associatedFeatureColor = congestionColor(for: nil, isMain: isMain)
                     }
                 }
 
@@ -335,7 +335,7 @@ extension NavigationMapView {
     /**
      Given a congestion level, return its associated color.
      */
-    func congestionColor(for congestionLevel: String? = nil, isMain: Bool) -> UIColor {
+    func congestionColor(for congestionLevel: String?, isMain: Bool) -> UIColor {
         switch congestionLevel {
         case "low":
             return isMain ? trafficLowColor : alternativeTrafficLowColor
