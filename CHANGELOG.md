@@ -34,6 +34,10 @@
 
 * Added the `NavigationViewController.usesNightStyleWhileInTunnel` and `CarPlayNavigationViewController.usesNightStyleWhileInTunnel` properties, which allow to disable dark style usage, while traversing the tunnels. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
 
+### Route overlay
+
+* Added the `RoutesPresentationStyle` enumeration, which allows to control routes presentation style while calling `NavigationMapView.showcase(_:routesPresentationStyle:animated:)`. ([#3556](https://github.com/mapbox/mapbox-navigation-ios/pull/3556))
+
 ### CarPlay
 
 * Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating. ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
