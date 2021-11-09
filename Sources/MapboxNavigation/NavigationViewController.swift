@@ -1136,6 +1136,10 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
     public func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
         cameraController?.recenter(self)
     }
+    
+    public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        delegate?.label(label, willPresent: instruction, as: presented)
+    }
 }
 
 // MARK: BottomBannerViewControllerDelegate methods

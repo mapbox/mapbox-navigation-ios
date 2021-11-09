@@ -6,7 +6,7 @@ import MapboxDirections
 /**
  `InstructionsBannerViewDelegate` provides methods for reacting to user interactions in `InstructionsBannerView`.
  */
-public protocol InstructionsBannerViewDelegate: AnyObject, UnimplementedLogging {
+public protocol InstructionsBannerViewDelegate: VisualInstructionDelegate {
     /**
      Called when the user taps the `InstructionsBannerView`.
      */
@@ -68,13 +68,8 @@ open class BaseInstructionsBannerView: UIControl {
             if showStepIndicator {
                 stepListIndicatorView.isHidden = false
             }
-        }
-    }
-    
-    weak var instructionDelegate: VisualInstructionDelegate? {
-        didSet {
-            primaryLabel.instructionDelegate = instructionDelegate
-            secondaryLabel.instructionDelegate = instructionDelegate
+            primaryLabel.instructionDelegate = delegate
+            secondaryLabel.instructionDelegate = delegate
         }
     }
     
@@ -212,7 +207,7 @@ open class BaseInstructionsBannerView: UIControl {
         self.distanceLabel = distanceLabel
         
         let primaryLabel = PrimaryLabel()
-        primaryLabel.instructionDelegate = instructionDelegate
+        primaryLabel.instructionDelegate = delegate
         primaryLabel.translatesAutoresizingMaskIntoConstraints = false
         primaryLabel.allowsDefaultTighteningForTruncation = true
         primaryLabel.adjustsFontSizeToFitWidth = true
@@ -223,7 +218,7 @@ open class BaseInstructionsBannerView: UIControl {
         self.primaryLabel = primaryLabel
         
         let secondaryLabel = SecondaryLabel()
-        secondaryLabel.instructionDelegate = instructionDelegate
+        secondaryLabel.instructionDelegate = delegate
         secondaryLabel.translatesAutoresizingMaskIntoConstraints = false
         secondaryLabel.allowsDefaultTighteningForTruncation = true
         secondaryLabel.numberOfLines = 1
