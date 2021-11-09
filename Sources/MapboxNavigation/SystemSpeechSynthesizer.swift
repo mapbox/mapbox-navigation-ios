@@ -30,6 +30,11 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     public var locale: Locale? = Locale.autoupdatingCurrent
     
+    /// Controls if this speech synthesizer is allowed to manage the shared `AVAudioSession`.
+    /// Set this field to `false` if you want to manage the session yourself, for example if your app has background music.
+    /// Default value is`true`.
+    public var managesAudioSession = true
+    
     // MARK: Speaking Instructions
     
     public var isSpeaking: Bool { return speechSynthesizer.isSpeaking }
@@ -111,7 +116,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     private func safeDuckAudio() {
-        
+        guard managesAudioSession else { return }
         if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
             guard let instruction = previousInstruction else {
                 assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
@@ -126,6 +131,7 @@ open class SystemSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     private func safeUnduckAudio() {
+        guard managesAudioSession else { return }
         if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
             guard let instruction = previousInstruction else {
                 assert(false, "Speech Synthesizer finished speaking 'nil' instruction")
