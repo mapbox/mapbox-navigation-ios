@@ -243,10 +243,13 @@ extension NavigationMapView {
 
             for (index, feature) in congestionFeatures.enumerated() {
                 var associatedFeatureColor = routeCasingColor
-                if case let .string(congestionLevel) = feature.properties?[CongestionAttribute],
-                   case let .boolean(isCurrentLeg) = feature.properties?[CurrentLegAttribute],
+                if case let .boolean(isCurrentLeg) = feature.properties?[CurrentLegAttribute],
                    isCurrentLeg {
-                    associatedFeatureColor = congestionColor(for: congestionLevel, isMain: isMain)
+                    if case let .string(congestionLevel) = feature.properties?[CongestionAttribute] {
+                        associatedFeatureColor = congestionColor(for: congestionLevel, isMain: isMain)
+                    } else {
+                        associatedFeatureColor = congestionColor(for: nil, isMain: isMain)
+                    }
                 }
 
                 guard case let .lineString(lineString) = feature.geometry,
