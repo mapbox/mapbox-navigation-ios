@@ -21,10 +21,12 @@
 ### Banners and guidance instructions
 
 * Fixed the crash when scrolling the guidance cards while the orientation changes. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
+* Added the ability to customize the `TopBannerViewController` through the publicly exposed `lanesView`, `nextBannerView`, `statusView` and `junctionView`. The `TopBannerViewController.instructionsBannerView` could also be customized through `NavigationViewControllerDelegate.label(_:willPresent:as:)` during active navigation. ([#3575](https://github.com/mapbox/mapbox-navigation-ios/pull/3575))
 
 ### Map
 
 * Added the `NavigationViewController.usesNightStyleWhileInTunnel` and `CarPlayNavigationViewController.usesNightStyleWhileInTunnel` properties, which allow to disable dark style usage, while traversing the tunnels. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
+
 
 ### CarPlay
 
