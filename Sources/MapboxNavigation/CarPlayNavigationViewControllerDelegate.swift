@@ -35,6 +35,16 @@ public protocol CarPlayNavigationViewControllerDelegate: AnyObject, Unimplemente
     func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
                                          didAdd finalDestinationAnnotation: PointAnnotation,
                                          pointAnnotationManager: PointAnnotationManager)
+    
+    /**
+     Offers the delegate an opportunity to use a customized rounding mechanism for the remaining distance.
+     
+     - parameter carPlayNavigationViewController: The `CarPlayNavigationViewController` object.
+     - parameter roundingMechanism: True if a custom rounding mechanism will be used.
+     - returns: An optional value representing the distance remaining.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         didSet roundingMechanism: Bool) -> Measurement<UnitLength>?
 }
 
 @available(iOS 12.0, *)
@@ -54,5 +64,14 @@ public extension CarPlayNavigationViewControllerDelegate {
                                          didAdd finalDestinationAnnotation: PointAnnotation,
                                          pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         didSet roundingMechanism: Bool) -> Measurement<UnitLength>? {
+        logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+        return nil
     }
 }

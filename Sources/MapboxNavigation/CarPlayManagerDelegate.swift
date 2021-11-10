@@ -169,6 +169,15 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
                         to parentViewController: UIViewController,
                         pointAnnotationManager: PointAnnotationManager)
     
+    /**
+     Offers the delegate an opportunity to use a customized rounding mechanism for the remaining distance.
+     
+     - parameter carPlayManager: The CarPlay manager instance.
+     - parameter roundingMechanism: True if a custom rounding mechanism will be used.
+     - returns: An optional value representing the distance remaining.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager, didSet roundingMechanism: Bool) -> Measurement<UnitLength>?
+    
     // MARK: Transitioning Between Templates
     
     /**
@@ -309,6 +318,14 @@ public extension CarPlayManagerDelegate {
                         to parentViewController: UIViewController,
                         pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager, didSet roundingMechanism: Bool) -> Measurement<UnitLength>? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return nil
     }
     
     /**
