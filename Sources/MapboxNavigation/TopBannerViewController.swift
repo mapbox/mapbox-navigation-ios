@@ -71,9 +71,24 @@ open class TopBannerViewController: UIViewController {
         return banner
     }()
     
+    /**
+     A view that contains one or more maneuver images indicating the lanes of road user driving on.
+     */
     public var lanesView: LanesView = .forAutoLayout(hidden: true)
+    
+    /**
+     A view that indicates the instruction for next step.
+     */
     public var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
+    
+    /**
+     A translucent bar that indicates the navigation status.
+     */
     public var statusView: StatusView = .forAutoLayout(hidden: true)
+    
+    /**
+     A view that indicates the layout of a highway junction.
+     */
     public var junctionView: JunctionView = .forAutoLayout(hidden: true)
     
     private let instructionsBannerHeight: CGFloat = 100.0
