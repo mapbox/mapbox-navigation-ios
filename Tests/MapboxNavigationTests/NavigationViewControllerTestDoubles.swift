@@ -17,6 +17,7 @@ class SpeechSynthesizerStub: SpeechSynthesizing {
     var volume: Float = 1.0
     var isSpeaking: Bool = false
     var locale: Locale? = Locale.autoupdatingCurrent
+    var managesAudioSession: Bool = false
     
     func prepareIncomingSpokenInstructions(_ instructions: [SpokenInstruction], locale: Locale?) {
         // do nothing
