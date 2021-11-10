@@ -190,6 +190,10 @@ final class BillingHandler {
     /// The billing service which is used to send billing events.
     private let billingService: BillingService
 
+    private var navigator: Navigator {
+        .shared
+    }
+
     /**
      A lock which serializes access to variables with underscore: `_sessions` etc.
      As a convention, all class-level identifiers that starts with `_` should be executed with locked `lock`.
@@ -267,6 +271,9 @@ final class BillingHandler {
      - uuid: The unique identifier of the billing session.
      */
     func beginBillingSession(for sessionType: SessionType, uuid: UUID) {
+        defer {
+            updateNavigator()
+        }
         lock.lock()
 
         if var existingSession = _sessions[uuid] {
@@ -296,7 +303,7 @@ final class BillingHandler {
                 case .invalidSkuId:
                     preconditionFailure("Invalid sku_id: \(error)")
                 case .tokenValidationFailed:
-                    assertionFailure("Token validation failed. Please check that you have the correct Mapboox Access Token.")
+                    assertionFailure("Token validation failed. Please check that you have the correct Mapbox Access Token.")
                 case .resumeFailed, .unknown:
                     break
                 }
@@ -341,6 +348,10 @@ final class BillingHandler {
 
     /// Stops the billing session identified by the `uuid`.
     func stopBillingSession(with uuid: UUID) {
+        defer {
+            updateNavigator()
+        }
+
         lock.lock()
         guard let session = _sessions[uuid] else {
             lock.unlock(); return
@@ -367,6 +378,10 @@ final class BillingHandler {
  
     /// Pauses the billing session identified by the `uuid`.
     func pauseBillingSession(with uuid: UUID) {
+        defer {
+            updateNavigator()
+        }
+
         lock.lock()
         guard var session = _sessions[uuid] else {
             assertionFailure("Trying to pause non-existing session.")
@@ -386,6 +401,9 @@ final class BillingHandler {
     
     /// Resumes the billing session identified by the `uuid`.
     func resumeBillingSession(with uuid: UUID) {
+        defer {
+            updateNavigator()
+        }
         lock.lock()
         guard var session = _sessions[uuid] else {
             assertionFailure("Trying to resume non-existing session.")
@@ -407,9 +425,14 @@ final class BillingHandler {
         lock {
             _sessions[uuid] = nil
         }
+        updateNavigator()
     }
 
     private func failedToResumeBillingSession(with uuid: UUID) {
+        defer {
+            updateNavigator()
+        }
+
         lock.lock()
         guard let session = _sessions[uuid] else {
             lock.unlock(); return
@@ -426,6 +449,19 @@ final class BillingHandler {
     private func _hasSession(with type: SessionType, isPaused: Bool) -> Bool {
         return _sessions.values.contains { session in
             session.type == type && session.isPaused == isPaused
+        }
+    }
+
+    /// Pauses `Navigator` if there are not running sessions. 
+    private func updateNavigator() {
+        lock.lock()
+        let hasRunningSession = _sessions.values.contains { !$0.isPaused }
+        lock.unlock()
+        if hasRunningSession {
+            navigator.resume()
+        }
+        else {
+            navigator.pause()
         }
     }
 }

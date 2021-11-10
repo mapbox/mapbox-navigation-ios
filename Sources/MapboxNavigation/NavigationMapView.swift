@@ -974,8 +974,14 @@ open class NavigationMapView: UIView {
         }
         
         let routeDurationAnnotationsLayerIdentifier = NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer
-        var shapeLayer = try style.layer(withId: routeDurationAnnotationsLayerIdentifier) as? SymbolLayer ??
-            SymbolLayer(id: routeDurationAnnotationsLayerIdentifier)
+        
+        var shapeLayer: SymbolLayer
+        if style.layerExists(withId: routeDurationAnnotationsLayerIdentifier),
+           let symbolLayer = try style.layer(withId: routeDurationAnnotationsLayerIdentifier) as? SymbolLayer {
+            shapeLayer = symbolLayer
+        } else {
+            shapeLayer = SymbolLayer(id: routeDurationAnnotationsLayerIdentifier)
+        }
         
         shapeLayer.source = routeDurationAnnotationsSourceIdentifier
         

@@ -2,19 +2,35 @@
 
 ## v2.1.0
 
+### Pricing
+
+* Fixed and issue where paused billing trip sessions might result in requests made inside NavNative billed per request. ([#3348](https://github.com/mapbox/mapbox-navigation-ios/pull/3558))
+
 ### Packaging
 
 * MapboxCoreNavigation now depends on [MapboxNavigationNative v79._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/79.0.0). ([#3509](https://github.com/mapbox/mapbox-navigation-ios/pull/3509))
 
 ### Location tracking
 
-* Added the the `PassiveLocationManager.rawLocation` and `PassiveLocationManager.location` properties to get the latest raw and idealized locations, respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
+* Added the `PassiveLocationManager.rawLocation` and `PassiveLocationManager.location` properties to get the latest raw and idealized locations, respectively. ([#3474](https://github.com/mapbox/mapbox-navigation-ios/pull/3474))
 * Fixed an issue where `ReplayLocationManager` would crash if initialized with just one location. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
-* Added the `ReplayLocationManager.onReplayLoopCompleted` property that allows you to stop the location manager from looping back to the beginning of the route. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528))
+* Added the `ReplayLocationManager.replayCompletionHandler` property that allows you to loop location. ([#3528](https://github.com/mapbox/mapbox-navigation-ios/pull/3528), [3550](https://github.com/mapbox/mapbox-navigation-ios/pull/3550))
+* Changed the behavior of `ReplayLocationManager` so that it doesn't loop locations by default. ([#3550](https://github.com/mapbox/mapbox-navigation-ios/pull/3550))
+* Fixed an issue where `ReplayLocationManager` didn't update location timestamps when a new loop started. ([#3550](https://github.com/mapbox/mapbox-navigation-ios/pull/3550))
 
 ### Banners and guidance instructions
 
 * Fixed the crash when scrolling the guidance cards while the orientaion changes. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
+
+### CarPlay
+
+* Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating. ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
+* Fixed an issue that caused the panning dismissal button to stop working on CarPlay. ([#3543](https://github.com/mapbox/mapbox-navigation-ios/pull/3543))
+
+### Other changes
+
+* Fixed a retain cycle in CarPlay implementation of a navigation map view that prevented `NavigationMapView` instances from being deallocated after CarPlay is stopped. ([#3552](https://github.com/mapbox/mapbox-navigation-ios/pull/3552))
+* Fixed an issue where the entire route line was colored as `NavigationMapView.routeCasingColor` instead of `NavigationMapView.trafficUnknownColor` when traffic congestion data was missing. ([#3577](https://github.com/mapbox/mapbox-navigation-ios/pull/3577))
 
 ## v2.0.1
 

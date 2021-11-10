@@ -182,12 +182,12 @@ open class PassiveLocationManager: NSObject {
     }
 
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
+        assert(Thread.isMainThread)
+        
         guard let userInfo = notification.userInfo,
               let status = userInfo[Navigator.NotificationUserInfoKey.statusKey] as? NavigationStatus,
               BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
-        DispatchQueue.main.async { [weak self] in
-            self?.update(to: status)
-        }
+        update(to: status)
     }
     
     private func update(to status: NavigationStatus) {

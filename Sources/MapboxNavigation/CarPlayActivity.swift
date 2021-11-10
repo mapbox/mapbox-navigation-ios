@@ -13,6 +13,11 @@ public enum CarPlayActivity: Int {
     case panningInBrowsingMode
     
     /**
+     The user is panning during active navigation.
+     */
+    case panningInNavigationMode
+    
+    /**
      The user is previewing a route or selecting among multiple routes.
      */
     case previewing
