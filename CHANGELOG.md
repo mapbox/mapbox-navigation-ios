@@ -31,6 +31,8 @@
 
 * Fixed a retain cycle in CarPlay implementation of a navigation map view that prevented `NavigationMapView` instances from being deallocated after CarPlay is stopped. ([#3552](https://github.com/mapbox/mapbox-navigation-ios/pull/3552))
 * Fixed an issue where the entire route line was colored as `NavigationMapView.routeCasingColor` instead of `NavigationMapView.trafficUnknownColor` when traffic congestion data was missing. ([#3577](https://github.com/mapbox/mapbox-navigation-ios/pull/3577))
+* Added the `SpeechSynthesizing.managesAudioSession` property to control if the speech synthesizer is allowed to manage the shared `AVAudioSession`. Set this value to false if you want to enable and disable the `AVAudioSession` yourself, for example, if your app plays background music. ([#3572](https://github.com/mapbox/mapbox-navigation-ios/pull/3572))
+* Fixed an issue when `SpeechSynthesizingDelegate.speechSynthesizer(_:willSpeak:)` callback was called at the wrong moment. ([#3572](https://github.com/mapbox/mapbox-navigation-ios/pull/3572))
 
 ## v2.0.1
 
