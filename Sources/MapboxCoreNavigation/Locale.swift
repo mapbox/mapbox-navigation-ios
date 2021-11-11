@@ -24,15 +24,17 @@ extension Locale {
      */
     public static var nationalizedCurrent = Locale(identifier: preferredLocalLanguageCountryCode)
     
+    @available(*, deprecated, message: "Use Locale.current.measuresDistancesInMetricUnits instead")
     public static var usesMetric: Bool {
-        let locale = self.current as NSLocale
-        guard let measurementSystem = locale.object(forKey: .measurementSystem) as? String else {
-            return false
-        }
-        return measurementSystem == "Metric"
+        Locale.current.measuresDistancesInMetricUnits
     }
-    
+
+    @available(*, deprecated, renamed: "measuresDistancesInMetricUnits")
     public var usesMetric: Bool {
+        measuresDistancesInMetricUnits
+    }
+
+    public var measuresDistancesInMetricUnits: Bool {
         let locale = self as NSLocale
         guard let measurementSystem = locale.object(forKey: .measurementSystem) as? String else {
             return false
