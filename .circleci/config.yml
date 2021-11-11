@@ -106,7 +106,7 @@ commands:
     parameters:
       swift-api-diff-version:
         type: string
-        default: "v2.0.0-rc.1"
+        default: "v2.0.0-rc.2"
     steps:
       - add_ssh_keys:
           fingerprints:
@@ -118,7 +118,7 @@ commands:
           command: |
             if [ ! -f "scripts/swift-api-diff/.build/release/swift-api-diff" ]; then 
               cd scripts && git clone git@github.com:mapbox/swift-api-diff.git --branch <<parameters.swift-api-diff-version>> --depth 1
-              cd scripts/swift-api-diff && swift build --configuration release; 
+              cd swift-api-diff && swift build --configuration release; 
             fi
       - save_cache:
           key: swift-api-diff-v1-<<parameters.swift-api-diff-version>>
@@ -151,7 +151,7 @@ commands:
           name: Generating << parameters.module_name >> API Diff
           command: |
             export GITHUB_TOKEN=$(mbx-ci github issues token)
-            LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes << parameters.base_api_path >> << parameters.new_api_path >>)
+            LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes << parameters.base_api_path >> << parameters.new_api_path >> --ignore-undocumented true)
             if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
               if [ -z "$LOG" ]; then
                 gh pr comment -b "No breaking changes detected in << parameters.module_name >>"
