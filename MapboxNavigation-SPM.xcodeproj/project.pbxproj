@@ -253,7 +253,7 @@
 					New,
 				);
 				LastSwiftUpdateCheck = 1220;
-				LastUpgradeCheck = 1300;
+				LastUpgradeCheck = 1310;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					358D14621E5E3B7700ADE590 = {

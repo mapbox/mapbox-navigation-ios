@@ -110,6 +110,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
+    /**
+     Controls whether night style will be used whenever traversing through a tunnel. Defaults to `true`.
+     */
+    public var usesNightStyleWhileInTunnel: Bool = true
+    
     // MARK: Setting Route and Navigation Experience
     
     /**
@@ -248,7 +253,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var sendsNotifications: Bool = true
     
-    private var traversingTunnel = false
+    private var isTraversingTunnel = false
     private var approachingDestinationThreshold: CLLocationDistance = 250.0
     private var passedApproachingDestinationThreshold: Bool = false
     private var currentLeg: RouteLeg?
@@ -783,7 +788,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             navigationMapView?.moveUserLocation(to: location, animated: true)
         }
 
-        attemptToHighlightBuildings(progress, with: location)
+        attemptToHighlightBuildings(progress)
         
         // Finally, pass the message onto the `NavigationViewControllerDelegate`.
         delegate?.navigationViewController(self, didUpdate: progress, with: location, rawLocation: rawLocation)
@@ -793,19 +798,22 @@ extension NavigationViewController: NavigationServiceDelegate {
         let inTunnel = navigationService.isInTunnel(at: location, along: progress)
         
         // Entering tunnel
-        if !traversingTunnel, inTunnel {
-            traversingTunnel = true
-            styleManager.applyStyle(type: .night)
+        if !isTraversingTunnel, inTunnel {
+            isTraversingTunnel = true
+            
+            if usesNightStyleWhileInTunnel {
+                styleManager?.applyStyle(type: .night)
+            }
         }
         
         // Exiting tunnel
-        if traversingTunnel, !inTunnel {
-            traversingTunnel = false
+        if isTraversingTunnel, !inTunnel {
+            isTraversingTunnel = false
             styleManager.timeOfDayChanged()
         }
     }
     
-    private func attemptToHighlightBuildings(_ progress: RouteProgress, with location: CLLocation) {
+    private func attemptToHighlightBuildings(_ progress: RouteProgress) {
         // In case if distance was fully covered - do nothing.
         // FIXME: This check prevents issue which leads to highlighting random buildings after arrival to final destination.
         // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
