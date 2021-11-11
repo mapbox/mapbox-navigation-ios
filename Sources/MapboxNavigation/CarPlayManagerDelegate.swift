@@ -173,8 +173,8 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      Offers the delegate an opportunity to use a customized rounding mechanism for the remaining distance.
      
      - parameter carPlayManager: The CarPlay manager instance.
-     - parameter remainingDistance: The distance remaining to be rounded.
-     - returns: An optional value representing the distance remaining.
+     - parameter remainingDistance: The remaining distance to be rounded.
+     - returns: An optional value representing the remaining distance.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager, didUpdate remainingDistance: CLLocationDistance) -> Measurement<UnitLength>?
     
