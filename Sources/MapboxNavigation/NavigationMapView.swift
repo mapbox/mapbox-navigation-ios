@@ -1210,7 +1210,7 @@ open class NavigationMapView: UIView {
      Attempts to localize labels into the system’s preferred language.
      
      This method automatically modifies the `SymbolLayer.textField` property of any symbol style
-     layer whose source is the <a href="https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#overview">Mapbox Streets source</a>.
+     layer whose source is the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#overview).
      The user can set the system’s preferred language in Settings, General Settings, Language & Region.
      
      This method avoids localizing road labels into the system’s preferred language, in an effort
