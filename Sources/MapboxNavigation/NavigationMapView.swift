@@ -736,8 +736,8 @@ open class NavigationMapView: UIView {
         
         // Pick a random tail direction to keep things varied.
         guard let randomTailPosition = [
-            RouteDurationAnnotationTailPosition.left,
-            RouteDurationAnnotationTailPosition.right
+            RouteDurationAnnotationTailPosition.leading,
+            RouteDurationAnnotationTailPosition.trailing
         ].randomElement() else { return }
         
         var features = [Turf.Feature]()
@@ -816,13 +816,13 @@ open class NavigationMapView: UIView {
             let unprojectedCoordinate = mapView.mapboxMap.point(for: annotationCoordinate)
             
             // Pick the orientation of the bubble "stem" based on how close to the edge of the screen it is.
-            if tailPosition == .left && unprojectedCoordinate.x > bounds.width * 0.75 {
-                tailPosition = .right
-            } else if tailPosition == .right && unprojectedCoordinate.x < bounds.width * 0.25 {
-                tailPosition = .left
+            if tailPosition == .leading && unprojectedCoordinate.x > bounds.width * 0.75 {
+                tailPosition = .trailing
+            } else if tailPosition == .trailing && unprojectedCoordinate.x < bounds.width * 0.25 {
+                tailPosition = .leading
             }
             
-            var imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
+            var imageName = tailPosition == .leading ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
             
             // The selected route uses the colored annotation image.
             if index == 0 {

@@ -36,7 +36,7 @@
 
 ### Route overlay
 
-* Added the `RoutesPresentationStyle` enumeration, which allows to control routes presentation style while calling `NavigationMapView.showcase(_:routesPresentationStyle:animated:)`. ([#3556](https://github.com/mapbox/mapbox-navigation-ios/pull/3556))
+* Renamed the `NavigationMapView.showcase(_:animated:)` method to `NavigationMapView.showcase(_:routesPresentationStyle:animated:)`, with an optional parameter to control whether the camera fits to unselected routes in addition to the selected route. ([#3556](https://github.com/mapbox/mapbox-navigation-ios/pull/3556))
 
 ### CarPlay
 
