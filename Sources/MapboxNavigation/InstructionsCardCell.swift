@@ -4,7 +4,7 @@ import MapboxDirections
 
 /// :nodoc:
 public class InstructionsCardCell: UICollectionViewCell {
-    public var container: InstructionsCardContainerView!
+    public let container: InstructionsCardContainerView = .init()
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -16,12 +16,13 @@ public class InstructionsCardCell: UICollectionViewCell {
         self.commonInit()
     }
     
-    func commonInit() {
-        container = InstructionsCardContainerView()
+    private func commonInit() {
         configureLayer()
+        addSubview(container)
+        setupConstraints()
     }
     
-    func configureLayer() {
+    private func configureLayer() {
         backgroundColor = .clear
         layer.shadowColor = UIColor.black.cgColor
         layer.shadowOffset = CGSize(width: 1, height: 2)
@@ -29,23 +30,17 @@ public class InstructionsCardCell: UICollectionViewCell {
         layer.shadowOpacity = 0.4
     }
     
-    func setupConstraints() {
+    private func setupConstraints() {
         container.translatesAutoresizingMaskIntoConstraints = false
         container.topAnchor.constraint(equalTo: topAnchor, constant: 2).isActive = true
         container.leadingAnchor.constraint(equalTo: contentView.leadingAnchor).isActive = true
         container.trailingAnchor.constraint(equalTo: contentView.trailingAnchor).isActive = true
     }
-    
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-        /* TODO: Smoothen animation here. */
-    }
-    
     public func configure(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil, isCurrentCardStep: Bool = false) {
-        addSubview(container)
-        setupConstraints()
-        container.prepareLayout()
-        container.updateInstruction(for: step, distance: distance, instruction: instruction, isCurrentCardStep: isCurrentCardStep)
+        container.updateInstruction(for: step,
+                                    distance: distance,
+                                    instruction: instruction,
+                                    isCurrentCardStep: isCurrentCardStep)
     }
 }
 

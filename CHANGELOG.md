@@ -22,6 +22,10 @@
 
 * Fixed the crash when scrolling the guidance cards while the orientaion changes. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
 
+### Map
+
+* Added the `NavigationViewController.usesNightStyleWhileInTunnel` and `CarPlayNavigationViewController.usesNightStyleWhileInTunnel` properties, which allow to disable dark style usage, while traversing the tunnels. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
+
 ### CarPlay
 
 * Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating. ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
@@ -33,6 +37,7 @@
 * Fixed an issue where the entire route line was colored as `NavigationMapView.routeCasingColor` instead of `NavigationMapView.trafficUnknownColor` when traffic congestion data was missing. ([#3577](https://github.com/mapbox/mapbox-navigation-ios/pull/3577))
 * Added the `SpeechSynthesizing.managesAudioSession` property to control if the speech synthesizer is allowed to manage the shared `AVAudioSession`. Set this value to false if you want to enable and disable the `AVAudioSession` yourself, for example, if your app plays background music. ([#3572](https://github.com/mapbox/mapbox-navigation-ios/pull/3572))
 * Fixed an issue when `SpeechSynthesizingDelegate.speechSynthesizer(_:willSpeak:)` callback was called at the wrong moment. ([#3572](https://github.com/mapbox/mapbox-navigation-ios/pull/3572))
+* Fixed an issue where `RouteStepProgress.currentIntersection` was always returning invalid value, which in turn caused inability to correctly detect whether specific location along the route is in tunnel, or not. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
 
 ## v2.0.1
 
@@ -41,6 +46,11 @@
 * Fixed an issue where setting `StyleManager.styles` to an array of only one style did not immediately apply the style. ([#3508](https://github.com/mapbox/mapbox-navigation-ios/pull/3508))
 * Fixed an issue in CarPlay’s previewing activity where only the selected route was visible on the map, while other alternative routes were hidden. Now all the routes are visible simultaneously. ([#3511](https://github.com/mapbox/mapbox-navigation-ios/pull/3511))
 * Fixed an issue where the route line flashed when the user arrived at the destination if `NavigationViewcontroller.routeLineTracksTraversal` was enabled. ([#3516](https://github.com/mapbox/mapbox-navigation-ios/pull/3516))
+
+### Banners and guidance instructions
+
+* `InstructionsCardViewController` now adapts to `NightStyle`. ([#3503](https://github.com/mapbox/mapbox-navigation-ios/pull/3503))
+* Fixed an issue where `InstructionsCardViewController` installed duplicate Auto Layout constraints on each location update. ([#3503](https://github.com/mapbox/mapbox-navigation-ios/pull/3503))
 
 ## v2.0.0
 
