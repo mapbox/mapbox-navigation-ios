@@ -8,7 +8,8 @@
 
 ### Banners and guidance instructions
 
-* Fixed Night Style for guidance instructions. ([#3503](https://github.com/mapbox/mapbox-navigation-ios/pull/3503))
+* `InstructionsCardViewController` now adapts to `NightStyle`. ([#3503](https://github.com/mapbox/mapbox-navigation-ios/pull/3503))
+* Fixed an issue where `InstructionsCardViewController` installed duplicate Auto Layout constraints on each location update. ([#3503](https://github.com/mapbox/mapbox-navigation-ios/pull/3503))
 
 ## v2.0.0
 
