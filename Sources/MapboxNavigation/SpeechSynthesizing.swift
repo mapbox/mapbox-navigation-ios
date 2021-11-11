@@ -18,6 +18,10 @@ public protocol SpeechSynthesizing: AnyObject {
     var isSpeaking: Bool { get }
     /// Locale setting to vocalization. This locale will be used as 'default' if no specific locale is passed for vocalizing each individual instruction.
     var locale: Locale? { get set }
+    /// Controls if this speech synthesizer is allowed to manage the shared `AVAudioSession`.
+    /// Set this field to `false` if you want to manage the session yourself, for example if your app has background music.
+    /// Default value is `true`.
+    var managesAudioSession: Bool { get set }
     
     /// Used to notify speech synthesizer about future spoken instructions in order to give extra time for preparations.
     /// - parameter instructions: An array of `SpokenInstruction`s that will be encountered further.

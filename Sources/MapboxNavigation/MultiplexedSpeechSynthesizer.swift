@@ -40,6 +40,18 @@ open class MultiplexedSpeechSynthesizer: SpeechSynthesizing {
         speechSynthesizers.forEach { $0.locale = locale }
     }
     
+    /// Controls if this speech synthesizer is allowed to manage the shared `AVAudioSession`.
+    /// Set this field to `false` if you want to manage the session yourself, for example if your app has background music.
+    /// Default value is `true`.
+    public var managesAudioSession: Bool {
+        get {
+            speechSynthesizers.allSatisfy { $0.managesAudioSession == true }
+        }
+        set {
+            speechSynthesizers.forEach { $0.managesAudioSession = newValue }
+        }
+    }
+    
     // MARK: Instructions vocalization
     
     public var isSpeaking: Bool {

@@ -35,6 +35,11 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
      */
     public var audioPlayer: AVAudioPlayer?
     
+    /// Controls if this speech synthesizer is allowed to manage the shared `AVAudioSession`.
+    /// Set this field to `false` if you want to manage the session yourself, for example if your app has background music.
+    /// Default value is `true`.
+    public var managesAudioSession = true
+    
     /**
      Mapbox speech engine instance.
      
@@ -92,13 +97,17 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
             return
         }
         
-        if let data = cachedDataForKey(instruction.ssmlText, with: locale) {
-            safeDuckAudio(instruction: instruction)
-            speak(instruction,
-                  data: data)
-        }
-        else {
+        guard let data = cachedDataForKey(instruction.ssmlText, with: locale) else {
             fetchAndSpeak(instruction: instruction, locale: locale)
+            return
+        }
+        
+        if let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction), modifiedInstruction != instruction {
+            // Application changed the instruction, we need to refetch and cache it
+            fetchAndSpeak(instruction: modifiedInstruction, locale: locale)
+        } else {
+            safeDuckAudio(instruction: instruction)
+            speak(instruction, data: data)
         }
     }
     
@@ -190,8 +199,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     private func downloadAndCacheSpokenInstruction(instruction: SpokenInstruction, locale: Locale) {
-        let modifiedInstruction = delegate?.speechSynthesizer(self, willSpeak: instruction) ?? instruction
-        let ssmlText = modifiedInstruction.ssmlText
+        let ssmlText = instruction.ssmlText
         let options = SpeechOptions(ssml: ssmlText)
         options.locale = locale
         
@@ -204,6 +212,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     func safeDuckAudio(instruction: SpokenInstruction?){
+        guard managesAudioSession else { return }
         if let error = AVAudioSession.sharedInstance().tryDuckAudio() {
             delegate?.speechSynthesizer(self,
                                         encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
@@ -213,6 +222,7 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     }
     
     func safeUnduckAudio(instruction: SpokenInstruction?) {
+        guard managesAudioSession else { return }
         if let error = AVAudioSession.sharedInstance().tryUnduckAudio() {
             delegate?.speechSynthesizer(self,
                                         encounteredError: SpeechError.unableToControlAudio(instruction: instruction,
