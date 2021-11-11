@@ -795,13 +795,15 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
-        guard usesNightStyleWhileInTunnel else { return }
         let inTunnel = navigationService.isInTunnel(at: location, along: progress)
         
         // Entering tunnel
         if !isTraversingTunnel, inTunnel {
             isTraversingTunnel = true
-            styleManager.applyStyle(type: .night)
+            
+            if usesNightStyleWhileInTunnel {
+                styleManager?.applyStyle(type: .night)
+            }
         }
         
         // Exiting tunnel
