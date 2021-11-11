@@ -88,7 +88,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     
     func testCustomVisualInstructionDelegate() {
         let view = instructionsView()
-        view.instructionDelegate = reverseDelegate
+        view.delegate = reverseDelegate
         
         view.update(for: typicalInstruction)
         
@@ -97,7 +97,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     
     func testCustomDelegateReturningNilTriggersDefaultBehavior() {
         let view = instructionsView()
-        view.instructionDelegate = silentDelegate
+        view.delegate = silentDelegate
         
         view.update(for: typicalInstruction)
         
@@ -339,7 +339,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     }
 }
 
-private class TextReversingDelegate: VisualInstructionDelegate {
+private class TextReversingDelegate: InstructionsBannerViewDelegate {
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         let forwards = Array(presented.string)
         let reverse = String(forwards.reversed())
@@ -349,7 +349,7 @@ private class TextReversingDelegate: VisualInstructionDelegate {
     }
 }
 
-private class DefaultBehaviorDelegate: VisualInstructionDelegate {
+private class DefaultBehaviorDelegate: InstructionsBannerViewDelegate {
     func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
         return nil
     }

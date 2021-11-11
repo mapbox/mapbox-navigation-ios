@@ -4,7 +4,7 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
-public protocol TopBannerViewControllerDelegate: AnyObject, UnimplementedLogging {
+public protocol TopBannerViewControllerDelegate: VisualInstructionDelegate {
     func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
     
     func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
@@ -71,19 +71,25 @@ open class TopBannerViewController: UIViewController {
         return banner
     }()
     
-    lazy var lanesView: LanesView = .forAutoLayout(hidden: true)
-    lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
-    lazy var statusView: StatusView = {
-        let view: StatusView = .forAutoLayout()
-        view.isHidden = true
-        return view
-    }()
+    /**
+     A view that contains one or more images indicating which lanes of road the user should take to complete the maneuver.
+     */
+    public var lanesView: LanesView = .forAutoLayout(hidden: true)
     
-    lazy var junctionView: JunctionView = {
-        let view: JunctionView = .forAutoLayout()
-        view.isHidden = true
-        return view
-    }()
+    /**
+     A view that indicates the instruction for next step.
+     */
+    public var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
+    
+    /**
+     A translucent bar that indicates the navigation status.
+     */
+    public var statusView: StatusView = .forAutoLayout(hidden: true)
+    
+    /**
+     A view that indicates the layout of a highway junction.
+     */
+    public var junctionView: JunctionView = .forAutoLayout(hidden: true)
     
     private let instructionsBannerHeight: CGFloat = 100.0
     
@@ -450,6 +456,10 @@ extension TopBannerViewController: InstructionsBannerViewDelegate {
     
     public func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
         delegate?.topBanner(self, didSwipeInDirection: direction)
+    }
+    
+    public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        delegate?.label(label, willPresent: instruction, as: presented)
     }
 }
 

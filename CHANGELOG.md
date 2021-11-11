@@ -21,6 +21,9 @@
 ### Banners and guidance instructions
 
 * Fixed the crash when scrolling the guidance cards while the orientation changes. ([#3544](https://github.com/mapbox/mapbox-navigation-ios/pull/3544))
+* Added the `TopBannerViewController.lanesView`, `TopBannerViewController.nextBannerView`, `TopBannerViewController.statusView` and `TopBannerViewController.junctionView` properties. ([#3575](https://github.com/mapbox/mapbox-navigation-ios/pull/3575))
+* The `InstructionsBannerViewDelegate` and `TopBannerViewControllerDelegate` protocols now conform to the `VisualInstructionDelegate` protocol. ([#3575](https://github.com/mapbox/mapbox-navigation-ios/pull/3575))
+* Fixed an issue where `VisualInstructionDelegate.label(_:willPresent:as:)` was never called. Your `NavigationViewControllerDelegate` class can now implement this method to customize the contents of a visual instruction during turn-by-turn navigation. ([#3575](https://github.com/mapbox/mapbox-navigation-ios/pull/3575))
 
 ### Map
 
