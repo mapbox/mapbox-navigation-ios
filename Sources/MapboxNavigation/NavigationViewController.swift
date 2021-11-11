@@ -253,7 +253,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var sendsNotifications: Bool = true
     
-    private var traversingTunnel = false
+    private var isTraversingTunnel = false
     private var approachingDestinationThreshold: CLLocationDistance = 250.0
     private var passedApproachingDestinationThreshold: Bool = false
     private var currentLeg: RouteLeg?
@@ -799,14 +799,14 @@ extension NavigationViewController: NavigationServiceDelegate {
         let inTunnel = navigationService.isInTunnel(at: location, along: progress)
         
         // Entering tunnel
-        if !traversingTunnel, inTunnel {
-            traversingTunnel = true
+        if !isTraversingTunnel, inTunnel {
+            isTraversingTunnel = true
             styleManager.applyStyle(type: .night)
         }
         
         // Exiting tunnel
-        if traversingTunnel, !inTunnel {
-            traversingTunnel = false
+        if isTraversingTunnel, !inTunnel {
+            isTraversingTunnel = false
             styleManager.timeOfDayChanged()
         }
     }

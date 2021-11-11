@@ -71,7 +71,7 @@ open class CarPlayNavigationViewController: UIViewController {
     var mapTemplate: CPMapTemplate
     var carInterfaceController: CPInterfaceController
     
-    private var traversingTunnel = false
+    private var isTraversingTunnel = false
     
     func setupOrnaments() {
         let compassView = CarPlayCompassView()
@@ -528,14 +528,14 @@ open class CarPlayNavigationViewController: UIViewController {
         let inTunnel = navigationService.isInTunnel(at: location, along: progress)
         
         // Entering tunnel
-        if !traversingTunnel, inTunnel {
-            traversingTunnel = true
+        if !isTraversingTunnel, inTunnel {
+            isTraversingTunnel = true
             styleManager?.applyStyle(type: .night)
         }
         
         // Exiting tunnel
-        if traversingTunnel, !inTunnel {
-            traversingTunnel = false
+        if isTraversingTunnel, !inTunnel {
+            isTraversingTunnel = false
             styleManager?.timeOfDayChanged()
         }
     }
