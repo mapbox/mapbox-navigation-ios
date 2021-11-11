@@ -124,11 +124,13 @@ open class NavigationMapView: UIView {
      are currently deselected or inactive. The order of routes in this array may differ from
      the order in the original `RouteResponse`, for example in response to a user selecting a preferred
      route.
+     - parameter routesPresentationStyle: Route lines presentation style. By default the map will be
+     updated to fit all routes.
      - parameter animated: `true` to asynchronously animate the camera, or `false` to instantaneously
      zoom and pan the map.
      */
     public func showcase(_ routes: [Route],
-                         routesPresentationStyle: RoutesPresentationStyle = .single,
+                         routesPresentationStyle: RoutesPresentationStyle = .all(shouldFit: true),
                          animated: Bool = false) {
         guard let activeRoute = routes.first,
               let coordinates = activeRoute.shape?.coordinates,

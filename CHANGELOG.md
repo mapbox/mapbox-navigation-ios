@@ -36,7 +36,7 @@
 
 ### Route overlay
 
-* Renamed the `NavigationMapView.showcase(_:animated:)` method to `NavigationMapView.showcase(_:routesPresentationStyle:animated:)`, with an optional parameter to control whether the camera fits to unselected routes in addition to the selected route. ([#3556](https://github.com/mapbox/mapbox-navigation-ios/pull/3556))
+* Fixed an issue where `NavigationMapView.showcase(_:animated:)` was clipping unselected routes by renaming it to the `NavigationMapView.showcase(_:routesPresentationStyle:animated:)`, with an optional parameter to control whether the camera fits to unselected routes in addition to the selected route. ([#3556](https://github.com/mapbox/mapbox-navigation-ios/pull/3556))
 
 ### CarPlay
 
