@@ -24,7 +24,7 @@
 
 ### Map
 
-* Added the `NavigationViewController.usesDarkStyleWhileInTunnel` and `CarPlayNavigationViewController.usesDarkStyleWhileInTunnel` properties, which allow to disable dark style usage, while traversing the tunnels. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
+* Added the `NavigationViewController.usesNightStyleWhileInTunnel` and `CarPlayNavigationViewController.usesNightStyleWhileInTunnel` properties, which allow to disable dark style usage, while traversing the tunnels. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
 
 ### CarPlay
 

@@ -111,9 +111,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     /**
-     Controls whether dark style will be used whenever traversing through a tunnel. Defaults to `true`.
+     Controls whether night style will be used whenever traversing through a tunnel. Defaults to `true`.
      */
-    public var usesDarkStyleWhileInTunnel: Bool = true
+    public var usesNightStyleWhileInTunnel: Bool = true
     
     // MARK: Setting Route and Navigation Experience
     
@@ -795,7 +795,7 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
-        guard usesDarkStyleWhileInTunnel else { return }
+        guard usesNightStyleWhileInTunnel else { return }
         let inTunnel = navigationService.isInTunnel(at: location, along: progress)
         
         // Entering tunnel
