@@ -184,7 +184,7 @@ class RouteControllerTests: TestCase {
         locationManager.startDate = Date()
         locationManager.delegate = routeController
 
-        routerDelegateSpy.onManeuverOffsetWhenRerouting = {
+        routerDelegateSpy.onManeuverBufferWhenRerouting = {
             return .radius(500)
         }
         

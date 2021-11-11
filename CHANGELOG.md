@@ -90,7 +90,7 @@
 
 ### Other changes
 
-* Added `RouterDelegate.router(_:, maneuverOffsetWhenReroutingFrom:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to expose configuration of safe distance marging when reroute occures.  ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
+* Added the `RouterDelegate.router(_:initialManeuverBufferWhenReroutingFrom:)` method and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to configure rerouting buffering. ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
 
 ## v2.0.1
 

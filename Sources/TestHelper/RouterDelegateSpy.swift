@@ -20,7 +20,7 @@ public final class RouterDelegateSpy: RouterDelegate {
     public var onDidArriveAt: ((Waypoint) -> Bool)?
     public var onShouldPreventReroutesWhenArrivingAt: ((Waypoint) -> Bool)?
     public var onRouterShouldDisableBatteryMonitoring: (() -> Bool)?
-    public var onManeuverOffsetWhenRerouting: (() -> ReroutingManeuverOffset)?
+    public var onManeuverBufferWhenRerouting: (() -> ReroutingManeuverBuffer)?
 
     public init() {}
 
@@ -38,8 +38,8 @@ public final class RouterDelegateSpy: RouterDelegate {
         onWillRerouteFrom?(location)
     }
     
-    public func router(_ router: Router, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset {
-        return onManeuverOffsetWhenRerouting?() ?? RouteController.DefaultBehavior.reroutingManeuverRadius
+    public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+        return onManeuverBufferWhenRerouting?() ?? RouteController.DefaultBehavior.reroutingManeuverRadius
     }
 
     public func router(_ router: Router,
