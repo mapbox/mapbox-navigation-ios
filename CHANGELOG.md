@@ -35,6 +35,7 @@
 
 * Fixed a retain cycle in CarPlay implementation of a navigation map view that prevented `NavigationMapView` instances from being deallocated after CarPlay is stopped. ([#3552](https://github.com/mapbox/mapbox-navigation-ios/pull/3552))
 * Fixed an issue where the entire route line was colored as `NavigationMapView.routeCasingColor` instead of `NavigationMapView.trafficUnknownColor` when traffic congestion data was missing. ([#3577](https://github.com/mapbox/mapbox-navigation-ios/pull/3577))
+* Fixed an issue where `RouteStepProgress.currentIntersection` was always returning invalid value, which in turn caused inability to correctly detect whether specific location along the route is in tunnel, or not. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
 
 ## v2.0.1
 
