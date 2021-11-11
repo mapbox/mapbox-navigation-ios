@@ -12,6 +12,7 @@ public class InstructionsCardView: BaseInstructionsBannerView {
     
     required public override init(frame: CGRect = .zero) {
         super.init(frame: frame)
+        prepareLayout()
         self.showStepIndicator = false
     }
     
