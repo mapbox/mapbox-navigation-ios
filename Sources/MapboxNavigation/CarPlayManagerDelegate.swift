@@ -173,10 +173,10 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      Offers the delegate an opportunity to use a customized rounding mechanism for the remaining distance.
      
      - parameter carPlayManager: The CarPlay manager instance.
-     - parameter roundingMechanism: True if a custom rounding mechanism will be used.
+     - parameter remainingDistance: The distance remaining to be rounded.
      - returns: An optional value representing the distance remaining.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, didSet roundingMechanism: Bool) -> Measurement<UnitLength>?
+    func carPlayManager(_ carPlayManager: CarPlayManager, didUpdate remainingDistance: CLLocationDistance) -> Measurement<UnitLength>?
     
     // MARK: Transitioning Between Templates
     
@@ -323,7 +323,7 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carPlayManager(_ carPlayManager: CarPlayManager, didSet roundingMechanism: Bool) -> Measurement<UnitLength>? {
+    func carPlayManager(_ carPlayManager: CarPlayManager, didUpdate remainingDistance: CLLocationDistance) -> Measurement<UnitLength>? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
     }

@@ -719,8 +719,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
 
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
                             selectedPreviewFor trip: CPTrip,
-                            using routeChoice: CPRouteChoice,
-                            customRounding: Bool? = false) {
+                            using routeChoice: CPRouteChoice) {
         guard let carPlayMapViewController = carPlayMapViewController,
               let (routeResponse, routeIndex, _) = routeChoice.userInfo as? (RouteResponse, Int, RouteOptions),
               var routes = routeResponse.routes,
@@ -728,7 +727,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         let route = routes[routeIndex]
         
-        let distanceRemaining = delegate?.carPlayManager(self, didSet: customRounding!) ?? Measurement(distance: route.distance).localized()
+        let distanceRemaining = delegate?.carPlayManager(self, didUpdate: route.distance) ?? Measurement(distance: route.distance).localized()
         let estimates = CPTravelEstimates(distanceRemaining: distanceRemaining,
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)
@@ -937,8 +936,8 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
                                  pointAnnotationManager: pointAnnotationManager)
     }
     
-    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didSet roundingMechanism: Bool) -> Measurement<UnitLength>? {
-        return delegate?.carPlayManager(self, didSet: roundingMechanism)
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didUpdate remainingDistance: CLLocationDistance) -> Measurement<UnitLength>? {
+        return delegate?.carPlayManager(self, didUpdate: remainingDistance)
     }
 }
 

@@ -80,8 +80,7 @@
 * Fixed an issue when incorrect padding was used for `SpeedLimitView` and `CarPlayCompassView` for right-hand traffic mode on CarPlay. ([#3605](https://github.com/mapbox/mapbox-navigation-ios/pull/3605))
 * Added the ability to extrude or highlight building on CarPlay by setting the `CarPlayNavigationViewController.waypointStyle` property. ([#3564](https://github.com/mapbox/mapbox-navigation-ios/pull/3564))
 * Fixed a retain cycle in CarPlay implementation of a navigation map view that prevented `NavigationMapView` instances from being deallocated after CarPlay is stopped. ([#3552](https://github.com/mapbox/mapbox-navigation-ios/pull/3552))
-* Added the `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:didSet:)` and `CarPlayManager.carPlayManager(_:didSet:)` delegate methods, which will be called whenever the `MapTemplate` updates the estimated distance remaining using a custom rounding mechanism.
-* Renamed `CarPlayManager.mapTemplate(_:selectedPreviewFor:using:)` to `CarPlayManager.mapTemplate(_:selectedPreviewFor:using:customRounding:)`.
+* Added the `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewController(_:didUpdate:)` and `CarPlayManagerDelegate.carPlayManager(_:didUpdate:)` delegate methods, which will be called whenever the `MapTemplate` updates the estimated distance remaining using a custom rounding mechanism.([#3581](https://github.com/mapbox/mapbox-navigation-ios/pull/3581))
 
 ### Other changes
 

@@ -40,11 +40,11 @@ public protocol CarPlayNavigationViewControllerDelegate: AnyObject, Unimplemente
      Offers the delegate an opportunity to use a customized rounding mechanism for the remaining distance.
      
      - parameter carPlayNavigationViewController: The `CarPlayNavigationViewController` object.
-     - parameter roundingMechanism: True if a custom rounding mechanism will be used.
+     - parameter remainingDistance: The distance remaining to be rounded.
      - returns: An optional value representing the distance remaining.
      */
     func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
-                                         didSet roundingMechanism: Bool) -> Measurement<UnitLength>?
+                                         didUpdate remainingDistance: CLLocationDistance) -> Measurement<UnitLength>?
 }
 
 @available(iOS 12.0, *)
@@ -70,7 +70,7 @@ public extension CarPlayNavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
-                                         didSet roundingMechanism: Bool) -> Measurement<UnitLength>? {
+                                         didUpdate remainingDistance: CLLocationDistance) -> Measurement<UnitLength>? {
         logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
         return nil
     }
