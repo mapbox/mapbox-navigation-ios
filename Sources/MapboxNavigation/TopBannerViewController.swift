@@ -72,7 +72,7 @@ open class TopBannerViewController: UIViewController {
     }()
     
     /**
-     A view that contains one or more maneuver images indicating the lanes of road user driving on.
+     A view that contains one or more images indicating which lanes of road the user should take to complete the maneuver.
      */
     public var lanesView: LanesView = .forAutoLayout(hidden: true)
     
