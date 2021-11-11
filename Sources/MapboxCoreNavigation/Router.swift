@@ -311,7 +311,7 @@ extension InternalRouter where Self: Router {
         let options = progress.reroutingOptions(with: origin)
         
         if isRerouting {
-            switch (delegate?.router(self, maneuverOffsetWhenReroutingFrom: origin) ?? RouteController.DefaultBehavior.reroutingManeuverRadius) {
+            switch (delegate?.router(self, initialManeuverBufferWhenReroutingFrom: origin) ?? RouteController.DefaultBehavior.reroutingManeuverRadius) {
             case .disabled:
                 options.initialManeuverAvoidanceRadius = nil
             case .radius(let distance):

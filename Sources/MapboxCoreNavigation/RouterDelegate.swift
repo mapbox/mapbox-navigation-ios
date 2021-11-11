@@ -6,7 +6,7 @@ import Turf
 /**
  Configuration for offsetting first route maneuver during rerouting.
  */
-public enum ReroutingManeuverOffset {
+public enum ReroutingManeuverBuffer {
     /**
      Leaves original `RouteOptions.initialManeuverAvoidanceRadius` to be used for rerouting attempt.
      */
@@ -49,7 +49,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately before the router calculates a new route.
      
-     This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:maneuverOffsetWhenReroutingFrom:)` is called.
+     This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:initialManeuverBufferWhenReroutingFrom:)` is called.
      
      - parameter router: The router that will calculate a new route.
      - parameter location: The user’s current location.
@@ -65,9 +65,9 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      
      - parameter router: The router that has detected the need to calculate a new route.
      - parameter location: The user’s current location.
-     - returns: `ReroutingManeuverOffset` value which overrides or leaves maneuvers offset as it was originally set.
+     - returns: `ReroutingManeuverBuffer` value which overrides or leaves maneuvers offset as it was originally set.
      */
-    func router(_ router: Router, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset
+    func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -83,7 +83,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately after the router receives a new route.
      
-     This method is called after `router(_:maneuverOffsetWhenReroutingFrom:)` method is called.
+     This method is called after `router(_:initialManeuverBufferWhenReroutingFrom:)` method is called.
      
      - parameter router: The router that has calculated a new route.
      - parameter route: The new route.
@@ -93,7 +93,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the router fails to receive a new route.
      
-     This method is called after `router(_:maneuverOffsetWhenReroutingFrom:)`.
+     This method is called after `router(_:initialManeuverBufferWhenReroutingFrom:)`.
      
      - parameter router: The router that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -194,7 +194,7 @@ public extension RouterDelegate {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
-    func router(_ router: Router, maneuverOffsetWhenReroutingFrom location: CLLocation) -> ReroutingManeuverOffset {
+    func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.reroutingManeuverRadius
     }
