@@ -8,7 +8,8 @@
 
 ### Packaging
 
-* MapboxCoreNavigation now depends on [MapboxNavigationNative v79._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/79.0.0). ([#3509](https://github.com/mapbox/mapbox-navigation-ios/pull/3509))
+* MapboxCoreNavigation now depends on [MapboxNavigationNative v80._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/80.0.0). ([#3590](https://github.com/mapbox/mapbox-navigation-ios/pull/3590))
+* MapboxCoreNavigation now depends on [MapboxDirections v2.1.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.1.0-rc.1). ([#3590](https://github.com/mapbox/mapbox-navigation-ios/pull/3590))
 
 ### Location tracking
 
