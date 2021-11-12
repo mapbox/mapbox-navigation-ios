@@ -122,25 +122,11 @@ public class NavigationSettings {
     
     /**
      Specifies the preferred distance measurement unit.
-     - note: Anything but `kilometer` and `mile` will fall back to the default measurement for the current locale.
-        Meters and feets will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
+     - Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
      */
     public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.measuresDistancesInMetricUnits ? .kilometer : .mile {
         didSet {
             notifyChanged(property: .distanceUnit, value: distanceUnit.rawValue)
-        }
-    }
-    
-    var usesMetric: Bool {
-        get {
-            switch distanceUnit {
-            case .kilometer:
-                return true
-            case .mile:
-                return false
-            default:
-                return Locale.current.measuresDistancesInMetricUnits
-            }
         }
     }
     

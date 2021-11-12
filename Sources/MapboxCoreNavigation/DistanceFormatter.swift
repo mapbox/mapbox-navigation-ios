@@ -1,4 +1,5 @@
 import CoreLocation
+import MapboxDirections
 
 struct RoundingTable {
     struct Threshold {
@@ -73,7 +74,7 @@ extension Measurement where UnitType == UnitLength {
      */
     public func localized(into locale: Locale = .nationalizedCurrent) -> Measurement<UnitLength> {
         let threshold: RoundingTable
-        if NavigationSettings.shared.usesMetric {
+        if MeasurementSystem(NavigationSettings.shared.distanceUnit) == .metric {
             threshold = .metric
         } else if locale.languageCode == "en" && locale.regionCode == "GB" {
             threshold = .uk
