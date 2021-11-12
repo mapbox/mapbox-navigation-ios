@@ -156,6 +156,7 @@
 		3EA93A1FEFDDB709DE84BED9 /* ImageRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EA938BE5468824787100228 /* ImageRepository.swift */; };
 		414119FF26C5269A00402B5D /* RoadSubgraphEdge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 414119FE26C5269A00402B5D /* RoadSubgraphEdge.swift */; };
 		417D127726E24D0800E0AB16 /* FreeDriveEventDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 417D127626E24D0800E0AB16 /* FreeDriveEventDetails.swift */; };
+		41AC2E0E273EF61200CA228B /* MapboxNavigationNative.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2C1CDA6265E22B400E158E0 /* MapboxNavigationNative.xcframework */; };
 		41B901EB271048BD007F9F78 /* HistoryRecording.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41B901EA271048BD007F9F78 /* HistoryRecording.swift */; };
 		4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4303A3982332CD6200B5737D /* UnimplementedLogging.swift */; };
 		4316D95C24340555000DD8F8 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4316D95B24340555000DD8F8 /* Match.swift */; };
@@ -1078,6 +1079,7 @@
 			files = (
 				3595FE48219190400035B765 /* TestHelper.framework in Frameworks */,
 				352BBC3B1E5E6A0C00703DF1 /* MapboxCoreNavigation.framework in Frameworks */,
+				41AC2E0E273EF61200CA228B /* MapboxNavigationNative.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
