@@ -130,7 +130,7 @@ open class NavigationMapView: UIView {
      zoom and pan the map.
      */
     public func showcase(_ routes: [Route],
-                         routesPresentationStyle: RoutesPresentationStyle = .all(shouldFit: true),
+                         routesPresentationStyle: RoutesPresentationStyle = .all(),
                          animated: Bool = false) {
         guard let activeRoute = routes.first,
               let coordinates = activeRoute.shape?.coordinates,
@@ -1618,7 +1618,7 @@ open class NavigationMapView: UIView {
     }
     
     func fitCamera(to routes: [Route],
-                   routesPresentationStyle: RoutesPresentationStyle = .single,
+                   routesPresentationStyle: RoutesPresentationStyle = .all(),
                    animated: Bool = false) {
         let geometry: Geometry
         

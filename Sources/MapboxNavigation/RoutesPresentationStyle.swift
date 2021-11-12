@@ -15,7 +15,7 @@ public enum RoutesPresentationStyle {
      All routes will be presented on a map view.
      
      - parameter shouldFit: If `true` geometry of all routes will be used for camera transition.
-     If `false` geometry of only first route will be used.
+     If `false` geometry of only first route will be used. Defaults to `true`.
      */
-    case all(shouldFit: Bool)
+    case all(shouldFit: Bool = true)
 }
