@@ -97,62 +97,6 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(0, pointAnnotationManager?.annotations.count)
     }
 
-    func setUpVanishingRouteLine() -> Route {
-        let routeData = Fixture.JSONFromFileNamed(name: "route-for-vanishing-route-line")
-        let routeOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2DMake(-122.5237734,37.9753973),
-            CLLocationCoordinate2DMake(-122.5264995,37.9709171)
-        ])
-        let decoder = JSONDecoder()
-        decoder.userInfo[.options] = routeOptions
-        var testRoute: Route?
-        XCTAssertNoThrow(testRoute = try decoder.decode(Route.self, from: routeData))
-        guard let route = testRoute else {
-            preconditionFailure("Route is invalid.")
-        }
-        return route
-    }
-    
-    func testUpdateVanishingPoint() {
-        let route = setUpVanishingRouteLine()
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        let shape = route.shape!
-        let targetPoint = Turf.mid(shape.coordinates[6], shape.coordinates[7])
-        //which is between route.legs[0].steps[1].shape!.coordinates[3] and  route.legs[0].steps[1].shape!.coordinates[4]
-        let traveledCoordinates = Array(route.legs[0].steps[1].shape!.coordinates[0...3])
-        let stepTraveledDistancePrep = navigationMapView.calculateGranularDistances(traveledCoordinates)?.distance
-        guard let stepTraveledDistanceSep = stepTraveledDistancePrep else {
-            preconditionFailure("Granular distances are invalid")
-        }
-
-        let testRouteProgress: RouteProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
-        testRouteProgress.currentLegProgress = RouteLegProgress(leg: route.legs[0], stepIndex: 1, spokenInstructionIndex: 0)
-        testRouteProgress.currentLegProgress.currentStepProgress = RouteStepProgress(step: route.legs[0].steps[1], spokenInstructionIndex: 0)
-        testRouteProgress.currentLegProgress.currentStepProgress.distanceTraveled = stepTraveledDistanceSep
-
-        navigationMapView.initPrimaryRoutePoints(route: route)
-        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: testRouteProgress)
-        navigationMapView.updateFractionTraveled(coordinate: targetPoint)
-
-        let expectedTraveledFraction = 0.06383308537010246
-
-        XCTAssertTrue(abs(navigationMapView.fractionTraveled - expectedTraveledFraction) < 0.000000000001)
-    }
-    
-    func testParseRoutePoints() {
-        let route = setUpVanishingRouteLine()
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        
-        navigationMapView.initPrimaryRoutePoints(route: route)
-        let nestedList = navigationMapView.routePoints?.nestedList
-        let flatList = navigationMapView.routePoints?.flatList
-        let distanceArray = navigationMapView.routeLineGranularDistances?.distanceArray
-        XCTAssertEqual(nestedList?.first?.count, 8)
-        XCTAssertEqual(flatList?.count, 33)
-        XCTAssertEqual(distanceArray?.count, 33)
-        XCTAssertEqual(distanceArray?[32].distanceRemaining, 0)
-    }
-
     // MARK: - Route congestion consistency tests
     
     func loadRoute(from jsonFile: String) -> Route {
@@ -373,13 +317,11 @@ class NavigationMapViewTests: TestCase {
         var fractionTraveled = 0.0
         var routeLineGradient = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: false)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.trafficLowColor)
-        XCTAssertEqual(routeLineGradient[1.0], navigationMapView.trafficLowColor)
         
         fractionTraveled = 0.3
         var fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
         routeLineGradient = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: false)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
-        XCTAssertEqual(routeLineGradient[1.0], navigationMapView.trafficLowColor)
         XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.trafficLowColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
         
@@ -387,7 +329,6 @@ class NavigationMapViewTests: TestCase {
         fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
         routeLineGradient = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
-        XCTAssertEqual(routeLineGradient[1.0], navigationMapView.trafficLowColor)
         XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.trafficLowColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
     }
@@ -397,9 +338,7 @@ class NavigationMapViewTests: TestCase {
         var congestions = route.congestionFeatures()
         var fractionTraveled = 0.0
         var lineGradient = navigationMapView.routeLineGradient(congestions, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
-        XCTAssertEqual(2, lineGradient.keys.count)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.trafficUnknownColor)
-        XCTAssertEqual(lineGradient[1.0], navigationMapView.trafficUnknownColor)
         
         lineGradient = [
             0.0: navigationMapView.trafficSevereColor,

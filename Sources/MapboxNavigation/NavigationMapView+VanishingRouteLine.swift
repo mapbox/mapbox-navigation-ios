@@ -37,9 +37,7 @@ extension NavigationMapView {
         let nestedList = route.legs.map { (routeLeg: RouteLeg) -> [[CLLocationCoordinate2D]] in
             return routeLeg.steps.map { (routeStep: RouteStep) -> [CLLocationCoordinate2D] in
                 if let routeShape = routeStep.shape {
-                    if !routeShape.coordinates.isEmpty {
-                        return routeShape.coordinates
-                    } else { return [] }
+                    return routeShape.coordinates
                 } else {
                     return []
                 }
@@ -59,26 +57,30 @@ extension NavigationMapView {
         }
         let currentLegProgress = routeProgress.currentLegProgress
         let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
+        let currentLegSteps = completeRoutePoints.nestedList[routeProgress.legIndex]
+        var allRemainingPoints = 0
         /**
          Find the count of remaining points in the current step.
          */
-        var allRemainingPoints = getSlicedLinePointsCount(currentLegProgress: currentLegProgress, currentStepProgress: currentStepProgress)
+        let lineString = currentStepProgress.step.shape ?? LineString([])
+        if currentStepProgress.distanceTraveled < 0 {
+            allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].count
+        } else if let slicedLineString = lineString.trimmed(from: currentStepProgress.distanceTraveled, to: currentStepProgress.step.distance) {
+            allRemainingPoints += slicedLineString.coordinates.dropLast().count
+        }
         
         /**
          Add to the count of remaining points all of the remaining points on the current leg, after the current step.
          */
-        let currentLegSteps = completeRoutePoints.nestedList[routeProgress.legIndex]
-        let startIndex = currentLegProgress.stepIndex + 1
-        let endIndex = currentLegSteps.count - 1
-        if startIndex < endIndex {
-            allRemainingPoints += currentLegSteps.prefix(endIndex).suffix(from: startIndex).flatMap{ $0.compactMap{ $0 } }.count
+        if currentLegProgress.stepIndex < currentLegSteps.endIndex {
+            allRemainingPoints += currentLegSteps.suffix(from: currentLegProgress.stepIndex + 1).dropLast().flatMap{ $0.compactMap{ $0 } }.count
         }
         
         /**
          Add to the count of remaining points all of the remaining legs.
          */
-        for index in stride(from: routeProgress.legIndex + 1, to: completeRoutePoints.nestedList.count, by: 1) {
-            allRemainingPoints += completeRoutePoints.nestedList[index].flatMap{ $0 }.count
+        if routeProgress.legIndex < completeRoutePoints.nestedList.endIndex {
+            allRemainingPoints += completeRoutePoints.nestedList.suffix(from: routeProgress.legIndex + 1).flatMap{ $0 }.map{ $0.count }.reduce(0, +)
         }
         
         /**
@@ -86,22 +88,6 @@ extension NavigationMapView {
          */
         let allPoints = completeRoutePoints.flatList.count
         routeRemainingDistancesIndex = allPoints - allRemainingPoints - 1
-    }
-    
-    func getSlicedLinePointsCount(currentLegProgress: RouteLegProgress, currentStepProgress: RouteStepProgress) -> Int {
-        let startDistance = currentStepProgress.distanceTraveled
-        let stopDistance = currentStepProgress.step.distance
-        
-        /**
-         Implement the Turf.lineSliceAlong(lineString, startDistance, stopDistance) to return a sliced lineString.
-         */
-        if let lineString = currentStepProgress.step.shape,
-           let midPoint = lineString.coordinateFromStart(distance: startDistance),
-           let slicedLine = lineString.trimmed(from: midPoint, distance: stopDistance - startDistance) {
-            return slicedLine.coordinates.count - 1
-        }
-         
-        return 0
     }
     
     func calculateGranularDistances(_ coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
@@ -124,8 +110,9 @@ extension NavigationMapView {
      - parameter coordinate: Current position of the user location.
      */
     func updateFractionTraveled(coordinate: CLLocationCoordinate2D) {
-        guard let granularDistances = routeLineGranularDistances,let index = routeRemainingDistancesIndex else { return }
-        guard index < granularDistances.distanceArray.endIndex else { return }
+        guard let granularDistances = routeLineGranularDistances,
+              let index = routeRemainingDistancesIndex,
+              index < granularDistances.distanceArray.endIndex else { return }
         let traveledIndex = granularDistances.distanceArray[index]
         let upcomingPoint = traveledIndex.point
         
@@ -238,6 +225,8 @@ extension NavigationMapView {
                     return nil
                 }
             }.reduce(0, +)
+            // lastRecordSegment records the last segmentEndPercentTraveled and associated congestion color added to the gradientStops.
+            var lastRecordSegment: (Double, UIColor) = (0.0, traversedRouteColor)
             // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply its color to the `fractionTraveled` stop.
             var minimumSegment: (Double, UIColor) = isMain ? (0.0, .trafficUnknown) : (0.0, .alternativeTrafficUnknown)
 
@@ -268,47 +257,48 @@ extension NavigationMapView {
                         let currentGradientStop = isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
                         if currentGradientStop > fractionTraveled {
                             gradientStops[currentGradientStop] = associatedFeatureColor
-                        } else if currentGradientStop >= minimumSegment.0 {
-                            minimumSegment = (currentGradientStop, associatedFeatureColor)
+                            lastRecordSegment = (currentGradientStop, associatedFeatureColor)
                         }
-                    } else {
-                        let lastGradientStop: Double = 1.0
-                        gradientStops[lastGradientStop] = associatedFeatureColor
                     }
                     
                     continue
                 }
                 
                 if index == congestionFeatures.endIndex - 1 {
-                    let lastGradientStop: Double = 1.0
-                    gradientStops[lastGradientStop] = associatedFeatureColor
-                    
-                    let segmentStartPercentTraveled = distanceTraveled / routeDistance
-                    let currentGradientStop = isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
-                    if currentGradientStop > fractionTraveled {
-                        gradientStops[currentGradientStop] = associatedFeatureColor
-                    } else if currentGradientStop >= minimumSegment.0 {
-                        minimumSegment = (lastGradientStop, associatedFeatureColor)
+                    if associatedFeatureColor == lastRecordSegment.1 {
+                        gradientStops[lastRecordSegment.0] = nil
+                    } else {
+                        let segmentStartPercentTraveled = distanceTraveled / routeDistance
+                        let currentGradientStop = isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
+                        if currentGradientStop > fractionTraveled {
+                            gradientStops[currentGradientStop] = associatedFeatureColor
+                        } else if currentGradientStop >= minimumSegment.0 {
+                            minimumSegment = (currentGradientStop, associatedFeatureColor)
+                        }
                     }
                     
                     continue
                 }
                 
-                let segmentStartPercentTraveled = distanceTraveled / routeDistance
-                var currentGradientStop = isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
-                
-                if currentGradientStop > fractionTraveled {
-                    gradientStops[currentGradientStop] = associatedFeatureColor
-                } else if currentGradientStop >= minimumSegment.0 {
-                    minimumSegment = (currentGradientStop, associatedFeatureColor)
+                if associatedFeatureColor == lastRecordSegment.1 {
+                    gradientStops[lastRecordSegment.0] = nil
+                } else {
+                    let segmentStartPercentTraveled = distanceTraveled / routeDistance
+                    let currentGradientStop = isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
+                    if currentGradientStop > fractionTraveled {
+                        gradientStops[currentGradientStop] = associatedFeatureColor
+                    } else if currentGradientStop >= minimumSegment.0 {
+                        minimumSegment = (currentGradientStop, associatedFeatureColor)
+                    }
                 }
                 
                 distanceTraveled = distanceTraveled + distance
                 let segmentEndPercentTraveled = distanceTraveled / routeDistance
-                currentGradientStop = isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
+                let currentGradientStop = isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
                 
                 if currentGradientStop > fractionTraveled {
                     gradientStops[currentGradientStop] = associatedFeatureColor
+                    lastRecordSegment = (currentGradientStop, associatedFeatureColor)
                 } else if currentGradientStop >= minimumSegment.0 {
                     minimumSegment = (currentGradientStop, associatedFeatureColor)
                 }
