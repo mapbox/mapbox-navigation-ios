@@ -2,4 +2,4 @@ binary "https://api.mapbox.com/downloads/v2/carthage/mapbox-common/MapboxCommon.
 binary "https://api.mapbox.com/downloads/v2/carthage/mobile-navigation-native/MapboxNavigationNative.xcframework.json" ~> 80.0
 github "mapbox/mapbox-directions-swift" ~> 2.1.0-rc.1
 github "mapbox/mapbox-events-ios" ~> 1.0.0
-github "mapbox/turf-swift" ~> 2.1.0
+github "mapbox/turf-swift" ~> 2.1
