@@ -367,7 +367,7 @@ extension TileEndpointConfiguration {
            - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
            - parameter targetVersion: Routing tile version, which navigator would like to eventually switch to if it becomes available
      */
-    convenience init(credentials: DirectionsCredentials, tilesVersion: String, minimumDaysToPersistVersion: Int?, targetVersion: String?) {
+    convenience init(credentials: Credentials, tilesVersion: String, minimumDaysToPersistVersion: Int?, targetVersion: String?) {
         let host = credentials.host.absoluteString
         guard let accessToken = credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")

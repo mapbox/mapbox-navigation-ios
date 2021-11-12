@@ -7,8 +7,8 @@ extension Directions {
     }
 }
 
-extension DirectionsCredentials {
-    public static var mocked: DirectionsCredentials {
+extension Credentials {
+    public static var mocked: Credentials {
         return .init(accessToken: .mockedAccessToken, host: nil)
     }
 

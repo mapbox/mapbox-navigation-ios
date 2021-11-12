@@ -38,7 +38,7 @@ open class TestCase: XCTestCase {
         isInitializationCompleted = true
 
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
-        DirectionsCredentials.injectSharedToken(.mockedAccessToken)
+        Credentials.injectSharedToken(.mockedAccessToken)
         #if canImport(MapboxMaps)
         ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
         #endif

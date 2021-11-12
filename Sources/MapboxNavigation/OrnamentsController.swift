@@ -239,7 +239,7 @@ extension NavigationMapView {
                 streetLabelLayer.lineWidth = .constant(20.0)
                 streetLabelLayer.lineColor = .constant(.init(.white))
                 
-                if ![DirectionsProfileIdentifier.walking, DirectionsProfileIdentifier.cycling].contains(router.routeProgress.routeOptions.profileIdentifier) {
+                if ![ProfileIdentifier.walking, ProfileIdentifier.cycling].contains(router.routeProgress.routeOptions.profileIdentifier) {
                     // Filter out to road classes valid only for motor transport.
                     let filter = Exp(.inExpression) {
                         "class"

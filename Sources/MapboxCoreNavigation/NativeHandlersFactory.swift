@@ -13,14 +13,14 @@ class NativeHandlersFactory {
     // MARK: - Settings
     
     let tileStorePath: String
-    let credentials: DirectionsCredentials
+    let credentials: Credentials
     let tilesVersion: String?
     let historyDirectoryURL: URL?
     let targetVersion: String?
     let configFactoryType: ConfigFactory.Type
     
     init(tileStorePath: String,
-         credentials: DirectionsCredentials,
+         credentials: Credentials,
          tilesVersion: String? = nil,
          historyDirectoryURL: URL? = nil,
          targetVersion: String? = nil,

@@ -38,7 +38,7 @@ public struct PredictiveCacheOptions {
      /**
      The Authorization & Authentication credentials that are used for this service. If not specified - will be automatically intialized from the token and host from your app's `info.plist`.
      */
-    public var credentials: DirectionsCredentials = .init()
+    public var credentials: Credentials = .init()
     
     public init() {
         // No-op

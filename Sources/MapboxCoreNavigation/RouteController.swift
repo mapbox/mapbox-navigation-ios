@@ -503,7 +503,7 @@ open class RouteController: NSObject {
         }
     }
     
-    func mode(_ profileIdentifier: DirectionsProfileIdentifier) -> ActiveGuidanceMode {
+    func mode(_ profileIdentifier: ProfileIdentifier) -> ActiveGuidanceMode {
         switch profileIdentifier {
         case .automobile:
             return .driving
