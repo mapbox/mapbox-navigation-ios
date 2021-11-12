@@ -122,7 +122,7 @@ public class NavigationSettings {
     
     /**
      Specifies the preferred distance measurement unit.
-     - Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
+     Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
      */
     public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.measuresDistancesInMetricUnits ? .kilometer : .mile {
         didSet {
