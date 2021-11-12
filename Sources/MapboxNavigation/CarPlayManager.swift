@@ -712,7 +712,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         
         let navigationMapView = carPlayMapViewController.navigationMapView
-        navigationMapView.showcase(routes)
+        navigationMapView.showcase(routes, animated: true)
         
         delegate?.carPlayManager(self, selectedPreviewFor: trip, using: routeChoice)
     }

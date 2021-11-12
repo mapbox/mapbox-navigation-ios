@@ -5,13 +5,9 @@ import MapboxDirections
 import MapboxCoreNavigation
 import Turf
 
-private enum RouteDurationAnnotationTailPosition: Int {
-    case left
-    case right
-}
-
 /**
- `NavigationMapView` is a subclass of `UIView`, which draws `MapView` on its surface and provides convenience functions for adding `Route` lines to a map.
+ `NavigationMapView` is a subclass of `UIView`, which draws `MapView` on its surface and provides
+ convenience functions for adding `Route` lines to a map.
  */
 open class NavigationMapView: UIView {
     
@@ -20,7 +16,9 @@ open class NavigationMapView: UIView {
     /**
      A collection of street road classes for which a congestion level substitution should occur.
      
-     For any street road class included in the `roadClassesWithOverriddenCongestionLevels`, all route segments with an `CongestionLevel.unknown` traffic congestion level and a matching `MapboxDirections.MapboxStreetsRoadClass`
+     For any street road class included in the `roadClassesWithOverriddenCongestionLevels`,
+     all route segments with an `CongestionLevel.unknown` traffic congestion level and
+     a matching `MapboxDirections.MapboxStreetsRoadClass`.
      will be replaced with the `CongestionLevel.low` congestion level.
      */
     public var roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil
@@ -28,14 +26,20 @@ open class NavigationMapView: UIView {
     /**
      Controls whether to show congestion levels on alternative route lines. Defaults to `false`.
      
-     If `true` and there're multiple routes to choose, the alternative route lines would display the congestion levels at different colors, similar to the main route. To customize the congestion colors that represent different congestion levels, override the `alternativeTrafficUnknownColor`, `alternativeTrafficLowColor`, `alternativeTrafficModerateColor`, `alternativeTrafficHeavyColor`, `alternativeTrafficSevereColor` property for the `NavigationMapView.appearance()`.
+     If `true` and there're multiple routes to choose, the alternative route lines would display
+     the congestion levels at different colors, similar to the main route. To customize the
+     congestion colors that represent different congestion levels, override the `alternativeTrafficUnknownColor`,
+     `alternativeTrafficLowColor`, `alternativeTrafficModerateColor`, `alternativeTrafficHeavyColor`,
+     `alternativeTrafficSevereColor` property for the `NavigationMapView.appearance()`.
      */
     public var showsCongestionForAlternativeRoutes: Bool = false
     
     /**
-     Controls whether to show fading gradient color on route lines between two different congestion level segments. Defaults to `false`.
+     Controls whether to show fading gradient color on route lines between two different congestion
+     level segments. Defaults to `false`.
      
-     If `true`, the congestion level change between two segments in the route line will be shown as fading gradient color instead of abrupt and steep change.
+     If `true`, the congestion level change between two segments in the route line will be shown as
+     fading gradient color instead of abrupt and steep change.
      */
     public var crossfadesCongestionSegments: Bool = false
     
@@ -65,7 +69,8 @@ open class NavigationMapView: UIView {
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
     
     /**
-     A pending user location coordinate, which is used to calculate the bottleneck distance for vanishing route line when a location update comes in.
+     A pending user location coordinate, which is used to calculate the bottleneck distance for
+     vanishing route line when a location update comes in.
      */
     var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
     
@@ -102,14 +107,31 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Visualizes the given routes and their waypoints and zooms the map to fit, removing any existing routes and waypoints from the map.
+     Visualizes the given routes and their waypoints and zooms the map to fit, removing any
+     existing routes and waypoints from the map.
      
-     Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion levels are present. Waypoints along the route are visualized as markers. Implement `NavigationMapViewDelegate` methods to customize the appearance of the lines and markers representing the routes and waypoints. To only visualize the routes and not the waypoints, or to have more control over the camera, use the `show(_:legIndex:)` method.
+     Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion
+     levels are present and `NavigationMapView.crossfadesCongestionSegments` is set to `true`.
      
-     - parameter routes: The routes to visualize in order of priority. The first route is displayed as if it is currently selected or active, while the remaining routes are displayed as if they are currently deselected or inactive. The order of routes in this array may differ from the order in the original `RouteResponse`, for example in response to a user selecting a preferred route.
-     - parameter animated: `true` to asynchronously animate the camera, or `false` to instantaneously zoom and pan the map.
+     Waypoints along the route are visualized as markers. Implement `NavigationMapViewDelegate` methods
+     to customize the appearance of the lines and markers representing the routes and waypoints.
+     
+     To only visualize the routes and not the waypoints, or to have more control over the camera,
+     use the `show(_:legIndex:)` method.
+     
+     - parameter routes: The routes to visualize in order of priority. The first route is displayed
+     as if it is currently selected or active, while the remaining routes are displayed as if they
+     are currently deselected or inactive. The order of routes in this array may differ from
+     the order in the original `RouteResponse`, for example in response to a user selecting a preferred
+     route.
+     - parameter routesPresentationStyle: Route lines presentation style. By default the map will be
+     updated to fit all routes.
+     - parameter animated: `true` to asynchronously animate the camera, or `false` to instantaneously
+     zoom and pan the map.
      */
-    public func showcase(_ routes: [Route], animated: Bool = false) {
+    public func showcase(_ routes: [Route],
+                         routesPresentationStyle: RoutesPresentationStyle = .all(),
+                         animated: Bool = false) {
         guard let activeRoute = routes.first,
               let coordinates = activeRoute.shape?.coordinates,
               !coordinates.isEmpty else { return }
@@ -118,22 +140,38 @@ open class NavigationMapView: UIView {
         removeRoutes()
         removeWaypoints()
         
-        show(routes)
+        switch routesPresentationStyle {
+        case .single:
+            show([activeRoute])
+        case .all(_):
+            show(routes)
+        }
+        
         showWaypoints(on: activeRoute)
         
         navigationCamera.stop()
-        fitCamera(to: activeRoute, animated: animated)
+        fitCamera(to: routes,
+                  routesPresentationStyle: routesPresentationStyle,
+                  animated: animated)
     }
     
     /**
      Visualizes the given routes, removing any existing routes from the map.
      
-     Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion levels are present. Implement `NavigationMapViewDelegate` methods to customize the appearance of the lines representing the routes. To also visualize waypoints and zoom the map to fit, use the `showcase(_:animated:)` method.
+     Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion
+     levels are present. Implement `NavigationMapViewDelegate` methods to customize the appearance of
+     the lines representing the routes. To also visualize waypoints and zoom the map to fit,
+     use the `showcase(_:animated:)` method.
      
      To undo the effects of this method, use the `removeRoutes()` method.
      
-     - parameter routes: The routes to visualize in order of priority. The first route is displayed as if it is currently selected or active, while the remaining routes are displayed as if they are currently deselected or inactive. The order of routes in this array may differ from the order in the original `RouteResponse`, for example in response to a user selecting a preferred route.
-     - parameter legIndex: The zero-based index of the currently active leg along the active route. The active leg is highlighted more prominently than inactive legs.
+     - parameter routes: The routes to visualize in order of priority. The first route is displayed
+     as if it is currently selected or active, while the remaining routes are displayed as if they
+     are currently deselected or inactive. The order of routes in this array may differ from the
+     order in the original `RouteResponse`, for example in response to a user selecting a preferred
+     route.
+     - parameter legIndex: The zero-based index of the currently active leg along the active route.
+     The active leg is highlighted more prominently than inactive legs.
      */
     public func show(_ routes: [Route], legIndex: Int? = nil) {
         removeRoutes()
@@ -342,8 +380,11 @@ open class NavigationMapView: UIView {
      */
     func setUpLineGradientStops(along route: Route) {
         if let legIndex = currentLegIndex {
-            let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-            currentLineGradientStops = routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isSoft: crossfadesCongestionSegments)
+            let congestionFeatures = route.congestionFeatures(legIndex: legIndex,
+                                                              roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+            currentLineGradientStops = routeLineGradient(congestionFeatures,
+                                                         fractionTraveled: fractionTraveled,
+                                                         isSoft: crossfadesCongestionSegments)
             pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
         }
     }
@@ -451,7 +492,9 @@ open class NavigationMapView: UIView {
         return layerIdentifier
     }
     
-    @discardableResult func addRouteCasingLayer(_ route: Route, below parentLayerIndentifier: String? = nil, isMainRoute: Bool = true) -> String? {
+    @discardableResult func addRouteCasingLayer(_ route: Route,
+                                                below parentLayerIndentifier: String? = nil,
+                                                isMainRoute: Bool = true) -> String? {
         guard let defaultShape = route.shape else { return nil }
         let shape = delegate?.navigationMapView(self, casingShapeFor: route) ?? defaultShape
         
@@ -680,7 +723,7 @@ open class NavigationMapView: UIView {
     private func updateRouteDurations(along routes: [Route]?) {
         let style = mapView.mapboxMap.style
         
-        // remove any existing route annotation
+        // Remove any existing route annotation.
         removeRouteDurationAnnotationsLayerFromStyle(style)
         
         guard let routes = routes else { return }
@@ -693,13 +736,17 @@ open class NavigationMapView: UIView {
         }
         let routesContainTolls = tollRoutes.count > 0
         
-        // pick a random tail direction to keep things varied
-        guard let randomTailPosition = [RouteDurationAnnotationTailPosition.left, RouteDurationAnnotationTailPosition.right].randomElement() else { return }
+        // Pick a random tail direction to keep things varied.
+        guard let randomTailPosition = [
+            RouteDurationAnnotationTailPosition.leading,
+            RouteDurationAnnotationTailPosition.trailing
+        ].randomElement() else { return }
         
         var features = [Turf.Feature]()
         
-        // Run through our heuristic algorithm looking for a good coordinate along each route line to place it's route annotation
-        // First, we will look for a set of RouteSteps unique to each route
+        // Run through our heuristic algorithm looking for a good coordinate along each route line
+        // to place it's route annotation.
+        // First, we will look for a set of RouteSteps unique to each route.
         var excludedSteps = [RouteStep]()
         for (index, route) in routes.enumerated() {
             let allSteps = route.legs.flatMap { return $0.steps }
@@ -710,16 +757,24 @@ open class NavigationMapView: UIView {
             
             var coordinate: CLLocationCoordinate2D?
             
-            // Obtain a polyline of the set of steps. We'll look for a good spot along this line to place the annotation.
-            // We will consider a good spot to be somewhere near the middle of the line, making sure that the coordinate is visible on-screen.
-            if let continuousLine = visibleAlternateSteps.continuousShape(), continuousLine.coordinates.count > 0 {
+            // Obtain a polyline of the set of steps. We'll look for a good spot along this line to
+            // place the annotation.
+            // We will consider a good spot to be somewhere near the middle of the line, making sure
+            // that the coordinate is visible on-screen.
+            if let continuousLine = visibleAlternateSteps.continuousShape(),
+                continuousLine.coordinates.count > 0 {
                 coordinate = continuousLine.coordinates[0]
                 
                 // Pick a coordinate using some randomness in order to give visual variety.
                 // Take care to snap that coordinate to one that lays on the original route line.
-                // If the chosen snapped coordinate is not visible on the screen, then we walk back along the route coordinates looking for one that is.
-                // If none of the earlier points are on screen then we walk forward along the route coordinates until we find one that is.
-                if let distance = continuousLine.distance(), let sampleCoordinate = continuousLine.indexedCoordinateFromStart(distance: distance * CLLocationDistance.random(in: 0.3...0.8))?.coordinate, let routeShape = route.shape, let snappedCoordinate = routeShape.closestCoordinate(to: sampleCoordinate) {
+                // If the chosen snapped coordinate is not visible on the screen, then we walk back
+                // along the route coordinates looking for one that is.
+                // If none of the earlier points are on screen then we walk forward along the route
+                // coordinates until we find one that is.
+                if let distance = continuousLine.distance(),
+                    let sampleCoordinate = continuousLine.indexedCoordinateFromStart(distance: distance * CLLocationDistance.random(in: 0.3...0.8))?.coordinate,
+                    let routeShape = route.shape,
+                    let snappedCoordinate = routeShape.closestCoordinate(to: sampleCoordinate) {
                     var foundOnscreenCoordinate = false
                     var firstOnscreenCoordinate = snappedCoordinate.coordinate
                     for indexedCoordinate in routeShape.coordinates.prefix(through: snappedCoordinate.index).reversed() {
@@ -731,10 +786,11 @@ open class NavigationMapView: UIView {
                     }
                     
                     if foundOnscreenCoordinate {
-                        // We found a point that is both on the route and on-screen
+                        // We found a point that is both on the route and on-screen.
                         coordinate = firstOnscreenCoordinate
                     } else {
-                        // we didn't find a previous point that is on-screen so we'll move forward through the coordinates looking for one
+                        // We didn't find a previous point that is on-screen so we'll move forward
+                        // through the coordinates looking for one.
                         for indexedCoordinate in routeShape.coordinates.suffix(from: snappedCoordinate.index) {
                             if visibleBoundingBox.contains(indexedCoordinate) {
                                 firstOnscreenCoordinate = indexedCoordinate
@@ -748,32 +804,34 @@ open class NavigationMapView: UIView {
             
             guard let annotationCoordinate = coordinate else { return }
             
-            // form the appropriate text string for the annotation
+            // Form the appropriate text string for the annotation.
             let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
             
-            // Create the feature for this route annotation. Set the styling attributes that will be used to render the annotation in the style layer.
+            // Create the feature for this route annotation. Set the styling attributes that will be
+            // used to render the annotation in the style layer.
             var feature = Feature(geometry: .point(Point(annotationCoordinate)))
             
             var tailPosition = randomTailPosition
             
-            // convert our coordinate to screen space so we can make a choice on which side of the coordinate the label ends up on
+            // Convert our coordinate to screen space so we can make a choice on which side of the
+            // coordinate the label ends up on.
             let unprojectedCoordinate = mapView.mapboxMap.point(for: annotationCoordinate)
             
-            // pick the orientation of the bubble "stem" based on how close to the edge of the screen it is
-            if tailPosition == .left && unprojectedCoordinate.x > bounds.width * 0.75 {
-                tailPosition = .right
-            } else if tailPosition == .right && unprojectedCoordinate.x < bounds.width * 0.25 {
-                tailPosition = .left
+            // Pick the orientation of the bubble "stem" based on how close to the edge of the screen it is.
+            if tailPosition == .leading && unprojectedCoordinate.x > bounds.width * 0.75 {
+                tailPosition = .trailing
+            } else if tailPosition == .trailing && unprojectedCoordinate.x < bounds.width * 0.25 {
+                tailPosition = .leading
             }
             
-            var imageName = tailPosition == .left ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
+            var imageName = tailPosition == .leading ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
             
-            // the selected route uses the colored annotation image
+            // The selected route uses the colored annotation image.
             if index == 0 {
                 imageName += "-Selected"
             }
             
-            // set the feature attributes which will be used in styling the symbol style layer
+            // Set the feature attributes which will be used in styling the symbol style layer.
             feature.properties = [
                 "selected": .boolean(index == 0),
                 "tailPosition": .number(Double(tailPosition.rawValue)),
@@ -785,7 +843,7 @@ open class NavigationMapView: UIView {
             features.append(feature)
         }
         
-        // add the features to the style
+        // Add the features to the style.
         do {
             try addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features))
         } catch {
@@ -1074,7 +1132,8 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Updates the image assets in the map style for the route duration annotations. Useful when the desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
+     Updates the image assets in the map style for the route duration annotations. Useful when the
+     desired callout colors change, such as when transitioning between light and dark mode on iOS 13 and later.
      */
     private func updateAnnotationSymbolImages() throws {
         let style = mapView.mapboxMap.style
@@ -1152,9 +1211,17 @@ open class NavigationMapView: UIView {
     /**
      Attempts to localize labels into the system’s preferred language.
      
-     This method automatically modifies the `SymbolLayer.textField` property of any symbol style layer whose source is the <a href="https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#overview">Mapbox Streets source</a>. The user can set the system’s preferred language in Settings, General Settings, Language & Region.
+     This method automatically modifies the `SymbolLayer.textField` property of any symbol style
+     layer whose source is the [Mapbox Streets source](https://docs.mapbox.com/vector-tiles/reference/mapbox-streets-v8/#overview).
+     The user can set the system’s preferred language in Settings, General Settings, Language & Region.
      
-     This method avoids localizing road labels into the system’s preferred language, in an effort to match road signage and the turn banner, which always display road names and exit destinations in the local language. If this `NavigationMapView` stands alone outside a `NavigationViewController`, you should call the `MapboxMap.onEvery(_:handler:)` on `mapView`, passing in `MapEvents.EventKind.styleLoaded`, and call this method inside the closure. The map view embedded in `NavigationViewController` is localized automatically, so you do not need to call this method on the value of `NavigationViewController.navigationMapView`.
+     This method avoids localizing road labels into the system’s preferred language, in an effort
+     to match road signage and the turn banner, which always display road names and exit destinations
+     in the local language. If this `NavigationMapView` stands alone outside a `NavigationViewController`,
+     you should call the `MapboxMap.onEvery(_:handler:)` on `mapView`, passing in
+     `MapEvents.EventKind.styleLoaded`, and call this method inside the closure.
+     The map view embedded in `NavigationViewController` is localized automatically, so you do not
+     need to call this method on the value of `NavigationViewController.navigationMapView`.
      */
     public func localizeLabels() {
         guard let preferredLocale = VectorSource.preferredMapboxStreetsLocale(for: .nationalizedCurrent) else { return }
@@ -1550,14 +1617,23 @@ open class NavigationMapView: UIView {
         mapView.preferredFramesPerSecond = NavigationMapView.FrameIntervalOptions.defaultFramesPerSecond
     }
     
-    func fitCamera(to route: Route, animated: Bool = false) {
-        guard let routeShape = route.shape, !routeShape.coordinates.isEmpty else { return }
+    func fitCamera(to routes: [Route],
+                   routesPresentationStyle: RoutesPresentationStyle = .all(),
+                   animated: Bool = false) {
+        let geometry: Geometry
+        
+        if case let RoutesPresentationStyle.all(shouldFit) = routesPresentationStyle, shouldFit {
+            geometry = .multiLineString(MultiLineString(routes.map({ $0.shape?.coordinates ?? [] })))
+        } else {
+            geometry = .lineString(LineString(routes.first?.shape?.coordinates ?? []))
+        }
+        
         let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
-        if let cameraOptions = mapView?.mapboxMap.camera(for: .lineString(routeShape),
-                                                         padding: edgeInsets,
-                                                         bearing: nil,
-                                                         pitch: nil) {
-            mapView?.mapboxMap.setCamera(to: cameraOptions)
+        if let cameraOptions = mapView?.mapboxMap.camera(for: geometry,
+                                                            padding: edgeInsets,
+                                                            bearing: nil,
+                                                            pitch: nil) {
+            mapView?.camera.ease(to: cameraOptions, duration: animated ? 1.0 : 0.0)
         }
     }
     
