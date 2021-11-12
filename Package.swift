@@ -32,6 +32,7 @@ let package = Package(
         .package(name: "Nimble", url: "https://github.com/Quick/Nimble.git", from: "9.0.1"),
         .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.8.1"),
         .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0"),
+        .package(name: "Turf", url: "https://github.com/mapbox/turf-swift.git", from: "2.1.0"),
     ],
     targets: [
         .target(
