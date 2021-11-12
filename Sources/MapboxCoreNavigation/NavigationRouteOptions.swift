@@ -139,7 +139,7 @@ extension OptimizedForNavigation {
         routeShapeResolution = .full
         includesSpokenInstructions = true
         locale = Locale.nationalizedCurrent
-        distanceMeasurementSystem = Locale.current.usesMetricSystem ? .metric : .imperial
+        distanceMeasurementSystem = .init(NavigationSettings.shared.distanceUnit)
         includesVisualInstructions = true
     }
 }

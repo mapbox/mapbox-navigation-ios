@@ -122,25 +122,11 @@ public class NavigationSettings {
     
     /**
      Specifies the preferred distance measurement unit.
-     - note: Anything but `kilometer` and `mile` will fall back to the default measurement for the current locale.
-        Meters and feets will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
+     Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more information.
      */
     public dynamic var distanceUnit : LengthFormatter.Unit = Locale.current.measuresDistancesInMetricUnits ? .kilometer : .mile {
         didSet {
             notifyChanged(property: .distanceUnit, value: distanceUnit.rawValue)
-        }
-    }
-    
-    var usesMetric: Bool {
-        get {
-            switch distanceUnit {
-            case .kilometer:
-                return true
-            case .mile:
-                return false
-            default:
-                return Locale.current.measuresDistancesInMetricUnits
-            }
         }
     }
     
@@ -185,5 +171,20 @@ public class NavigationSettings {
 extension String {
     fileprivate var prefixed: String {
         return "MB" + self
+    }
+}
+
+extension MeasurementSystem {
+    /// :nodoc: Converts `LengthFormatter.Unit` into `MapboxDirections.MeasurementSystem`.
+    public init(_ lengthUnit: LengthFormatter.Unit) {
+        let metricUnits: [LengthFormatter.Unit] = [.kilometer, .centimeter, .meter, .millimeter]
+        self = metricUnits.contains(lengthUnit) ? .metric : .imperial
+    }
+}
+
+extension LengthFormatter.Unit {
+    /// :nodoc: Converts `MapboxDirections.MeasurementSystem` into `LengthFormatter.Unit`.
+    public init(_ measurementSystem: MeasurementSystem) {
+        self = measurementSystem == .metric ? .kilometer : .mile
     }
 }
