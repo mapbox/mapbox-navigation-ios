@@ -26,7 +26,8 @@ class CLLocationTests: TestCase {
                                       provider: nil,
                                       bearingAccuracy: bearingAccuracy as NSNumber,
                                       speedAccuracy: speedAccuracy as NSNumber,
-                                      verticalAccuracy: verticalAccuracy as NSNumber)
+                                      verticalAccuracy: verticalAccuracy as NSNumber,
+                                      extras: [:])
         
         let location = CLLocation(fixLocation)
         

@@ -55,7 +55,7 @@ public class Fixture: NSObject {
     
     public class func downloadRouteFixture(coordinates: [CLLocationCoordinate2D], fileName: String, completion: @escaping () -> Void) {
         let accessToken = "<# Mapbox Access Token #>"
-        let credentials = DirectionsCredentials(accessToken: accessToken)
+        let credentials = Credentials(accessToken: accessToken)
         let directions = Directions(credentials: credentials)
         
         let options = RouteOptions(coordinates: coordinates, profileIdentifier: .automobileAvoidingTraffic)
@@ -178,7 +178,7 @@ public class Fixture: NSObject {
     }
 
     public static func route(waypoints: [CLLocationCoordinate2D],
-                             profileIdentifier: DirectionsProfileIdentifier = .automobile,
+                             profileIdentifier: ProfileIdentifier = .automobile,
                              transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {
         precondition(waypoints.count >= 2)
         func routeDistance(between waypoints: [CLLocationCoordinate2D]) -> CLLocationDistance {
@@ -221,7 +221,7 @@ public class Fixture: NSObject {
     public static func route(between origin: CLLocationCoordinate2D,
                              and destination: CLLocationCoordinate2D,
                              legsCount: Int = 1,
-                             profileIdentifier: DirectionsProfileIdentifier = .automobile,
+                             profileIdentifier: ProfileIdentifier = .automobile,
                              transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {
         precondition(legsCount > 0)
         var waypoints: [CLLocationCoordinate2D] = [origin]
@@ -257,7 +257,7 @@ public class Fixture: NSObject {
 
     public static func generateLeg(between origin: CLLocationCoordinate2D,
                                    and destination: CLLocationCoordinate2D,
-                                   profileIdentifier: DirectionsProfileIdentifier = .automobile,
+                                   profileIdentifier: ProfileIdentifier = .automobile,
                                    transportType: TransportType = .automobile) -> RouteLeg {
         let distance = origin.distance(to: destination)
         let shape = LineString([origin, destination])
@@ -289,7 +289,7 @@ public class Fixture: NSObject {
         return leg
     }
 
-    public static let credentials: DirectionsCredentials = .mocked
+    public static let credentials: Credentials = .mocked
 }
 
 class TraceCollector: NSObject, CLLocationManagerDelegate {
