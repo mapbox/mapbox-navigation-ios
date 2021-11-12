@@ -1,7 +1,7 @@
 import Foundation
 
 /**
- Style, which will be used when presenting routes on top of a map view by calling
+ A style that will be used when presenting routes on top of a map view by calling
  `NavigationMapView.showcase(_:routesPresentationStyle:animated:)`.
  */
 public enum RoutesPresentationStyle {
@@ -12,7 +12,7 @@ public enum RoutesPresentationStyle {
     case single
     
     /**
-     All routes will be used presented on a map view.
+     All routes will be presented on a map view.
      
      - parameter shouldFit: If `true` geometry of all routes will be used for camera transition.
      If `false` geometry of only first route will be used.
