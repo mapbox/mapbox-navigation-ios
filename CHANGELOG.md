@@ -33,6 +33,7 @@
 
 * Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating. ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
 * Fixed an issue that caused the panning dismissal button to stop working on CarPlay. ([#3543](https://github.com/mapbox/mapbox-navigation-ios/pull/3543))
+* Fixed an issue which caused the inability to see `SpeedLimitView` and `CarPlayCompassView` when left-hand traffic mode is used on CarPlay. ([#3583](https://github.com/mapbox/mapbox-navigation-ios/pull/3583))
 
 ### Other changes
 
