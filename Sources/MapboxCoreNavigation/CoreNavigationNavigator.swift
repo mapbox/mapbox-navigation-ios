@@ -1,6 +1,7 @@
 import MapboxNavigationNative
 import MapboxDirections
 @_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxNavigationNative_Private
 
 class Navigator {
     
@@ -17,10 +18,10 @@ class Navigator {
     
     private(set) var cacheHandle: CacheHandle
     
-    lazy var routerInterface: MapboxNavigationNative.RouterInterface = {
-        return MapboxNavigationNative.RouterFactory.build(for: .hybrid,
-                                                          cache: cacheHandle,
-                                                          historyRecorder: historyRecorder)
+    lazy var routerInterface: MapboxNavigationNative_Private.RouterInterface = {
+        return MapboxNavigationNative_Private.RouterFactory.build(for: .hybrid,
+                                                                  cache: cacheHandle,
+                                                                  historyRecorder: historyRecorder)
     }()
     
     var mostRecentNavigationStatus: NavigationStatus? = nil

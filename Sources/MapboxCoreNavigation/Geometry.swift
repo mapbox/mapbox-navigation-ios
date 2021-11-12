@@ -1,4 +1,5 @@
 import Foundation
+import MapboxCommon
 import MapboxNavigationNative
 import Turf
 

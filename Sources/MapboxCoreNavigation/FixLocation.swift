@@ -19,6 +19,7 @@ extension FixLocation {
                   provider: nil,
                   bearingAccuracy: bearingAccuracy,
                   speedAccuracy: location.speedAccuracy >= 0 ? location.speedAccuracy as NSNumber : nil,
-                  verticalAccuracy: location.verticalAccuracy >= 0 ? location.verticalAccuracy as NSNumber : nil)
+                  verticalAccuracy: location.verticalAccuracy >= 0 ? location.verticalAccuracy as NSNumber : nil,
+                  extras: [:])
     }
 }

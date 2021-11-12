@@ -2,6 +2,7 @@ import Foundation
 import MapboxNavigationNative
 import Turf
 @_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxNavigationNative_Private
 
 /**
  Provides methods for road object matching.

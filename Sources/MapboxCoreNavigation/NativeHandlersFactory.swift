@@ -1,3 +1,4 @@
+import MapboxCommon
 import MapboxNavigationNative
 import MapboxDirections
 import Foundation

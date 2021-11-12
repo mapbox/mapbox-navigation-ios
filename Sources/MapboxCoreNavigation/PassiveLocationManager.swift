@@ -3,6 +3,7 @@
 
 import MapboxNavigationNative
 import CoreLocation
+import MapboxCommon
 import MapboxDirections
 
 /**
