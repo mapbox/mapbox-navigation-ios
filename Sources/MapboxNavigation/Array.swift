@@ -100,6 +100,28 @@ extension Array where Iterator.Element == CLLocationCoordinate2D {
         return segments
     }
     
+    func combined(_ roadClasses: [RoadClasses?],
+                  combiningRoadClasses: RoadClasses? = nil) -> [RoadClassesSegment] {
+        var segments: [RoadClassesSegment] = []
+        segments.reserveCapacity(roadClasses.count)
+        
+        var index = 0
+        for (firstSegment, currentRoadClass) in zip(zip(self, self.suffix(from: 1)), roadClasses) {
+            let coordinates = [firstSegment.0, firstSegment.1]
+            let definedRoadClass = currentRoadClass ?? RoadClasses()
+            
+            if segments.last?.1 == definedRoadClass {
+                segments[segments.count - 1].0 += coordinates
+            } else {
+                segments.append((coordinates, combiningRoadClasses?.intersection(definedRoadClass) ?? definedRoadClass))
+            }
+            
+            index += 1
+        }
+        
+        return segments
+    }
+    
     func sliced(from: CLLocationCoordinate2D? = nil, to: CLLocationCoordinate2D? = nil) -> [CLLocationCoordinate2D] {
         return LineString(self).sliced(from: from, to: to)?.coordinates ?? []
     }

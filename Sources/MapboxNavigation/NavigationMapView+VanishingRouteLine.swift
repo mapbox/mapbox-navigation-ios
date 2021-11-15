@@ -357,4 +357,106 @@ extension NavigationMapView {
             return isMain ? trafficUnknownColor : alternativeTrafficUnknownColor
         }
     }
+    
+    func routeLineRestrictedDash(_ restrictionFeatures: [Turf.Feature]? = nil, fractionTraveled: Double) -> [Double: [Double]] {
+        var dashingStops = [Double: [Double]]()
+        var distanceTraveled = 0.0
+        
+        if let restrictionFeatures = restrictionFeatures {
+            let routeDistance = restrictionFeatures.compactMap { feature -> LocationDistance? in
+                if case let .lineString(lineString) = feature.geometry {
+                    return lineString.distance()
+                } else {
+                    return nil
+                }
+            }.reduce(0, +)
+            // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply its color to the `fractionTraveled` stop.
+            var minimumSegment: (Double, [Double]) = (0.0, [])
+
+            for (index, feature) in restrictionFeatures.enumerated() {
+                var associatedDashLine = [Double]()
+                if case let .boolean(isRestricted) = feature.properties?[RestrictedRoadClassAttribute],
+                   isRestricted {
+                    associatedDashLine = [0.5, 2.0]
+                }
+
+                guard case let .lineString(lineString) = feature.geometry,
+                      let distance = lineString.distance() else {
+                    return dashingStops
+                }
+                let minimumPercentGap = 0.0000000000000002
+//                let stopGap = (routeDistance > 0.0) ? max(min(0, distance * 0.1) / routeDistance, minimumPercentGap) : minimumPercentGap // ACHtuNG may remove min() part
+                
+                if index == restrictionFeatures.startIndex {
+                    minimumSegment = (0.0, associatedDashLine)
+                    distanceTraveled = distanceTraveled + distance
+                    
+                    if index + 1 < restrictionFeatures.count {
+                        let segmentEndPercentTraveled = distanceTraveled / routeDistance
+                        let currentGradientStop = Double(CGFloat(segmentEndPercentTraveled).nextDown)
+                        if currentGradientStop > fractionTraveled {
+                            dashingStops[currentGradientStop] = associatedDashLine
+                        } else if currentGradientStop >= minimumSegment.0 {
+                            minimumSegment = (currentGradientStop, associatedDashLine)
+                        }
+                    } else {
+                        let lastGradientStop: Double = 1.0
+                        dashingStops[lastGradientStop] = associatedDashLine
+                    }
+                    
+                    continue
+                }
+                
+                if index == restrictionFeatures.endIndex - 1 {
+                    let lastGradientStop: Double = 1.0
+                    dashingStops[lastGradientStop] = associatedDashLine
+                    
+                    let segmentStartPercentTraveled = distanceTraveled / routeDistance
+                    let currentGradientStop = Double(CGFloat(segmentStartPercentTraveled).nextUp)
+                    if currentGradientStop > fractionTraveled {
+                        dashingStops[currentGradientStop] = associatedDashLine
+                    } else if currentGradientStop >= minimumSegment.0 {
+                        minimumSegment = (lastGradientStop, associatedDashLine)
+                    }
+                    
+                    continue
+                }
+                
+                let segmentStartPercentTraveled = distanceTraveled / routeDistance
+                var currentGradientStop = Double(CGFloat(segmentStartPercentTraveled).nextUp)
+                
+                if currentGradientStop > fractionTraveled {
+                    dashingStops[currentGradientStop] = associatedDashLine
+                } else if currentGradientStop >= minimumSegment.0 {
+                    minimumSegment = (currentGradientStop, associatedDashLine)
+                }
+                
+                distanceTraveled = distanceTraveled + distance
+                let segmentEndPercentTraveled = distanceTraveled / routeDistance
+                currentGradientStop = Double(CGFloat(segmentEndPercentTraveled).nextDown)
+                
+                if currentGradientStop > fractionTraveled {
+                    dashingStops[currentGradientStop] = associatedDashLine
+                } else if currentGradientStop >= minimumSegment.0 {
+                    minimumSegment = (currentGradientStop, associatedDashLine)
+                }
+            }
+            
+            dashingStops[0.0] = []
+            let currentGradientStop = Double(CGFloat(fractionTraveled).nextDown)
+            if currentGradientStop >= 0.0 {
+                dashingStops[currentGradientStop] = []
+            }
+            dashingStops[fractionTraveled] = minimumSegment.1
+        } else {
+//            let percentTraveled = CGFloat(fractionTraveled)
+//            dashingStops[0.0] = traversedRouteColor
+//            if percentTraveled.nextDown >= 0.0 {
+//                dashingStops[Double(percentTraveled.nextDown)] = traversedRouteColor
+//            }
+//            dashingStops[Double(percentTraveled)] = routeCasingColor
+        }
+        
+        return dashingStops
+    }
 }

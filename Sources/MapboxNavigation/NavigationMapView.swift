@@ -34,6 +34,8 @@ open class NavigationMapView: UIView {
      */
     public var showsCongestionForAlternativeRoutes: Bool = false
     
+    public var showsRestrictedAreasDashed: Bool = true // false
+    
     /**
      Controls whether to show fading gradient color on route lines between two different congestion
      level segments. Defaults to `false`.
@@ -477,6 +479,18 @@ open class NavigationMapView: UIView {
                     lineLayer?.lineColor = .constant(.init(routeAlternateColor))
                 }
             }
+            
+            if showsRestrictedAreasDashed {
+                let restrictedStops = routeLineRestrictedDash(route.restrictedRoadsFeatures(), fractionTraveled:  routeLineTracksTraversal ? fractionTraveled : 0.0)
+                // Value<Double>?
+//                lineLayer?.lineDasharray = .constant([0.5, 2.0])
+                lineLayer?.lineDasharray = .expression(Exp(.get) {
+                    "dashData"
+//                    Exp(.lineProgress)
+//                    [1.0, 0.0]
+//                    restrictedStops
+                })
+            }
         }
         
         if let lineLayer = lineLayer {
@@ -540,6 +554,11 @@ open class NavigationMapView: UIView {
                 lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
                 lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))
+            }
+            
+            if showsRestrictedAreasDashed {
+                // Value<Double>?
+                lineLayer?.lineDasharray = .constant([0.5, 2.0])
             }
         }
         

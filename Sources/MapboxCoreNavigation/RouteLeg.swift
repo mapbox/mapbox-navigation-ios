@@ -28,4 +28,22 @@ extension RouteLeg {
         
         return streetsRoadClasses
     }
+    
+    public var roadClasses: [RoadClasses?] {
+        // Pick only valid segment indices for specific `Intersection` in `RouteStep`.
+        // Array of segment indexes can look like this: [0, 3, 24, 28, 48, 50, 51, 53].
+        let segmentIndices = steps.compactMap({ $0.segmentIndicesByIntersection?.compactMap({ $0 }) }).reduce([], +)
+        
+        // Pick `RoadClasses` in specific `Intersection` of `RouteStep`.
+        // It is expected that number of `segmentIndices` will be equal to number of `roadClassesInLeg`.
+        // Array of `MapboxStreetsRoadClass` can look like this: [Optional(motorway), ... , Optional(motorway), nil]
+        let roadClassesInLeg = steps.compactMap({ $0.intersections?.map({ $0.outletRoadClasses }) }).reduce([], +)
+        
+        // Map each `RoadClasses` to the amount of two adjacent `segmentIndices`.
+        // At the end amount of `RoadClasses` should be equal to the last segment index.
+        let roadClasses = segmentIndices.enumerated().map({ segmentIndices.indices.contains($0.offset + 1) && roadClassesInLeg.indices.contains($0.offset) ?
+                                                                    Array(repeating: roadClassesInLeg[$0.offset], count: segmentIndices[$0.offset + 1] - segmentIndices[$0.offset]) : [] }).reduce([], +)
+        
+        return roadClasses
+    }
 }

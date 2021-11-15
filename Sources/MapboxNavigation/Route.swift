@@ -44,6 +44,45 @@ extension Route {
         }
     }
     
+    func restrictedRoadsFeatures(legIndex: Int? = nil) -> [Feature] {
+        guard let coordinates = shape?.coordinates, let shape = shape else { return [] }
+        var features: [Feature] = []
+        
+        for leg in legs {
+            let legFeatures: [Feature]
+            let legRoadClasses = leg.roadClasses
+            
+            if legRoadClasses.count < coordinates.count {
+                // The last coordinate of the preceding step, is shared with the first coordinate of the next step, we don't need both.
+                let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
+                    let index = current.offset
+                    let step = current.element
+                    let stepCoordinates = step.shape!.coordinates
+                    
+                    return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
+                }
+                
+                let mergedRoadClasses = legCoordinates.combined(legRoadClasses,
+                                                                combiningRoadClasses: .restricted)
+                
+                legFeatures = mergedRoadClasses.map { (roadClassesSegment: RoadClassesSegment) -> Feature in
+                    var feature = Feature(geometry: .lineString(LineString(roadClassesSegment.0)))
+                    feature.properties = [
+                        RestrictedRoadClassAttribute: .boolean(roadClassesSegment.1 == .restricted),
+                    ]
+                    
+                    return feature
+                }
+            } else {
+                legFeatures = [Feature(geometry: .lineString(LineString(shape.coordinates)))]
+            }
+            
+            features.append(contentsOf: legFeatures)
+        }
+        
+        return features
+    }
+    
     func congestionFeatures(legIndex: Int? = nil,
                             roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [Feature] {
         guard let coordinates = shape?.coordinates, let shape = shape else { return [] }
