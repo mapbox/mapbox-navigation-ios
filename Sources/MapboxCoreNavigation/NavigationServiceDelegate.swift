@@ -246,6 +246,7 @@ public extension NavigationServiceDelegate {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.reroutingManeuverRadius
     }
+    
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
