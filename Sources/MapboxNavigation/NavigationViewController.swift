@@ -530,7 +530,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     var arrivalController: ArrivalController?
     var cameraController: CameraController?
-    var ornamentsController: NavigationMapView.OrnamentsController?
+    var ornamentsController: OrnamentsController?
     var routeOverlayController: NavigationMapView.RouteOverlayController?
     var viewObservers: [NavigationComponentDelegate?] = []
     
@@ -538,7 +538,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         arrivalController = ArrivalController(self)
         routeOverlayController = NavigationMapView.RouteOverlayController(self)
         cameraController = CameraController(self)
-        ornamentsController = NavigationMapView.OrnamentsController(self, eventsManager: navigationService.eventsManager)
+        ornamentsController = OrnamentsController(self, eventsManager: navigationService.eventsManager)
         
         viewObservers = [
             routeOverlayController,

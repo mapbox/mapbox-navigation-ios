@@ -29,6 +29,8 @@
 * Fixed an issue where `VisualInstructionDelegate.label(_:willPresent:as:)` was never called. Your `NavigationViewControllerDelegate` class can now implement this method to customize the contents of a visual instruction during turn-by-turn navigation. ([#3575](https://github.com/mapbox/mapbox-navigation-ios/pull/3575))
 * Fixed an issue where certain dual- or triple-use lanes were blank in the tertiary instruction banner. ([#3569](https://github.com/mapbox/mapbox-navigation-ios/pull/3569), [mapbox/navigation-ui-resources#26](https://github.com/mapbox/navigation-ui-resources/pull/26))
 * Fixed an issue where dual-use slight turn lanes were sometimes depicted as normal turn lanes in the tertiary instruction banner. ([#3569](https://github.com/mapbox/mapbox-navigation-ios/pull/3569), [mapbox/navigation-ui-resources#26](https://github.com/mapbox/navigation-ui-resources/pull/26))
+* Setting the `WayNameView.isHidden` property to `true` now keeps the view hidden even after the user goes onto a named road. ([#3534](https://github.com/mapbox/mapbox-navigation-ios/pull/3534))
+* Added the `WayNameView.backgroundColor` and `WayNameView.borderWidth` properties for customizing how the current road name is labeled. ([#3534](https://github.com/mapbox/mapbox-navigation-ios/pull/3534))
 
 ### Map
 
@@ -43,6 +45,7 @@
 * Added the `CarPlayActivity.panningInNavigationMode` case, which allows to track a state when user is panning a map view while actively navigating. ([#3545](https://github.com/mapbox/mapbox-navigation-ios/pull/3545))
 * Fixed an issue that caused the panning dismissal button to stop working on CarPlay. ([#3543](https://github.com/mapbox/mapbox-navigation-ios/pull/3543))
 * Fixed an issue which caused the inability to see `SpeedLimitView` and `CarPlayCompassView` when left-hand traffic mode is used on CarPlay. ([#3583](https://github.com/mapbox/mapbox-navigation-ios/pull/3583))
+* Added the `CarPlayMapViewController.wayNameView` and `CarPlayNavigationViewController.wayNameView` properties to show the current road name on CarPlay. `CarPlayNavigationViewController.compassView`, `CarPlayNavigationViewController.speedLimitView` and `CarPlayMapViewController.speedLimitView` are kept as strong references, thus available throughout the lifetime of a parent object. ([#3534](https://github.com/mapbox/mapbox-navigation-ios/pull/3534))
 
 ### Other changes
 

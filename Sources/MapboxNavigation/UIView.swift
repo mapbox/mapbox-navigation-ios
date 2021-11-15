@@ -137,6 +137,34 @@ extension UIView {
         }
         return trailingAnchor
     }
+    
+    var safeWidthAnchor: NSLayoutDimension {
+        if #available(iOS 11.0, *) {
+            return safeAreaLayoutGuide.widthAnchor
+        }
+        return widthAnchor
+    }
+    
+    var safeHeightAnchor: NSLayoutDimension {
+        if #available(iOS 11.0, *) {
+            return safeAreaLayoutGuide.heightAnchor
+        }
+        return heightAnchor
+    }
+    
+    var safeCenterXAnchor: NSLayoutXAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return safeAreaLayoutGuide.centerXAnchor
+        }
+        return centerXAnchor
+    }
+    
+    var safeCenterYAnchor: NSLayoutYAxisAnchor {
+        if #available(iOS 11.0, *) {
+            return safeAreaLayoutGuide.centerYAnchor
+        }
+        return centerYAnchor
+    }
 }
 
 protocol Anchorable {

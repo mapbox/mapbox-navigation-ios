@@ -15,22 +15,35 @@ extension UIImage {
         self.init(cgImage: cgImage)
     }
     
-    func withCenteredText(_ text: String, color: UIColor, font: UIFont, scale: CGFloat) -> UIImage {
-        let maxHeight = font.lineHeight * 2
-        var constrainedSize = size
-        constrainedSize.width = min(constrainedSize.width, constrainedSize.width * maxHeight / constrainedSize.height)
-        constrainedSize.height = min(constrainedSize.height, maxHeight)
+    func withCenteredText(_ text: String,
+                          color: UIColor,
+                          font: UIFont,
+                          size: CGSize? = nil) -> UIImage {
+        let maxHeight = size?.height ?? font.lineHeight * 2
+        var constrainedSize = self.size
+        constrainedSize.width = min(constrainedSize.width,
+                                    constrainedSize.width * maxHeight / constrainedSize.height)
+        
+        constrainedSize.height = min(constrainedSize.height,
+                                     maxHeight)
         
         let renderer = UIGraphicsImageRenderer(size: constrainedSize)
-        return renderer.image { (context) in
+        return renderer.image { _ in
             let textStyle = NSMutableParagraphStyle()
             textStyle.alignment = .center
             
-            let textFontAttributes: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: color, .paragraphStyle: textStyle]
+            let textFontAttributes: [NSAttributedString.Key: Any] = [
+                .font: font,
+                .foregroundColor: color,
+                .paragraphStyle: textStyle
+            ]
+            
             let rect = CGRect(origin: .zero, size: constrainedSize)
             draw(in: rect)
             
-            (text as NSString).draw(in: rect.offsetBy(dx: 0, dy: (constrainedSize.height - font.lineHeight) / 2).integral, withAttributes: textFontAttributes)
+            (text as NSString).draw(in: rect.offsetBy(dx: 0,
+                                                      dy: (constrainedSize.height - font.lineHeight) / 2).integral,
+                                    withAttributes: textFontAttributes)
         }
     }
 
