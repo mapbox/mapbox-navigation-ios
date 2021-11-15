@@ -3,16 +3,31 @@ import UIKit
 import Turf
 import MapboxMaps
 
-/// :nodoc:
+/**
+ A label that is used to show a road name and a shield icon.
+ */
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {}
 
-/// :nodoc:
+/**
+ A host view for `WayNameLabel` that shows a road name and a shield icon.
+ 
+ `WayNameView` is hidden or shown depending on the road name information availability. In case if
+ such information is not present, `WayNameView` is automatically hidden. If you'd like to completely
+ hide `WayNameView` set `WayNameView.isHidden` property to `true`.
+ */
 @objc(MBWayNameView)
 open class WayNameView: UIView {
-    private static let textInsets = UIEdgeInsets(top: 6, left: 14, bottom: 6, right: 14)
+    
+    private static let textInsets = UIEdgeInsets(top: 3, left: 14, bottom: 3, right: 14)
     
     lazy var label: WayNameLabel = .forAutoLayout()
+    
+    /**
+     A host view for the `WayNameLabel` instance that is used internally to show or hide
+     `WayNameLabel` depending on the road name data availability.
+     */
+    lazy var containerView: UIView = .forAutoLayout()
     
     var text: String? {
         get {
@@ -32,13 +47,47 @@ open class WayNameView: UIView {
         }
     }
     
+    open override var layer: CALayer {
+        containerView.layer
+    }
+    
+    /**
+     The background color of the `WayNameView`.
+     */
+    @objc dynamic public override var backgroundColor: UIColor? {
+        get {
+            containerView.backgroundColor
+        }
+        
+        set {
+            containerView.backgroundColor = newValue
+        }
+    }
+    
+    /**
+     The color of the `WayNameView`'s border.
+     */
     @objc dynamic public var borderColor: UIColor? {
         get {
             guard let color = layer.borderColor else { return nil }
             return UIColor(cgColor: color)
         }
+        
         set {
             layer.borderColor = newValue?.cgColor
+        }
+    }
+    
+    /**
+     The width of the `WayNameView`'s border.
+     */
+    @objc dynamic public var borderWidth: CGFloat {
+        get {
+            layer.borderWidth
+        }
+        
+        set {
+            layer.borderWidth = newValue
         }
     }
     
@@ -47,25 +96,33 @@ open class WayNameView: UIView {
         commonInit()
     }
     
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    public required init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
         commonInit()
     }
     
-    func commonInit() {
-        addSubview(label)
-        layoutMargins = WayNameView.textInsets
+    private func commonInit() {
+        addSubview(containerView)
+        containerView.pinInSuperview(respectingMargins: false)
+        
+        containerView.addSubview(label)
         label.pinInSuperview(respectingMargins: true)
     }
     
     open override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = bounds.midY
+        containerView.layer.cornerRadius = bounds.midY
     }
     
-    /// Attempts to fill contents with road name and shield icon.
-    ///
-    /// This method attempts to extract the road name and shield image as well as styling information and tries to display it. Return result shows if it was a success.
+    /**
+     Fills contents of the `WayNameLabel` with the road name and shield icon by extracting it from the
+     `Turf.Feature` and `MapboxMaps.Style` objects (if it's valid and available).
+     
+     - parameter feature: `Turf.Feature` object, properties of which will be checked for the appropriate
+     shield image related information.
+     - parameter style: Style of the map view instance.
+     - returns: `true` if operation was successful, `false` otherwise.
+     */
     @discardableResult
     func setupWith(feature: Turf.Feature, using style: MapboxMaps.Style?) -> Bool {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
@@ -122,13 +179,18 @@ open class WayNameView: UIView {
         }
     }
     
-    private func roadShieldAttributedText(for text: String, textColor: UIColor, style: MapboxMaps.Style?, imageName: String) -> NSAttributedString? {
+    private func roadShieldAttributedText(for text: String,
+                                          textColor: UIColor,
+                                          style: MapboxMaps.Style?,
+                                          imageName: String) -> NSAttributedString? {
         guard let image = style?.image(withId: imageName) else { return nil }
         let attachment = ShieldAttachment()
+        // To correctly scale size of the font its height is based on the label where it is shown.
+        let fontSize = label.frame.size.height / 2.5
         attachment.image = image.withCenteredText(text,
                                                   color: textColor,
-                                                  font: UIFont.boldSystemFont(ofSize: UIFont.systemFontSize),
-                                                  scale: UIScreen.main.scale)
+                                                  font: UIFont.boldSystemFont(ofSize: fontSize),
+                                                  size: label.frame.size)
         return NSAttributedString(attachment: attachment)
     }
 }

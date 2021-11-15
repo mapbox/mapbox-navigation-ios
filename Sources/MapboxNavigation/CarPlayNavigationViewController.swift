@@ -22,12 +22,17 @@ open class CarPlayNavigationViewController: UIViewController {
      
      This view is hidden by default.
      */
-    public weak var compassView: CarPlayCompassView!
+    public var compassView: CarPlayCompassView!
     
     /**
      A view that displays the current speed limit.
      */
-    public weak var speedLimitView: SpeedLimitView!
+    public var speedLimitView: SpeedLimitView!
+    
+    /**
+     A view that displays the current road name.
+     */
+    public var wayNameView: WayNameView!
     
     /**
      The interface styles available for display.
@@ -72,7 +77,8 @@ open class CarPlayNavigationViewController: UIViewController {
     var carInterfaceController: CPInterfaceController
     
     private var isTraversingTunnel = false
-    
+    private var roadNameFromStatus: String?
+
     func setupOrnaments() {
         let compassView = CarPlayCompassView()
         view.addSubview(compassView)
@@ -90,6 +96,20 @@ open class CarPlayNavigationViewController: UIViewController {
         speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         self.speedLimitView = speedLimitView
+        
+        let wayNameView: WayNameView = .forAutoLayout()
+        wayNameView.containerView.isHidden = true
+        wayNameView.containerView.clipsToBounds = true
+        wayNameView.label.textAlignment = .center
+        view.addSubview(wayNameView)
+        
+        NSLayoutConstraint.activate([
+            wayNameView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor, constant: -8),
+            wayNameView.centerXAnchor.constraint(equalTo: view.safeCenterXAnchor),
+            wayNameView.widthAnchor.constraint(lessThanOrEqualTo: view.safeWidthAnchor, multiplier: 0.95)
+        ])
+        
+        self.wayNameView = wayNameView
     }
     
     func setupStyleManager() {
@@ -289,8 +309,6 @@ open class CarPlayNavigationViewController: UIViewController {
      */
     public fileprivate(set) var navigationMapView: NavigationMapView?
     
-    
-
     var carSession: CPNavigationSession!
     var currentLegIndexMapped: Int = 0
 
@@ -434,6 +452,11 @@ open class CarPlayNavigationViewController: UIViewController {
                                                selector: #selector(simulationStateDidChange(_:)),
                                                name: .navigationServiceSimulationDidChange,
                                                object: service)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(didUpdateRoadNameFromStatus),
+                                               name: .currentRoadNameDidChange,
+                                               object: nil)
     }
     
     func suspendNotifications() {
@@ -455,6 +478,10 @@ open class CarPlayNavigationViewController: UIViewController {
         
         NotificationCenter.default.removeObserver(self,
                                                   name: .navigationServiceSimulationDidChange,
+                                                  object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .currentRoadNameDidChange,
                                                   object: nil)
     }
     
@@ -521,6 +548,11 @@ open class CarPlayNavigationViewController: UIViewController {
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView?.travelAlongRouteLine(to: location.coordinate)
         }
+        
+        navigationMapView?.labelCurrentRoadFeature(at: location,
+                                                   router: navigationService.router,
+                                                   wayNameView: wayNameView,
+                                                   roadNameFromStatus: roadNameFromStatus)
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
@@ -581,6 +613,10 @@ open class CarPlayNavigationViewController: UIViewController {
                 navigationMapView?.useStoredLocationProvider()
             }
         }
+    }
+    
+    @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
+        roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
     }
     
     func setUpSimulatedLocationProvider(routeProgress: RouteProgress, speedMultiplier: Double) {

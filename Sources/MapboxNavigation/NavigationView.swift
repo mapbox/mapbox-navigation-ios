@@ -136,10 +136,10 @@ open class NavigationView: UIView {
     lazy var resumeButton: ResumeButton = .forAutoLayout()
     
     lazy var wayNameView: WayNameView = {
-        let view: WayNameView = .forAutoLayout(hidden: true)
-        view.clipsToBounds = true
-        view.layer.borderWidth = 1.0 / UIScreen.main.scale
-        return view
+        let wayNameView: WayNameView = .forAutoLayout()
+        wayNameView.containerView.isHidden = true
+        wayNameView.containerView.clipsToBounds = true
+        return wayNameView
     }()
     
     lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
@@ -244,6 +244,7 @@ extension NavigationView {
         
         wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
+        wayNameView.widthAnchor.constraint(lessThanOrEqualTo: safeWidthAnchor, multiplier: 0.95).isActive = true
         
         speedLimitView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor, constant: 10).isActive = true
         speedLimitView.widthAnchor.constraint(equalToConstant: FloatingButton.buttonSize.width).isActive = true

@@ -146,7 +146,7 @@ class NavigationViewControllerTests: TestCase {
             navigationViewController.navigationView.wayNameView.text == roadName
         }
         expectation(description: "WayNameView is visible") {
-            navigationViewController.navigationView.wayNameView.isHidden == false
+            navigationViewController.navigationView.wayNameView.containerView.isHidden == false
         }
         waitForExpectations(timeout: 3, handler: nil)
     }
@@ -244,7 +244,7 @@ class NavigationViewControllerTests: TestCase {
         customRoadName[dependencies.poi[0].coordinate] = "Taylor Swift Street"
         service.locationManager!(service.locationManager, didUpdateLocations: [dependencies.poi[0]])
         expectation {
-            !navigationViewController.navigationView.wayNameView.isHidden
+            !navigationViewController.navigationView.wayNameView.containerView.isHidden
         }
         waitForExpectations(timeout: 3, handler: nil)
 
@@ -256,7 +256,7 @@ class NavigationViewControllerTests: TestCase {
         
         service.locationManager!(service.locationManager, didUpdateLocations: [turkStreetLocation])
         expectation {
-            navigationViewController.navigationView.wayNameView.isHidden
+            navigationViewController.navigationView.wayNameView.containerView.isHidden
         }
         waitForExpectations(timeout: 3, handler: nil)
     }

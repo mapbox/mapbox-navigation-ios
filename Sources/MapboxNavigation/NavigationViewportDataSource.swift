@@ -204,7 +204,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             // Bottom of the viewport on CarPlay should be placed at the same level with
             // trip estimate view.
-            carPlayCameraPadding.bottom += 25.0
+            carPlayCameraPadding.bottom += 65.0
             
             if geometryFramingAfterManeuver.enabled {
                 let stepIndex = routeProgress.currentLegProgress.stepIndex
