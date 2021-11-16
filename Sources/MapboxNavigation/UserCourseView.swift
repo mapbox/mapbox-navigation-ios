@@ -241,46 +241,49 @@ class UserPuckStyleKitView: UIView {
                             shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160),
                             circleColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
         
+        let widthRatio = bounds.width / 75
+        let heightRatio = bounds.height / 75
+        
         //// Canvas 2
         //// navigation_pluck
         //// Oval 7
         //// path0_fill Drawing
-        let path0_fillPath = UIBezierPath(ovalIn: CGRect(x: 9, y: 9, width: 57, height: 57))
+        let path0_fillPath = UIBezierPath(ovalIn: CGRect(x: 9 * widthRatio, y: 9 * heightRatio, width: 57 * widthRatio, height: 57 * heightRatio))
         fillColor.setFill()
         path0_fillPath.fill()
         
         //// Group 4
         //// path1_stroke_2x Drawing
         let path1_stroke_2xPath = UIBezierPath()
-        path1_stroke_2xPath.move(to: CGPoint(x: 37.5, y: 75))
-        path1_stroke_2xPath.addCurve(to: CGPoint(x: 75, y: 37.5), controlPoint1: CGPoint(x: 58.21, y: 75), controlPoint2: CGPoint(x: 75, y: 58.21))
-        path1_stroke_2xPath.addLine(to: CGPoint(x: 57, y: 37.5))
-        path1_stroke_2xPath.addCurve(to: CGPoint(x: 37.5, y: 57), controlPoint1: CGPoint(x: 57, y: 48.27), controlPoint2: CGPoint(x: 48.27, y: 57))
-        path1_stroke_2xPath.addLine(to: CGPoint(x: 37.5, y: 75))
+        path1_stroke_2xPath.move(to: CGPoint(x: 37.5 * widthRatio, y: 75 * heightRatio))
+        path1_stroke_2xPath.addCurve(to: CGPoint(x: 75 * widthRatio, y: 37.5 * heightRatio), controlPoint1: CGPoint(x: 58.21 * widthRatio, y: 75 * heightRatio), controlPoint2: CGPoint(x: 75 * widthRatio, y: 58.21 * heightRatio))
+        path1_stroke_2xPath.addLine(to: CGPoint(x: 57 * widthRatio, y: 37.5 * heightRatio))
+        path1_stroke_2xPath.addCurve(to: CGPoint(x: 37.5 * widthRatio, y: 57 * heightRatio), controlPoint1: CGPoint(x: 57 * widthRatio, y: 48.27 * heightRatio), controlPoint2: CGPoint(x: 48.27 * widthRatio, y: 57 * heightRatio))
+        path1_stroke_2xPath.addLine(to: CGPoint(x: 37.5 * widthRatio, y: 75 * heightRatio))
         path1_stroke_2xPath.close()
-        path1_stroke_2xPath.move(to: CGPoint(x: 75, y: 37.5))
-        path1_stroke_2xPath.addCurve(to: CGPoint(x: 37.5, y: 0), controlPoint1: CGPoint(x: 75, y: 16.79), controlPoint2: CGPoint(x: 58.21, y: 0))
-        path1_stroke_2xPath.addLine(to: CGPoint(x: 37.5, y: 18))
-        path1_stroke_2xPath.addCurve(to: CGPoint(x: 57, y: 37.5), controlPoint1: CGPoint(x: 48.27, y: 18), controlPoint2: CGPoint(x: 57, y: 26.73))
-        path1_stroke_2xPath.addLine(to: CGPoint(x: 75, y: 37.5))
+        path1_stroke_2xPath.move(to: CGPoint(x: 75 * widthRatio, y: 37.5 * heightRatio))
+        path1_stroke_2xPath.addCurve(to: CGPoint(x: 37.5 * widthRatio, y: 0), controlPoint1: CGPoint(x: 75 * widthRatio, y: 16.79 * heightRatio), controlPoint2: CGPoint(x: 58.21 * widthRatio, y: 0))
+        path1_stroke_2xPath.addLine(to: CGPoint(x: 37.5 * widthRatio, y: 18 * heightRatio))
+        path1_stroke_2xPath.addCurve(to: CGPoint(x: 57 * widthRatio, y: 37.5 * heightRatio), controlPoint1: CGPoint(x: 48.27 * widthRatio, y: 18 * heightRatio), controlPoint2: CGPoint(x: 57 * widthRatio, y: 26.73))
+        path1_stroke_2xPath.addLine(to: CGPoint(x: 75 * widthRatio, y: 37.5 * heightRatio))
         path1_stroke_2xPath.close()
-        path1_stroke_2xPath.move(to: CGPoint(x: 37.5, y: 0))
-        path1_stroke_2xPath.addCurve(to: CGPoint(x: 0, y: 37.5), controlPoint1: CGPoint(x: 16.79, y: 0), controlPoint2: CGPoint(x: 0, y: 16.79))
-        path1_stroke_2xPath.addLine(to: CGPoint(x: 18, y: 37.5))
-        path1_stroke_2xPath.addCurve(to: CGPoint(x: 37.5, y: 18), controlPoint1: CGPoint(x: 18, y: 26.73), controlPoint2: CGPoint(x: 26.73, y: 18))
-        path1_stroke_2xPath.addLine(to: CGPoint(x: 37.5, y: 0))
+        path1_stroke_2xPath.move(to: CGPoint(x: 37.5 * widthRatio, y: 0))
+        path1_stroke_2xPath.addCurve(to: CGPoint(x: 0, y: 37.5 * heightRatio), controlPoint1: CGPoint(x: 16.79 * widthRatio, y: 0), controlPoint2: CGPoint(x: 0, y: 16.79 * heightRatio))
+        path1_stroke_2xPath.addLine(to: CGPoint(x: 18 * widthRatio, y: 37.5 * heightRatio))
+        path1_stroke_2xPath.addCurve(to: CGPoint(x: 37.5 * widthRatio, y: 18 * heightRatio), controlPoint1: CGPoint(x: 18 * widthRatio, y: 26.73 * heightRatio), controlPoint2: CGPoint(x: 26.73 * widthRatio, y: 18 * heightRatio))
+        path1_stroke_2xPath.addLine(to: CGPoint(x: 37.5 * widthRatio, y: 0))
         path1_stroke_2xPath.close()
-        path1_stroke_2xPath.move(to: CGPoint(x: 0, y: 37.5))
-        path1_stroke_2xPath.addCurve(to: CGPoint(x: 37.5, y: 75), controlPoint1: CGPoint(x: 0, y: 58.21), controlPoint2: CGPoint(x: 16.79, y: 75))
-        path1_stroke_2xPath.addLine(to: CGPoint(x: 37.5, y: 57))
-        path1_stroke_2xPath.addCurve(to: CGPoint(x: 18, y: 37.5), controlPoint1: CGPoint(x: 26.73, y: 57), controlPoint2: CGPoint(x: 18, y: 48.27))
-        path1_stroke_2xPath.addLine(to: CGPoint(x: 0, y: 37.5))
+        path1_stroke_2xPath.move(to: CGPoint(x: 0, y: 37.5 * heightRatio))
+        path1_stroke_2xPath.addCurve(to: CGPoint(x: 37.5 * widthRatio, y: 75 * heightRatio), controlPoint1: CGPoint(x: 0, y: 58.21 * heightRatio), controlPoint2: CGPoint(x: 16.79 * widthRatio, y: 75 * heightRatio))
+        path1_stroke_2xPath.addLine(to: CGPoint(x: 37.5 * widthRatio, y: 57 * heightRatio))
+        path1_stroke_2xPath.addCurve(to: CGPoint(x: 18 * widthRatio, y: 37.5 * heightRatio), controlPoint1: CGPoint(x: 26.73 * widthRatio, y: 57 * heightRatio), controlPoint2: CGPoint(x: 18 * widthRatio, y: 48.27 * heightRatio))
+        path1_stroke_2xPath.addLine(to: CGPoint(x: 0, y: 37.5 * heightRatio))
         path1_stroke_2xPath.close()
         shadowColor.setFill()
         path1_stroke_2xPath.fill()
         
         //// path0_fill 2 Drawing
-        let path0_fill2Path = UIBezierPath(ovalIn: CGRect(x: 9, y: 9, width: 57, height: 57))
+        let path0_fill2Path = UIBezierPath(ovalIn: CGRect(x: 9 * widthRatio, y: 9 * heightRatio, width: 57 * widthRatio, height: 57 * heightRatio))
         circleColor.setFill()
         path0_fill2Path.fill()
         
@@ -288,18 +291,18 @@ class UserPuckStyleKitView: UIView {
         //// Fill 1
         //// path3_fill Drawing
         let path3_fillPath = UIBezierPath()
-        path3_fillPath.move(to: CGPoint(x: 39.2, y: 28.46))
-        path3_fillPath.addCurve(to: CGPoint(x: 38.02, y: 27.69), controlPoint1: CGPoint(x: 39, y: 27.99), controlPoint2: CGPoint(x: 38.54, y: 27.68))
-        path3_fillPath.addCurve(to: CGPoint(x: 36.8, y: 28.49), controlPoint1: CGPoint(x: 37.5, y: 27.7), controlPoint2: CGPoint(x: 37.02, y: 28.01))
-        path3_fillPath.addLine(to: CGPoint(x: 27.05, y: 45.83))
-        path3_fillPath.addCurve(to: CGPoint(x: 27.28, y: 47.26), controlPoint1: CGPoint(x: 26.83, y: 46.32), controlPoint2: CGPoint(x: 26.92, y: 46.89))
-        path3_fillPath.addCurve(to: CGPoint(x: 28.71, y: 47.54), controlPoint1: CGPoint(x: 27.65, y: 47.64), controlPoint2: CGPoint(x: 28.21, y: 47.75))
-        path3_fillPath.addLine(to: CGPoint(x: 37.07, y: 44.03))
-        path3_fillPath.addCurve(to: CGPoint(x: 38.06, y: 44.02), controlPoint1: CGPoint(x: 37.39, y: 43.89), controlPoint2: CGPoint(x: 37.75, y: 43.89))
-        path3_fillPath.addLine(to: CGPoint(x: 46.26, y: 47.34))
-        path3_fillPath.addCurve(to: CGPoint(x: 47.71, y: 47.03), controlPoint1: CGPoint(x: 46.75, y: 47.54), controlPoint2: CGPoint(x: 47.32, y: 47.42))
-        path3_fillPath.addCurve(to: CGPoint(x: 48, y: 45.59), controlPoint1: CGPoint(x: 48.09, y: 46.64), controlPoint2: CGPoint(x: 48.2, y: 46.07))
-        path3_fillPath.addLine(to: CGPoint(x: 39.2, y: 28.46))
+        path3_fillPath.move(to: CGPoint(x: 39.2 * widthRatio, y: 28.46 * heightRatio))
+        path3_fillPath.addCurve(to: CGPoint(x: 38.02 * widthRatio, y: 27.69 * heightRatio), controlPoint1: CGPoint(x: 39 * widthRatio, y: 27.99 * heightRatio), controlPoint2: CGPoint(x: 38.54 * widthRatio, y: 27.68 * heightRatio))
+        path3_fillPath.addCurve(to: CGPoint(x: 36.8 * widthRatio, y: 28.49 * heightRatio), controlPoint1: CGPoint(x: 37.5 * widthRatio, y: 27.7 * heightRatio), controlPoint2: CGPoint(x: 37.02 * widthRatio, y: 28.01 * heightRatio))
+        path3_fillPath.addLine(to: CGPoint(x: 27.05 * widthRatio, y: 45.83 * heightRatio))
+        path3_fillPath.addCurve(to: CGPoint(x: 27.28 * widthRatio, y: 47.26 * heightRatio), controlPoint1: CGPoint(x: 26.83 * widthRatio, y: 46.32 * heightRatio), controlPoint2: CGPoint(x: 26.92 * widthRatio, y: 46.89 * heightRatio))
+        path3_fillPath.addCurve(to: CGPoint(x: 28.71 * widthRatio, y: 47.54 * heightRatio), controlPoint1: CGPoint(x: 27.65 * widthRatio, y: 47.64 * heightRatio), controlPoint2: CGPoint(x: 28.21 * widthRatio, y: 47.75 * heightRatio))
+        path3_fillPath.addLine(to: CGPoint(x: 37.07 * widthRatio, y: 44.03 * heightRatio))
+        path3_fillPath.addCurve(to: CGPoint(x: 38.06 * widthRatio, y: 44.02 * heightRatio), controlPoint1: CGPoint(x: 37.39 * widthRatio, y: 43.89 * heightRatio), controlPoint2: CGPoint(x: 37.75 * widthRatio, y: 43.89 * heightRatio))
+        path3_fillPath.addLine(to: CGPoint(x: 46.26 * widthRatio, y: 47.34 * heightRatio))
+        path3_fillPath.addCurve(to: CGPoint(x: 47.71 * widthRatio, y: 47.03 * heightRatio), controlPoint1: CGPoint(x: 46.75 * widthRatio, y: 47.54 * heightRatio), controlPoint2: CGPoint(x: 47.32 * widthRatio, y: 47.42 * heightRatio))
+        path3_fillPath.addCurve(to: CGPoint(x: 48 * widthRatio, y: 45.59 * heightRatio), controlPoint1: CGPoint(x: 48.09 * widthRatio, y: 46.64 * heightRatio), controlPoint2: CGPoint(x: 48.2 * widthRatio, y: 46.07 * heightRatio))
+        path3_fillPath.addLine(to: CGPoint(x: 39.2 * widthRatio, y: 28.46 * heightRatio))
         path3_fillPath.close()
         path3_fillPath.usesEvenOddFillRule = true
         puckColor.setFill()
