@@ -89,7 +89,7 @@ extension Array where Iterator.Element == CLLocationCoordinate2D {
             }
             
             if segments.last?.1 == overriddenCongestionLevel {
-                segments[segments.count - 1].0 += coordinates
+                segments[segments.count - 1].0 += [firstSegment.1]
             } else {
                 segments.append((coordinates, overriddenCongestionLevel))
             }
@@ -108,12 +108,13 @@ extension Array where Iterator.Element == CLLocationCoordinate2D {
         var index = 0
         for (firstSegment, currentRoadClass) in zip(zip(self, self.suffix(from: 1)), roadClasses) {
             let coordinates = [firstSegment.0, firstSegment.1]
-            let definedRoadClass = currentRoadClass ?? RoadClasses()
+            var definedRoadClass = currentRoadClass ?? RoadClasses()
+            definedRoadClass = combiningRoadClasses?.intersection(definedRoadClass) ?? definedRoadClass
             
             if segments.last?.1 == definedRoadClass {
                 segments[segments.count - 1].0 += coordinates
             } else {
-                segments.append((coordinates, combiningRoadClasses?.intersection(definedRoadClass) ?? definedRoadClass))
+                segments.append((coordinates, definedRoadClass))
             }
             
             index += 1

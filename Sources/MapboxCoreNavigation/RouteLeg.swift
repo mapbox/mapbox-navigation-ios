@@ -40,9 +40,13 @@ extension RouteLeg {
         let roadClassesInLeg = steps.compactMap({ $0.intersections?.map({ $0.outletRoadClasses }) }).reduce([], +)
         
         // Map each `RoadClasses` to the amount of two adjacent `segmentIndices`.
-        // At the end amount of `RoadClasses` should be equal to the last segment index.
-        let roadClasses = segmentIndices.enumerated().map({ segmentIndices.indices.contains($0.offset + 1) && roadClassesInLeg.indices.contains($0.offset) ?
-                                                                    Array(repeating: roadClassesInLeg[$0.offset], count: segmentIndices[$0.offset + 1] - segmentIndices[$0.offset]) : [] }).reduce([], +)
+        // At the end amount of `roadClasses` should be equal to the last segment index.
+        let roadClasses = segmentIndices.enumerated().map {
+            segmentIndices.indices.contains($0.offset + 1) && roadClassesInLeg.indices.contains($0.offset) ?
+                Array(repeating: roadClassesInLeg[$0.offset],
+                      count: segmentIndices[$0.offset + 1] - segmentIndices[$0.offset]) : []
+            
+        }.reduce([], +)
         
         return roadClasses
     }

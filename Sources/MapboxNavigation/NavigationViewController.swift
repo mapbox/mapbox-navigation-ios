@@ -1157,6 +1157,10 @@ extension NavigationViewController: NavigationMapViewDelegate {
         delegate?.navigationViewController(self, routeCasingLineLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
     }
     
+    public func navigationMapView(_ navigationMapView: NavigationMapView, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
+        delegate?.navigationViewController(self, routeRestrictedAreasLineLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    }
+    
     public func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
         delegate?.navigationViewController(self, waypointCircleLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
     }

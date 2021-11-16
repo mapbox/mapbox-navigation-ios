@@ -34,7 +34,7 @@ open class NavigationMapView: UIView {
      */
     public var showsCongestionForAlternativeRoutes: Bool = false
     
-    public var showsRestrictedAreasDashed: Bool = true // false
+    public var showsRestrictedAreasOnRoute: Bool = false
     
     /**
      Controls whether to show fading gradient color on route lines between two different congestion
@@ -79,7 +79,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var traversedRouteColor: UIColor = .defaultTraversedRouteColor
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
-    
+    @objc dynamic public var routeRestrictedAreaColor: UIColor = .defaultRouteRestrictedAreaColor
     /**
      A pending user location coordinate, which is used to calculate the bottleneck distance for
      vanishing route line when a location update comes in.
@@ -87,6 +87,7 @@ open class NavigationMapView: UIView {
     var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
     
     var currentLineGradientStops = [Double: UIColor]()
+    var currentRestrictedAreasStops = [Double: UIColor]()
     var routeLineTracksTraversal: Bool = false {
         didSet {
             if routeLineTracksTraversal, let route = self.routes?.first {
@@ -198,6 +199,7 @@ open class NavigationMapView: UIView {
                 setUpLineGradientStops(along: route)
             }
             
+            parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
             parentLayerIdentifier = addRouteLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0, legIndex: legIndex)
             parentLayerIdentifier = addRouteCasingLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0)
         }
@@ -214,8 +216,10 @@ open class NavigationMapView: UIView {
         routes?.enumerated().forEach {
             sourceIdentifiers.insert($0.element.identifier(.source(isMainRoute: $0.offset == 0, isSourceCasing: true)))
             sourceIdentifiers.insert($0.element.identifier(.source(isMainRoute: $0.offset == 0, isSourceCasing: false)))
+            sourceIdentifiers.insert($0.element.identifier(.restrictedRouteAreaSource))
             layerIdentifiers.insert($0.element.identifier(.route(isMainRoute: $0.offset == 0)))
             layerIdentifiers.insert($0.element.identifier(.routeCasing(isMainRoute: $0.offset == 0)))
+            layerIdentifiers.insert($0.element.identifier(.restrictedRouteAreaRoute))
         }
         
         mapView.mapboxMap.style.removeLayers(layerIdentifiers)
@@ -397,6 +401,8 @@ open class NavigationMapView: UIView {
             currentLineGradientStops = routeLineGradient(congestionFeatures,
                                                          fractionTraveled: fractionTraveled,
                                                          isSoft: crossfadesCongestionSegments)
+            currentRestrictedAreasStops = routeLineRestrictionStops(route.restrictedRoadsFeatures(),
+                                                                    fractionTraveled: fractionTraveled)
             pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
         }
     }
@@ -407,6 +413,7 @@ open class NavigationMapView: UIView {
     func removeLineGradientStops() {
         fractionTraveled = 0.0
         currentLineGradientStops.removeAll()
+        currentRestrictedAreasStops.removeAll()
         if let routes = self.routes {
             show(routes, legIndex: currentLegIndex)
         }
@@ -415,6 +422,80 @@ open class NavigationMapView: UIView {
         routeLineGranularDistances = nil
         routeRemainingDistancesIndex = nil
         pendingCoordinateForRouteLine = nil
+    }
+    
+    @discardableResult func addRouteRestrictedAreaLayer(_ route: Route,
+                                                        below parentLayerIndentifier: String? = nil) -> String? {
+        guard showsRestrictedAreasOnRoute else {
+            return nil
+        }
+        
+        let sourceIdentifier = route.identifier(.restrictedRouteAreaSource)
+        let restrictedRoadsFeatures = route.restrictedRoadsFeatures()
+        
+        do {
+            let shape = delegate?.navigationMapView(self, restrictedAreasShapeFor: route) ?? LineString(restrictedRoadsFeatures.compactMap {
+                guard case let .lineString(lineString) = $0.geometry else {
+                    return nil
+                }
+                return lineString.coordinates
+            }.reduce([LocationCoordinate2D](), +))
+            
+            if mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
+                try mapView.mapboxMap.style.updateGeoJSONSource(withId: sourceIdentifier,
+                                                                geoJSON: .geometry(.lineString(shape)))
+            } else {
+                var restrictedAreaGeoJSON = GeoJSONSource()
+                restrictedAreaGeoJSON.data = .geometry(.lineString(shape))
+                restrictedAreaGeoJSON.lineMetrics = true
+                
+                try mapView.mapboxMap.style.addSource(restrictedAreaGeoJSON, id: sourceIdentifier)
+            }
+        } catch {
+            NSLog("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).")
+        }
+        
+        let layerIdentifier = route.identifier(.restrictedRouteAreaRoute)
+        var lineLayer = delegate?.navigationMapView(self,
+                                                    routeRestrictedAreasLineLayerWithIdentifier: layerIdentifier,
+                                                    sourceIdentifier: sourceIdentifier)
+
+        if lineLayer == nil {
+            lineLayer = LineLayer(id: layerIdentifier)
+            lineLayer?.source = sourceIdentifier
+            lineLayer?.lineColor = .constant(.init(routeRestrictedAreaColor))
+            lineLayer?.lineWidth = .expression(Expression.routeLineWidthExpression(0.5))
+            lineLayer?.lineJoin = .constant(.round)
+            lineLayer?.lineCap = .constant(.round)
+            lineLayer?.lineOpacity = .constant(0.5)
+            
+            if !currentRestrictedAreasStops.isEmpty {
+                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(currentRestrictedAreasStops,
+                                                                                             lineBaseColor: routeRestrictedAreaColor))
+            } else {
+                let routeLineStops = routeLineRestrictionStops(restrictedRoadsFeatures,
+                                                               fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
+                                                                                             lineBaseColor: routeRestrictedAreaColor))
+            }
+            lineLayer?.lineDasharray = .constant([0.5, 2.0])
+        }
+        
+        if let lineLayer = lineLayer {
+            do {
+                var layerPosition: MapboxMaps.LayerPosition? = nil
+                
+                if let belowLayerIdentifier = parentLayerIndentifier {
+                    layerPosition = .below(belowLayerIdentifier)
+                }
+                
+                try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: layerPosition)
+            } catch {
+                NSLog("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).")
+            }
+        }
+        
+        return layerIdentifier
     }
     
     @discardableResult func addRouteLayer(_ route: Route,
@@ -479,18 +560,6 @@ open class NavigationMapView: UIView {
                     lineLayer?.lineColor = .constant(.init(routeAlternateColor))
                 }
             }
-            
-            if showsRestrictedAreasDashed {
-                let restrictedStops = routeLineRestrictedDash(route.restrictedRoadsFeatures(), fractionTraveled:  routeLineTracksTraversal ? fractionTraveled : 0.0)
-                // Value<Double>?
-//                lineLayer?.lineDasharray = .constant([0.5, 2.0])
-                lineLayer?.lineDasharray = .expression(Exp(.get) {
-                    "dashData"
-//                    Exp(.lineProgress)
-//                    [1.0, 0.0]
-//                    restrictedStops
-                })
-            }
         }
         
         if let lineLayer = lineLayer {
@@ -554,11 +623,6 @@ open class NavigationMapView: UIView {
                 lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
                 lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))
-            }
-            
-            if showsRestrictedAreasDashed {
-                // Value<Double>?
-                lineLayer?.lineDasharray = .constant([0.5, 2.0])
             }
         }
         
