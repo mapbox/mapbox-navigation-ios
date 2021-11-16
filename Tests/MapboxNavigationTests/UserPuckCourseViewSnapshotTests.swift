@@ -117,4 +117,16 @@ class UserPuckCourseViewSnapshotTests: TestCase {
                                              Float(courseUpdatableMock.transform.a))).toDegrees()
         XCTAssertEqual(angle, course - direction, accuracy: 0.1, "Direction angles of the puck should be almost equal.")
     }
+    
+    func testUserPuckCourseViewScale() {
+        let frame = CGRect(x: 0.0, y: 0.0, width: 50.0, height: 50.0)
+        let userPuckСourseView = UserPuckCourseView(frame: frame)
+        userPuckСourseView.puckColor = .red
+        userPuckСourseView.fillColor = .green
+        userPuckСourseView.shadowColor = .blue
+        userPuckСourseView.puckView.draw(frame)
+        
+        // It is expected that the `UserPuckCourseView` is scaled by the customized frame instead of being trimmed.
+        assertImageSnapshot(matching: userPuckСourseView, as: .image(precision: 0.95))
+    }
 }
