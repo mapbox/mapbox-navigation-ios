@@ -1149,8 +1149,11 @@ open class NavigationMapView: UIView {
         // Right-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
+            // These numbers are the pixel offsets into the PDF image asset
             let stretchX = [ImageStretches(first: Float(33), second: Float(52))]
             let stretchY = [ImageStretches(first: Float(32), second: Float(35))]
+            // define the "content" area of the image which is the portion that the maps sdk will use
+            // to place the text label within
             let imageContent = ImageContent(left: 34, top: 32, right: 56, bottom: 50)
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
@@ -1171,8 +1174,11 @@ open class NavigationMapView: UIView {
         // Left-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
+            // These numbers are the pixel offsets into the PDF image asset
             let stretchX = [ImageStretches(first: Float(47), second: Float(48))]
             let stretchY = [ImageStretches(first: Float(28), second: Float(32))]
+            // define the "content" area of the image which is the portion that the maps sdk will use
+            // to place the text label within
             let imageContent = ImageContent(left: 47, top: 28, right: 52, bottom: 40)
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
