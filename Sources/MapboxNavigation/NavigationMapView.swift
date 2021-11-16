@@ -746,7 +746,7 @@ open class NavigationMapView: UIView {
             RouteDurationAnnotationTailPosition.leading,
             RouteDurationAnnotationTailPosition.trailing
         ].randomElement() else { return }
-        
+
         var features = [Turf.Feature]()
         
         // Run through our heuristic algorithm looking for a good coordinate along each route line
@@ -1149,9 +1149,9 @@ open class NavigationMapView: UIView {
         // Right-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationRightHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
-            let stretchX = [ImageStretches(first: Float(24), second: Float(40))]
-            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
-            let imageContent = ImageContent(left: 24, top: 25, right: 40, bottom: 35)
+            let stretchX = [ImageStretches(first: Float(33), second: Float(52))]
+            let stretchY = [ImageStretches(first: Float(32), second: Float(35))]
+            let imageContent = ImageContent(left: 34, top: 32, right: 56, bottom: 50)
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
             try style.addImage(regularAnnotationImage,
@@ -1171,9 +1171,9 @@ open class NavigationMapView: UIView {
         // Left-hand pin
         if let image = Bundle.mapboxNavigation.image(named: "RouteInfoAnnotationLeftHanded") {
             // define the "stretchable" areas in the image that will be fitted to the text label
-            let stretchX = [ImageStretches(first: Float(34), second: Float(50))]
-            let stretchY = [ImageStretches(first: Float(25), second: Float(35))]
-            let imageContent = ImageContent(left: 34, top: 25, right: 50, bottom: 35)
+            let stretchX = [ImageStretches(first: Float(47), second: Float(48))]
+            let stretchY = [ImageStretches(first: Float(28), second: Float(32))]
+            let imageContent = ImageContent(left: 47, top: 28, right: 52, bottom: 40)
             
             let regularAnnotationImage = image.tint(routeDurationAnnotationColor)
             try style.addImage(regularAnnotationImage,
