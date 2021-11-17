@@ -47,7 +47,7 @@ class NavigationMapViewTests: TestCase {
         ])
         
         XCTAssertEqual(congestionSegments.count, 1)
-        XCTAssertEqual(congestionSegments[0].0.count, 10)
+        XCTAssertEqual(congestionSegments[0].0.count, 6)
         XCTAssertEqual(congestionSegments[0].1, .low)
     }
     
@@ -64,9 +64,9 @@ class NavigationMapViewTests: TestCase {
         // Any time the current congestion level is different than the previous segment, we have to create a new congestion segment.
         XCTAssertEqual(congestionSegmentsSevere.count, 3)
         
-        XCTAssertEqual(congestionSegmentsSevere[0].0.count, 4)
+        XCTAssertEqual(congestionSegmentsSevere[0].0.count, 3)
         XCTAssertEqual(congestionSegmentsSevere[1].0.count, 2)
-        XCTAssertEqual(congestionSegmentsSevere[2].0.count, 4)
+        XCTAssertEqual(congestionSegmentsSevere[2].0.count, 3)
         
         XCTAssertEqual(congestionSegmentsSevere[0].1, .low)
         XCTAssertEqual(congestionSegmentsSevere[1].1, .severe)
@@ -315,19 +315,19 @@ class NavigationMapViewTests: TestCase {
         let congestionFeatures:[Turf.Feature] = [feature]
         
         var fractionTraveled = 0.0
-        var routeLineGradient = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: false)
+        var routeLineGradient = navigationMapView.routeLineCongestionGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: false)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.trafficLowColor)
         
         fractionTraveled = 0.3
         var fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
-        routeLineGradient = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: false)
+        routeLineGradient = navigationMapView.routeLineCongestionGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: false)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.trafficLowColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
         
         fractionTraveled = 0.999999999
         fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
-        routeLineGradient = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
+        routeLineGradient = navigationMapView.routeLineCongestionGradient(congestionFeatures, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.trafficLowColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
@@ -337,7 +337,7 @@ class NavigationMapViewTests: TestCase {
         let route = loadRoute(from: "route-with-road-classes-single-congestion")
         var congestions = route.congestionFeatures()
         var fractionTraveled = 0.0
-        var lineGradient = navigationMapView.routeLineGradient(congestions, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
+        var lineGradient = navigationMapView.routeLineCongestionGradient(congestions, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.trafficUnknownColor)
         
         lineGradient = [
@@ -350,14 +350,14 @@ class NavigationMapViewTests: TestCase {
         ]
         fractionTraveled = 0.3
         let nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
-        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient)
+        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient, baseColor: navigationMapView.trafficUnknownColor)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficSevereColor)
         XCTAssertEqual(lineGradient[0.305], navigationMapView.trafficModerateColor)
         
         congestions = [Turf.Feature]()
-        lineGradient = navigationMapView.routeLineGradient(congestions, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
+        lineGradient = navigationMapView.routeLineCongestionGradient(congestions, fractionTraveled: fractionTraveled, isMain: true, isSoft: true)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficUnknownColor)
@@ -367,12 +367,12 @@ class NavigationMapViewTests: TestCase {
     func testUpdateRouteLineGradient() {
         let route = loadRoute(from: "route-with-road-classes-single-congestion")
         let congestions = route.congestionFeatures()
-        var lineGradient = navigationMapView.routeLineGradient(congestions, fractionTraveled: 0.0, isMain: true)
+        var lineGradient = navigationMapView.routeLineCongestionGradient(congestions, fractionTraveled: 0.0, isMain: true)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.trafficUnknownColor)
         
         var fractionTraveled = 0.5
         var nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
-        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient)
+        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient, baseColor: navigationMapView.trafficUnknownColor)
 
         XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
@@ -390,21 +390,21 @@ class NavigationMapViewTests: TestCase {
         
         fractionTraveled = 0.3
         nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
-        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient)
+        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient, baseColor: navigationMapView.trafficUnknownColor)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficModerateColor)
         
         fractionTraveled = 0.35
         nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
-        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient)
+        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient, baseColor: navigationMapView.trafficUnknownColor)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficModerateColor)
         
         fractionTraveled = 0.45
         nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
-        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient)
+        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient, baseColor: navigationMapView.trafficUnknownColor)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficHeavyColor)
@@ -412,7 +412,7 @@ class NavigationMapViewTests: TestCase {
         lineGradient = [Double:UIColor]()
         fractionTraveled = 0.45
         nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
-        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient)
+        lineGradient = navigationMapView.updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: lineGradient, baseColor: navigationMapView.trafficUnknownColor)
         XCTAssertEqual(lineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[nextDownFractionTraveled], navigationMapView.traversedRouteColor)
         XCTAssertEqual(lineGradient[fractionTraveled], navigationMapView.trafficUnknownColor)

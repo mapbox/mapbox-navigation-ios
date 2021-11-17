@@ -289,7 +289,7 @@ class VanishingRouteLineTests: TestCase {
         // When there's no congestion information found or parsed from route features,
         // the route line is expcted to apply `trafficUnknownColor` for the main route.
         let congestionFeatures = route.congestionFeatures(legIndex: 0)
-        let currentLineGradientStops = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: 0.0)
+        let currentLineGradientStops = navigationMapView.routeLineCongestionGradient(congestionFeatures, fractionTraveled: 0.0)
         XCTAssertEqual(currentLineGradientStops[0.0], navigationMapView.trafficUnknownColor, "Failed to use trafficUnknownColor for route line when no congestion level found.")
     }
 }

@@ -100,6 +100,15 @@ extension Array where Iterator.Element == CLLocationCoordinate2D {
         return segments
     }
     
+    /**
+     Returns an array of road segments by associating road classes of corresponding line segments.
+     
+     Adjacent segments with the same `combiningRoadClasses` will be merged together.
+     
+     - parameter roadClasses: An array of `RoadClasses`along given segment. There should be one fewer congestion levels than coordinates.
+     - parameter combiningRoadClasses: `RoadClasses` which will be joined if they are neighbouring each other.
+     - returns: A list of `RoadClassesSegment` tuples with coordinate and road class.
+     */
     func combined(_ roadClasses: [RoadClasses?],
                   combiningRoadClasses: RoadClasses? = nil) -> [RoadClassesSegment] {
         var segments: [RoadClassesSegment] = []
@@ -112,7 +121,7 @@ extension Array where Iterator.Element == CLLocationCoordinate2D {
             definedRoadClass = combiningRoadClasses?.intersection(definedRoadClass) ?? definedRoadClass
             
             if segments.last?.1 == definedRoadClass {
-                segments[segments.count - 1].0 += coordinates
+                segments[segments.count - 1].0 += [firstSegment.1]
             } else {
                 segments.append((coordinates, definedRoadClass))
             }
