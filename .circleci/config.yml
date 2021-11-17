@@ -23,16 +23,16 @@ commands:
               - slack/notify:
                   channel: mobile-bots
                   event: pass
-                  template: basic_success_1   
+                  template: basic_success_1
                   branch_pattern: main
         - slack/notify:
             channel: mobile-bots
             event: fail
-            template: basic_fail_1   
+            template: basic_fail_1
             branch_pattern: main
             mentions: '@here'
   install-gh-cli:
-      steps:        
+      steps:
         - run:
             name: Install GitHub CLI
             command: |
@@ -57,7 +57,7 @@ commands:
   save-api-diff-cache:
     parameters:
       key:
-        type: string    
+        type: string
       is_template:
         type: boolean
         default: false
@@ -253,7 +253,7 @@ step-library:
       run:
         name: Build Example
         command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=14.4,name=iPhone 8 Plus' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build
+          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=14.5,name=iPhone 8 Plus' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build
 
   - &trigger-metrics
       run:
@@ -270,10 +270,10 @@ jobs:
         default: false
       iOS:
         type: string
-        default: "14.4"
+        default: "14.5"
       xcode:
         type: string
-        default: "12.4.0"
+        default: "12.5.1"
       lint:
         type: boolean
         default: false
@@ -321,13 +321,13 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.4.0"
+        default: "12.5.1"
       device:
         type: string
         default: "iPhone 12 Pro Max"
       iOS:
         type: string
-        default: "14.4"
+        default: "14.5"
       spm:
         type: boolean
         default: false
@@ -354,7 +354,7 @@ jobs:
       - when: # Simulator is needed only for tests
           condition: << parameters.test >>
           steps:
-            - run:          
+            - run:
                 name: pre-start simulator
                 command: xcrun instruments -w "<< parameters.device >> (<< parameters.iOS >>) [" || true
       - when:
@@ -389,7 +389,7 @@ jobs:
           steps:
             - run:
                 name: Send code coverage
-                command: bash <(curl -s https://codecov.io/bash)       
+                command: bash <(curl -s https://codecov.io/bash)
       - notify-build-finished
 
 
@@ -397,7 +397,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.4.0"
+        default: "12.5.1"
       spm:
         type: boolean
         default: true
@@ -418,7 +418,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.4.0"
+        default: "12.5.1"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -431,15 +431,15 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.4.0"
+        default: "12.5.1"
       device:
         type: string
       iOS:
         type: string
-        default: "14.4"     
+        default: "14.5"
       notify_success:
         type: boolean
-        default: false   
+        default: false
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -462,24 +462,24 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.4.0"
+        default: "12.5.1"
       device:
         type: string
         default: "iPhone 12 Pro Max"
       iOS:
         type: string
-        default: "14.4"
+        default: "14.5"
       is_base_api:
         type: boolean
         default: false
       commit_hash: 
         description: "git hash of the commit to be used for generating logs in api_logs folder"
-        type: string        
+        type: string
     macos:
       xcode: << parameters.xcode >>
     environment:
-      HOMEBREW_NO_AUTO_UPDATE: 1        
-    steps:     
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
       - checkout
       - when:
           condition: << parameters.is_base_api >>
@@ -517,7 +517,7 @@ jobs:
           steps:
             - run:
                 name: Checking out commit
-                command: git checkout << parameters.commit_hash >>      
+                command: git checkout << parameters.commit_hash >>
       - build-api-diff-cli-tool
       - run:
           name: Move Xcode project aside
@@ -596,7 +596,7 @@ jobs:
     parameters:
       xcode:
         type: string
-        default: "12.4.0"
+        default: "12.5.1"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -640,16 +640,16 @@ workflows:
   extended-workflow:
     jobs:
       - spm-test-job:
-          name: "swift test; Xcode 12.4; iOS 14.4"
-          xcode: "12.4.0"
-          iOS: "14.4"          
-          device: "iPhone 12 Pro Max"     
+          name: "swift test; Xcode 12.5.1; iOS 14.5"
+          xcode: "12.5.1"
+          iOS: "14.5"
+          device: "iPhone 12 Pro Max"
           context: Slack Orb
           notify_success: true
       - spm-test-job:
-          name: "swift test; Xcode 12.4; iOS 13.7"
-          xcode: "12.4.0"
-          iOS: "13.7"          
+          name: "swift test; Xcode 12.5.1; iOS 13.7"
+          xcode: "12.5.1"
+          iOS: "13.7"
           device: "iPhone 11 Pro Max"
           context: Slack Orb
           notify_success: true
@@ -677,15 +677,15 @@ workflows:
   main-workflow:
     jobs:
       - build-job:
-          name: "Xcode_12.4_iOS_14.4"
-          xcode: "12.4.0"
-          iOS: "14.4"
+          name: "Xcode_12.5.1_iOS_14.5"
+          xcode: "12.5.1"
+          iOS: "14.5"
           device: "iPhone 12 Pro Max"
           context: Slack Orb
       - build-job:
-          name: "Xcode_12.4_iOS_14.4_SPM"
-          xcode: "12.4.0"
-          iOS: "14.4"
+          name: "Xcode_12.5.1_iOS_14.5_SPM"
+          xcode: "12.5.1"
+          iOS: "14.5"
           device: "iPhone 12 Pro Max"
           spm: true
           codecoverage: false
@@ -709,8 +709,8 @@ workflows:
       - spm-test-job:
           name: "swift test; Xcode 12.5; iOS 14.5"
           xcode: "12.5.0"
-          iOS: "14.5"          
-          device: "iPhone 12 Pro Max"          
+          iOS: "14.5"
+          device: "iPhone 12 Pro Max"
           context: Slack Orb
       - spm-core-integration-test-job:
           name: "Xcode 13; iOS 15.0; SPM Core test"
