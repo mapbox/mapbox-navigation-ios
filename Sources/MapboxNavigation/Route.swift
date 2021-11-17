@@ -44,7 +44,7 @@ extension Route {
         }
     }
     
-    func restrictedRoadsFeatures(legIndex: Int? = nil) -> [Feature] {
+    func restrictedRoadsFeatures() -> [Feature] {
         guard shape != nil else { return [] }
         
         var hasRestriction = false
