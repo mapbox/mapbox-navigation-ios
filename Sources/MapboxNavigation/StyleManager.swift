@@ -69,7 +69,7 @@ public extension StyleManagerDelegate {
 
 /**
  A manager that handles `Style` objects. The manager listens for significant time changes
- and changes to the content size to apply an approriate style for the given condition.
+ and changes to the content size to apply an appropriate style for the given condition.
  */
 open class StyleManager {
     /**
