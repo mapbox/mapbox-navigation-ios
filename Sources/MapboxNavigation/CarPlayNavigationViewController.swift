@@ -408,7 +408,15 @@ open class CarPlayNavigationViewController: UIViewController {
         }
     }
     
-    open override func updateViewConstraints() {
+    public override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        
+        // Trigger update of view constraints to correctly position views like `SpeedLimitView` and
+        // `CarPlayCompassView`.
+        view.setNeedsUpdateConstraints()
+    }
+    
+    public override func updateViewConstraints() {
         // Since there is no ability to detect current driving side mode of the CarPlay head-unit,
         // two separate `NSLayoutConstraint` objects are used to prevent `SpeedLimitView` and
         // `CarPlayCompassView` disappearance:
@@ -416,6 +424,7 @@ open class CarPlayNavigationViewController: UIViewController {
         // estimate panels will be on the right.
         // - second one is used when driving on the left side of the road, in this case guidance and trip
         // estimate panels will be on the left.
+        // Similar check is performed in `CarPlayMapViewController`.
         if view.safeAreaInsets.right > 38.0 {
             safeTrailingCompassViewConstraint.isActive = true
             trailingCompassViewConstraint.isActive = false
