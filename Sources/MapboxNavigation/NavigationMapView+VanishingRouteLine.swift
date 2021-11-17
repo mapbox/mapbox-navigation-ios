@@ -194,9 +194,11 @@ extension NavigationMapView {
         let mainRouteCasingLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor)
         setLayerLineGradient(for: mainRouteCasingLayerIdentifier, exp: mainRouteCasingLayerGradientExpression)
         
-        let restrictedAreaLayerGradient = updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentRestrictedAreasStops, baseColor: routeRestrictedAreaColor)
-        let restrictedAreaLayerGradientExpression = Expression.routeLineGradientExpression(restrictedAreaLayerGradient, lineBaseColor: traversedRouteColor)
-        setLayerLineGradient(for: restrictedAreaLayerIdentifier, exp: restrictedAreaLayerGradientExpression)
+        if showsRestrictedAreasOnRoute {
+            let restrictedAreaLayerGradient = updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentRestrictedAreasStops, baseColor: routeRestrictedAreaColor)
+            let restrictedAreaLayerGradientExpression = Expression.routeLineGradientExpression(restrictedAreaLayerGradient, lineBaseColor: traversedRouteColor)
+            setLayerLineGradient(for: restrictedAreaLayerIdentifier, exp: restrictedAreaLayerGradientExpression)
+        }
         
         pendingCoordinateForRouteLine = coordinate
     }

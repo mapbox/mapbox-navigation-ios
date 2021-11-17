@@ -34,6 +34,11 @@ open class NavigationMapView: UIView {
      */
     public var showsCongestionForAlternativeRoutes: Bool = false
     
+    /**
+     Controls wheter to show restricted portions of a route line.
+     
+     Restricted areas are drawn using `routeRestrictedAreaColor` which is customizable.
+     */
     public var showsRestrictedAreasOnRoute: Bool = false
     
     /**
@@ -65,6 +70,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var alternativeTrafficModerateColor: UIColor = .alternativeTrafficModerate
     @objc dynamic public var alternativeTrafficHeavyColor: UIColor = .alternativeTrafficHeavy
     @objc dynamic public var alternativeTrafficSevereColor: UIColor = .alternativeTrafficSevere
+    @objc dynamic public var routeRestrictedAreaColor: UIColor = .defaultRouteRestrictedAreaColor
     
     // MARK: Customizing and Displaying the Route Line(s)
     
@@ -79,7 +85,7 @@ open class NavigationMapView: UIView {
     @objc dynamic public var traversedRouteColor: UIColor = .defaultTraversedRouteColor
     @objc dynamic public var maneuverArrowColor: UIColor = .defaultManeuverArrow
     @objc dynamic public var maneuverArrowStrokeColor: UIColor = .defaultManeuverArrowStroke
-    @objc dynamic public var routeRestrictedAreaColor: UIColor = .defaultRouteRestrictedAreaColor
+    
     /**
      A pending user location coordinate, which is used to calculate the bottleneck distance for
      vanishing route line when a location update comes in.
@@ -199,7 +205,9 @@ open class NavigationMapView: UIView {
                 setUpLineGradientStops(along: route)
             }
             
-            parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
+            if showsRestrictedAreasOnRoute {
+                parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
+            }
             parentLayerIdentifier = addRouteLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0, legIndex: legIndex)
             parentLayerIdentifier = addRouteCasingLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0)
         }
@@ -426,10 +434,6 @@ open class NavigationMapView: UIView {
     
     @discardableResult func addRouteRestrictedAreaLayer(_ route: Route,
                                                         below parentLayerIndentifier: String? = nil) -> String? {
-        guard showsRestrictedAreasOnRoute else {
-            return nil
-        }
-        
         let sourceIdentifier = route.identifier(.restrictedRouteAreaSource)
         let restrictedRoadsFeatures = route.restrictedRoadsFeatures()
         

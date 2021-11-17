@@ -31,6 +31,9 @@ public var RouteLineWidthByZoomLevel: [Double: Double] = [
 @available(*, deprecated, message: "This value is no longer used.")
 public var NavigationMapViewMinimumDistanceForOverheadZooming: CLLocationDistance = 200
 
+/**
+ Attribute name for the route line that is used for identifying restricted areas along the route.
+ */
 public let RestrictedRoadClassAttribute = "isRestrictedRoad"
 
 /**
