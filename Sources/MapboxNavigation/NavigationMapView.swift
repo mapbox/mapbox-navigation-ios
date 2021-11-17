@@ -573,6 +573,11 @@ open class NavigationMapView: UIView {
             setupUserLocation()
         }
     }
+    var inActiveNavigation: Bool = false {
+        didSet {
+            setupUserLocation()
+        }
+    }
     
     /**
      Most recent user location, which is used to place `UserCourseView`.
@@ -604,7 +609,7 @@ open class NavigationMapView: UIView {
         } else {
             switch userLocationStyle {
             case .courseView(let courseView):
-                mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
+                mapView.location.options.puckType = inActiveNavigation ? nil : .puck2D(emptyPuckConfiguration)
                 
                 courseView.tag = NavigationMapView.userCourseViewTag
                 mapView.addSubview(courseView)
@@ -1399,7 +1404,7 @@ open class NavigationMapView: UIView {
                     self.travelAlongRouteLine(to: location.coordinate)
                 }
             default:
-                if self.simulatesLocation, let locationProvider = self.mapView.location.locationProvider {
+                if self.simulatesLocation, self.inActiveNavigation, let locationProvider = self.mapView.location.locationProvider {
                     self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
                 }
             }
