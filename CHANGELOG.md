@@ -37,6 +37,7 @@
 ### Map
 
 * Added the `NavigationViewController.usesNightStyleWhileInTunnel` and `CarPlayNavigationViewController.usesNightStyleWhileInTunnel` properties, which allow to disable dark style usage, while traversing the tunnels. ([#3559](https://github.com/mapbox/mapbox-navigation-ios/pull/3559))
+* Added the ability to change congestion color transition sharply or softly when `NavigationMapView.crossfadesCongestionSegments` changed during active navigation. ([#3466](https://github.com/mapbox/mapbox-navigation-ios/pull/3466))
 
 ### Route overlay
 
@@ -48,6 +49,7 @@
 * Fixed an issue that caused the panning dismissal button to stop working on CarPlay. ([#3543](https://github.com/mapbox/mapbox-navigation-ios/pull/3543))
 * Fixed an issue which caused the inability to see `SpeedLimitView` and `CarPlayCompassView` when left-hand traffic mode is used on CarPlay. ([#3583](https://github.com/mapbox/mapbox-navigation-ios/pull/3583))
 * Added the `CarPlayMapViewController.wayNameView` and `CarPlayNavigationViewController.wayNameView` properties to show the current road name on CarPlay. `CarPlayNavigationViewController.compassView`, `CarPlayNavigationViewController.speedLimitView` and `CarPlayMapViewController.speedLimitView` are kept as strong references, thus available throughout the lifetime of a parent object. ([#3534](https://github.com/mapbox/mapbox-navigation-ios/pull/3534))
+* Fixed an issue when `NavigationMapView.crossfadesCongestionSegments` enabled but congestion color transition is still sharp in CarPlay. ([#3466](https://github.com/mapbox/mapbox-navigation-ios/pull/3466))
 
 ### Other changes
 

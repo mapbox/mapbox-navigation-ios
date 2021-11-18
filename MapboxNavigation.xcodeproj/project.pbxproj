@@ -274,6 +274,7 @@
 		AE7DE6C621A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift */; };
 		AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */; };
 		AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEC3AC992106703100A26F34 /* HighwayShield.swift */; };
+		B40B1C61270380EC0065F57D /* VanishingRouteLineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B40B1C60270380EC0065F57D /* VanishingRouteLineTests.swift */; };
 		B41299CD26D6DE4D004031A3 /* RouteProgress+Arrival.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41299CC26D6DE4D004031A3 /* RouteProgress+Arrival.swift */; };
 		B41299CF26D7101F004031A3 /* CLLocationCoordinate2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41299CE26D7101F004031A3 /* CLLocationCoordinate2D.swift */; };
 		B419BFF225F00A9C0086639B /* Feature.swift in Sources */ = {isa = PBXBuildFile; fileRef = B419BFF125F00A9C0086639B /* Feature.swift */; };
@@ -320,6 +321,8 @@
 		B4A78D30261FD47700FDF212 /* route-with-road-classes-single-congestion.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFC261FD0A30078546C /* route-with-road-classes-single-congestion.json */; };
 		B4A78D31261FD47700FDF212 /* route-with-lanes.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFD261FD0A30078546C /* route-with-lanes.json */; };
 		B4A78D32261FD47700FDF212 /* sthlm-double-back.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFE261FD0A30078546C /* sthlm-double-back.json */; };
+		B4BB0AD52704D1D7006F502D /* short_route.json in Resources */ = {isa = PBXBuildFile; fileRef = B4BB0AD42704D1D7006F502D /* short_route.json */; };
+		B4BB0AD72704D1E6006F502D /* multileg_route.json in Resources */ = {isa = PBXBuildFile; fileRef = B4BB0AD62704D1E6006F502D /* multileg_route.json */; };
 		B4E19C47268114840011581F /* NavigationLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E19C46268114840011581F /* NavigationLocationProvider.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
@@ -421,7 +424,6 @@
 		E2D14965265CF9D9008135A3 /* CPMapTemplate+MBTestable.h in Headers */ = {isa = PBXBuildFile; fileRef = E2D14961265CF9D9008135A3 /* CPMapTemplate+MBTestable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E2D14966265CFACB008135A3 /* CarPlayTestHelper.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E2D1494E265CF97D008135A3 /* CarPlayTestHelper.framework */; };
 		E2D1496B265CFB4D008135A3 /* waypoint-after-turn.json in Resources */ = {isa = PBXBuildFile; fileRef = E2D14967265CFB4D008135A3 /* waypoint-after-turn.json */; };
-		E2D1496C265CFB4D008135A3 /* route-for-vanishing-route-line.json in Resources */ = {isa = PBXBuildFile; fileRef = E2D14968265CFB4D008135A3 /* route-for-vanishing-route-line.json */; };
 		E2D1496D265CFB4D008135A3 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E2D14969265CFB4D008135A3 /* Images.xcassets */; };
 		E2D1496E265CFB4D008135A3 /* md5_crazy_strings.txt in Resources */ = {isa = PBXBuildFile; fileRef = E2D1496A265CFB4D008135A3 /* md5_crazy_strings.txt */; };
 		E2D1497B265CFB5B008135A3 /* 107.gph.gz in Resources */ = {isa = PBXBuildFile; fileRef = E2D14973265CFB5B008135A3 /* 107.gph.gz */; };
@@ -800,6 +802,7 @@
 		AE8B1B96207D2B2B003050F6 /* TunnelAuthorityTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelAuthorityTests.swift; sourceTree = "<group>"; };
 		AEC3AC992106703100A26F34 /* HighwayShield.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighwayShield.swift; sourceTree = "<group>"; };
 		AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationViewControllerTests.swift; sourceTree = "<group>"; };
+		B40B1C60270380EC0065F57D /* VanishingRouteLineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VanishingRouteLineTests.swift; sourceTree = "<group>"; };
 		B41299CC26D6DE4D004031A3 /* RouteProgress+Arrival.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RouteProgress+Arrival.swift"; sourceTree = "<group>"; };
 		B41299CE26D7101F004031A3 /* CLLocationCoordinate2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLLocationCoordinate2D.swift; sourceTree = "<group>"; };
 		B417913A2624F9EA001E0348 /* MBXInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
@@ -847,6 +850,8 @@
 		B47C1B02261FD0A30078546C /* DirectionsSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSpy.swift; sourceTree = "<group>"; };
 		B47C1B03261FD0A30078546C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B4843886270F8E1600E161E6 /* SimulationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationType.swift; sourceTree = "<group>"; };
+		B4BB0AD42704D1D7006F502D /* short_route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = short_route.json; sourceTree = "<group>"; };
+		B4BB0AD62704D1E6006F502D /* multileg_route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = multileg_route.json; sourceTree = "<group>"; };
 		B4D4291826260D5900EE92A8 /* MBXInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
 		B4E19C46268114840011581F /* NavigationLocationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationLocationProvider.swift; sourceTree = "<group>"; };
 		C51511D020EAC89D00372A91 /* CPMapTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPMapTemplate.swift; sourceTree = "<group>"; };
@@ -1021,7 +1026,6 @@
 		E2D14960265CF9D9008135A3 /* CPBarButton+MBTestable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CPBarButton+MBTestable.h"; path = "include/CPBarButton+MBTestable.h"; sourceTree = "<group>"; };
 		E2D14961265CF9D9008135A3 /* CPMapTemplate+MBTestable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "CPMapTemplate+MBTestable.h"; path = "include/CPMapTemplate+MBTestable.h"; sourceTree = "<group>"; };
 		E2D14967265CFB4D008135A3 /* waypoint-after-turn.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "waypoint-after-turn.json"; sourceTree = "<group>"; };
-		E2D14968265CFB4D008135A3 /* route-for-vanishing-route-line.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-vanishing-route-line.json"; sourceTree = "<group>"; };
 		E2D14969265CFB4D008135A3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E2D1496A265CFB4D008135A3 /* md5_crazy_strings.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = md5_crazy_strings.txt; sourceTree = "<group>"; };
 		E2D14973265CFB5B008135A3 /* 107.gph.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 107.gph.gz; sourceTree = "<group>"; };
@@ -1456,6 +1460,7 @@
 				C55C299820D2E2F600B0406C /* NavigationMapViewTests.swift */,
 				AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */,
 				169A9709216440820082A6A0 /* NavigationViewControllerTestDoubles.swift */,
+				B40B1C60270380EC0065F57D /* VanishingRouteLineTests.swift */,
 			);
 			name = Navigation;
 			sourceTree = "<group>";
@@ -1621,11 +1626,12 @@
 		B47C1AE4261FD0A30078546C /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				B4BB0AD62704D1E6006F502D /* multileg_route.json */,
+				B4BB0AD42704D1D7006F502D /* short_route.json */,
 				8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */,
 				8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */,
 				E2D14969265CFB4D008135A3 /* Images.xcassets */,
 				E2D1496A265CFB4D008135A3 /* md5_crazy_strings.txt */,
-				E2D14968265CFB4D008135A3 /* route-for-vanishing-route-line.json */,
 				E2D14967265CFB4D008135A3 /* waypoint-after-turn.json */,
 				B47C1AE5261FD0A30078546C /* route-with-banner-instructions.json */,
 				B47C1AE6261FD0A30078546C /* route-with-missing-road-classes.json */,
@@ -2283,10 +2289,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8A0DA5F726A23FF800E7D360 /* route-for-navigation-camera.json in Resources */,
+				B4BB0AD72704D1E6006F502D /* multileg_route.json in Resources */,
 				B4A78D19261FD47700FDF212 /* route-with-banner-instructions.json in Resources */,
 				B4A78D1A261FD47700FDF212 /* route-with-missing-road-classes.json in Resources */,
 				B4A78D1B261FD47700FDF212 /* route-with-instructions.json in Resources */,
-				E2D1496C265CFB4D008135A3 /* route-for-vanishing-route-line.json in Resources */,
 				E2D1497C265CFB5B008135A3 /* 509.gph.gz in Resources */,
 				B4A78D1C261FD47700FDF212 /* routeWithTunnels_9thStreetDC.json in Resources */,
 				B4A78D1D261FD47700FDF212 /* PipeFittersUnion-FourSeasonsBoston.json in Resources */,
@@ -2311,6 +2317,7 @@
 				B4A78D2D261FD47700FDF212 /* DCA-Arboretum-dummy-faster-route.json in Resources */,
 				B4A78D2E261FD47700FDF212 /* route-with-mixed-road-classes.json in Resources */,
 				B4A78D2F261FD47700FDF212 /* sthlm-double-back-replay.json in Resources */,
+				B4BB0AD52704D1D7006F502D /* short_route.json in Resources */,
 				B4A78D30261FD47700FDF212 /* route-with-road-classes-single-congestion.json in Resources */,
 				E2D1496D265CFB4D008135A3 /* Images.xcassets in Resources */,
 				B4A78D31261FD47700FDF212 /* route-with-lanes.json in Resources */,
@@ -2605,6 +2612,7 @@
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,
 				AE47A33822B27D8D0096458C /* InstructionsCardCollectionTests.swift in Sources */,
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
+				B40B1C61270380EC0065F57D /* VanishingRouteLineTests.swift in Sources */,
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
 				DA1755F82357B6BD00B06C1D /* StringTests.swift in Sources */,
 				355B469D22B9031E009CE634 /* SKUTestable.swift in Sources */,
