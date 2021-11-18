@@ -41,7 +41,17 @@ open class NavigationMapView: UIView {
      If `true`, the congestion level change between two segments in the route line will be shown as
      fading gradient color instead of abrupt and steep change.
      */
-    public var crossfadesCongestionSegments: Bool = false
+    public var crossfadesCongestionSegments: Bool = false {
+        didSet {
+            if let routes = self.routes {
+                if routeLineTracksTraversal, let route = routes.first {
+                    setUpLineGradientStops(along: route)
+                } else {
+                    show(routes, legIndex: currentLegIndex)
+                }
+            }
+        }
+    }
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow

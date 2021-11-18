@@ -225,14 +225,23 @@ class VanishingRouteLineTests: TestCase {
             var lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level.")
 
+            // During active navigation with `routeLineTracksTraversal` and `crossfadesCongestionSegments` both enabled, the route line should re-generate the gradient stops and update the line gradient expression when there's a location update comes in.
             expectedExpressionString = "[interpolate, [linear], [line-progress], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTrvaledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTrvaled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.8482948363463217, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9482948363463218, [rgba, 255.0, 0.0, 0.0, 1.0]]"
             navigationMapView.crossfadesCongestionSegments = true
-            navigationMapView.show([route], legIndex: 0)
-            navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView.travelAlongRouteLine(to: coordinate)
+            
             layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
             lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply soft color transition between two different congestion level.")
+            
+            // During active navigation with `crossfadesCongestionSegments` enabled but `routeLineTracksTraversal` disabled, the route line should re-generate the route line directly.
+            expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
+            navigationMapView.routeLineTracksTraversal = false
+            navigationMapView.crossfadesCongestionSegments = false
+            
+            layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
+            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level and show a whole new route line.")
         } catch {
             XCTFail(error.localizedDescription)
         }
