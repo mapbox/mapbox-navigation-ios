@@ -78,12 +78,22 @@ open class CarPlayNavigationViewController: UIViewController {
     
     private var isTraversingTunnel = false
     private var roadNameFromStatus: String?
+    
+    private var safeTrailingSpeedLimitViewConstraint: NSLayoutConstraint!
+    private var trailingSpeedLimitViewConstraint: NSLayoutConstraint!
+    
+    private var safeTrailingCompassViewConstraint: NSLayoutConstraint!
+    private var trailingCompassViewConstraint: NSLayoutConstraint!
 
     func setupOrnaments() {
         let compassView = CarPlayCompassView()
         view.addSubview(compassView)
+        
         compassView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 8).isActive = true
-        compassView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor, constant: -8).isActive = true
+        safeTrailingCompassViewConstraint = compassView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
+                                                                                  constant: -8)
+        trailingCompassViewConstraint = compassView.trailingAnchor.constraint(equalTo: view.trailingAnchor,
+                                                                              constant: -8)
         self.compassView = compassView
         
         let speedLimitView = SpeedLimitView()
@@ -91,7 +101,10 @@ open class CarPlayNavigationViewController: UIViewController {
         view.addSubview(speedLimitView)
         
         speedLimitView.topAnchor.constraint(equalTo: compassView.bottomAnchor, constant: 8).isActive = true
-        speedLimitView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor, constant: -8).isActive = true
+        safeTrailingSpeedLimitViewConstraint = speedLimitView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
+                                                                                        constant: -8)
+        trailingSpeedLimitViewConstraint = speedLimitView.trailingAnchor.constraint(equalTo: view.trailingAnchor,
+                                                                                    constant: -8)
         speedLimitView.widthAnchor.constraint(equalToConstant: 30).isActive = true
         speedLimitView.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
@@ -344,7 +357,7 @@ open class CarPlayNavigationViewController: UIViewController {
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
-    required public init(navigationService: NavigationService,
+    public required init(navigationService: NavigationService,
                          mapTemplate: CPMapTemplate,
                          interfaceController: CPInterfaceController,
                          manager: CarPlayManager,
@@ -363,7 +376,7 @@ open class CarPlayNavigationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         setupNavigationMapView()
@@ -381,7 +394,7 @@ open class CarPlayNavigationViewController: UIViewController {
         updateTripEstimateStyle(traitCollection.userInterfaceStyle)
     }
     
-    override public func viewWillDisappear(_ animated: Bool) {
+    public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         suspendNotifications()
     }
@@ -393,6 +406,40 @@ open class CarPlayNavigationViewController: UIViewController {
             updateTripEstimateStyle(traitCollection.userInterfaceStyle)
             updateManeuvers(navigationService.routeProgress)
         }
+    }
+    
+    public override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        
+        // Trigger update of view constraints to correctly position views like `SpeedLimitView` and
+        // `CarPlayCompassView`.
+        view.setNeedsUpdateConstraints()
+    }
+    
+    public override func updateViewConstraints() {
+        // Since there is no ability to detect current driving side mode of the CarPlay head-unit,
+        // two separate `NSLayoutConstraint` objects are used to prevent `SpeedLimitView` and
+        // `CarPlayCompassView` disappearance:
+        // - first one is used when driving on the right side of the road, in this case guidance and trip
+        // estimate panels will be on the right.
+        // - second one is used when driving on the left side of the road, in this case guidance and trip
+        // estimate panels will be on the left.
+        // Similar check is performed in `CarPlayMapViewController`.
+        if view.safeAreaInsets.right > 38.0 {
+            safeTrailingCompassViewConstraint.isActive = true
+            trailingCompassViewConstraint.isActive = false
+            
+            safeTrailingSpeedLimitViewConstraint.isActive = true
+            trailingSpeedLimitViewConstraint.isActive = false
+        } else {
+            safeTrailingCompassViewConstraint.isActive = false
+            trailingCompassViewConstraint.isActive = true
+            
+            safeTrailingSpeedLimitViewConstraint.isActive = false
+            trailingSpeedLimitViewConstraint.isActive = true
+        }
+        
+        super.updateViewConstraints()
     }
     
     func setupNavigationMapView() {
