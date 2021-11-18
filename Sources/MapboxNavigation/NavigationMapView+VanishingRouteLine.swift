@@ -63,10 +63,11 @@ extension NavigationMapView {
          Find the count of remaining points in the current step.
          */
         let lineString = currentStepProgress.step.shape ?? LineString([])
-        if currentStepProgress.distanceTraveled < 0 {
-            allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].count
-        } else if let slicedLineString = lineString.trimmed(from: currentStepProgress.distanceTraveled, to: currentStepProgress.step.distance) {
-            allRemainingPoints += slicedLineString.coordinates.dropLast().count
+        if currentStepProgress.distanceTraveled <= 0 {
+            allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].dropLast().count
+        } else if let startIndex = lineString.indexedCoordinateFromStart(distance: currentStepProgress.distanceTraveled)?.index,
+           startIndex < lineString.coordinates.endIndex - 1 {
+            allRemainingPoints += lineString.coordinates.suffix(from: startIndex + 1).dropLast().count
         }
         
         /**
