@@ -116,7 +116,7 @@ class VanishingRouteLineTests: TestCase {
         // https://github.com/mapbox/mapbox-navigation-android/blob/0ca183f7cb7bec930521ea9bcd59d0e8e2bef165/libnavui-maps/src/test/java/com/mapbox/navigation/ui/maps/route/line/api/MapboxRouteLineApiTest.kt#L846
         let routeProgress = getRouteProgress()
         
-        // When the route points points not initialized first, the upcoming route point index is expected to be `nil`.
+        // When the route points not initialized yet, the upcoming route point index is expected to be `nil`.
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         XCTAssertNil(navigationMapView.routeRemainingDistancesIndex)
     }
@@ -190,7 +190,7 @@ class VanishingRouteLineTests: TestCase {
             XCTAssert(!gradientExpression.contains(actualFractionTraveled.description), "Failed to stop vanishing effect when routeLineTracksTraversal disabled.")
             
             // During the active navigation, when enabling `routeLineTracksTraversal`, the new line gradient stops of current route will be generated.
-            // The `fractionTraveled` and the route line are expected to update after a new `routeProgress` and location update comes in
+            // The `fractionTraveled` and the route line are expected to be updated after a new `routeProgress` and location update comes in
             navigationMapView.routeLineTracksTraversal = true
             navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView.travelAlongRouteLine(to: coordinate)
@@ -205,7 +205,7 @@ class VanishingRouteLineTests: TestCase {
     func testRouteLineGradientWithCombinedColor() {
         let route = getRoute()
         
-        // When different congestion levels have same color, the gradient stops is expected to combine these congestion level.
+        // When different congestion levels have same color, the line gradient stops are expected to combine these congestion level.
         navigationMapView.trafficModerateColor = navigationMapView.trafficUnknownColor
         navigationMapView.routes = [route]
         navigationMapView.routeLineTracksTraversal = true
@@ -255,7 +255,7 @@ class VanishingRouteLineTests: TestCase {
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply soft color transition between two different congestion level.")
             
             // During active navigation with `crossfadesCongestionSegments` enabled but `routeLineTracksTraversal` disabled,
-            // the route line should re-generate the route line directly.
+            // the route line should be re-generated directly.
             expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
             navigationMapView.routeLineTracksTraversal = false
             navigationMapView.crossfadesCongestionSegments = false
@@ -274,7 +274,7 @@ class VanishingRouteLineTests: TestCase {
         let startCoordinate = CLLocationCoordinate2D(latitude: 37.974092, longitude: -122.525212)
         let endCoordinate = CLLocationCoordinate2D(latitude: 37.974569579999944, longitude: -122.52509389295653)
         
-        // This is to test the calculation of project distance using [EPSG:3857 projection](https://epsg.io/3857).
+        // It's to test the calculation of project distance using [EPSG:3857 projection](https://epsg.io/3857).
         let distance = startCoordinate.projectedDistance(to: endCoordinate)
         let expectedDistance = 0.0000017145850113848236
         XCTAssertEqual(distance, expectedDistance, "Failed to calculate the right project distance.")
