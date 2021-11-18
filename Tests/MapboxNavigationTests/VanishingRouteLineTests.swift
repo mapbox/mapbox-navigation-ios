@@ -1,7 +1,6 @@
 import XCTest
 import MapboxDirections
 import TestHelper
-import Turf
 import MapboxMaps
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
@@ -86,7 +85,8 @@ class VanishingRouteLineTests: TestCase {
         let route = getMultilegRoute()
         let routePoints = navigationMapView.parseRoutePoints(route: route)
         
-        // Because mapbox-directions-swift parses the route with one more duplicate coordinate in the last step of each route leg. The two leg route has two more coordinates compared with Android.
+        // Because mapbox-directions-swift parses the route with one more duplicate coordinate in the last step of each route leg.
+        // The two leg route has two more coordinates compared with Android.
         XCTAssertEqual(routePoints.flatList.count, 130)
         XCTAssertEqual(routePoints.nestedList.flatMap{$0}.count, 15)
         XCTAssertEqual(routePoints.flatList[1].latitude, routePoints.flatList[2].latitude)
@@ -107,7 +107,8 @@ class VanishingRouteLineTests: TestCase {
         
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         
-        // Because mapbox-directions-swift parses the route with one more duplicate coordinate in the last step of each route leg. The one leg route has one more coordinate compared with Android.
+        // Because mapbox-directions-swift parses the route with one more duplicate coordinate in the last step of each route leg.
+        // The one leg route has one more coordinate compared with Android.
         XCTAssertEqual(navigationMapView.routeRemainingDistancesIndex, 7)
     }
     
@@ -115,6 +116,7 @@ class VanishingRouteLineTests: TestCase {
         // https://github.com/mapbox/mapbox-navigation-android/blob/0ca183f7cb7bec930521ea9bcd59d0e8e2bef165/libnavui-maps/src/test/java/com/mapbox/navigation/ui/maps/route/line/api/MapboxRouteLineApiTest.kt#L846
         let routeProgress = getRouteProgress()
         
+        // When the route points points not initialized first, the upcoming route point index is expected to be `nil`.
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         XCTAssertNil(navigationMapView.routeRemainingDistancesIndex)
     }
@@ -130,6 +132,8 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         navigationMapView.updateFractionTraveled(coordinate: coordinate)
         
+        // When `routeLineTracksTraversal` enabled, the `fractionTraveled` is expected to be updated after
+        // the upcoming route point index update and a location update.
         let expectedFractionTraveled = 0.3240769449298392
         XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: 0.0000000001)
     }
@@ -143,11 +147,20 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.routeLineTracksTraversal = true
         navigationMapView.show([route], legIndex: 0)
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+
+        // By setting the zoom level of camera in `navigationMapView` to 5, the meters per pixel at latitude at high zoom level would be really large.
+        // When a location update comes in with a small distance change, it's expected to be less than the meters per pixel,
+        // In this case, the `fractionTraveled` and the vanishing route line won't be updated.
         setUpCameraZoom(at: 5.0)
-        
         navigationMapView.travelAlongRouteLine(to: coordinate)
-        
         XCTAssertTrue(navigationMapView.fractionTraveled == 0.0, "Failed to avoid updating route line when the distance is smaller than 1 pixel.")
+        
+        // By setting the zoom level of camera in `navigationMapView` to 16, the meters per pixel at latitude at low zoom level would be really small.
+        // When a location update comes in with a distance change larger than or equal to the meters per pixel,
+        // the `fractionTraveled` and vanishing route line will both be updated.
+        setUpCameraZoom(at: 17.0)
+        navigationMapView.travelAlongRouteLine(to: coordinate)
+        XCTAssertTrue(navigationMapView.fractionTraveled != 0.0, "Failed to update route line when the distance is larger than or equal to 1 pixel.")
     }
     
     func testSwitchRouteLineTracksTraversalDuringNavigation() {
@@ -168,12 +181,16 @@ class VanishingRouteLineTests: TestCase {
         
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {
+            // During the active navigation, when disabling `routeLineTracksTraversal`, the new route line will be generated,
+            // and the `fractionTraveled` will be 0.0.
             navigationMapView.routeLineTracksTraversal = false
             var layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
             var gradientExpression = layer.lineGradient.debugDescription
             XCTAssertEqual(navigationMapView.fractionTraveled, 0.0)
             XCTAssert(!gradientExpression.contains(actualFractionTraveled.description), "Failed to stop vanishing effect when routeLineTracksTraversal disabled.")
             
+            // During the active navigation, when enabling `routeLineTracksTraversal`, the new line gradient stops of current route will be generated.
+            // The `fractionTraveled` and the route line are expected to update after a new `routeProgress` and location update comes in
             navigationMapView.routeLineTracksTraversal = true
             navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView.travelAlongRouteLine(to: coordinate)
@@ -188,6 +205,7 @@ class VanishingRouteLineTests: TestCase {
     func testRouteLineGradientWithCombinedColor() {
         let route = getRoute()
         
+        // When different congestion levels have same color, the gradient stops is expected to combine these congestion level.
         navigationMapView.trafficModerateColor = navigationMapView.trafficUnknownColor
         navigationMapView.routes = [route]
         navigationMapView.routeLineTracksTraversal = true
@@ -214,10 +232,10 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         navigationMapView.travelAlongRouteLine(to: coordinate)
 
-        let fractionTrvaled = navigationMapView.fractionTraveled
-        let fractionTrvaledNextDown = Double(CGFloat(fractionTrvaled).nextDown)
+        let fractionTraveled = navigationMapView.fractionTraveled
+        let fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
         
-        var expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTrvaledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTrvaled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
+        var expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
 
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {
@@ -225,8 +243,10 @@ class VanishingRouteLineTests: TestCase {
             var lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level.")
 
-            // During active navigation with `routeLineTracksTraversal` and `crossfadesCongestionSegments` both enabled, the route line should re-generate the gradient stops and update the line gradient expression when there's a location update comes in.
-            expectedExpressionString = "[interpolate, [linear], [line-progress], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTrvaledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTrvaled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.8482948363463217, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9482948363463218, [rgba, 255.0, 0.0, 0.0, 1.0]]"
+            // During active navigation with `routeLineTracksTraversal` and `crossfadesCongestionSegments` both enabled,
+            // the route line should re-generate the gradient stops and update the line gradient expression
+            // when there's a location update comes in.
+            expectedExpressionString = "[interpolate, [linear], [line-progress], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.8482948363463217, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9482948363463218, [rgba, 255.0, 0.0, 0.0, 1.0]]"
             navigationMapView.crossfadesCongestionSegments = true
             navigationMapView.travelAlongRouteLine(to: coordinate)
             
@@ -234,7 +254,8 @@ class VanishingRouteLineTests: TestCase {
             lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply soft color transition between two different congestion level.")
             
-            // During active navigation with `crossfadesCongestionSegments` enabled but `routeLineTracksTraversal` disabled, the route line should re-generate the route line directly.
+            // During active navigation with `crossfadesCongestionSegments` enabled but `routeLineTracksTraversal` disabled,
+            // the route line should re-generate the route line directly.
             expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
             navigationMapView.routeLineTracksTraversal = false
             navigationMapView.crossfadesCongestionSegments = false
@@ -253,6 +274,7 @@ class VanishingRouteLineTests: TestCase {
         let startCoordinate = CLLocationCoordinate2D(latitude: 37.974092, longitude: -122.525212)
         let endCoordinate = CLLocationCoordinate2D(latitude: 37.974569579999944, longitude: -122.52509389295653)
         
+        // This is to test the calculation of project distance using [EPSG:3857 projection](https://epsg.io/3857).
         let distance = startCoordinate.projectedDistance(to: endCoordinate)
         let expectedDistance = 0.0000017145850113848236
         XCTAssertEqual(distance, expectedDistance, "Failed to calculate the right project distance.")
@@ -264,6 +286,8 @@ class VanishingRouteLineTests: TestCase {
         route.legs.first!.segmentNumericCongestionLevels = nil
         XCTAssertNil(route.legs.first!.resolvedCongestionLevels, "Failed to get nil resolvedCongestionLevels from route.")
 
+        // When there's no congestion information found or parsed from route features,
+        // the route line is expcted to apply `trafficUnknownColor` for the main route.
         let congestionFeatures = route.congestionFeatures(legIndex: 0)
         let currentLineGradientStops = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: 0.0)
         XCTAssertEqual(currentLineGradientStops[0.0], navigationMapView.trafficUnknownColor, "Failed to use trafficUnknownColor for route line when no congestion level found.")
