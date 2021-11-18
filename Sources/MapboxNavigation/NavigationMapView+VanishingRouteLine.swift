@@ -2,7 +2,6 @@ import CoreLocation
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
-import Turf
 import MapboxMaps
 
 extension NavigationMapView {
@@ -66,7 +65,7 @@ extension NavigationMapView {
         if currentStepProgress.distanceTraveled <= 0 {
             allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].dropLast().count
         } else if let startIndex = lineString.indexedCoordinateFromStart(distance: currentStepProgress.distanceTraveled)?.index,
-           startIndex < lineString.coordinates.endIndex - 1 {
+                  startIndex < lineString.coordinates.endIndex - 1 {
             allRemainingPoints += lineString.coordinates.suffix(from: startIndex + 1).dropLast().count
         }
         
