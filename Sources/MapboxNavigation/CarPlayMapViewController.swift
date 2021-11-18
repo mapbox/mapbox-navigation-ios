@@ -200,7 +200,7 @@ open class CarPlayMapViewController: UIViewController {
         super.init(coder: decoder)
     }
     
-    override public func encode(with aCoder: NSCoder) {
+    public override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         
         aCoder.encode(styles, forKey: "styles")
@@ -300,12 +300,12 @@ open class CarPlayMapViewController: UIViewController {
     
     // MARK: UIViewController Lifecycle Methods
     
-    override public func loadView() {
+    public override func loadView() {
         setupNavigationMapView()
         setupPassiveLocationProvider()
     }
     
-    override public func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         setupStyleManager()
@@ -314,7 +314,7 @@ open class CarPlayMapViewController: UIViewController {
         navigationMapView.navigationCamera.follow()
     }
     
-    override public func viewSafeAreaInsetsDidChange() {
+    public override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
         // Trigger update of view constraints to correctly position views like `SpeedLimitView`.
@@ -334,7 +334,7 @@ open class CarPlayMapViewController: UIViewController {
         }
     }
     
-    open override func updateViewConstraints() {
+    public override func updateViewConstraints() {
         if view.safeAreaInsets.right > 38.0 {
             safeTrailingSpeedLimitViewConstraint.isActive = true
             trailingSpeedLimitViewConstraint.isActive = false

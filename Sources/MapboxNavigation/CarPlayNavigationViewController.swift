@@ -357,7 +357,7 @@ open class CarPlayNavigationViewController: UIViewController {
      
      - postcondition: Call `startNavigationSession(for:)` after initializing this object to begin navigation.
      */
-    required public init(navigationService: NavigationService,
+    public required init(navigationService: NavigationService,
                          mapTemplate: CPMapTemplate,
                          interfaceController: CPInterfaceController,
                          manager: CarPlayManager,
@@ -376,7 +376,7 @@ open class CarPlayNavigationViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         setupNavigationMapView()
@@ -394,7 +394,7 @@ open class CarPlayNavigationViewController: UIViewController {
         updateTripEstimateStyle(traitCollection.userInterfaceStyle)
     }
     
-    override public func viewWillDisappear(_ animated: Bool) {
+    public override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         suspendNotifications()
     }
