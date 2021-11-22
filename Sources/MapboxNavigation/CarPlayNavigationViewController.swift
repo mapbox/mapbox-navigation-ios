@@ -640,15 +640,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     @objc func refresh(_ notification: NSNotification) {
-        let progress = navigationService.routeProgress
-        let legIndex = progress.legIndex
-        let coordinate = navigationService.router.location?.coordinate
-        
-        navigationMapView?.show([progress.route], legIndex: legIndex)
-        if routeLineTracksTraversal {
-            navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: progress)
-            navigationMapView?.travelAlongRouteLine(to: coordinate)
-        }
+        updateRouteLine(routeProgress: navigationService.routeProgress, coordinate: navigationService.router.location?.coordinate)
     }
     
     @objc func simulationStateDidChange(_ notification: NSNotification) {
@@ -692,8 +684,19 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         let nextStep = progress.currentLegProgress.stepIndex + 1
         
         navigationMapView?.addArrow(route: progress.route, legIndex: legIndex, stepIndex: nextStep)
-        navigationMapView?.show([progress.route], legIndex: legIndex)
+        updateRouteLine(routeProgress: progress, coordinate: navigationService.router.location?.coordinate)
         navigationMapView?.showWaypoints(on: progress.route, legIndex: legIndex)
+    }
+    
+    func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?) {
+        navigationMapView?.show([routeProgress.route], legIndex: routeProgress.legIndex)
+        if routeLineTracksTraversal {
+            if routeProgress.routeIsComplete {
+                navigationMapView?.removeRoutes()
+            }
+            navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+            navigationMapView?.travelAlongRouteLine(to: coordinate)
+        }
     }
     
     func updateManeuvers(_ routeProgress: RouteProgress) {
