@@ -29,7 +29,7 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  Guidance session. The trip session is stopped when the instance is deallocated. For more info read the
  [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
  */
-open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData {
+open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData, BuildingHighlighting {
     
     // MARK: Accessing the View Hierarchy
     
@@ -253,10 +253,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public var sendsNotifications: Bool = true
     
     private var isTraversingTunnel = false
-    private var approachingDestinationThreshold: CLLocationDistance = 250.0
-    private var passedApproachingDestinationThreshold: Bool = false
-    private var currentLeg: RouteLeg?
-    private var foundAllBuildings = false
     
     // MARK: View Lifecycle and Events
     
@@ -679,6 +675,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var waypointStyle: WaypointStyle = .annotation
     
+    var approachingDestinationThreshold: CLLocationDistance = DefaultApproachingDestinationThresholdDistance
+    var passedApproachingDestinationThreshold: Bool = false
+    var currentLeg: RouteLeg?
+    var buildingWasFound: Bool = false
+    
     /**
      Controls the styling of NavigationViewController and its components.
      
@@ -787,7 +788,7 @@ extension NavigationViewController: NavigationServiceDelegate {
             navigationMapView?.moveUserLocation(to: location, animated: true)
         }
 
-        attemptToHighlightBuildings(progress)
+        attemptToHighlightBuildings(progress, navigationMapView: navigationMapView)
         
         // Finally, pass the message onto the `NavigationViewControllerDelegate`.
         delegate?.navigationViewController(self, didUpdate: progress, with: location, rawLocation: rawLocation)
@@ -809,33 +810,6 @@ extension NavigationViewController: NavigationServiceDelegate {
         if isTraversingTunnel, !inTunnel {
             isTraversingTunnel = false
             styleManager.timeOfDayChanged()
-        }
-    }
-    
-    private func attemptToHighlightBuildings(_ progress: RouteProgress) {
-        // In case if distance was fully covered - do nothing.
-        // FIXME: This check prevents issue which leads to highlighting random buildings after arrival to final destination.
-        // At the same time this check will prevent building highlighting in case of arrival in overview mode/high altitude.
-        if progress.fractionTraveled >= 1.0 { return }
-        if waypointStyle == .annotation { return }
-
-        if currentLeg != progress.currentLeg {
-            currentLeg = progress.currentLeg
-            passedApproachingDestinationThreshold = false
-            foundAllBuildings = false
-        }
-        
-        if !passedApproachingDestinationThreshold, progress.currentLegProgress.distanceRemaining < approachingDestinationThreshold {
-            passedApproachingDestinationThreshold = true
-        }
-        
-        if !foundAllBuildings, passedApproachingDestinationThreshold,
-           let currentLegWaypoint = progress.currentLeg.destination?.targetCoordinate {
-            navigationMapView?.highlightBuildings(at: [currentLegWaypoint],
-                                                  in3D: waypointStyle == .extrudedBuilding ? true : false,
-                                                  completion: { (found) in
-                                                    self.foundAllBuildings = found
-                                                  })
         }
     }
     

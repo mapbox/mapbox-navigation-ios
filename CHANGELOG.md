@@ -50,6 +50,7 @@
 * Added the `CarPlayMapViewController.wayNameView` and `CarPlayNavigationViewController.wayNameView` properties to show the current road name on CarPlay. `CarPlayNavigationViewController.compassView`, `CarPlayNavigationViewController.speedLimitView` and `CarPlayMapViewController.speedLimitView` are kept as strong references, thus available throughout the lifetime of a parent object. ([#3534](https://github.com/mapbox/mapbox-navigation-ios/pull/3534))
 * Fixed an issue when `NavigationMapView.crossfadesCongestionSegments` enabled but congestion color transition is still sharp in CarPlay. ([#3466](https://github.com/mapbox/mapbox-navigation-ios/pull/3466))
 * Fixed an issue when incorrect padding was used for `SpeedLimitView` and `CarPlayCompassView` for right-hand traffic mode on CarPlay. ([#3605](https://github.com/mapbox/mapbox-navigation-ios/pull/3605))
+* Added the ability to extrude or highlight building on CarPlay by setting the `CarPlayNavigationViewController.waypointStyle` property. ([#3564](https://github.com/mapbox/mapbox-navigation-ios/pull/3564))
 
 ### Other changes
 

@@ -12,7 +12,7 @@ import CarPlay
  - seealso: `NavigationViewController`
  */
 @available(iOS 12.0, *)
-open class CarPlayNavigationViewController: UIViewController {
+open class CarPlayNavigationViewController: UIViewController, BuildingHighlighting {
     
     // MARK: Child Views and Styling Configuration
     
@@ -72,6 +72,16 @@ open class CarPlayNavigationViewController: UIViewController {
      The style can be modified programmatically by using `StyleManager.applyStyle(type:)`.
      */
     public private(set) var styleManager: StyleManager?
+    
+    /**
+     Allows to control highlighting of the destination building on arrival. By default destination buildings will not be highlighted.
+     */
+    public var waypointStyle: WaypointStyle = .annotation
+    
+    var approachingDestinationThreshold: CLLocationDistance = DefaultApproachingDestinationThresholdDistance
+    var passedApproachingDestinationThreshold: Bool = false
+    var currentLeg: RouteLeg?
+    var buildingWasFound: Bool = false
     
     var mapTemplate: CPMapTemplate
     var carInterfaceController: CPInterfaceController
@@ -452,9 +462,10 @@ open class CarPlayNavigationViewController: UIViewController {
         
         // Reapply runtime styling changes each time the style changes.
         navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
-            self?.navigationMapView?.localizeLabels()
-            self?.navigationMapView?.mapView.showsTraffic = false
-            self?.updateRouteOnMap()
+            guard let self = self else { return }
+            self.navigationMapView?.localizeLabels()
+            self.navigationMapView?.mapView.showsTraffic = false
+            self.updateRouteOnMap()
         }
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
@@ -555,6 +566,8 @@ open class CarPlayNavigationViewController: UIViewController {
         
         // Check to see if we're in a tunnel.
         checkTunnelState(at: location, along: routeProgress)
+        
+        attemptToHighlightBuildings(routeProgress, navigationMapView: navigationMapView)
         
         let legIndex = routeProgress.legIndex
         
