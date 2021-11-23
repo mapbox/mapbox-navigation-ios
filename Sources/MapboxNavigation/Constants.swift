@@ -21,8 +21,9 @@ public var RouteLineWidthByZoomLevel: [Double: Double] = [
 ]
 
 /**
- The minium distance remaining on a route before overhead zooming is stopped.
+ The minimum distance remaining on a route before overhead zooming is stopped.
  */
+@available(*, deprecated, message: "This value is no longer used.")
 public var NavigationMapViewMinimumDistanceForOverheadZooming: CLLocationDistance = 200
 
 /**
@@ -77,3 +78,9 @@ public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepre
      */
     static let styleManagerKey: StyleManagerNotificationUserInfoKey = .init(rawValue: "styleManager")
 }
+
+/**
+ Distance (in meters), remaining on a current route leg, which is required for building highlighting
+ to start working.
+ */
+let DefaultApproachingDestinationThresholdDistance: CLLocationDistance = 250.0

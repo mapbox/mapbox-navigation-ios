@@ -88,10 +88,13 @@ extension AppDelegate: CarPlayManagerDelegate {
     
     func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {
         currentAppRootViewController?.beginNavigationWithCarPlay(navigationService: navigationViewController.navigationService)
-        carPlayManager.carPlayNavigationViewController?.compassView.isHidden = false
+        navigationViewController.compassView.isHidden = false
         
         // Render part of the route that has been traversed with full transparency, to give the illusion of a disappearing route.
-        carPlayManager.carPlayNavigationViewController?.routeLineTracksTraversal = true
+        navigationViewController.routeLineTracksTraversal = true
+        
+        // Example of building highlighting in 3D.
+        navigationViewController.waypointStyle = .extrudedBuilding
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
