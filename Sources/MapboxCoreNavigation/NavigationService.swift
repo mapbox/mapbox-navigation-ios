@@ -485,7 +485,6 @@ extension MapboxNavigationService: RouterDelegate {
     }
     
     public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
-        //ask our consumer
         return delegate?.navigationService(self, initialManeuverBufferWhenReroutingFrom: location) ?? Default.reroutingManeuverRadius
     }
     
