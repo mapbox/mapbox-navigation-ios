@@ -47,6 +47,24 @@ extension NavigationMapView {
     }
     
     /**
+     Update the existing primary route line during active navigation.
+     
+     - parameter routeProgress: The current `RouteProgress`.
+     - parameter coordinate: The current user location coordinate.
+     */
+    func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?) {
+        show([routeProgress.route], legIndex: routeProgress.legIndex)
+        guard routeLineTracksTraversal else { return }
+        
+        if routeProgress.routeIsComplete {
+            removeRoutes()
+        } else {
+            updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+            travelAlongRouteLine(to: coordinate)
+        }
+    }
+    
+    /**
      Find and cache the index of the upcoming [RouteLineDistancesIndex].
      */
     public func updateUpcomingRoutePointIndex(routeProgress: RouteProgress) {
