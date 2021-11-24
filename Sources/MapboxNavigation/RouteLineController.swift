@@ -39,7 +39,7 @@ extension NavigationMapView {
             guard navigationViewData.containerViewController.isViewLoaded else { return }
             
             guard !navigationMapView.showsRoute else { return }
-            navigationMapView.show([router.route], legIndex: router.routeProgress.legIndex)
+            navigationMapView.updateRouteLine(routeProgress: router.routeProgress, coordinate: router.location?.coordinate)
             navigationMapView.showWaypoints(on: router.route, legIndex: router.routeProgress.legIndex)
             
             let currentLegProgress = router.routeProgress.currentLegProgress
@@ -70,16 +70,11 @@ extension NavigationMapView {
             navigationMapView.removeWaypoints()
             
             navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
-            navigationMapView.show([route], legIndex: legIndex)
+            navigationMapView.updateRouteLine(routeProgress: router.routeProgress, coordinate: location?.coordinate)
             navigationMapView.showWaypoints(on: route)
             
             if annotatesSpokenInstructions {
                 navigationMapView.showVoiceInstructionsOnMap(route: route)
-            }
-            
-            if routeLineTracksTraversal {
-                navigationMapView.updateUpcomingRoutePointIndex(routeProgress: router.routeProgress)
-                navigationMapView.travelAlongRouteLine(to: location?.coordinate)
             }
         }
         
@@ -154,11 +149,7 @@ extension NavigationMapView {
         }
         
         func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
-            navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
-            if routeLineTracksTraversal {
-                navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-                navigationMapView.travelAlongRouteLine(to: router.location?.coordinate)
-            }
+            navigationMapView.updateRouteLine(routeProgress: routeProgress, coordinate: router.location?.coordinate)
         }
     }
 }
