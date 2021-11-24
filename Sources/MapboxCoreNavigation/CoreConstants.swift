@@ -213,6 +213,13 @@ public extension Notification.Name {
      */
     static let currentRoadNameDidChange: Notification.Name = .init(rawValue: "CurrentRoadNameDidChange")
     
+    /**
+     Posted when `RouteController` detects the arrival at waypoint.
+     
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.waypointKey`.
+     */
+    static let didArriveAtWaypoint: Notification.Name = .init(rawValue: "DidArriveAtWaypoint")
+    
     // MARK: Settings and Permissions Updates
     
     /**
@@ -228,6 +235,13 @@ public extension Notification.Name {
      The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.locationAuthorizationKey`.
     */
     static let locationAuthorizationDidChange: Notification.Name = .init(rawValue: "LocationAuthorizationDidChange")
+    
+    /**
+     Posted when `NavigationService` update the simulating status.
+     
+     The user info dictionary contains the key `MapboxNavigationService.NotificationUserInfoKey.simulationStateKey` and `MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey`.
+     */
+    static let navigationServiceSimulationDidChange: Notification.Name = .init(rawValue: "NavigationServiceSimulationDidChange")
 }
 
 extension RouteController {
@@ -264,6 +278,11 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `NSString` object representing the current road name.
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.didArriveAtWaypoint` notification. The corresponding value is a `MapboxDirections.Waypoint` object representing the current destination waypoint.
+         */
+        public static let waypointKey: NotificationUserInfoKey = .init(rawValue: "waypoint")
         
         // MARK: Monitoring Rerouting
         
@@ -356,6 +375,14 @@ extension MapboxNavigationService {
         /**
          A key in the user info dictionary of a `Notification.Name.locationAuthorizationDidChange` notification. The corresponding value is a `CLAccuracyAuthorization` indicating the current location authorization setting. */
         public static let locationAuthorizationKey: NotificationUserInfoKey = .init(rawValue: "locationAuthorization")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.navigationServiceSimulationDidChange` notification. The corresponding value is a `SimulationState` indicating the current simulation status. */
+        public static let simulationStateKey: NotificationUserInfoKey = .init(rawValue: "simulationState")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.navigationServiceSimulatingDidChange` notification. The corresponding value is a `Double` indicating the current simulated speed multiplier. */
+        public static let simulatedSpeedMultiplierKey: NotificationUserInfoKey = .init(rawValue: "simulatedSpeedMultiplier")
     }
 }
 

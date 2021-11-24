@@ -102,10 +102,12 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Showcases route array. Adds routes and waypoints to map, and sets the camera to point encompassing the route.
+     Visualizes the given routes and their waypoints and zooms the map to fit, removing any existing routes and waypoints from the map.
      
-     - parameter routes: List of `Route` objects, which will be shown on `MapView`.
-     - parameter animated: Property, which determines whether camera movement will be animated while fitting first route.
+     Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion levels are present. Waypoints along the route are visualized as markers. Implement `NavigationMapViewDelegate` methods to customize the appearance of the lines and markers representing the routes and waypoints. To only visualize the routes and not the waypoints, or to have more control over the camera, use the `show(_:legIndex:)` method.
+     
+     - parameter routes: The routes to visualize in order of priority. The first route is displayed as if it is currently selected or active, while the remaining routes are displayed as if they are currently deselected or inactive. The order of routes in this array may differ from the order in the original `RouteResponse`, for example in response to a user selecting a preferred route.
+     - parameter animated: `true` to asynchronously animate the camera, or `false` to instantaneously zoom and pan the map.
      */
     public func showcase(_ routes: [Route], animated: Bool = false) {
         guard let activeRoute = routes.first,
@@ -124,11 +126,14 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Adds main and alternative route lines and their casings on `MapView`. Prior to showing, previous
-     route lines and their casings will be removed.
+     Visualizes the given routes, removing any existing routes from the map.
      
-     - parameter routes: List of `Route` objects, which will be shown on `MapView`.
-     - parameter legIndex: Index, which will be used to highlight specific `RouteLeg` on main route.
+     Each route is visualized as a line. Each line is color-coded by traffic congestion, if congestion levels are present. Implement `NavigationMapViewDelegate` methods to customize the appearance of the lines representing the routes. To also visualize waypoints and zoom the map to fit, use the `showcase(_:animated:)` method.
+     
+     To undo the effects of this method, use the `removeRoutes()` method.
+     
+     - parameter routes: The routes to visualize in order of priority. The first route is displayed as if it is currently selected or active, while the remaining routes are displayed as if they are currently deselected or inactive. The order of routes in this array may differ from the order in the original `RouteResponse`, for example in response to a user selecting a preferred route.
+     - parameter legIndex: The zero-based index of the currently active leg along the active route. The active leg is highlighted more prominently than inactive legs.
      */
     public func show(_ routes: [Route], legIndex: Int? = nil) {
         removeRoutes()
@@ -149,7 +154,9 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Removes all existing `Route` objects from `MapView`, which were added by `NavigationMapView`.
+     Remove any lines visualizing routes from the map.
+     
+     This method undoes the effects of the `show(_:legIndex:)` method.
      */
     public func removeRoutes() {
         var sourceIdentifiers = Set<String>()
@@ -1121,6 +1128,7 @@ open class NavigationMapView: UIView {
      */
     public weak var delegate: NavigationMapViewDelegate?
     
+    var locationProvider: LocationProvider?
     var simulatesLocation: Bool = true
     
     /**
@@ -1293,6 +1301,7 @@ open class NavigationMapView: UIView {
         mapView = MapView(frame: frame, mapInitOptions: mapInitOptions)
         mapView.translatesAutoresizingMaskIntoConstraints = false
         mapView.ornaments.options.scaleBar.visibility = .hidden
+        storeLocationProviderBeforeSimulation()
         
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
             guard let self = self,
@@ -1332,6 +1341,19 @@ open class NavigationMapView: UIView {
         
         navigationCamera = NavigationCamera(mapView, navigationCameraType: navigationCameraType)
         navigationCamera.follow()
+    }
+    
+    func storeLocationProviderBeforeSimulation() {
+        simulatesLocation = true
+        locationProvider = mapView.location.locationProvider
+        locationProvider?.stopUpdatingLocation()
+        locationProvider?.stopUpdatingHeading()
+    }
+
+    func useStoredLocationProvider() {
+        simulatesLocation = false
+        let locationProvider = self.locationProvider ?? AppleLocationProvider()
+        mapView.location.overrideLocationProvider(with: locationProvider)
     }
     
     func setupGestureRecognizers() {

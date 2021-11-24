@@ -8,7 +8,8 @@ import MapboxCoreMaps
 import MapboxNavigation
 
 class ViewController: UIViewController {
-    
+
+    @IBOutlet weak var mapHostView: UIView!
     @IBOutlet weak var longPressHintView: UIView!
     @IBOutlet weak var simulationButton: UIButton!
     @IBOutlet weak var startButton: UIButton!
@@ -41,8 +42,8 @@ class ViewController: UIViewController {
             }
             
             if let navigationMapView = navigationMapView {
+                mapHostView.addSubview(navigationMapView)
                 configure(navigationMapView)
-                view.insertSubview(navigationMapView, belowSubview: longPressHintView)
             }
         }
     }
@@ -152,7 +153,7 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         if navigationMapView == nil {
-            navigationMapView = NavigationMapView(frame: view.bounds)
+            navigationMapView = NavigationMapView(frame: .zero)
             navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
                 self?.navigationMapView.localizeLabels()
             }
@@ -164,12 +165,21 @@ class ViewController: UIViewController {
 
         requestNotificationCenterAuthorization()
     }
-    
+
     private func configure(_ navigationMapView: NavigationMapView) {
         setupPassiveLocationProvider()
         
-        navigationMapView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
+        navigationMapView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            navigationMapView.topAnchor.constraint(equalTo: mapHostView.topAnchor),
+            navigationMapView.leadingAnchor.constraint(equalTo: mapHostView.leadingAnchor),
+            navigationMapView.bottomAnchor.constraint(equalTo: mapHostView.bottomAnchor),
+            navigationMapView.trailingAnchor.constraint(equalTo: mapHostView.trailingAnchor),
+        ])
+
+        let mapOrnamentsMargin: CGFloat = 55
+        navigationMapView.mapView.ornaments.options.logo.margins.y = mapOrnamentsMargin
+        navigationMapView.mapView.ornaments.options.attributionButton.margins.y = mapOrnamentsMargin
         navigationMapView.delegate = self
         navigationMapView.userLocationStyle = .puck2D()
         navigationMapView.mapView.mapboxMap.loadStyleURI(.navigationDay)

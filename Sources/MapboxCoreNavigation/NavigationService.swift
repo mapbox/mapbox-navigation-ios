@@ -2,35 +2,6 @@ import UIKit
 import CoreLocation
 import MapboxDirections
 
-public enum SimulationIntent: Int{
-    case manual, poorGPS
-}
-
-/**
- The simulation mode type. Used for setting the simulation mode of the navigation service.
- */
-public enum SimulationMode: Int {
-    /**
-     A setting of `.onPoorGPS` will enable simulation when we do not recieve a location update after the `poorGPSPatience` threshold has elapsed.
-     */
-    case onPoorGPS
-
-    /**
-     A setting of `.always` will simulate route progress at all times.
-     */
-    case always
-
-    /**
-     A setting of `.never` will never enable the location simulator, regardless of circumstances.
-     */
-    case never
-    
-    /**
-     A setting of `.inTunnels` will enable simulation when two conditions are met: we do not recieve a location update after the `poorGPSPatience` threshold has elapsed and SDK detects current location as a [tunnel](https://wiki.openstreetmap.org/wiki/Key:tunnel).
-     */
-    case inTunnels
-}
-
 /**
  A navigation service coordinates various nonvisual components that track the user as they navigate along a predetermined route. You use `MapboxNavigationService`, which conforms to this protocol, either as part of `NavigationViewController` or by itself as part of a custom user interface. A navigation service calls methods on its `delegate`, which conforms to the `NavigationServiceDelegate` protocol, whenever significant events or decision points occur along the route.
  
@@ -173,6 +144,8 @@ public class MapboxNavigationService: NSObject, NavigationService {
             guard simulationMode == .always else { return }
             _simulationSpeedMultiplier = newValue
             simulatedLocationSource?.speedMultiplier = newValue
+            let simulationState: SimulationState = isSimulating ? .inSimulation : .notInSimulation
+            announceSimulationDidChange(simulationState)
         }
     }
     
@@ -182,26 +155,46 @@ public class MapboxNavigationService: NSObject, NavigationService {
     private var _simulationSpeedMultiplier: Double = 1.0
     
     private func simulate(intent: SimulationIntent = .manual) {
-        guard !isSimulating else { return }
+        guard !isSimulating else {
+            announceSimulationDidChange(.inSimulation)
+            return
+        }
         let progress = router.routeProgress
         delegate?.navigationService(self, willBeginSimulating: progress, becauseOf: intent)
+        announceSimulationDidChange(.willBeginSimulation)
+        
         simulatedLocationSource = SimulatedLocationManager(routeProgress: progress)
         simulatedLocationSource?.delegate = self
         simulatedLocationSource?.speedMultiplier = _simulationSpeedMultiplier
         simulatedLocationSource?.startUpdatingLocation()
         simulatedLocationSource?.startUpdatingHeading()
         delegate?.navigationService(self, didBeginSimulating: progress, becauseOf: intent)
+        announceSimulationDidChange(.didBeginSimulation)
     }
     
     private func endSimulation(intent: SimulationIntent = .manual) {
-        guard isSimulating else { return }
+        guard isSimulating else {
+            announceSimulationDidChange(.notInSimulation)
+            return
+        }
         let progress = router.routeProgress
         delegate?.navigationService(self, willEndSimulating: progress, becauseOf: intent)
+        announceSimulationDidChange(.willEndSimulation)
+        
         simulatedLocationSource?.stopUpdatingLocation()
         simulatedLocationSource?.stopUpdatingHeading()
         simulatedLocationSource?.delegate = nil
         simulatedLocationSource = nil
         delegate?.navigationService(self, didEndSimulating: progress, becauseOf: intent)
+        announceSimulationDidChange(.didEndSimulation)
+    }
+
+    private func announceSimulationDidChange(_ simulationState: SimulationState) {
+        let userInfo: [NotificationUserInfoKey: Any] = [
+            NotificationUserInfoKey.simulationStateKey: simulationState,
+            NotificationUserInfoKey.simulatedSpeedMultiplierKey: _simulationSpeedMultiplier
+        ]
+        NotificationCenter.default.post(name: .navigationServiceSimulationDidChange, object: self, userInfo: userInfo)
     }
     
     private func resetGPSCountdown() {
