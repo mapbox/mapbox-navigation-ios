@@ -1,6 +1,7 @@
 import UIKit
 import CoreLocation
 import MapboxDirections
+import Turf
 
 /**
  A navigation service coordinates various nonvisual components that track the user as they navigate along a predetermined route. You use `MapboxNavigationService`, which conforms to this protocol, either as part of `NavigationViewController` or by itself as part of a custom user interface. A navigation service calls methods on its `delegate`, which conforms to the `NavigationServiceDelegate` protocol, whenever significant events or decision points occur along the route.
@@ -550,7 +551,7 @@ extension MapboxNavigationService: RouterDelegate {
         delegate?.navigationService(self, willRerouteFrom: location)
     }
     
-    public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+    public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
         //ask our consumer
         return delegate?.navigationService(self, initialManeuverBufferWhenReroutingFrom: location) ?? Default.reroutingManeuverRadius
     }

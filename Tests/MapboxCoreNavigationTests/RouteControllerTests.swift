@@ -185,7 +185,7 @@ class RouteControllerTests: TestCase {
         locationManager.delegate = routeController
 
         routerDelegateSpy.onManeuverBufferWhenRerouting = {
-            return .radius(500)
+            return 500
         }
         
         let calculateRouteCalled = expectation(description: "Calculate route called")

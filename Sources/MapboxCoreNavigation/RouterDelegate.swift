@@ -4,26 +4,6 @@ import MapboxDirections
 import Turf
 
 /**
- Configuration for offsetting first route maneuver during rerouting.
- */
-public enum ReroutingManeuverBuffer {
-    /**
-     Leaves original `RouteOptions.initialManeuverAvoidanceRadius` to be used for rerouting attempt.
-     */
-    case `default`
-    /**
-     Disables offsetting the maneuver.
-     */
-    case disabled
-    /**
-     Sets offset radius (in meters).
-     
-     Equivalent to setting `RouteOptions.initialManeuverAvoidanceRadius` to the same radius at the beginning.
-     */
-    case radius(LocationDistance)
-}
-
-/**
  A router delegate interacts with one or more `Router` instances, such as `RouteController` objects, during turn-by-turn navigation. This protocol is similar to `NavigationServiceDelegate`, which is the main way that your application can synchronize its state with the SDK’s location-related functionality. Normally, you should not need to make a class conform to the `RouterDelegate` protocol or call any of its methods directly, but you would need to call this protocol’s methods if you implement a custom `Router` class.
  
  `MapboxNavigationService` is the only concrete implementation of a router delegate. Implement the `NavigationServiceDelegate` protocol instead to be notified when various significant events occur along the route tracked by a `NavigationService`.
@@ -65,9 +45,9 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      
      - parameter router: The router that has detected the need to calculate a new route.
      - parameter location: The user’s current location.
-     - returns: `ReroutingManeuverBuffer` value which overrides or leaves maneuvers offset as it was originally set.
+     - returns: `LocationDistance` value which overrides (by passing a non-nil value) or leaves maneuvers offset as it was originally set (by passing `nil`).
      */
-    func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer
+    func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance?
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -194,7 +174,7 @@ public extension RouterDelegate {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
     
-    func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+    func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return RouteController.DefaultBehavior.reroutingManeuverRadius
     }

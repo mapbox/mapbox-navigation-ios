@@ -724,7 +724,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         delegate?.navigationViewController(self, willRerouteFrom: location)
     }
     
-    public func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+    public func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
         return delegate?.navigationViewController(self, initialManeuverBufferWhenReroutingFrom: location) ?? RouteController.DefaultBehavior.reroutingManeuverRadius
     }
     
