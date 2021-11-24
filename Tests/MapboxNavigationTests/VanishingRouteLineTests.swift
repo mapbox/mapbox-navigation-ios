@@ -292,4 +292,35 @@ class VanishingRouteLineTests: TestCase {
         let currentLineGradientStops = navigationMapView.routeLineGradient(congestionFeatures, fractionTraveled: 0.0)
         XCTAssertEqual(currentLineGradientStops[0.0], navigationMapView.trafficUnknownColor, "Failed to use trafficUnknownColor for route line when no congestion level found.")
     }
+    func testFindDistanceToNearestPointOnCurrentLine() {
+        // https://github.com/mapbox/mapbox-navigation-android/blob/0478c43781fdf7489f10f22c0055fadf181970f6/libnavui-maps/src/test/java/com/mapbox/navigation/ui/maps/internal/route/line/MapboxRouteLineUtilsTest.kt#L814
+        
+        let route = getMultilegRoute()
+        let coordinate = route.shape!.coordinates[15]
+        let granularDistances = navigationMapView.calculateGranularDistances(route.shape!.coordinates)!
+        
+        // It's to test the distance calculation from user location to pre-existing route line.
+        let expectedResult = 141.6772603078415
+        let result = navigationMapView.findDistanceToNearestPointOnCurrentLine(coordinate: coordinate, granularDistances: granularDistances, upcomingIndex: 12)
+        XCTAssertEqual(expectedResult, result, accuracy: 0.01, "Failed to calculate the distance from one coordinate to current route line.")
+    }
+    
+    func testUpdateFractionTraveledWhenUserOffRouteLine() {
+        let route = getRoute()
+        let routeProgress = getRouteProgress()
+        let coordinate = CLLocationCoordinate2D(latitude: 37.7577627, longitude: -122.4727051)
+        
+        navigationMapView.routes = [route]
+        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.show([route], legIndex: 0)
+        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        setUpCameraZoom(at: 16.0)
+        
+        // When the distance of user location to pre-existing route line is larger than the `offRouteDistanceCheckEnabled`,
+        // the route line is expcted to stop updating until a new route line gets generated.
+        let expectedFractionTraveled = 0.0
+        navigationMapView.updateFractionTraveled(coordinate: coordinate)
+        XCTAssertTrue(expectedFractionTraveled == navigationMapView.fractionTraveled, "Failed to stop updating fractionTraveled when user off the route line.")
+    }
+    
 }
