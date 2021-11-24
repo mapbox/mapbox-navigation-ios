@@ -7,7 +7,7 @@ import Turf
 public final class RouterDelegateSpy: RouterDelegate {
     public var onDidRefresh: ((RouteProgress) -> Void)?
     public var onShouldRerouteFrom: ((CLLocation) -> Bool)?
-    public var onWillRerouteFrom: ((CLLocation) -> ReroutingRequest)?
+    public var onWillRerouteFrom: ((CLLocation) -> Void)?
     public var onShouldDiscard: ((CLLocation) -> Bool)?
     public var onDidRerouteAlong: (((route: Route, location: CLLocation?, proactive: Bool)) -> Void)?
     public var onDidFailToRerouteWith: ((Error) -> Void)?
@@ -21,6 +21,7 @@ public final class RouterDelegateSpy: RouterDelegate {
     public var onShouldPreventReroutesWhenArrivingAt: ((Waypoint) -> Bool)?
     public var onRouterShouldDisableBatteryMonitoring: (() -> Bool)?
     public var onManeuverBufferWhenRerouting: (() -> LocationDistance?)?
+    public var onReroutingRequest: ((RouteOptions) -> ReroutingRequest)?
 
     public init() {}
 
@@ -34,14 +35,18 @@ public final class RouterDelegateSpy: RouterDelegate {
     }
 
     public func router(_ router: Router,
-                       willRerouteFrom location: CLLocation) -> ReroutingRequest {
-        return onWillRerouteFrom?(location) ?? .default
+                       willRerouteFrom location: CLLocation) {
+        onWillRerouteFrom?(location)
     }
     
     public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
         return onManeuverBufferWhenRerouting?() ?? RouteController.DefaultBehavior.reroutingManeuverRadius
     }
 
+    public func router(_ router: Router, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest {
+        return onReroutingRequest?(options) ?? .default
+    }
+    
     public func router(_ router: Router,
                        shouldDiscard location: CLLocation) -> Bool {
         return onShouldDiscard?(location) ?? RouteController.DefaultBehavior.shouldDiscardLocation

@@ -326,7 +326,7 @@ extension InternalRouter where Self: Router {
         
         lastRerouteLocation = origin
         
-        routeTask = directions.calculateWithCache(options: options) {(session, result) in
+        let parseResult: Directions.RouteCompletionHandler = {(session, result) in
             switch result {
             case .failure(let error):
                 return completion(session, .failure(error))
@@ -338,15 +338,24 @@ extension InternalRouter where Self: Router {
                 return completion(session, .success(.init(routeResponse: response, routeIndex: mostSimilarIndex)))
             }
         }
+        
+        switch delegate?.router(self, requestSourceForReroutingWith: options) {
+        case .default, .none:
+            routeTask = directions.calculateWithCache(options: options, completionHandler: parseResult)
+        case .custom(let reroutingResult):
+            let (options, result) = reroutingResult()
+            let session = Directions.Session(options: options,
+                                             credentials: directions.credentials)
+            
+            parseResult(session, result)
+        }
     }
     
-    func announceImpendingReroute(at location: CLLocation) -> ReroutingRequest {
-        let rerouteRequest = delegate?.router(self, willRerouteFrom: location) ?? .default
+    func announceImpendingReroute(at location: CLLocation) {
+        delegate?.router(self, willRerouteFrom: location)
         NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
             RouteController.NotificationUserInfoKey.locationKey: location,
         ])
-        
-        return rerouteRequest
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {

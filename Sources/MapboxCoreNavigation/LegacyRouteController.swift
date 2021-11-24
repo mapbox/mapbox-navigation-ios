@@ -422,7 +422,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         isRerouting = true
 
-        _ = announceImpendingReroute(at: location)
+        announceImpendingReroute(at: location)
 
         self.lastRerouteLocation = location
 

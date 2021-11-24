@@ -225,11 +225,12 @@ class RouteControllerTests: TestCase {
         locationManager.startDate = Date()
         locationManager.delegate = routeController
 
-        routerDelegateSpy.onWillRerouteFrom = { location in
+        routerDelegateSpy.onReroutingRequest = { options in
             return .custom {
-                let newResponse = Fixture.route(between: location.coordinate, and: destination)
+                let coordinate = options.waypoints.first!.coordinate
+                let newResponse = Fixture.route(between: coordinate, and: destination)
                 newRoute = newResponse.route
-                let newOptions = NavigationRouteOptions(coordinates: [location.coordinate, destination])
+                let newOptions = NavigationRouteOptions(coordinates: [coordinate, destination])
                 return (newOptions, .success(newResponse.response))
             }
         }

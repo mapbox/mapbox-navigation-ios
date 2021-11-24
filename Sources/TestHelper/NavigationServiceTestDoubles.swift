@@ -27,11 +27,20 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
         return true
     }
 
-    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) -> ReroutingRequest {
+    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
+        recentMessages.append(#function)
+    }
+
+    public func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+        recentMessages.append(#function)
+        return RouteController.DefaultBehavior.reroutingManeuverRadius
+    }
+
+    public func navigationService(_ service: NavigationService, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest {
         recentMessages.append(#function)
         return .default
     }
-
+    
     public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
         recentMessages.append(#function)
         return false

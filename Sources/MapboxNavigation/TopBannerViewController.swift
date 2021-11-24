@@ -398,13 +398,11 @@ extension TopBannerViewController: NavigationComponent {
         }
     }
     
-    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) -> ReroutingRequest {
+    public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         let title = NSLocalizedString("REROUTING", bundle: .mapboxNavigation, value: "Rerouting…", comment: "Indicates that rerouting is in progress")
         lanesView.hide()
         let reroutingStatus = StatusView.Status(identifier: "REROUTING", title: title, duration: 20, priority: 0)
         show(reroutingStatus)
-        
-        return .default
     }
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
