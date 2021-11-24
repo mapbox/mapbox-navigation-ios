@@ -312,11 +312,13 @@ extension InternalRouter where Self: Router {
         
         if isRerouting {
             switch (delegate?.router(self, initialManeuverBufferWhenReroutingFrom: origin) ?? RouteController.DefaultBehavior.reroutingManeuverRadius) {
-            case .disabled:
-                options.initialManeuverAvoidanceRadius = nil
-            case .radius(let distance):
-                options.initialManeuverAvoidanceRadius = distance
-            case .default:
+            case .some(let distance):
+                if distance == 0 {
+                    options.initialManeuverAvoidanceRadius = nil
+                } else {
+                    options.initialManeuverAvoidanceRadius = distance
+                }
+            case .none:
                 // do nothing
                 break
             }

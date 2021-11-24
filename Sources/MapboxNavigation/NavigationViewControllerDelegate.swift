@@ -109,9 +109,9 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      
      - parameter router: The router that has detected the need to calculate a new route.
      - parameter location: The user’s current location.
-     - returns: `ReroutingManeuverBuffer` value which overrides or leaves maneuvers offset as it was originally set.
+     - returns: `LocationDistance` value which overrides (by passing a non-nil value) or leaves maneuvers offset as it was originally set (by passing `nil`).
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer
+    func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance?
     
     /**
      Called immediately after the navigation view controller receives a new route.
@@ -280,7 +280,7 @@ public extension NavigationViewControllerDelegate {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     
-    func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+    func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return RouteController.DefaultBehavior.reroutingManeuverRadius
     }

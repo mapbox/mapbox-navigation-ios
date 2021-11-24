@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 import os.log
+import Turf
 
 /**
  A navigation service delegate interacts with one or more `NavigationService` instances (such as `MapboxNavigationService` objects) during turn-by-turn navigation. This protocol is the main way that your application can synchronize its state with the SDK’s location-related functionality. Each of the protocol’s methods is optional.
@@ -49,9 +50,9 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      
      - parameter router: The router that has detected the need to calculate a new route.
      - parameter location: The user’s current location.
-     - returns: `ReroutingManeuverBuffer` value which overrides or leaves maneuvers offset as it was originally set.
+     - returns: `LocationDistance` value which overrides (by passing a non-nil value) or leaves maneuvers offset as it was originally set (by passing `nil`).
      */
-    func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer
+    func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance?
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -242,7 +243,7 @@ public extension NavigationServiceDelegate {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
     
-    func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+    func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return MapboxNavigationService.Default.reroutingManeuverRadius
     }

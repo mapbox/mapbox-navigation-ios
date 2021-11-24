@@ -648,13 +648,13 @@ extension ViewController: NavigationViewControllerDelegate {
         clearNavigationMapView()
     }
     
-    func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+    func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
         
         guard let currentSpeed = navigationViewController.navigationService.router.location?.speed else {
-            return .default
+            return nil
         }
         
         // allowing at least 8 seconds for user to react to new route
-        return .radius(currentSpeed * 8)
+        return currentSpeed * 8
     }
 }
