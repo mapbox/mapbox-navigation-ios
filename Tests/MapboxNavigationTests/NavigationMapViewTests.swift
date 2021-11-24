@@ -505,16 +505,18 @@ class NavigationMapViewTests: TestCase {
             composeFeature(3, false)
         ]
         
+        let featureBorderStop = 0.75.nextUp
+        
         var fractionTraveled = 0.0 // not traversed at all
         var routeLineGradient = navigationMapView.routeLineRestrictionStops(features, fractionTraveled: fractionTraveled)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.routeRestrictedAreaColor)
-        XCTAssertEqual(routeLineGradient[1.0], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(routeLineGradient[featureBorderStop.nextUp], navigationMapView.traversedRouteColor)
         
         fractionTraveled = 0.25 // border between restricted and not restricted
         var fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
         routeLineGradient = navigationMapView.routeLineRestrictionStops(features, fractionTraveled: fractionTraveled)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
-        XCTAssertEqual(routeLineGradient[1.0], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(routeLineGradient[featureBorderStop.nextUp], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.routeRestrictedAreaColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
         
@@ -522,8 +524,7 @@ class NavigationMapViewTests: TestCase {
         fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
         routeLineGradient = navigationMapView.routeLineRestrictionStops(features, fractionTraveled: fractionTraveled)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
-        XCTAssertEqual(routeLineGradient[1.0], navigationMapView.traversedRouteColor)
-        XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.routeRestrictedAreaColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
     }
     
