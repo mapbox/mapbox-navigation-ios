@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxCoreNavigation
 import MapboxDirections
+import Turf
 
 public class RouteControllerDataSourceFake: RouterDataSource {
     let manager = NavigationLocationManager()
@@ -31,7 +32,7 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
         recentMessages.append(#function)
     }
 
-    public func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> ReroutingManeuverBuffer {
+    public func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
         recentMessages.append(#function)
         return RouteController.DefaultBehavior.reroutingManeuverRadius
     }
