@@ -53,6 +53,10 @@
 * Fixed an issue when incorrect padding was used for `SpeedLimitView` and `CarPlayCompassView` for right-hand traffic mode on CarPlay. ([#3605](https://github.com/mapbox/mapbox-navigation-ios/pull/3605))
 * Added the ability to extrude or highlight building on CarPlay by setting the `CarPlayNavigationViewController.waypointStyle` property. ([#3564](https://github.com/mapbox/mapbox-navigation-ios/pull/3564))
 
+### Camera
+
+* Fixed an issue where on routes with large distances between current location and next manuever camera zoom level was too low. To control navigation camera zoom level use `IntersectionDensity.averageDistanceMultiplier` coefficient. ([#3616](https://github.com/mapbox/mapbox-navigation-ios/pull/3616))
+
 ### Other changes
 
 * Fixed a retain cycle in CarPlay implementation of a navigation map view that prevented `NavigationMapView` instances from being deallocated after CarPlay is stopped. ([#3552](https://github.com/mapbox/mapbox-navigation-ios/pull/3552))

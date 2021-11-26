@@ -229,7 +229,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
             
             if options.followingCameraOptions.centerUpdatesAllowed {
-                var center: CLLocationCoordinate2D = location.coordinate
+                var center = location.coordinate
                 if let boundingBox = BoundingBox(from: coordinatesToManeuver + coordinatesForManeuverFraming) {
                     let coordinates = [
                         center,
@@ -248,32 +248,40 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 followingCarPlayCamera.center = center
             }
             
+            let lookaheadDistance = self.lookaheadDistance(routeProgress)
+            
             if options.followingCameraOptions.zoomUpdatesAllowed {
                 let defaultZoomLevel = 12.0
                 
-                followingMobileCamera.zoom = zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                  pitch: pitch,
-                                                  maxPitch: followingCameraOptions.defaultPitch,
-                                                  edgeInsets: viewportPadding,
-                                                  defaultZoomLevel: defaultZoomLevel,
-                                                  maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
-                                                  minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
+                let coordinatesForIntersections = coordinatesToManeuver.sliced(from: nil,
+                                                                               to: LineString(coordinatesToManeuver).coordinateFromStart(distance: lookaheadDistance))
                 
-                followingCarPlayCamera.zoom = zoom(coordinatesToManeuver + coordinatesForManeuverFraming,
-                                                   pitch: pitch,
-                                                   maxPitch: followingCameraOptions.defaultPitch,
-                                                   edgeInsets: carPlayCameraPadding,
-                                                   defaultZoomLevel: defaultZoomLevel,
-                                                   maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
-                                                   minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
+                let followingMobileCameraZoom = zoom(coordinatesForIntersections,
+                                                     pitch: pitch,
+                                                     maxPitch: followingCameraOptions.defaultPitch,
+                                                     edgeInsets: viewportPadding,
+                                                     defaultZoomLevel: defaultZoomLevel,
+                                                     maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
+                                                     minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
+                
+                followingMobileCamera.zoom = followingMobileCameraZoom
+                
+                let followingCarPlayCameraZoom = zoom(coordinatesForIntersections,
+                                                      pitch: pitch,
+                                                      maxPitch: followingCameraOptions.defaultPitch,
+                                                      edgeInsets: carPlayCameraPadding,
+                                                      defaultZoomLevel: defaultZoomLevel,
+                                                      maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
+                                                      minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
+                followingCarPlayCamera.zoom = followingCarPlayCameraZoom
             }
             
             if options.followingCameraOptions.bearingUpdatesAllowed {
-                var bearing: CLLocationDirection = location.course
-                let lookaheadDistance: CLLocationDistance = self.lookaheadDistance(routeProgress)
+                var bearing = location.course
+                let lookaheadDistance = self.lookaheadDistance(routeProgress)
                 let distance = fmax(lookaheadDistance, geometryFramingAfterManeuver.enabled
-                                        ? geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers
-                                        : 0.0)
+                                    ? geometryFramingAfterManeuver.distanceToCoalesceCompoundManeuvers
+                                    : 0.0)
                 let coordinatesForIntersections = coordinatesToManeuver.sliced(from: nil,
                                                                                to: LineString(coordinatesToManeuver).coordinateFromStart(distance: distance))
                 
@@ -438,7 +446,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
     
     func pitchСoefficient(_ routeProgress: RouteProgress,
-                           currentCoordinate: CLLocationCoordinate2D) -> Double {
+                          currentCoordinate: CLLocationCoordinate2D) -> Double {
         let defaultPitchСoefficient = 1.0
         let pitchNearManeuver = options.followingCameraOptions.pitchNearManeuver
         if pitchNearManeuver.enabled {
@@ -465,6 +473,15 @@ public class NavigationViewportDataSource: ViewportDataSource {
         return defaultPitchСoefficient
     }
     
+    /**
+     Calculates lookahead distance based on current `RouteProgress` and `IntersectionDensity` coefficients.
+     
+     Lookahead distance value will be influenced by both `IntersectionDensity.minimumDistanceBetweenIntersections` and
+     `IntersectionDensity.averageDistanceMultiplier`.
+     
+     - parameter routeProgress: Current `RouteProgress`.
+     - returns: Lookahead distance.
+     */
     func lookaheadDistance(_ routeProgress: RouteProgress) -> CLLocationDistance {
         let intersectionDensity = options.followingCameraOptions.intersectionDensity
         let averageIntersectionDistances = routeProgress.route.legs.map { (leg) -> [CLLocationDistance] in
@@ -476,8 +493,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
                         return intersection.distance(to: intersectionLocations[index])
                     })
                     let filteredIntersectionDistances = intersectionDensity.enabled
-                        ? intersectionDistances.filter { $0 > intersectionDensity.minimumDistanceBetweenIntersections }
-                        : intersectionDistances
+                    ? intersectionDistances.filter { $0 > intersectionDensity.minimumDistanceBetweenIntersections }
+                    : intersectionDistances
                     let averageIntersectionDistance = filteredIntersectionDistances.reduce(0.0, +) / Double(filteredIntersectionDistances.count)
                     return averageIntersectionDistance
                 }
