@@ -555,6 +555,10 @@ extension MapboxNavigationService: RouterDelegate {
         return delegate?.navigationService(self, initialManeuverBufferWhenReroutingFrom: location) ?? Default.reroutingManeuverRadius
     }
     
+    public func router(_ router: Router, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest {
+        return delegate?.navigationService(self, requestSourceForReroutingWith: options) ?? .default
+    }
+    
     public func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         //notify the events manager that the route has changed
         eventsManager.reportReroute(progress: router.routeProgress, proactive: proactive)
