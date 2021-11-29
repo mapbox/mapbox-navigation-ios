@@ -72,7 +72,13 @@ class NavigationViewControllerTests: TestCase {
         dependencies = {
             UNUserNotificationCenter.replaceWithMock()
 
-            let fakeService = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, locationSource: NavigationLocationManagerStub(), simulating: .never)
+            let fakeService = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                                      routeIndex: 0,
+                                                      routeOptions: routeOptions,
+                                                      routingProvider: MapboxRoutingProvider(.offline),
+                                                      credentials: Fixture.credentials,
+                                                      locationSource: NavigationLocationManagerStub(),
+                                                      simulating: .never)
             let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
             let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
             let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
@@ -278,7 +284,12 @@ class NavigationViewControllerTests: TestCase {
     }
     
     func testDestinationAnnotationUpdatesUponReroute() {
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, simulating: .never)
+        let service = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                              routeIndex: 0,
+                                              routeOptions: routeOptions,
+                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              credentials: Fixture.credentials,
+                                              simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
         let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         expectation(description: "Style Loaded") {
@@ -324,7 +335,12 @@ class NavigationViewControllerTests: TestCase {
     }
     
     func testPuck3DLayerPosition() {
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, simulating: .never)
+        let service = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                              routeIndex: 0,
+                                              routeOptions: routeOptions,
+                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              credentials: Fixture.credentials,
+                                              simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
         let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         

@@ -39,7 +39,12 @@ class LeaksSpec: QuickSpec {
             ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
 
             let navigationViewController = LeakTest {
-                let service = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: self.initialOptions, eventsManagerType: NavigationEventsManagerSpy.self)
+                let service = MapboxNavigationService(routeResponse: response,
+                                                      routeIndex: 0,
+                                                      routeOptions: self.initialOptions,
+                                                      routingProvider: MapboxRoutingProvider(.offline),
+                                                      credentials: Fixture.credentials,
+                                                      eventsManagerType: NavigationEventsManagerSpy.self)
                 let navOptions = NavigationOptions(navigationService: service, voiceController: RouteVoiceControllerStub(navigationService: self.dummySvc))
                 
                 return NavigationViewController(for: response, routeIndex: 0, routeOptions: self.initialOptions, navigationOptions: navOptions)

@@ -44,30 +44,7 @@ extension Directions {
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
     open func calculateOffline(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
-        let directionsUri = url(forCalculating: options)
-        
-        Navigator.shared.routerInterface.getRouteForDirectionsUri(directionsUri.absoluteString) { (result, _) in
-            let json = result.value as? String
-            let data = json?.data(using: .utf8)
-            let decoder = JSONDecoder()
-            decoder.userInfo = [.options: options,
-                                .credentials: self.credentials]
-            
-            let session = (options: options as DirectionsOptions, credentials: self.credentials)
-            
-            if let jsonData = data,
-               let response = try? decoder.decode(RouteResponse.self, from: jsonData) {
-                DispatchQueue.main.async {
-                    completionHandler(session, .success(response))
-                }
-            } else {
-                DispatchQueue.main.async {
-                    completionHandler(session, .failure(.unknown(response: nil,
-                                                                 underlying: result.error as? Error,
-                                                                 code: nil,
-                                                                 message: nil)))
-                }
-            }
-        }
+        MapboxRoutingProvider().calculateRoutes(options: options,
+                                                completionHandler: completionHandler)
     }
 }

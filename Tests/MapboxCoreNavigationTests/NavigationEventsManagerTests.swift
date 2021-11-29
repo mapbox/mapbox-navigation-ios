@@ -35,6 +35,8 @@ class NavigationEventsManagerTests: TestCase {
         let locationManager = NavigationLocationManager()
         let service = MapboxNavigationService(routeResponse: firstRouteResponse, routeIndex: 0,
                                               routeOptions: firstRouteOptions,
+                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              credentials: Fixture.credentials,
                                               locationSource: locationManager,
                                               eventsManagerType: NavigationEventsManagerSpy.self,
                                               simulating: .always)
@@ -87,7 +89,12 @@ class NavigationEventsManagerTests: TestCase {
         let eventTimeout = 0.3
         let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
         let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: routeOptions)
-        let dataSource = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: routeOptions, simulating: .onPoorGPS)
+        let dataSource = MapboxNavigationService(routeResponse: routeResponse,
+                                                 routeIndex: 0,
+                                                 routeOptions: routeOptions,
+                                                 routingProvider: MapboxRoutingProvider(.offline),
+                                                 credentials: Fixture.credentials,
+                                                 simulating: .onPoorGPS)
         let sessionState = SessionState(currentRoute: route, originalRoute: route, routeIdentifier: routeResponse.identifier)
         
         // Attempt to create NavigationEventDetails object from global queue, no errors from Main Thread Checker

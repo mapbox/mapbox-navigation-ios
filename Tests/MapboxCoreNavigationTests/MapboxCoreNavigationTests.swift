@@ -42,7 +42,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             directions: directions,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              simulating: .never)
         let now = Date()
         let steps = route.legs.first!.steps
@@ -86,7 +87,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             directions: directions,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              simulating: .never)
         
         // Coordinates from first step
@@ -135,7 +137,8 @@ class MapboxCoreNavigationTests: TestCase {
         let navigationService = MapboxNavigationService(routeResponse: response,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
-                                                        directions: directions,
+                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        credentials: Fixture.credentials,
                                                         locationSource: locationManager,
                                                         simulating: .never)
         
@@ -191,7 +194,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             directions: directions,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
         
@@ -242,7 +246,8 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             directions: directions,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
@@ -285,9 +290,11 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: routeResponse,
                                              routeIndex: 0,
                                              routeOptions: navOptions,
-                                             directions: .mocked,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
+        navigation.router.refreshesRoute = false
 
         expectation(forNotification: .routeControllerProgressDidChange, object: navigation.router) { (notification) -> Bool in
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
@@ -327,15 +334,16 @@ class MapboxCoreNavigationTests: TestCase {
     
     func testOrderOfExecution() {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
-        let directions = DirectionsSpy()
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
 
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             directions: directions,
+                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
                                              locationSource: locationManager)
+        navigation.router.refreshesRoute = false
         
         struct InstructionPoint {
             enum InstructionType {
@@ -352,6 +360,9 @@ class MapboxCoreNavigationTests: TestCase {
         var points = [InstructionPoint]()
         
         let spokenInstructionsExpectation = expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint, object: nil) { (notification) -> Bool in
+            guard notification.object as? Router === self.navigation.router else {
+                return false
+            }
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
             let legIndex = routeProgress.legIndex
             let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -369,6 +380,9 @@ class MapboxCoreNavigationTests: TestCase {
         }
         
         let visualInstructionsExpectation = expectation(forNotification: .routeControllerDidPassVisualInstructionPoint, object: nil) { (notification) -> Bool in
+            guard notification.object as? Router === self.navigation.router else {
+                return false
+            }
             let routeProgress = notification.userInfo![RouteController.NotificationUserInfoKey.routeProgressKey] as! RouteProgress
             let legIndex = routeProgress.legIndex
             let stepIndex = routeProgress.currentLegProgress.stepIndex
@@ -445,11 +459,11 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testFailToReroute() {
-        let directionsClientSpy = DirectionsSpy()
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             directions: directionsClientSpy,
+                                             routingProvider: MapboxRoutingProvider(.online),
+                                             credentials: Fixture.credentials,
                                              simulating: .never)
         
         expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { (notification) -> Bool in
@@ -461,7 +475,6 @@ class MapboxCoreNavigationTests: TestCase {
         }
         
         navigation.router.reroute(from: CLLocation(latitude: 0, longitude: 0), along: navigation.router.routeProgress)
-        directionsClientSpy.fireLastCalculateCompletion(with: nil, routes: nil, error: .profileNotFound)
         
         waitForExpectations(timeout: 2) { (error) in
             XCTAssertNil(error)

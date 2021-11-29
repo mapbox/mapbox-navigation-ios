@@ -26,6 +26,17 @@ public struct IndexedRouteResponse {
     public let routeIndex: Int
     
     /**
+     Returns a route from the `routeResponse` under given `routeIndex` if possible.
+     */
+    public var currentRoute: Route? {
+        guard let routes = routeResponse.routes,
+              routes.count > routeIndex else {
+            return nil
+        }
+        return routeResponse.routes?[routeIndex]
+    }
+    
+    /**
      Initializes a new `IndexedRouteResponse` object.
      
      - parameter routeResponse: `RouteResponse` object, containing routes and other related info.
@@ -66,10 +77,14 @@ public protocol Router: CLLocationManagerDelegate {
      
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
-     - parameter directions: The Directions object that created `route`.
+     - parameter routingProvider: `RoutingProvider`, used to create route.
      - parameter source: The data source for the RouteController.
      */
-    init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions, dataSource source: RouterDataSource)
+    init(alongRouteAtIndex routeIndex: Int,
+         in routeResponse: RouteResponse,
+         options: RouteOptions,
+         routingProvider: RoutingProvider,
+         dataSource source: RouterDataSource)
     
     /**
      Details about the user’s progress along the current route, leg, and step.
@@ -154,7 +169,7 @@ protocol InternalRouter: AnyObject {
     
     var lastRouteRefresh: Date? { get set }
     
-    var routeTask: URLSessionDataTask? { get set }
+    var routeTask: NavigationProviderRequest? { get set }
     
     var lastRerouteLocation: CLLocation? { get set }
     
@@ -162,7 +177,7 @@ protocol InternalRouter: AnyObject {
     
     var isRefreshing: Bool { get set }
     
-    var directions: Directions { get }
+    var routingProvider: RoutingProvider { get }
     
     var routeProgress: RouteProgress { get }
     
@@ -187,7 +202,7 @@ extension InternalRouter where Self: Router {
     }
     
     func refreshRoute(from location: CLLocation, legIndex: Int, completion: @escaping ()->()) {
-        guard refreshesRoute, let routeIdentifier = indexedRouteResponse.routeResponse.identifier else {
+        guard refreshesRoute else {
             completion()
             return
         }
@@ -208,8 +223,8 @@ extension InternalRouter where Self: Router {
             return
         }
         isRefreshing = true
-        
-        directions.refreshRoute(responseIdentifier: routeIdentifier, routeIndex: indexedRouteResponse.routeIndex, fromLegAtIndex: legIndex) { [weak self] (session, result) in
+        routingProvider.refreshRoute(indexedRouteResponse: indexedRouteResponse,
+                                     fromLegAtIndex: UInt32(legIndex)) { [weak self] session, result in
             defer {
                 self?.isRefreshing = false
                 self?.lastRouteRefresh = nil
@@ -219,8 +234,14 @@ extension InternalRouter where Self: Router {
             guard case let .success(response) = result, let self = self else {
                 return
             }
+            self.indexedRouteResponse = .init(routeResponse: response, routeIndex: self.indexedRouteResponse.routeIndex)
             
-            self.routeProgress.refreshRoute(with: response.route, at: location)
+            guard let currentRoute = self.indexedRouteResponse.currentRoute else {
+                assertionFailure("Refreshed `RouteResponse` did not contain required `routeIndex`!")
+                return
+            }
+            
+            self.routeProgress.refreshRoute(with: currentRoute, at: location)
             
             var userInfo = [RouteController.NotificationUserInfoKey: Any]()
             userInfo[.routeProgressKey] = self.routeProgress
@@ -312,7 +333,8 @@ extension InternalRouter where Self: Router {
         
         lastRerouteLocation = origin
         
-        routeTask = directions.calculateWithCache(options: options) {(session, result) in
+        routeTask = routingProvider.calculateRoutes(options: options) {(session, result) in
+            defer { self.routeTask = nil }
             switch result {
             case .failure(let error):
                 return completion(session, .failure(error))

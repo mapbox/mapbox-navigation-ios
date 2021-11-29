@@ -132,7 +132,12 @@ class SpeechSynthesizersControllerTests: TestCase {
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
         let sut = SystemSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: routeOptions, simulating: .always)
+        let dummyService = MapboxNavigationService(routeResponse: routeResponse,
+                                                   routeIndex: 0,
+                                                   routeOptions: routeOptions,
+                                                   routingProvider: MapboxRoutingProvider(.offline),
+                                                   credentials: Fixture.credentials,
+                                                   simulating: .always)
         let routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: sut)
         XCTAssertNotNil(routeController)
@@ -146,7 +151,12 @@ class SpeechSynthesizersControllerTests: TestCase {
         let expectation = XCTestExpectation(description: "Synthesizers speak should be called")
         let sut = MapboxSpeechSynthMock()
         sut.speakExpectation = expectation
-        let dummyService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: routeOptions, simulating: .always)
+        let dummyService = MapboxNavigationService(routeResponse: routeResponse,
+                                                   routeIndex: 0,
+                                                   routeOptions: routeOptions,
+                                                   routingProvider: MapboxRoutingProvider(.offline),
+                                                   credentials: Fixture.credentials,
+                                                   simulating: .always)
         let routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: sut)
         XCTAssertNotNil(routeController)

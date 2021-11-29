@@ -18,9 +18,15 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     public unowned var dataSource: RouterDataSource
     
     /**
-     The Directions object used to create the route.
+     A reference to a MapboxDirections service. Used for rerouting.
      */
-    public var directions: Directions
+    @available(*, deprecated, message: "Use `routingProvider` instead. If route controller was not initialized using `Directions` object - this property is unused and ignored.")
+    public lazy var directions: Directions = routingProvider as? Directions ?? Directions.shared
+    
+    /**
+     Routing provider used to create the route.
+     */
+    public var routingProvider: RoutingProvider
 
     public var route: Route {
         routeProgress.route
@@ -102,7 +108,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     var didFindFasterRoute = false
     
-    var routeTask: URLSessionDataTask?
+    var routeTask: NavigationProviderRequest?
     
     
     // MARK: Navigating
@@ -131,11 +137,11 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                      routeOptions: RouteOptions?,
                      isProactive: Bool,
                      completion: ((Bool) -> Void)?) {
-        guard let routes = indexedRouteResponse.routeResponse.routes, routes.count > indexedRouteResponse.routeIndex else {
+        guard let route = indexedRouteResponse.currentRoute else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
         let routeOptions = routeOptions ?? routeProgress.routeOptions
-        routeProgress = RouteProgress(route: routes[indexedRouteResponse.routeIndex], options: routeOptions)
+        routeProgress = RouteProgress(route: route, options: routeOptions)
         self.indexedRouteResponse = indexedRouteResponse
         announce(reroute: route, at: location, proactive: isProactive)
         completion?(true)
@@ -195,8 +201,25 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return false
     }
     
-    required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
-        self.directions = directions
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:options:routingProvider:dataSource:)")
+    public convenience init(alongRouteAtIndex routeIndex: Int,
+                            in routeResponse: RouteResponse,
+                            options: RouteOptions,
+                            directions: Directions = NavigationSettings.shared.directions,
+                            dataSource source: RouterDataSource) {
+        self.init(alongRouteAtIndex: routeIndex,
+                  in: routeResponse,
+                  options: options,
+                  routingProvider: directions,
+                  dataSource: source)
+    }
+    
+    required public init(alongRouteAtIndex routeIndex: Int,
+                         in routeResponse: RouteResponse,
+                         options: RouteOptions,
+                         routingProvider: RoutingProvider = Directions.shared,
+                         dataSource source: RouterDataSource) {
+        self.routingProvider = routingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source

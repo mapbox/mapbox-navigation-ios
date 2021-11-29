@@ -59,10 +59,15 @@ public class CarPlayManager: NSObject {
     public let eventsManager: NavigationEventsManager
     
     /**
-     The object that calculates routes when the user interacts with the CarPlay
-     interface.
+     The object that calculates routes when the user interacts with the CarPlay interface.
      */
-    public let directions: Directions
+    @available(*, deprecated, message: "Use `routingProvider` instead. If car play manager was not initialized using `Directions` object - this property is unused and ignored.")
+    public lazy var directions: Directions = self.routingProvider as? Directions ?? NavigationSettings.shared.directions
+    
+    /**
+     `RoutingProvider`, used to create route.
+     */
+    public var routingProvider: RoutingProvider
     
     /**
      Returns current `CarPlayActivity`, which is based on currently present `CPTemplate`. In case if
@@ -108,22 +113,38 @@ public class CarPlayManager: NSObject {
      - parameter directions: The object that calculates routes when the user interacts with the CarPlay interface. If this argument is `nil` or omitted, the shared `Directions` object is used by default.
      - parameter eventsManager: The events manager to use during turn-by-turn navigation while connected to CarPlay. If this argument is `nil` or omitted, a standard `NavigationEventsManager` object is used by default.
      */
+    @available(*, deprecated, renamed: "init(styles:routingProvider:eventsManager:carPlayNavigationViewControllerClass:)")
     public convenience init(styles: [Style]? = nil,
                             directions: Directions? = nil,
                             eventsManager: NavigationEventsManager? = nil) {
         self.init(styles: styles,
-                  directions: directions,
+                  routingProvider: directions ?? NavigationSettings.shared.directions,
+                  eventsManager: eventsManager,
+                  carPlayNavigationViewControllerClass: nil)
+    }
+    
+    /**
+     Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
+     
+     - parameter styles: The styles to display in the CarPlay interface. If this argument is omitted, `DayStyle` and `NightStyle` are displayed by default.
+     - parameter routingProvider: The object that calculates routes when the user interacts with the CarPlay interface.
+     - parameter eventsManager: The events manager to use during turn-by-turn navigation while connected to CarPlay. If this argument is `nil` or omitted, a standard `NavigationEventsManager` object is used by default.
+     */
+    public convenience init(styles: [Style]? = nil,
+                            routingProvider: RoutingProvider,
+                            eventsManager: NavigationEventsManager? = nil) {
+        self.init(styles: styles,
+                  routingProvider: routingProvider,
                   eventsManager: eventsManager,
                   carPlayNavigationViewControllerClass: nil)
     }
     
     init(styles: [Style]? = nil,
-         directions: Directions? = nil,
+         routingProvider: RoutingProvider,
          eventsManager: NavigationEventsManager? = nil,
          carPlayNavigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
         self.styles = styles ?? [DayStyle(), NightStyle()]
-        let mapboxDirections = directions ?? NavigationSettings.shared.directions
-        self.directions = mapboxDirections
+        self.routingProvider = routingProvider
         self.eventsManager = eventsManager ?? .init(activeNavigationDataSource: nil,
                                                     accessToken: NavigationSettings.shared.directions.credentials.accessToken)
         self.mapTemplateProvider = MapTemplateProvider()
@@ -527,7 +548,7 @@ extension CarPlayManager {
     }
     
     func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
-        directions.calculateWithCache(options: options, completionHandler: completionHandler)
+        routingProvider.calculateRoutes(options: options, completionHandler: completionHandler)
     }
     
     func didCalculate(_ result: Result<RouteResponse, DirectionsError>,
@@ -621,6 +642,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
             MapboxNavigationService(routeResponse: routeResponse,
                                     routeIndex: routeIndex,
                                     routeOptions: options,
+                                    routingProvider: NavigationSettings.shared.directions,
+                                    credentials: NavigationSettings.shared.directions.credentials,
                                     simulating: desiredSimulationMode)
         
         // Store newly created `MapboxNavigationService`.

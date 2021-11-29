@@ -11,7 +11,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     @available(iOS 12.0, *)
-    lazy var carPlayManager: CarPlayManager = CarPlayManager()
+    lazy var carPlayManager: CarPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.hybrid))
     
     @available(iOS 12.0, *)
     lazy var carPlaySearchController: CarPlaySearchController = CarPlaySearchController()

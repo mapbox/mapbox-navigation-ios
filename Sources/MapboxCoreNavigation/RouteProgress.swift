@@ -129,15 +129,28 @@ open class RouteProgress: Codable {
     public var route: Route
     
     /**
-     Updates the current route with attributes from the given skeletal route.
+     Updates the current route with a refreshed one.
      */
-    public func refreshRoute(with refreshedRoute: RefreshedRoute, at location: CLLocation) {
-        route.refreshLegAttributes(from: refreshedRoute)
+    func refreshRoute(with refreshedRoute: Route, at location: CLLocation) {
+        route = refreshedRoute
+        refreshLegProgress(at: location)
+    }
+    
+    private func refreshLegProgress(at location: CLLocation) {
         currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
                                               stepIndex: currentLegProgress.stepIndex,
                                               spokenInstructionIndex: currentLegProgress.currentStepProgress.spokenInstructionIndex)
         calculateLegsCongestion()
         updateDistanceTraveled(with: location)
+    }
+    
+    /**
+     Updates the current route with attributes from the given skeletal route.
+     */
+    @available(*, deprecated, message: "Route refreshing logic should be handled by the SDK. There is no need to refresh the route object manually.")
+    public func refreshRoute(with refreshedRoute: RefreshedRoute, at location: CLLocation) {
+        route.refreshLegAttributes(from: refreshedRoute)
+        refreshLegProgress(at: location)
     }
     
     /**

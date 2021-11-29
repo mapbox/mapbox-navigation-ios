@@ -27,7 +27,8 @@ class NavigationServiceTests: TestCase {
         let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
-                                                        directions: directionsClientSpy,
+                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        credentials: Fixture.credentials,
                                                         locationSource: locationSource,
                                                         eventsManagerType: NavigationEventsManagerSpy.self,
                                                         simulating: .never)
@@ -64,6 +65,7 @@ class NavigationServiceTests: TestCase {
     override func tearDown() {
         super.tearDown()
         dependencies = nil
+        MapboxRoutingProvider.__testRoutesStub = nil
     }
 
     func testDefaultUserInterfaceUsage() {
@@ -409,7 +411,7 @@ class NavigationServiceTests: TestCase {
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
 
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
+        let service = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, routingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }
@@ -418,6 +420,8 @@ class NavigationServiceTests: TestCase {
         let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
+                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        credentials: Fixture.credentials,
                                                         eventsManagerType: NavigationEventsManagerSpy.self,
                                                         simulating: .always)
         navigationService.delegate = delegate
@@ -471,6 +475,18 @@ class NavigationServiceTests: TestCase {
 
             return true
         }
+
+        // MARK: Setupping a re-route stub
+        MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
+            completionHandler(Directions.Session(options, Credentials()),
+                              .success(RouteResponse(httpResponse: nil,
+                                                     identifier: nil,
+                                                     routes: [self.alternateRoute],
+                                                     waypoints: nil,
+                                                     options: .route(options),
+                                                     credentials: Fixture.credentials)))
+            return nil
+        }
         
         dependencies.navigationService.start()
 
@@ -483,8 +499,7 @@ class NavigationServiceTests: TestCase {
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:willRerouteFrom:)"))
         wait(for: [willRerouteNotificationExpectation], timeout: 0.1)
 
-        // MARK: Upon rerouting successfully...
-        directionsClientSpy.fireLastCalculateCompletion(with: routeOptions.waypoints, routes: [alternateRoute], error: nil)
+        // MARK: Upon rerouting it tells the delegate & posts a didReroute notification
 
         // MARK: It tells the delegate & posts a didReroute notification
         wait(for: [didRerouteNotificationExpectation], timeout: 3)
@@ -510,6 +525,7 @@ class NavigationServiceTests: TestCase {
         let locationManager = ReplayLocationManager(locations: trace)
         dependencies = createDependencies(locationSource: locationManager)
         let navigation = dependencies.navigationService
+        navigation.router.refreshesRoute = false
 
         locationManager.speedMultiplier = 50
         navigation.start()
@@ -542,6 +558,7 @@ class NavigationServiceTests: TestCase {
         dependencies = createDependencies(locationSource: locationManager)
 
         let navigation = dependencies.navigationService
+        navigation.router.refreshesRoute = false
 
         let replayFinished = expectation(description: "Replay finished")
         locationManager.replayCompletionHandler = { _ in
@@ -596,7 +613,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, dataSource: fakeDataSource)
+            let routeController = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, routingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -608,7 +625,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            _ = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, dataSource: fakeDataSource)
+            _ = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, routingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
             subject = fakeDataSource
         }
 
@@ -616,8 +633,7 @@ class NavigationServiceTests: TestCase {
     }
 
     func testCountdownTimerDefaultAndUpdate() {
-        let directions = DirectionsSpy()
-        let subject = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions,  directions: directions)
+        let subject = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, routingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials)
 
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(2500), "Default countdown interval should be 2500 milliseconds.")
 
@@ -642,8 +658,11 @@ class NavigationServiceTests: TestCase {
 
         let navigationService = dependencies.navigationService
         let routeController = navigationService.router as! RouteController
+        routeController.refreshesRoute = false
+
         let routeUpdated = expectation(description: "Route Updated")
-        routeController.updateRoute(with: .init(routeResponse: routeResponse, routeIndex: 0), routeOptions: nil) {
+        routeController.updateRoute(with: .init(routeResponse: routeResponse, routeIndex: 0),
+                                    routeOptions: routeOptions) {
             success in
             XCTAssertTrue(success)
             routeUpdated.fulfill()
@@ -669,7 +688,8 @@ class NavigationServiceTests: TestCase {
 
     func testProactiveRerouting() {
         typealias RouterComposition = Router & InternalRouter
-
+        dependencies = nil
+        
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
@@ -687,13 +707,13 @@ class NavigationServiceTests: TestCase {
         XCTAssert(duration > RouteControllerProactiveReroutingInterval + RouteControllerMinimumDurationRemainingForProactiveRerouting,
                   "Duration must greater than rerouting interval and minimum duration remaining for proactive rerouting")
 
-        let directions = DirectionsSpy()
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
         let service = MapboxNavigationService(routeResponse: routeResponse,
                                               routeIndex: 0,
                                               routeOptions: options,
-                                              directions: directions,
+                                              routingProvider: MapboxRoutingProvider(.online),
+                                              credentials: Fixture.credentials,
                                               locationSource: locationManager)
         service.delegate = delegate
         let router = service.router
@@ -704,6 +724,25 @@ class NavigationServiceTests: TestCase {
             return isProactive == true
         }
 
+        let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
+        let fasterOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.878206, longitude: -77.037265),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+        let fasterRoute = Fixture.route(from: fasterRouteName, options: fasterOptions)
+        let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName, options: fasterOptions)
+        let fasterResponse = RouteResponse(httpResponse: nil,
+                                           identifier: nil,
+                                           routes: [fasterRoute],
+                                           waypoints: waypointsForFasterRoute,
+                                           options: .route(options),
+                                           credentials: Fixture.credentials)
+        MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
+            completionHandler(Directions.Session(options, Fixture.credentials),
+                              .success(fasterResponse))
+            return nil
+        }
+        
         let rerouteTriggeredExpectation = expectation(description: "Proactive reroute triggered")
         locationManager.onTick = { [unowned locationManager] _, _ in
             if (router as! RouterComposition).lastRerouteLocation != nil {
@@ -714,19 +753,9 @@ class NavigationServiceTests: TestCase {
 
         service.start()
 
-        wait(for: [rerouteTriggeredExpectation], timeout: locationManager.expectedReplayTime)
+        wait(for: [rerouteTriggeredExpectation, didRerouteExpectation], timeout: locationManager.expectedReplayTime)
         locationManager.stopUpdatingLocation()
-
-        let fasterRouteName = "DCA-Arboretum-dummy-faster-route"
-        let fasterOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 38.878206, longitude: -77.037265),
-            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
-        ])
-        let fasterRoute = Fixture.route(from: fasterRouteName, options: fasterOptions)
-        let waypointsForFasterRoute = Fixture.waypoints(from: fasterRouteName, options: fasterOptions)
-        directions.fireLastCalculateCompletion(with: waypointsForFasterRoute, routes: [fasterRoute], error: nil)
         
-        wait(for: [didRerouteExpectation], timeout: 10)
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
     }
 

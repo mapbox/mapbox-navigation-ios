@@ -89,7 +89,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public var voiceController: RouteVoiceController!
     
     func setupVoiceController() {
-        let credentials = navigationService.directions.credentials
+        let credentials = navigationService.credentials
         voiceController = navigationOptions?.voiceController
             ?? RouteVoiceController(navigationService: navigationService,
                                     accessToken: credentials.accessToken,
@@ -183,10 +183,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     var _routeResponse: RouteResponse?
     
     /**
-     An instance of `Directions` need for rerouting. See [Mapbox Directions](https://docs.mapbox.com/ios/api/directions/) for further information.
+     A reference to a MapboxDirections service. Used for rerouting.
      */
+    @available(*, deprecated, message: "Use `navigationService.routingProvider` instead. If navigation service was not initialized using `Directions` object - this property is unused and ignored.")
     public var directions: Directions {
-        return navigationService.directions
+        navigationService?.directions ?? NavigationSettings.shared.directions
     }
     
     /**
@@ -217,6 +218,8 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             ?? MapboxNavigationService(routeResponse: routeResponse,
                                        routeIndex: routeIndex,
                                        routeOptions: routeOptions,
+                                       routingProvider: NavigationSettings.shared.directions,
+                                       credentials: NavigationSettings.shared.directions.credentials,
                                        simulating: navigationOptions?.simulationMode)
         navigationService.delegate = self
         
@@ -293,7 +296,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     /**
      Initializes a `NavigationViewController` that presents the user interface for following a predefined route based on the given options.
 
-     The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, or it may be unarchived or created from a JSON object.
+     The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, MapboxCoreNavigation `MapboxRoutingProvider.calculateRoutes(options:completionHandler:)`, or it may be unarchived or created from a JSON object.
      
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.

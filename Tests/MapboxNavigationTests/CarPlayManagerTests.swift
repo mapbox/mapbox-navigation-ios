@@ -20,7 +20,9 @@ class CarPlayManagerTests: TestCase {
     override func setUp() {
         super.setUp()
         eventsManagerSpy = NavigationEventsManagerSpy()
-        manager = CarPlayManager(eventsManager: eventsManagerSpy, carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
+        manager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline),
+                                 eventsManager: eventsManagerSpy,
+                                 carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         searchController = CarPlaySearchController()
     }
 
@@ -190,7 +192,7 @@ class CarPlayManagerTests: TestCase {
     }
     
     func testRouteFailure() {
-        let manager = CarPlayManager()
+        let manager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
         
         let spy = CarPlayManagerFailureDelegateSpy()
         let testError = DirectionsError.requestTooLarge
@@ -201,33 +203,6 @@ class CarPlayManagerTests: TestCase {
         XCTAssert(spy.recievedError == testError, "Delegate should have receieved error")
     }
     
-    func testDirectionsOverride() {
-        class DirectionsInvocationSpy: Directions {
-            typealias VoidClosure = () -> Void
-            var payload: VoidClosure?
-            
-            override func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) -> URLSessionDataTask {
-                payload?()
-                
-                return URLSessionDataTask()
-            }
-        }
-        
-        let expectation = XCTestExpectation(description: "Ensuring Spy is called")
-        let spy = DirectionsInvocationSpy(credentials: .mocked)
-        spy.payload = expectation.fulfill
-        
-        let subject = CarPlayManager(directions: spy)
-      
-        let waypoint1 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.795042, longitude: -122.413165))
-        let waypoint2 = Waypoint(coordinate: CLLocationCoordinate2D(latitude: 37.7727, longitude: -122.433378))
-        let options = RouteOptions(waypoints: [waypoint1, waypoint2])
-        subject.calculate(options, completionHandler: { _, _ in })
-        wait(for: [expectation], timeout: 1.0)
-        
-        XCTAssert(subject.directions == spy, "Directions client is not overridden properly.")
-    }
-    
     func testCustomStyles() {
         class CustomStyle: DayStyle {}
         
@@ -236,7 +211,7 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(manager?.styles.last?.styleType, StyleType.night)
         
         let styles = [CustomStyle()]
-        XCTAssertEqual(CarPlayManager(styles: styles).styles, styles, "CarPlayManager should persist the initial styles given to it.")
+        XCTAssertEqual(CarPlayManager(styles: styles, routingProvider: MapboxRoutingProvider(.offline)).styles, styles, "CarPlayManager should persist the initial styles given to it.")
     }
 }
 
@@ -260,8 +235,7 @@ class CarPlayManagerSpec: QuickSpec {
             Navigator._recreateNavigator()
             
             CarPlayMapViewController.swizzleMethods()
-            let directionsSpy = DirectionsSpy()
-            manager = CarPlayManager(styles: nil, directions: directionsSpy, eventsManager: nil)
+            manager = CarPlayManager(styles: nil, routingProvider: MapboxRoutingProvider(.offline), eventsManager: nil)
             delegate = TestCarPlayManagerDelegate()
             manager!.delegate = delegate
 
@@ -279,6 +253,10 @@ class CarPlayManagerSpec: QuickSpec {
             beforeEach {
                 manager!.mapTemplateProvider = MapTemplateSpyProvider()
             }
+            
+            afterEach {
+                MapboxRoutingProvider.__testRoutesStub = nil
+            }
 
             let previewRoutesAction = {
                 let options = NavigationRouteOptions(coordinates: [
@@ -288,10 +266,19 @@ class CarPlayManagerSpec: QuickSpec {
                 let route = Fixture.route(from: "route-with-banner-instructions", options: options)
                 let waypoints = options.waypoints
 
-                let directionsSpy = manager!.directions as! DirectionsSpy
-
+                let fasterResponse = RouteResponse(httpResponse: nil,
+                                                   identifier: nil,
+                                                   routes: [route],
+                                                   waypoints: waypoints,
+                                                   options: .route(options),
+                                                   credentials: Fixture.credentials)
+                MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
+                    completionHandler(Directions.Session(options, Fixture.credentials),
+                                      .success(fasterResponse))
+                    return nil
+                }
+                
                 manager!.previewRoutes(for: options, completionHandler: {})
-                directionsSpy.fireLastCalculateCompletion(with: waypoints, routes: [route], error: nil)
             }
 
             context("when the trip is not customized by the developer") {
@@ -428,7 +415,12 @@ class CarPlayManagerSpec: QuickSpec {
         
         //TODO: ADD OPTIONS TO THIS DELEGATE METHOD
         func carPlayManager(_ carPlayManager: CarPlayManager, navigationServiceFor routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, desiredSimulationMode: SimulationMode) -> NavigationService? {
-            return MapboxNavigationService(routeResponse: routeResponse, routeIndex: routeIndex, routeOptions: routeOptions, simulating: desiredSimulationMode)
+            return MapboxNavigationService(routeResponse: routeResponse,
+                                           routeIndex: routeIndex,
+                                           routeOptions: routeOptions,
+                                           routingProvider: MapboxRoutingProvider(.offline),
+                                           credentials: Fixture.credentials,
+                                           simulating: desiredSimulationMode)
         }
 
         func carPlayManager(_ carPlayManager: CarPlayManager, didPresent navigationViewController: CarPlayNavigationViewController) {

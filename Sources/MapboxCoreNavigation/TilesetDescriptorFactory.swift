@@ -14,9 +14,10 @@ extension TilesetDescriptorFactory {
     public class func getSpecificVersion(version: String,
                                          completionQueue: DispatchQueue = .main,
                                          completion: @escaping (TilesetDescriptor) -> Void) {
-        let cacheHandle = Navigator.shared.cacheHandle
+        let factory = NativeHandlersFactory(tileStorePath: NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
+                                            credentials: NavigationSettings.shared.directions.credentials)
         completionQueue.async {
-            completion(getSpecificVersion(forCache: cacheHandle, version: version))
+            completion(getSpecificVersion(forCache: factory.cacheHandle, version: version))
         }
     }
 
@@ -31,10 +32,10 @@ extension TilesetDescriptorFactory {
      */
     public class func getLatest(completionQueue: DispatchQueue = .main,
                                 completion: @escaping (_ latestTilesetDescriptor: TilesetDescriptor) -> Void) {
-        let cacheHandle = Navigator.shared.cacheHandle
-
+        let factory = NativeHandlersFactory(tileStorePath: NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
+                                            credentials: NavigationSettings.shared.directions.credentials)
         completionQueue.async {
-            completion(getLatestForCache(cacheHandle))
+            completion(getLatestForCache(factory.cacheHandle))
         }
     }
 }

@@ -48,9 +48,15 @@ open class RouteController: NSObject {
     public unowned var dataSource: RouterDataSource
     
     /**
-     The Directions object used to create the route.
+     A reference to a MapboxDirections service. Used for rerouting.
      */
-    public var directions: Directions
+    @available(*, deprecated, message: "Use `routingProvider` instead. If route controller was not initialized using `Directions` object - this property is unused and ignored.")
+    public lazy var directions: Directions = routingProvider as? Directions ?? Directions.shared
+    
+    /**
+     `RoutingProvider`, used to create route.
+     */
+    public var routingProvider: RoutingProvider
     
     public var route: Route {
         return routeProgress.route
@@ -186,8 +192,7 @@ open class RouteController: NSObject {
     
     var didFindFasterRoute = false
     
-
-    var routeTask: URLSessionDataTask?
+    var routeTask: NavigationProviderRequest?
     
     // MARK: Navigating
     
@@ -521,8 +526,21 @@ open class RouteController: NSObject {
     
     // MARK: Handling Lifecycle
     
-    required public init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
-        self.directions = directions
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:routingProvider:dataSource:)")
+    public convenience init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
+        self.init(alongRouteAtIndex: routeIndex,
+                  in: routeResponse,
+                  options: options,
+                  routingProvider: directions,
+                  dataSource: source)
+    }
+    
+    required public init(alongRouteAtIndex routeIndex: Int,
+                         in routeResponse: RouteResponse,
+                         options: RouteOptions,
+                         routingProvider: RoutingProvider,
+                         dataSource source: RouterDataSource) {
+        self.routingProvider = routingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
@@ -539,6 +557,7 @@ open class RouteController: NSObject {
     deinit {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         unsubscribeNotifications()
+        routeTask?.cancel()
     }
 
     private func subscribeNotifications() {
@@ -679,11 +698,9 @@ extension RouteController: Router {
                      routeOptions: RouteOptions?,
                      isProactive: Bool,
                      completion: ((Bool) -> Void)?) {
-        guard let routes = indexedRouteResponse.routeResponse.routes,
-              routes.count > indexedRouteResponse.routeIndex else {
+        guard let route = indexedRouteResponse.currentRoute else {
             preconditionFailure("`indexedRouteResponse` does not contain route for index `\(indexedRouteResponse.routeIndex)` when updating route.")
         }
-        let route = routes[indexedRouteResponse.routeIndex]
         if shouldStartNewBillingSession(for: route, routeOptions: routeOptions) {
             BillingHandler.shared.stopBillingSession(with: sessionUUID)
             BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
