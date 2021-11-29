@@ -22,6 +22,7 @@
 * Fixed the background location update issue during active navigation when using default `.courseView` for `NavigationMapView.userLocationStyle`. ([#3533](https://github.com/mapbox/mapbox-navigation-ios/pull/3533))
 * Fixed an issue where `UserPuckCourseView` is trimmed when using custom frame for `UserLocationStyle.courseView(_:)`. ([#3601](https://github.com/mapbox/mapbox-navigation-ios/pull/3601))
 * Fixed an issue where route line blinks when style is changed during active navigation. ([#3613](https://github.com/mapbox/mapbox-navigation-ios/pull/3613))
+* Fixed an issue where route line missing traffic colors after refresh or rerouting. ([#3622](https://github.com/mapbox/mapbox-navigation-ios/pull/3622))
 
 ### Banners and guidance instructions
 

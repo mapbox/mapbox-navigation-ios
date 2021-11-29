@@ -47,7 +47,7 @@ class NavigationMapViewTests: TestCase {
         ])
         
         XCTAssertEqual(congestionSegments.count, 1)
-        XCTAssertEqual(congestionSegments[0].0.count, 10)
+        XCTAssertEqual(congestionSegments[0].0.count, 6)
         XCTAssertEqual(congestionSegments[0].1, .low)
     }
     
@@ -64,9 +64,9 @@ class NavigationMapViewTests: TestCase {
         // Any time the current congestion level is different than the previous segment, we have to create a new congestion segment.
         XCTAssertEqual(congestionSegmentsSevere.count, 3)
         
-        XCTAssertEqual(congestionSegmentsSevere[0].0.count, 4)
+        XCTAssertEqual(congestionSegmentsSevere[0].0.count, 3)
         XCTAssertEqual(congestionSegmentsSevere[1].0.count, 2)
-        XCTAssertEqual(congestionSegmentsSevere[2].0.count, 4)
+        XCTAssertEqual(congestionSegmentsSevere[2].0.count, 3)
         
         XCTAssertEqual(congestionSegmentsSevere[0].1, .low)
         XCTAssertEqual(congestionSegmentsSevere[1].1, .severe)
