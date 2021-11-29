@@ -788,7 +788,9 @@ extension NavigationViewController: NavigationServiceDelegate {
 
         let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
         if movePuckToCurrentLocation {
-            navigationMapView?.moveUserLocation(to: location, animated: true)
+            let isWalking = progress.currentLegProgress.currentStep.transportType == .walking
+            let heading = isWalking ? navigationService.locationManager.heading : nil
+            navigationMapView?.moveUserLocation(to: location, with: heading, animated: true)
         }
 
         attemptToHighlightBuildings(progress, navigationMapView: navigationMapView)

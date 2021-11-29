@@ -29,8 +29,7 @@ open class RouteProgress: Codable {
         let oldOptions = routeOptions
         let user = Waypoint(coordinate: location.coordinate)
 
-        // to do: FIX THIS WORKING (esp, turn on a dime)
-        // A pedestrian can turn on a dime; there's no problems with a route that starts out by turning the pedestrian around.
+        // A pedestrian can turn on a dime; there's no problem with a route that starts out by turning the pedestrian around.
         let transportType = currentLegProgress.currentStep.transportType
         if transportType != .walking && location.course >= 0 {
             user.heading = location.course

@@ -223,6 +223,10 @@ open class RouteController: NSObject {
         }
     }
     
+    public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        heading = newHeading
+    }
+    
     /**
      Asynchronously updates NavNative navigator with the new `RouteProgress`.
 
@@ -474,9 +478,6 @@ open class RouteController: NSObject {
             .rawLocationKey: rawLocation, // raw
         ]
         userInfo[.headingKey] = heading
-        
-        // to do: DETERMINE IF THIS IS NEEDED
-        userInfo[.rawHeadingKey] = heading // heading snapping not yet implemented (an unnecessary?)
         
         NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: userInfo)
     }

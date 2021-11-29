@@ -174,7 +174,7 @@ public extension Notification.Name {
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
      
-     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.locationKey` and `RouteController.NotificationUserInfoKey.headingKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.locationKey` and `RouteController.NotificationUserInfoKey.headingKey`.
      */
     static let routeControllerWillReroute: Notification.Name = .init(rawValue: "RouteControllerWillReroute")
     
