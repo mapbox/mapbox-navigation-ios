@@ -89,7 +89,7 @@ extension Array where Iterator.Element == CLLocationCoordinate2D {
             }
             
             if segments.last?.1 == overriddenCongestionLevel {
-                segments[segments.count - 1].0 += coordinates
+                segments[segments.count - 1].0 += [firstSegment.1]
             } else {
                 segments.append((coordinates, overriddenCongestionLevel))
             }

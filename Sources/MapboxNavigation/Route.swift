@@ -53,7 +53,7 @@ extension Route {
             let legFeatures: [Feature]
             let currentLegAttribute = (legIndex != nil) ? index == legIndex : true
 
-            if let congestionLevels = leg.resolvedCongestionLevels, congestionLevels.count < coordinates.count {
+            if let congestionLevels = leg.resolvedCongestionLevels, congestionLevels.count < coordinates.count + 2 {
                 // The last coordinate of the preceding step, is shared with the first coordinate of the next step, we don't need both.
                 let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
                     let index = current.offset
