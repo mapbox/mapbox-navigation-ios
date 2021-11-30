@@ -39,10 +39,11 @@ open class NavigationMapView: UIView {
      
      Restricted areas are drawn using `routeRestrictedAreaColor` which is customizable.
      */
-    public var showsRestrictedAreasOnRoute: Bool = true//false
-    {
+    public var showsRestrictedAreasOnRoute: Bool = false {
         didSet {
-            updateRestrictedAreasGradientStops(along: self.routes?.first)
+            if let routes = self.routes {
+                show(routes, legIndex: self.currentLegIndex)
+            }
         }
     }
     
