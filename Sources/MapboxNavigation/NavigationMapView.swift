@@ -39,7 +39,12 @@ open class NavigationMapView: UIView {
      
      Restricted areas are drawn using `routeRestrictedAreaColor` which is customizable.
      */
-    public var showsRestrictedAreasOnRoute: Bool = false
+    public var showsRestrictedAreasOnRoute: Bool = true//false
+    {
+        didSet {
+            updateRestrictedAreasGradientStops(along: self.routes?.first)
+        }
+    }
     
     /**
      Controls whether to show fading gradient color on route lines between two different congestion
@@ -102,6 +107,7 @@ open class NavigationMapView: UIView {
             } else {
                 removeLineGradientStops()
             }
+            updateRestrictedAreasGradientStops(along: self.routes?.first)
         }
     }
     
@@ -200,9 +206,13 @@ open class NavigationMapView: UIView {
         
         var parentLayerIdentifier: String? = nil
         for (index, route) in routes.enumerated() {
-            if index == 0, routeLineTracksTraversal {
-                initPrimaryRoutePoints(route: route)
-                setUpLineGradientStops(along: route)
+            if index == 0 {
+                updateRestrictedAreasGradientStops(along: route)
+                
+                if routeLineTracksTraversal {
+                    initPrimaryRoutePoints(route: route)
+                    setUpLineGradientStops(along: route)
+                }
             }
             
             if showsRestrictedAreasOnRoute {
@@ -235,6 +245,7 @@ open class NavigationMapView: UIView {
         
         routes = nil
         removeLineGradientStops()
+        updateRestrictedAreasGradientStops(along: nil)
     }
     
     /**
@@ -409,9 +420,16 @@ open class NavigationMapView: UIView {
             currentLineGradientStops = routeLineCongestionGradient(congestionFeatures,
                                                                    fractionTraveled: fractionTraveled,
                                                                    isSoft: crossfadesCongestionSegments)
-            currentRestrictedAreasStops = routeLineRestrictionStops(route.restrictedRoadsFeatures(),
-                                                                    fractionTraveled: fractionTraveled)
             pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
+        }
+    }
+    
+    func updateRestrictedAreasGradientStops(along route: Route?) {
+        if showsRestrictedAreasOnRoute, let route = route {
+            currentRestrictedAreasStops = routeLineRestrictionsGradient(route.restrictedRoadsFeatures(),
+                                                                    fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+        } else {
+            currentRestrictedAreasStops.removeAll()
         }
     }
     
@@ -421,7 +439,6 @@ open class NavigationMapView: UIView {
     func removeLineGradientStops() {
         fractionTraveled = 0.0
         currentLineGradientStops.removeAll()
-        currentRestrictedAreasStops.removeAll()
         if let routes = self.routes {
             show(routes, legIndex: currentLegIndex)
         }
@@ -477,7 +494,7 @@ open class NavigationMapView: UIView {
                 lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(currentRestrictedAreasStops,
                                                                                              lineBaseColor: routeRestrictedAreaColor))
             } else {
-                let routeLineStops = routeLineRestrictionStops(restrictedRoadsFeatures,
+                let routeLineStops = routeLineRestrictionsGradient(restrictedRoadsFeatures,
                                                                fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
                                                                                              lineBaseColor: routeRestrictedAreaColor))

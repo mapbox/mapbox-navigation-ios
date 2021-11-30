@@ -386,7 +386,7 @@ extension NavigationMapView {
         }
     }
     
-    func routeLineRestrictionStops(_ restrictionFeatures: [Turf.Feature], fractionTraveled: Double) -> [Double: UIColor] {
+    func routeLineRestrictionsGradient(_ restrictionFeatures: [Turf.Feature], fractionTraveled: Double) -> [Double: UIColor] {
         let lineSettings = LineGradientSettings(fractionTraveled: fractionTraveled,
                                                 isSoft: false,
                                                 startingColor: traversedRouteColor,

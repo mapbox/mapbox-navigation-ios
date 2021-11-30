@@ -508,13 +508,13 @@ class NavigationMapViewTests: TestCase {
         let featureBorderStop = 0.75.nextUp
         
         var fractionTraveled = 0.0 // not traversed at all
-        var routeLineGradient = navigationMapView.routeLineRestrictionStops(features, fractionTraveled: fractionTraveled)
+        var routeLineGradient = navigationMapView.routeLineRestrictionsGradient(features, fractionTraveled: fractionTraveled)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.routeRestrictedAreaColor)
         XCTAssertEqual(routeLineGradient[featureBorderStop.nextUp], navigationMapView.traversedRouteColor)
         
         fractionTraveled = 0.25 // border between restricted and not restricted
         var fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
-        routeLineGradient = navigationMapView.routeLineRestrictionStops(features, fractionTraveled: fractionTraveled)
+        routeLineGradient = navigationMapView.routeLineRestrictionsGradient(features, fractionTraveled: fractionTraveled)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[featureBorderStop.nextUp], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.routeRestrictedAreaColor)
@@ -522,7 +522,7 @@ class NavigationMapViewTests: TestCase {
         
         fractionTraveled = 0.999999999 // almost finished
         fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
-        routeLineGradient = navigationMapView.routeLineRestrictionStops(features, fractionTraveled: fractionTraveled)
+        routeLineGradient = navigationMapView.routeLineRestrictionsGradient(features, fractionTraveled: fractionTraveled)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.routeRestrictedAreaColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
