@@ -1215,6 +1215,12 @@ open class NavigationMapView: UIView {
     var routeRemainingDistancesIndex: Int?
     var fractionTraveled: Double = 0.0
     var currentLegIndex: Int?
+    var offRouteDistanceCheckEnabled: Bool = true
+    
+    /**
+     The maximum distance threshold of vanishing route line update. When the user's location to the route line is larger than the threshold, the user is off the route and the route line won't be updated.
+     */
+    var OffRouteDistanceUpdateThreshold: CLLocationDistance = 15.0
     
     /**
      `MapView`, which is added on top of `NavigationMapView` and allows to render navigation related components.

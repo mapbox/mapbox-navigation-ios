@@ -23,6 +23,7 @@
 * Fixed an issue where `UserPuckCourseView` is trimmed when using custom frame for `UserLocationStyle.courseView(_:)`. ([#3601](https://github.com/mapbox/mapbox-navigation-ios/pull/3601))
 * Fixed an issue where route line blinks when style is changed during active navigation. ([#3613](https://github.com/mapbox/mapbox-navigation-ios/pull/3613))
 * Fixed an issue where route line missing traffic colors after refresh or rerouting. ([#3622](https://github.com/mapbox/mapbox-navigation-ios/pull/3622))
+* Fixed an issue when user goes offline and the route line grows back when `NavigationViewController.routeLineTracksTraversal` enabled. When the distance of user location to the route is larger than certain distance threshold, the vanishing effect of route line would stop until the new route line gets generated. ([#3385](https://github.com/mapbox/mapbox-navigation-ios/pull/3385))
 
 ### Banners and guidance instructions
 

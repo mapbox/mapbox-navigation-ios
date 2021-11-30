@@ -60,7 +60,9 @@ extension NavigationMapView {
             removeRoutes()
         } else {
             updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+            offRouteDistanceCheckEnabled = false
             travelAlongRouteLine(to: coordinate)
+            offRouteDistanceCheckEnabled = true
         }
     }
     
@@ -122,6 +124,28 @@ extension NavigationMapView {
         return RouteLineGranularDistances(distance: distance, distanceArray: indexArray.compactMap{ $0 })
     }
     
+    func findDistanceToNearestPointOnCurrentLine(coordinate: CLLocationCoordinate2D, granularDistances: RouteLineGranularDistances, upcomingIndex: Int) -> CLLocationDistance {
+        guard granularDistances.distanceArray.indices.contains(upcomingIndex) else { return 0.0 }
+
+        var coordinates = [CLLocationCoordinate2D]()
+        
+        /**
+         Takes the passed 10 points and the upcoming point of route to form a sliced polyline for distance calculation, incase of the curved shape of route.
+         */
+        for index in max(0, upcomingIndex - 10)...upcomingIndex  {
+            let point = granularDistances.distanceArray[index].point
+            coordinates.append(point)
+        }
+
+        let polyline = LineString(coordinates)
+
+        if let closestCoordinateOnRoute = polyline.closestCoordinate(to: coordinate)?.coordinate {
+            return coordinate.distance(to: closestCoordinateOnRoute)
+        } else {
+            return 0.0
+        }
+    }
+    
     /**
      Updates the fractionTraveled along the route line from the origin point to the indicated point.
      
@@ -133,6 +157,13 @@ extension NavigationMapView {
               index < granularDistances.distanceArray.endIndex else { return }
         let traveledIndex = granularDistances.distanceArray[index]
         let upcomingPoint = traveledIndex.point
+        
+        if index > 0 && offRouteDistanceCheckEnabled {
+            let distanceToLine = findDistanceToNearestPointOnCurrentLine(coordinate: coordinate, granularDistances: granularDistances, upcomingIndex: index + 1)
+            if distanceToLine > OffRouteDistanceUpdateThreshold {
+                return
+            }
+        }
         
         /**
          Take the remaining distance from the upcoming point on the route and extends it by the exact position of the puck.
