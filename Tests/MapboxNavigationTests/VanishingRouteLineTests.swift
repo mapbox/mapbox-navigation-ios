@@ -296,7 +296,10 @@ class VanishingRouteLineTests: TestCase {
         // https://github.com/mapbox/mapbox-navigation-android/blob/0478c43781fdf7489f10f22c0055fadf181970f6/libnavui-maps/src/test/java/com/mapbox/navigation/ui/maps/internal/route/line/MapboxRouteLineUtilsTest.kt#L814
         
         let route = getMultilegRoute()
-        let coordinate = route.shape!.coordinates[15]
+        guard let coordinate = route.shape?.coordinates[15] else {
+            XCTFail("Coordinate is invalid.")
+            return
+        }
         let granularDistances = navigationMapView.calculateGranularDistances(route.shape!.coordinates)!
         
         // It's to test the distance calculation from user location to pre-existing route line.
@@ -317,7 +320,7 @@ class VanishingRouteLineTests: TestCase {
         setUpCameraZoom(at: 16.0)
         
         // When the distance of user location to pre-existing route line is larger than the `offRouteDistanceCheckEnabled`,
-        // the route line is expcted to stop updating until a new route line gets generated.
+        // the route line is expected to stop updating until a new route line gets generated.
         let expectedFractionTraveled = 0.0
         navigationMapView.updateFractionTraveled(coordinate: coordinate)
         XCTAssertTrue(expectedFractionTraveled == navigationMapView.fractionTraveled, "Failed to stop updating fractionTraveled when user off the route line.")

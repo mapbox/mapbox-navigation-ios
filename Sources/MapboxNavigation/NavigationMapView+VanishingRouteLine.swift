@@ -128,6 +128,10 @@ extension NavigationMapView {
         guard granularDistances.distanceArray.indices.contains(upcomingIndex) else { return 0.0 }
 
         var coordinates = [CLLocationCoordinate2D]()
+        
+        /**
+         Takes the passed 10 points and the upcoming point of route to form a sliced polyline for distance calculation, incase of the curved shape of route.
+         */
         for index in max(0, upcomingIndex - 10)...upcomingIndex  {
             let point = granularDistances.distanceArray[index].point
             coordinates.append(point)
