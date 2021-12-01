@@ -123,7 +123,7 @@ public protocol Router: CLLocationManagerDelegate {
     /**
      The most recently received user heading, if any.
      */
-    public var heading: CLHeading? { get }
+    var heading: CLHeading? { get }
     
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`. If `refreshesRoute` is enabled too, reroute attempt will be fired after route refreshing.
@@ -366,7 +366,6 @@ extension InternalRouter where Self: Router {
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
         var userInfo = [RouteController.NotificationUserInfoKey: Any]()
-        // to do: WAS IT OKAY TO REMOVE THIS IF LET?
         userInfo[.locationKey] = location
         userInfo[.headingKey] = heading
         userInfo[.isProactiveKey] = proactive

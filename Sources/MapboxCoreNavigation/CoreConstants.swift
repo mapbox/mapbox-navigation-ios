@@ -280,11 +280,6 @@ extension RouteController {
         public static let headingKey: NotificationUserInfoKey = .init(rawValue: "heading")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange` notification. The corresponding value is a `CLHeading` object representing the current raw user heading.
-         */
-        public static let rawHeadingKey: NotificationUserInfoKey = .init(rawValue: "rawHeading")
-        
-        /**
          A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `NSString` object representing the current road name.
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")

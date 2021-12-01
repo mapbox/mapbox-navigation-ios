@@ -790,7 +790,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         if movePuckToCurrentLocation {
             let isWalking = progress.currentLegProgress.currentStep.transportType == .walking
             let heading = isWalking ? navigationService.locationManager.heading : nil
-            navigationMapView?.moveUserLocation(to: location, with: heading, animated: true)
+            navigationMapView?.moveUserLocation(to: location, facing: heading, animated: true)
         }
 
         attemptToHighlightBuildings(progress, navigationMapView: navigationMapView)

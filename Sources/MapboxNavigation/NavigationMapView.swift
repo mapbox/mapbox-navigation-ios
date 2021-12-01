@@ -663,10 +663,10 @@ open class NavigationMapView: UIView {
      Updates `UserLocationStyle` to provided location.
      
      - parameter location: Location, where `UserLocationStyle` should be shown.
-     - parameter heading: Optional heading, which allows camera to move using heading instead of bearing for walking directions.
+     - parameter heading: Optional heading, which allows camera to move using heading instead of course for walking directions.
      - parameter animated: Property, which determines whether `UserLocationStyle` transition to new location will be animated.
      */
-    public func moveUserLocation(to location: CLLocation, with heading: CLHeading? = nil, animated: Bool = false) {
+    public func moveUserLocation(to location: CLLocation, facing heading: CLHeading? = nil, animated: Bool = false) {
         guard CLLocationCoordinate2DIsValid(location.coordinate) else { return }
         
         mostRecentUserCourseViewLocation = location
@@ -677,11 +677,11 @@ open class NavigationMapView: UIView {
         }
         
         if case let .courseView(view) = userLocationStyle {
-            move(view, to: location, with: heading, animated: animated)
+            move(view, to: location, facing: heading, animated: animated)
         }
     }
     
-    func move(_ userCourseView: UserCourseView, to location: CLLocation, with heading: CLHeading? = nil, animated: Bool = false) {
+    func move(_ userCourseView: UserCourseView, to location: CLLocation, facing heading: CLHeading? = nil, animated: Bool = false) {
         // While animating to overview mode, don't animate the puck.
         let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
@@ -691,19 +691,18 @@ open class NavigationMapView: UIView {
         }
         
         let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
-        
-        if let heading = heading {
-            userCourseView.update(location: location,
-                                  pitch: cameraOptions.pitch!,
-                                  direction: heading.trueHeading,
-                                  animated: animated,
-                                  navigationCameraState: navigationCamera.state)
-            return
+        var direction: CLLocationDirection?
+        if let trueHeading = heading?.trueHeading, trueHeading >= 0 {
+            direction = trueHeading
+        } else if let magneticHeading = heading?.magneticHeading, magneticHeading >= 0 {
+            direction = magneticHeading
+        } else {
+            direction = cameraOptions.bearing!
         }
-        
+
         userCourseView.update(location: location,
                               pitch: cameraOptions.pitch!,
-                              direction: cameraOptions.bearing!,
+                              direction: direction!,
                               animated: animated,
                               navigationCameraState: navigationCamera.state)
     }
