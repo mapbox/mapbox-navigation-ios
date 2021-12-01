@@ -53,6 +53,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
     
     var viewportDataSourceType: ViewportDataSourceType = .passive
     
+    var heading: CLHeading?
+    
     // MARK: Initializer Methods
     
     /**
@@ -113,6 +115,8 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let passiveLocation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation
         let activeLocation = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation
         let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress
+        heading = notification.userInfo?[RouteController.NotificationUserInfoKey.headingKey] as? CLHeading
+        
         let cameraOptions = self.cameraOptions(passiveLocation: passiveLocation,
                                                activeLocation: activeLocation,
                                                routeProgress: routeProgress)
@@ -287,7 +291,19 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 
                 bearing = self.bearing(location.course, coordinatesToManeuver: coordinatesForIntersections)
                 
-                followingMobileCamera.bearing = bearing
+                var headingDirection: CLLocationDirection?
+                let isWalking = routeProgress.currentLegProgress.currentStep.transportType == .walking
+                if isWalking {
+                    if let trueHeading = heading?.trueHeading, trueHeading >= 0 {
+                        headingDirection = trueHeading
+                    } else if let magneticHeading = heading?.magneticHeading, magneticHeading >= 0 {
+                        headingDirection = magneticHeading
+                    } else {
+                        headingDirection = bearing
+                    }
+                }
+                
+                followingMobileCamera.bearing = !isWalking ? bearing : headingDirection
                 followingCarPlayCamera.bearing = bearing
             }
             
@@ -380,7 +396,19 @@ public class NavigationViewportDataSource: ViewportDataSource {
             // of bearing will be also ignored.
             let bearing = 0.0
             
-            overviewMobileCamera.bearing = bearing
+            var headingDirection: CLLocationDirection?
+            let isWalking = routeProgress.currentLegProgress.currentStep.transportType == .walking
+            if isWalking {
+                if let trueHeading = heading?.trueHeading, trueHeading >= 0 {
+                    headingDirection = trueHeading
+                } else if let magneticHeading = heading?.magneticHeading, magneticHeading >= 0 {
+                    headingDirection = magneticHeading
+                } else {
+                    headingDirection = bearing
+                }
+            }
+            
+            overviewMobileCamera.bearing = !isWalking ? bearing : headingDirection
             overviewCarPlayCamera.bearing = bearing
         }
         
