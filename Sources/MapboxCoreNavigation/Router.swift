@@ -123,7 +123,7 @@ public protocol Router: CLLocationManagerDelegate {
     /**
      The most recently received user heading, if any.
      */
-    var heading: CLHeading? { get }
+    public var heading: CLHeading? { get }
     
     /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`. If `refreshesRoute` is enabled too, reroute attempt will be fired after route refreshing.
