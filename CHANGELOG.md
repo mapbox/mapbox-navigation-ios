@@ -25,6 +25,9 @@
 * Fixed an issue where route line blinks when style is changed during active navigation. ([#3613](https://github.com/mapbox/mapbox-navigation-ios/pull/3613))
 * Fixed an issue where route line missing traffic colors after refresh or rerouting. ([#3622](https://github.com/mapbox/mapbox-navigation-ios/pull/3622))
 * Fixed an issue when user goes offline and the route line grows back when `NavigationViewController.routeLineTracksTraversal` enabled. When the distance of user location to the route is larger than certain distance threshold, the vanishing effect of route line would stop until the new route line gets generated. ([#3385](https://github.com/mapbox/mapbox-navigation-ios/pull/3385))
+* If the user walks away from the route, they may be rerouted onto a route that initially travels in the opposite direction. This is only the case along steps that require walking on foot. ([#3620](https://github.com/mapbox/mapbox-navigation-ios/pull/3620))
+* Added `RouteControllerNotificationUserInfoKey.headingKey` to the user info dictionary of `Notification.Name.routeControllerWillReroute`, `Notification.Name.routeControllerDidReroute`, and `Notification.Name.routeControllerProgressDidChange` notifications. ([#3620](https://github.com/mapbox/mapbox-navigation-ios/pull/3620))
+* Added a `Router.heading` property that may contain a heading from the location manager. ([#3620](https://github.com/mapbox/mapbox-navigation-ios/pull/3620))
 
 ### Banners and guidance instructions
 
@@ -59,6 +62,7 @@
 ### Camera
 
 * Fixed an issue where on routes with large distances between current location and next manuever camera zoom level was too low. To control navigation camera zoom level use `IntersectionDensity.averageDistanceMultiplier` coefficient. ([#3616](https://github.com/mapbox/mapbox-navigation-ios/pull/3616))
+* While the user is walking, the map rotates according to the user’s heading instead of their course. ([#3620](https://github.com/mapbox/mapbox-navigation-ios/pull/3620))
 
 ### Other changes
 

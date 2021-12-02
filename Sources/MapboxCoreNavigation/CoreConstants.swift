@@ -158,7 +158,7 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey`, `RouteController.NotificationUserInfoKey.locationKey`, and `RouteController.NotificationUserInfoKey.rawLocationKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey`, `RouteController.NotificationUserInfoKey.locationKey`, and `RouteController.NotificationUserInfoKey.rawLocationKey`, and `RouteController.NotificationUserInfoKey.headingKey`.
      
      - seealso: `passiveLocationManagerDidUpdate`
      */
@@ -174,14 +174,14 @@ public extension Notification.Name {
     /**
      Posted after the user diverges from the expected route, just before `RouteController` attempts to calculate a new route.
      
-     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.locationKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.locationKey` and `RouteController.NotificationUserInfoKey.headingKey`.
      */
     static let routeControllerWillReroute: Notification.Name = .init(rawValue: "RouteControllerWillReroute")
     
     /**
      Posted when `RouteController` obtains a new route in response to the user diverging from a previous route.
      
-     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.locationKey` and `RouteController.NotificationUserInfoKey.isProactiveKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.locationKey`, `RouteController.NotificationUserInfoKey.isProactiveKey`, and `RouteController.NotificationUserInfoKey.headingKey`.
      */
     static let routeControllerDidReroute: Notification.Name = .init(rawValue: "RouteControllerDidReroute")
     
@@ -273,6 +273,11 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange` notification. The corresponding value is a `CLLocation` object representing the current raw user location.
          */
         public static let rawLocationKey: NotificationUserInfoKey = .init(rawValue: "rawLocation")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange` notification. The corresponding value is a `CLHeading` object representing the current user heading.
+         */
+        public static let headingKey: NotificationUserInfoKey = .init(rawValue: "heading")
         
         /**
          A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `NSString` object representing the current road name.

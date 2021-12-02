@@ -71,7 +71,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return rawLocation?.snapped(to: routeProgress)
     }
 
-    var heading: CLHeading?
+    public var heading: CLHeading?
 
     /**
      The most recently received user location.

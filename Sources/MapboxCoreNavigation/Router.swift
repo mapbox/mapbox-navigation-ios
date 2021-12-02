@@ -121,6 +121,11 @@ public protocol Router: CLLocationManagerDelegate {
     var rawLocation: CLLocation? { get }
     
     /**
+     The most recently received user heading, if any.
+     */
+    var heading: CLHeading? { get }
+    
+    /**
      If true, the `RouteController` attempts to calculate a more optimal route for the user on an interval defined by `RouteControllerProactiveReroutingInterval`. If `refreshesRoute` is enabled too, reroute attempt will be fired after route refreshing.
      */
     var reroutesProactively: Bool { get set }
@@ -329,7 +334,7 @@ extension InternalRouter where Self: Router {
      */
     func calculateRoutes(from origin: CLLocation, along progress: RouteProgress, completion: @escaping IndexedRouteCompletionHandler) {
         routeTask?.cancel()
-        let options = progress.reroutingOptions(with: origin)
+        let options = progress.reroutingOptions(from: origin)
         
         lastRerouteLocation = origin
         
@@ -350,16 +355,19 @@ extension InternalRouter where Self: Router {
     
     func announceImpendingReroute(at location: CLLocation) {
         delegate?.router(self, willRerouteFrom: location)
-        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: [
-            RouteController.NotificationUserInfoKey.locationKey: location,
-        ])
+        
+        var userInfo: [RouteController.NotificationUserInfoKey: Any] = [
+            .locationKey: location,
+        ]
+        userInfo[.headingKey] = heading
+        
+        NotificationCenter.default.post(name: .routeControllerWillReroute, object: self, userInfo: userInfo)
     }
     
     func announce(reroute newRoute: Route, at location: CLLocation?, proactive: Bool) {
         var userInfo = [RouteController.NotificationUserInfoKey: Any]()
-        if let location = location {
-            userInfo[.locationKey] = location
-        }
+        userInfo[.locationKey] = location
+        userInfo[.headingKey] = heading
         userInfo[.isProactiveKey] = proactive
         NotificationCenter.default.post(name: .routeControllerDidReroute, object: self, userInfo: userInfo)
         delegate?.router(self, didRerouteAlong: routeProgress.route, at: location, proactive: proactive)

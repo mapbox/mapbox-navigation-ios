@@ -690,6 +690,7 @@ open class NavigationMapView: UIView {
         }
         
         let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
+
         userCourseView.update(location: location,
                               pitch: cameraOptions.pitch!,
                               direction: cameraOptions.bearing!,
