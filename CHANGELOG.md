@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.0.2
+
+* Fixed billing issues. ([#3625](https://github.com/mapbox/mapbox-navigation-ios/pull/3625))
+
 ## v2.0.1
 
 * Added the `Notification.Name.didArriveAtWaypoint` constant for notifications posted when the user arrives at a waypoint. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))
