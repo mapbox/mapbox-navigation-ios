@@ -4,6 +4,7 @@
 
 ### Pricing
 
+* Fixed billing issues which might affect v1.x -> v2.x migration. The update is strongly recommended. ([#3626](https://github.com/mapbox/mapbox-navigation-ios/pull/3626))
 * Fixed and issue where paused billing trip sessions might result in requests made inside NavNative billed per request. ([#3348](https://github.com/mapbox/mapbox-navigation-ios/pull/3558))
 
 ### Packaging
