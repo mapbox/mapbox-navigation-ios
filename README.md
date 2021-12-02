@@ -72,8 +72,8 @@ To install the MapboxNavigation framework using [CocoaPods](https://cocoapods.or
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
    # Latest stable release
-   pod 'MapboxCoreNavigation', '~> 2.0'
-   pod 'MapboxNavigation', '~> 2.0'
+   pod 'MapboxCoreNavigation', '~> 2.1'
+   pod 'MapboxNavigation', '~> 2.1'
    # Latest prerelease
    pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.1.0-rc.2'
    pod 'MapboxNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.1.0-rc.2'
