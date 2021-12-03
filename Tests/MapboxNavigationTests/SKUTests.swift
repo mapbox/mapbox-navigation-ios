@@ -37,7 +37,7 @@ class SKUTests: TestCase {
 
     func testSKUTokensMatch() {
         BillingHandler.shared.beginBillingSession(for: .freeDrive, uuid: .init())
-        let skuToken = MapboxCommon_Private.BillingService.getSessionSKUTokenIfValid(for: .nav2SesFDTrip)
+        let skuToken = NativeBillingService.shared.getSessionSKUTokenIfValid(for: .nav2SesFDTrip)
         billingServiceMock.onGetSKUTokenIfValid = { _ in skuToken }
 
         let viewController = TokenTestViewController()

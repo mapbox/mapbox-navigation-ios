@@ -6,8 +6,15 @@ import MapboxDirections
 import os.log
 @_implementationOnly import MapboxCommon_Private
 
-/// BillingService from MapboxCommon
-private typealias BillingServiceNative = MapboxCommon_Private.BillingService
+/// Wrapper around `MapboxCommon_Private.BillingServiceFactory`, which provides its shared instance.
+class NativeBillingService {
+    
+    /// Provides a new or an existing `MapboxCommon`s `BillingServiceFactory` instance.
+    static var shared: MapboxCommon_Private.BillingServiceInterface {
+        MapboxCommon_Private.BillingServiceFactory.getInstance()
+    }
+}
+
 /// BillingServiceError from MapboxCommon
 private typealias BillingServiceErrorNative = MapboxCommon_Private.BillingServiceError
 
@@ -15,9 +22,6 @@ private typealias BillingServiceErrorNative = MapboxCommon_Private.BillingServic
 enum BillingServiceError: Error {
     /// Unknown error from Billing Service
     case unknown
-
-    /// Provided SKU ID is invalid.
-    case invalidSkuId
     /// The request failed because the access token is invalid.
     case tokenValidationFailed
     /// The resume failed because the session doesn't exist or invalid.
@@ -25,8 +29,6 @@ enum BillingServiceError: Error {
 
     fileprivate init(_ nativeError: BillingServiceErrorNative) {
         switch nativeError.code {
-        case .invalidSkuId:
-            self = .invalidSkuId
         case .resumeFailed:
             self = .resumeFailed
         case .tokenValidationFailed:
@@ -37,7 +39,7 @@ enum BillingServiceError: Error {
     }
 }
 
-/// Protocol for `BillingServiceNative` implementation. Inversing the dependency on `BillingServiceNative` allows us
+/// Protocol for `NativeBillingService` implementation. Inversing the dependency on `NativeBillingService` allows us
 /// to unit test our implementation.
 protocol BillingService {
     var accessToken: String { get }
@@ -52,15 +54,15 @@ protocol BillingService {
     func getSessionStatus(for sessionType: BillingHandler.SessionType) -> BillingHandler.SessionState
 }
 
-/// Implementation of `BillingService` protocol which uses `BillingServiceNative`.
+/// Implementation of `BillingService` protocol which uses `NativeBillingService`.
 private final class ProductionBillingService: BillingService {
     /// Mapbox access token which will be included in the billing requests.
     let accessToken: String
 
     /// The User Agent string which will be included in the billing requests.
     private let userAgent: String
-    /// `SKUIdentifier` which is used for navigation MAU billing events.
-    private let mauSku: SKUIdentifier = .nav2SesMAU
+    /// `UserSKUIdentifier` which is used for navigation MAU billing events.
+    private let mauSku: UserSKUIdentifier = .nav2SesMAU
 
     /**
      Creates a new instance of `ProductionBillingService` which uses provided `accessToken` and `userAgent` for
@@ -76,57 +78,57 @@ private final class ProductionBillingService: BillingService {
     }
 
     func getSKUTokenIfValid(for sessionType: BillingHandler.SessionType) -> String {
-        MapboxCommon_Private.BillingService.getSessionSKUTokenIfValid(for: tripSku(for: sessionType))
+        NativeBillingService.shared.getSessionSKUTokenIfValid(for: tripSku(for: sessionType))
     }
 
     func beginBillingSession(for sessionType: BillingHandler.SessionType,
                              onError: @escaping (BillingServiceError) -> Void) {
         let skuToken = tripSku(for: sessionType)
-        BillingServiceNative.beginBillingSession(forAccessToken: accessToken,
-                                                 userAgent: userAgent,
-                                                 skuIdentifier: skuToken,
-                                                 callback: { nativeBillingServiceError in
-                                                    onError(BillingServiceError(nativeBillingServiceError))
-                                                 }, validity: sessionType.maxSessionInterval)
+        NativeBillingService.shared.beginBillingSession(forAccessToken: accessToken,
+                                                               userAgent: userAgent,
+                                                               skuIdentifier: skuToken,
+                                                               callback: { nativeBillingServiceError in
+            onError(BillingServiceError(nativeBillingServiceError))
+        }, validity: sessionType.maxSessionInterval)
     }
 
     func pauseBillingSession(for sessionType: BillingHandler.SessionType) {
         let skuToken = tripSku(for: sessionType)
-        BillingServiceNative.pauseBillingSession(for: skuToken)
+        NativeBillingService.shared.pauseBillingSession(for: skuToken)
     }
 
     func resumeBillingSession(for sessionType: BillingHandler.SessionType,
                               onError: @escaping (BillingServiceError) -> Void) {
         let skuToken = tripSku(for: sessionType)
-        BillingServiceNative.resumeBillingSession(for: skuToken) { nativeBillingServiceError in
+        NativeBillingService.shared.resumeBillingSession(for: skuToken) { nativeBillingServiceError in
             onError(BillingServiceError(nativeBillingServiceError))
         }
     }
 
     func stopBillingSession(for sessionType: BillingHandler.SessionType) {
         let skuToken = tripSku(for: sessionType)
-        BillingServiceNative.stopBillingSession(for: skuToken)
+        NativeBillingService.shared.stopBillingSession(for: skuToken)
     }
 
     func triggerBillingEvent(onError: @escaping (BillingServiceError) -> Void) {
-        BillingServiceNative.triggerBillingEvent(forAccessToken: accessToken,
-                                                 userAgent: userAgent,
-                                                 skuIdentifier: mauSku) { nativeBillingServiceError in
+        NativeBillingService.shared.triggerUserBillingEvent(forAccessToken: accessToken,
+                                                                   userAgent: userAgent,
+                                                                   skuIdentifier: mauSku) { nativeBillingServiceError in
             onError(BillingServiceError(nativeBillingServiceError))
         }
     }
 
     func getSessionStatus(for sessionType: BillingHandler.SessionType) -> BillingHandler.SessionState {
-        switch BillingServiceNative.getSessionStatus(for: tripSku(for: sessionType)) {
+        switch NativeBillingService.shared.getSessionStatus(for: tripSku(for: sessionType)) {
         case .noSession: return .stopped
         case .sessionActive: return .running
         case .sessionPaused: return .paused
         @unknown default:
-            preconditionFailure("Unsupported session status from BillingServiceNative")
+            preconditionFailure("Unsupported session status from NativeBillingService.")
         }
     }
 
-    private func tripSku(for sessionType: BillingHandler.SessionType) -> SKUIdentifier {
+    private func tripSku(for sessionType: BillingHandler.SessionType) -> SessionSKUIdentifier {
         switch sessionType {
         case .activeGuidance:
             return .nav2SesTrip
@@ -202,8 +204,8 @@ final class BillingHandler {
 
     /**
      All currently active sessions. Running or paused. When session is stopped, it is removed from this variable.
-     These sessions are different from `BillingServiceNative` sessions. `BillingHandler.Session`s are mapped to one
-     `BillingServiceNative`'s session for each `BillingHandler.SessionType`.
+     These sessions are different from `NativeBillingService` sessions. `BillingHandler.Session`s are mapped to one
+     `NativeBillingService`'s session for each `BillingHandler.SessionType`.
      */
     private var _sessions: [UUID: Session] = [:]
 
@@ -300,8 +302,6 @@ final class BillingHandler {
                        type: .fault)
 
                 switch error {
-                case .invalidSkuId:
-                    preconditionFailure("Invalid sku_id: \(error)")
                 case .tokenValidationFailed:
                     assertionFailure("Token validation failed. Please check that you have the correct Mapbox Access Token.")
                 case .resumeFailed, .unknown:
@@ -336,8 +336,6 @@ final class BillingHandler {
                    type: .fault)
 
             switch error {
-            case .invalidSkuId:
-                preconditionFailure("Invalid sku_id: \(error)")
             case .tokenValidationFailed:
                 assertionFailure("Token validation failed. Please check that you have the correct Mapboox Access Token.")
             case .resumeFailed, .unknown:

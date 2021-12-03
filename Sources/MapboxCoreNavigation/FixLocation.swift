@@ -3,7 +3,8 @@ import Foundation
 import MapboxNavigationNative
 
 extension FixLocation {
-    convenience init(_ location: CLLocation) {
+
+    convenience init(_ location: CLLocation, isMock: Bool = false) {
         var bearingAccuracy: NSNumber? = nil
         if #available(iOS 13.4, *) {
             bearingAccuracy = location.courseAccuracy >= 0 ? location.courseAccuracy as NSNumber : nil
@@ -20,6 +21,7 @@ extension FixLocation {
                   bearingAccuracy: bearingAccuracy,
                   speedAccuracy: location.speedAccuracy >= 0 ? location.speedAccuracy as NSNumber : nil,
                   verticalAccuracy: location.verticalAccuracy >= 0 ? location.verticalAccuracy as NSNumber : nil,
-                  extras: [:])
+                  extras: [:],
+                  isMock: isMock)
     }
 }

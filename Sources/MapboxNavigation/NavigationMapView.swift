@@ -598,9 +598,10 @@ open class NavigationMapView: UIView {
         // Since Mapbox Maps will not provide location data in case if `LocationOptions.puckType` is
         // set to nil, we have to draw empty and transparent `UIImage` instead of puck. This is used
         // in case when user wants to stop showing location puck or draw a custom one.
-        let emptyPuckConfiguration = Puck2DConfiguration(topImage: UIColor.clear.image(),
-                                                         bearingImage: UIColor.clear.image(),
-                                                         shadowImage: UIColor.clear.image(),
+        let clearImage = UIColor.clear.image(CGSize(size: 1.0))
+        let emptyPuckConfiguration = Puck2DConfiguration(topImage: clearImage,
+                                                         bearingImage: clearImage,
+                                                         shadowImage: clearImage,
                                                          scale: nil,
                                                          showsAccuracyRing: false)
         
