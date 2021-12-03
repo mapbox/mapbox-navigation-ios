@@ -1,5 +1,13 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.2.0
+
+### Packaging
+
+* MapboxNavigation now depends on [Maps v10.2.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.2.0-rc.1). ([#3614](https://github.com/mapbox/mapbox-navigation-ios/pull/3614))
+* MapboxCoreNavigation now depends on [MapboxDirections v2.1.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.1.0). ([#3630](https://github.com/mapbox/mapbox-navigation-ios/pull/3630))
+* MapboxCoreNavigation now depends on [MapboxNavigationNative v81._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/81.0.0). ([#3614](https://github.com/mapbox/mapbox-navigation-ios/pull/3614))
+
 ## v2.1.0
 
 ### Pricing
