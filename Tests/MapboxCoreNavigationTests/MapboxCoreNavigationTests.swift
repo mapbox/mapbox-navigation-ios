@@ -270,26 +270,22 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testArrive() {
-        let origin = CLLocationCoordinate2D(latitude: 0, longitude: 0)
-        let destination = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
+        let route = Fixture.route(from: "multileg-route", options: routeOptions)
+        let replayLocations = Array(Fixture.generateTrace(for: route).shiftedToPresent().qualified()[0..<100])
+        let routeResponse = RouteResponse(httpResponse: nil,
+                                          routes: [route],
+                                          options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
+                                          credentials: .mocked)
 
-        let routeResponse = Fixture.route(between: origin, and: destination).response
-
-        let replyLocations = Fixture.generateCoordinates(between: origin, and: destination, count: 100)
-            .map { CLLocation(coordinate: $0) }
-            .shiftedToPresent()
-
-        let locationManager = ReplayLocationManager(locations: replyLocations)
+        let locationManager = ReplayLocationManager(locations: replayLocations)
         let speedMultiplier: TimeInterval = 50
         locationManager.speedMultiplier = speedMultiplier
         locationManager.startDate = Date()
         locationManager.startUpdatingLocation()
 
-        let navOptions = NavigationRouteOptions(coordinates: [origin, destination])
-
         navigation = MapboxNavigationService(routeResponse: routeResponse,
                                              routeIndex: 0,
-                                             routeOptions: navOptions,
+                                             routeOptions: routeOptions,
                                              routingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager,

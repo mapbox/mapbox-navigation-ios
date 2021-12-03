@@ -318,6 +318,10 @@ public class NavigationCameraStateTransition: CameraStateTransition {
         
         let animationsGroup = DispatchGroup()
         
+        let cancellableAnimatingPositions: Set<UIViewAnimatingPosition> = [
+            .end
+        ]
+        
         let centerTimingParameters = UICubicTimingParameters(controlPoint1: CGPoint(x: 0.4, y: 0.0),
                                                              controlPoint2: CGPoint(x: 0.6, y: 1.0))
         animatorCenter = mapView.camera.makeAnimator(duration: transitionParameters.centerAnimationDuration,
@@ -325,8 +329,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
                                                      animations: { (transition) in
                                                         transition.center.toValue = center
                                                      })
-        animatorCenter?.addCompletion { (animatingPosition) in
-            if animatingPosition == .end {
+        animatorCenter?.addCompletion { animatingPosition in
+            if cancellableAnimatingPositions.contains(animatingPosition) {
                 animationsGroup.leave()
             }
         }
@@ -338,8 +342,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
                                                    animations: { (transition) in
                                                     transition.zoom.toValue = zoom
                                                    })
-        animatorZoom?.addCompletion { (animatingPosition) in
-            if animatingPosition == .end {
+        animatorZoom?.addCompletion { animatingPosition in
+            if cancellableAnimatingPositions.contains(animatingPosition) {
                 animationsGroup.leave()
             }
         }
@@ -351,9 +355,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
                                                       animations: { (transition) in
                                                         transition.bearing.toValue = bearing
                                                       })
-        
-        animatorBearing?.addCompletion { (animatingPosition) in
-            if animatingPosition == .end {
+        animatorBearing?.addCompletion { animatingPosition in
+            if cancellableAnimatingPositions.contains(animatingPosition) {
                 animationsGroup.leave()
             }
         }
@@ -367,8 +370,8 @@ public class NavigationCameraStateTransition: CameraStateTransition {
                                                         transition.anchor.toValue = anchor
                                                         transition.padding.toValue = padding
                                                     })
-        animatorPitch?.addCompletion { (animatingPosition) in
-            if animatingPosition == .end {
+        animatorPitch?.addCompletion { animatingPosition in
+            if cancellableAnimatingPositions.contains(animatingPosition) {
                 animationsGroup.leave()
             }
         }

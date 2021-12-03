@@ -246,10 +246,10 @@ open class RouteController: NSObject {
 
         let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
         
-        navigator.setRouteForRouteResponse(routeJSONString,
-                                           route: 0,
-                                           leg: UInt32(progress.legIndex),
-                                           routeRequest: routeRequest) { result in
+        navigator.setRoutesFor(Routes(routesResponse: routeJSONString,
+                                      routeIndex: 0,
+                                      legIndex: UInt32(progress.legIndex),
+                                      routesRequest: routeRequest)) { result in
             if result.isValue() {
                 if let routeInfo = result.value as? RouteInfo {
                     os_log("Navigator updated to routeSequenceNumber = %{public}d",

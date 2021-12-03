@@ -574,17 +574,21 @@ class NavigationCameraTests: TestCase {
                                           bearing: 0.0,
                                           pitch: 45.0)
         
+        // Starting from Mapbox Maps SDK `v10.2.0-beta.1` `BasicCameraAnimator`s, which were created, but
+        // haven't started yet, will still have `isRunning` flag set to `true`. This means, that
+        // if such animators are stopped right after starting transition, completion block will not be called.
         let followingExpectation = expectation(description: "Camera transition expectation.")
+        followingExpectation.isInverted = true
         
         navigationCameraStateTransition.transitionToFollowing(cameraOptions) {
             followingExpectation.fulfill()
         }
         
-        // Attempt to stop animators right away to verify that no side effects occur. Based on Maps SDK
-        // behavior it should not be possible to stop animator, which has not started yet.
-        navigationCameraStateTransition.stopAnimators()
+        // Attempt to stop animators right away to verify that no side effects occur.
+        navigationCameraStateTransition.cancelPendingTransition()
         
-        wait(for: [followingExpectation], timeout: 5.0)
+        // This expectation should not be fulfilled.
+        wait(for: [followingExpectation], timeout: 1.0)
         
         // Anchor and padding animators are not created when performing transition to the
         // `NavigationCameraState.following` state.
