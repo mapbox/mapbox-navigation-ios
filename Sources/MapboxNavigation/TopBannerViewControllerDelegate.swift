@@ -28,23 +28,23 @@ public protocol TopBannerViewControllerDelegate: VisualInstructionDelegate {
     func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
     
     /**
-     Tells the delegate the `TopBannerViewController` is about to display a `StepsViewController` as a dropdown.
+     Tells the delegate the `TopBannerViewController` is about to display a `StepsViewController` as a drop-down.
      
      - parameter banner: The `TopBannerViewController` instance.
-     - parameter willDisplayStepsController: The `StepsViewController` instance, which is about to be shown as a dropdown.
+     - parameter willDisplayStepsController: The `StepsViewController` instance, which is about to be shown as a drop-down.
      */
     func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
     
     /**
-     Tells the delegate the `TopBannerViewController` that `StepsViewController` was displayed as a dropdown.
+     Tells the delegate the `TopBannerViewController` that `StepsViewController` was displayed as a drop-down.
      
      - parameter banner: The `TopBannerViewController` instance.
-     - parameter didDisplayStepsController: The `StepsViewController` instance, which was displayed as a dropdown.
+     - parameter didDisplayStepsController: The `StepsViewController` instance, which was displayed as a drop-down.
      */
     func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController)
     
     /**
-     Tells the delegate the `TopBannerViewController` is about to dismiss and hide a `StepsViewController` dropdown.
+     Tells the delegate the `TopBannerViewController` is about to dismiss and hide a `StepsViewController` drop-down.
      
      - parameter banner: The `TopBannerViewController` instance.
      - parameter willDismissStepsController: The `StepsViewController` instance, which is about to be dismissed.
