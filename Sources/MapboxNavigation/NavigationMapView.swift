@@ -235,7 +235,14 @@ open class NavigationMapView: UIView {
               let triangleImage = Bundle.mapboxNavigation.image(named: "triangle")?.withRenderingMode(.alwaysTemplate) else { return }
         
         do {
-            try mapView.mapboxMap.style.addImage(triangleImage, id: NavigationMapView.ImageIdentifier.arrowImage, stretchX: [], stretchY: [])
+            if mapView.mapboxMap.style.image(withId: NavigationMapView.ImageIdentifier.arrowImage) == nil {
+                try mapView.mapboxMap.style.addImage(triangleImage,
+                                                     id: NavigationMapView.ImageIdentifier.arrowImage,
+                                                     sdf: true,
+                                                     stretchX: [],
+                                                     stretchY: [])
+            }
+            
             let step = route.legs[legIndex].steps[stepIndex]
             let maneuverCoordinate = step.maneuverLocation
             guard step.maneuverType != .arrive else { return }
@@ -381,6 +388,14 @@ open class NavigationMapView: UIView {
             NavigationMapView.SourceIdentifier.arrowSymbolSource
         ]
         mapView.mapboxMap.style.removeSources(sources)
+        
+        do {
+            if mapView.mapboxMap.style.image(withId: NavigationMapView.ImageIdentifier.arrowImage) != nil {
+                try mapView.mapboxMap.style.removeImage(withId: NavigationMapView.ImageIdentifier.arrowImage)
+            }
+        } catch {
+            NSLog("Failed to remove image \(NavigationMapView.ImageIdentifier.arrowImage) from style with error: \(error.localizedDescription).")
+        }
     }
     
     /**
