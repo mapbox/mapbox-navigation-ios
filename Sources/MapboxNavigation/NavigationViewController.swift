@@ -603,15 +603,6 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         navigationMapView?.mapView.location.overrideLocationProvider(with: NavigationLocationProvider(locationManager: simulatedLocationManager))
     }
     
-    func embed(_ child: UIViewController, in container: UIView, constrainedBy constraints: ((NavigationViewController, UIViewController) -> [NSLayoutConstraint])?) {
-        addChild(child)
-        container.addSubview(child.view)
-        if let childConstraints: [NSLayoutConstraint] = constraints?(self, child) {
-            view.addConstraints(childConstraints)
-        }
-        child.didMove(toParent: self)
-    }
-    
     /**
      The position of floating buttons in a navigation view. The default value is `MapOrnamentPosition.topTrailing`.
      */

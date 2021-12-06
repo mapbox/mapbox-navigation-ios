@@ -4,46 +4,6 @@ import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
 
-public protocol TopBannerViewControllerDelegate: VisualInstructionDelegate {
-    func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction)
-    
-    func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
-    
-    func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController)
-    
-    func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController)
-    
-    func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController)
-    
-    func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController)
-}
-
-public extension TopBannerViewControllerDelegate {
-    func topBanner(_ banner: TopBannerViewController, didSwipeInDirection direction: UISwipeGestureRecognizer.Direction) {
-        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-    }
-    
-    func topBanner(_ banner: TopBannerViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) {
-        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-    }
-    
-    func topBanner(_ banner: TopBannerViewController, willDisplayStepsController: StepsViewController) {
-        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-    }
-    
-    func topBanner(_ banner: TopBannerViewController, didDisplayStepsController: StepsViewController) {
-        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-    }
-    
-    func topBanner(_ banner: TopBannerViewController, willDismissStepsController: StepsViewController) {
-        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-    }
-    
-    func topBanner(_ banner: TopBannerViewController, didDismissStepsController: StepsViewController) {
-        logUnimplemented(protocolType: TopBannerViewControllerDelegate.self,  level: .debug)
-    }
-}
-
 /**
  A view controller that displays the current maneuver instruction as a “banner” flush with the edges of the containing view. The user swipes to one side to preview a subsequent maneuver.
  
