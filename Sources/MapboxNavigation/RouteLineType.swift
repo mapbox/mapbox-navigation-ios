@@ -7,4 +7,8 @@ enum RouteLineType {
     case route(isMainRoute: Bool)
     
     case routeCasing(isMainRoute: Bool)
+    
+    case restrictedRouteAreaSource
+    
+    case restrictedRouteAreaRoute
 }

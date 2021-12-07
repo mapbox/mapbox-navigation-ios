@@ -44,6 +44,44 @@ extension Route {
         }
     }
     
+    func restrictedRoadsFeatures() -> [Feature] {
+        guard shape != nil else { return [] }
+        
+        var hasRestriction = false
+        var features: [Feature] = []
+        
+        for leg in legs {
+            let legRoadClasses = leg.roadClasses
+            
+            // The last coordinate of the preceding step, is shared with the first coordinate of the next step, we don't need both.
+            let legCoordinates: [CLLocationCoordinate2D] = leg.steps.enumerated().reduce([]) { allCoordinates, current in
+                let index = current.offset
+                let step = current.element
+                let stepCoordinates = step.shape!.coordinates
+                
+                return index == 0 ? stepCoordinates : allCoordinates + stepCoordinates.suffix(from: 1)
+            }
+            
+            let mergedRoadClasses = legCoordinates.combined(legRoadClasses,
+                                                            combiningRoadClasses: .restricted)
+            
+            features.append(contentsOf: mergedRoadClasses.map { (roadClassesSegment: RoadClassesSegment) -> Feature in
+                var feature = Feature(geometry: .lineString(LineString(roadClassesSegment.0)))
+                feature.properties = [
+                    RestrictedRoadClassAttribute: .boolean(roadClassesSegment.1 == .restricted),
+                ]
+                
+                if !hasRestriction && roadClassesSegment.1 == .restricted {
+                    hasRestriction = true
+                }
+                
+                return feature
+            })
+        }
+        
+        return hasRestriction ? features : []
+    }
+    
     func congestionFeatures(legIndex: Int? = nil,
                             roadClassesWithOverriddenCongestionLevels: Set<MapboxStreetsRoadClass>? = nil) -> [Feature] {
         guard let coordinates = shape?.coordinates, let shape = shape else { return [] }
@@ -104,6 +142,10 @@ extension Route {
             return "\(identifier).\(isMainRoute ? "main" : "alternative").route_line"
         case .routeCasing(isMainRoute: let isMainRoute):
             return "\(identifier).\(isMainRoute ? "main" : "alternative").route_line_casing"
+        case .restrictedRouteAreaSource:
+            return "\(identifier).restricted_area_source"
+        case .restrictedRouteAreaRoute:
+            return "\(identifier).restricted_area_route_line"
         }
     }
     

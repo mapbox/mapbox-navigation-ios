@@ -8,6 +8,11 @@ import MapboxDirections
 typealias CongestionSegment = ([CLLocationCoordinate2D], CongestionLevel)
 
 /**
+ A tuple that pairs an array of coordinates with assigned road classes along these coordinates.
+ */
+typealias RoadClassesSegment = ([CLLocationCoordinate2D], RoadClasses)
+
+/**
  A stop dictionary representing the default line widths of the route line by zoom level when `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)` is undefined.
  
  You may use this constant in your implementation of `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)` if you want to keep the default line widths but customize other aspects of the route line.
@@ -25,6 +30,11 @@ public var RouteLineWidthByZoomLevel: [Double: Double] = [
  */
 @available(*, deprecated, message: "This value is no longer used.")
 public var NavigationMapViewMinimumDistanceForOverheadZooming: CLLocationDistance = 200
+
+/**
+ Attribute name for the route line that is used for identifying restricted areas along the route.
+ */
+public let RestrictedRoadClassAttribute = "isRestrictedRoad"
 
 /**
  Attribute name for the route line that is used for identifying whether a RouteLeg is the current active leg.
