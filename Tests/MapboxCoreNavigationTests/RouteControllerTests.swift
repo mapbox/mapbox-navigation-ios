@@ -194,15 +194,16 @@ class RouteControllerTests: TestCase {
             return 500
         }
         
-        let calculateRouteCalled = expectation(description: "Calculate route called")
-        calculateRouteCalled.assertForOverFulfill = false
+        let radiusOverriden = expectation(description: "Dangerous maneuver radius should be changed.")
+        radiusOverriden.assertForOverFulfill = false
         
         MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
-            XCTAssertTrue(options.initialManeuverAvoidanceRadius == 500)
             DispatchQueue.main.async {
                 completionHandler(Directions.Session(options, .mocked),
                                   .success(routeResponse))
-                calculateRouteCalled.fulfill()
+                if options.initialManeuverAvoidanceRadius == 500 {
+                    radiusOverriden.fulfill()
+                }
             }
             return nil
         }
