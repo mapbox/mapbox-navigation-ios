@@ -89,6 +89,7 @@ class NavigationViewControllerTests: TestCase {
                 XCTFail("Navigation Service is nil"); return nil
             }
             let router = navigationService.router
+            router.reroutesProactively = false
             guard let firstCoord = router.routeProgress.nearbyShape.coordinates.first else {
                 XCTFail("First Coordinate is nil"); return nil
             }
