@@ -97,7 +97,7 @@ class ViewController: UIViewController {
     }
     
     weak var activeNavigationViewController: NavigationViewController?
-    
+
     // MARK: - Initializer methods
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -187,6 +187,12 @@ class ViewController: UIViewController {
         
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()
+        if let cameraState = activeNavigationViewController?.navigationMapView?.mapView.cameraState {
+            navigationMapView.mapView.camera.fly(to: .init(center: cameraState.center,
+                                                           zoom: cameraState.zoom),
+                                                 duration: 0,
+                                                 completion: nil)
+        }
     }
     
     private func uninstall(_ navigationMapView: NavigationMapView) {
