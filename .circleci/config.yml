@@ -150,7 +150,7 @@ commands:
       - run:
           name: Generating << parameters.module_name >> API Diff
           command: |
-            export GITHUB_TOKEN=$(mbx-ci github issues token)
+            export GITHUB_TOKEN=$(mbx-ci github issues public token)
             LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes << parameters.base_api_path >> << parameters.new_api_path >> --ignore-undocumented true)
             if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
               if [ -z "$LOG" ]; then
@@ -628,7 +628,7 @@ jobs:
             - run:
                 name: Push docs to publisher-production
                 command: |
-                  git remote set-url origin "https://x-access-token:$(mbx-ci github writer token)@github.com/mapbox/mapbox-navigation-ios.git"
+                  git remote set-url origin "https://x-access-token:$(mbx-ci github writer public token)@github.com/mapbox/mapbox-navigation-ios.git"
                   git config user.email "release-bot@mapbox.com"
                   git config user.name "Mapbox Releases"
                   VERSION="${OUTPUT}" scripts/publish-docs.sh
