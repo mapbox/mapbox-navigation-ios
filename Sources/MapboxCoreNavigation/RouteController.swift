@@ -311,19 +311,26 @@ open class RouteController: NSObject {
     }
 
     private func update(to status: NavigationStatus) {
-        guard let location = rawLocation else { return }
+        guard let rawLocation = rawLocation else { return }
+        
+        let snappedLocation = CLLocation(status.location)
+        
         // Notify observers if the step’s remaining distance has changed.
-        update(progress: routeProgress, with: CLLocation(status.location), rawLocation: location, upcomingRouteAlerts: status.upcomingRouteAlerts)
+        update(progress: routeProgress,
+               with: snappedLocation,
+               rawLocation: rawLocation,
+               upcomingRouteAlerts: status.upcomingRouteAlerts)
         
         updateIndexes(status: status, progress: routeProgress)
         updateRouteLegProgress(status: status)
-        let willReroute = !userIsOnRoute(location, status: status) && delegate?.router(self, shouldRerouteFrom: location)
-            ?? DefaultBehavior.shouldRerouteFromLocation
+        let willReroute = !userIsOnRoute(snappedLocation, status: status)
+        && delegate?.router(self, shouldRerouteFrom: snappedLocation)
+        ?? DefaultBehavior.shouldRerouteFromLocation
         
         updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
         updateRoadName(status: status)
-        updateDistanceToIntersection(from: CLLocation(status.location))
+        updateDistanceToIntersection(from: snappedLocation)
         
         if willReroute {
             reroute(from: CLLocation(status.location), along: routeProgress)
@@ -331,7 +338,7 @@ open class RouteController: NSObject {
 
         if status.routeState != .complete {
             // Check for faster route proactively (if reroutesProactively is enabled)
-            refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
+            refreshAndCheckForFasterRoute(from: snappedLocation, routeProgress: routeProgress)
         }
     }
     
