@@ -5,12 +5,17 @@
 ### Packaging
 
 * MapboxNavigation now depends on [Maps v10.2.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.2.0-rc.1). ([#3614](https://github.com/mapbox/mapbox-navigation-ios/pull/3614))
-* MapboxCoreNavigation now depends on [MapboxDirections v2.1.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.1.0). ([#3630](https://github.com/mapbox/mapbox-navigation-ios/pull/3630))
+* MapboxCoreNavigation now depends on [MapboxDirections v2.2.0-alpha.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.2.0-alpha.1). ([#3648](https://github.com/mapbox/mapbox-navigation-ios/pull/3648))
 * MapboxCoreNavigation now depends on [MapboxNavigationNative v81._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/81.0.0). ([#3614](https://github.com/mapbox/mapbox-navigation-ios/pull/3614))
 
 ### Route overlay
 
 * Fixed an issue where changing color of `NavigationMapView.maneuverArrowColor` and `NavigationMapView.maneuverArrowStrokeColor` did not work. ([#3633](https://github.com/mapbox/mapbox-navigation-ios/pull/3633))
+
+### Rerouting
+
+* Added the `RouterDelegate.router(_:initialManeuverBufferWhenReroutingFrom:)` method and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to configure rerouting buffering. ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
+* Added `RouterDelegate.router(_:requestBehaviorForReroutingWith:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to provide customization for rerouting mechanism by providing a user-defined route as a reroute. ([#3472](https://github.com/mapbox/mapbox-navigation-ios/pull/3472))
 
 ## v2.1.0
 
@@ -87,11 +92,6 @@
 * Renamed the `Locale.usesMetric` property to `Locale.measuresDistancesInMetricUnits`. `Locale.usesMetric` is still available but deprecated. ([#3547](https://github.com/mapbox/mapbox-navigation-ios/pull/3547))
 * Fixed an issue where the user interface did not necessarily display distances in the same units as the route by default. `NavigationRouteOptions` and `NavigationMatchOptions` now set `DirectionsOptions.distanceMeasurementSystem` to a default value matching the `NavigationSettings.distanceUnit` property. ([#3541](https://github.com/mapbox/mapbox-navigation-ios/pull/3541))
 * Introduced `RoutingProvider` to parameterize routing fetching and refreshing during active guidance sessions.  `Directions.calculateWithCache(options:completionHandler:)` and `Directions.calculateOffline(options:completionHandler)` functionality is deprecated by `MapboxRoutingProvider`. It is now recommended to use `MapboxRoutingProvider` to request or refresh routes instead of `Directions` object but you may also provide your own `RoutingProvider` implementation to `NavigationService`, `RouteController` or `LegacyRouteController`. Using `directions` property of listed above entities is discouraged, you should use corresponding `routingProvider` instead, albeit `Directions` also implements the protocol. ([#3261](https://github.com/mapbox/mapbox-navigation-ios/pull/3261))
-
-### Other changes
-
-* Added the `RouterDelegate.router(_:initialManeuverBufferWhenReroutingFrom:)` method and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to configure rerouting buffering. ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
-* Added `RouterDelegate.router(_:requestBehaviorForReroutingWith:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to provide customization for rerouting mechanism by providing a user-defined route as a reroute. ([#3472](https://github.com/mapbox/mapbox-navigation-ios/pull/3472))
 
 ## v2.0.1
 
