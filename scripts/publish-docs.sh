@@ -14,7 +14,7 @@ if ! [[ "${VERSION}" =~ ^([0-9]+\.){2}[0-9]+(-.+)?$ ]]; then
   exit 1
 fi
 
-
+git checkout -- .
 git checkout publisher-production
 git add "${VERSION}"
 git commit -m "v${VERSION} [skip ci]"
