@@ -324,8 +324,8 @@ open class RouteController: NSObject {
         updateIndexes(status: status, progress: routeProgress)
         updateRouteLegProgress(status: status)
         let willReroute = !userIsOnRoute(snappedLocation, status: status)
-        && delegate?.router(self, shouldRerouteFrom: snappedLocation)
-        ?? DefaultBehavior.shouldRerouteFromLocation
+        && (delegate?.router(self, shouldRerouteFrom: snappedLocation)
+            ?? DefaultBehavior.shouldRerouteFromLocation)
         
         updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
         updateVisualInstructionProgress(status: status)
@@ -333,7 +333,7 @@ open class RouteController: NSObject {
         updateDistanceToIntersection(from: snappedLocation)
         
         if willReroute {
-            reroute(from: CLLocation(status.location), along: routeProgress)
+            reroute(from: snappedLocation, along: routeProgress)
         }
 
         if status.routeState != .complete {
