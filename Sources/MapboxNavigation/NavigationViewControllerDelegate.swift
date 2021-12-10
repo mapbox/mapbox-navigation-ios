@@ -101,7 +101,6 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      
      - parameter navigationViewController: The navigation view controller that will calculate a new route.
      - parameter location: The user’s current location.
-     - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
     
@@ -110,7 +109,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      
      If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
      
-     This method is called after `navigationViewController(_:willRerouteFrom:)` is called, and before `navigationViewController(_:requestSourceForReroutingWith:)` is called.
+     This method is called after `navigationViewController(_:willRerouteFrom:)` is called, and before `navigationViewController(_:requestBehaviorForReroutingWith:)` is called.
      
      - parameter navigationViewController: The navigation view controller that has detected the need to calculate a new route.
      - parameter location: The user’s current location.
@@ -128,14 +127,14 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      This method is called after `navigationViewController(_:initialManeuverBufferWhenReroutingFrom:)` is called, and before `navigationViewController(_:didRerouteAlong:)` is called.
      
      - parameter navigationViewController: The navigation view controller that will calculate a new route.
-     - parameter location: The user’s current location.
+     - parameter options: `RouteOptions` that are supposed to be used for route calculation.
      - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest
+    func navigationViewController(_ navigationViewController: NavigationViewController, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior
     /**
      Called immediately after the navigation view controller receives a new route.
      
-     This method is called after `navigationViewController(_:requestSourceForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
+     This method is called after `navigationViewController(_:requestBehaviorForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter route: The new route.
@@ -145,7 +144,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller fails to receive a new route.
      
-     This method is called after `navigationViewController(_:requestSourceForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
+     This method is called after `navigationViewController(_:requestBehaviorForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -323,7 +322,7 @@ public extension NavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationViewController(_ navigationViewController: NavigationViewController, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest {
+    func navigationViewController(_ navigationViewController: NavigationViewController, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
         return .default
     }

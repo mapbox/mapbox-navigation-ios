@@ -38,7 +38,6 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      
      - parameter service: The navigation service that will calculate a new route.
      - parameter location: The user’s current location.
-     - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
      */
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation)
     
@@ -47,7 +46,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      
      If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
      
-     This method is called after `navigationService(_:willRerouteFrom:)` is called, and before `navigationService(_:requestSourceForReroutingWith:)` is called.
+     This method is called after `navigationService(_:willRerouteFrom:)` is called, and before `navigationService(_:requestBehaviorForReroutingWith:)` is called.
      
      - parameter service: The navigation service that will calculate a new route.
      - parameter location: The user’s current location.
@@ -65,10 +64,10 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      This method is called after `navigationService(_:initialManeuverBufferWhenReroutingFrom:)` is called, and before `navigationService(_:didRerouteAlong:)` is called.
      
      - parameter service: The navigation service that will calculate a new route.
-     - parameter location: The user’s current location.
+     - parameter options: `RouteOptions` that are supposed to be used for route calculation.
      - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
      */
-    func navigationService(_ service: NavigationService, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest
+    func navigationService(_ service: NavigationService, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -84,7 +83,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately after the navigation service receives a new route.
      
-     This method is called after `navigationService(_:requestSourceForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
+     This method is called after `navigationService(_:requestBehaviorForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
      
      - parameter service: The navigation service that has calculated a new route.
      - parameter route: The new route.
@@ -94,7 +93,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the navigation service fails to receive a new route.
      
-     This method is called after `navigationService(_:requestSourceForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
+     This method is called after `navigationService(_:requestBehaviorForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
      
      - parameter service: The navigation service that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -270,7 +269,7 @@ public extension NavigationServiceDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func navigationService(_ service: NavigationService, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest {
+    func navigationService(_ service: NavigationService, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
         return .default
     }

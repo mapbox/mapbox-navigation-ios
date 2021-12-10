@@ -728,8 +728,8 @@ extension NavigationViewController: NavigationServiceDelegate {
         return delegate?.navigationViewController(self, initialManeuverBufferWhenReroutingFrom: location) ?? RouteController.DefaultBehavior.reroutingManeuverRadius
     }
     
-    public func navigationService(_ service: NavigationService, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest {
-        return delegate?.navigationViewController(self, requestSourceForReroutingWith:options) ?? .default
+    public func navigationService(_ service: NavigationService, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
+        return delegate?.navigationViewController(self, requestBehaviorForReroutingWith:options) ?? .default
     }
     
     public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {

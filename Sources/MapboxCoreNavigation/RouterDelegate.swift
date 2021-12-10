@@ -4,29 +4,9 @@ import MapboxDirections
 import Turf
 
 /**
- Configuration for offsetting first route maneuver during rerouting.
- */
-public enum ReroutingManeuverBuffer {
-    /**
-     Leaves original `RouteOptions.initialManeuverAvoidanceRadius` to be used for rerouting attempt.
-     */
-    case `default`
-    /**
-     Disables offsetting the maneuver.
-     */
-    case disabled
-    /**
-     Sets offset radius (in meters).
-     
-     Equivalent to setting `RouteOptions.initialManeuverAvoidanceRadius` to the same radius at the beginning.
-     */
-    case radius(LocationDistance)
-}
-
-/**
  Configuration for a source to get new `Route` when rerouting occurs.
  */
-public enum ReroutingRequest {
+public enum ReroutingRequestBehavior {
     public typealias ReroutingRequestData = (options: RouteOptions, result: Result<RouteResponse, DirectionsError>)
     
     /**
@@ -80,7 +60,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      
      If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
      
-     This method is called after `router(_:willRerouteFrom:)` is called, and before `router(_:requestSourceForReroutingWith:)` is called.
+     This method is called after `router(_:willRerouteFrom:)` is called, and before `router(_:requestBehaviorForReroutingWith:)` is called.
      
      - parameter router: The router that has detected the need to calculate a new route.
      - parameter location: The user’s current location.
@@ -98,10 +78,10 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      This method is called after `router(_:initialManeuverBufferWhenReroutingFrom:)` is called, and before `router(_:didRerouteAlong:)` is called.
      
      - parameter router: The router that will calculate a new route.
-     - parameter location: The user’s current location.
+     - parameter options: `RouteOptions` that are supposed to be used for route calculation.
      - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
      */
-    func router(_ router: Router, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest
+    func router(_ router: Router, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -117,7 +97,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately after the router receives a new route.
      
-     This method is called after `router(_:requestSourceForReroutingWith:)` method is called.
+     This method is called after `router(_:requestBehaviorForReroutingWith:)` method is called.
      
      - parameter router: The router that has calculated a new route.
      - parameter route: The new route.
@@ -127,7 +107,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the router fails to receive a new route.
      
-     This method is called after `router(_:requestSourceForReroutingWith:)`.
+     This method is called after `router(_:requestBehaviorForReroutingWith:)`.
      
      - parameter router: The router that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -233,7 +213,7 @@ public extension RouterDelegate {
         return RouteController.DefaultBehavior.reroutingManeuverRadius
     }
     
-    func router(_ router: Router, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest {
+    func router(_ router: Router, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
         return .default
     }

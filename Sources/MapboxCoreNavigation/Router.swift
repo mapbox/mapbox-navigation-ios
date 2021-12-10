@@ -365,7 +365,7 @@ extension InternalRouter where Self: Router {
             }
         }
         
-        switch delegate?.router(self, requestSourceForReroutingWith: options) {
+        switch delegate?.router(self, requestBehaviorForReroutingWith: options) {
         case .default, .none:
             routeTask = routingProvider.calculateRoutes(options: options) {(session, result) in
                 parseResult(session, result)

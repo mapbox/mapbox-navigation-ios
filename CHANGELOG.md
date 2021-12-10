@@ -91,7 +91,7 @@
 ### Other changes
 
 * Added the `RouterDelegate.router(_:initialManeuverBufferWhenReroutingFrom:)` method and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to configure rerouting buffering. ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
-* Added `RouterDelegate.router(_:, requestSourceForReroutingWith:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to provide customization for rerouting mechanism by providing a user-defined route as a reroute. ([#3472](https://github.com/mapbox/mapbox-navigation-ios/pull/3472))
+* Added `RouterDelegate.router(_:requestBehaviorForReroutingWith:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to provide customization for rerouting mechanism by providing a user-defined route as a reroute. ([#3472](https://github.com/mapbox/mapbox-navigation-ios/pull/3472))
 
 ## v2.0.1
 

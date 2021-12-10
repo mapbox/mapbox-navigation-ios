@@ -37,7 +37,7 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
         return RouteController.DefaultBehavior.reroutingManeuverRadius
     }
 
-    public func navigationService(_ service: NavigationService, requestSourceForReroutingWith options: RouteOptions) -> ReroutingRequest {
+    public func navigationService(_ service: NavigationService, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
         recentMessages.append(#function)
         return .default
     }
