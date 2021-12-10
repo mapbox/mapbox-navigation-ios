@@ -2,6 +2,7 @@ import Foundation
 import CoreLocation
 import MapboxDirections
 import os.log
+import Turf
 
 /**
  A navigation service delegate interacts with one or more `NavigationService` instances (such as `MapboxNavigationService` objects) during turn-by-turn navigation. This protocol is the main way that your application can synchronize its state with the SDK’s location-related functionality. Each of the protocol’s methods is optional.
@@ -33,12 +34,40 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately before the navigation service calculates a new route.
      
-     This method is called after `navigationService(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationService(_:didRerouteAlong:)` is called.
+     This method is called after `navigationService(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationService(_:initialManeuverBufferWhenReroutingFrom:)` is called.
      
      - parameter service: The navigation service that will calculate a new route.
      - parameter location: The user’s current location.
      */
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation)
+    
+    /**
+     Configures distance (in meters) before the first maneuver in requested reroute.
+     
+     If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
+     
+     This method is called after `navigationService(_:willRerouteFrom:)` is called, and before `navigationService(_:requestBehaviorForReroutingWith:)` is called.
+     
+     - parameter service: The navigation service that will calculate a new route.
+     - parameter location: The user’s current location.
+     - returns: `LocationDistance` value which overrides (by passing a non-nil value) or leaves maneuvers offset as it was originally set (by passing `nil`).
+     */
+    func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance?
+    
+    /**
+     Called when the navigation service calculates a new route.
+
+     This method allows customizing the rerouting by providing custom `RouteResponse`. SDK will then treat it as if it was fetched as usual and apply as a reroute.
+     
+     - note: Multiple method calls will not interrupt the first ongoing request.
+     
+     This method is called after `navigationService(_:initialManeuverBufferWhenReroutingFrom:)` is called, and before `navigationService(_:didRerouteAlong:)` is called.
+     
+     - parameter service: The navigation service that will calculate a new route.
+     - parameter options: `RouteOptions` that are supposed to be used for route calculation.
+     - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
+     */
+    func navigationService(_ service: NavigationService, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -54,7 +83,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately after the navigation service receives a new route.
      
-     This method is called after `navigationService(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
+     This method is called after `navigationService(_:requestBehaviorForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
      
      - parameter service: The navigation service that has calculated a new route.
      - parameter route: The new route.
@@ -64,7 +93,7 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the navigation service fails to receive a new route.
      
-     This method is called after `navigationService(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
+     This method is called after `navigationService(_:requestBehaviorForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
      
      - parameter service: The navigation service that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -227,6 +256,22 @@ public extension NavigationServiceDelegate {
      */
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
+        return MapboxNavigationService.Default.reroutingManeuverRadius
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
+        return .default
     }
     
     /**

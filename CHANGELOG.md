@@ -88,6 +88,11 @@
 * Fixed an issue where the user interface did not necessarily display distances in the same units as the route by default. `NavigationRouteOptions` and `NavigationMatchOptions` now set `DirectionsOptions.distanceMeasurementSystem` to a default value matching the `NavigationSettings.distanceUnit` property. ([#3541](https://github.com/mapbox/mapbox-navigation-ios/pull/3541))
 * Introduced `RoutingProvider` to parameterize routing fetching and refreshing during active guidance sessions.  `Directions.calculateWithCache(options:completionHandler:)` and `Directions.calculateOffline(options:completionHandler)` functionality is deprecated by `MapboxRoutingProvider`. It is now recommended to use `MapboxRoutingProvider` to request or refresh routes instead of `Directions` object but you may also provide your own `RoutingProvider` implementation to `NavigationService`, `RouteController` or `LegacyRouteController`. Using `directions` property of listed above entities is discouraged, you should use corresponding `routingProvider` instead, albeit `Directions` also implements the protocol. ([#3261](https://github.com/mapbox/mapbox-navigation-ios/pull/3261))
 
+### Other changes
+
+* Added the `RouterDelegate.router(_:initialManeuverBufferWhenReroutingFrom:)` method and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to configure rerouting buffering. ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
+* Added `RouterDelegate.router(_:requestBehaviorForReroutingWith:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to provide customization for rerouting mechanism by providing a user-defined route as a reroute. ([#3472](https://github.com/mapbox/mapbox-navigation-ios/pull/3472))
+
 ## v2.0.1
 
 * Added the `Notification.Name.didArriveAtWaypoint` constant for notifications posted when the user arrives at a waypoint. ([#3514](https://github.com/mapbox/mapbox-navigation-ios/pull/3514))

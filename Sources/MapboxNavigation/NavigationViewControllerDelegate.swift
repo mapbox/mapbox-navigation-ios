@@ -93,7 +93,11 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called immediately before the navigation view controller calculates a new route.
      
-     This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationViewController(_:didRerouteAlong:)` is called.
+     This method also allows customizing the rerouting by providing custom `RouteResponse`. SDK will then treat it as if it was fetched as usual and apply as a reroute.
+     
+     - note: Multiple method calls will not interrupt the first ongoing request.
+     
+     This method is called after `navigationViewController(_:shouldRerouteFrom:)` is called, simultaneously with the `Notification.Name.routeControllerWillReroute` notification being posted, and before `navigationViewController(_:initialManeuverBufferWhenReroutingFrom:)` is called.
      
      - parameter navigationViewController: The navigation view controller that will calculate a new route.
      - parameter location: The user’s current location.
@@ -101,9 +105,36 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?)
     
     /**
+     Configures distance (in meters) before the first maneuver in requested reroute.
+     
+     If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
+     
+     This method is called after `navigationViewController(_:willRerouteFrom:)` is called, and before `navigationViewController(_:requestBehaviorForReroutingWith:)` is called.
+     
+     - parameter navigationViewController: The navigation view controller that has detected the need to calculate a new route.
+     - parameter location: The user’s current location.
+     - returns: `LocationDistance` value which overrides (by passing a non-nil value) or leaves maneuvers offset as it was originally set (by passing `nil`).
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance?
+    
+    /**
+     Called when the navigation view controller calculates a new route.
+
+     This method allows customizing the rerouting by providing custom `RouteResponse`. SDK will then treat it as if it was fetched as usual and apply as a reroute.
+     
+     - note: Multiple method calls will not interrupt the first ongoing request.
+     
+     This method is called after `navigationViewController(_:initialManeuverBufferWhenReroutingFrom:)` is called, and before `navigationViewController(_:didRerouteAlong:)` is called.
+     
+     - parameter navigationViewController: The navigation view controller that will calculate a new route.
+     - parameter options: `RouteOptions` that are supposed to be used for route calculation.
+     - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior
+    /**
      Called immediately after the navigation view controller receives a new route.
      
-     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
+     This method is called after `navigationViewController(_:requestBehaviorForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter route: The new route.
@@ -113,7 +144,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     /**
      Called when the navigation view controller fails to receive a new route.
      
-     This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
+     This method is called after `navigationViewController(_:requestBehaviorForReroutingWith:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
      
      - parameter navigationViewController: The navigation view controller that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -278,6 +309,22 @@ public extension NavigationViewControllerDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, willRerouteFrom location: CLLocation?) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        return RouteController.DefaultBehavior.reroutingManeuverRadius
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+        return .default
     }
     
     /**
