@@ -47,7 +47,7 @@ extension SpokenInstruction {
 }
 
 /**
- A route voice controller monitors turn-by-turn navigation events and triggers playing spoken instructions as audio using the Speech Synthesis framework, also known as VoiceOver.
+ A route voice controller monitors turn-by-turn navigation events and triggers playing spoken instructions as audio using the instance of `SpeechSynthesizing` type.
  
  You initialize a voice controller using a `NavigationService` instance. The voice controller observes when the navigation service hints that the user has passed a _spoken instruction point_ and responds by calling it's `speechSynthesizer` to handle the vocalization.
  
