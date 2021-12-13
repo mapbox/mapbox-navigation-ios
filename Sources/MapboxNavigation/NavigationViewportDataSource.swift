@@ -308,14 +308,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
             
             let followingMobileCameraAnchor = anchor(pitchСoefficient,
-                                                     maxPitch: followingCameraOptions.defaultPitch,
                                                      bounds: mapView.bounds,
                                                      edgeInsets: viewportPadding)
             
             followingMobileCamera.anchor = followingMobileCameraAnchor
             
             let followingCarPlayCameraAnchor = anchor(pitchСoefficient,
-                                                      maxPitch: followingCameraOptions.defaultPitch,
                                                       bounds: mapView.bounds,
                                                       edgeInsets: carPlayCameraPadding)
             
@@ -462,7 +460,6 @@ public class NavigationViewportDataSource: ViewportDataSource {
     }
     
     func anchor(_ pitchСoefficient: Double = 0.0,
-                maxPitch: Double = 0.0,
                 bounds: CGRect = .zero,
                 edgeInsets: UIEdgeInsets = .zero) -> CGPoint {
         let xCenter = max(((bounds.size.width - edgeInsets.left - edgeInsets.right) / 2.0) + edgeInsets.left, 0.0)
