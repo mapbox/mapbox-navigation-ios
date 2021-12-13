@@ -2,6 +2,7 @@ import CarPlay
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxMaps
+import os.log
 
 /**
  `CarPlayManager` is the main object responsible for orchestrating interactions with a Mapbox map on CarPlay.
@@ -77,6 +78,7 @@ public class CarPlayManager: NSObject {
 
     private weak var navigationService: NavigationService?
     private var idleTimerCancellable: IdleTimerManager.Cancellable?
+    private let logger: OSLog = .init(subsystem: "com.mapbox.navigation", category: "CarPlay")
     
     /**
      Programatically begins a CarPlay turn-by-turn navigation session.
@@ -88,11 +90,13 @@ public class CarPlayManager: NSObject {
     public func beginNavigationWithCarPlay(using currentLocation: CLLocationCoordinate2D,
                                            navigationService: NavigationService) {
         // Stop the background `PassiveLocationProvider` sending location and heading update `mapView` before turn-by-turn navigation session starts.
+        os_log("Begin navigation with CarPlay", log: logger, type: .info)
         if let locationProvider = navigationMapView?.mapView.location.locationProvider {
             locationProvider.stopUpdatingLocation()
             locationProvider.stopUpdatingHeading()
             if let passiveLocationProvider = locationProvider as? PassiveLocationProvider {
                 passiveLocationProvider.locationManager.pauseTripSession()
+                os_log("Trip session paused", log: logger, type: .info)
             }
         }
         
@@ -143,6 +147,7 @@ public class CarPlayManager: NSObject {
          routingProvider: RoutingProvider,
          eventsManager: NavigationEventsManager? = nil,
          carPlayNavigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
+        os_log("CarPlayManager initialized", log: logger, type: .info)
         self.styles = styles ?? [DayStyle(), NightStyle()]
         self.routingProvider = routingProvider
         self.eventsManager = eventsManager ?? .init(activeNavigationDataSource: nil,
@@ -160,22 +165,74 @@ public class CarPlayManager: NSObject {
                                                selector: #selector(navigationCameraStateDidChange(_:)),
                                                name: .navigationCameraStateDidChange,
                                                object: carPlayMapViewController?.navigationMapView.navigationCamera)
+        os_log("Subscribed for notifications", log: logger, type: .info)
     }
     
     func unsubscribeFromNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: .navigationCameraStateDidChange,
                                                   object: carPlayMapViewController?.navigationMapView.navigationCamera)
+        os_log("Unsubscribed for notifications", log: logger, type: .info)
     }
+    
+    func writeLogEvent() {
+        // OPEN FILE FOR LOGGING
+        
+        os_log("!!! CARPLAY TEST LOG ON ATTACH",
+               log: logger,
+               type: .debug)
+        
+        let stringToSave = "The string I want to save."
+        let path = getDocumentDirections()
+        print("!!! PATH: \(path)")
+        if let stringData = stringToSave.data(using: .utf8) {
+            try? stringData.write(to: path)
+        }
+    }
+    
+    func endLogging() {
+        // CLOSE FILE FOR LOGGING
+        
+        os_log("!!! CARPLAY TEST LOG ON DETACH",
+               log: logger,
+               type: .debug)
+        
+        let path = getDocumentDirections()
+        let stringToSave2 = "The SECOND string I want to save."
+        if let stringData2 = stringToSave2.data(using: .utf8) {
+            try? stringData2.write(to: path)
+        }
+        print("Log can be found here: \(path)")
+    }
+    
+    func getDocumentDirections() -> URL {
+        return FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("carplayTestLog")
+    }
+    
+    func getLogEntries() throws -> [OSLogEntryLog] {
+        let logStore = try OSLogStore(scope: .currentProcessIdentifier)
+        let oneHourAgo = logStore.position(date: Date().addingTimeInterval(-3600))
+
+        let allEntries = try logStore.getEntries(at: oneHourAgo)
+
+        // Filter the log to be relevant for carplay
+        return allEntries
+            .compactMap { $0 as? OSLogEntryLog }
+            .filter { $0.category == "CarPlay" }
+    }
+
     
     @objc func navigationCameraStateDidChange(_ notification: Notification) {
         guard let state = notification.userInfo?[NavigationCamera.NotificationUserInfoKey.state] as? NavigationCameraState else { return }
         switch state {
         case .idle:
+            os_log("Camera state: idle", log: logger, type: .info)
             carPlayMapViewController?.recenterButton.isHidden = false
         case .transitionToFollowing, .following:
+            os_log("Camera state: following", log: logger, type: .info)
             carPlayMapViewController?.recenterButton.isHidden = true
         case .transitionToOverview, .overview:
+            os_log("Camera state: overview", log: logger, type: .info)
             break
         }
     }
@@ -333,6 +390,7 @@ extension CarPlayManager: CPApplicationDelegate {
         interfaceController.setRootTemplate(mapTemplate, animated: false)
             
         eventsManager.sendCarPlayConnectEvent()
+        os_log("Did connect CarInterfaceController to window", log: logger, type: .info)
         
         subscribeForNotifications()
     }
@@ -351,6 +409,7 @@ extension CarPlayManager: CPApplicationDelegate {
         carWindow = nil
 
         eventsManager.sendCarPlayDisconnectEvent()
+        os_log("Did disconnect CarInterfaceController to window", log: logger, type: .info)
 
         idleTimerCancellable = nil
         
@@ -392,7 +451,7 @@ extension CarPlayManager: CPApplicationDelegate {
         } else if let mapButtons = browsingMapButtons(for: mapTemplate) {
             mapTemplate.mapButtons = mapButtons
         }
-        
+        os_log("Did create map template", log: logger, type: .info)
         return mapTemplate
     }
 
@@ -407,7 +466,7 @@ extension CarPlayManager: CPApplicationDelegate {
             } else if let mapButtons = browsingMapButtons(for: mapTemplate) {
                 mapTemplate.mapButtons = mapButtons
             }
-            
+            os_log("Resent pan buttons", log: logger, type: .info)
             mapTemplate.dismissPanningInterface(animated: false)
         }
     }
@@ -513,6 +572,7 @@ extension CarPlayManager {
                               name: name)
         
         previewRoutes(between: [origin, destination], completionHandler: completionHandler)
+        os_log("Resent pan buttons", log: logger, type: .info)
     }
     
     /**
@@ -522,6 +582,7 @@ extension CarPlayManager {
      - parameter completionHandler: A closure to be executed when the calculation completes.
      */
     public func previewRoutes(between waypoints: [Waypoint], completionHandler: @escaping CompletionHandler) {
+        os_log("Previewed routes for a list of waypoint objects", log: logger, type: .info)
         let options = NavigationRouteOptions(waypoints: waypoints)
         previewRoutes(for: options, completionHandler: completionHandler)
     }
@@ -534,6 +595,7 @@ extension CarPlayManager {
      - parameter completionHandler: A closure to be executed when the calculation completes.
      */
     public func previewRoutes(for options: RouteOptions, completionHandler: @escaping CompletionHandler) {
+        os_log("Calculated routes with given options", log: logger, type: .info)
         calculate(options) { [weak self] (session, result) in
             guard let self = self else {
                 completionHandler()
@@ -561,6 +623,7 @@ extension CarPlayManager {
         
         switch result {
         case let .failure(error):
+            os_log("Failed to calculate routes.", log: logger, type: .info)
             guard let delegate = delegate,
                   let alert = delegate.carPlayManager(self,
                                                       didFailToFetchRouteBetween: routeOptions.waypoints,
@@ -574,6 +637,7 @@ extension CarPlayManager {
             mapTemplate?.present(navigationAlert: alert, animated: true)
             return
         case let .success(response):
+            os_log("Successfully calculated routes.", log: logger, type: .info)
             if let traitCollection = (self.carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
                let interfaceController = interfaceController {
                 
@@ -1003,6 +1067,7 @@ extension CarPlayManager {
         interfaceController.setRootTemplate(mapTemplate, animated: false)
 
         eventsManager.sendCarPlayConnectEvent()
+        os_log("Attach carplay to window", log: logger, type: .info)
         
         subscribeForNotifications()
     }
@@ -1023,6 +1088,7 @@ extension CarPlayManager {
         eventsManager.sendCarPlayDisconnectEvent()
 
         idleTimerCancellable = nil
+        os_log("Detach carplay from window", log: logger, type: .info)
         
         unsubscribeFromNotifications()
     }
