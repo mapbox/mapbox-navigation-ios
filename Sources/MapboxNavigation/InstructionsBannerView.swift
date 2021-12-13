@@ -4,58 +4,75 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 /**
- `InstructionsBannerViewDelegate` provides methods for reacting to user interactions in `InstructionsBannerView`.
- */
-public protocol InstructionsBannerViewDelegate: VisualInstructionDelegate {
-    /**
-     Called when the user taps the `InstructionsBannerView`.
-     */
-    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView)
-    
-    /**
-     Called when the user swipes either left, right, or down on the `InstructionsBannerView`
-     */
-    func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction)
-}
-
-public extension InstructionsBannerViewDelegate {
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
-        logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
-        logUnimplemented(protocolType: InstructionsBannerViewDelegate.self, level: .debug)
-    }
-}
-
-/// :nodoc:
+ A banner view that contains the current step instruction and responds to tap and swipe gestures.
+ 
+ This class responds and gets updated as the user progresses along a route according to the `NavigationComponent` and `BaseInstructionsBannerView` protocol.
+*/
 @IBDesignable
 open class InstructionsBannerView: BaseInstructionsBannerView, NavigationComponent {
+    
+    /**
+     Updates the instructions banner info as the user progresses along a route.
+     
+     - parameter service: The `NavigationService` instance that passes the instruction.
+     - parameter instruction: The `VisualInstructionBanner` instance to be presented.
+     - parameter routeProgress: The`RouteProgress` instance that the instruction banner view is updating.
+     */
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         update(for: instruction)
     }
 }
 
-/// :nodoc:
+/**
+ A banner view that contains the current step instruction along a route and responds to tap and swipe gestures, as the base of `InstructionsCardView` and `InstructionsBannerView`.
+*/
 open class BaseInstructionsBannerView: UIControl {
+    
+    /**
+     A view that contains a simple image indicating a type of maneuver.
+     */
     public weak var maneuverView: ManeuverView!
+    
+    /**
+     A primary instruction label indicates the current step.
+     */
     public weak var primaryLabel: PrimaryLabel!
+    
+    /**
+     A secondary instruction label below the `primaryLabel` to provide detail information of current step.
+     */
     public weak var secondaryLabel: SecondaryLabel!
+    
+    /**
+     A styled lable indicates the remaining distance along the current step.
+     */
     public weak var distanceLabel: DistanceLabel!
+    
+    /**
+     A vertical view divides between `maneuverView` and `distanceLabel` to `primaryLabel` and `secondaryLabel`.
+     */
     public weak var dividerView: UIView!
     weak var _separatorView: UIView!
+    
+    /**
+     A invisible helper view for visualizing the result of the constraints.
+     */
     public weak var separatorView: SeparatorView!
+    
+    /**
+     A drag view indicates whether there're more steps in the remaining route.
+     */
     public weak var stepListIndicatorView: StepListIndicatorView!
     
+    /**
+     A `Boolean` value controls whether the banner view reponds to swipe gestures. Defaults to `false`.
+     */
     @IBInspectable
     public var swipeable: Bool = false
     
+    /**
+     A `Boolean` value controls whether the banner view shows the `stepListIndicatorView`. Defaults to `true`.
+     */
     @IBInspectable
     public var showStepIndicator: Bool = true {
         didSet {
@@ -63,6 +80,9 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
+    /**
+     The instruction banner view's delegate that conforms to `InstructionsBannerViewDelegate`.
+     */
     public weak var delegate: InstructionsBannerViewDelegate? {
         didSet {
             if showStepIndicator {
@@ -78,6 +98,9 @@ open class BaseInstructionsBannerView: UIControl {
     
     let distanceFormatter = DistanceFormatter()
     
+    /**
+     The remaining distance of current step in meters.
+     */
     public var distance: CLLocationDistance? {
         didSet {
             distanceLabel.attributedDistanceString = nil
