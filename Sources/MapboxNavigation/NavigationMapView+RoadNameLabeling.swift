@@ -1,6 +1,9 @@
 import MapboxMaps
 import MapboxDirections
 import MapboxCoreNavigation
+import os.log
+
+private let logger: OSLog = .init(subsystem: "com.mapbox.navigation", category: "RoadNameLabeling")
 
 extension NavigationMapView {
     
@@ -23,7 +26,7 @@ extension NavigationMapView {
             do {
                 try mapView.mapboxMap.style.addSource(streetsSource, id: sourceIdentifier)
             } catch {
-                NSLog("Failed to add \(sourceIdentifier) with error: \(error.localizedDescription).")
+                os_log("Failed to add %s with error: %s.", log: logger, type: .error, sourceIdentifier as CVarArg, error.localizedDescription)
             }
         }
         
@@ -82,7 +85,7 @@ extension NavigationMapView {
                 
                 try mapView.mapboxMap.style.addLayer(streetLabelLayer, layerPosition: layerPosition)
             } catch {
-                NSLog("Failed to add \(roadLabelStyleLayerIdentifier) with error: \(error.localizedDescription).")
+                os_log("Failed to add %s with error: %s.", log: logger, type: .error, roadLabelStyleLayerIdentifier as CVarArg, error.localizedDescription)
             }
         }
         
@@ -164,7 +167,7 @@ extension NavigationMapView {
                 wayNameView.containerView.isHidden = hideWayName
                 
             case .failure:
-                NSLog("Failed to find visible features.")
+                os_log("Failed to find visible features.", log: logger, type: .error)
             }
         }
     }
