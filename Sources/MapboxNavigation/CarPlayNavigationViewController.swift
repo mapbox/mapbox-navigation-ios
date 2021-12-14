@@ -2,6 +2,7 @@ import Foundation
 import MapboxDirections
 import MapboxCoreNavigation
 @_spi(Restricted) import MapboxMaps
+import os.log
 
 #if canImport(CarPlay)
 import CarPlay
@@ -94,6 +95,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     
     private var safeTrailingCompassViewConstraint: NSLayoutConstraint!
     private var trailingCompassViewConstraint: NSLayoutConstraint!
+    
+    private let logger: OSLog = .init(subsystem: "com.mapbox.navigation", category: "CarPlayNavigationViewController")
 
     func setupOrnaments() {
         let compassView = CarPlayCompassView()
@@ -149,8 +152,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     func updateTripEstimateStyle(_ userInterfaceStyle: UIUserInterfaceStyle) {
         switch traitCollection.userInterfaceStyle {
         case .dark:
+            os_log("TripEstimateStyle set to dark.", log: logger, type: .info)
             mapTemplate.tripEstimateStyle = .dark
         default:
+            os_log("TripEstimateStyle set to default/light.", log: logger, type: .info)
             mapTemplate.tripEstimateStyle = .light
         }
     }
@@ -413,6 +418,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         super.traitCollectionDidChange(previousTraitCollection)
         
         if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
+            os_log("Trait collection changed.", log: logger, type: .info)
             updateTripEstimateStyle(traitCollection.userInterfaceStyle)
             updateManeuvers(navigationService.routeProgress)
         }
@@ -516,6 +522,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                                                selector: #selector(didUpdateRoadNameFromStatus),
                                                name: .currentRoadNameDidChange,
                                                object: nil)
+        os_log("CarPlayNavigationViewController subscribed for notifications.", log: logger, type: .info)
     }
     
     func suspendNotifications() {
@@ -542,6 +549,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         NotificationCenter.default.removeObserver(self,
                                                   name: .currentRoadNameDidChange,
                                                   object: nil)
+        os_log("CarPlayNavigationViewController suspended notifications.", log: logger, type: .info)
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {
@@ -648,6 +656,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
               let simulatedSpeedMultiplier = notification.userInfo?[MapboxNavigationService.NotificationUserInfoKey.simulatedSpeedMultiplierKey] as? Double
               else { return }
 
+        os_log("Simulation state did change.", log: logger, type: .info)
+        
         switch simulationState {
         case .willBeginSimulation:
             navigationMapView?.storeLocationProviderBeforeSimulation()

@@ -2,6 +2,7 @@ import Foundation
 @_spi(Restricted) import MapboxMaps
 import MapboxCoreNavigation
 import MapboxDirections
+import os.log
 
 #if canImport(CarPlay)
 import CarPlay
@@ -172,6 +173,7 @@ open class CarPlayMapViewController: UIViewController {
     
     private var safeTrailingSpeedLimitViewConstraint: NSLayoutConstraint!
     private var trailingSpeedLimitViewConstraint: NSLayoutConstraint!
+    private let logger: OSLog = .init(subsystem: "com.mapbox.navigation", category: "CarPlayMapViewController")
     
     // MARK: Initialization Methods
     
@@ -278,12 +280,14 @@ open class CarPlayMapViewController: UIViewController {
                                                selector: #selector(didUpdatePassiveLocation),
                                                name: .passiveLocationManagerDidUpdate,
                                                object: nil)
+        os_log("CarPlayMapViewController did subscribe to free drive notifications.", log: logger, type: .info)
     }
     
     func unsubscribeFromFreeDriveNotifications() {
         NotificationCenter.default.removeObserver(self,
                                                   name: .passiveLocationManagerDidUpdate,
                                                   object: nil)
+        os_log("CarPlayMapViewController did unsubscribe from free drive notifications.", log: logger, type: .info)
     }
     
     @objc func didUpdatePassiveLocation(_ notification: Notification) {
