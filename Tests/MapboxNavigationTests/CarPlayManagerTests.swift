@@ -29,6 +29,7 @@ class CarPlayManagerTests: TestCase {
     override func tearDown() {
         manager = nil
         searchController = nil
+        eventsManagerSpy = nil
         super.tearDown()
     }
 
@@ -244,6 +245,8 @@ class CarPlayManagerSpec: QuickSpec {
 
         afterEach {
             CarPlayMapViewController.unswizzleMethods()
+            manager = nil
+            delegate = nil
         }
 
         //MARK: Previewing Routes
@@ -448,6 +451,7 @@ extension CarPlayMapViewController {
         guard swizzled else { return }
         swizzled = false
         swapMethodsForSwizzling()
+        presentedViewControllers.removeAll()
     }
 
     private static func swapMethodsForSwizzling() {
