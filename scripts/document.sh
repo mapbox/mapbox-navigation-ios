@@ -25,10 +25,6 @@ THEME=${JAZZY_THEME:-$DEFAULT_THEME}
 
 BASE_URL="https://docs.mapbox.com/ios"
 
-# Link to directions documentation
-DIRECTIONS_VERSION=$(grep 'mapbox-directions-swift' Cartfile.resolved | grep -oE '"v.+?"' | grep -oE '[^"v]+')
-DIRECTIONS_SYMBOLS="AttributeOptions|CoordinateBounds|Directions|DirectionsCredentials|DirectionsOptions|DirectionsPriority|DirectionsProfileIdentifier|DirectionsResult|Intersection|Lane|LaneIndication|MapMatchingResponse|Match|MatchOptions|RoadClasses|Route|RouteLeg|RouteOptions|RouteResponse|RouteStep|SpokenInstruction|Tracepoint|VisualInstruction|VisualInstruction.Component|VisualInstruction.Component.ImageRepresentation|VisualInstruction.Component.TextRepresentation|VisualInstructionBanner|Waypoint"
-
 rm -rf ${OUTPUT}
 mkdir -p ${OUTPUT}
 
@@ -71,10 +67,8 @@ fi
     
 rm docs.output
 
-REPLACE_REGEXP='s/MapboxNavigation\s+(Docs|Reference)/Mapbox Navigation SDK for iOS $1/, '
-REPLACE_REGEXP+="s/<span class=\"kt\">(${DIRECTIONS_SYMBOLS})<\/span>/<span class=\"kt\"><a href=\"${BASE_URL//\//\\/}\/directions\/api\/${DIRECTIONS_VERSION}\/Classes\/\$1.html\">\$1<\/a><\/span>/, "
-
-find ${OUTPUT} -name *.html -exec \
-    perl -pi -e "$REPLACE_REGEXP" {} \;
+# Link to directions documentation
+DIRECTIONS_VERSION=$(python3 -c "import json; print(list(filter(lambda x:x['package']=='MapboxDirections', json.loads(open('Package.resolved').read())['object']['pins']))[0]['state']['version'])")
+python3 scripts/postprocess-docs.py -b "${BASE_URL}/directions/api/${DIRECTIONS_VERSION}" -d "${OUTPUT}"
 
 echo $SHORT_VERSION > $OUTPUT/latest_version
