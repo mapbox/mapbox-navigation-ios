@@ -1,6 +1,6 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## v2.1.0
+## v2.1.1
 
 ### Pricing
 
