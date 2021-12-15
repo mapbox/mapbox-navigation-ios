@@ -353,9 +353,7 @@ extension TopBannerViewController: NavigationComponent {
         instructionsBannerView.update(for: instruction)
         lanesView.update(for: instruction)
         nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
-        DispatchQueue.main.async {
-            self.junctionView.update(for: instruction, service: service)
-        }
+        junctionView.update(for: instruction, service: service)
     }
     
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
