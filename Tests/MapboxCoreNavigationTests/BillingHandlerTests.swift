@@ -655,7 +655,7 @@ final class BillingHandlerUnitTests: TestCase {
 
     // FIXME: Regardless of location, which was provided, `Navigator.updateLocation(for:callback:)`
     // will always return `false`, this in turn will lead to a test failure.
-    func disabled_testPausedFreeDrivePausesNavNativeNavigator() {
+    func testPausedFreeDrivePausesNavNativeNavigator() {
         let locationManager = ReplayLocationManager(locations: [.init(coordinate: .init(latitude: 0, longitude: 0))])
         locationManager.speedMultiplier = 100
         locationManager.replayCompletionHandler = { _ in true }
@@ -703,7 +703,7 @@ final class BillingHandlerUnitTests: TestCase {
                 }
                 let nextLocation = lastLocation.shifted(to: lastLocation.timestamp.addingTimeInterval(TimeInterval(idx)))
                 Navigator.shared.navigator.updateLocation(for: FixLocation(nextLocation)) { success in
-                    XCTAssertTrue(success)
+                    XCTAssertFalse(success) // For paused Navigator updateLocation MUST return false
                 }
             }
             forceSendNextLocation(idx: 1)
