@@ -11,39 +11,50 @@ class InstructionsCardCollectionTests: TestCase {
         return Fixture.routeResponse(from: jsonFileName, options: routeOptions)
     }()
     
-    lazy var instructionsCardCollectionDataSource: (collection: InstructionsCardViewController, progress: RouteProgress, service: MapboxNavigationService, delegate: InstructionsCardCollectionDelegateSpy) = {
-        let host = UIViewController(nibName: nil, bundle: nil)
-        let container = UIView.forAutoLayout()
-        let subject = InstructionsCardViewController(nibName: nil, bundle: nil)
-        let delegate = InstructionsCardCollectionDelegateSpy()
-        subject.cardCollectionDelegate = delegate
-        
-        host.view.addSubview(container)
-        constrain(container, to: host.view)
-        
-        embed(parent: host, child: subject, in: container) { (parent, guidanceCard) -> [NSLayoutConstraint] in
-            guidanceCard.view.translatesAutoresizingMaskIntoConstraints = false
-            return guidanceCard.view.constraintsForPinning(to: container)
-        }
-        
-        let fakeOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
-            CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
-        ])
-        let fakeRoute = Fixture.route(from: "route-with-banner-instructions", options: fakeOptions)
-        
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                              routeIndex: 0,
-                                              routeOptions: fakeOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
-                                              credentials: Fixture.credentials,
-                                              simulating: .never)
-        let routeProgress = RouteProgress(route: fakeRoute, options: fakeOptions)
-        subject.routeProgress = routeProgress
-        
-        return (collection: subject, progress: routeProgress, service: service, delegate: delegate)
-    }()
-    
+    var instructionsCardCollectionDataSource: (collection: InstructionsCardViewController, progress: RouteProgress, service: MapboxNavigationService, delegate: InstructionsCardCollectionDelegateSpy)!
+
+    override func setUp() {
+        super.setUp()
+
+        instructionsCardCollectionDataSource = {
+            let host = UIViewController(nibName: nil, bundle: nil)
+            let container = UIView.forAutoLayout()
+            let subject = InstructionsCardViewController(nibName: nil, bundle: nil)
+            let delegate = InstructionsCardCollectionDelegateSpy()
+            subject.cardCollectionDelegate = delegate
+
+            host.view.addSubview(container)
+            constrain(container, to: host.view)
+
+            embed(parent: host, child: subject, in: container) { (parent, guidanceCard) -> [NSLayoutConstraint] in
+                guidanceCard.view.translatesAutoresizingMaskIntoConstraints = false
+                return guidanceCard.view.constraintsForPinning(to: container)
+            }
+
+            let fakeOptions = NavigationRouteOptions(coordinates: [
+                CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
+                CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
+            ])
+            let fakeRoute = Fixture.route(from: "route-with-banner-instructions", options: fakeOptions)
+
+            let service = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                                  routeIndex: 0,
+                                                  routeOptions: fakeOptions,
+                                                  routingProvider: MapboxRoutingProvider(.offline),
+                                                  credentials: Fixture.credentials,
+                                                  simulating: .never)
+            let routeProgress = RouteProgress(route: fakeRoute, options: fakeOptions)
+            subject.routeProgress = routeProgress
+
+            return (collection: subject, progress: routeProgress, service: service, delegate: delegate)
+        }()
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        instructionsCardCollectionDataSource = nil
+    }
+
     @available(iOS 11.0, *)
     func testInstructionsCardCollectionScrollViewWillEndDragging_ShouldScrollToNextItem() {
         let subject = instructionsCardCollectionDataSource.collection
