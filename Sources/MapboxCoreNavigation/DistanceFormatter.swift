@@ -1,13 +1,13 @@
 import CoreLocation
 import MapboxDirections
 
-struct RoundingTable {
-    struct Threshold {
-        let maximumDistance: Measurement<UnitLength>
-        let roundingIncrement: Double
-        let maximumFractionDigits: Int
+public struct RoundingTable {
+    public struct Threshold {
+        public let maximumDistance: Measurement<UnitLength>
+        public let roundingIncrement: Double
+        public let maximumFractionDigits: Int
         
-        func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
+        public func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
             var measurement = Measurement(value: distance, unit: .meters).converted(to: maximumDistance.unit)
             measurement.value.round(roundingIncrement: roundingIncrement)
             measurement.value.round(precision: pow(10, Double(maximumFractionDigits)))
@@ -15,12 +15,12 @@ struct RoundingTable {
         }
     }
     
-    let thresholds: [Threshold]
+    public let thresholds: [Threshold]
     
     /**
      Returns the most applicable threshold for the given distance, falling back to the last threshold.
      */
-    func threshold(for distance: CLLocationDistance) -> Threshold {
+    public func threshold(for distance: CLLocationDistance) -> Threshold {
         return thresholds.first {
             distance < $0.maximumDistance.distance
         } ?? thresholds.last!

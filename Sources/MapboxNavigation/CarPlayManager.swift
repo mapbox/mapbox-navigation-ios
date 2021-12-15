@@ -726,9 +726,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
               routes.indices.contains(routeIndex) else { return }
         
         let route = routes[routeIndex]
-        
-        let distanceRemaining = delegate?.carPlayManager(self, didUpdate: route.distance) ?? Measurement(distance: route.distance).localized()
-        let estimates = CPTravelEstimates(distanceRemaining: distanceRemaining,
+        let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)
         
@@ -934,10 +932,6 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
                                  didAdd: finalDestinationAnnotation,
                                  to: carPlayNavigationViewController,
                                  pointAnnotationManager: pointAnnotationManager)
-    }
-    
-    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, didUpdate remainingDistance: CLLocationDistance) -> Measurement<UnitLength>? {
-        return delegate?.carPlayManager(self, didUpdate: remainingDistance)
     }
 }
 
