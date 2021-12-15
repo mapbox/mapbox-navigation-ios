@@ -694,8 +694,10 @@ extension RouteController: Router {
                     //TODO: Can a match hit this codepoint?
                     self.isRerouting = false; return
                 }
-                self.updateRoute(with: indexedResponse, routeOptions: routeOptions, isProactive: false) { success in
-                    self.isRerouting = false
+                self.updateRoute(with: indexedResponse,
+                                 routeOptions: routeOptions,
+                                 isProactive: false) { [weak self] success in
+                    self?.isRerouting = false
                 }
             case let .failure(error):
                 self.delegate?.router(self, didFailToRerouteWith: error)
