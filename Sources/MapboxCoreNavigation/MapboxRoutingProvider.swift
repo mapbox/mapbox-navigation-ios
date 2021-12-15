@@ -3,6 +3,9 @@ import MapboxDirections
 import MapboxNavigationNative
 @_implementationOnly import MapboxNavigationNative_Private
 
+/// RouterInterface from MapboxNavigationNative
+typealias RouterInterfaceNative = MapboxNavigationNative_Private.RouterInterface
+
 /**
  Provides alternative access to routing API.
  
@@ -114,7 +117,7 @@ public class MapboxRoutingProvider: RoutingProvider {
     public private(set) var activeRequests: [RequestId : Request] = [:]
     
     private let requestsLock = NSLock()
-    private let router: MapboxNavigationNative_Private.RouterInterface
+    private let router: RouterInterfaceNative
     
     private func complete(requestId: RequestId, with result: @escaping () -> Void) {
         DispatchQueue.main.async { [self] in
