@@ -305,6 +305,7 @@
 		B47C1B86261FD3E00078546C /* NavigationPlotter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1B01261FD0A30078546C /* NavigationPlotter.swift */; };
 		B47C1B8F261FD3E70078546C /* NavigationServiceTestDoubles.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1AE2261FD0A30078546C /* NavigationServiceTestDoubles.swift */; };
 		B4843887270F8E1600E161E6 /* SimulationType.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4843886270F8E1600E161E6 /* SimulationType.swift */; };
+		B493FB1D2767EDDB002AF455 /* InstructionsBannerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B493FB1C2767EDDB002AF455 /* InstructionsBannerViewDelegate.swift */; };
 		B4A78D19261FD47700FDF212 /* route-with-banner-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AE5261FD0A30078546C /* route-with-banner-instructions.json */; };
 		B4A78D1A261FD47700FDF212 /* route-with-missing-road-classes.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AE6261FD0A30078546C /* route-with-missing-road-classes.json */; };
 		B4A78D1B261FD47700FDF212 /* route-with-instructions.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AE7261FD0A30078546C /* route-with-instructions.json */; };
@@ -864,6 +865,7 @@
 		B47C1B02261FD0A30078546C /* DirectionsSpy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsSpy.swift; sourceTree = "<group>"; };
 		B47C1B03261FD0A30078546C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B4843886270F8E1600E161E6 /* SimulationType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulationType.swift; sourceTree = "<group>"; };
+		B493FB1C2767EDDB002AF455 /* InstructionsBannerViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsBannerViewDelegate.swift; sourceTree = "<group>"; };
 		B4BB0AD42704D1D7006F502D /* short_route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = short_route.json; sourceTree = "<group>"; };
 		B4BB0AD62704D1E6006F502D /* multileg_route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = multileg_route.json; sourceTree = "<group>"; };
 		B4D4291826260D5900EE92A8 /* MBXInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
@@ -1563,6 +1565,7 @@
 				8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */,
 				353610CD1FAB6A8F00FB1746 /* BottomBannerViewController.swift */,
 				355ED36F1FAB724F00BCE1B8 /* BottomBannerViewLayout.swift */,
+				B493FB1C2767EDDB002AF455 /* InstructionsBannerViewDelegate.swift */,
 			);
 			name = Banners;
 			sourceTree = "<group>";
@@ -2438,6 +2441,7 @@
 				353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
 				C54C655220336F2600D338E0 /* Constants.swift in Sources */,
+				B493FB1D2767EDDB002AF455 /* InstructionsBannerViewDelegate.swift in Sources */,
 				353610CE1FAB6A8F00FB1746 /* BottomBannerViewController.swift in Sources */,
 				8A50A3CD26EC0A3100894A8E /* DialogViewController.swift in Sources */,
 				AEC3AC9A2106703100A26F34 /* HighwayShield.swift in Sources */,

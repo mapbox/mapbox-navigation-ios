@@ -160,7 +160,7 @@ extension NavigationMapView {
         
         if index > 0 && offRouteDistanceCheckEnabled {
             let distanceToLine = findDistanceToNearestPointOnCurrentLine(coordinate: coordinate, granularDistances: granularDistances, upcomingIndex: index + 1)
-            if distanceToLine > OffRouteDistanceUpdateThreshold {
+            if distanceToLine > offRouteDistanceUpdateThreshold {
                 return
             }
         }

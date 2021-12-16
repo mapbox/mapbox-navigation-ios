@@ -94,7 +94,9 @@ custom_categories:
       - InstructionsCardViewController
       - InstructionsCardContainerView
       - InstructionsCardContainerViewDelegate
+      - InstructionsBannerView
       - InstructionsBannerViewDelegate
+      - BaseInstructionsBannerView
       - ManeuverView
       - JunctionView
       - GenericRouteShield
