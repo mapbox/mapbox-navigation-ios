@@ -29,7 +29,7 @@ open class InstructionsBannerView: BaseInstructionsBannerView, NavigationCompone
 open class BaseInstructionsBannerView: UIControl {
     
     /**
-     A view that contains a simple image indicating a type of maneuver.
+     A view that contains an image indicating a type of maneuver.
      */
     public weak var maneuverView: ManeuverView!
     
@@ -39,28 +39,30 @@ open class BaseInstructionsBannerView: UIControl {
     public weak var primaryLabel: PrimaryLabel!
     
     /**
-     A secondary instruction label below the `primaryLabel` to provide detail information of current step.
+     A secondary instruction label below the `PrimaryLabel`, which provides detailed information about the current step..
      */
     public weak var secondaryLabel: SecondaryLabel!
     
     /**
-     A styled lable indicates the remaining distance along the current step.
+     A styled label indicates the remaining distance along the current step.
      */
     public weak var distanceLabel: DistanceLabel!
     
     /**
-     A vertical view divides between `maneuverView` and `distanceLabel` to `primaryLabel` and `secondaryLabel`.
+     A vertical view divides between `ManeuverView` and `DistanceLabel` to `PrimaryLabel` and `SecondaryLabel`.
      */
     public weak var dividerView: UIView!
     weak var _separatorView: UIView!
     
     /**
-     A invisible helper view for visualizing the result of the constraints.
+     An invisible helper view for visualizing the result of the constraints.
      */
     public weak var separatorView: SeparatorView!
     
     /**
-     A drag view indicates whether there're more steps in the remaining route.
+     A view, which indicates that there're more steps in the current route.
+     
+     If shown, `InstructionsBannerView` can be swiped to the bottom to see all of these remaining steps.
      */
     public weak var stepListIndicatorView: StepListIndicatorView!
     
@@ -71,7 +73,7 @@ open class BaseInstructionsBannerView: UIControl {
     public var swipeable: Bool = false
     
     /**
-     A `Boolean` value controls whether the banner view shows the `stepListIndicatorView`. Defaults to `true`.
+     A `Boolean` value controls whether the banner view shows the `StepListIndicatorView`. Defaults to `true`.
      */
     @IBInspectable
     public var showStepIndicator: Bool = true {
@@ -175,6 +177,8 @@ open class BaseInstructionsBannerView: UIControl {
     
     /**
      Updates the instructions banner info with a given `VisualInstructionBanner`.
+     
+     - parameter instruction: The `VisualInstructionBanner` instance to be presented.
      */
     public func update(for instruction: VisualInstructionBanner?) {
         let secondaryInstruction = instruction?.secondaryInstruction
@@ -204,6 +208,8 @@ open class BaseInstructionsBannerView: UIControl {
     
     /**
      Updates the instructions banner distance info for a given `RouteStepProgress`.
+     
+     - parameter currentStepProgress: The current `RouteStepProgress` instance that the instruction banner view is updating.
      */
     public func updateDistance(for currentStepProgress: RouteStepProgress) {
         let distanceRemaining = currentStepProgress.distanceRemaining
