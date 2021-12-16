@@ -34,6 +34,7 @@ echo "DESTINATION=$DESTINATION"
 echo "NATIVE_SIM_FRAMEWORK_PATH=$NATIVE_SIM_FRAMEWORK_PATH"
 
 pushd $NATIVE_PATH
+git fetch --tags
 git switch --detach v$NATIVE_VERSION
 rm -rf build
 mkdir build
