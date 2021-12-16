@@ -49,7 +49,7 @@ open class BaseInstructionsBannerView: UIControl {
     public weak var distanceLabel: DistanceLabel!
     
     /**
-     A vertical view divides between `ManeuverView` and `DistanceLabel` to `PrimaryLabel` and `SecondaryLabel`.
+     A vertical view, which is used as a divider between `ManeuverView`/`DistanceLabel` views to the left and `PrimaryLabel`/`SecondaryLabel` views to the right.
      */
     public weak var dividerView: UIView!
     weak var _separatorView: UIView!
