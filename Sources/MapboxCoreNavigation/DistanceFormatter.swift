@@ -1,12 +1,38 @@
 import CoreLocation
 import MapboxDirections
 
+/**
+ :nodoc:
+ An object responsible for the rounding behavior of distances according to locale.
+ */
 public struct RoundingTable {
+    /**
+     :nodoc:
+     `Threshold` supplies rounding behavior for a given maximum distance.
+     */
     public struct Threshold {
+        /**
+         :nodoc:
+         The maximum distance that the `Threshold` is applicable.
+         */
         public let maximumDistance: Measurement<UnitLength>
+        
+        /**
+         :nodoc:
+         The increment that a given distance with be rounded to.
+         */
         public let roundingIncrement: Double
+        
+        /**
+         :nodoc:
+         The maximum number of digits following the decimal point.
+         */
         public let maximumFractionDigits: Int
         
+        /**
+         :nodoc:
+         Returns a rounded `Measurement<UnitLength>` for a given distance.
+         */
         public func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
             var measurement = Measurement(value: distance, unit: .meters).converted(to: maximumDistance.unit)
             measurement.value.round(roundingIncrement: roundingIncrement)
@@ -15,6 +41,10 @@ public struct RoundingTable {
         }
     }
     
+    /**
+     :nodoc:
+     An array of `Threshold`s that detail the rounding behavior.
+     */
     public let thresholds: [Threshold]
     
     /**
@@ -26,7 +56,11 @@ public struct RoundingTable {
         } ?? thresholds.last!
     }
     
-    static var metric: RoundingTable = RoundingTable(thresholds: [
+    /**
+     :nodoc:
+     The rounding behavior for locales where the metric system is used.
+     */
+    public static var metric: RoundingTable = RoundingTable(thresholds: [
         .init(maximumDistance: Measurement(value: 25, unit: .meters), roundingIncrement: 5, maximumFractionDigits: 0),
         .init(maximumDistance: Measurement(value: 100, unit: .meters), roundingIncrement: 25, maximumFractionDigits: 0),
         .init(maximumDistance: Measurement(value: 999, unit: .meters), roundingIncrement: 50, maximumFractionDigits: 0),
@@ -35,7 +69,11 @@ public struct RoundingTable {
         .init(maximumDistance: Measurement(value: 5, unit: .kilometers), roundingIncrement: 0.0001, maximumFractionDigits: 0)
     ])
     
-    static var uk: RoundingTable = RoundingTable(thresholds: [
+    /**
+     :nodoc:
+     The rounding behavior used by the UK.
+     */
+    public static var uk: RoundingTable = RoundingTable(thresholds: [
         .init(maximumDistance: Measurement(value: 20, unit: .yards), roundingIncrement: 10, maximumFractionDigits: 0),
         .init(maximumDistance: Measurement(value: 100, unit: .yards), roundingIncrement: 25, maximumFractionDigits: 0),
         .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .yards), roundingIncrement: 50, maximumFractionDigits: 1),
@@ -43,7 +81,11 @@ public struct RoundingTable {
         .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0.0001, maximumFractionDigits: 0)
     ])
     
-    static var us: RoundingTable = RoundingTable(thresholds: [
+    /**
+     :nodoc:
+     The rounding behavior for locales where the imperial system is used.
+     */
+    public static var us: RoundingTable = RoundingTable(thresholds: [
         .init(maximumDistance: Measurement(value: 0.1, unit: .miles).converted(to: .feet), roundingIncrement: 50, maximumFractionDigits: 0),
         .init(maximumDistance: Measurement(value: 3, unit: .miles), roundingIncrement: 0.1, maximumFractionDigits: 1),
         .init(maximumDistance: Measurement(value: 5, unit: .miles), roundingIncrement: 0.0001, maximumFractionDigits: 0)
