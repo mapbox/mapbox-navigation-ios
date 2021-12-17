@@ -404,10 +404,18 @@ extension InternalRouter where Self: Router {
 extension Array where Element: MapboxDirections.Route {
     func index(mostSimilarTo route: Route) -> Int? {
         let target = route.description
-        return enumerated().min { (left, right) -> Bool in
-            let leftDistance = left.element.description.minimumEditDistance(to: target)
-            let rightDistance = right.element.description.minimumEditDistance(to: target)
-            return leftDistance < rightDistance
-        }?.offset
+        
+        guard let bestCandidate = map({
+            (route: $0, editDistance: $0.description.minimumEditDistance(to: target))
+        }).enumerated().min(by: { $0.element.editDistance < $1.element.editDistance }) else { return nil }
+
+
+        // If the most similar route is still more than 50% different from the original route,
+        // we fallback to the fastest route which index is 0.
+        guard bestCandidate.element.route.description.count > 0 else { return 0 }
+        let similarityScore = Double(bestCandidate.element.editDistance) / Double(bestCandidate.element.route.description.count)
+        guard similarityScore < 0.5 else { return 0 }
+
+        return bestCandidate.offset
     }
 }
