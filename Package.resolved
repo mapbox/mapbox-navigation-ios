@@ -25,7 +25,7 @@
         "state": {
           "branch": null,
           "revision": "ff38feb00183210d0e8807a205f9de2be97a5a38",
-          "version": "21.0.0-rc.2"
+          "version": "21.0.1"
         }
       },
       {
@@ -34,7 +34,7 @@
         "state": {
           "branch": null,
           "revision": "9fe2c2e9c39c463973be407f3ba4d9a11c95f9c9",
-          "version": "10.2.0-rc.1"
+          "version": "10.2.0"
         }
       },
       {
@@ -61,7 +61,7 @@
         "state": {
           "branch": null,
           "revision": "7d9359bf08be6712b53621631f0cd4b899f0c4a9",
-          "version": "10.2.0-rc.1"
+          "version": "10.2.0"
         }
       },
       {
@@ -70,7 +70,7 @@
         "state": {
           "branch": null,
           "revision": "8665568a07a09086aaa704e4edf2af8644e14ab3",
-          "version": "81.0.0"
+          "version": "82.0.1"
         }
       },
       {
