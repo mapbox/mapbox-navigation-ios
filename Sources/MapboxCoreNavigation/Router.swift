@@ -416,7 +416,7 @@ extension Array where Element: MapboxDirections.Route {
         let differenceScore = Double(bestCandidate.element.editDistance) / totalLength
         // Comparing to 0.25 as for "replacing the half of the string", since we add target and candidate lengths together
         // Algorithm proposal: https://github.com/mapbox/mapbox-navigation-ios/pull/3664#discussion_r772194977
-        guard differenceScore < 0.25 else { return 0 } //
+        guard differenceScore < 0.25 else { return 0 }
 
         return bestCandidate.offset
     }
