@@ -5,7 +5,7 @@ import TestHelper
 
 class RerouteTests: XCTestCase {
 
-    func testSelectsMostSililarRouteForRerouting() {
+    func testSelectsMostSimilarRouteForRerouting() {
         let originalRoute = DummyRoute(description: "AAAAA")
         let candidates = [
             DummyRoute(description: "AABBB"),
@@ -30,5 +30,47 @@ class RerouteTests: XCTestCase {
 
     func testReturnsNilIfReroutesArrayIsEmpty() {
         XCTAssertNil([Route]().index(mostSimilarTo: DummyRoute(description: "")))
+    }
+
+    func testSelectsMostSimilarRouteWhenCandidatesAreLonger() {
+        let originalRoute = DummyRoute(description: "AAAAAA")
+        let candidates = [
+            DummyRoute(description: "AAAAAA12345"),
+            DummyRoute(description: "AAAAAA1234"),
+        ]
+        let mostCommonIndex = candidates.index(mostSimilarTo: originalRoute)
+        XCTAssertEqual(mostCommonIndex, 1)
+    }
+
+    func testSelectsTheFastestRouteWhenCandidatesAreVeryLong() {
+        // Here we select the fastest route because all of the candidates are more than 50% different
+        let originalRoute = DummyRoute(description: "AAAAAA")
+        let candidates = [
+            DummyRoute(description: "AAAAAA123456789"),
+            DummyRoute(description: "AAAAAA12345678"),
+        ]
+        let mostCommonIndex = candidates.index(mostSimilarTo: originalRoute)
+        XCTAssertEqual(mostCommonIndex, 0)
+    }
+
+    func testSelectsMostSimilarRouteWhenCandidatesAreShorter() {
+        let originalRoute = DummyRoute(description: "AAAAAA")
+        let candidates = [
+            DummyRoute(description: "AAAA"),
+            DummyRoute(description: "AAAAA"),
+        ]
+        let mostCommonIndex = candidates.index(mostSimilarTo: originalRoute)
+        XCTAssertEqual(mostCommonIndex, 1)
+    }
+
+    func testSelectsTheFastestRouteWhenCandidatesAreVeryShort() {
+        // Here we select the fastest route because all of the candidates are more than 50% different
+        let originalRoute = DummyRoute(description: "AAAAAA")
+        let candidates = [
+            DummyRoute(description: "AA"),
+            DummyRoute(description: "AAA"),
+        ]
+        let mostCommonIndex = candidates.index(mostSimilarTo: originalRoute)
+        XCTAssertEqual(mostCommonIndex, 0)
     }
 }
