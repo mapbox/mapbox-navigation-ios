@@ -31,16 +31,6 @@ public class NavigationServiceDelegateSpy: NavigationServiceDelegate {
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
         recentMessages.append(#function)
     }
-
-    public func navigationService(_ service: NavigationService, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
-        recentMessages.append(#function)
-        return RouteController.DefaultBehavior.reroutingManeuverRadius
-    }
-
-    public func navigationService(_ service: NavigationService, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
-        recentMessages.append(#function)
-        return .default
-    }
     
     public func navigationService(_ service: NavigationService, shouldDiscard location: CLLocation) -> Bool {
         recentMessages.append(#function)

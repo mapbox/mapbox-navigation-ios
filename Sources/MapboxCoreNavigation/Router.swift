@@ -336,23 +336,10 @@ extension InternalRouter where Self: Router {
         routeTask?.cancel()
         let options = progress.reroutingOptions(from: origin)
         
-        if isRerouting {
-            switch (delegate?.router(self, initialManeuverBufferWhenReroutingFrom: origin) ?? RouteController.DefaultBehavior.reroutingManeuverRadius) {
-            case .some(let distance):
-                if distance == 0 {
-                    options.initialManeuverAvoidanceRadius = nil
-                } else {
-                    options.initialManeuverAvoidanceRadius = distance
-                }
-            case .none:
-                // do nothing
-                break
-            }
-        }
-        
         lastRerouteLocation = origin
         
-        let parseResult: Directions.RouteCompletionHandler = {(session, result) in
+        routeTask = routingProvider.calculateRoutes(options: options) {(session, result) in
+            defer { self.routeTask = nil }
             switch result {
             case .failure(let error):
                 return completion(session, .failure(error))
@@ -363,20 +350,6 @@ extension InternalRouter where Self: Router {
                 
                 return completion(session, .success(.init(routeResponse: response, routeIndex: mostSimilarIndex)))
             }
-        }
-        
-        switch delegate?.router(self, requestBehaviorForReroutingWith: options) {
-        case .default, .none:
-            routeTask = routingProvider.calculateRoutes(options: options) { [weak self] (session, result) in
-                parseResult(session, result)
-                self?.routeTask = nil
-            }
-        case .custom(let reroutingResult):
-            let (options, result) = reroutingResult()
-            let session = Directions.Session(options: options,
-                                             credentials: Credentials())
-            
-            parseResult(session, result)
         }
     }
     
