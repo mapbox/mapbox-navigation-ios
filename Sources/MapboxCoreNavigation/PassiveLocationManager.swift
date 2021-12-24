@@ -241,6 +241,8 @@ open class PassiveLocationManager: NSObject {
         if let signStandard = signStandard {
             userInfo[.signStandardKey] = signStandard
         }
+        userInfo[.mapMatchingResultKey] = MapMatchingResult(status: status)
+        
         NotificationCenter.default.post(name: .passiveLocationManagerDidUpdate, object: self, userInfo: userInfo)
     }
     
