@@ -18,6 +18,7 @@
 * Fixed an issue where customized `.puck2D` and `.puck3D` of `NavigationMapView.userLocationStyle` is not shown during simulated active navigation. ([#3674](https://github.com/mapbox/mapbox-navigation-ios/pull/3674))
 * Added the `NavigationLocationProvider.didUpdateLocations(locations:)` to send locations update to `MapView` and notify its `LocationConsumer`. ([#3674](https://github.com/mapbox/mapbox-navigation-ios/pull/3674))
 * When rerouting the user, if none of the new routes is very similar to the original route selection, the Router now follows the most optimal route, not a route that is only marginally similar. ([#3664](https://github.com/mapbox/mapbox-navigation-ios/pull/3664))
+* Exposed map matching status using new `MapMatchingResult` object which can be obtained through `RouteController.routeControllerProgressDidChange` and `PassiveLocationManager.passiveLocationManagerDidUpdate` notifications under `mapMatchingResultKey`. ([#3669](https://github.com/mapbox/mapbox-navigation-ios/pull/3669))
 
 ### CarPlay
 
