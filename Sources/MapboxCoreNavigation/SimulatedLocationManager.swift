@@ -58,7 +58,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.currentDistance = currentDistance
         self.route = route
 
-        self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: .main) { [weak self] in
+        self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: .global()) { [weak self] in
             self?.tick()
         }
         
@@ -142,6 +142,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100)!.coordinates
         
         // Simulate speed based on expected segment travel time
+        let currentSpeed: CLLocationSpeed
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
             let shape = routeProgress?.route.shape,
             let closestCoordinateOnRoute = shape.closestCoordinate(to: newCoordinate),
@@ -160,11 +161,13 @@ open class SimulatedLocationManager: NavigationLocationManager {
                                   course: newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360),
                                   speed: currentSpeed,
                                   timestamp: Date())
-        
-        self.simulatedLocation = location
-        
-        delegate?.locationManager?(self, didUpdateLocations: [location])
-        currentDistance = calculateCurrentDistance(currentDistance)
+
+        DispatchQueue.main.async {
+            self.currentSpeed = currentSpeed
+            self.simulatedLocation = location
+            self.delegate?.locationManager?(self, didUpdateLocations: [location])
+            self.currentDistance = self.calculateCurrentDistance(self.currentDistance)
+        }
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
