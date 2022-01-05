@@ -1548,8 +1548,8 @@ open class NavigationMapView: UIView {
                     self.travelAlongRouteLine(to: location.coordinate)
                 }
             default:
-                if self.simulatesLocation, self.inActiveNavigation, let locationProvider = self.mapView.location.locationProvider {
-                    self.mapView.location.locationProvider(locationProvider, didUpdateLocations: [location])
+                if self.simulatesLocation, self.inActiveNavigation, let locationProvider = self.mapView.location.locationProvider as? NavigationLocationProvider {
+                    locationProvider.didUpdateLocations(locations: [location])
                 }
             }
         }
