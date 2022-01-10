@@ -359,7 +359,7 @@ class VanishingRouteLineTests: TestCase {
         
         // When the `NavigationMapView.showsRestrictedAreasOnRoute` turns on during active navigation with `routeLineTracksTraversal` enabled,
         // the previous vanishing effect should be kept, and the new restricted areas layer should be added
-        // avove the main route line layer but below the arrow stroke layer.
+        // above the main route line layer but below the arrow stroke layer.
         navigationMapView.showsRestrictedAreasOnRoute = true
         do {
             let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
