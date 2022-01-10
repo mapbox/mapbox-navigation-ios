@@ -41,8 +41,17 @@ open class NavigationMapView: UIView {
      */
     public var showsRestrictedAreasOnRoute: Bool = false {
         didSet {
+            updateRestrictedAreasGradientStops(along: self.routes?.first)
             if let routes = self.routes {
-                show(routes, legIndex: self.currentLegIndex)
+                if routeLineTracksTraversal {
+                    if showsRestrictedAreasOnRoute, let route = routes.first {
+                        addRouteRestrictedAreaLayer(route, above: route.identifier(.route(isMainRoute: true)))
+                    } else {
+                        removeRestrictedRouteArea()
+                    }
+                } else {
+                    show(routes, legIndex: currentLegIndex)
+                }
             }
         }
     }
@@ -247,6 +256,14 @@ open class NavigationMapView: UIView {
         routes = nil
         removeLineGradientStops()
         updateRestrictedAreasGradientStops(along: nil)
+    }
+    
+    func removeRestrictedRouteArea() {
+        guard let sourceIdentifier = routes?.first?.identifier(.restrictedRouteAreaSource),
+              let layerIdentifier = routes?.first?.identifier(.restrictedRouteAreaRoute) else { return }
+        
+        mapView.mapboxMap.style.removeLayers(Set([layerIdentifier]))
+        mapView.mapboxMap.style.removeSources(Set([sourceIdentifier]))
     }
     
     /**
@@ -466,7 +483,8 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addRouteRestrictedAreaLayer(_ route: Route,
-                                                        below parentLayerIndentifier: String? = nil) -> String? {
+                                                        below parentLayerIndentifier: String? = nil,
+                                                        above aboveLayerIdentifier: String? = nil) -> String? {
         let sourceIdentifier = route.identifier(.restrictedRouteAreaSource)
         let restrictedRoadsFeatures = route.restrictedRoadsFeatures()
         
@@ -524,6 +542,11 @@ open class NavigationMapView: UIView {
                 
                 if let belowLayerIdentifier = parentLayerIndentifier {
                     layerPosition = .below(belowLayerIdentifier)
+                } else {
+                    let allIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
+                    if let aboveLayerIdentifier = aboveLayerIdentifier, allIds.contains(aboveLayerIdentifier) {
+                        layerPosition = .above(aboveLayerIdentifier)
+                    }
                 }
                 
                 try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: layerPosition)

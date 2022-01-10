@@ -123,8 +123,8 @@ class VanishingRouteLineTests: TestCase {
     
     func testUpdateFractionTraveled() {
         // https://github.com/mapbox/mapbox-navigation-android/blob/0ca183f7cb7bec930521ea9bcd59d0e8e2bef165/libnavui-maps/src/test/java/com/mapbox/navigation/ui/maps/route/line/api/MapboxRouteLineApiTest.kt#L636
-        let route = getRoute()
         let routeProgress = getRouteProgress()
+        let route = routeProgress.route
         
         let coordinate = route.shape!.coordinates[1]
         navigationMapView.routeLineTracksTraversal = true
@@ -139,8 +139,8 @@ class VanishingRouteLineTests: TestCase {
     }
     
     func testUpdateRouteLineWithDifferentDistance() {
-        let route = getRoute()
         let routeProgress = getRouteProgress()
+        let route = routeProgress.route
         let coordinate = route.shape!.coordinates[1]
         
         navigationMapView.routes = [route]
@@ -164,8 +164,8 @@ class VanishingRouteLineTests: TestCase {
     }
     
     func testSwitchRouteLineTracksTraversalDuringNavigation() {
-        let route = getRoute()
         let routeProgress = getRouteProgress()
+        let route = routeProgress.route
         let coordinate = route.shape!.coordinates[1]
         
         navigationMapView.routes = [route]
@@ -217,8 +217,8 @@ class VanishingRouteLineTests: TestCase {
     }
 
     func testSwitchCrossfadesCongestionSegments() {
-        let route = getRoute()
         let routeProgress = getRouteProgress()
+        let route = routeProgress.route
         let coordinate = route.shape!.coordinates[1]
 
         navigationMapView.trafficUnknownColor = UIColor.blue
@@ -309,8 +309,8 @@ class VanishingRouteLineTests: TestCase {
     }
     
     func testUpdateFractionTraveledWhenUserOffRouteLine() {
-        let route = getRoute()
         let routeProgress = getRouteProgress()
+        let route = routeProgress.route
         let coordinate = CLLocationCoordinate2D(latitude: 37.7577627, longitude: -122.4727051)
         
         navigationMapView.routes = [route]
@@ -326,4 +326,72 @@ class VanishingRouteLineTests: TestCase {
         XCTAssertTrue(expectedFractionTraveled == navigationMapView.fractionTraveled, "Failed to stop updating fractionTraveled when user off the route line.")
     }
     
+    func testSwitchshowsRestrictedAreasOnRoute() {
+        let routeProgress = getRouteProgress()
+        let route = routeProgress.route
+        let coordinate = route.shape!.coordinates[1]
+
+
+        navigationMapView.trafficUnknownColor = UIColor.blue
+        navigationMapView.trafficModerateColor = UIColor.red
+        navigationMapView.traversedRouteColor = UIColor.clear
+        setUpCameraZoom(at: 16.0)
+        
+        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.show([route], legIndex: 0)
+        navigationMapView.addArrow(route: route, legIndex: 0, stepIndex: 2)
+        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        navigationMapView.travelAlongRouteLine(to: coordinate)
+
+        let fractionTraveled = navigationMapView.fractionTraveled
+        let fractionTraveledNextDown = Double(CGFloat(fractionTraveled).nextDown)
+        let expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveledNextDown), [rgba, 0.0, 0.0, 0.0, 0.0], \(fractionTraveled), [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
+
+        let layerIdentifier = route.identifier(.route(isMainRoute: true))
+        
+        var allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+        guard let indexOfMainRouteLayer = allLayerIds.firstIndex(of: route.identifier(.route(isMainRoute: true))),
+              let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer) else {
+                  XCTFail("Failed to find all the layers")
+                  return
+              }
+        XCTAssert(indexOfMainRouteLayer < indexOfArrowStrokeLayer, "Arrow stroke layer should be above main route layer")
+        
+        // When the `NavigationMapView.showsRestrictedAreasOnRoute` turns on during active navigation with `routeLineTracksTraversal` enabled,
+        // the previous vanishing effect should be kept, and the new restricted areas layer should be added
+        // avove the main route line layer but below the arrow stroke layer.
+        navigationMapView.showsRestrictedAreasOnRoute = true
+        do {
+            let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            let lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
+            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to keep the vanishing effect when showsRestrictedAreasOnRoute turns on.")
+            
+            allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+            guard let indexOfMainRouteLayer = allLayerIds.firstIndex(of: route.identifier(.route(isMainRoute: true))),
+                  let indexOfRestrictedAreas = allLayerIds.firstIndex(of: route.identifier(.restrictedRouteAreaRoute)),
+                  let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer) else {
+                      XCTFail("Failed to find all the layers")
+                      return
+                  }
+            XCTAssert(indexOfMainRouteLayer < indexOfRestrictedAreas, "Restricted areas route layer should be above main route layer.")
+            XCTAssert(indexOfRestrictedAreas < indexOfArrowStrokeLayer, "Restricted areas route layer should be below arrow stroke layer.")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+        
+        // When the `NavigationMapView.showsRestrictedAreasOnRoute` turns off during active navigation with `routeLineTracksTraversal` enabled,
+        // the previous vanishing effect should be kept, but the restricted areas layer and its source should be removed.
+        navigationMapView.showsRestrictedAreasOnRoute = false
+        do {
+            let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            let lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
+            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to keep the vanishing effect when showsRestrictedAreasOnRoute turns off.")
+            
+            allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
+            XCTAssertFalse(allLayerIds.contains(route.identifier(.restrictedRouteAreaRoute)), "Failed to remove restricted areas route layer.")
+            XCTAssertFalse(allLayerIds.contains(route.identifier(.restrictedRouteAreaSource)), "Failed to remove restricted areas route source.")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
+    }
 }
