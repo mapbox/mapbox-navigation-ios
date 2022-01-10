@@ -17,7 +17,7 @@
 
 * Added the `RouterDelegate.router(_:initialManeuverBufferWhenReroutingFrom:)` method and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to configure rerouting buffering. ([#3454](https://github.com/mapbox/mapbox-navigation-ios/pull/3454))
 * Added `RouterDelegate.router(_:requestBehaviorForReroutingWith:)` and related `NavigationServiceDelegate` and `NavigationViewControllerDelegate` methods to provide customization for rerouting mechanism by providing a user-defined route as a reroute. ([#3472](https://github.com/mapbox/mapbox-navigation-ios/pull/3472))
-* Fixed an issue where customized `.puck2D` and `.puck3D` of `NavigationMapView.userLocationStyle` being stale during simulated active navigation. ([#3674](https://github.com/mapbox/mapbox-navigation-ios/pull/3674))
+* Fixed an issue where customized `.puck2D` and `.puck3D` of `NavigationMapView.userLocationStyle` is not shown during simulated active navigation. ([#3674](https://github.com/mapbox/mapbox-navigation-ios/pull/3674))
 * Added the `NavigationLocationProvider.didUpdateLocations(locations:)` to send locations update to `MapView` and notify its `LocationConsumer`. ([#3674](https://github.com/mapbox/mapbox-navigation-ios/pull/3674))
 
 ### Other Changes
