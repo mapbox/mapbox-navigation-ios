@@ -20,6 +20,10 @@
 * Fixed an issue where customized `.puck2D` and `.puck3D` of `NavigationMapView.userLocationStyle` is not shown during simulated active navigation. ([#3674](https://github.com/mapbox/mapbox-navigation-ios/pull/3674))
 * Added the `NavigationLocationProvider.didUpdateLocations(locations:)` to send locations update to `MapView` and notify its `LocationConsumer`. ([#3674](https://github.com/mapbox/mapbox-navigation-ios/pull/3674))
 
+### CarPlay
+
+* Added the `CarPlayManagerDelegate.carPlayManagerWillEndNavigation(_:byCanceling:)` and `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewControllerWillDismiss(_:byCanceling:)` methods for determining when `CarPlayNavigationViewController` is about to be dismissed. ([#3676](https://github.com/mapbox/mapbox-navigation-ios/pull/3676))
+
 ### Other Changes
 
 * Extracted `MapboxNavigationNative_Private` usage into a type alias to fix a compilation in Xcode 12.4. ([#3662](https://github.com/mapbox/mapbox-navigation-ios/pull/3662))

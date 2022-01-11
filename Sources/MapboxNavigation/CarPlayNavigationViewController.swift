@@ -351,6 +351,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     public func exitNavigation(byCanceling canceled: Bool = false) {
         carSession.finishTrip()
+        
+        self.delegate?.carPlayNavigationViewControllerWillDismiss(self, byCanceling: canceled)
+        
         dismiss(animated: true) {
             self.delegate?.carPlayNavigationViewControllerDidDismiss(self, byCanceling: canceled)
         }
