@@ -294,6 +294,7 @@
 		B456A8D22620C9C700FD86D8 /* MMEEventsManager+Spy.m in Sources */ = {isa = PBXBuildFile; fileRef = B456A8B72620C9C000FD86D8 /* MMEEventsManager+Spy.m */; };
 		B456A8EC2620D26B00FD86D8 /* LeakTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B456A8EB2620D26A00FD86D8 /* LeakTest.swift */; };
 		B456A9062620D73700FD86D8 /* CLHeadingPrivate.h in Headers */ = {isa = PBXBuildFile; fileRef = B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		B473E901278651DD00D9E821 /* NavigationLocationProviderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */; };
 		B47C1B05261FD0C00078546C /* TestHelper.h in Headers */ = {isa = PBXBuildFile; fileRef = B47C1AFF261FD0A30078546C /* TestHelper.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B47C1B1E261FD3290078546C /* CoreLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1AE3261FD0A30078546C /* CoreLocation.swift */; };
 		B47C1B47261FD3A90078546C /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = B47C1ACF261FD0A30078546C /* Date.swift */; };
@@ -829,6 +830,7 @@
 		B456A8B82620C9C000FD86D8 /* MMEEventsManager+Spy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "MMEEventsManager+Spy.h"; path = "include/MMEEventsManager+Spy.h"; sourceTree = "<group>"; };
 		B456A8EB2620D26A00FD86D8 /* LeakTest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeakTest.swift; sourceTree = "<group>"; };
 		B456A9052620D73700FD86D8 /* CLHeadingPrivate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CLHeadingPrivate.h; path = include/CLHeadingPrivate.h; sourceTree = "<group>"; };
+		B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationLocationProviderTests.swift; sourceTree = "<group>"; };
 		B47C1AAA261FCDF30078546C /* CTestHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CTestHelper.h; sourceTree = "<group>"; };
 		B47C1ACF261FD0A30078546C /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		B47C1AD0261FD0A30078546C /* NavigationEventsManagerTestDoubles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationEventsManagerTestDoubles.swift; sourceTree = "<group>"; };
@@ -1478,6 +1480,7 @@
 				AED2156E208F7FEA009AA673 /* NavigationViewControllerTests.swift */,
 				169A9709216440820082A6A0 /* NavigationViewControllerTestDoubles.swift */,
 				B40B1C60270380EC0065F57D /* VanishingRouteLineTests.swift */,
+				B473E900278651DD00D9E821 /* NavigationLocationProviderTests.swift */,
 			);
 			name = Navigation;
 			sourceTree = "<group>";
@@ -2629,6 +2632,7 @@
 				AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */,
 				8DEDBCA9222F442900DA2618 /* CarPlayNavigationViewControllerTests.swift in Sources */,
 				8A6C468226C2FA2E00452EBE /* NavigationGeocodedPlacemarkTests.swift in Sources */,
+				B473E901278651DD00D9E821 /* NavigationLocationProviderTests.swift in Sources */,
 				35B1AEBC20AD9B3C00C8544E /* LeaksSpec.swift in Sources */,
 				16A509D5202A87B20011D788 /* ImageDownloaderTests.swift in Sources */,
 				8AB316C926BCA56D00C3AC76 /* UIViewController.swift in Sources */,

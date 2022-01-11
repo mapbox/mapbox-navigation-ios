@@ -116,6 +116,13 @@ open class NavigationLocationProvider: NSObject, LocationProvider, CLLocationMan
     }
     
     /**
+     Sends the locations update through the delegate to the `MapView` after overriding the `locationProvider` of `MapView`.
+     */
+    public func didUpdateLocations(locations: [CLLocation]) {
+        delegate?.locationProvider(self, didUpdateLocations: locations)
+    }
+    
+    /**
      Returns the current accuracy authorization that the user has granted
      */
     public var accuracyAuthorization: CLAccuracyAuthorization {
