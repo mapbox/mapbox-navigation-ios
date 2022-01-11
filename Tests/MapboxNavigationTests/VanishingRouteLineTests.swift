@@ -357,7 +357,7 @@ class VanishingRouteLineTests: TestCase {
               }
         XCTAssert(indexOfMainRouteLayer < indexOfArrowStrokeLayer, "Arrow stroke layer should be above main route layer")
         
-        // When the `NavigationMapView.showsRestrictedAreasOnRoute` turns on during active navigation with `routeLineTracksTraversal` enabled,
+        // When the `NavigationMapView.showsRestrictedAreasOnRoute` is turned on during active navigation with `routeLineTracksTraversal` enabled,
         // the previous vanishing effect should be kept, and the new restricted areas layer should be added
         // above the main route line layer but below the arrow stroke layer.
         navigationMapView.showsRestrictedAreasOnRoute = true
@@ -379,7 +379,7 @@ class VanishingRouteLineTests: TestCase {
             XCTFail(error.localizedDescription)
         }
         
-        // When the `NavigationMapView.showsRestrictedAreasOnRoute` turns off during active navigation with `routeLineTracksTraversal` enabled,
+        // When the `NavigationMapView.showsRestrictedAreasOnRoute` is turned off during active navigation with `routeLineTracksTraversal` enabled,
         // the previous vanishing effect should be kept, but the restricted areas layer and its source should be removed.
         navigationMapView.showsRestrictedAreasOnRoute = false
         do {
