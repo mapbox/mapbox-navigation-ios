@@ -13,6 +13,7 @@
 * Added `NavigationMapView.showsRestrictedAreasOnRoute` property which allows displaying on UI parts of a route which lie on restricted roads. This overlay is customisable through `NavigationMapView.routeRestrictedAreaColor`, `NavigationMapViewDelegate.navigationMapView(_:, restrictedAreasShapeFor:)` and `NavigationMapView.navigationMapView(_:, routeRestrictedAreasLineLayerWithIdentifier:, sourceIdentifier:)` methods. ([#3603](https://github.com/mapbox/mapbox-navigation-ios/pull/3603))
 * Fixed an issue where changing color of `NavigationMapView.maneuverArrowColor` and `NavigationMapView.maneuverArrowStrokeColor` did not work. ([#3633](https://github.com/mapbox/mapbox-navigation-ios/pull/3633))
 * Fixed an issue where the route line blinks when `NavigationMapView.showsRestrictedAreasOnRoute` is turned on during active navigation, and when `NavigationMapView.routeLineTracksTraversal` is set to `true`. ([#3654](https://github.com/mapbox/mapbox-navigation-ios/pull/3654))
+* Added `RoutesPresentationStyle.custom(cameraOptions:)` to support the ability to present routes based on custom camera options. ([#3678](https://github.com/mapbox/mapbox-navigation-ios/pull/3678))
 
 ### Location tracking
 
