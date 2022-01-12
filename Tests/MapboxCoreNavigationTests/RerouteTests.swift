@@ -33,10 +33,10 @@ class RerouteTests: XCTestCase {
     }
 
     func testSelectsMostSimilarRouteWhenCandidatesAreLonger() {
-        let originalRoute = DummyRoute(description: "AAAAAA")
+        let originalRoute = DummyRoute(description: "AAAAAAA")
         let candidates = [
-            DummyRoute(description: "AAAAAA12345"),
-            DummyRoute(description: "AAAAAA1234"),
+            DummyRoute(description: "AAAAAAA12345"),
+            DummyRoute(description: "AAAAAAA1234"),
         ]
         let mostCommonIndex = candidates.index(mostSimilarTo: originalRoute)
         XCTAssertEqual(mostCommonIndex, 1)
