@@ -38,4 +38,4 @@ for root, dirs, files in os.walk(docs_root):
       # Mapbox Navigation specific
       line = re.sub(r'MapboxNavigation\s+(Docs|Reference)', lambda x: 'Mapbox Navigation SDK for iOS {section}'.format(section=x.group(1)), line.rstrip('\n'))
       
-      sys.stdout.write(line)
+      sys.stdout.write(line + "\n")
