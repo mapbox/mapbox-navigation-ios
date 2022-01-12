@@ -34,6 +34,7 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
     
     func setupGestureRecognizers() {
         makeGestureRecognizersDisableCameraFollowing()
+        makeTapGestureRecognizerStopAnimatedTransitions()
     }
     
     // MARK: Reacting to ViewportDataSourceDelegate Updates
@@ -194,11 +195,19 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
      and stops all pending transitions.
      */
     @objc public func stop() {
-        if state == .idle { return }
-        
+        stopTransition(ignoring: .idle)
+    }
+    
+    @objc func stopNonFollowingTransition() {
+        stopTransition(ignoring: .following)
+    }
+    
+    private func stopTransition(ignoring state: NavigationCameraState) {
+        if self.state == state { return }
+
         cameraStateTransition.cancelPendingTransition()
-        
-        state = .idle
+
+        self.state = .idle
     }
     
     /**
@@ -211,6 +220,14 @@ public class NavigationCamera: NSObject, ViewportDataSourceDelegate {
             || gestureRecognizer is UIRotationGestureRecognizer
             || gestureRecognizer is UIPinchGestureRecognizer {
             gestureRecognizer.addTarget(self, action: #selector(stop))
+        }
+    }
+    
+    func makeTapGestureRecognizerStopAnimatedTransitions() {
+        for gestureRecognizer in mapView?.gestureRecognizers ?? []
+        where gestureRecognizer is UITapGestureRecognizer
+        {
+            gestureRecognizer.addTarget(self, action: #selector(stopNonFollowingTransition))
         }
     }
     
