@@ -58,7 +58,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.currentDistance = currentDistance
         self.route = route
 
-        self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: .global()) { [weak self] in
+        self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: queue) { [weak self] in
             self?.tick()
         }
         
@@ -103,13 +103,15 @@ open class SimulatedLocationManager: NavigationLocationManager {
     
     // MARK: Simulation Logic
     
-    internal var currentDistance: CLLocationDistance = 0
-    fileprivate var currentSpeed: CLLocationSpeed = 30
-    fileprivate let accuracy: DispatchTimeInterval = .milliseconds(50)
-    let updateInterval: DispatchTimeInterval = .milliseconds(1000)
-    fileprivate var timer: DispatchTimer!
-    fileprivate var locations: [SimulatedLocation]!
-    fileprivate var routeShape: LineString!
+    var currentDistance: CLLocationDistance = 0
+    private var currentSpeed: CLLocationSpeed = 30
+    private let accuracy: DispatchTimeInterval = .milliseconds(50)
+    private let updateInterval: DispatchTimeInterval = .milliseconds(1000)
+    private var timer: DispatchTimer!
+    private var locations: [SimulatedLocation]!
+    private var routeShape: LineString!
+
+    private let queue = DispatchQueue(label: "com.mapbox.SimulatedLocationManager")
     
     var route: Route? {
         didSet {
@@ -142,7 +144,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
         let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100)!.coordinates
         
         // Simulate speed based on expected segment travel time
-        let currentSpeed: CLLocationSpeed
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
             let shape = routeProgress?.route.shape,
             let closestCoordinateOnRoute = shape.closestCoordinate(to: newCoordinate),
@@ -162,12 +163,10 @@ open class SimulatedLocationManager: NavigationLocationManager {
                                   speed: currentSpeed,
                                   timestamp: Date())
 
-        DispatchQueue.main.async {
-            self.currentSpeed = currentSpeed
-            self.simulatedLocation = location
-            self.delegate?.locationManager?(self, didUpdateLocations: [location])
-            self.currentDistance = self.calculateCurrentDistance(self.currentDistance)
-        }
+        self.simulatedLocation = location
+
+        delegate?.locationManager?(self, didUpdateLocations: [location])
+        currentDistance = calculateCurrentDistance(currentDistance)
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
