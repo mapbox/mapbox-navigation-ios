@@ -377,10 +377,20 @@ extension InternalRouter where Self: Router {
 extension Array where Element: MapboxDirections.Route {
     func index(mostSimilarTo route: Route) -> Int? {
         let target = route.description
-        return enumerated().min { (left, right) -> Bool in
-            let leftDistance = left.element.description.minimumEditDistance(to: target)
-            let rightDistance = right.element.description.minimumEditDistance(to: target)
-            return leftDistance < rightDistance
-        }?.offset
+        
+        guard let bestCandidate = map({
+            (route: $0, editDistance: $0.description.minimumEditDistance(to: target))
+        }).enumerated().min(by: { $0.element.editDistance < $1.element.editDistance }) else { return nil }
+
+        // If the most similar route is still more than 50% different from the original route,
+        // we fallback to the fastest route which index is 0.
+        let totalLength = Double(bestCandidate.element.route.description.count + target.description.count)
+        guard totalLength > 0 else { return 0 }
+        let differenceScore = Double(bestCandidate.element.editDistance) / totalLength
+        // Comparing to 0.25 as for "replacing the half of the string", since we add target and candidate lengths together
+        // Algorithm proposal: https://github.com/mapbox/mapbox-navigation-ios/pull/3664#discussion_r772194977
+        guard differenceScore < 0.25 else { return 0 }
+
+        return bestCandidate.offset
     }
 }
