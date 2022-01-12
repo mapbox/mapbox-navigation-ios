@@ -551,14 +551,6 @@ extension MapboxNavigationService: RouterDelegate {
         delegate?.navigationService(self, willRerouteFrom: location)
     }
     
-    public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
-        return delegate?.navigationService(self, initialManeuverBufferWhenReroutingFrom: location) ?? Default.reroutingManeuverRadius
-    }
-    
-    public func router(_ router: Router, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
-        return delegate?.navigationService(self, requestBehaviorForReroutingWith: options) ?? .default
-    }
-    
     public func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         //notify the events manager that the route has changed
         eventsManager.reportReroute(progress: router.routeProgress, proactive: proactive)

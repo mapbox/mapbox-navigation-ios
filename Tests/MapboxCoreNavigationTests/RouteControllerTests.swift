@@ -22,7 +22,7 @@ class RouteControllerTests: TestCase {
     // FIXME: In case if `testRerouteAfterArrival` is called before `testRouteSnappingOvershooting`,
     // precondition will be triggered in `RouteController.updateIndexes(status:progress:)`, which will lead
     // to a test failure.
-    func disabled_testRouteSnappingOvershooting() {
+    func testRouteSnappingOvershooting() {
         let options = NavigationMatchOptions(coordinates: [
             .init(latitude: 59.337928, longitude: 18.076841),
             .init(latitude: 59.33865, longitude: 18.074935),
@@ -153,125 +153,6 @@ class RouteControllerTests: TestCase {
         wait(for: [replayFinished], timeout: locationManager.expectedReplayTime)
 
         waitForExpectations(timeout: 1, handler: nil)
-    }
-    
-    func testRerouteDangerousManeuverOverride() {
-        let coordinates = [
-            CLLocationCoordinate2D(latitude: 37.750384, longitude: -122.387487),
-            CLLocationCoordinate2D(latitude: 37.764343, longitude: -122.388664),
-        ]
-        
-        let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
-        let route = Fixture.route(from: "route-for-off-route", options: navigationRouteOptions)
-        var replayLocations = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
-        let routeResponse = RouteResponse(httpResponse: nil,
-                                          routes: [route],
-                                          options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
-                                          credentials: .mocked)
-        
-        let overshootingOrigin = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
-        let overshootingDestination = CLLocationCoordinate2D(latitude: 0.002, longitude: 0.002)
-        replayLocations = Fixture.generateCoordinates(between: overshootingOrigin, and: overshootingDestination, count: 11).map {
-            CLLocation(coordinate: $0)
-        }.shiftedToPresent()
-
-        navigationRouteOptions.initialManeuverAvoidanceRadius = 100
-        
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: routeResponse,
-                                              options: navigationRouteOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
-                                              dataSource: self)
-
-        let routerDelegateSpy = RouterDelegateSpy()
-        routeController.delegate = routerDelegateSpy
-
-        let locationManager = ReplayLocationManager(locations: replayLocations)
-        locationManager.startDate = Date()
-        locationManager.delegate = routeController
-
-        routerDelegateSpy.onManeuverBufferWhenRerouting = {
-            return 500
-        }
-        
-        let radiusOverriden = expectation(description: "Dangerous maneuver radius should be changed.")
-        radiusOverriden.assertForOverFulfill = false
-        
-        MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
-            DispatchQueue.main.async {
-                completionHandler(Directions.Session(options, .mocked),
-                                  .success(routeResponse))
-                if options.initialManeuverAvoidanceRadius == 500 {
-                    radiusOverriden.fulfill()
-                }
-            }
-            return nil
-        }
-
-        let speedMultiplier: TimeInterval = 100
-        locationManager.speedMultiplier = speedMultiplier
-        locationManager.startUpdatingLocation()
-        waitForExpectations(timeout: locationManager.expectedReplayTime + 1, handler: nil)
-    }
-    
-    func testReroutingWithCustomRoute() {
-        let coordinates = [
-            CLLocationCoordinate2D(latitude: 37.750384, longitude: -122.387487),
-            CLLocationCoordinate2D(latitude: 37.764343, longitude: -122.388664),
-        ]
-        
-        let navOptions = NavigationRouteOptions(coordinates: coordinates)
-        let route = Fixture.route(from: "route-for-off-route", options: navOptions)
-        var replayLocations = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
-        let routeResponse = RouteResponse(httpResponse: nil,
-                                          routes: [route],
-                                          options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
-                                          credentials: .mocked)
-
-        let overshootingOrigin = CLLocationCoordinate2D(latitude: 0.001, longitude: 0.001)
-        let overshootingDestination = CLLocationCoordinate2D(latitude: 0.002, longitude: 0.002)
-        replayLocations = Fixture.generateCoordinates(between: overshootingOrigin, and: overshootingDestination, count: 11).map {
-            CLLocation(coordinate: $0)
-        }.shiftedToPresent()
-
-        var newRoute: Route?
-        
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: routeResponse,
-                                              options: navOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
-                                              dataSource: self)
-
-        let routerDelegateSpy = RouterDelegateSpy()
-        routeController.delegate = routerDelegateSpy
-
-        let locationManager = ReplayLocationManager(locations: replayLocations)
-        locationManager.startDate = Date()
-        locationManager.delegate = routeController
-
-        routerDelegateSpy.onReroutingRequest = { options in
-            return .custom {
-                let coordinate = options.waypoints.first!.coordinate
-                let newResponse = Fixture.route(between: coordinate, and: coordinates[1])
-                newRoute = newResponse.route
-                let newOptions = NavigationRouteOptions(coordinates: coordinates)
-                return (newOptions, .success(newResponse.response))
-            }
-        }
-        
-        let rerouteFinished = expectation(description: "Reroute finished")
-        rerouteFinished.assertForOverFulfill = false
-        
-        routerDelegateSpy.onDidRerouteAlong = { result in
-            XCTAssertEqual(result.route, newRoute!, "New route should be the custom one.")
-            
-            rerouteFinished.fulfill()
-        }
-        
-        let speedMultiplier: TimeInterval = 100
-        locationManager.speedMultiplier = speedMultiplier
-        locationManager.startUpdatingLocation()
-        waitForExpectations(timeout: locationManager.expectedReplayTime + 1, handler: nil)
     }
 }
 

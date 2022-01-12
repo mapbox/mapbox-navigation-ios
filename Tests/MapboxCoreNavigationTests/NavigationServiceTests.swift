@@ -503,8 +503,6 @@ class NavigationServiceTests: TestCase {
 
         // MARK: It tells the delegate & posts a didReroute notification
         wait(for: [didRerouteNotificationExpectation], timeout: 3)
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:initialManeuverBufferWhenReroutingFrom:)"))
-        XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:requestBehaviorForReroutingWith:)"))
         XCTAssertTrue(delegate.recentMessages.contains("navigationService(_:didRerouteAlong:at:proactive:)"))
 
         // MARK: On the next call to `locationManager(_, didUpdateLocations:)`

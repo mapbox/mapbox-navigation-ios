@@ -23,7 +23,6 @@ import os.log
 open class RouteController: NSObject {
     public enum DefaultBehavior {
         public static let shouldRerouteFromLocation: Bool = true
-        public static let reroutingManeuverRadius: LocationDistance? = nil
         public static let shouldDiscardLocation: Bool = false
         public static let didArriveAtWaypoint: Bool = true
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
@@ -694,8 +693,10 @@ extension RouteController: Router {
                     //TODO: Can a match hit this codepoint?
                     self.isRerouting = false; return
                 }
-                self.updateRoute(with: indexedResponse, routeOptions: routeOptions, isProactive: false) { success in
-                    self.isRerouting = false
+                self.updateRoute(with: indexedResponse,
+                                 routeOptions: routeOptions,
+                                 isProactive: false) { [weak self] success in
+                    self?.isRerouting = false
                 }
             case let .failure(error):
                 self.delegate?.router(self, didFailToRerouteWith: error)

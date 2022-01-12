@@ -685,34 +685,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
             CarPlayManager.currentActivityKey: currentActivity
         ]
 
-        guard let carPlayMapViewController = carPlayMapViewController else { return mapTemplate }
-        
-        if let mapButtons = delegate?.carPlayManager(self,
-                                                     mapButtonsCompatibleWith: carPlayMapViewController.traitCollection,
-                                                     in: mapTemplate,
-                                                     for: currentActivity) {
-            mapTemplate.mapButtons = mapButtons
-        } else {
-            mapTemplate.mapButtons = [userTrackingButton, showFeedbackButton]
-        }
-
-        if let leadingButtons = delegate?.carPlayManager(self,
-                                                         leadingNavigationBarButtonsCompatibleWith: carPlayMapViewController.traitCollection,
-                                                         in: mapTemplate,
-                                                         for: currentActivity) {
-            mapTemplate.leadingNavigationBarButtons = leadingButtons
-        } else {
-            mapTemplate.leadingNavigationBarButtons.insert(muteButton, at: 0)
-        }
-        
-        if let trailingButtons = delegate?.carPlayManager(self,
-                                                          trailingNavigationBarButtonsCompatibleWith: carPlayMapViewController.traitCollection,
-                                                          in: mapTemplate,
-                                                          for: currentActivity) {
-            mapTemplate.trailingNavigationBarButtons = trailingButtons
-        } else {
-            mapTemplate.trailingNavigationBarButtons.append(exitButton)
-        }
+        updateNavigationButtons(for: mapTemplate)
         
         return mapTemplate
     }
@@ -766,10 +739,6 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplateDidShowPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let carPlayMapViewController = carPlayMapViewController else {
-            return
-        }
-        
         let traitCollection: UITraitCollection
         let currentActivity: CarPlayActivity
         if let carPlayNavigationViewController = carPlayNavigationViewController {
@@ -783,15 +752,33 @@ extension CarPlayManager: CPMapTemplateDelegate {
             return
         }
         
+        // Whenever panning interface is shown (either in preview mode or during active navigation),
+        // user should be given an opportunity to update buttons in `CPMapTemplate`.
         if let mapButtons = delegate?.carPlayManager(self,
                                                      mapButtonsCompatibleWith: traitCollection,
                                                      in: mapTemplate,
                                                      for: currentActivity) {
             mapTemplate.mapButtons = mapButtons
         } else {
-            let closeButton = carPlayMapViewController.panningInterfaceDismissalButton(for: mapTemplate)
-            carPlayMapViewController.dismissPanningButton = closeButton
-            mapTemplate.mapButtons = [closeButton]
+            if let carPlayMapViewController = carPlayMapViewController {
+                let closeButton = carPlayMapViewController.panningInterfaceDismissalButton(for: mapTemplate)
+                carPlayMapViewController.dismissPanningButton = closeButton
+                mapTemplate.mapButtons = [closeButton]
+            }
+        }
+        
+        if let leadingButtons = delegate?.carPlayManager(self,
+                                                         leadingNavigationBarButtonsCompatibleWith: traitCollection,
+                                                         in: mapTemplate,
+                                                         for: currentActivity) {
+            mapTemplate.leadingNavigationBarButtons = leadingButtons
+        }
+        
+        if let trailingButtons = delegate?.carPlayManager(self,
+                                                          trailingNavigationBarButtonsCompatibleWith: traitCollection,
+                                                          in: mapTemplate,
+                                                          for: currentActivity) {
+            mapTemplate.trailingNavigationBarButtons = trailingButtons
         }
         
         self.currentActivity = currentActivity
@@ -805,10 +792,14 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        if let userInfo = mapTemplate.userInfo as? [String: Any],
-           let currentActivity = userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity {
-            self.currentActivity = currentActivity
-        }
+        guard let userInfo = mapTemplate.userInfo as? [String: Any],
+              let currentActivity = userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity else {
+                  return
+              }
+        
+        self.currentActivity = currentActivity
+        
+        updateNavigationButtons(for: mapTemplate)
     }
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
@@ -887,6 +878,62 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         return []
     }
+    
+    /**
+     Updates buttons (map buttons, leading and trailing navigation bar buttons) for provided
+     `CPMapTemplate`.
+     In case if delegate methods for certain `CarPlayActivity` return nil value, default buttons
+     will be used:
+     - Default map buttons include user tracking button (allows to switch between overview and
+     following camera modes) and show feedback button.
+     - Default leading navigation bar buttons include only mute/unmute button.
+     - Default trailing navigation bar buttons include only exit active navigation button.
+     
+     - parameter mapTemplate: `CPMapTemplate` instance, for which buttons update will be performed.
+     */
+    private func updateNavigationButtons(for mapTemplate: CPMapTemplate) {
+        guard let userInfo = mapTemplate.userInfo as? [String: Any],
+              let currentActivity = userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity else {
+                  return
+              }
+
+        let traitCollection: UITraitCollection
+        if let carPlayNavigationViewController = carPlayNavigationViewController {
+            traitCollection = carPlayNavigationViewController.traitCollection
+        } else if let carPlayMapViewController = carPlayMapViewController {
+            traitCollection = carPlayMapViewController.traitCollection
+        } else {
+            assertionFailure("Panning interface is only supported for free-drive or active-guidance navigation.")
+            return
+        }
+        
+        if let mapButtons = delegate?.carPlayManager(self,
+                                                     mapButtonsCompatibleWith: traitCollection,
+                                                     in: mapTemplate,
+                                                     for: currentActivity) {
+            mapTemplate.mapButtons = mapButtons
+        } else {
+            mapTemplate.mapButtons = [userTrackingButton, showFeedbackButton]
+        }
+        
+        if let leadingButtons = delegate?.carPlayManager(self,
+                                                         leadingNavigationBarButtonsCompatibleWith: traitCollection,
+                                                         in: mapTemplate,
+                                                         for: currentActivity) {
+            mapTemplate.leadingNavigationBarButtons = leadingButtons
+        } else {
+            mapTemplate.leadingNavigationBarButtons = [muteButton]
+        }
+        
+        if let trailingButtons = delegate?.carPlayManager(self,
+                                                          trailingNavigationBarButtonsCompatibleWith: traitCollection,
+                                                          in: mapTemplate,
+                                                          for: currentActivity) {
+            mapTemplate.trailingNavigationBarButtons = trailingButtons
+        } else {
+            mapTemplate.trailingNavigationBarButtons = [exitButton]
+        }
+    }
 }
 
 // MARK: CarPlayNavigationViewControllerDelegate Methods
@@ -894,9 +941,9 @@ extension CarPlayManager: CPMapTemplateDelegate {
 @available(iOS 12.0, *)
 extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
     
-    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
-                                                shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
-        return delegate?.carPlayManager(self, shouldPresentArrivalUIFor: waypoint) ?? true
+    public func carPlayNavigationViewControllerWillDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                           byCanceling canceled: Bool) {
+        delegate?.carPlayManagerWillEndNavigation(self, byCanceling: canceled)
     }
     
     public func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController,
@@ -923,6 +970,11 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         
         self.carPlayNavigationViewController = nil
         delegate?.carPlayManagerDidEndNavigation(self)
+    }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
+        return delegate?.carPlayManager(self, shouldPresentArrivalUIFor: waypoint) ?? true
     }
     
     public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
