@@ -1,26 +1,6 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
-import Turf
-
-/**
- Configuration for a source to get new `Route` when rerouting occurs.
- */
-public enum ReroutingRequestBehavior {
-    public typealias ReroutingRequestData = (options: RouteOptions, result: Result<RouteResponse, DirectionsError>)
-    
-    /**
-     Navigation SDK is responsible for rerouting request
-     */
-    case `default`
-
-    /**
-     Navigation SDK will use provided `ReroutingRequestData` for rerouting.
-     
-     - note: Associated callback will be executed on a background thread.
-     */
-    case custom(() -> ReroutingRequestData)
-}
 
 /**
  A router delegate interacts with one or more `Router` instances, such as `RouteController` objects, during turn-by-turn navigation. This protocol is similar to `NavigationServiceDelegate`, which is the main way that your application can synchronize its state with the SDK’s location-related functionality. Normally, you should not need to make a class conform to the `RouterDelegate` protocol or call any of its methods directly, but you would need to call this protocol’s methods if you implement a custom `Router` class.
@@ -48,40 +28,12 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately before the router calculates a new route.
 
-     This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:initialManeuverBufferWhenReroutingFrom:)` is called.
+     This method is called after `router(_:shouldRerouteFrom:)` is called, and before `router(_:didRerouteAlong:)` is called.
      
      - parameter router: The router that will calculate a new route.
      - parameter location: The user’s current location.
      */
     func router(_ router: Router, willRerouteFrom location: CLLocation)
-    
-    /**
-     Configures distance (in meters) before the first maneuver in requested reroute.
-     
-     If implemented, this method allows to override set `RouteOptions.initialManeuverAvoidanceRadius` value which is useful when adjusting reroute according to current user velocity in order to avoid dangerous maneuvers in the beginning of the route.
-     
-     This method is called after `router(_:willRerouteFrom:)` is called, and before `router(_:requestBehaviorForReroutingWith:)` is called.
-     
-     - parameter router: The router that has detected the need to calculate a new route.
-     - parameter location: The user’s current location.
-     - returns: `LocationDistance` value which overrides (by passing a non-nil value) or leaves maneuvers offset as it was originally set (by passing `nil`).
-     */
-    func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance?
-    
-    /**
-     Called when the router calculates a new route.
-
-     This method allows customizing the rerouting by providing custom `RouteResponse`. SDK will then treat it as if it was fetched as usual and apply as a reroute.
-     
-     - note: Multiple method calls will not interrupt the first ongoing request.
-     
-     This method is called after `router(_:initialManeuverBufferWhenReroutingFrom:)` is called, and before `router(_:didRerouteAlong:)` is called.
-     
-     - parameter router: The router that will calculate a new route.
-     - parameter options: `RouteOptions` that are supposed to be used for route calculation.
-     - returns: `.default` to let the SDK handle retrieving new `Route`, or `.custom` to provide your own reroute.
-     */
-    func router(_ router: Router, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior
     
     /**
      Called when a location has been identified as unqualified to navigate on.
@@ -97,7 +49,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called immediately after the router receives a new route.
      
-     This method is called after `router(_:requestBehaviorForReroutingWith:)` method is called.
+     This method is called after `router(_:willRerouteFrom:)` method is called.
      
      - parameter router: The router that has calculated a new route.
      - parameter route: The new route.
@@ -107,7 +59,7 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     /**
      Called when the router fails to receive a new route.
      
-     This method is called after `router(_:requestBehaviorForReroutingWith:)`.
+     This method is called after `router(_:willRerouteFrom:)`.
      
      - parameter router: The router that has calculated a new route.
      - parameter error: An error raised during the process of obtaining a new route.
@@ -206,16 +158,6 @@ public extension RouterDelegate {
     
     func router(_ router: Router, willRerouteFrom location: CLLocation) {
         logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
-    }
-    
-    func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
-        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
-        return RouteController.DefaultBehavior.reroutingManeuverRadius
-    }
-    
-    func router(_ router: Router, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
-        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
-        return .default
     }
     
     func router(_ router: Router, shouldDiscard location: CLLocation) -> Bool {

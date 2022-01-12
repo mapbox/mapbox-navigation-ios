@@ -2,7 +2,6 @@ import Foundation
 import MapboxCoreNavigation
 import CoreLocation
 import MapboxDirections
-import Turf
 
 public final class RouterDelegateSpy: RouterDelegate {
     public var onDidRefresh: ((RouteProgress) -> Void)?
@@ -20,9 +19,7 @@ public final class RouterDelegateSpy: RouterDelegate {
     public var onDidArriveAt: ((Waypoint) -> Bool)?
     public var onShouldPreventReroutesWhenArrivingAt: ((Waypoint) -> Bool)?
     public var onRouterShouldDisableBatteryMonitoring: (() -> Bool)?
-    public var onManeuverBufferWhenRerouting: (() -> LocationDistance?)?
-    public var onReroutingRequest: ((RouteOptions) -> ReroutingRequestBehavior)?
-
+    
     public init() {}
 
     public func router(_ router: Router, didRefresh routeProgress: RouteProgress) {
@@ -37,14 +34,6 @@ public final class RouterDelegateSpy: RouterDelegate {
     public func router(_ router: Router,
                        willRerouteFrom location: CLLocation) {
         onWillRerouteFrom?(location)
-    }
-    
-    public func router(_ router: Router, initialManeuverBufferWhenReroutingFrom location: CLLocation) -> LocationDistance? {
-        return onManeuverBufferWhenRerouting?() ?? RouteController.DefaultBehavior.reroutingManeuverRadius
-    }
-
-    public func router(_ router: Router, requestBehaviorForReroutingWith options: RouteOptions) -> ReroutingRequestBehavior {
-        return onReroutingRequest?(options) ?? .default
     }
     
     public func router(_ router: Router,

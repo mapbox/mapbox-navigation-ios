@@ -23,7 +23,6 @@ import os.log
 open class RouteController: NSObject {
     public enum DefaultBehavior {
         public static let shouldRerouteFromLocation: Bool = true
-        public static let reroutingManeuverRadius: LocationDistance? = nil
         public static let shouldDiscardLocation: Bool = false
         public static let didArriveAtWaypoint: Bool = true
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
