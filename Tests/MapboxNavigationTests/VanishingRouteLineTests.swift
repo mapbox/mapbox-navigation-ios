@@ -184,7 +184,10 @@ class VanishingRouteLineTests: TestCase {
             // During the active navigation, when disabling `routeLineTracksTraversal`, the new route line will be generated,
             // and the `fractionTraveled` will be 0.0.
             navigationMapView.routeLineTracksTraversal = false
-            var layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
             var gradientExpression = layer.lineGradient.debugDescription
             XCTAssertEqual(navigationMapView.fractionTraveled, 0.0)
             XCTAssert(!gradientExpression.contains(actualFractionTraveled.description), "Failed to stop vanishing effect when routeLineTracksTraversal disabled.")
@@ -194,7 +197,10 @@ class VanishingRouteLineTests: TestCase {
             navigationMapView.routeLineTracksTraversal = true
             navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView.travelAlongRouteLine(to: coordinate)
-            layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
             gradientExpression = layer.lineGradient.debugDescription
             XCTAssert(gradientExpression.contains(actualFractionTraveled.description), "Failed to restore vanishing effect when routeLineTracksTraversal enabled.")
         } catch {
@@ -239,7 +245,10 @@ class VanishingRouteLineTests: TestCase {
 
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {
-            var layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
             var lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level.")
 
@@ -250,7 +259,10 @@ class VanishingRouteLineTests: TestCase {
             navigationMapView.crossfadesCongestionSegments = true
             navigationMapView.travelAlongRouteLine(to: coordinate)
             
-            layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
             lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply soft color transition between two different congestion level.")
             
@@ -260,7 +272,10 @@ class VanishingRouteLineTests: TestCase {
             navigationMapView.routeLineTracksTraversal = false
             navigationMapView.crossfadesCongestionSegments = false
             
-            layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
             lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level and show a whole new route line.")
         } catch {
@@ -362,7 +377,10 @@ class VanishingRouteLineTests: TestCase {
         // above the main route line layer but below the arrow stroke layer.
         navigationMapView.showsRestrictedAreasOnRoute = true
         do {
-            let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
             let lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to keep the vanishing effect when showsRestrictedAreasOnRoute turns on.")
             
@@ -383,13 +401,14 @@ class VanishingRouteLineTests: TestCase {
         // the previous vanishing effect should be kept, but the restricted areas layer and its source should be removed.
         navigationMapView.showsRestrictedAreasOnRoute = false
         do {
-            let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as! LineLayer
+            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
             let lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to keep the vanishing effect when showsRestrictedAreasOnRoute turns off.")
-            
-            allLayerIds = navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id })
-            XCTAssertFalse(allLayerIds.contains(route.identifier(.restrictedRouteAreaRoute)), "Failed to remove restricted areas route layer.")
-            XCTAssertFalse(allLayerIds.contains(route.identifier(.restrictedRouteAreaSource)), "Failed to remove restricted areas route source.")
+            XCTAssertFalse(navigationMapView.mapView.mapboxMap.style.layerExists(withId: route.identifier(.restrictedRouteAreaRoute)), "Failed to remove restricted areas route layer.")
+            XCTAssertFalse(navigationMapView.mapView.mapboxMap.style.sourceExists(withId: route.identifier(.restrictedRouteAreaSource)), "Failed to remove restricted areas route source.")
         } catch {
             XCTFail(error.localizedDescription)
         }
