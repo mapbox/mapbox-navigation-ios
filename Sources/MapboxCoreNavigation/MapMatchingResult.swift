@@ -19,7 +19,7 @@ public struct MapMatchingResult {
     public var isOffRoad: Bool
     
     /// Probability that the user is off road.
-    public var offRoadProbability: Float
+    public var offRoadProbability: Double
     
     /// Returns true if map matcher changed its opinion about most probable path on last update.
     ///
@@ -27,7 +27,7 @@ public struct MapMatchingResult {
     public var isTeleport: Bool
     
     /// When map matcher snaps to a road, this is the confidence in the chosen edge from all nearest edges.
-    public var roadEdgeMatchProbability: Float
+    public var roadEdgeMatchProbability: Double
     
     /// :nodoc:
     /// Creates new `MapMatchingResult` with given parameters
@@ -36,9 +36,9 @@ public struct MapMatchingResult {
     public init(enhancedLocation: CLLocation,
                 keyPoints: [CLLocation],
                 isOffRoad: Bool,
-                offRoadProbability: Float,
+                offRoadProbability: Double,
                 isTeleport: Bool,
-                roadEdgeMatchProbability: Float) {
+                roadEdgeMatchProbability: Double) {
         self.enhancedLocation = enhancedLocation
         self.keyPoints = keyPoints
         self.isOffRoad = isOffRoad
@@ -51,8 +51,8 @@ public struct MapMatchingResult {
         enhancedLocation = CLLocation(status.location)
         keyPoints = status.keyPoints.map { CLLocation($0) }
         isOffRoad = status.offRoadProba > 0.5
-        offRoadProbability = status.offRoadProba
+        offRoadProbability = Double(status.offRoadProba)
         isTeleport = status.mapMatcherOutput.isIsTeleport
-        roadEdgeMatchProbability = status.mapMatcherOutput.matches.first?.proba ?? 0.0
+        roadEdgeMatchProbability = Double(status.mapMatcherOutput.matches.first?.proba ?? 0.0)
     }
 }
