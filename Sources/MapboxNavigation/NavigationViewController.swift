@@ -31,6 +31,8 @@ public typealias ContainerViewController = UIViewController & NavigationComponen
  */
 open class NavigationViewController: UIViewController, NavigationStatusPresenter, NavigationViewData, BuildingHighlighting {
     
+    let tlController = TLTools()
+    
     // MARK: Accessing the View Hierarchy
     
     /**
@@ -335,6 +337,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     open override func loadView() {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
         view = NavigationView(delegate: self, frame: frame, tileStoreLocation: mapTileStore, navigationMapView: self.navigationOptions?.navigationMapView)
+        tlController.delegate = self
     }
     
     /**
@@ -706,6 +709,16 @@ extension NavigationViewController: NavigationViewDelegate {
     }
 }
 
+extension NavigationViewController: TLDelegate {
+    public func trafficLightUpdated(at coordinate: LocationCoordinate2D,
+                                    state: String, color: UIColor) {
+        DispatchQueue.main.async {
+            self.navigationMapView?.showTLStateOnMap(coordinate: coordinate,
+                                                     text: state,
+                                                     color: color)
+        }
+    }
+}
 // MARK: - NavigationServiceDelegate methods
 
 extension NavigationViewController: NavigationServiceDelegate {
@@ -783,6 +796,9 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
 
         attemptToHighlightBuildings(progress, navigationMapView: navigationMapView)
+        
+        tlController.detectTrafficLightState(using: progress, at: location)
+        tlController.predictTrafficLightState(using: progress, at: location)
         
         // Finally, pass the message onto the `NavigationViewControllerDelegate`.
         delegate?.navigationViewController(self, didUpdate: progress, with: location, rawLocation: rawLocation)

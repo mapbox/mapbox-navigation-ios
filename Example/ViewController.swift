@@ -193,6 +193,8 @@ class ViewController: UIViewController {
                                                  duration: 0,
                                                  completion: nil)
         }
+        
+        navigationMapView.mapView.mapboxMap.style.uri = StyleURI(rawValue: "mapbox://styles/udumft/ck71tkbt508kg1it8qw5kwdm3")
     }
     
     private func uninstall(_ navigationMapView: NavigationMapView) {
@@ -354,7 +356,9 @@ class ViewController: UIViewController {
     func startStyledNavigation() {
         guard let response = response, case let .route(routeOptions) = response.options else { return }
 
-        let styles = [CustomDayStyle(), CustomNightStyle()]
+        var myStyle = Style()
+        myStyle.mapStyleURL = .init(string: "mapbox://styles/udumft/ck71tkbt508kg1it8qw5kwdm3")!
+        let styles = [myStyle] //[CustomDayStyle(), CustomNightStyle()]
         let options = NavigationOptions(styles: styles, navigationService: navigationService(response: response, routeIndex: currentRouteIndex, options: routeOptions), predictiveCacheOptions: PredictiveCacheOptions())
         let navigationViewController = NavigationViewController(for: response, routeIndex: currentRouteIndex, routeOptions: routeOptions, navigationOptions: options)
         navigationViewController.delegate = self

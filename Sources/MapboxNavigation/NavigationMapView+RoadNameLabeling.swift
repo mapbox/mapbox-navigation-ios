@@ -91,6 +91,8 @@ extension NavigationMapView {
         let pointAheadUser = stepShape.sliced(from: closestCoordinate)?.coordinateFromStart(distance: lookAheadDistance)
         let position = mapView.mapboxMap.point(for: closestCoordinate)
         
+        let ids = mapView.mapboxMap.style.allLayerIdentifiers
+        
         mapView.mapboxMap.queryRenderedFeatures(at: position,
                                                 options: RenderedQueryOptions(layerIds: [roadLabelStyleLayerIdentifier], filter: nil)) { [weak self] result in
             switch result {

@@ -1462,6 +1462,60 @@ open class NavigationMapView: UIView {
         }
     }
     
+    public func showTLStateOnMap(coordinate: LocationCoordinate2D, text: String, color: UIColor) {
+        var feature = Feature(geometry: .point(Point(coordinate)))
+        feature.properties = [
+            "instruction": .string(text),
+        ]
+        
+        do {
+            if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.TLLabelSource) {
+                try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.TLLabelSource, geoJSON: .feature(feature))
+                
+                try mapView.mapboxMap.style.updateLayer(withId: NavigationMapView.LayerIdentifier.TLLabelLayer,
+                                                        type: SymbolLayer.self) { layer in
+                    layer.textHaloColor = .constant(.init(color))
+                }
+            } else {
+                var source = GeoJSONSource()
+                source.data = .feature(feature)
+                try mapView.mapboxMap.style.addSource(source, id: NavigationMapView.SourceIdentifier.TLLabelSource)
+                
+                var symbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.TLLabelLayer)
+                symbolLayer.source = NavigationMapView.SourceIdentifier.TLLabelSource
+                
+                let instruction = Exp(.toString) {
+                    Exp(.get) {
+                        "instruction"
+                    }
+                }
+                
+                symbolLayer.textField = .expression(instruction)
+                symbolLayer.textSize = .constant(14)
+                symbolLayer.textHaloWidth = .constant(1)
+                symbolLayer.textHaloColor = .constant(.init(color))
+                symbolLayer.textOpacity = .constant(0.75)
+                symbolLayer.textAnchor = .constant(.bottom)
+                symbolLayer.textJustify = .constant(.left)
+                try mapView.mapboxMap.style.addLayer(symbolLayer)
+                
+                var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.TLCircleLayer)
+                circleLayer.source = NavigationMapView.SourceIdentifier.TLLabelSource
+                circleLayer.circleRadius = .constant(5)
+                circleLayer.circleOpacity = .constant(0.75)
+                circleLayer.circleColor = .constant(.init(.orange))
+                try mapView.mapboxMap.style.addLayer(circleLayer)
+                
+                try mapView.mapboxMap.style.moveLayer(withId: NavigationMapView.LayerIdentifier.TLCircleLayer,
+                                                      to: .default)
+                try mapView.mapboxMap.style.moveLayer(withId: NavigationMapView.LayerIdentifier.TLLabelLayer,
+                                                      to: .default)
+            }
+        } catch {
+            NSLog("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).")
+        }
+    }
+    
     /**
      Initializes a newly allocated `NavigationMapView` object with the specified frame rectangle.
      

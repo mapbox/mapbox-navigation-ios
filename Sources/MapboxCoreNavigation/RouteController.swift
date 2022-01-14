@@ -179,7 +179,7 @@ open class RouteController: NSObject {
     
     // MARK: Controlling and Altering the Route
     
-    public var reroutesProactively: Bool = true
+    public var reroutesProactively: Bool = false//true
     
     var lastProactiveRerouteDate: Date?
     
@@ -187,7 +187,7 @@ open class RouteController: NSObject {
     
     var lastRerouteLocation: CLLocation?
     
-    public var refreshesRoute: Bool = true
+    public var refreshesRoute: Bool = false//true
     
     var isRefreshing = false
     
@@ -562,7 +562,7 @@ open class RouteController: NSObject {
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
-        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+//        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()

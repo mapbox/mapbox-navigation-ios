@@ -58,6 +58,7 @@ open class UserPuckCourseView: UIView, CourseUpdatable {
     }
     
     func commonInit() {
+        alpha = 0.25
         isUserInteractionEnabled = false
         backgroundColor = .clear
         puckView = UserPuckStyleKitView(frame: bounds)
