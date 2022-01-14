@@ -147,7 +147,8 @@ public extension Notification.Name {
     /**
      Posted when `PassiveLocationManager` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `PassiveLocationManager.NotificationUserInfoKey.locationKey`, `PassiveLocationManager.NotificationUserInfoKey.rawLocationKey`, `PassiveLocationManager.NotificationUserInfoKey.matchesKey`, and `PassiveLocationManager.NotificationUserInfoKey.roadNameKey`.
+     The user info dictionary contains the keys `PassiveLocationManager.NotificationUserInfoKey.locationKey`, `PassiveLocationManager.NotificationUserInfoKey.rawLocationKey`, `PassiveLocationManager.NotificationUserInfoKey.matchesKey`,  `PassiveLocationManager.NotificationUserInfoKey.roadNameKey` and
+     `PassiveLocationManager.NotificationUserInfoKey.mapMatchingResultKey`.
      
      - seealso: `routeControllerProgressDidUpdate`
      */
@@ -158,7 +159,9 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` receives a user location update representing movement along the expected route.
      
-     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey`, `RouteController.NotificationUserInfoKey.locationKey`, and `RouteController.NotificationUserInfoKey.rawLocationKey`, and `RouteController.NotificationUserInfoKey.headingKey`.
+     The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey`, `RouteController.NotificationUserInfoKey.locationKey`, `RouteController.NotificationUserInfoKey.rawLocationKey`, `RouteController.NotificationUserInfoKey.headingKey` and `RouteController.NotificationUserInfoKey.mapMatchingResultKey`.
+     
+     - note: Notification emitted by `LegacyRouteController` will not contain `RouteController.NotificationUserInfoKey.headingKey` and `RouteController.NotificationUserInfoKey.mapMatchingResultKey`.
      
      - seealso: `passiveLocationManagerDidUpdate`
      */
@@ -280,6 +283,11 @@ extension RouteController {
         public static let headingKey: NotificationUserInfoKey = .init(rawValue: "heading")
         
         /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange` notification. The corresponding value is a `MapMatchingResult` object representing the map matching state.
+         */
+        public static let mapMatchingResultKey: NotificationUserInfoKey = .init(rawValue: "mapMatchingResult")
+        
+        /**
          A key in the user info dictionary of a `Notification.Name.currentRoadNameDidChange` notification. The corresponding value is a `NSString` object representing the current road name.
          */
         public static let roadNameKey: NotificationUserInfoKey = .init(rawValue: "roadName")
@@ -363,6 +371,11 @@ extension PassiveLocationManager {
          A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `SignStandard` representing the sign standard used for speed limit signs along the current road.
          */
         public static let signStandardKey: NotificationUserInfoKey = .init(rawValue: "signStandard")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `MapMatchingResult` object representing the map matching state.
+         */
+        public static let mapMatchingResultKey: NotificationUserInfoKey = .init(rawValue: "mapMatchingResult")
     }
 }
 

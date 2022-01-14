@@ -319,7 +319,8 @@ open class RouteController: NSObject {
         update(progress: routeProgress,
                with: snappedLocation,
                rawLocation: rawLocation,
-               upcomingRouteAlerts: status.upcomingRouteAlerts)
+               upcomingRouteAlerts: status.upcomingRouteAlerts,
+               mapMatchingResult: MapMatchingResult(status: status))
         
         updateIndexes(status: status, progress: routeProgress)
         updateRouteLegProgress(status: status)
@@ -470,7 +471,7 @@ open class RouteController: NSObject {
         }
     }
     
-    private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert]) {
+    private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation, upcomingRouteAlerts routeAlerts: [UpcomingRouteAlert], mapMatchingResult: MapMatchingResult) {
         progress.updateDistanceTraveled(with: rawLocation)
         progress.upcomingRouteAlerts = routeAlerts.map { RouteAlert($0) }
         
@@ -485,6 +486,7 @@ open class RouteController: NSObject {
             .rawLocationKey: rawLocation, // raw
         ]
         userInfo[.headingKey] = heading
+        userInfo[.mapMatchingResultKey] = mapMatchingResult
         
         NotificationCenter.default.post(name: .routeControllerProgressDidChange, object: self, userInfo: userInfo)
     }
