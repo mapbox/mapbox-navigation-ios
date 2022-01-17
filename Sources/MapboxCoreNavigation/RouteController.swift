@@ -168,12 +168,15 @@ open class RouteController: NSObject {
 
     func changeRouteProgress(_ routeProgress: RouteProgress,
                              completion: @escaping (Bool) -> Void) {
-        updateNavigator(with: routeProgress) { [weak self] isSuccessful in
+        updateNavigator(with: routeProgress) { [weak self] result in
             guard let self = self else { return }
-            if isSuccessful {
+            switch result {
+            case .success:
                 self.routeProgress = routeProgress
+                completion(true)
+            case .failure:
+                completion(false)
             }
-            completion(isSuccessful)
         }
     }
     
@@ -235,43 +238,23 @@ open class RouteController: NSObject {
      whether the change was successful.
      */
     private func updateNavigator(with progress: RouteProgress,
-                                 completion: ((Bool) -> Void)?) {
+                                 completion: ((Result<RouteInfo, Error>) -> Void)?) {
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = progress.routeOptions
         guard let routeData = try? encoder.encode(progress.route),
               let routeJSONString = String(data: routeData, encoding: .utf8) else {
-                  completion?(false)
+                  completion?(.failure(RouteControllerError.failedToSerializeRoute))
                   return
         }
 
         let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
-        
-        navigator.setRoutesFor(Routes(routesResponse: routeJSONString,
-                                      routeIndex: 0,
-                                      legIndex: UInt32(progress.legIndex),
-                                      routesRequest: routeRequest)) { result in
-            if result.isValue() {
-                if let routeInfo = result.value as? RouteInfo {
-                    os_log("Navigator updated to routeSequenceNumber = %{public}d",
-                           log: RouteController.log,
-                           type: .debug,
-                           routeInfo.routeSequenceNumber)
-                }
-                completion?(true)
-            }
-            else if result.isError() {
-                if let reason = result.error as? String {
-                    os_log("Failed to update navigator with reason: %{public}@",
-                           log: RouteController.log,
-                           type: .error,
-                           reason)
-                }
-                completion?(false)
-            }
-            else {
-                assertionFailure("Invalid Expected value: \(result)")
-                completion?(false)
-            }
+        let routes = Routes(routesResponse: routeJSONString,
+                            routeIndex: 0,
+                            legIndex: UInt32(progress.legIndex),
+                            routesRequest: routeRequest)
+
+        Navigator.shared.setRoutes(routes) { result in
+            completion?(result)
         }
     }
     
@@ -575,6 +558,7 @@ open class RouteController: NSObject {
     }
     
     deinit {
+        removeRoutes(completion: nil)
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         unsubscribeNotifications()
         routeTask?.cancel()
@@ -739,6 +723,17 @@ extension RouteController: Router {
         }
     }
 
+    private func removeRoutes(completion: ((Error?) -> Void)?) {
+        Navigator.shared.setRoutes(nil) { result in
+            switch result {
+            case .success:
+                completion?(nil)
+            case .failure(let error):
+                completion?(error)
+            }
+        }
+    }
+
     private func shouldStartNewBillingSession(for newRoute: Route, routeOptions: RouteOptions?) -> Bool {
         guard let routeOptions = routeOptions else {
             // Waypoints are read from routeOptions.
@@ -771,4 +766,5 @@ extension RouteController: InternalRouter { }
 enum RouteControllerError: Error {
     case internalError
     case failedToChangeRouteLeg
+    case failedToSerializeRoute
 }

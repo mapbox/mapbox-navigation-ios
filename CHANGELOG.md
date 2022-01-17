@@ -29,6 +29,10 @@
 
 * Extracted `MapboxNavigationNative_Private` usage into a type alias to fix a compilation in Xcode 12.4. ([#3662](https://github.com/mapbox/mapbox-navigation-ios/pull/3662))
 
+### Location tracking
+
+* Fixed an issue where dismissing `NavigationViewController` could cause `RouteController` to crash or `PassiveLocationProvider` to behave like active turn-by-turn navigation. It is a programmer error to have more than one alive `NavigationViewController`, `NavigationService` or `RouteController` simultaneously. ([#3652](https://github.com/mapbox/mapbox-navigation-ios/pull/3652))
+
 ## v2.1.0
 
 ### Pricing
