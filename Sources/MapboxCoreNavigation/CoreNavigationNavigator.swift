@@ -1,9 +1,11 @@
 import MapboxNavigationNative
 import MapboxDirections
+import os.log
 @_implementationOnly import MapboxCommon_Private
 
 class Navigator {
-    
+    static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "Navigator")
+
     /**
      Tiles version string. If not specified explicitly - will be automatically resolved
      to the latest version.
@@ -146,6 +148,33 @@ class Navigator {
         electronicHorizonOptions = nil
     }
 
+    // MARK: - Navigator Updates
+
+    func setRoutes(_ routes: Routes?, completion: @escaping (Result<RouteInfo, Error>) -> Void) {
+        navigator.setRoutesFor(routes) { result in
+            if result.isValue() {
+                let routeInfo = result.value as! RouteInfo
+                os_log("Navigator updated to routeSequenceNumber = %{public}d",
+                       log: Navigator.log,
+                       type: .debug,
+                       routeInfo.routeSequenceNumber)
+                completion(.success(routeInfo))
+            }
+            else if result.isError() {
+                let reason = (result.error as? String) ?? ""
+                os_log("Failed to update navigator with reason: %{public}@",
+                       log: Navigator.log,
+                       type: .error,
+                       reason)
+                completion(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
+            }
+            else {
+                assertionFailure("Invalid Expected value: \(result)")
+                completion(.failure(NavigatorError.failedToUpdateRoutes(reason: "Unexpected internal response")))
+            }
+        }
+    }
+
     func pause() {
         navigator.pause()
     }
@@ -260,4 +289,8 @@ extension Navigator: NavigatorObserver {
         
         mostRecentNavigationStatus = status
     }
+}
+
+enum NavigatorError: Swift.Error {
+    case failedToUpdateRoutes(reason: String)
 }

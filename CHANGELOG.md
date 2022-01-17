@@ -36,6 +36,10 @@
 * Fixed a bug where tapping `NavigationMapView` while it transitions the camera to or from `following/overview` states would leave it in `transitioning` state, and thus blocking switching to either mode. ([#3685](https://github.com/mapbox/mapbox-navigation-ios/pull/3685))
 * Fixed an issue where building extrusion highlighting was covering other items located on the map like POI and destination/arrival icons. ([#3692](https://github.com/mapbox/mapbox-navigation-ios/pull/3692))
 
+### Location tracking
+
+* Fixed an issue where dismissing `NavigationViewController` could cause `RouteController` to crash or `PassiveLocationProvider` to behave like active turn-by-turn navigation. It is a programmer error to have more than one alive `NavigationViewController`, `NavigationService` or `RouteController` simultaneously. ([#3652](https://github.com/mapbox/mapbox-navigation-ios/pull/3652))
+
 ## v2.1.0
 
 ### Pricing

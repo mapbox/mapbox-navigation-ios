@@ -12,23 +12,32 @@ class StepsViewControllerTests: TestCase {
         static let credentials = Fixture.credentials
     }
     
-    lazy var dependencies: (stepsViewController: StepsViewController, routeController: RouteController, firstLocation: CLLocation, lastLocation: CLLocation) = {
-        let bogusToken = "pk.feedCafeDeadBeefBadeBede"
-        let dataSource = RouteControllerDataSourceFake()
-        
-        let routeController = RouteController(alongRouteAtIndex: 0, in: response, options: Constants.options, routingProvider: MapboxRoutingProvider(.offline), dataSource: dataSource)
-        
-        let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
-        
-        let firstCoord = routeController.routeProgress.nearbyShape.coordinates.first!
-        let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
-        
-        let lastCoord = routeController.routeProgress.currentLegProgress.remainingSteps.last!.shape!.coordinates.first!
-        let lastLocation = CLLocation(coordinate: lastCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
-        
-        return (stepsViewController: stepsViewController, routeController: routeController, firstLocation: firstLocation, lastLocation: lastLocation)
-    }()
-    
+    var dependencies: (stepsViewController: StepsViewController, routeController: RouteController, firstLocation: CLLocation, lastLocation: CLLocation)!
+
+    override func setUp() {
+        super.setUp()
+
+        dependencies = {
+            let dataSource = RouteControllerDataSourceFake()
+
+            let routeController = RouteController(alongRouteAtIndex: 0, in: response, options: Constants.options, routingProvider: MapboxRoutingProvider(.offline), dataSource: dataSource)
+
+            let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
+
+            let firstCoord = routeController.routeProgress.nearbyShape.coordinates.first!
+            let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
+
+            let lastCoord = routeController.routeProgress.currentLegProgress.remainingSteps.last!.shape!.coordinates.first!
+            let lastLocation = CLLocation(coordinate: lastCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
+
+            return (stepsViewController: stepsViewController, routeController: routeController, firstLocation: firstLocation, lastLocation: lastLocation)
+        }()
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        dependencies = nil
+    }
     
     func testRebuildStepsInstructionsViewDataSource() {
         let stepsViewController = dependencies.stepsViewController
