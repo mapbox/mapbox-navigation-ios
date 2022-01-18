@@ -178,11 +178,8 @@ open class NavigationMapView: UIView {
         switch routesPresentationStyle {
         case .single:
             show([activeRoute])
-        case .all(_):
+        case .all:
             show(routes)
-        case .custom(routes: let customRoutes, cameraOptions: _):
-            let customRoutes = (customRoutes == nil) ? routes : customRoutes!
-            show(customRoutes)
         }
         
         showWaypoints(on: activeRoute)
@@ -1797,19 +1794,21 @@ open class NavigationMapView: UIView {
                    animated: Bool = false) {
         let geometry: Geometry
         
-        if case let RoutesPresentationStyle.custom(routes: customRoutes, cameraOptions: customCameraOptions) = routesPresentationStyle {
-            if let customCameraOptions = customCameraOptions {
+        switch routesPresentationStyle {
+        case .single(cameraOptions: let cameraOptions):
+            if let customCameraOptions = cameraOptions {
                 mapView?.camera.ease(to: customCameraOptions, duration: animated ? 1.0 : 0.0)
                 return
-            } else if let customRoutes = customRoutes {
-                geometry = .multiLineString(MultiLineString(customRoutes.map({ $0.shape?.coordinates ?? [] })))
+            } else {
+                geometry = .lineString(LineString(routes.first?.shape?.coordinates ?? []))
+            }
+        case .all(cameraOptions: let cameraOptions):
+            if let customCameraOptions = cameraOptions {
+                mapView?.camera.ease(to: customCameraOptions, duration: animated ? 1.0 : 0.0)
+                return
             } else {
                 geometry = .multiLineString(MultiLineString(routes.map({ $0.shape?.coordinates ?? [] })))
             }
-        } else if case let RoutesPresentationStyle.all(shouldFit) = routesPresentationStyle, shouldFit {
-            geometry = .multiLineString(MultiLineString(routes.map({ $0.shape?.coordinates ?? [] })))
-        } else {
-            geometry = .lineString(LineString(routes.first?.shape?.coordinates ?? []))
         }
         
         let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets

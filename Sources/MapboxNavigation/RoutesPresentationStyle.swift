@@ -10,22 +10,17 @@ public enum RoutesPresentationStyle {
     
     /**
      Only first route will be presented on a map view.
+     
+     - parameter cameraOptions: The custom `CameraOptions` that the map view ill be presented with.
+     If no value provided, the map view will present the whole first route from above.
      */
-    case single
+    case single(cameraOptions: CameraOptions? = nil)
     
     /**
      All routes will be presented on a map view.
      
-     - parameter shouldFit: If `true` geometry of all routes will be used for camera transition.
-     If `false` geometry of only first route will be used. Defaults to `true`.
-     */
-    case all(shouldFit: Bool = true)
-    
-    /**
-     The custom routes will be presented on a map view with the custom camera options.
-     
-     - parameter routes: The custom `Routes` that will be presented on a map view.
      - parameter cameraOptions: The custom `CameraOptions` that the map view ill be presented with.
+     If no value provided, the map view will present all routes from above.
      */
-    case custom(routes: [Route]? = nil, cameraOptions: CameraOptions? = nil)
+    case all(cameraOptions: CameraOptions? = nil)
 }
