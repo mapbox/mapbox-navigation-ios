@@ -28,6 +28,7 @@
 ### Other Changes
 
 * Extracted `MapboxNavigationNative_Private` usage into a type alias to fix a compilation in Xcode 12.4. ([#3662](https://github.com/mapbox/mapbox-navigation-ios/pull/3662))
+* Fixed a bug where tapping `NavigationMapView` while it transitions the camera to or from `following/overview` states would leave it in `transitioning` state, and thus blocking switching to either mode. ([#3685](https://github.com/mapbox/mapbox-navigation-ios/pull/3685))
 
 ## v2.1.0
 
