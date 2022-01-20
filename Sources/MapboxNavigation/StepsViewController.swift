@@ -6,21 +6,6 @@ import Turf
 /// :nodoc:
 open class StepsBackgroundView: UIView { }
 
-/**
- `StepsViewControllerDelegate` provides methods for user interactions in a `StepsViewController`.
- */
-public protocol StepsViewControllerDelegate: AnyObject {
-    /**
-     Called when the user selects a step in a `StepsViewController`.
-     */
-    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell)
-
-    /**
-     Called when the user dismisses the `StepsViewController`.
-     */
-    func didDismissStepsViewController(_ viewController: StepsViewController)
-}
-
 /// :nodoc:
 public class StepsViewController: UIViewController {
     weak var tableView: UITableView!
@@ -272,55 +257,5 @@ extension StepsViewController: UITableViewDataSource {
         } else {
             return leg.name
         }
-    }
-}
-
-/// :nodoc:
-open class StepInstructionsView: BaseInstructionsBannerView { }
-
-/// :nodoc:
-open class StepTableViewCell: UITableViewCell {
-    weak var instructionsView: StepInstructionsView!
-    weak var separatorView: SeparatorView!
-
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-        commonInit()
-    }
-
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        commonInit()
-    }
-
-    func commonInit() {
-        selectionStyle = .none
-
-        let instructionsView = StepInstructionsView()
-        instructionsView.translatesAutoresizingMaskIntoConstraints = false
-        instructionsView.separatorView.isHidden = true
-        instructionsView.isUserInteractionEnabled = false
-        addSubview(instructionsView)
-        self.instructionsView = instructionsView
-
-        instructionsView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        instructionsView.leadingAnchor.constraint(equalTo: safeLeadingAnchor).isActive = true
-        instructionsView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        instructionsView.trailingAnchor.constraint(equalTo: safeTrailingAnchor).isActive = true
-
-        let separatorView = SeparatorView()
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(separatorView)
-        self.separatorView = separatorView
-
-        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
-        separatorView.leadingAnchor.constraint(equalTo: instructionsView.primaryLabel.leadingAnchor).isActive = true
-        separatorView.bottomAnchor.constraint(equalTo: instructionsView.bottomAnchor).isActive = true
-        separatorView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
-    }
-
-    open override func prepareForReuse() {
-        super.prepareForReuse()
-        instructionsView.update(for:nil)
     }
 }

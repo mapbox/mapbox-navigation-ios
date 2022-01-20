@@ -11,6 +11,11 @@ open class LanesView: UIView, NavigationComponent {
     public var isCurrentlyVisible: Bool = false
     
     /**
+     A vertical separator for the trailing side of the view.
+     */
+    var trailingSeparatorView: SeparatorView!
+    
+    /**
      Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
      */
     public func update(for visualInstruction: VisualInstructionBanner?) {
@@ -89,7 +94,7 @@ open class LanesView: UIView, NavigationComponent {
         commonInit()
     }
     
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -129,9 +134,32 @@ open class LanesView: UIView, NavigationComponent {
         stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
-        separatorView.heightAnchor.constraint(equalToConstant: 2).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
+        let trailingSeparatorView = SeparatorView()
+        trailingSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(trailingSeparatorView)
+        self.trailingSeparatorView = trailingSeparatorView
+        
+        trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
+        trailingSeparatorView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        trailingSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        trailingSeparatorView.leadingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection == traitCollection { return }
+        
+        // Do not show trailing separator view in case of regular layout.
+        if traitCollection.verticalSizeClass == .regular {
+            trailingSeparatorView.isHidden = true
+        } else {
+            trailingSeparatorView.isHidden = false
+        }
     }
 }

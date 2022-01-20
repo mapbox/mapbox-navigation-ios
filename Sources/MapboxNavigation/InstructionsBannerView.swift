@@ -115,6 +115,11 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
+    /**
+     A vertical separator for the trailing side of the view.
+     */
+    var trailingSeparatorView: SeparatorView!
+    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -289,6 +294,11 @@ open class BaseInstructionsBannerView: UIControl {
         let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(BaseInstructionsBannerView.swipedInstructionBannerDown(_:)))
         swipeDownGesture.direction = .down
         addGestureRecognizer(swipeDownGesture)
+        
+        let trailingSeparatorView = SeparatorView()
+        trailingSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(trailingSeparatorView)
+        self.trailingSeparatorView = trailingSeparatorView
     }
     
     func setupLayout() {
@@ -331,13 +341,13 @@ open class BaseInstructionsBannerView: UIControl {
 
         // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
         dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: firstColumnWidth).isActive = true
-        dividerView.widthAnchor.constraint(equalToConstant: 1).isActive = true
+        dividerView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         dividerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
         
         // Separator view (invisible helper view for visualizing the result of the constraints)
         _separatorView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
-        _separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        _separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         _separatorView.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
         _separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         
@@ -346,6 +356,11 @@ open class BaseInstructionsBannerView: UIControl {
         separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
+        trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
+        trailingSeparatorView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        trailingSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        trailingSeparatorView.leadingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
     // Aligns the instruction to the center Y (used for single line primary and/or secondary instructions)
@@ -374,6 +389,19 @@ open class BaseInstructionsBannerView: UIControl {
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
             let availableWidth = self.secondaryLabel.viewForAvailableBoundsCalculation?.bounds.width ?? self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: self.secondaryLabel.font.lineHeight)
+        }
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection == traitCollection { return }
+        
+        // Do not show trailing separator view in case of regular layout.
+        if traitCollection.verticalSizeClass == .regular {
+            trailingSeparatorView.isHidden = true
+        } else {
+            trailingSeparatorView.isHidden = false
         }
     }
 }

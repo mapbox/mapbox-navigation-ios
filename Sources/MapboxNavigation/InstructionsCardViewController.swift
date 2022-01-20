@@ -63,7 +63,21 @@ open class InstructionsCardViewController: UIViewController {
     fileprivate let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
     
     var cardSize: CGSize {
-        var cardSize = CGSize(width: Int(floor(UIScreen.main.bounds.width * 0.8)), height: 140)
+        let cardWidth: Int
+        
+        let interfaceOrientations: [UIInterfaceOrientation] = [
+            .unknown,
+            .portrait
+        ]
+        
+        if interfaceOrientations.contains(UIApplication.shared.statusBarOrientation)
+            || (traitCollection.verticalSizeClass == .regular && traitCollection.horizontalSizeClass == .regular) {
+            cardWidth = Int(floor(UIScreen.main.bounds.width * 0.8))
+        } else {
+            cardWidth = Int(floor(UIScreen.main.bounds.width * 0.4) - view.safeAreaInsets.left - 5.0)
+        }
+        
+        var cardSize = CGSize(width: cardWidth, height: 140)
         
         /* TODO: Identify the traitCollections to define the width of the cards */
         if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {

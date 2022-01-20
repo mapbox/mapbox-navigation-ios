@@ -57,6 +57,11 @@ extension BottomBannerViewController {
         bottomBannerView.addSubview(horizontalDividerView)
         self.horizontalDividerView = horizontalDividerView
         
+        let trailingSeparatorView = SeparatorView()
+        trailingSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        bottomBannerView.addSubview(trailingSeparatorView)
+        self.trailingSeparatorView = trailingSeparatorView
+        
         setupConstraints()
     }
     
@@ -66,71 +71,89 @@ extension BottomBannerViewController {
         reinstallConstraints()
     }
     
-    fileprivate func setupVerticalCompactLayout(_ c: inout [NSLayoutConstraint]) {
-        c.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 50))
+    fileprivate func setupVerticalCompactLayout(_ layoutConstraints: inout [NSLayoutConstraint]) {
+        layoutConstraints.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 60))
         
-        c.append(cancelButton.widthAnchor.constraint(equalTo: bottomBannerView.heightAnchor))
-        c.append(cancelButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
-        c.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
-        c.append(cancelButton.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor))
+        layoutConstraints.append(timeRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor, constant: 10))
+        layoutConstraints.append(timeRemainingLabel.lastBaselineAnchor.constraint(equalTo: bottomBannerView.centerYAnchor, constant: 0))
         
-        c.append(timeRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor, constant: 10))
-        c.append(timeRemainingLabel.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor))
+        layoutConstraints.append(distanceRemainingLabel.leadingAnchor.constraint(equalTo: timeRemainingLabel.leadingAnchor))
+        layoutConstraints.append(distanceRemainingLabel.topAnchor.constraint(equalTo: timeRemainingLabel.bottomAnchor, constant: 0))
         
-        c.append(distanceRemainingLabel.leadingAnchor.constraint(equalTo: timeRemainingLabel.trailingAnchor, constant: 10))
-        c.append(distanceRemainingLabel.lastBaselineAnchor.constraint(equalTo: timeRemainingLabel.lastBaselineAnchor))
+        layoutConstraints.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
+        layoutConstraints.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: verticalDividerView.leadingAnchor, constant: -5))
         
-        c.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1))
-        c.append(verticalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: 10))
-        c.append(verticalDividerView.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor, constant: -10))
-        c.append(verticalDividerView.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
-        c.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
+        layoutConstraints.append(cancelButton.widthAnchor.constraint(equalTo: bottomBannerView.heightAnchor))
+        layoutConstraints.append(cancelButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
+        layoutConstraints.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
+        layoutConstraints.append(cancelButton.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor))
         
-        c.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
-        c.append(horizontalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
-        c.append(horizontalDividerView.leadingAnchor.constraint(equalTo:bottomBannerView.leadingAnchor))
-        c.append(horizontalDividerView.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
+        layoutConstraints.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
+        layoutConstraints.append(verticalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: 10))
+        layoutConstraints.append(verticalDividerView.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor, constant: -10))
+        layoutConstraints.append(verticalDividerView.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
+        layoutConstraints.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
         
-        c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: verticalDividerView.leadingAnchor, constant: -10))
-        c.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: cancelButton.centerYAnchor))
+        layoutConstraints.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
+        layoutConstraints.append(horizontalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
+        layoutConstraints.append(horizontalDividerView.leadingAnchor.constraint(equalTo:bottomBannerView.leadingAnchor))
+        layoutConstraints.append(horizontalDividerView.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
+        
+        layoutConstraints.append(trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
+        layoutConstraints.append(trailingSeparatorView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
+        layoutConstraints.append(trailingSeparatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor))
+        layoutConstraints.append(trailingSeparatorView.leadingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
     }
     
-    fileprivate func setupVerticalRegularLayout(_ c: inout [NSLayoutConstraint]) {
-        c.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 80))
+    fileprivate func setupVerticalRegularLayout(_ layoutConstraints: inout [NSLayoutConstraint]) {
+        layoutConstraints.append(bottomBannerView.heightAnchor.constraint(equalToConstant: 80))
         
-        c.append(timeRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor, constant: 10))
-        c.append(timeRemainingLabel.lastBaselineAnchor.constraint(equalTo: bottomBannerView.centerYAnchor, constant: 0))
+        layoutConstraints.append(timeRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor, constant: 10))
+        layoutConstraints.append(timeRemainingLabel.lastBaselineAnchor.constraint(equalTo: bottomBannerView.centerYAnchor, constant: 0))
         
-        c.append(distanceRemainingLabel.leadingAnchor.constraint(equalTo: timeRemainingLabel.leadingAnchor))
-        c.append(distanceRemainingLabel.topAnchor.constraint(equalTo: timeRemainingLabel.bottomAnchor, constant: 0))
+        layoutConstraints.append(distanceRemainingLabel.leadingAnchor.constraint(equalTo: timeRemainingLabel.leadingAnchor))
+        layoutConstraints.append(distanceRemainingLabel.topAnchor.constraint(equalTo: timeRemainingLabel.bottomAnchor, constant: 0))
         
-        c.append(cancelButton.widthAnchor.constraint(equalToConstant: 80))
-        c.append(cancelButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
-        c.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
-        c.append(cancelButton.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor))
+        layoutConstraints.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
+        layoutConstraints.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: verticalDividerView.leadingAnchor, constant: -10))
         
-        c.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1))
-        c.append(verticalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: 10))
-        c.append(verticalDividerView.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor, constant: -10))
-        c.append(verticalDividerView.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
-        c.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
+        layoutConstraints.append(cancelButton.widthAnchor.constraint(equalTo: bottomBannerView.heightAnchor))
+        layoutConstraints.append(cancelButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
+        layoutConstraints.append(cancelButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
+        layoutConstraints.append(cancelButton.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor))
         
-        c.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
-        c.append(horizontalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
-        c.append(horizontalDividerView.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor))
-        c.append(horizontalDividerView.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
+        layoutConstraints.append(verticalDividerView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
+        layoutConstraints.append(verticalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor, constant: 10))
+        layoutConstraints.append(verticalDividerView.bottomAnchor.constraint(equalTo: bottomBannerView.bottomAnchor, constant: -10))
+        layoutConstraints.append(verticalDividerView.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
+        layoutConstraints.append(verticalDividerView.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor))
         
-        c.append(arrivalTimeLabel.centerYAnchor.constraint(equalTo: bottomBannerView.centerYAnchor))
-        c.append(arrivalTimeLabel.trailingAnchor.constraint(equalTo: verticalDividerView.leadingAnchor, constant: -10))
+        layoutConstraints.append(horizontalDividerView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
+        layoutConstraints.append(horizontalDividerView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
+        layoutConstraints.append(horizontalDividerView.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor))
+        layoutConstraints.append(horizontalDividerView.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
+        
+        layoutConstraints.append(trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale))
+        layoutConstraints.append(trailingSeparatorView.topAnchor.constraint(equalTo: bottomBannerView.topAnchor))
+        layoutConstraints.append(trailingSeparatorView.bottomAnchor.constraint(equalTo: view.bottomAnchor))
+        layoutConstraints.append(trailingSeparatorView.leadingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor))
     }
     
     open func reinstallConstraints() {
         verticalCompactConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass == .compact }
-        verticalRegularConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass != .compact }
+        verticalRegularConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass == .regular }
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        reinstallConstraints()
+        
+        setupConstraints()
+        
+        // Do not show trailing separator view in case of regular layout.
+        if traitCollection.verticalSizeClass == .regular {
+            trailingSeparatorView.isHidden = true
+        } else {
+            trailingSeparatorView.isHidden = false
+        }
     }
 }

@@ -134,8 +134,23 @@ class CameraController: NavigationComponent, NavigationComponentDelegate {
         let courseViewMinimumInsets = UIEdgeInsets(top: 75.0, left: 75.0, bottom: 75.0, right: 75.0)
         var insets = navigationMapView.mapView.safeArea
         insets += courseViewMinimumInsets
-        insets.top += topBannerContainerView.bounds.height
-        insets.bottom += bottomBannerContainerView.bounds.height + 10.0
+        
+        switch navigationViewData.navigationView.traitCollection.verticalSizeClass {
+        case .unspecified:
+            fallthrough
+        case .regular:
+            insets.top += topBannerContainerView.bounds.height
+            insets.bottom += bottomBannerContainerView.bounds.height + 10.0
+        case .compact:
+            let inset = navigationViewData.navigationView.topBannerContainerView.frame.width + 10.0
+            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                insets.right += inset
+            } else {
+                insets.left += inset
+            }
+        @unknown default:
+            break
+        }
     
         return insets
     }

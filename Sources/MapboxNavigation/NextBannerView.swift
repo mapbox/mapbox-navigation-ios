@@ -21,12 +21,17 @@ open class NextBannerView: UIView, NavigationComponent {
     private var shouldShow: Bool = false
     private var isAnimating: Bool = false
     
+    /**
+     A vertical separator for the trailing side of the view.
+     */
+    var trailingSeparatorView: SeparatorView!
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
     
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -62,15 +67,38 @@ open class NextBannerView: UIView, NavigationComponent {
         addSubview(bottomSeparatorView)
         self.bottomSeparatorView = bottomSeparatorView
         
+        let trailingSeparatorView = SeparatorView()
+        trailingSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(trailingSeparatorView)
+        self.trailingSeparatorView = trailingSeparatorView
+        
+        trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
+        trailingSeparatorView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        trailingSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        trailingSeparatorView.leadingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        
         clipsToBounds = true
     }
     
-    override open func prepareForInterfaceBuilder() {
+    open override func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isEnd = true
         let component = VisualInstruction.Component.text(text: .init(text: "Next step", abbreviation: nil, abbreviationPriority: nil))
         let instruction = VisualInstruction(text: nil, maneuverType: .turn, maneuverDirection: .right, components: [component])
         instructionLabel.instruction = instruction
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if previousTraitCollection == traitCollection { return }
+        
+        // Do not show trailing separator view in case of regular layout.
+        if traitCollection.verticalSizeClass == .regular {
+            trailingSeparatorView.isHidden = true
+        } else {
+            trailingSeparatorView.isHidden = false
+        }
     }
     
     func setupLayout() {
