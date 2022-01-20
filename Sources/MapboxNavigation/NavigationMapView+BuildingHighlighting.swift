@@ -21,6 +21,7 @@ extension NavigationMapView {
         let identifiers = mapView.mapboxMap.style.allLayerIdentifiers
             .compactMap({ $0.id })
             .filter({ $0.contains("building") })
+        let layerPosition = identifiers.last.map { LayerPosition.above($0) }
         
         coordinates.forEach {
             group.enter()
@@ -46,7 +47,7 @@ extension NavigationMapView {
         }
 
         group.notify(queue: DispatchQueue.main) {
-            self.addBuildingsLayer(with: foundBuildingIds, in3D: extrudesBuildings)
+            self.addBuildingsLayer(with: foundBuildingIds, in3D: extrudesBuildings, layerPosition: layerPosition)
             completion?(foundBuildingIds.count == coordinates.count)
         }
     }
@@ -66,7 +67,7 @@ extension NavigationMapView {
         }
     }
 
-    private func addBuildingsLayer(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false) {
+    private func addBuildingsLayer(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false, layerPosition: LayerPosition? = nil) {
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
@@ -120,7 +121,7 @@ extension NavigationMapView {
             highlightedBuildingsLayer.fillExtrusionColor = .constant(.init(buildingHighlightColor))
             highlightedBuildingsLayer.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
             highlightedBuildingsLayer.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
-            try mapView.mapboxMap.style.addLayer(highlightedBuildingsLayer)
+            try mapView.mapboxMap.style.addLayer(highlightedBuildingsLayer, layerPosition: layerPosition)
         } catch {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
         }
