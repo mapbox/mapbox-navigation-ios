@@ -590,7 +590,7 @@ final class BillingHandlerUnitTests: TestCase {
         ])
     }
 
-    func testTripPerWaypoint() {
+    func disabled_testTripPerWaypoint() {
         var routeOptions: NavigationRouteOptions {
             let coordinates = [
                 CLLocationCoordinate2D(latitude: 37.751748, longitude: -122.387589),
