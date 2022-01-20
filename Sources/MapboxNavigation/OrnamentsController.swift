@@ -136,22 +136,31 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
      reported in https://github.com/mapbox/mapbox-navigation-ios/issues/2561.
      */
     private func updateMapViewOrnaments() {
-        let bottomBannerHeight = navigationViewData.navigationView.bottomBannerContainerView.bounds.height
-        let bottomBannerVerticalOffset = navigationViewData.navigationView.bounds.height - bottomBannerHeight - navigationViewData.navigationView.bottomBannerContainerView.frame.origin.y
+        let bottomBannerHeight = navigationView.bottomBannerContainerView.bounds.height
+        let bottomBannerVerticalOffset = navigationView.bounds.height - bottomBannerHeight - navigationView.bottomBannerContainerView.frame.origin.y
         let defaultOffset: CGFloat = 10.0
-        let x: CGFloat = defaultOffset
+        let x: CGFloat = 10.0
         let y: CGFloat = bottomBannerHeight + defaultOffset + bottomBannerVerticalOffset
         
-        if #available(iOS 11.0, *) {
-            navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
-        } else {
-            navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x, y: y)
-        }
+        navigationMapView.mapView.ornaments.options.logo.margins = CGPoint(x: x - navigationView.safeAreaInsets.left,
+                                                                           y: y - navigationView.safeAreaInsets.bottom)
         
-        if #available(iOS 11.0, *) {
-            navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x, y: y - navigationView.safeAreaInsets.bottom)
-        } else {
-            navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x, y: y)
+        switch navigationView.traitCollection.verticalSizeClass {
+        case .unspecified:
+            fallthrough
+        case .regular:
+            navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: -navigationView.safeAreaInsets.right,
+                                                                                            y: y - navigationView.safeAreaInsets.bottom)
+        case .compact:
+            if UIApplication.shared.statusBarOrientation == .landscapeRight {
+                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: -navigationView.safeAreaInsets.right,
+                                                                                                y: defaultOffset - navigationView.safeAreaInsets.bottom)
+            } else {
+                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: 0.0,
+                                                                                                y: defaultOffset - navigationView.safeAreaInsets.bottom)
+            }
+        @unknown default:
+            break
         }
     }
     
@@ -197,13 +206,13 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     // MARK: NavigationComponentDelegate implementation
     
     func navigationViewDidLoad(_: UIView) {
-        navigationViewData.navigationView.muteButton.addTarget(self, action: #selector(toggleMute(_:)), for: .touchUpInside)
-        navigationViewData.navigationView.reportButton.addTarget(self, action: #selector(feedback(_:)), for: .touchUpInside)
+        navigationView.muteButton.addTarget(self, action: #selector(toggleMute(_:)), for: .touchUpInside)
+        navigationView.reportButton.addTarget(self, action: #selector(feedback(_:)), for: .touchUpInside)
     }
     
     func navigationViewWillAppear(_: Bool) {
         resumeNotifications()
-        navigationViewData.navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
+        navigationView.muteButton.isSelected = NavigationSettings.shared.voiceMuted
     }
     
     func navigationViewDidDisappear(_: Bool) {
@@ -217,8 +226,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     // MARK: NavigationComponent implementation
     
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
-        
-        navigationViewData.navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
-        navigationViewData.navigationView.speedLimitView.speedLimit = progress.currentLegProgress.currentSpeedLimit
+        navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
+        navigationView.speedLimitView.speedLimit = progress.currentLegProgress.currentSpeedLimit
     }
 }

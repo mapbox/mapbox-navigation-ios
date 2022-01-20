@@ -51,6 +51,9 @@ open class NavigationView: UIView {
         static let feedback = UIImage(named: "feedback", in: .mapboxNavigation, compatibleWith: nil)!.withRenderingMode(.alwaysTemplate)
     }
     
+    var compactConstraints = [NSLayoutConstraint]()
+    var regularConstraints = [NSLayoutConstraint]()
+    
     // MARK: Data Configuration
     
     weak var delegate: NavigationViewDelegate? {
@@ -66,8 +69,8 @@ open class NavigationView: UIView {
     var tileStoreLocation: TileStoreConfiguration.Location? = .default
     private var _navigationMapView: NavigationMapView? = nil
     lazy var navigationMapView: NavigationMapView = {
-        _navigationMapView?.frame = self.bounds
-        let navigationMapView = _navigationMapView ?? NavigationMapView(frame: self.bounds, tileStoreLocation: tileStoreLocation)
+        _navigationMapView?.frame = bounds
+        let navigationMapView = _navigationMapView ?? NavigationMapView(frame: bounds, tileStoreLocation: tileStoreLocation)
         navigationMapView.isHidden = false
         navigationMapView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -80,11 +83,11 @@ open class NavigationView: UIView {
     
     // MARK: End of Route UI
     
-    lazy var endOfRouteShowConstraint: NSLayoutConstraint? = self.endOfRouteView?.bottomAnchor.constraint(equalTo: self.safeBottomAnchor)
+    lazy var endOfRouteShowConstraint: NSLayoutConstraint? = endOfRouteView?.bottomAnchor.constraint(equalTo: safeBottomAnchor)
     
-    lazy var endOfRouteHideConstraint: NSLayoutConstraint? = self.endOfRouteView?.topAnchor.constraint(equalTo: self.bottomAnchor)
+    lazy var endOfRouteHideConstraint: NSLayoutConstraint? = endOfRouteView?.topAnchor.constraint(equalTo: bottomAnchor)
     
-    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = self.endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
+    lazy var endOfRouteHeightConstraint: NSLayoutConstraint? = endOfRouteView?.heightAnchor.constraint(equalToConstant: Constants.endOfRouteHeight)
     
     var endOfRouteView: UIView? {
         didSet {
@@ -99,12 +102,12 @@ open class NavigationView: UIView {
     }
     
     func constrainEndOfRoute() {
-        self.endOfRouteHideConstraint?.isActive = true
+        endOfRouteHideConstraint?.isActive = true
         
         endOfRouteView?.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
         endOfRouteView?.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
-        self.endOfRouteHeightConstraint?.isActive = true
+        endOfRouteHeightConstraint?.isActive = true
     }
     
     // MARK: Overlay Views
@@ -122,7 +125,7 @@ open class NavigationView: UIView {
     
     var floatingButtonsPosition: MapOrnamentPosition = .topTrailing {
         didSet {
-            reinstallConstraints()
+            setupConstraints()
         }
     }
     
@@ -200,8 +203,8 @@ open class NavigationView: UIView {
             navigationMapView,
             topBannerContainerView,
             floatingStackView,
-            resumeButton,
             wayNameView,
+            resumeButton,
             speedLimitView,
             bottomBannerContainerView
         ]
@@ -214,61 +217,5 @@ open class NavigationView: UIView {
         DayStyle().apply()
         [navigationMapView, topBannerContainerView, bottomBannerContainerView].forEach({ $0.prepareForInterfaceBuilder() })
         wayNameView.text = "Street Label"
-    }
-}
-
-protocol NavigationViewDelegate: NavigationMapViewDelegate, InstructionsBannerViewDelegate {
-    func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton)
-}
-
-extension NavigationView {
-    
-    func setupConstraints() {
-        navigationMapView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        navigationMapView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        navigationMapView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        navigationMapView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-  
-        topBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        topBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        topBannerContainerView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-
-        floatingStackView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor, constant: 10).isActive = true
-        
-        resumeButton.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
-        resumeButton.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
-
-        bottomBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
-        bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
-        bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        
-        wayNameView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        wayNameView.bottomAnchor.constraint(equalTo: bottomBannerContainerView.topAnchor, constant: -10).isActive = true
-        wayNameView.widthAnchor.constraint(lessThanOrEqualTo: safeWidthAnchor, multiplier: 0.95).isActive = true
-        
-        speedLimitView.topAnchor.constraint(equalTo: topBannerContainerView.bottomAnchor, constant: 10).isActive = true
-        speedLimitView.widthAnchor.constraint(equalToConstant: FloatingButton.buttonSize.width).isActive = true
-        speedLimitView.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height).isActive = true
-        
-        switch floatingButtonsPosition {
-        case .topLeading:
-            floatingStackView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
-            speedLimitView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
-        case .topTrailing:
-            floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor, constant: -10).isActive = true
-            speedLimitView.leadingAnchor.constraint(equalTo: safeLeadingAnchor, constant: 10).isActive = true
-        }
-    }
-    
-    func reinstallConstraints() {
-        if let activeFloatingStackView = self.constraints(affecting: self.floatingStackView) {
-            NSLayoutConstraint.deactivate(activeFloatingStackView)
-        }
-        
-        if let activeSpeedLimitView = self.constraints(affecting: self.speedLimitView) {
-            NSLayoutConstraint.deactivate(activeSpeedLimitView)
-        }
-
-        setupConstraints()
     }
 }

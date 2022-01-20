@@ -84,6 +84,26 @@ open class DayStyle: Style {
             tintColor = .defaultTint
         }
         
+        let regularAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .regular),
+            UITraitCollection(horizontalSizeClass: .regular)
+        ])
+        
+        let regularAndCompactSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .regular),
+            UITraitCollection(horizontalSizeClass: .compact)
+        ])
+        
+        let compactAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .compact),
+            UITraitCollection(horizontalSizeClass: .regular)
+        ])
+        
+        let compactAndCompactSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .compact),
+            UITraitCollection(horizontalSizeClass: .compact)
+        ])
+        
         ArrivalTimeLabel.appearance().normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
         ArrivalTimeLabel.appearance().normalTextColor = .defaultPrimaryText
         BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -246,6 +266,10 @@ open class DayStyle: Style {
         StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         StylableLabel.appearance(whenContainedInInstancesOf: [CarPlayCompassView.self]).normalFont = UIFont.systemFont(ofSize: 12, weight: .medium).adjustedFont
         StylableLabel.appearance(whenContainedInInstancesOf: [CarPlayCompassView.self]).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+        TimeRemainingLabel.appearance(for: regularAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: regularAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: compactAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: compactAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
         TimeRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
         TimeRemainingLabel.appearance().normalTextColor = .defaultPrimaryText
         TimeRemainingLabel.appearance().trafficHeavyColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)

@@ -21,7 +21,6 @@ class GuidanceCardsSnapshotTests: TestCase {
         DayStyle().apply()
     }
     
-    
     func testRegularManeuver() {
         let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
@@ -41,7 +40,6 @@ class GuidanceCardsSnapshotTests: TestCase {
         
         subject.routeProgress = progress
         assertImageSnapshot(matching: host, as: .image(precision: 0.95))
-
     }
     
     func testLanesManeuver() {
@@ -64,11 +62,9 @@ class GuidanceCardsSnapshotTests: TestCase {
         
         subject.routeProgress = progress
         
-
         assertImageSnapshot(matching: host, as: .image(precision: 0.95))
     }
     
-
     func testTertiaryManeuver() {
         let route = Fixture.route(from: "route-with-tertiary", options: tertiaryRouteOptions)
         
@@ -90,7 +86,6 @@ class GuidanceCardsSnapshotTests: TestCase {
         subject.routeProgress = progress
         subject.view.setNeedsDisplay()
         
-
         assertImageSnapshot(matching: host, as: .image(precision: 0.95))
     }
 }

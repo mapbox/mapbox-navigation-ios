@@ -89,6 +89,11 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
      */
     open var horizontalDividerView: SeparatorView!
     
+    /**
+     A vertical separator for the trailing side of the view.
+     */
+    var trailingSeparatorView: SeparatorView!
+    
     // MARK: Setup and Initialization
     
     /**

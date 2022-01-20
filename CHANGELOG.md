@@ -22,6 +22,10 @@
 * When rerouting the user, if none of the new routes is very similar to the original route selection, the Router now follows the most optimal route, not a route that is only marginally similar. ([#3664](https://github.com/mapbox/mapbox-navigation-ios/pull/3664))
 * Exposed map matching status using new `MapMatchingResult` object which can be obtained through `RouteController.routeControllerProgressDidChange` and `PassiveLocationManager.passiveLocationManagerDidUpdate` notifications under `mapMatchingResultKey`. ([#3669](https://github.com/mapbox/mapbox-navigation-ios/pull/3669))
 
+### Banners and guidance instructions
+
+* In landscape orientation, `NavigationViewController`’s top and bottom banners take up less space, leaving more room for the map. ([#3643](https://github.com/mapbox/mapbox-navigation-ios/pull/3643))
+
 ### CarPlay
 
 * Added the `CarPlayManagerDelegate.carPlayManagerWillEndNavigation(_:byCanceling:)` and `CarPlayNavigationViewControllerDelegate.carPlayNavigationViewControllerWillDismiss(_:byCanceling:)` methods for determining when `CarPlayNavigationViewController` is about to be dismissed. ([#3676](https://github.com/mapbox/mapbox-navigation-ios/pull/3676))

@@ -102,7 +102,7 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
         separatorView.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
         separatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         separatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        separatorView.heightAnchor.constraint(equalToConstant: 0.5).isActive = true
+        separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
