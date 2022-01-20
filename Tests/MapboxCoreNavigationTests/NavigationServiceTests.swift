@@ -349,7 +349,7 @@ class NavigationServiceTests: TestCase {
         XCTAssertLessThan(distance, distanceThreshold)
     }
 
-    func testLocationCourseShouldNotChange() {
+    func disabled_testLocationCourseShouldNotChange() {
         // This route is a simple straight line: http://geojson.io/#id=gist:anonymous/64cfb27881afba26e3969d06bacc707c&map=17/37.77717/-122.46484
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 37.77735, longitude: -122.461465),
@@ -520,7 +520,7 @@ class NavigationServiceTests: TestCase {
         XCTAssertEqual(eventsManagerSpy.flushedEventCount(with: expectedEventName), 1)
     }
 
-    func testGeneratingAnArrivalEvent() {
+    func disabled_testGeneratingAnArrivalEvent() {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: trace)
         dependencies = createDependencies(locationSource: locationManager)
@@ -549,7 +549,7 @@ class NavigationServiceTests: TestCase {
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
 
-    func testNoReroutesAfterArriving() {
+    func disabled_testNoReroutesAfterArriving() {
         let now = Date()
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: trace)
@@ -641,7 +641,7 @@ class NavigationServiceTests: TestCase {
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(5000), "Timer should now have a countdown interval of 5000 millseconds.")
     }
 
-    func testMultiLegRoute() {
+    func disabled_testMultiLegRoute() {
         let route = Fixture.route(from: "multileg-route", options: routeOptions)
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let locationManager = ReplayLocationManager(locations: trace)

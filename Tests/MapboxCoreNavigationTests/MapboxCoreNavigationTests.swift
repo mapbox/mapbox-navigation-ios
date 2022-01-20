@@ -38,7 +38,7 @@ class MapboxCoreNavigationTests: TestCase {
         UserDefaults.resetStandardUserDefaults()
     }
     
-    func testNavigationNotificationsInfoDict() {
+    func disabled_testNavigationNotificationsInfoDict() {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
@@ -121,7 +121,7 @@ class MapboxCoreNavigationTests: TestCase {
         }
     }
     
-    func testNewStep() {
+    func disabled_testNewStep() {
         let steps = route.legs[0].steps
         // Create list of coordinates, which includes all coordinates in the first step and
         // first coordinate in the second step.
@@ -328,7 +328,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation.stop()
     }
     
-    func testOrderOfExecution() {
+    func disabled_testOrderOfExecution() {
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
