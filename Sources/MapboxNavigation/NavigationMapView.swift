@@ -178,7 +178,7 @@ open class NavigationMapView: UIView {
         switch routesPresentationStyle {
         case .single:
             show([activeRoute])
-        case .all(_):
+        case .all:
             show(routes)
         }
         
@@ -1793,18 +1793,23 @@ open class NavigationMapView: UIView {
                    routesPresentationStyle: RoutesPresentationStyle = .all(),
                    animated: Bool = false) {
         let geometry: Geometry
+        let customCameraOptions: MapboxMaps.CameraOptions?
         
-        if case let RoutesPresentationStyle.all(shouldFit) = routesPresentationStyle, shouldFit {
-            geometry = .multiLineString(MultiLineString(routes.map({ $0.shape?.coordinates ?? [] })))
-        } else {
+        switch routesPresentationStyle {
+        case .single(cameraOptions: let cameraOptions):
             geometry = .lineString(LineString(routes.first?.shape?.coordinates ?? []))
+            customCameraOptions = cameraOptions
+        case .all(shouldFit: let shouldFit, cameraOptions: let cameraOptions):
+            geometry = shouldFit ? .multiLineString(MultiLineString(routes.compactMap({ $0.shape?.coordinates }))) : .lineString(LineString(routes.first?.shape?.coordinates ?? []))
+            customCameraOptions = cameraOptions
         }
         
         let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
+        let bearing = customCameraOptions.flatMap({ $0.bearing }).map({ CGFloat($0) })
         if let cameraOptions = mapView?.mapboxMap.camera(for: geometry,
-                                                            padding: edgeInsets,
-                                                            bearing: nil,
-                                                            pitch: nil) {
+                                                            padding: customCameraOptions?.padding ?? edgeInsets,
+                                                            bearing: bearing,
+                                                            pitch: customCameraOptions?.pitch) {
             mapView?.camera.ease(to: cameraOptions, duration: animated ? 1.0 : 0.0)
         }
     }
