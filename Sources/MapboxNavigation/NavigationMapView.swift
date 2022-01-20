@@ -1800,17 +1800,17 @@ open class NavigationMapView: UIView {
             geometry = .lineString(LineString(routes.first?.shape?.coordinates ?? []))
             customCameraOptions = cameraOptions
         case .all(shouldFit: let shouldFit, cameraOptions: let cameraOptions):
-            geometry = shouldFit ? .multiLineString(MultiLineString(routes.map({ $0.shape?.coordinates ?? [] }))) : .lineString(LineString(routes.first?.shape?.coordinates ?? []))
+            geometry = shouldFit ? .multiLineString(MultiLineString(routes.compactMap({ $0.shape?.coordinates }))) : .lineString(LineString(routes.first?.shape?.coordinates ?? []))
             customCameraOptions = cameraOptions
         }
         
         let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
-        let bearing = (customCameraOptions?.bearing == nil) ? nil : CGFloat(customCameraOptions!.bearing!)
+        let bearing = customCameraOptions.flatMap({ $0.bearing }).map({ CGFloat($0) })
         if let cameraOptions = mapView?.mapboxMap.camera(for: geometry,
                                                             padding: customCameraOptions?.padding ?? edgeInsets,
                                                             bearing: bearing,
                                                             pitch: customCameraOptions?.pitch) {
-         mapView?.camera.ease(to: cameraOptions, duration: animated ? 1.0 : 0.0)
+            mapView?.camera.ease(to: cameraOptions, duration: animated ? 1.0 : 0.0)
         }
     }
     
