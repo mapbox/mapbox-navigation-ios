@@ -1793,30 +1793,24 @@ open class NavigationMapView: UIView {
                    routesPresentationStyle: RoutesPresentationStyle = .all(),
                    animated: Bool = false) {
         let geometry: Geometry
+        let customCameraOptions: MapboxMaps.CameraOptions?
         
         switch routesPresentationStyle {
         case .single(cameraOptions: let cameraOptions):
-            if let customCameraOptions = cameraOptions {
-                mapView?.camera.ease(to: customCameraOptions, duration: animated ? 1.0 : 0.0)
-                return
-            } else {
-                geometry = .lineString(LineString(routes.first?.shape?.coordinates ?? []))
-            }
-        case .all(cameraOptions: let cameraOptions):
-            if let customCameraOptions = cameraOptions {
-                mapView?.camera.ease(to: customCameraOptions, duration: animated ? 1.0 : 0.0)
-                return
-            } else {
-                geometry = .multiLineString(MultiLineString(routes.map({ $0.shape?.coordinates ?? [] })))
-            }
+            geometry = .lineString(LineString(routes.first?.shape?.coordinates ?? []))
+            customCameraOptions = cameraOptions
+        case .all(shouldFit: let shouldFit, cameraOptions: let cameraOptions):
+            geometry = shouldFit ? .multiLineString(MultiLineString(routes.map({ $0.shape?.coordinates ?? [] }))) : .lineString(LineString(routes.first?.shape?.coordinates ?? []))
+            customCameraOptions = cameraOptions
         }
         
         let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
+        let bearing = (customCameraOptions?.bearing == nil) ? nil : CGFloat(customCameraOptions!.bearing!)
         if let cameraOptions = mapView?.mapboxMap.camera(for: geometry,
-                                                            padding: edgeInsets,
-                                                            bearing: nil,
-                                                            pitch: nil) {
-            mapView?.camera.ease(to: cameraOptions, duration: animated ? 1.0 : 0.0)
+                                                            padding: customCameraOptions?.padding ?? edgeInsets,
+                                                            bearing: bearing,
+                                                            pitch: customCameraOptions?.pitch) {
+         mapView?.camera.ease(to: cameraOptions, duration: animated ? 1.0 : 0.0)
         }
     }
     
