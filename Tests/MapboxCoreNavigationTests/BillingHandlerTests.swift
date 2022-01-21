@@ -590,23 +590,25 @@ final class BillingHandlerUnitTests: TestCase {
         ])
     }
 
-    func disabled_testTripPerWaypoint() {
-        var routeOptions: NavigationRouteOptions {
-            let coordinates = [
-                CLLocationCoordinate2D(latitude: 37.751748, longitude: -122.387589),
-                CLLocationCoordinate2D(latitude: 37.752397, longitude: -122.387631),
-                CLLocationCoordinate2D(latitude: 37.753186, longitude: -122.387721),
-                CLLocationCoordinate2D(latitude: 37.75405, longitude: -122.38781),
-                CLLocationCoordinate2D(latitude: 37.754817, longitude: -122.387859),
-                CLLocationCoordinate2D(latitude: 37.755594, longitude: -122.38793),
-                CLLocationCoordinate2D(latitude: 37.756574, longitude: -122.388057),
-                CLLocationCoordinate2D(latitude: 37.757531, longitude: -122.388198),
-                CLLocationCoordinate2D(latitude: 37.758628, longitude: -122.388322),
-                CLLocationCoordinate2D(latitude: 37.759682, longitude: -122.388401),
-                CLLocationCoordinate2D(latitude: 37.760872, longitude: -122.388511),
-            ]
+    func testTripPerWaypoint() {
+        let waypointCoordinates = [
+            CLLocationCoordinate2D(latitude: 37.751748, longitude: -122.387589),
+            CLLocationCoordinate2D(latitude: 37.752397, longitude: -122.387631),
+            CLLocationCoordinate2D(latitude: 37.753186, longitude: -122.387721),
+            CLLocationCoordinate2D(latitude: 37.75405, longitude: -122.38781),
+            CLLocationCoordinate2D(latitude: 37.754817, longitude: -122.387859),
+            CLLocationCoordinate2D(latitude: 37.755594, longitude: -122.38793),
+            CLLocationCoordinate2D(latitude: 37.756574, longitude: -122.388057),
+            CLLocationCoordinate2D(latitude: 37.757531, longitude: -122.388198),
+            CLLocationCoordinate2D(latitude: 37.758628, longitude: -122.388322),
+            CLLocationCoordinate2D(latitude: 37.759682, longitude: -122.388401),
+            CLLocationCoordinate2D(latitude: 37.760872, longitude: -122.388511),
+        ]
 
-            let waypoints = coordinates.map({ Waypoint(coordinate: $0) })
+        let waypoints = waypointCoordinates.map({ Waypoint(coordinate: $0) })
+
+        var routeOptions: NavigationRouteOptions {
+
 
             return NavigationRouteOptions(waypoints: waypoints)
         }
@@ -614,10 +616,10 @@ final class BillingHandlerUnitTests: TestCase {
         let route = Fixture.route(from: "route-with-10-legs", options: routeOptions)
         
         autoreleasepool {
-            let replayLocations = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
+            let replayLocations = Fixture.generateTrace(for: route).shiftedToPresent()
             let routeResponse = RouteResponse(httpResponse: nil,
                                               routes: [route],
-                                              options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
+                                              options: .route(.init(coordinates: waypointCoordinates)),
                                               credentials: .mocked)
 
             let routeController = RouteController(alongRouteAtIndex: 0,

@@ -338,7 +338,8 @@ extension InternalRouter where Self: Router {
         
         lastRerouteLocation = origin
         
-        routeTask = routingProvider.calculateRoutes(options: options) {(session, result) in
+        routeTask = routingProvider.calculateRoutes(options: options) { [weak self] (session, result) in
+            guard let self = self else { return }            
             defer { self.routeTask = nil }
             switch result {
             case .failure(let error):

@@ -28,8 +28,8 @@ open class TestCase: XCTestCase {
         super.tearDown()
         // Reset navigator
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
-        Navigator.shared.navigator.resetRideSession()
-        Navigator._recreateNavigator()
+        Navigator.shared.restartNavigator(forcing: nil)
+        Navigator.shared.mostRecentNavigationStatus = nil
     }
 
     /// Prepares tests for execution. Should be called once before any test runs.
