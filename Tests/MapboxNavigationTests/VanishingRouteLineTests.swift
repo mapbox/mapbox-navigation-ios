@@ -184,11 +184,11 @@ class VanishingRouteLineTests: TestCase {
             // During the active navigation, when disabling `routeLineTracksTraversal`, the new route line will be generated,
             // and the `fractionTraveled` will be 0.0.
             navigationMapView.routeLineTracksTraversal = false
-            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+            guard let nonTrackingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
                 XCTFail("Route line layer should be added.")
                 return
             }
-            var gradientExpression = layer.lineGradient.debugDescription
+            var gradientExpression = nonTrackingRouteLineLayer.lineGradient.debugDescription
             XCTAssertEqual(navigationMapView.fractionTraveled, 0.0)
             XCTAssert(!gradientExpression.contains(actualFractionTraveled.description), "Failed to stop vanishing effect when routeLineTracksTraversal disabled.")
             
@@ -197,11 +197,11 @@ class VanishingRouteLineTests: TestCase {
             navigationMapView.routeLineTracksTraversal = true
             navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView.travelAlongRouteLine(to: coordinate)
-            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+            guard let trackingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
                 XCTFail("Route line layer should be added.")
                 return
             }
-            gradientExpression = layer.lineGradient.debugDescription
+            gradientExpression = trackingRouteLineLayer.lineGradient.debugDescription
             XCTAssert(gradientExpression.contains(actualFractionTraveled.description), "Failed to restore vanishing effect when routeLineTracksTraversal enabled.")
         } catch {
             XCTFail(error.localizedDescription)
@@ -245,11 +245,11 @@ class VanishingRouteLineTests: TestCase {
 
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {
-            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+            guard let steppedRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
                 XCTFail("Route line layer should be added.")
                 return
             }
-            var lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
+            var lineGradientString = lineGradientToString(lineGradient: steppedRouteLineLayer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level.")
 
             // During active navigation with `routeLineTracksTraversal` and `crossfadesCongestionSegments` both enabled,
@@ -259,11 +259,11 @@ class VanishingRouteLineTests: TestCase {
             navigationMapView.crossfadesCongestionSegments = true
             navigationMapView.travelAlongRouteLine(to: coordinate)
             
-            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+            guard let crossfadingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
                 XCTFail("Route line layer should be added.")
                 return
             }
-            lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
+            lineGradientString = lineGradientToString(lineGradient: crossfadingRouteLineLayer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply soft color transition between two different congestion level.")
             
             // During active navigation with `crossfadesCongestionSegments` enabled but `routeLineTracksTraversal` disabled,
@@ -272,11 +272,11 @@ class VanishingRouteLineTests: TestCase {
             navigationMapView.routeLineTracksTraversal = false
             navigationMapView.crossfadesCongestionSegments = false
             
-            guard let layer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+            guard let trackingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
                 XCTFail("Route line layer should be added.")
                 return
             }
-            lineGradientString = lineGradientToString(lineGradient: layer.lineGradient)
+            lineGradientString = lineGradientToString(lineGradient: trackingRouteLineLayer.lineGradient)
             XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to apply step color transition between two different congestion level and show a whole new route line.")
         } catch {
             XCTFail(error.localizedDescription)
