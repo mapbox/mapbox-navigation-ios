@@ -153,7 +153,7 @@ extension LanesStyleKit {
             TurnClassification(laneIndication: $0, dominantSide: dominantSide, drivingSide: drivingSide)
         }
         guard let method = styleKitMethod(turnClassifications: turnClassifications, favoredTurnClassification: favoredTurnClassification) ??
-                favoredTurnClassification.map({ styleKitMethod(turnClassifications: [$0], favoredTurnClassification: $0) }) ??
+                favoredTurnClassification.flatMap({ styleKitMethod(turnClassifications: [$0], favoredTurnClassification: $0) }) ??
                 styleKitMethod(turnClassifications: [.straightAhead], favoredTurnClassification: nil) else {
             preconditionFailure("No StyleKit method for straight ahead.")
         }
