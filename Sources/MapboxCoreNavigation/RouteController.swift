@@ -220,7 +220,7 @@ open class RouteController: NSObject {
         rawLocation = location
         
         locations.forEach {
-            navigator.updateLocation(for: FixLocation($0)) { _ in
+            Navigator.shared.updateLocation($0) { _ in
                 // No-op
             }
         }

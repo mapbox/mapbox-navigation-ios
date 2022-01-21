@@ -175,6 +175,10 @@ class Navigator {
         }
     }
 
+    func updateLocation(_ location: CLLocation, completion: @escaping (Bool) -> Void) {
+        navigator.updateLocation(for: FixLocation(location), callback: completion)
+    }
+
     func pause() {
         navigator.pause()
     }

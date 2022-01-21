@@ -119,7 +119,7 @@ open class PassiveLocationManager: NSObject {
         }
         
         for location in locations {
-            navigator.updateLocation(for: FixLocation(location)) { success in
+            Navigator.shared.updateLocation(location) { success in
                 let result: Result<CLLocation, Error>
                 if success {
                     result = .success(location)
