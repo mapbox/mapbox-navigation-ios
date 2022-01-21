@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## main
+
+* Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
+
 ## v2.2.0
 
 ### Packaging

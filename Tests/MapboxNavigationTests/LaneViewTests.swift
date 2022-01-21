@@ -148,6 +148,11 @@ class LaneViewTests: TestCase {
         XCTAssertEqual(LanesStyleKit.styleKitMethod(turnClassifications: [.sharpTurn], favoredTurnClassification: .sharpTurn)?.isOn, true)
         XCTAssertEqual(LanesStyleKit.styleKitMethod(turnClassifications: [.uTurn], favoredTurnClassification: nil)?.isOff, true)
         XCTAssertEqual(LanesStyleKit.styleKitMethod(turnClassifications: [.uTurn], favoredTurnClassification: .uTurn)?.isOn, true)
+        
+        // Unrecognized turn indications show up as empty lanes in the Directions API response.
+        // https://github.com/mapbox/mapbox-navigation-ios/issues/3596
+        XCTAssertNil(LanesStyleKit.styleKitMethod(turnClassifications: [], favoredTurnClassification: nil))
+        XCTAssertNil(LanesStyleKit.styleKitMethod(turnClassifications: [], favoredTurnClassification: .straightAhead))
     }
     
     func testStyleKitMethodDoubleUseAllowingStraightAhead() {
@@ -324,5 +329,10 @@ class LaneViewTests: TestCase {
         
         XCTAssertTrue(LanesStyleKit.styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: nil, drivingSide: .right).isSymmetric, "Unsupported configuration should fall back to straight ahead")
         XCTAssertTrue(LanesStyleKit.styleKitMethod(lane: [.sharpLeft, .sharpRight], maneuverDirection: nil, drivingSide: .right).isOff, "Unsupported configuration should fall back to straight ahead")
+        
+        // Unrecognized turn indications show up as empty lanes in the Directions API response.
+        // https://github.com/mapbox/mapbox-navigation-ios/issues/3596
+        XCTAssertTrue(LanesStyleKit.styleKitMethod(lane: [], maneuverDirection: .left, drivingSide: .right).isSymmetric)
+        XCTAssertTrue(LanesStyleKit.styleKitMethod(lane: [], maneuverDirection: .left, drivingSide: .right).isOff)
     }
 }
