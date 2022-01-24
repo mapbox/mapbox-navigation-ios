@@ -50,12 +50,12 @@ class MapViewTests: TestCase {
         
         wait(for: [mapLoadingErrorExpectation], timeout: 1.0)
         
-        let tileSetIdentifiers = mapView.tileSetIdentifiers("composite")
+        let tileSetIdentifiers = mapView.tileSetIdentifiersSet("composite")
         
-        let expectedTileSetIdentifiers = [
+        let expectedTileSetIdentifiers = Set([
             "mapbox.mapbox-streets-v8",
             "mapbox.mapbox-terrain-v2"
-        ]
+        ])
         
         XCTAssertEqual(tileSetIdentifiers.count,
                        expectedTileSetIdentifiers.count,
@@ -71,7 +71,7 @@ class MapViewTests: TestCase {
         
         // Verify whether `MapView.sourceIdentifiers(_:)` returns only source identifiers for
         // Mapbox tile set identifiers.
-        let mapboxSourceIdentifiers = mapView.sourceIdentifiers("mapbox.mapbox-terrain-v2")
+        let mapboxSourceIdentifiers = mapView.sourceIdentifiers(Set(["mapbox.mapbox-terrain-v2"]))
         XCTAssertEqual(mapboxSourceIdentifiers.count,
                        1,
                        "There should be only one source identifier.")

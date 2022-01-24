@@ -12,6 +12,10 @@
 * Fixed cases in which the user location indicator floated around when the user was stopped at an intersection in an urban canyon. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
 * Fixed poor location snapping while the user is inside a tunnel. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
 
+### Map
+
+* Added `MapView.showsTileSet(withIdentifiers:layerIdentifier:)` and `MapView.setShowsTileSet(_:withIdentifiers:layerIdentifier:)`to public to support developers show and hide custom TileSet IDs for the map view. ([#3700](https://github.com/mapbox/mapbox-navigation-ios/pull/3700))
+
 ### Offline routing
 
 * If routing tiles in local storage are corrupted, the tiles are now redownloaded. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
