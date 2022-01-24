@@ -17,17 +17,22 @@ open class LanesView: UIView, NavigationComponent {
     
     /**
      Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
+     
+     - parameter visualInstruction: Current instruction, which will be displayed in the lanes view.
+     - parameter completion: A completion that will be called once lanes view is either shown or hidden.
      */
-    public func update(for visualInstruction: VisualInstructionBanner?) {
+    public func update(for visualInstruction: VisualInstructionBanner?,
+                       completion: ((_ completed: Bool) -> Void)? = nil) {
         clearLaneViews()
         
         guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction else {
-            hide()
+            hide { completed in
+                completion?(completed)
+            }
             return
         }
         
         let subviews = tertiaryInstruction.components.compactMap { (component) -> LaneView? in
-
             if case let .lane(indications: indications, isUsable: isUsable, preferredDirection: preferredDirection) = component {
                 let maneuverDirection = preferredDirection ?? visualInstruction?.primaryInstruction.maneuverDirection
                 return LaneView(indications: indications, isUsable: isUsable, direction: maneuverDirection)
@@ -37,32 +42,54 @@ open class LanesView: UIView, NavigationComponent {
         }
         
         guard !subviews.isEmpty && subviews.contains(where: { !$0.isValid }) else {
-            hide()
+            hide { completed in
+                completion?(completed)
+            }
             return
         }
         
         stackView.addArrangedSubviews(subviews)
-        show()
+        show { completed in
+            completion?(completed)
+        }
     }
     
-    public func show(animated: Bool = true) {
-        guard isHidden == true else { return }
+    public func show(animated: Bool = true,
+                     completion: ((_ completed: Bool) -> Void)? = nil) {
+        guard isHidden == true else {
+            completion?(true)
+            return
+        }
+        
         if animated {
             UIView.defaultAnimation(0.3, animations: {
                 self.isCurrentlyVisible = true
                 self.isHidden = false
-            }, completion: nil)
+            }) { completed in
+                completion?(completed)
+            }
         } else {
-            self.isHidden = false
+            isHidden = false
         }
     }
     
-    public func hide() {
-        guard isHidden == false else { return }
-        UIView.defaultAnimation(0.3, animations: {
-            self.isCurrentlyVisible = false
-            self.isHidden = true
-        }, completion: nil)
+    public func hide(animated: Bool = true,
+                     completion: ((_ completed: Bool) -> Void)? = nil) {
+        guard isHidden == false else {
+            completion?(true)
+            return
+        }
+        
+        if animated {
+            UIView.defaultAnimation(0.3, animations: {
+                self.isCurrentlyVisible = false
+                self.isHidden = true
+            }) { completed in
+                completion?(completed)
+            }
+        } else {
+            isHidden = true
+        }
     }
     
     fileprivate func clearLaneViews() {
@@ -74,7 +101,9 @@ open class LanesView: UIView, NavigationComponent {
     
     // MARK: NavigationComponent Implementation
     
-    public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService,
+                                  didPassVisualInstructionPoint instruction: VisualInstructionBanner,
+                                  routeProgress: RouteProgress) {
         update(for: instruction)
     }
     
@@ -125,14 +154,14 @@ open class LanesView: UIView, NavigationComponent {
         addSubview(stackView)
         self.stackView = stackView
         
+        stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
         let separatorView = SeparatorView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(separatorView)
         self.separatorView = separatorView
-        
-        stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
