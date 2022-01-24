@@ -13,7 +13,6 @@ class BottomBannerSnapshotTests: TestCase {
         DayStyle().apply()
     }
     
-    @available(iOS 11.0, *)
     func testBottomBannerViewController() {
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
@@ -33,7 +32,6 @@ class BottomBannerSnapshotTests: TestCase {
         assertImageSnapshot(matching: host, as: .image(precision: 0.95))
     }
     
-    @available(iOS 11.0, *)
     func testBottomBannerViewControllerNoSafeArea() {
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
