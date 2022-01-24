@@ -31,6 +31,16 @@ public struct RoundingTable {
         
         /**
          :nodoc:
+         Initializes a `Threshold` object with a given maximum distance, rounding increment, and maximum fraction of digits.
+         */
+        public init(maximumDistance: Measurement<UnitLength>, roundingIncrement: Double, maximumFractionDigits: Int) {
+            self.maximumDistance = maximumDistance
+            self.roundingIncrement = roundingIncrement
+            self.maximumFractionDigits = maximumFractionDigits
+        }
+        
+        /**
+         :nodoc:
          Returns a rounded `Measurement<UnitLength>` for a given distance.
          */
         public func measurement(of distance: CLLocationDistance) -> Measurement<UnitLength> {
@@ -56,6 +66,15 @@ public struct RoundingTable {
         } ?? thresholds.last!
     }
     
+    /**
+     :nodoc:
+     Initializes a `RoundingTable` with the given thresholds.
+     - parameter thresholds: An array of `Threshold`s that dictate rounding behavior.
+     */
+    public init(thresholds: [Threshold]) {
+        self.thresholds = thresholds
+    }
+
     /**
      :nodoc:
      The rounding behavior for locales where the metric system is used.
