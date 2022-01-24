@@ -141,7 +141,7 @@ open class RouteProgress: Codable {
     /**
      Updates the current route with attributes from the given skeletal route.
      */
-    public func refreshRoute(with refreshedRoute: RouteRefreshing, at location: CLLocation) {
+    public func refreshRoute(with refreshedRoute: RouteRefreshSource, at location: CLLocation) {
         route.refreshLegAttributes(from: refreshedRoute)
         currentLegProgress = RouteLegProgress(leg: route.legs[legIndex],
                                               stepIndex: currentLegProgress.stepIndex,
