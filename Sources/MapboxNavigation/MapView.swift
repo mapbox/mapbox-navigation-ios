@@ -4,27 +4,38 @@ import MapboxMaps
 import MapboxDirections
 import MapboxCoreNavigation
 
+
+private let trafficTileSetIdentifiers = Set([
+    "mapbox.mapbox-traffic-v1",
+    "mapbox.mapbox-traffic-v2-beta"
+])
+
+private let incidentsTileSetIdentifiers = Set([
+    "mapbox.mapbox-incidents-v1",
+    "mapbox.mapbox-incidents-v2-beta"
+])
+
 /**
  An extension on `MapView` that allows for toggling traffic on a map style that contains a [Mapbox Traffic source](https://docs.mapbox.com/vector-tiles/mapbox-traffic-v1/).
  */
 extension MapView {
     
     /**
-     Returns a list of tile set identifiers for specific `sourceIdentifier`.
+     Returns a set of tile set identifiers for specific `sourceIdentifier`.
      
      - parameter sourceIdentifier: Identifier of the source, which will be searched for in current style of the `MapView`.
-     - returns: List of tile set identifiers.
+     - returns: Set of tile set identifiers.
      */
-    func tileSetIdentifiers(_ sourceIdentifier: String) -> [String] {
+    func tileSetIdentifiersSet(_ sourceIdentifier: String) -> Set<String> {
         if let properties = try? mapboxMap.style.sourceProperties(for: sourceIdentifier),
            let url = properties["url"] as? String,
            let configurationURL = URL(string: url),
            configurationURL.scheme == "mapbox",
            let tileSetIdentifiers = configurationURL.host?.components(separatedBy: ",") {
-            return tileSetIdentifiers
+            return Set(tileSetIdentifiers)
         }
         
-        return []
+        return Set()
     }
     
     /**
@@ -38,7 +49,7 @@ extension MapView {
      */
     func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
         if sourceType == "vector" {
-            return tileSetIdentifiers(sourceIdentifier)
+            return Array(tileSetIdentifiersSet(sourceIdentifier))
         }
         
         return []
@@ -50,24 +61,24 @@ extension MapView {
      - parameter tileSetIdentifier: Identifier of the tile set in the form `user.tileset`.
      - returns: Set of source identifiers.
      */
-    func sourceIdentifiers(_ tileSetIdentifier: String) -> Set<String> {
+    func sourceIdentifiers(_ tileSetIdentifiers: Set<String>) -> Set<String> {
         return Set(mapboxMap.style.allSourceIdentifiers.filter {
             $0.type.rawValue == "vector"
         }.filter {
-            tileSetIdentifiers($0.id).contains(tileSetIdentifier)
+            !tileSetIdentifiersSet($0.id).isDisjoint(with: tileSetIdentifiers)
         }.map {
             $0.id
         })
     }
     
     /**
-     Returns a Boolean value indicating whether data from the given tile set layer is currently visible in the map view’s style.
+     Returns a Boolean value indicating whether data from the given tile set layers is currently visible in the map view’s style.
      
-     - parameter tileSetIdentifier: Identifier of the tile set in the form `user.tileset`.
+     - parameter tileSetIdentifiers: Identifiers of the tile sets in the form `user.tileset`.
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
-    func showsTileSet(withIdentifier tileSetIdentifier: String, layerIdentifier: String) -> Bool {
-        let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifier)
+    public func showsTileSet(withIdentifiers tileSetIdentifiers: Set<String>, layerIdentifier: String) -> Bool {
+        let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifiers)
         
         for mapViewLayerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
             guard let sourceIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
@@ -86,14 +97,14 @@ extension MapView {
     }
     
     /**
-     Shows or hides data from the given tile set layer.
+     Shows or hides data from the given tile set layers.
      
      - parameter isVisible: Parameter, which controls whether layer should be visible or not.
-     - parameter tileSetIdentifier: Identifier of the tile set in the form `user.tileset`.
+     - parameter tileSetIdentifiers: Identifiers of the tile sets in the form `user.tileset`.
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
-    func setShowsTileSet(_ isVisible: Bool, withIdentifier tileSetIdentifier: String, layerIdentifier: String) {
-        let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifier)
+    public func setShowsTileSet(_ isVisible: Bool, withIdentifiers tileSetIdentifiers: Set<String>, layerIdentifier: String) {
+        let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifiers)
         
         for mapViewLayerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
             guard let sourceIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
@@ -115,10 +126,10 @@ extension MapView {
      */
     public var showsTraffic: Bool {
         get {
-            return showsTileSet(withIdentifier: "mapbox.mapbox-traffic-v1", layerIdentifier: "traffic")
+            return showsTileSet(withIdentifiers: trafficTileSetIdentifiers, layerIdentifier: "traffic")
         }
         set {
-            setShowsTileSet(newValue, withIdentifier: "mapbox.mapbox-traffic-v1", layerIdentifier: "traffic")
+            setShowsTileSet(newValue, withIdentifiers: trafficTileSetIdentifiers, layerIdentifier: "traffic")
         }
     }
     
@@ -127,10 +138,10 @@ extension MapView {
      */
     public var showsIncidents: Bool {
         get {
-            return showsTileSet(withIdentifier: "mapbox.mapbox-incidents-v1", layerIdentifier: "closures")
+            return showsTileSet(withIdentifiers: incidentsTileSetIdentifiers, layerIdentifier: "closures")
         }
         set {
-            setShowsTileSet(newValue, withIdentifier: "mapbox.mapbox-incidents-v1", layerIdentifier: "closures")
+            setShowsTileSet(newValue, withIdentifiers: incidentsTileSetIdentifiers, layerIdentifier: "closures")
         }
     }
     
@@ -206,7 +217,7 @@ extension MapView {
         guard !ResourceOptionsManager.hasChinaBaseURL,
               let mapboxStreetsSource = streetsSources().first else { return }
         
-        let streetsSourceTilesetIdentifiers = tileSetIdentifiers(mapboxStreetsSource.id)
+        let streetsSourceTilesetIdentifiers = tileSetIdentifiersSet(mapboxStreetsSource.id)
         let roadLabelSourceLayerIdentifier = streetsSourceTilesetIdentifiers.compactMap { VectorSource.roadLabelLayerIdentifiersByTileSetIdentifier[$0]
         }.first
         
