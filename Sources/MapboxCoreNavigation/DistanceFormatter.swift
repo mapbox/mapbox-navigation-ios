@@ -67,7 +67,7 @@ public struct RoundingTable {
     }
     
     /**
-     :no-doc:
+     :nodoc:
      Initializes a `RoundingTable` with the given thresholds.
      - parameter thresholds: An array of `Threshold`s that dictate rounding behavior.
      */
