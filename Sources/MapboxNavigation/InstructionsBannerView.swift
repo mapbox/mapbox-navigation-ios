@@ -6,7 +6,8 @@ import MapboxDirections
 /**
  A banner view that contains the current step instruction and responds to tap and swipe gestures.
  
- This class responds and gets updated as the user progresses along a route according to the `NavigationComponent` and `BaseInstructionsBannerView` protocol.
+ This class responds and gets updated as the user progresses along a route according to the
+ `NavigationComponent` and `BaseInstructionsBannerView` protocol.
 */
 @IBDesignable
 open class InstructionsBannerView: BaseInstructionsBannerView, NavigationComponent {
@@ -18,13 +19,16 @@ open class InstructionsBannerView: BaseInstructionsBannerView, NavigationCompone
      - parameter instruction: The `VisualInstructionBanner` instance to be presented.
      - parameter routeProgress: The`RouteProgress` instance that the instruction banner view is updating.
      */
-    public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService,
+                                  didPassVisualInstructionPoint instruction: VisualInstructionBanner,
+                                  routeProgress: RouteProgress) {
         update(for: instruction)
     }
 }
 
 /**
- A banner view that contains the current step instruction along a route and responds to tap and swipe gestures, as the base of `InstructionsCardView` and `InstructionsBannerView`.
+ A banner view that contains the current step instruction along a route and responds to tap and
+ swipe gestures, as the base of `InstructionsCardView` and `InstructionsBannerView`.
 */
 open class BaseInstructionsBannerView: UIControl {
     
@@ -39,7 +43,8 @@ open class BaseInstructionsBannerView: UIControl {
     public weak var primaryLabel: PrimaryLabel!
     
     /**
-     A secondary instruction label below the `PrimaryLabel`, which provides detailed information about the current step..
+     A secondary instruction label below the `PrimaryLabel`, which provides detailed information
+     about the current step..
      */
     public weak var secondaryLabel: SecondaryLabel!
     
@@ -49,7 +54,8 @@ open class BaseInstructionsBannerView: UIControl {
     public weak var distanceLabel: DistanceLabel!
     
     /**
-     A vertical view, which is used as a divider between `ManeuverView`/`DistanceLabel` views to the left and `PrimaryLabel`/`SecondaryLabel` views to the right.
+     A vertical view, which is used as a divider between `ManeuverView`/`DistanceLabel` views to the
+     left and `PrimaryLabel`/`SecondaryLabel` views to the right.
      */
     public weak var dividerView: UIView!
     weak var _separatorView: UIView!
@@ -58,6 +64,11 @@ open class BaseInstructionsBannerView: UIControl {
      An invisible helper view for visualizing the result of the constraints.
      */
     public weak var separatorView: SeparatorView!
+    
+    /**
+     A vertical separator for the trailing side of the view.
+     */
+    var trailingSeparatorView: SeparatorView!
     
     /**
      A view, which indicates that there're more steps in the current route.
@@ -115,17 +126,12 @@ open class BaseInstructionsBannerView: UIControl {
         }
     }
     
-    /**
-     A vertical separator for the trailing side of the view.
-     */
-    var trailingSeparatorView: SeparatorView!
-    
     public override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
     }
     
-    required public init?(coder aDecoder: NSCoder) {
+    public required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
     }
@@ -143,18 +149,21 @@ open class BaseInstructionsBannerView: UIControl {
             return
         }
 
-        if let gestureRecognizer = sender as? UISwipeGestureRecognizer, gestureRecognizer.state == .ended {
+        if let gestureRecognizer = sender as? UISwipeGestureRecognizer,
+           gestureRecognizer.state == .ended {
             if let delegate = delegate {
                 delegate.didSwipeInstructionsBanner(self, swipeDirection: .left)
             }
         }
     }
+    
     @objc func swipedInstructionBannerRight(_ sender: Any) {
         if !swipeable {
             return
         }
         
-        if let gestureRecognizer = sender as? UISwipeGestureRecognizer, gestureRecognizer.state == .ended {
+        if let gestureRecognizer = sender as? UISwipeGestureRecognizer,
+           gestureRecognizer.state == .ended {
             if let delegate = delegate {
                 delegate.didSwipeInstructionsBanner(self, swipeDirection: .right)
             }
@@ -162,7 +171,8 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     @objc func swipedInstructionBannerDown(_ sender: Any) {
-        if let gestureRecognizer = sender as? UISwipeGestureRecognizer, gestureRecognizer.state == .ended {
+        if let gestureRecognizer = sender as? UISwipeGestureRecognizer,
+           gestureRecognizer.state == .ended {
             if showStepIndicator {
                 stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
             }
@@ -204,8 +214,13 @@ open class BaseInstructionsBannerView: UIControl {
     override open func prepareForInterfaceBuilder() {
         super.prepareForInterfaceBuilder()
         maneuverView.isStart = true
-        let component = VisualInstruction.Component.text(text: .init(text: "Primary text label", abbreviation: nil, abbreviationPriority: nil))
-        let instruction = VisualInstruction(text: nil, maneuverType: .turn, maneuverDirection: .left, components: [component])
+        let component = VisualInstruction.Component.text(text: .init(text: "Primary text label",
+                                                                     abbreviation: nil,
+                                                                     abbreviationPriority: nil))
+        let instruction = VisualInstruction(text: nil,
+                                            maneuverType: .turn,
+                                            maneuverDirection: .left,
+                                            components: [component])
         primaryLabel.instruction = instruction
         
         distance = 100
@@ -214,7 +229,8 @@ open class BaseInstructionsBannerView: UIControl {
     /**
      Updates the instructions banner distance info for a given `RouteStepProgress`.
      
-     - parameter currentStepProgress: The current `RouteStepProgress` instance that the instruction banner view is updating.
+     - parameter currentStepProgress: The current `RouteStepProgress` instance that the instruction
+     banner view is updating.
      */
     public func updateDistance(for currentStepProgress: RouteStepProgress) {
         let distanceRemaining = currentStepProgress.distanceRemaining
@@ -281,17 +297,22 @@ open class BaseInstructionsBannerView: UIControl {
         addSubview(stepListIndicatorView)
         self.stepListIndicatorView = stepListIndicatorView
         
-        addTarget(self, action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)), for: .touchUpInside)
-
-        let swipeLeftGesture = UISwipeGestureRecognizer(target: self, action: #selector(BaseInstructionsBannerView.swipedInstructionBannerLeft(_:)))
+        addTarget(self,
+                  action: #selector(BaseInstructionsBannerView.tappedInstructionsBanner(_:)),
+                  for: .touchUpInside)
+        
+        let swipeLeftGesture = UISwipeGestureRecognizer(target: self,
+                                                        action: #selector(BaseInstructionsBannerView.swipedInstructionBannerLeft(_:)))
         swipeLeftGesture.direction = .left
         addGestureRecognizer(swipeLeftGesture)
         
-        let swipeRightGesture = UISwipeGestureRecognizer(target: self, action: #selector(BaseInstructionsBannerView.swipedInstructionBannerRight(_:)))
+        let swipeRightGesture = UISwipeGestureRecognizer(target: self,
+                                                         action: #selector(BaseInstructionsBannerView.swipedInstructionBannerRight(_:)))
         swipeRightGesture.direction = .right
         addGestureRecognizer(swipeRightGesture)
         
-        let swipeDownGesture = UISwipeGestureRecognizer(target: self, action: #selector(BaseInstructionsBannerView.swipedInstructionBannerDown(_:)))
+        let swipeDownGesture = UISwipeGestureRecognizer(target: self,
+                                                        action: #selector(BaseInstructionsBannerView.swipedInstructionBannerDown(_:)))
         swipeDownGesture.direction = .down
         addGestureRecognizer(swipeDownGesture)
         
@@ -306,41 +327,56 @@ open class BaseInstructionsBannerView: UIControl {
         let firstColumnWidth = BaseInstructionsBannerView.maneuverViewSize.width + BaseInstructionsBannerView.padding * 3
         
         // Distance label
-        distanceLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor, constant: BaseInstructionsBannerView.padding / 2).isActive = true
-        distanceLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor, constant: -BaseInstructionsBannerView.padding / 2).isActive = true
-        distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor, constant: 0).isActive = true
-        distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding).isActive = true
+        distanceLabel.leadingAnchor.constraint(greaterThanOrEqualTo: leadingAnchor,
+                                               constant: BaseInstructionsBannerView.padding / 2).isActive = true
+        distanceLabel.trailingAnchor.constraint(lessThanOrEqualTo: trailingAnchor,
+                                                constant: -BaseInstructionsBannerView.padding / 2).isActive = true
+        distanceLabel.centerXAnchor.constraint(equalTo: maneuverView.centerXAnchor,
+                                               constant: 0).isActive = true
+        distanceLabel.lastBaselineAnchor.constraint(equalTo: bottomAnchor,
+                                                    constant: -BaseInstructionsBannerView.padding).isActive = true
         distanceLabel.topAnchor.constraint(greaterThanOrEqualTo: maneuverView.bottomAnchor).isActive = true
         
         // Turn arrow view
         maneuverView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.height).isActive = true
         maneuverView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.width).isActive = true
-        maneuverView.topAnchor.constraint(equalTo: topAnchor, constant: BaseInstructionsBannerView.padding).isActive = true
-        maneuverView.centerXAnchor.constraint(equalTo: leadingAnchor, constant: firstColumnWidth / 2).isActive = true
+        maneuverView.topAnchor.constraint(equalTo: topAnchor,
+                                          constant: BaseInstructionsBannerView.padding).isActive = true
+        maneuverView.centerXAnchor.constraint(equalTo: leadingAnchor,
+                                              constant: firstColumnWidth / 2).isActive = true
         
         // Primary Label
         primaryLabel.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor).isActive = true
-        primaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
-        baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor, constant: -BaseInstructionsBannerView.padding/2))
+        primaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                               constant: -18).isActive = true
+        baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor,
+                                                                     constant: -BaseInstructionsBannerView.padding / 2))
         centerYConstraints.append(primaryLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
         
         // Secondary Label
         secondaryLabel.leadingAnchor.constraint(equalTo: dividerView.trailingAnchor).isActive = true
-        secondaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -18).isActive = true
-        baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor, constant: -BaseInstructionsBannerView.padding / 2))
-        baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
-        centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor, constant: 0))
+        secondaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                 constant: -18).isActive = true
+        baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor,
+                                                                                constant: -BaseInstructionsBannerView.padding / 2))
+        baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor,
+                                                                       constant: 0))
+        centerYConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor,
+                                                                      constant: 0))
         
         // Drag Indicator View
         stepListIndicatorView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.stepListIndicatorViewSize.height).isActive = true
         stepListIndicatorView.widthAnchor.constraint(equalToConstant: BaseInstructionsBannerView.stepListIndicatorViewSize.width).isActive = true
-        stepListIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -BaseInstructionsBannerView.padding / 2).isActive = true
+        stepListIndicatorView.bottomAnchor.constraint(equalTo: bottomAnchor,
+                                                      constant: -BaseInstructionsBannerView.padding / 2).isActive = true
         stepListIndicatorView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         baselineConstraints.append(stepListIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor))
-        centerYConstraints.append(stepListIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor, constant: 0))
+        centerYConstraints.append(stepListIndicatorView.topAnchor.constraint(greaterThanOrEqualTo: secondaryLabel.bottomAnchor,
+                                                                             constant: 0))
 
         // Divider view (vertical divider between maneuver/distance to primary/secondary instruction
-        dividerView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: firstColumnWidth).isActive = true
+        dividerView.leadingAnchor.constraint(equalTo: leadingAnchor,
+                                             constant: firstColumnWidth).isActive = true
         dividerView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         dividerView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
         dividerView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -381,13 +417,15 @@ open class BaseInstructionsBannerView: UIControl {
         // Abbreviate if the instructions do not fit on one line
         primaryLabel.availableBounds = { [unowned self] in
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
-            let availableWidth = self.primaryLabel.viewForAvailableBoundsCalculation?.bounds.width ?? self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
+            let availableWidth = self.primaryLabel.viewForAvailableBoundsCalculation?.bounds.width
+            ?? self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: self.primaryLabel.font.lineHeight)
         }
         
         secondaryLabel.availableBounds = { [unowned self] in
             // Available width H:|-padding-maneuverView-padding-availableWidth-padding-|
-            let availableWidth = self.secondaryLabel.viewForAvailableBoundsCalculation?.bounds.width ?? self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
+            let availableWidth = self.secondaryLabel.viewForAvailableBoundsCalculation?.bounds.width
+            ?? self.bounds.width - BaseInstructionsBannerView.maneuverViewSize.width - BaseInstructionsBannerView.padding * 3
             return CGRect(x: 0, y: 0, width: availableWidth, height: self.secondaryLabel.font.lineHeight)
         }
     }
