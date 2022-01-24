@@ -55,7 +55,6 @@ class InstructionsCardCollectionTests: TestCase {
         instructionsCardCollectionDataSource = nil
     }
 
-    @available(iOS 11.0, *)
     func testInstructionsCardCollectionScrollViewWillEndDragging_ShouldScrollToNextItem() {
         let subject = instructionsCardCollectionDataSource.collection
         let routeProgress = instructionsCardCollectionDataSource.progress
@@ -84,7 +83,6 @@ class InstructionsCardCollectionTests: TestCase {
         XCTAssertEqual(previewStep!.instructions, nextCard.step!.instructions)
     }
     
-    @available(iOS 11.0, *)
     func testInstructionsCardCollectionScrollViewWillEndDragging_ShouldScrollToPreviousItem() {
         let subject = instructionsCardCollectionDataSource.collection
         let routeProgress = instructionsCardCollectionDataSource.progress
