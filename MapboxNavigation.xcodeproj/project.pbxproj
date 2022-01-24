@@ -195,6 +195,7 @@
 		8A41F63D25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A41F63B25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift */; };
 		8A44662B260A6C51008BA55E /* ViewportDataSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */; };
 		8A446645260A7B24008BA55E /* BoundingBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A446644260A7B24008BA55E /* BoundingBox.swift */; };
+		8A460FB8279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A460FB7279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift */; };
 		8A50A3C326EC09FB00894A8E /* FeedbackSubtypeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A50A3BA26EC09FA00894A8E /* FeedbackSubtypeViewController.swift */; };
 		8A50A3C426EC09FB00894A8E /* FeedbackViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A50A3BB26EC09FA00894A8E /* FeedbackViewController.swift */; };
 		8A50A3C526EC09FB00894A8E /* FeedbackViewControllerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A50A3BC26EC09FA00894A8E /* FeedbackViewControllerType.swift */; };
@@ -725,6 +726,7 @@
 		8A41F63B25BF631500BD6FCF /* NavigationMapView+BuildingHighlighting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+BuildingHighlighting.swift"; sourceTree = "<group>"; };
 		8A44662A260A6C51008BA55E /* ViewportDataSourceType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewportDataSourceType.swift; sourceTree = "<group>"; };
 		8A446644260A7B24008BA55E /* BoundingBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBox.swift; sourceTree = "<group>"; };
+		8A460FB7279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardContainerViewDelegate.swift; sourceTree = "<group>"; };
 		8A50A3BA26EC09FA00894A8E /* FeedbackSubtypeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedbackSubtypeViewController.swift; path = Feedback/FeedbackSubtypeViewController.swift; sourceTree = "<group>"; };
 		8A50A3BB26EC09FA00894A8E /* FeedbackViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedbackViewController.swift; path = Feedback/FeedbackViewController.swift; sourceTree = "<group>"; };
 		8A50A3BC26EC09FA00894A8E /* FeedbackViewControllerType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FeedbackViewControllerType.swift; path = Feedback/FeedbackViewControllerType.swift; sourceTree = "<group>"; };
@@ -1618,6 +1620,7 @@
 				AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */,
 				AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */,
 				AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */,
+				8A460FB7279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift */,
 			);
 			name = "Guidance Cards";
 			sourceTree = "<group>";
@@ -2465,6 +2468,7 @@
 				C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */,
 				353280A11FA72871005175F3 /* InstructionLabel.swift in Sources */,
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
+				8A460FB8279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift in Sources */,
 				C54C655220336F2600D338E0 /* Constants.swift in Sources */,
 				B493FB1D2767EDDB002AF455 /* InstructionsBannerViewDelegate.swift in Sources */,
 				353610CE1FAB6A8F00FB1746 /* BottomBannerViewController.swift in Sources */,

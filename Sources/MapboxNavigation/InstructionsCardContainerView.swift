@@ -3,49 +3,6 @@ import UIKit
 import MapboxDirections
 
 /**
- The `InstructionsCardContainerViewDelegate` protocol defines a method that allows an object to customize presented visual instructions within the instructions container view.
- */
-public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate {
-    /**
-     Called when the Primary Label will present a visual instruction.
-     
-     - parameter primaryLabel: The custom primary label that the instruction will be presented on.
-     - parameter instruction: the `VisualInstruction` that will be presented.
-     - parameter presented: the formatted string that is provided by the instruction presenter
-     - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
-     */
-    func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
-    
-    /**
-     Called when the Secondary Label will present a visual instruction.
-     
-     - parameter secondaryLabel: The custom secondary label that the instruction will be presented on.
-     - parameter instruction: the `VisualInstruction` that will be presented.
-     - parameter presented: the formatted string that is provided by the instruction presenter
-     - returns: optionally, a customized NSAttributedString that will be presented instead of the default, or if nil, the default behavior will be used.
-     */
-    func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString?
-}
-
-public extension InstructionsCardContainerViewDelegate {
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func primaryLabel(_ primaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        logUnimplemented(protocolType: InstructionsCardContainerViewDelegate.self, level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func secondaryLabel(_ secondaryLabel: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        logUnimplemented(protocolType: InstructionsCardContainerViewDelegate.self,level: .debug)
-        return nil
-    }
-}
-
-/**
  A container view for the information currently displayed in `InstructionsCardViewController`.
  */
 public class InstructionsCardContainerView: StylableView, InstructionsCardContainerViewDelegate {
@@ -57,6 +14,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
             prepareLayout()
         }
     }
+    
     @objc dynamic public var highlightedBackgroundColor: UIColor = UIColor(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
     
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
@@ -70,10 +28,6 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     lazy var lanesView: LanesView = .forAutoLayout(hidden: true)
     lazy var nextBannerView: NextBannerView = .forAutoLayout(hidden: true)
     
-    private var informationChildren: [UIView] {
-        return [instructionsCardView] + secondaryChildren
-    }
-    
     private var secondaryChildren: [UIView] {
         return [lanesView, nextBannerView]
     }
@@ -82,7 +36,10 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     
     public weak var delegate: InstructionsCardContainerViewDelegate?
 
-    public func updateInstruction(for step: RouteStep, distance: CLLocationDistance, instruction: VisualInstructionBanner? = nil, isCurrentCardStep: Bool = false) {
+    public func updateInstruction(for step: RouteStep,
+                                  distance: CLLocationDistance,
+                                  instruction: VisualInstructionBanner? = nil,
+                                  isCurrentCardStep: Bool = false) {
         instructionsCardView.updateDistanceFromCurrentLocation(distance)
         instructionsCardView.step = step
         
@@ -124,7 +81,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         }
     }
     
-    required public init() {
+    public required init() {
         super.init(frame: .zero)
         commonInit()
     }
@@ -297,7 +254,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         nextBannerView.instructionLabel.showHighlightedTextColor = true
     }
     
-    private func highlightInstructionsCardView(colors: [CGColor]) {
+    private func highlightInstructionsCardView() {
         // primary & secondary labels
         instructionsCardView.primaryLabel.showHighlightedTextColor = true
         instructionsCardView.secondaryLabel.showHighlightedTextColor = true
