@@ -44,7 +44,7 @@ extension Directions {
      - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
      */
     open func calculateOffline(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) {
-        MapboxRoutingProvider().calculateRoutes(options: options,
-                                                completionHandler: completionHandler)
+        MapboxRoutingProvider(.offline).calculateRoutes(options: options,
+                                                        completionHandler: completionHandler)
     }
 }
