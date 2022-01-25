@@ -3,6 +3,7 @@
 ## main
 
 * Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
+* Fixed an error behavior where `Directions.calculateOffline` would still try to build a route online. ([#3702](https://github.com/mapbox/mapbox-navigation-ios/pull/3702))
 
 ## v2.2.0
 
