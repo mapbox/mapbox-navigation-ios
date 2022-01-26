@@ -256,6 +256,7 @@ open class DayStyle: Style {
         SecondaryLabel.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).normalFont = UIFont.boldSystemFont(ofSize: 18.0).adjustedFont
         SecondaryLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
         SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
+        SeparatorView.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         SpeedLimitView.appearance().signBackColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         SpeedLimitView.appearance().textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         SpeedLimitView.appearance().regulatoryBorderColor = #colorLiteral(red: 0.800, green: 0, blue: 0, alpha: 1)
