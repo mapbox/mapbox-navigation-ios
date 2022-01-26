@@ -80,18 +80,17 @@ open class InstructionsCardViewController: UIViewController {
         
         if interfaceOrientations.contains(UIApplication.shared.statusBarOrientation)
             || (traitCollection.verticalSizeClass == .regular && traitCollection.horizontalSizeClass == .regular) {
-            cardWidth = view.frame.width
+            cardWidth = UIScreen.main.bounds.width - 20.0
         } else {
-            cardWidth = UIScreen.main.bounds.width * 0.4 - view.safeAreaInsets.left
+            cardWidth = view.frame.width - view.safeAreaInsets.left - 20.0
         }
         
         let cardSize: CGSize
         
-        /* TODO: Identify the traitCollections to define the width of the cards */
         if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {
             cardSize = customSize
         } else {
-            cardSize = CGSize(width: cardWidth, height: 140.0)
+            cardSize = CGSize(width: cardWidth, height: 130.0)
         }
 
         return cardSize
@@ -147,8 +146,6 @@ open class InstructionsCardViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        /* TODO: Custom dataSource */
-        
         view.backgroundColor = .clear
         view.translatesAutoresizingMaskIntoConstraints = false
         view.clipsToBounds = false
@@ -166,7 +163,7 @@ open class InstructionsCardViewController: UIViewController {
         instructionCollectionView.translatesAutoresizingMaskIntoConstraints = false
         
         addSubviews()
-        setConstraints()
+        reinstallConstraints()
         addObservers()
     }
     
@@ -184,18 +181,31 @@ open class InstructionsCardViewController: UIViewController {
         [instructionCollectionView, junctionView].forEach(view.addSubview(_:))
     }
     
-    func setConstraints() {
-        let instructionCollectionViewContraints: [NSLayoutConstraint] = [
-            instructionCollectionView.topAnchor.constraint(equalTo: view.safeTopAnchor, constant: 5.0),
-            instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            instructionCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+    var instructionCollectionViewContraints: [NSLayoutConstraint] = []
+    var junctionViewConstraints: [NSLayoutConstraint] = []
+    
+    func reinstallConstraints() {
+        NSLayoutConstraint.deactivate(instructionCollectionViewContraints)
+        instructionCollectionViewContraints = []
+        
+        instructionCollectionViewContraints = [
+            instructionCollectionView.topAnchor.constraint(equalTo: view.safeTopAnchor,
+                                                           constant: 10.0),
+            instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
+                                                               constant: 10.0),
+            instructionCollectionView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
+                                                                constant: -10.0),
             instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height),
-            instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
         
         NSLayoutConstraint.activate(instructionCollectionViewContraints)
         
-        let junctionViewConstraints: [NSLayoutConstraint] = [
+        
+        NSLayoutConstraint.deactivate(junctionViewConstraints)
+        junctionViewConstraints = []
+        
+        junctionViewConstraints = [
             junctionView.topAnchor.constraint(equalTo: instructionCollectionView.bottomAnchor),
             junctionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             junctionView.widthAnchor.constraint(equalToConstant: cardSize.width),
@@ -203,6 +213,14 @@ open class InstructionsCardViewController: UIViewController {
         ]
         
         NSLayoutConstraint.activate(junctionViewConstraints)
+    }
+    
+    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if previousTraitCollection == traitCollection { return }
+        
+        reinstallConstraints()
     }
     
     func snapToIndexPath(_ indexPath: IndexPath) {
@@ -320,13 +338,19 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
                              cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cardCollectionCellIdentifier,
                                                       for: indexPath) as! InstructionsCardCell
-        
-        guard let steps = steps,
+
+        return cell
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView,
+                               willDisplay cell: UICollectionViewCell,
+                               forItemAt indexPath: IndexPath) {
+        guard let cell = cell as? InstructionsCardCell,
+              let steps = steps,
               indexPath.row < steps.count,
               let distanceRemaining = routeProgress?.currentLegProgress.currentStepProgress.distanceRemaining else {
-                  return cell
+                  return
               }
-        
         cell.container.delegate = self
         
         let step = steps[indexPath.row]
@@ -339,8 +363,6 @@ extension InstructionsCardViewController: UICollectionViewDataSource {
             cell.configure(for: step,
                               distance: step.distance)
         }
-        
-        return cell
     }
 }
 
