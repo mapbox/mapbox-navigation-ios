@@ -2,11 +2,13 @@ import MapboxDirections
 import CarPlay
 
 extension VisualInstruction {
+    
     var laneComponents: [Component] {
         return components.filter { component -> Bool in
-            if case VisualInstruction.Component.lane(indications: _, isUsable: _, preferredDirection: _) = component {
+            if case .lane(indications: _, isUsable: _, preferredDirection: _) = component {
                 return true
             }
+            
             return false
         }
     }
