@@ -2,7 +2,7 @@ import Foundation
 import MapboxDirections
 
 /**
- The `InstructionsCardContainerViewDelegate` protocol defines a method that allows an object to
+ The `InstructionsCardContainerViewDelegate` protocol defines methods that allow an object to
  customize presented visual instructions within the instructions container view.
  */
 public protocol InstructionsCardContainerViewDelegate: VisualInstructionDelegate {
