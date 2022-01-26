@@ -16,53 +16,82 @@ open class LanesView: UIView, NavigationComponent {
     var trailingSeparatorView: SeparatorView!
     
     /**
+     A closure that is called after either presenting or dismissing lanes view.
+     
+     - parameter completed: Boolean value that indicates whether or not the animation actually
+     finished before the completion handler was called.
+     */
+    public typealias CompletionHandler = (_ completed: Bool) -> Void
+    
+    /**
      Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
      
      - parameter visualInstruction: Current instruction, which will be displayed in the lanes view.
-     - parameter completion: A completion that will be called once lanes view is either shown or hidden.
+     - parameter animated: If `true`, lanes view presentation or dismissal is animated.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called once lanes view is either shown or hidden.
      */
     public func update(for visualInstruction: VisualInstructionBanner?,
-                       completion: ((_ completed: Bool) -> Void)? = nil) {
+                       animated: Bool = true,
+                       duration: TimeInterval = 0.5,
+                       completion: CompletionHandler? = nil) {
         clearLaneViews()
         
         guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction else {
-            hide { completed in
+            hide(animated: animated,
+                 duration: duration) { completed in
                 completion?(completed)
             }
             return
         }
         
         let subviews = tertiaryInstruction.components.compactMap { (component) -> LaneView? in
-            if case let .lane(indications: indications, isUsable: isUsable, preferredDirection: preferredDirection) = component {
+            if case let .lane(indications: indications,
+                              isUsable: isUsable,
+                              preferredDirection: preferredDirection) = component {
                 let maneuverDirection = preferredDirection ?? visualInstruction?.primaryInstruction.maneuverDirection
-                return LaneView(indications: indications, isUsable: isUsable, direction: maneuverDirection)
+                return LaneView(indications: indications,
+                                isUsable: isUsable,
+                                direction: maneuverDirection)
             } else {
                 return nil
             }
         }
         
         guard !subviews.isEmpty && subviews.contains(where: { !$0.isValid }) else {
-            hide { completed in
+            hide(animated: animated,
+                 duration: duration) { completed in
                 completion?(completed)
             }
             return
         }
         
         stackView.addArrangedSubviews(subviews)
-        show { completed in
+        show(animated: animated,
+             duration: duration) { completed in
             completion?(completed)
         }
     }
     
+    /**
+     Shows lanes view.
+     
+     - parameter animated: If `true`, lanes view presentation is animated. Defaults to `true`.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called once lanes view is shown.
+     */
     public func show(animated: Bool = true,
-                     completion: ((_ completed: Bool) -> Void)? = nil) {
-        guard isHidden == true else {
+                     duration: TimeInterval = 0.5,
+                     completion: CompletionHandler? = nil) {
+        guard isHidden else {
             completion?(true)
             return
         }
         
         if animated {
-            UIView.defaultAnimation(0.3, animations: {
+            UIView.defaultAnimation(duration, animations: {
                 self.isCurrentlyVisible = true
                 self.isHidden = false
             }) { completed in
@@ -70,18 +99,28 @@ open class LanesView: UIView, NavigationComponent {
             }
         } else {
             isHidden = false
+            completion?(true)
         }
     }
     
+    /**
+     Hides lanes view.
+     
+     - parameter animated: If `true`, lanes view dismissal is animated. Defaults to `true`.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called after lanes view dismissal.
+     */
     public func hide(animated: Bool = true,
-                     completion: ((_ completed: Bool) -> Void)? = nil) {
-        guard isHidden == false else {
+                     duration: TimeInterval = 0.5,
+                     completion: CompletionHandler? = nil) {
+        guard !isHidden else {
             completion?(true)
             return
         }
         
         if animated {
-            UIView.defaultAnimation(0.3, animations: {
+            UIView.defaultAnimation(duration, animations: {
                 self.isCurrentlyVisible = false
                 self.isHidden = true
             }) { completed in
@@ -89,6 +128,7 @@ open class LanesView: UIView, NavigationComponent {
             }
         } else {
             isHidden = true
+            completion?(true)
         }
     }
     
@@ -176,7 +216,7 @@ open class LanesView: UIView, NavigationComponent {
         trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         trailingSeparatorView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         trailingSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        trailingSeparatorView.leadingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        trailingSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
