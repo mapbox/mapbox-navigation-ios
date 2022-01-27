@@ -114,6 +114,8 @@ public protocol Router: CLLocationManagerDelegate {
     func userIsOnRoute(_ location: CLLocation) -> Bool
     func reroute(from: CLLocation, along: RouteProgress)
     
+    var initialManeuverAvoidanceRadius: TimeInterval { get set }
+    
     /**
      A radius around the current user position in which the API will avoid returning any significant maneuvers when rerouting.
      
