@@ -66,6 +66,8 @@
 		2BE7013D25359C7B00F46E4E /* RouteAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7013C25359C7B00F46E4E /* RouteAlert.swift */; };
 		2BE7016925371E3400F46E4E /* Incident.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7016825371E3400F46E4E /* Incident.swift */; };
 		2BE70189253734A000F46E4E /* TollCollection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BE7012C2535946300F46E4E /* TollCollection.swift */; };
+		2BEA240A27D205B500EE05D9 /* RerouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEA240827D205B500EE05D9 /* RerouteController.swift */; };
+		2BEA240B27D205B500EE05D9 /* ReroutingObserverDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEA240927D205B500EE05D9 /* ReroutingObserverDelegate.swift */; };
 		2BEF16472775C8FD0085E3C6 /* MapMatchingResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BEF16462775C8FD0085E3C6 /* MapMatchingResult.swift */; };
 		2BF398C1274BDEA8000C9A72 /* Directions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF398C0274BDEA8000C9A72 /* Directions.swift */; };
 		2BF398C3274FE99A000C9A72 /* HandlerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BF398C2274FE99A000C9A72 /* HandlerFactory.swift */; };
@@ -592,6 +594,8 @@
 		2BE701342535948100F46E4E /* RestStop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestStop.swift; sourceTree = "<group>"; };
 		2BE7013C25359C7B00F46E4E /* RouteAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RouteAlert.swift; sourceTree = "<group>"; };
 		2BE7016825371E3400F46E4E /* Incident.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Incident.swift; sourceTree = "<group>"; };
+		2BEA240827D205B500EE05D9 /* RerouteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteController.swift; sourceTree = "<group>"; };
+		2BEA240927D205B500EE05D9 /* ReroutingObserverDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReroutingObserverDelegate.swift; sourceTree = "<group>"; };
 		2BEF16462775C8FD0085E3C6 /* MapMatchingResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapMatchingResult.swift; sourceTree = "<group>"; };
 		2BF398C0274BDEA8000C9A72 /* Directions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Directions.swift; sourceTree = "<group>"; };
 		2BF398C2274FE99A000C9A72 /* HandlerFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandlerFactory.swift; sourceTree = "<group>"; };
@@ -1911,6 +1915,8 @@
 				3582A24F20EEC46B0029C5DE /* Router.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				35C98730212E02B500808B82 /* RouteController.swift */,
+				2BEA240827D205B500EE05D9 /* RerouteController.swift */,
+				2BEA240927D205B500EE05D9 /* ReroutingObserverDelegate.swift */,
 				5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */,
 				8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */,
 				E2805A5726CB994500165DB9 /* NSLock+MapboxInternal.swift */,
@@ -2808,6 +2814,7 @@
 				3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */,
 				2E50E0D2264E468B009D3848 /* RoadObjectMatcherError.swift in Sources */,
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,
+				2BEA240A27D205B500EE05D9 /* RerouteController.swift in Sources */,
 				2B01E4B8274671550002A5F7 /* Directions+RoutingProvider.swift in Sources */,
 				2B7ACA9C25E3F84700B0ACFD /* PredictiveCacheOptions.swift in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
@@ -2816,6 +2823,7 @@
 				DA5F44C725F07AB700F573EC /* RoadName.swift in Sources */,
 				DA5F44AC25F07A6800F573EC /* RoadGraphPosition.swift in Sources */,
 				2E50E0E6264E49EF009D3848 /* OpenLRIdentifier.swift in Sources */,
+				2BEA240B27D205B500EE05D9 /* ReroutingObserverDelegate.swift in Sources */,
 				2BF398C1274BDEA8000C9A72 /* Directions.swift in Sources */,
 				353E69041EF0C4E5007B2AE5 /* SimulatedLocationManager.swift in Sources */,
 				2B01E4B7274671550002A5F7 /* RoutingProvider.swift in Sources */,

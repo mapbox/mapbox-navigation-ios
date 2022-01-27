@@ -91,6 +91,8 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      
      You can implement this method to allow the router to continue check and reroute the user if needed. By default, the user will not be rerouted when arriving at a waypoint.
      
+     - important: Only works for `LegacyRouteController`.
+     
      - parameter router: The router that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the controller has arrived at.
      - returns: True to prevent the router from checking if the user should be rerouted.

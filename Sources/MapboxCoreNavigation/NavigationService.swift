@@ -27,7 +27,7 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      `RoutingProvider`, used to create route.
      */
-    var routingProvider: RoutingProvider { get }
+    var routingProvider: RoutingProvider? { get }
     
     /**
      Credentials data, used to authorize server requests.
@@ -329,7 +329,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeOptions: The route options used to get the route.
-     - parameter routingProvider: `RoutingProvider`, used to create route.
+     - parameter routingProvider: Custom `RoutingProvider`, used to create route.
      - parameter credentials: Credentials to authorize additional data requests throughout the route.
      - parameter locationSource: An optional override for the default `NaviationLocationManager`.
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
@@ -339,14 +339,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
     required public init(routeResponse: RouteResponse,
                          routeIndex: Int,
                          routeOptions: RouteOptions,
-                         routingProvider: RoutingProvider,
+                         routingProvider: RoutingProvider?,
                          credentials: Credentials,
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          simulating simulationMode: SimulationMode? = nil,
                          routerType: Router.Type? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
-        self.routingProvider = routingProvider
         self.credentials = credentials
         self.simulationMode = simulationMode ?? .inTunnels
         super.init()
@@ -432,9 +431,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public lazy var directions: Directions = self.routingProvider as? Directions ?? NavigationSettings.shared.directions
     
     /**
-     `RoutingProvider`, used to create route.
+     Custom `RoutingProvider`, used to create route.
+     
+     If set to `nil` - default implementation will be used.
      */
-    public var routingProvider: RoutingProvider
+    public var routingProvider: RoutingProvider? {
+        router.routingProvider
+    }
     
     /**
      Credentials data, used to authorize server requests.

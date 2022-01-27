@@ -98,6 +98,8 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      
      You can implement this method to allow the navigation service to continue check and reroute the user if needed. By default, the user will not be rerouted when arriving at a waypoint.
      
+     - important: Only works for `LegacyRouteController`.
+     
      - parameter service: The navigation service that has arrived at a waypoint.
      - parameter waypoint: The waypoint that the controller has arrived at.
      - returns: True to prevent the navigation service from checking if the user should be rerouted.

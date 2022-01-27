@@ -58,6 +58,8 @@ class Navigator {
         })
     }()
     
+    private(set) var rerouteController: RerouteController
+
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `NavigationSettings`).
@@ -97,7 +99,8 @@ class Navigator {
                                             credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL,
-                                            datasetProfileIdentifier: Self.datasetProfileIdentifier)
+                                            datasetProfileIdentifier: Self.datasetProfileIdentifier,
+                                            navigatorRouterType: NavigationSettings.shared.navigationRouterType.nativeSource)
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
@@ -105,6 +108,7 @@ class Navigator {
         navigator = factory.navigator
         roadObjectStore = RoadObjectStore(navigator.roadObjectStore())
         roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
+        rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
         
         subscribeNavigator()
     }
@@ -124,7 +128,8 @@ class Navigator {
                                             tilesVersion: version ?? Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL,
                                             targetVersion: version.map { _ in Self.tilesVersion },
-                                            datasetProfileIdentifier: Self.datasetProfileIdentifier)
+                                            datasetProfileIdentifier: Self.datasetProfileIdentifier,
+                                            navigatorRouterType: NavigationSettings.shared.navigationRouterType.nativeSource)
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
@@ -133,6 +138,7 @@ class Navigator {
         
         roadObjectStore.native = navigator.roadObjectStore()
         roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
+        rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
         
         subscribeNavigator()
     }

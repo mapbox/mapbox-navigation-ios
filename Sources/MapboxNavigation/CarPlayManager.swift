@@ -65,7 +65,9 @@ public class CarPlayManager: NSObject {
     public lazy var directions: Directions = self.routingProvider as? Directions ?? NavigationSettings.shared.directions
     
     /**
-     `RoutingProvider`, used to create route.
+     Custom `RoutingProvider`, used to create route.
+     
+     If set to `nil` - default implementation will be used.
      */
     public var routingProvider: RoutingProvider
     
@@ -649,7 +651,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         MapboxNavigationService(routeResponse: routeResponse.response,
                                 routeIndex: routeResponse.routeIndex,
                                 routeOptions: routeOptions,
-                                routingProvider: NavigationSettings.shared.directions,
+                                routingProvider: nil,
                                 credentials: NavigationSettings.shared.directions.credentials,
                                 simulating: desiredSimulationMode)
         

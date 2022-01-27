@@ -24,10 +24,18 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     public lazy var directions: Directions = routingProvider as? Directions ?? Directions.shared
     
     /**
-     Routing provider used to create the route.
+     Custom `RoutingProvider`, used to create route.
+     
+     If set to `nil` - default implementation will be used.
      */
-    public var routingProvider: RoutingProvider
+    public var routingProvider: RoutingProvider?
 
+    private lazy var defaultRoutingProvider: RoutingProvider = MapboxRoutingProvider(NavigationSettings.shared.navigationRouterType)
+    
+    var resolvedRoutingProvider:  RoutingProvider {
+        routingProvider ?? defaultRoutingProvider
+    }
+    
     public var route: Route {
         routeProgress.route
     }
@@ -99,6 +107,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     var isRerouting = false
     
     var lastRerouteLocation: CLLocation?
+    
+    public var initialManeuverAvoidanceRadius: TimeInterval = RerouteController.DefaultManeuverAvoidanceRadius
     
     public var refreshesRoute: Bool = true
     
@@ -217,7 +227,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     required public init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
                          options: RouteOptions,
-                         routingProvider: RoutingProvider = Directions.shared,
+                         routingProvider: RoutingProvider? = Directions.shared,
                          dataSource source: RouterDataSource) {
         self.routingProvider = routingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)

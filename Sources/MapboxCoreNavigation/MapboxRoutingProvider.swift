@@ -123,7 +123,8 @@ public class MapboxRoutingProvider: RoutingProvider {
                                             credentials: settings.directions.credentials,
                                             tilesVersion: Navigator.tilesVersion,
                                             historyDirectoryURL: Navigator.historyDirectoryURL,
-                                            datasetProfileIdentifier: datasetProfileIdentifier ?? Navigator.datasetProfileIdentifier)
+                                            datasetProfileIdentifier: datasetProfileIdentifier ?? Navigator.datasetProfileIdentifier,
+                                            navigatorRouterType: source.nativeSource)
         return RouterFactory.build(for: source.nativeSource,
                                       cache: factory.cacheHandle,
                                       config: factory.configHandle,
@@ -300,19 +301,12 @@ public class MapboxRoutingProvider: RoutingProvider {
         
         let routeIndex = UInt32(indexedRouteResponse.routeIndex)
         
-        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
-              let routeJSONString = String(data: routeData, encoding: .utf8) else {
-            preconditionFailure("Could not serialize route data for refreshing.")
-        }
-        
         var requestId: RequestId!
         let refreshOptions = RouteRefreshOptions(requestId: responseIdentifier,
                                                  routeIndex: routeIndex,
                                                  legIndex: startLegIndex,
                                                  routingProfile: routeOptions.profileIdentifier.nativeProfile)
-        
-        requestId = router.getRouteRefresh(for: refreshOptions,
-                                           route: routeJSONString) { [weak self] result, _ in
+        requestId = router.getRouteRefresh(for: refreshOptions) { [weak self] result, _ in
             guard let self = self else { return }
             
             self.parseResponse(requestId: requestId,

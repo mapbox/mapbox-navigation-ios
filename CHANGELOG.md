@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## Main
+
+### Routing
+* Integrated MaboxNavigtionNative rerouting mechanism. Rerouting customization is done using providing user implementation of `RoutingProvider` protocol to `NavigationService.init(routeResponse:routeIndex:routeOptions:routingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)` or `Router.init(alongRouteAtIndex:in:options:routingProvider:dataSource:)`. Passing `nil` will result in default behavior. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
+* Exposed configurations for rerouting aspects like controlling usage of online vs. offline data for route building through `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:)` method, and `Router.initialManeuverAvoidanceRadius` to configure radius before first dangerous maneuver. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
+
 ## v2.3.0
 
 The v2.2.0 release notes [clarified](https://github.com/mapbox/mapbox-navigation-ios/pull/3652) that is an error to have more than one instance of `NavigationViewController`, `NavigationService`, or `RouteController` running simultaneously. Now you will receive a log message at the fault level helping you to spot the issue. To pause the debugger when the SDK detect the problematic situation, enable the “All Runtime Issues” breakpoint in Xcode. Learn more about breakpoints in [Xcode documentation](https://developer.apple.com/documentation/xcode/setting-breakpoints-to-pause-your-running-app). ([#3740](https://github.com/mapbox/mapbox-navigation-ios/pull/3740))

@@ -60,9 +60,18 @@ open class RouteController: NSObject {
     public lazy var directions: Directions = routingProvider as? Directions ?? Directions.shared
     
     /**
-     `RoutingProvider`, used to create route.
+      Custom `RoutingProvider`, used to create route.
+     
+      If set to `nil` - default implementation will be used.
      */
-    public var routingProvider: RoutingProvider
+    public var routingProvider: RoutingProvider?
+    
+    // TODO: remove when NN implements RouteRefreshing and Continuos Alternatives
+    private lazy var defaultRoutingProvider: RoutingProvider = MapboxRoutingProvider(NavigationSettings.shared.navigationRouterType)
+    
+    var resolvedRoutingProvider:  RoutingProvider {
+        routingProvider ?? defaultRoutingProvider
+    }
     
     public var route: Route {
         return routeProgress.route
@@ -171,22 +180,12 @@ open class RouteController: NSObject {
     public func stopUpdatingElectronicHorizon() {
         sharedNavigator.stopUpdatingElectronicHorizon()
     }
-
-    func changeRouteProgress(_ routeProgress: RouteProgress,
-                             completion: @escaping (Bool) -> Void) {
-        updateNavigator(with: routeProgress) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success:
-                self.routeProgress = routeProgress
-                completion(true)
-            case .failure:
-                completion(false)
-            }
-        }
-    }
     
     // MARK: Controlling and Altering the Route
+    
+    var rerouteController: RerouteController {
+        Navigator.shared.rerouteController
+    }
     
     public var reroutesProactively: Bool = true
     
@@ -195,6 +194,15 @@ open class RouteController: NSObject {
     var isRerouting = false
     
     var lastRerouteLocation: CLLocation?
+    
+    public var initialManeuverAvoidanceRadius: TimeInterval {
+        get {
+            rerouteController.initialManeuverAvoidanceRadius
+        }
+        set {
+            rerouteController.initialManeuverAvoidanceRadius = newValue
+        }
+    }
     
     public var refreshesRoute: Bool = true
     
@@ -239,26 +247,34 @@ open class RouteController: NSObject {
     }
     
     /**
-     Asynchronously updates NavNative navigator with the new `RouteProgress`.
+     Asynchronously updates NavNative navigator with the new `IndexedRouteResponse`.
 
-     - parameter progress: New route progress to apply to the navigator.
-     - parameter completion: A completion that will be called once the navigator is updated with a boolean indicating
+     - parameter indexedRouteResponse: New route response to apply to the navigator.
+     - parameter legIndex: A leg index, to start routing from.
+     - parameter completion: A completion that will be called once the navigator is updated indicating
      whether the change was successful.
      */
-    private func updateNavigator(with progress: RouteProgress,
+    private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
+                                 starting legIndex: Int,
                                  completion: ((Result<RouteInfo, Error>) -> Void)?) {
+        guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
+                  completion?(.failure(RouteControllerError.internalError))
+                  return
+        }
+        
         let encoder = JSONEncoder()
-        encoder.userInfo[.options] = progress.routeOptions
-        guard let routeData = try? encoder.encode(progress.route),
+        encoder.userInfo[.options] = routeOptions
+        
+        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
               let routeJSONString = String(data: routeData, encoding: .utf8) else {
                   completion?(.failure(RouteControllerError.failedToSerializeRoute))
                   return
         }
 
-        let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
+        let routeRequest = Directions().url(forCalculating: routeOptions).absoluteString
         let routes = Routes(routesResponse: routeJSONString,
-                            routeIndex: 0,
-                            legIndex: UInt32(progress.legIndex),
+                            routeIndex: UInt32(indexedRouteResponse.routeIndex),
+                            legIndex: UInt32(legIndex),
                             routesRequest: routeRequest)
 
         sharedNavigator.setRoutes(routes, uuid: sessionUUID) { result in
@@ -317,19 +333,12 @@ open class RouteController: NSObject {
         
         updateIndexes(status: status, progress: routeProgress)
         updateRouteLegProgress(status: status)
-        let willReroute = !userIsOnRoute(snappedLocation, status: status)
-        && (delegate?.router(self, shouldRerouteFrom: snappedLocation)
-            ?? DefaultBehavior.shouldRerouteFromLocation)
         
-        updateSpokenInstructionProgress(status: status, willReRoute: willReroute)
+        updateSpokenInstructionProgress(status: status, willReRoute: isRerouting)
         updateVisualInstructionProgress(status: status)
         updateRoadName(status: status)
         updateDistanceToIntersection(from: snappedLocation)
         
-        if willReroute {
-            reroute(from: snappedLocation, along: routeProgress)
-        }
-
         if status.routeState != .complete {
             // Check for faster route proactively (if reroutesProactively is enabled)
             refreshAndCheckForFasterRoute(from: snappedLocation, routeProgress: routeProgress)
@@ -368,11 +377,11 @@ open class RouteController: NSObject {
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
-        updateNavigator(with: self.routeProgress, completion: nil)
+        updateNavigator(with: indexedRouteResponse, starting: self.routeProgress.legIndex, completion: nil)
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
-        updateNavigator(with: self.routeProgress, completion: nil)
+        updateNavigator(with: indexedRouteResponse, starting: self.routeProgress.legIndex, completion: nil)
     }
 
     func isValidNavigationStatus(_ status: NavigationStatus) -> Bool {
@@ -516,6 +525,13 @@ open class RouteController: NSObject {
         NotificationCenter.default.post(name: .didArriveAtWaypoint, object: self, userInfo: info)
     }
     
+    private func announcReroutingError(with error: Error) {
+        delegate?.router(self, didFailToRerouteWith: error)
+        NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
+            NotificationUserInfoKey.routingErrorKey: error,
+        ])
+    }
+    
     func geometryEncoding(_ routeShapeFormat: RouteShapeFormat) -> ActiveGuidanceGeometryEncoding {
         switch routeShapeFormat {
         case .geoJSON:
@@ -541,7 +557,7 @@ open class RouteController: NSObject {
     required public init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
                          options: RouteOptions,
-                         routingProvider: RoutingProvider,
+                         routingProvider: RoutingProvider?,
                          dataSource source: RouterDataSource) {
         Self.instanceLock.lock()
         let twoInstances = Self.instance != nil
@@ -560,10 +576,11 @@ open class RouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
+        rerouteController.customRoutingProvider = self.routingProvider
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
-        updateNavigator(with: routeProgress) { [weak self] _ in
+        updateNavigator(with: self.indexedRouteResponse, starting: 0) { [weak self] _ in
             self?.isInitialized = true
         }
         Self.instanceLock.lock()
@@ -576,6 +593,7 @@ open class RouteController: NSObject {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         unsubscribeNotifications()
         routeTask?.cancel()
+        rerouteController.resetToDefaultSettings()
         Self.instanceLock.lock()
         Self.instance = nil
         Self.instanceLock.unlock()
@@ -594,10 +612,12 @@ open class RouteController: NSObject {
                                                selector: #selector(navigationStatusDidChange),
                                                name: .navigationStatusDidChange,
                                                object: nil)
+        rerouteController.delegate = self
     }
     
     private func unsubscribeNotifications() {
         NotificationCenter.default.removeObserver(self)
+        rerouteController.delegate = nil
     }
     
     // MARK: Accessing Relevant Routing Data
@@ -629,58 +649,16 @@ extension RouteController: Router {
     }
     
     public func userIsOnRoute(_ location: CLLocation, status: NavigationStatus?) -> Bool {
-        
-        guard let destination = routeProgress.currentLeg.destination else {
-            preconditionFailure("Route legs used for navigation must have destinations")
-        }
-        
-        // If the user has arrived, do not continue monitor reroutes, step progress, etc
-        if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
-            (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: destination) ??
-                DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
-            return true
-        }
-        
-        // If we still wait for the first status from NavNative, there is no need to reroute
-        guard let status = status ?? sharedNavigator.mostRecentNavigationStatus else { return true }
-
-        /// NavNative doesn't support reroutes after arrival.
-        /// The code below is a port of logic from LegacyRouteController
-        /// This should be removed once NavNative adds support for reroutes after arrival. 
-        if status.routeState == .complete {
-            // If the user has arrived and reroutes after arrival should be prevented, do not continue monitor
-            // reroutes, step progress, etc
-            if routeProgress.currentLegProgress.userHasArrivedAtWaypoint &&
-                (delegate?.router(self, shouldPreventReroutesWhenArrivingAt: destination) ??
-                    RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint) {
-                return true
-            }
-
-            func userIsWithinRadiusOfDestination(location: CLLocation) -> Bool {
-                let lastStep = routeProgress.currentLegProgress.currentStep
-                let isCloseToFinalStep = location.isWithin(RouteControllerMaximumDistanceBeforeRecalculating,
-                                                           of: lastStep)
-                return isCloseToFinalStep
-            }
-
-            return userIsWithinRadiusOfDestination(location: location)
-        }
-        else {
-            let offRoute = status.routeState == .offRoute
-            return !offRoute
-        }
+        return rerouteController.userIsOnRoute()
     }
     
     public func reroute(from location: CLLocation, along progress: RouteProgress) {
-        if let lastRerouteLocation = lastRerouteLocation {
-            guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
-                return
-            }
+        guard routingProvider != nil else {
+            rerouteController.forceReroute()
+            return
         }
         
         announceImpendingReroute(at: location)
-        
-        self.lastRerouteLocation = location
         
         // Avoid interrupting an ongoing reroute
         if isRerouting { return }
@@ -702,10 +680,7 @@ extension RouteController: Router {
                     self?.isRerouting = false
                 }
             case let .failure(error):
-                self.delegate?.router(self, didFailToRerouteWith: error)
-                NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
-                    NotificationUserInfoKey.routingErrorKey: error,
-                ])
+                self.announcReroutingError(with: error)
                 self.isRerouting = false
             }
         }
@@ -730,13 +705,19 @@ extension RouteController: Router {
         }
 
         let routeOptions = routeOptions ?? routeProgress.routeOptions
-        changeRouteProgress(RouteProgress(route: route, options: routeOptions)) { [weak self] success in
+        let routeProgress = RouteProgress(route: route, options: routeOptions)
+        updateNavigator(with: indexedRouteResponse,
+                        starting: routeProgress.legIndex) { [weak self] result in
             guard let self = self else { return }
-            if success {
+            switch result {
+            case .success:
+                self.routeProgress = routeProgress
                 self.announce(reroute: route, at: self.location, proactive: isProactive)
                 self.indexedRouteResponse = indexedRouteResponse
+                completion?(true)
+            case .failure:
+                completion?(false)
             }
-            completion?(success)
         }
     }
 
@@ -779,6 +760,40 @@ extension RouteController: Router {
 }
 
 extension RouteController: InternalRouter { }
+
+extension RouteController: ReroutingObserverDelegate {
+    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) {
+        guard let location = location else { return }
+        
+        if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+            announceImpendingReroute(at: location)
+            
+            isRerouting = true
+        } else {
+            rerouteController.cancel()
+        }
+    }
+    
+    func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions) {
+        updateRoute(with: IndexedRouteResponse(routeResponse: response,
+                                               routeIndex: 0),
+                    routeOptions: options,
+                    isProactive: false) { [weak self] _ in
+            self?.isRerouting = false
+        }
+    }
+    
+    func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController) {
+        announcReroutingError(with: ReroutingError.cancelled)
+        self.isRerouting = false
+    }
+    
+    func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: ReroutingError) {
+        announcReroutingError(with: error)
+        self.isRerouting = false
+    }
+}
+
 
 enum RouteControllerError: Error {
     case internalError
