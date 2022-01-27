@@ -48,7 +48,8 @@ class NativeHandlersFactory {
         onMainQueueSync { // Make sure that Navigator pick ups Main Thread RunLoop.
             MapboxNavigationNative.Navigator(config: configHandle,
                                              cache: cacheHandle,
-                                             historyRecorder: historyRecorder)
+                                             historyRecorder: historyRecorder,
+                                             router: nil)
         }
     }()
     
@@ -114,7 +115,9 @@ class NativeHandlersFactory {
                                               electronicHorizonOptions: nil,
                                               polling: nil,
                                               incidentsOptions: nil,
-                                              noSignalSimulationEnabled: nil)
+                                              noSignalSimulationEnabled: nil,
+                                              avoidManeuverSeconds: nil,
+                                              useSensors: nil)
         
         return configFactoryType.build(for: settingsProfile,
                                        config: navigatorConfig,
