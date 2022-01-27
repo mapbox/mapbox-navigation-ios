@@ -8,30 +8,30 @@ extension URLSessionDataTask: NavigationProviderRequest {
 }
 
 extension Directions: RoutingProvider {
-    
+
     @discardableResult public func calculateRoutes(options: RouteOptions, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
-        return calculate(options, completionHandler: completionHandler)
+        return calculateWithCache(options, completionHandler: completionHandler)
     }
-    
+
     @discardableResult public func calculateRoutes(options: MatchOptions, completionHandler: @escaping MatchCompletionHandler) -> NavigationProviderRequest? {
-        return calculate(options, completionHandler: completionHandler)
+        return calculateWithCache(options, completionHandler: completionHandler)
     }
-    
+
     @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse, fromLegAtIndex: UInt32, completionHandler: @escaping RouteCompletionHandler) -> NavigationProviderRequest? {
         guard case let .route(routeOptions) = indexedRouteResponse.routeResponse.options else {
             preconditionFailure("Invalid route data passed for refreshing. Expected `RouteResponse` containing `.route` `ResponseOptions` but got `.match`.")
         }
-        
+
         let session = (options: routeOptions as DirectionsOptions,
                        credentials: self.credentials)
-        
+
         guard let responseIdentifier = indexedRouteResponse.routeResponse.identifier else {
             DispatchQueue.main.async {
                 completionHandler(session, .failure(.noData))
             }
             return nil
         }
-        
+
         return refreshRoute(responseIdentifier: responseIdentifier,
                             routeIndex: indexedRouteResponse.routeIndex,
                             fromLegAtIndex: Int(fromLegAtIndex),
@@ -73,7 +73,7 @@ extension Route {
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = options
         let encoded = try encoder.encode(self)
-        
+
         let decoder = JSONDecoder()
         decoder.userInfo[.options] = options
         return try decoder.decode(Self.self, from: encoded)
