@@ -2,6 +2,7 @@
 
 ## main
 
+* Fixed route line blinking when route is refreshed. ([#3647](https://github.com/mapbox/mapbox-navigation-ios/pull/3647))
 * Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
 
 ## v2.2.0
