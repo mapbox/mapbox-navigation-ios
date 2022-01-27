@@ -218,7 +218,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             ?? MapboxNavigationService(routeResponse: routeResponse,
                                        routeIndex: routeIndex,
                                        routeOptions: routeOptions,
-                                       routingProvider: NavigationSettings.shared.directions,
+                                       routingProvider: nil,
                                        credentials: NavigationSettings.shared.directions.credentials,
                                        simulating: navigationOptions?.simulationMode)
         navigationService.delegate = self

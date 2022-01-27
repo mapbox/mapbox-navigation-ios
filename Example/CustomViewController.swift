@@ -48,7 +48,7 @@ class CustomViewController: UIViewController {
         navigationService = MapboxNavigationService(routeResponse: indexedUserRouteResponse!.routeResponse,
                                                     routeIndex: indexedUserRouteResponse!.routeIndex,
                                                     routeOptions: userRouteOptions!,
-                                                    routingProvider: MapboxRoutingProvider(.hybrid),
+                                                    routingProvider: nil,
                                                     credentials: NavigationSettings.shared.directions.credentials,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .inTunnels)
