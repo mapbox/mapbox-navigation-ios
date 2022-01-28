@@ -29,7 +29,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     /**
      Color of the separator between `InstructionsCardView` or `LanesView`/`NextBannerView`.
      */
-    @objc dynamic public var customSeparatorColor: UIColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+    @objc dynamic public var customSeparatorColor: UIColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
     
     /**
      Color of the separator between `InstructionsCardView` or `LanesView`/`NextBannerView` that will
@@ -51,7 +51,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
      */
     var state: InstructionsCardContainerView.State = .unhighlighted {
         didSet {
-            backgroundColor = state == .highighted ? highlightedBackgroundColor : customBackgroundColor
+            updateInstructionsCardContainerView(for: state)
             updateInstructionsCardView(for: state)
             updateLanesView(for: state)
             updateNextBannerView(for: state)
@@ -159,6 +159,23 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
             nextBannerView
         ]
         informationStackView.addArrangedSubviews(informationStackViewSubviews)
+    }
+    
+    private func updateInstructionsCardContainerView(for state: InstructionsCardContainerView.State) {
+        let borderColor: UIColor
+        let backgroundColor: UIColor
+        switch state {
+        case .unhighlighted:
+            borderColor = customSeparatorColor
+            backgroundColor = customBackgroundColor
+        case .highighted:
+            borderColor = highlightedSeparatorColor
+            backgroundColor = highlightedBackgroundColor
+        }
+        
+        layer.borderWidth = 1 / UIScreen.main.scale
+        layer.borderColor = borderColor.cgColor
+        self.backgroundColor = backgroundColor
     }
     
     private func updateInstructionsCardView(for state: InstructionsCardContainerView.State) {
