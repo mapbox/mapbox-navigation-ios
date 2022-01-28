@@ -70,7 +70,7 @@ extension CarPlaySearchController: CPListTemplateDelegate {
                              didSelect item: CPListItem,
                              completionHandler: @escaping () -> Void) {
         // Selected a search item from the extended list?
-        if let userInfo = item.userInfo as? [String: Any],
+        if let userInfo = item.userInfo as? CarPlayUserInfo,
            let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? NavigationGeocodedPlacemark,
            let location = placemark.location {
             let destinationWaypoint = Waypoint(location: location)

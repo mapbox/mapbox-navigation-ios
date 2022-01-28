@@ -94,3 +94,9 @@ public struct StyleManagerNotificationUserInfoKey: Hashable, Equatable, RawRepre
  to start working.
  */
 let DefaultApproachingDestinationThresholdDistance: CLLocationDistance = 250.0
+
+/**
+ Dictionary, which contains any custom user info related data (for example it's used by `CPTrip`,
+ while filling it with `CPRouteChoice` objects).
+ */
+public typealias CarPlayUserInfo = [String: Any?]
