@@ -105,7 +105,8 @@ public class MapboxRoutingProvider: RoutingProvider {
          Cancels the request if it is still active.
          */
         public func cancel() {
-            routingProvider.router.cancelRequest(forToken: requestIdentifier)
+            routingProvider.router.cancelRouteRefreshRequest(forToken: requestIdentifier)
+            routingProvider.router.cancelRouteRequest(forToken: requestIdentifier)
         }
     }
     

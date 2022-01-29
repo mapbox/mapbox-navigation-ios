@@ -2,9 +2,22 @@
 
 ## main
 
+### User interface
+
 * Fixed route line blinking when route is refreshed. ([#3647](https://github.com/mapbox/mapbox-navigation-ios/pull/3647))
 * Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
-* Fixed an error behavior where `Directions.calculateOffline` would still try to build a route online. ([#3702](https://github.com/mapbox/mapbox-navigation-ios/pull/3702))
+
+### Location tracking
+
+* Fixed cases in which the user location indicator floated around when the user was stopped at an intersection in an urban canyon. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
+* Fixed poor location snapping while the user is inside a tunnel. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
+
+### Offline routing
+
+* If routing tiles in local storage are corrupted, the tiles are now redownloaded. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
+* Offline routes now respect the `RouteOptions.roadClassesToAllow` property. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
+* Fixed an issue where `Directions.calculateOffline(options:completionHandler:)` calculated the route by making a network request. ([#3702](https://github.com/mapbox/mapbox-navigation-ios/pull/3702))
+* Fixed an issue where offline directions contained instructions in English regardless of the `DirectionsOptions.locale` property. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
 
 ## v2.2.0
 

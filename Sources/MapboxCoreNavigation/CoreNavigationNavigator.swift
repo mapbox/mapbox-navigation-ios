@@ -154,10 +154,9 @@ class Navigator {
         navigator.setRoutesFor(routes) { result in
             if result.isValue() {
                 let routeInfo = result.value as! RouteInfo
-                os_log("Navigator updated to routeSequenceNumber = %{public}d",
+                os_log("Navigator has been updated",
                        log: Navigator.log,
-                       type: .debug,
-                       routeInfo.routeSequenceNumber)
+                       type: .debug)
                 completion(.success(routeInfo))
             }
             else if result.isError() {
