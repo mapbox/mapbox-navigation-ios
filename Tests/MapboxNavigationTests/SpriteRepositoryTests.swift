@@ -43,6 +43,25 @@ class SpriteRepositoryTests: TestCase {
         XCTAssertTrue((sprite?.isKind(of: UIImage.self))!)
     }
     
+    func testGettingLegacyShield() {
+        let fakeBaseURL = "http://an.image.url/legacyShield"
+        ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: URL(string: fakeBaseURL + "@2x.png")!)
+        
+        let semaphore = DispatchSemaphore(value: 0)
+        var shield: UIImage?
+        
+        repository.getLegacyShield(imageBaseUrl: fakeBaseURL) { (image) in
+            shield = image
+            semaphore.signal()
+        }
+
+        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
+        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
+        
+        XCTAssertNotNil(shield)
+        XCTAssertTrue((shield?.isKind(of: UIImage.self))!)
+    }
+    
     func testDownLoadingSpriteMetaData() {
         let fakeURL = URL(string: "http://an.image.url/spriteMetaData.json")!
         ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-metadata"), forURL: fakeURL)

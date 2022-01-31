@@ -106,6 +106,28 @@ class SpriteRepository {
         return nil
     }
     
+    func getLegacyShield(imageBaseUrl: String, completion: @escaping (UIImage?) -> Void) {
+        guard let requestURL = URL(string: imageBaseUrl + "@2x.png") else {
+            completion(nil)
+            return
+        }
+        
+        let _ = imageDownloader.downloadImage(with: requestURL, completion: { (image, data, error) in
+            guard let image = image else {
+                completion(nil)
+                return
+            }
+
+            guard error == nil else {
+                completion(image)
+                return
+            }
+
+            completion(image)
+            return
+        })
+    }
+    
     func resetCache() {
         imageCache.clearMemory()
         metadataCache.clearMemory()
