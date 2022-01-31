@@ -7,8 +7,15 @@ class SpriteRepository {
     let metadataCache =  SpriteMetaDataCache()
     var styleURI: StyleURI = .navigationDay
     var baseURL: String = "https://api.mapbox.com/styles/v1"
-    public static let shared = ImageRepository.init()
-    let imageDownloader: ReentrantImageDownloader
+    
+    public var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
+        didSet {
+            imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
+        }
+    }
+
+    public static let shared = SpriteRepository.init()
+    fileprivate(set) var imageDownloader: ReentrantImageDownloader
     
     init(imageCache: BimodalImageCache = ImageCache(), withDownloader downloader: ReentrantImageDownloader = ImageDownloader()) {
         self.imageCache = imageCache

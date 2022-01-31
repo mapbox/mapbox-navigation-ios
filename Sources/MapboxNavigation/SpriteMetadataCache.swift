@@ -1,6 +1,6 @@
 import UIKit
 
-public struct SpriteMetaData: Codable {
+public struct SpriteMetaData: Codable, Equatable {
     var width: Int
     var height: Int
     var x: Int
