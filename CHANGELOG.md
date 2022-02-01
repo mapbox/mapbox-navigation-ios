@@ -49,6 +49,7 @@
 * Fixed an issue where changes made to `NavigationViewController.showsReportFeedback`, `NavigationViewController.showsSpeedLimits`, `NavigationViewController.detailedFeedbackEnabled`, `NavigationViewController.floatingButtonsPosition` and `NavigationViewController.floatingButtons` before `NavigationViewController` presentation were not saved. ([#3718](https://github.com/mapbox/mapbox-navigation-ios/pull/3718))
 * Fixed an issue where `SpeechSynthesizing.managesAudioSession` was ignored by `RouteVoiceController`. ([#3572](https://github.com/mapbox/mapbox-navigation-ios/pull/3572))
 * Location tracking and routing resources are now freed if no `RouteController` or `PassiveLocationManager` instance is actively being used. ([#3724](https://github.com/mapbox/mapbox-navigation-ios/pull/3724))
+* Added tileset profile configuration for Free Drive, Active Guidance, `MapboRoutingProvider` and Tileset Descriptors API. Now, `RouteOptions.profileIdentifier` is used to determine which type of tiles should be used for navigation. Please make sure to pay attention to `MapboxRoutingProfider` and `TilesetDescriptorFactory` arguments when configuring `ProfileIdentifier`. ([#3717](https://github.com/mapbox/mapbox-navigation-ios/pull/3717))
 * Fixed an issue where release builds would crash on invalid navigator initialization. ([#3738](https://github.com/mapbox/mapbox-navigation-ios/pull/3738))
 
 ## v2.2.0
