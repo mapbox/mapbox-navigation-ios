@@ -72,13 +72,14 @@ extension MapView {
     }
     
     /**
-     Returns a Boolean value indicating whether data from the given tile set layers is currently visible in the map view’s style.
+     Returns a Boolean value indicating whether data from the given tile set layers is currently all visible in the map view’s style.
      
      - parameter tileSetIdentifiers: Identifiers of the tile sets in the form `user.tileset`.
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
     public func showsTileSet(withIdentifiers tileSetIdentifiers: Set<String>, layerIdentifier: String) -> Bool {
         let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifiers)
+        var foundTileSets = false
         
         for mapViewLayerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
             guard let sourceIdentifier = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier,
@@ -87,13 +88,15 @@ extension MapView {
                                                                             property: "source-layer").value as? String else { return false }
             
             if sourceIdentifiers.contains(sourceIdentifier) && sourceLayerIdentifier == layerIdentifier {
+                foundTileSets = true
                 let visibility = mapboxMap.style.layerProperty(for: mapViewLayerIdentifier, property: "visibility").value as? String
-                
-                return visibility == "visible"
+                if visibility != "visible" {
+                    return false
+                }
             }
         }
         
-        return false
+        return foundTileSets
     }
     
     /**
