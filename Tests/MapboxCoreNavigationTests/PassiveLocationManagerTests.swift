@@ -77,25 +77,31 @@ class PassiveLocationManagerTests: TestCase {
     }
     
     func testManualLocations() {
-        let locationManager = PassiveLocationManager()
-        Navigator.shared.navigator.resetRideSession()
+        let navigatorResetExpectation = expectation(description: "Navigator should be reset successfully.")
+        Navigator.shared.navigator.reset {
+            navigatorResetExpectation.fulfill()
+        }
+        wait(for: [navigatorResetExpectation], timeout: 1.0)
+        
         let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
         locationUpdateExpectation.expectedFulfillmentCount = 1
         
         let road = Road(from: CLLocationCoordinate2D(latitude: 47.207966, longitude: 9.527012), to: CLLocationCoordinate2D(latitude: 47.209518, longitude: 9.522167))
         let delegate = Delegate(road: road, locationUpdateExpectation: locationUpdateExpectation)
         let date = Date()
+        let locationManager = PassiveLocationManager()
         locationManager.updateLocation(CLLocation(latitude: 47.208674, longitude: 9.524650, timestamp: date.addingTimeInterval(-5)))
         locationManager.delegate = delegate
         DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(500)) {
-            Navigator.shared.navigator.resetRideSession()
-            locationManager.updateLocation(CLLocation(latitude: 47.208943, longitude: 9.524707, timestamp: date.addingTimeInterval(-4)))
-            locationManager.updateLocation(CLLocation(latitude: 47.209082, longitude: 9.524319, timestamp: date.addingTimeInterval(-3)))
-            locationManager.updateLocation(CLLocation(latitude: 47.209229, longitude: 9.523838, timestamp: date.addingTimeInterval(-2)))
-            locationManager.updateLocation(CLLocation(latitude: 47.209612, longitude: 9.522629, timestamp: date.addingTimeInterval(-1)))
-            locationManager.updateLocation(CLLocation(latitude: 47.209842, longitude: 9.522377, timestamp: date.addingTimeInterval(0)))
+            Navigator.shared.navigator.reset {
+                locationManager.updateLocation(CLLocation(latitude: 47.208943, longitude: 9.524707, timestamp: date.addingTimeInterval(-4)))
+                locationManager.updateLocation(CLLocation(latitude: 47.209082, longitude: 9.524319, timestamp: date.addingTimeInterval(-3)))
+                locationManager.updateLocation(CLLocation(latitude: 47.209229, longitude: 9.523838, timestamp: date.addingTimeInterval(-2)))
+                locationManager.updateLocation(CLLocation(latitude: 47.209612, longitude: 9.522629, timestamp: date.addingTimeInterval(-1)))
+                locationManager.updateLocation(CLLocation(latitude: 47.209842, longitude: 9.522377, timestamp: date.addingTimeInterval(0)))
 
-            locationUpdateExpectation.fulfill()
+                locationUpdateExpectation.fulfill()
+            }
         }
         wait(for: [locationUpdateExpectation], timeout: 5)
     }
