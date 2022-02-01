@@ -453,6 +453,113 @@ class NavigationViewControllerTests: TestCase {
         XCTAssert(subject.navigationMapView == injected, "NavigtionMapView not injected properly.")
         XCTAssert(subject.view.subviews.contains(injected), "NavigtionMapView not injected in view hierarchy.")
     }
+    
+    func navigationViewControllerMock() -> NavigationViewController {
+        let navigationRouteOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
+            CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
+        ])
+        
+        let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                                        routeIndex: 0,
+                                                        routeOptions: navigationRouteOptions)
+        
+        let navigationOptions = NavigationOptions(navigationService: navigationService)
+        
+        let navigationViewController = NavigationViewController(for: initialRouteResponse,
+                                                                   routeIndex: 0,
+                                                                   routeOptions: routeOptions,
+                                                                   navigationOptions: navigationOptions)
+        
+        return navigationViewController
+    }
+    
+    func testShowsReportFeedback() {
+        let navigationViewController = navigationViewControllerMock()
+        
+        XCTAssertEqual(navigationViewController.showsReportFeedback,
+                       true,
+                       "Button that allows drivers to report feedback should be shown by default.")
+        
+        navigationViewController.showsReportFeedback = false
+        
+        XCTAssertEqual(navigationViewController.showsReportFeedback,
+                       false,
+                       "Button that allows drivers to report feedback should not be shown.")
+    }
+    
+    func testShowsSpeedLimits() {
+        let navigationViewController = navigationViewControllerMock()
+        
+        XCTAssertEqual(navigationViewController.showsSpeedLimits,
+                       true,
+                       "Speed limit should be shown by default.")
+        
+        navigationViewController.showsSpeedLimits = false
+        
+        XCTAssertEqual(navigationViewController.showsSpeedLimits,
+                       false,
+                       "Speed limit should not be shown.")
+    }
+    
+    func testDetailedFeedbackEnabled() {
+        let navigationViewController = navigationViewControllerMock()
+        
+        XCTAssertEqual(navigationViewController.detailedFeedbackEnabled,
+                       false,
+                       "Second level of detail for feedback items should not be enabled by default.")
+        
+        navigationViewController.showsSpeedLimits = true
+        
+        XCTAssertEqual(navigationViewController.showsSpeedLimits,
+                       true,
+                       "Second level of detail for feedback items should be enabled.")
+    }
+    
+    func testFloatingButtonsPosition() {
+        let navigationViewController = navigationViewControllerMock()
+        
+        XCTAssertEqual(navigationViewController.floatingButtonsPosition,
+                       .topTrailing,
+                       "The position of the floating buttons should be topTrailing by default.")
+        
+        navigationViewController.floatingButtonsPosition = .topLeading
+        
+        XCTAssertEqual(navigationViewController.floatingButtonsPosition,
+                       .topLeading,
+                       "The position of the floating buttons should be topLeading.")
+    }
+    
+    func testFloatingButtons() {
+        let navigationViewController = navigationViewControllerMock()
+        
+        XCTAssertEqual(navigationViewController.floatingButtons?.count,
+                       3,
+                       "There should be three floating buttons by default.")
+        XCTAssertEqual(navigationViewController.floatingButtons?[0],
+                       navigationViewController.navigationView.overviewButton,
+                       "Unexpected floating button.")
+        XCTAssertEqual(navigationViewController.floatingButtons?[1],
+                       navigationViewController.navigationView.muteButton,
+                       "Unexpected floating button.")
+        XCTAssertEqual(navigationViewController.floatingButtons?[2],
+                       navigationViewController.navigationView.reportButton,
+                       "Unexpected floating button.")
+        
+        navigationViewController.floatingButtons = []
+        XCTAssertEqual(navigationViewController.floatingButtons?.count,
+                       0,
+                       "There should be zero floating buttons after modification.")
+        
+        let floatingButton = UIButton()
+        navigationViewController.floatingButtons = [floatingButton]
+        XCTAssertEqual(navigationViewController.floatingButtons?.count,
+                       1,
+                       "There should be one floating button after modification.")
+        XCTAssertEqual(navigationViewController.floatingButtons?.first,
+                       floatingButton,
+                       "Unexpected floating button.")
+    }
 }
 
 extension NavigationViewControllerTests: NavigationViewControllerDelegate, StyleManagerDelegate {
