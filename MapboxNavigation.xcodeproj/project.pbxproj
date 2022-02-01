@@ -341,10 +341,10 @@
 		B4A78D32261FD47700FDF212 /* sthlm-double-back.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFE261FD0A30078546C /* sthlm-double-back.json */; };
 		B4B61B9227A8823100AA127E /* sprite-metadata.json in Resources */ = {isa = PBXBuildFile; fileRef = B4B61B9127A8823100AA127E /* sprite-metadata.json */; };
 		B4B61B9527A882C900AA127E /* SpriteMetaDataCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B61B9327A8826F00AA127E /* SpriteMetaDataCacheTests.swift */; };
-		B4B61B9727A882E200AA127E /* SpriteRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B61B9627A882E200AA127E /* SpriteRepositoryTests.swift */; };
 		B4BB0AD52704D1D7006F502D /* short_route.json in Resources */ = {isa = PBXBuildFile; fileRef = B4BB0AD42704D1D7006F502D /* short_route.json */; };
 		B4BB0AD72704D1E6006F502D /* multileg_route.json in Resources */ = {isa = PBXBuildFile; fileRef = B4BB0AD62704D1E6006F502D /* multileg_route.json */; };
 		B4E19C47268114840011581F /* NavigationLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E19C46268114840011581F /* NavigationLocationProvider.swift */; };
+		B4F4FEAD27AB1E11003915A9 /* SpriteRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4B61B9627A882E200AA127E /* SpriteRepositoryTests.swift */; };
 		C51511D120EAC89D00372A91 /* CPMapTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51511D020EAC89D00372A91 /* CPMapTemplate.swift */; };
 		C51DF8661F38C31C006C6A15 /* Locale.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51DF8651F38C31C006C6A15 /* Locale.swift */; };
 		C520EE901EBB84F9008805BC /* Navigation.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C520EE921EBB84F9008805BC /* Navigation.storyboard */; };
@@ -2699,6 +2699,7 @@
 				8D86AE8B21C31CC80064A304 /* ManeuverArrowSnapshotTests.swift in Sources */,
 				8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
+				B4F4FEAD27AB1E11003915A9 /* SpriteRepositoryTests.swift in Sources */,
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
 				B40B1C61270380EC0065F57D /* VanishingRouteLineTests.swift in Sources */,
@@ -2715,7 +2716,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4B61B9727A882E200AA127E /* SpriteRepositoryTests.swift in Sources */,
 				E2BBB458273254830016BC45 /* PassiveLocationManagerDelegateSpy.swift in Sources */,
 				B47C1B62261FD3BD0078546C /* DummyURLSessionDataTask.swift in Sources */,
 				E20E3AC526C50AC6002E13EE /* BillingServiceMock.swift in Sources */,
