@@ -19,6 +19,10 @@
 * Fixed an issue where `Directions.calculateOffline(options:completionHandler:)` calculated the route by making a network request. ([#3702](https://github.com/mapbox/mapbox-navigation-ios/pull/3702))
 * Fixed an issue where offline directions contained instructions in English regardless of the `DirectionsOptions.locale` property. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
 
+### Other Changes
+
+* Fixed an issue where changes made to `NavigationViewController.showsReportFeedback`, `NavigationViewController.showsSpeedLimits`, `NavigationViewController.detailedFeedbackEnabled`, `NavigationViewController.floatingButtonsPosition` and `NavigationViewController.floatingButtons` before `NavigationViewController` presentation were not saved. ([#3718](https://github.com/mapbox/mapbox-navigation-ios/pull/3718))
+
 ## v2.2.0
 
 ### Packaging
