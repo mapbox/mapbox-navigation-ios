@@ -165,16 +165,29 @@ extension NavigationView {
             
             layoutConstraints.append(floatingStackViewLeadingConstraint)
         case .topTrailing:
-            let floatingStackViewLeadingContraint: NSLayoutConstraint
+            let floatingStackViewLeadingConstraint: NSLayoutConstraint
+            // Device is in landscape mode and notch (if present) is located on the left side.
             if UIApplication.shared.statusBarOrientation == .landscapeRight {
-                floatingStackViewLeadingContraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
-                                                                                                constant: -10)
+                if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                    // Language with right-to-left interface layout is used.
+                    floatingStackViewLeadingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
+                                                                                                     constant: -10)
+                } else {
+                    // Language with left-to-right interface layout is used.
+                    floatingStackViewLeadingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                                                                     constant: -10)
+                }
             } else {
-                floatingStackViewLeadingContraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
-                                                                                                constant: -10)
+                if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                    floatingStackViewLeadingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                                                                     constant: -10)
+                } else {
+                    floatingStackViewLeadingConstraint = floatingStackView.trailingAnchor.constraint(equalTo: safeTrailingAnchor,
+                                                                                                     constant: -10)
+                }
             }
             
-            layoutConstraints.append(floatingStackViewLeadingContraint)
+            layoutConstraints.append(floatingStackViewLeadingConstraint)
         }
 
         let bottomBannerContainerViewTrailingConstraint = bottomBannerContainerView.trailingAnchor.constraint(equalTo: topBannerContainerView.trailingAnchor)
