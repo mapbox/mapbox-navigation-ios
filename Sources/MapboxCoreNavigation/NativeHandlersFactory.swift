@@ -19,19 +19,22 @@ class NativeHandlersFactory {
     let historyDirectoryURL: URL?
     let targetVersion: String?
     let configFactoryType: ConfigFactory.Type
+    let datasetProfile: ProfileIdentifier
     
     init(tileStorePath: String,
          credentials: Credentials,
          tilesVersion: String = "",
          historyDirectoryURL: URL? = nil,
          targetVersion: String? = nil,
-         configFactoryType: ConfigFactory.Type = ConfigFactory.self) {
+         configFactoryType: ConfigFactory.Type = ConfigFactory.self,
+         datasetProfile: ProfileIdentifier = ProfileIdentifier.automobile) {
         self.tileStorePath = tileStorePath
         self.credentials = credentials
         self.tilesVersion = tilesVersion
         self.historyDirectoryURL = historyDirectoryURL
         self.targetVersion = targetVersion
         self.configFactoryType = configFactoryType
+        self.datasetProfile = datasetProfile
     }
     
     // MARK: - Native Handlers
@@ -79,7 +82,8 @@ class NativeHandlersFactory {
         TileEndpointConfiguration(credentials: credentials,
                                   tilesVersion: tilesVersion,
                                   minimumDaysToPersistVersion: nil,
-                                  targetVersion: targetVersion)
+                                  targetVersion: targetVersion,
+                                  datasetProfile: datasetProfile)
     }()
     
     lazy var tilesConfig: TilesConfig = {
