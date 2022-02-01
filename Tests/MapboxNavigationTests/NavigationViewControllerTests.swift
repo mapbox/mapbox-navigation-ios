@@ -507,13 +507,13 @@ class NavigationViewControllerTests: TestCase {
         
         XCTAssertEqual(navigationViewController.detailedFeedbackEnabled,
                        false,
-                       "Second level of detail for feedback items should not be shown by default.")
+                       "Second level of detail for feedback items should not be enabled by default.")
         
         navigationViewController.showsSpeedLimits = true
         
         XCTAssertEqual(navigationViewController.showsSpeedLimits,
                        true,
-                       "Second level of detail for feedback items should be shown.")
+                       "Second level of detail for feedback items should be enabled.")
     }
     
     func testFloatingButtonsPosition() {
