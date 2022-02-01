@@ -471,6 +471,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var showsReportFeedback: Bool = true {
         didSet {
+            loadViewIfNeeded()
             ornamentsController?.reportButton.isHidden = !showsReportFeedback
             showsEndOfRouteFeedback = showsReportFeedback
         }
@@ -499,9 +500,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var showsSpeedLimits: Bool {
         get {
-            ornamentsController?.showsSpeedLimits ?? false
+            loadViewIfNeeded()
+            return ornamentsController?.showsSpeedLimits ?? false
         }
         set {
+            loadViewIfNeeded()
             ornamentsController?.showsSpeedLimits = newValue
         }
     }
@@ -513,9 +516,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     public var detailedFeedbackEnabled: Bool {
         get {
-            ornamentsController?.detailedFeedbackEnabled ?? false
+            loadViewIfNeeded()
+            return ornamentsController?.detailedFeedbackEnabled ?? false
         }
         set {
+            loadViewIfNeeded()
             ornamentsController?.detailedFeedbackEnabled = newValue
         }
     }
@@ -608,7 +613,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     open var floatingButtonsPosition: MapOrnamentPosition? {
         get {
-            ornamentsController?.floatingButtonsPosition
+            // Force `NavigationViewController` to call `viewDidLoad()` method, which will in turn
+            // create other controllers (including `OrnamentsController`).
+            loadViewIfNeeded()
+            return ornamentsController?.floatingButtonsPosition
         }
         set {
             ornamentsController?.floatingButtonsPosition = newValue
@@ -620,9 +628,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      */
     open var floatingButtons: [UIButton]? {
         get {
-            ornamentsController?.floatingButtons
+            loadViewIfNeeded()
+            return ornamentsController?.floatingButtons
         }
         set {
+            loadViewIfNeeded()
             ornamentsController?.floatingButtons = newValue
         }
     }
