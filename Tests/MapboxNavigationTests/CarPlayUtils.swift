@@ -12,7 +12,10 @@ func simulateCarPlayConnection(_ carPlayManager: CarPlayManager) {
     let fakeInterfaceController = FakeCPInterfaceController(context: #function)
     let fakeWindow = CPWindow()
     
-    carPlayManager.application(UIApplication.shared, didConnectCarInterfaceController: fakeInterfaceController, to: fakeWindow)
+    carPlayManager.application(UIApplication.shared,
+                               didConnectCarInterfaceController: fakeInterfaceController,
+                               to: fakeWindow)
+    
     if let mapViewController = carPlayManager.carWindow?.rootViewController?.view {
         carPlayManager.carWindow?.addSubview(mapViewController)
     }
@@ -36,8 +39,6 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public fileprivate(set) var navigationEnded = false
 
     public var leadingBarButtons: [CPBarButton]?
-    public var trailingBarButtons: [CPBarButton]?
-    public var mapButtons: [CPMapButton]?
 
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         navigationServiceFor routeResponse: RouteResponse,
@@ -61,20 +62,6 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
                         in: CPTemplate,
                         for activity: CarPlayActivity) -> [CPBarButton]? {
         return leadingBarButtons
-    }
-    
-    func carPlayManager(_ carPlayManager: CarPlayManager,
-                        trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
-                        in: CPTemplate,
-                        for activity: CarPlayActivity) -> [CPBarButton]? {
-        return trailingBarButtons
-    }
-    
-    func carPlayManager(_ carPlayManager: CarPlayManager,
-                        mapButtonsCompatibleWith traitCollection: UITraitCollection,
-                        in template: CPTemplate,
-                        for activity: CarPlayActivity) -> [CPMapButton]? {
-        return mapButtons
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager,

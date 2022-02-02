@@ -28,9 +28,6 @@ class CarPlayManagerTests: TestCase {
     }
     
     override func tearDown() {
-        //        carPlayManager = nil
-        //        carPlaySearchController = nil
-        //        eventsManagerSpy = nil
         super.tearDown()
     }
     
@@ -47,8 +44,6 @@ class CarPlayManagerTests: TestCase {
         let expectedEventName = MMEventTypeNavigationCarplayDisconnect
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
     }
-    
-    // MARK: Upon connecting to CarPlay, window and interfaceController should be set up correctly
     
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
         let exampleDelegate = TestCarPlayManagerDelegate()
@@ -93,18 +88,39 @@ class CarPlayManagerTests: TestCase {
     }
     
     func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfAvailable() {
-        let exampleDelegate = TestCarPlayManagerDelegate()
-        exampleDelegate.leadingBarButtons = [
+        
+        class CarPlayManagerDelegateMock: CarPlayManagerDelegate {
+            
+            var leadingBarButtons: [CPBarButton]?
+            var trailingBarButtons: [CPBarButton]?
+            
+            func carPlayManager(_ carPlayManager: CarPlayManager,
+                                leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                                in: CPTemplate,
+                                for activity: CarPlayActivity) -> [CPBarButton]? {
+                return leadingBarButtons
+            }
+            
+            func carPlayManager(_ carPlayManager: CarPlayManager,
+                                trailingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                                in: CPTemplate,
+                                for activity: CarPlayActivity) -> [CPBarButton]? {
+                return trailingBarButtons
+            }
+        }
+        
+        let carPlayManagerDelegateMock = CarPlayManagerDelegateMock()
+        carPlayManagerDelegateMock.leadingBarButtons = [
             CPBarButton(type: .text),
             CPBarButton(type: .text)
         ]
         
-        exampleDelegate.trailingBarButtons = [
+        carPlayManagerDelegateMock.trailingBarButtons = [
             CPBarButton(type: .image),
             CPBarButton(type: .image)
         ]
         
-        carPlayManager.delegate = exampleDelegate
+        carPlayManager.delegate = carPlayManagerDelegateMock
         
         simulateCarPlayConnection(carPlayManager)
         
@@ -122,10 +138,23 @@ class CarPlayManagerTests: TestCase {
     }
     
     func testManagerAsksDelegateForMapButtonsIfAvailable() {
-        let exampleDelegate = TestCarPlayManagerDelegate()
-        exampleDelegate.mapButtons = [CPMapButton()]
         
-        carPlayManager.delegate = exampleDelegate
+        class CarPlayManagerDelegateMock: CarPlayManagerDelegate {
+            
+            var mapButtons: [CPMapButton]?
+            
+            func carPlayManager(_ carPlayManager: CarPlayManager,
+                                mapButtonsCompatibleWith traitCollection: UITraitCollection,
+                                in template: CPTemplate,
+                                for activity: CarPlayActivity) -> [CPMapButton]? {
+                return mapButtons
+            }
+        }
+        
+        let carPlayManagerDelegateMock = CarPlayManagerDelegateMock()
+        carPlayManagerDelegateMock.mapButtons = [CPMapButton()]
+        
+        carPlayManager.delegate = carPlayManagerDelegateMock
         
         simulateCarPlayConnection(carPlayManager)
         
@@ -137,6 +166,7 @@ class CarPlayManagerTests: TestCase {
         simulateCarPlayConnection(carPlayManager)
         
         let mapTemplate = carPlayManager.interfaceController?.rootTemplate as? CPMapTemplate
+        // By default there are four map buttons in preview mode: recenter, pan, zoom-in, zoom-out.
         XCTAssertEqual(4, mapTemplate?.mapButtons.count)
     }
     
