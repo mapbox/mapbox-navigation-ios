@@ -14,7 +14,7 @@
 
 ### Map
 
-* Added `MapView.showsTileSet(withIdentifiers:layerIdentifier:)` and `MapView.setShowsTileSet(_:withIdentifiers:layerIdentifier:)`to public to support developers show and hide custom TileSet IDs for the map view. ([#3700](https://github.com/mapbox/mapbox-navigation-ios/pull/3700))
+* Added `MapView.showsTileSet(with:layerIdentifier:)` and `MapView.setShowsTileSet(_:with:layerIdentifier:)` to provide the ability to show and hide custom tile set identifiers on the map view. ([#3700](https://github.com/mapbox/mapbox-navigation-ios/pull/3700))
 
 ### Offline routing
 

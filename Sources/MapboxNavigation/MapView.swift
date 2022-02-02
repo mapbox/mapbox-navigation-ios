@@ -26,7 +26,7 @@ extension MapView {
      - parameter sourceIdentifier: Identifier of the source, which will be searched for in current style of the `MapView`.
      - returns: Set of tile set identifiers.
      */
-    func tileSetIdentifiersSet(_ sourceIdentifier: String) -> Set<String> {
+    func tileSetIdentifiers(_ sourceIdentifier: String) -> Set<String> {
         if let properties = try? mapboxMap.style.sourceProperties(for: sourceIdentifier),
            let url = properties["url"] as? String,
            let configurationURL = URL(string: url),
@@ -49,7 +49,7 @@ extension MapView {
      */
     func tileSetIdentifiers(_ sourceIdentifier: String, sourceType: String) -> [String] {
         if sourceType == "vector" {
-            return Array(tileSetIdentifiersSet(sourceIdentifier))
+            return Array(tileSetIdentifiers(sourceIdentifier))
         }
         
         return []
@@ -65,7 +65,7 @@ extension MapView {
         return Set(mapboxMap.style.allSourceIdentifiers.filter {
             $0.type.rawValue == "vector"
         }.filter {
-            !tileSetIdentifiersSet($0.id).isDisjoint(with: tileSetIdentifiers)
+            !self.tileSetIdentifiers($0.id).isDisjoint(with: tileSetIdentifiers)
         }.map {
             $0.id
         })
@@ -77,7 +77,7 @@ extension MapView {
      - parameter tileSetIdentifiers: Identifiers of the tile sets in the form `user.tileset`.
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
-    public func showsTileSet(withIdentifiers tileSetIdentifiers: Set<String>, layerIdentifier: String) -> Bool {
+    public func showsTileSet(with tileSetIdentifiers: Set<String>, layerIdentifier: String) -> Bool {
         let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifiers)
         var foundTileSets = false
         
@@ -106,7 +106,7 @@ extension MapView {
      - parameter tileSetIdentifiers: Identifiers of the tile sets in the form `user.tileset`.
      - parameter layerIdentifier: Identifier of the layer in the tile set; in other words, a source layer identifier. Not to be confused with a style layer.
      */
-    public func setShowsTileSet(_ isVisible: Bool, withIdentifiers tileSetIdentifiers: Set<String>, layerIdentifier: String) {
+    public func setShowsTileSet(_ isVisible: Bool, with tileSetIdentifiers: Set<String>, layerIdentifier: String) {
         let sourceIdentifiers = self.sourceIdentifiers(tileSetIdentifiers)
         
         for mapViewLayerIdentifier in mapboxMap.style.allLayerIdentifiers.map({ $0.id }) {
@@ -129,10 +129,10 @@ extension MapView {
      */
     public var showsTraffic: Bool {
         get {
-            return showsTileSet(withIdentifiers: trafficTileSetIdentifiers, layerIdentifier: "traffic")
+            return showsTileSet(with: trafficTileSetIdentifiers, layerIdentifier: "traffic")
         }
         set {
-            setShowsTileSet(newValue, withIdentifiers: trafficTileSetIdentifiers, layerIdentifier: "traffic")
+            setShowsTileSet(newValue, with: trafficTileSetIdentifiers, layerIdentifier: "traffic")
         }
     }
     
@@ -141,10 +141,10 @@ extension MapView {
      */
     public var showsIncidents: Bool {
         get {
-            return showsTileSet(withIdentifiers: incidentsTileSetIdentifiers, layerIdentifier: "closures")
+            return showsTileSet(with: incidentsTileSetIdentifiers, layerIdentifier: "closures")
         }
         set {
-            setShowsTileSet(newValue, withIdentifiers: incidentsTileSetIdentifiers, layerIdentifier: "closures")
+            setShowsTileSet(newValue, with: incidentsTileSetIdentifiers, layerIdentifier: "closures")
         }
     }
     
@@ -220,7 +220,7 @@ extension MapView {
         guard !ResourceOptionsManager.hasChinaBaseURL,
               let mapboxStreetsSource = streetsSources().first else { return }
         
-        let streetsSourceTilesetIdentifiers = tileSetIdentifiersSet(mapboxStreetsSource.id)
+        let streetsSourceTilesetIdentifiers = tileSetIdentifiers(mapboxStreetsSource.id)
         let roadLabelSourceLayerIdentifier = streetsSourceTilesetIdentifiers.compactMap { VectorSource.roadLabelLayerIdentifiersByTileSetIdentifier[$0]
         }.first
         

@@ -50,7 +50,7 @@ class MapViewTests: TestCase {
         
         wait(for: [mapLoadingErrorExpectation], timeout: 1.0)
         
-        let tileSetIdentifiers = mapView.tileSetIdentifiersSet("composite")
+        let tileSetIdentifiers = mapView.tileSetIdentifiers("composite")
         
         let expectedTileSetIdentifiers = Set([
             "mapbox.mapbox-streets-v8",
