@@ -32,11 +32,42 @@ func simulateCarPlayDisconnection(_ carPlayManager: CarPlayManager) {
 }
 
 @available(iOS 12.0, *)
+func createRouteChoice() -> CPRouteChoice {
+    let routeChoice = CPRouteChoice(summaryVariants: ["summary"],
+                                    additionalInformationVariants: ["additionalInformation"],
+                                    selectionSummaryVariants: ["selectionSummary"])
+    let navigationRouteOptions = NavigationRouteOptions(coordinates: [
+        CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
+        CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
+    ])
+    let routeResponseUserInfoKey = CPRouteChoice.RouteResponseUserInfo.key
+    let routeResponse = Fixture.routeResponse(from: "route-with-banner-instructions",
+                                              options: navigationRouteOptions)
+    let routeResponseUserInfo: CPRouteChoice.RouteResponseUserInfo = .init(response: routeResponse,
+                                                                           routeIndex: 0,
+                                                                           options: navigationRouteOptions)
+    let userInfo: CarPlayUserInfo = [
+        routeResponseUserInfoKey: routeResponseUserInfo
+    ]
+    routeChoice.userInfo = userInfo
+    
+    return routeChoice
+}
+
+@available(iOS 12.0, *)
+func createValidTrip(_ routeChoice: CPRouteChoice) -> CPTrip {
+    let trip = CPTrip(origin: MKMapItem(),
+                      destination: MKMapItem(),
+                      routeChoices: [routeChoice])
+    
+    return trip
+}
+
+@available(iOS 12.0, *)
 class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     
     public fileprivate(set) var navigationInitiated = false
     public fileprivate(set) var currentService: NavigationService?
-    public fileprivate(set) var navigationEnded = false
 
     public var leadingBarButtons: [CPBarButton]?
 
@@ -45,16 +76,16 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
                         routeIndex: Int,
                         routeOptions: RouteOptions,
                         desiredSimulationMode: SimulationMode) -> NavigationService? {
-        let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
-        let service = MapboxNavigationService(routeResponse: response,
-                                              routeIndex: 0,
-                                              routeOptions: routeOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
-                                              credentials: Fixture.credentials,
-                                              locationSource: NavigationLocationManager(),
-                                              eventsManagerType: NavigationEventsManagerSpy.self,
-                                              simulating: desiredSimulationMode)
-        return service
+        let routeResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+        let navigationService = MapboxNavigationService(routeResponse: routeResponse,
+                                                        routeIndex: routeIndex,
+                                                        routeOptions: routeOptions,
+                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        credentials: Fixture.credentials,
+                                                        locationSource: NavigationLocationManager(),
+                                                        eventsManagerType: NavigationEventsManagerSpy.self,
+                                                        simulating: desiredSimulationMode)
+        return navigationService
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager,
@@ -75,16 +106,12 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
-        XCTAssertTrue(navigationInitiated)
-        navigationEnded = true
         currentService = nil
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         didPresent navigationViewController: CarPlayNavigationViewController) {
-        XCTAssertFalse(navigationInitiated)
         navigationInitiated = true
-        XCTAssertTrue(navigationInitiated)
     }
 }
 

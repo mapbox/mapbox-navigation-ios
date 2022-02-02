@@ -8,8 +8,6 @@ import CarPlayTestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-// For some reason XCTest bundles ignore @available annotations and these tests are run on iOS < 12 :(
-// This is a bug in XCTest which will hopefully get fixed in an upcoming release.
 @available(iOS 12.0, *)
 class CarPlayManagerTests: TestCase {
     
@@ -19,8 +17,6 @@ class CarPlayManagerTests: TestCase {
     
     override func setUp() {
         super.setUp()
-        
-        NSLog("Current iOS version: \(UIDevice.current.systemVersion)")
         
         eventsManagerSpy = NavigationEventsManagerSpy()
         carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline),
@@ -202,28 +198,11 @@ class CarPlayManagerTests: TestCase {
             return
         }
         
-        let routeChoice = CPRouteChoice(summaryVariants: ["summary"],
-                                        additionalInformationVariants: ["additionalInformation"],
-                                        selectionSummaryVariants: ["selectionSummary"])
-        let navigationRouteOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
-            CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
-        ])
-        let routeResponseUserInfoKey = CPRouteChoice.RouteResponseUserInfo.key
-        let routeResponse = Fixture.routeResponse(from: "route-with-banner-instructions",
-                                                  options: navigationRouteOptions)
-        let routeResponseUserInfo: CPRouteChoice.RouteResponseUserInfo = .init(response: routeResponse,
-                                                                               routeIndex: 0,
-                                                                               options: navigationRouteOptions)
-        let userInfo: CarPlayUserInfo = [
-            routeResponseUserInfoKey: routeResponseUserInfo
-        ]
-        routeChoice.userInfo = userInfo
+        let routeChoice = createRouteChoice()
+        let trip = createValidTrip(routeChoice)
+        
         CarPlayMapViewController.swizzleMethods()
         
-        let trip = CPTrip(origin: MKMapItem(),
-                          destination: MKMapItem(),
-                          routeChoices: [routeChoice])
         carPlayManager.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
         XCTAssertTrue(carPlayManagerDelegateMock.navigationStarted,
                       "The CarPlayManagerDelegate should have been told that navigation was initiated.")
