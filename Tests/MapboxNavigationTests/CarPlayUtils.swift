@@ -32,7 +32,7 @@ func simulateCarPlayDisconnection(_ carPlayManager: CarPlayManager) {
 }
 
 @available(iOS 12.0, *)
-func createRouteChoice() -> CPRouteChoice {
+func createValidRouteChoice() -> CPRouteChoice {
     let routeChoice = CPRouteChoice(summaryVariants: ["summary"],
                                     additionalInformationVariants: ["additionalInformation"],
                                     selectionSummaryVariants: ["selectionSummary"])
@@ -55,7 +55,16 @@ func createRouteChoice() -> CPRouteChoice {
 }
 
 @available(iOS 12.0, *)
-func createValidTrip(_ routeChoice: CPRouteChoice) -> CPTrip {
+func createInvalidRouteChoice() -> CPRouteChoice {
+    let routeChoice = CPRouteChoice(summaryVariants: ["summary"],
+                                    additionalInformationVariants: ["additionalInformation"],
+                                    selectionSummaryVariants: ["selectionSummary"])
+    
+    return routeChoice
+}
+
+@available(iOS 12.0, *)
+func createTrip(_ routeChoice: CPRouteChoice) -> CPTrip {
     let trip = CPTrip(origin: MKMapItem(),
                       destination: MKMapItem(),
                       routeChoices: [routeChoice])

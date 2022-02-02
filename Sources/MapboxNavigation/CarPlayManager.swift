@@ -625,10 +625,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
     
     public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
-              let carPlayMapViewController = carPlayMapViewController,
-              let routeResponse = routeChoice.routeResponseFromUserInfo,
-              let routeOptions = routeResponse.options as? RouteOptions else {
+              let carPlayMapViewController = carPlayMapViewController else {
                   return
+              }
+        
+        guard let routeResponse = routeChoice.routeResponseFromUserInfo,
+              let routeOptions = routeResponse.options as? RouteOptions else {
+                  preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
               }
 
         mapTemplate.hideTripPreviews()

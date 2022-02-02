@@ -198,8 +198,8 @@ class CarPlayManagerTests: TestCase {
             return
         }
         
-        let routeChoice = createRouteChoice()
-        let trip = createValidTrip(routeChoice)
+        let routeChoice = createValidRouteChoice()
+        let trip = createTrip(routeChoice)
         
         CarPlayMapViewController.swizzleMethods()
         

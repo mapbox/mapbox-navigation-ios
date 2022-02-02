@@ -132,8 +132,8 @@ class CarPlayManagerSpec: QuickSpec {
         
         describe("Starting a valid trip.") {
             let action = {
-                let routeChoice = createRouteChoice()
-                let trip = createValidTrip(routeChoice)
+                let routeChoice = createValidRouteChoice()
+                let trip = createTrip(routeChoice)
                 let mapTemplate = CPMapTemplate()
                 
                 carPlayManager.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
@@ -173,6 +173,18 @@ class CarPlayManagerSpec: QuickSpec {
                     
                     expect(navigationService?.simulationMode).to(equal(.inTunnels))
                 }
+            }
+        }
+        
+        describe("Starting an invalid trip.") {
+            context("Precondition should be triggered if CPRouteChoice is invalid.") {
+                let routeChoice = createInvalidRouteChoice()
+                let trip = createTrip(routeChoice)
+                let mapTemplate = CPMapTemplate()
+                
+                expect {
+                    carPlayManager.mapTemplate(mapTemplate, startedTrip: trip, using: routeChoice)
+                }.to(throwAssertion())
             }
         }
     }
