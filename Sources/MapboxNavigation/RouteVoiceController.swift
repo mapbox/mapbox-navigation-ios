@@ -118,6 +118,7 @@ open class RouteVoiceController: NSObject, AVSpeechSynthesizerDelegate {
     }
     
     func tryMixAudio() throws {
+        guard speechSynthesizer.managesAudioSession else { return }
         let audioSession = AVAudioSession.sharedInstance()
         try audioSession.setCategory(.ambient, mode: audioSession.mode)
         try audioSession.setActive(true)
