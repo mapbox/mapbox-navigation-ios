@@ -8,19 +8,6 @@ import CarPlay
 import CarPlayTestHelper
 
 @available(iOS 12.0, *)
-fileprivate class CarPlayNavigationViewControllerDelegateSpy: NSObject, CarPlayNavigationViewControllerDelegate {
-    var didArriveExpectation: XCTestExpectation!
-    
-    init(_ didArriveExpectation: XCTestExpectation) {
-        self.didArriveExpectation = didArriveExpectation
-    }
-    
-    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
-        return true
-    }
-}
-
-@available(iOS 12.0, *)
 fileprivate class CPManeuverFake: CPManeuver {
     override init() {
         super.init()
