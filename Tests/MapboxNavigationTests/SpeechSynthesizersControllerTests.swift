@@ -72,7 +72,7 @@ class SpeechSynthesizersControllerTests: TestCase {
         super.tearDown()
         synthesizers = []
         delegateErrorBlock = nil
-        Navigator.shared.navigator.resetRideSession()
+        Navigator.shared.navigator.reset { }
     }
 
     func testNoFallback() {
