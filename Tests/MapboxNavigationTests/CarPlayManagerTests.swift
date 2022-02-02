@@ -20,6 +20,8 @@ class CarPlayManagerTests: TestCase {
     override func setUp() {
         super.setUp()
         
+        NSLog("Current iOS version: \(UIDevice.current.systemVersion)")
+        
         eventsManagerSpy = NavigationEventsManagerSpy()
         carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline),
                                         eventsManager: eventsManagerSpy,
@@ -48,8 +50,9 @@ class CarPlayManagerTests: TestCase {
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
         let exampleDelegate = TestCarPlayManagerDelegate()
         let searchDelegate = TestCarPlaySearchControllerDelegate()
-        let searchButtonHandler: ((CPBarButton) -> Void) = {
-            _ in self.carPlayManager.interfaceController?.pushTemplate(CPSearchTemplate(), animated: true)
+        let searchButtonHandler: ((CPBarButton) -> Void) = { [weak self] _ in
+            guard let self = self else { return }
+            self.carPlayManager.interfaceController?.pushTemplate(CPSearchTemplate(), animated: true)
         }
         exampleDelegate.leadingBarButtons = [
             CPBarButton(type: .image, handler: searchButtonHandler)
@@ -70,7 +73,7 @@ class CarPlayManagerTests: TestCase {
                                                interfaceController: interfaceController)
         
         let view = carPlayManager.carWindow?.rootViewController?.view
-        XCTAssertTrue(view is NavigationMapView, "CarPlay window's root view should be a map view")
+        XCTAssertTrue(view is NavigationMapView, "NavigationMapView should be a root view.")
         
         let mapTemplate = interfaceController.rootTemplate as? CPMapTemplate
         XCTAssertEqual(1, mapTemplate?.leadingNavigationBarButtons.count)
@@ -84,7 +87,7 @@ class CarPlayManagerTests: TestCase {
         searchButton.handler?(searchButton)
         
         XCTAssertTrue(interfaceController.topTemplate?.isKind(of: CPSearchTemplate.self) ?? false,
-                      "Expecting a search template to be on top")
+                      "CPSearchTemplate should be the top template in the navigation hierarchy.")
     }
     
     func testManagerAsksDelegateForLeadingAndTrailingBarButtonsIfAvailable() {
@@ -310,7 +313,8 @@ extension CarPlayMapViewController {
     @objc private func swizzled_present(_ viewControllerToPresent: UIViewController,
                                         animated flag: Bool,
                                         completion: (() -> Void)? = nil) {
-        // We need to keep strong reference to `viewControllerToPresent` so that it won't be deallocated in some cases.
+        // We need to keep strong reference to `viewControllerToPresent` so that it won't be
+        // deallocated in some cases.
         Self.presentedViewControllers.append(viewControllerToPresent)
         completion?()
     }
