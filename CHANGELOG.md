@@ -4,12 +4,12 @@
 
 ### User interface
 
-* Fixed route line blinking when route is refreshed. ([#3647](https://github.com/mapbox/mapbox-navigation-ios/pull/3647))
+* Fixed route line blinking when a route is refreshed. ([#3647](https://github.com/mapbox/mapbox-navigation-ios/pull/3647))
 * Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
 
 ### Location tracking
 
-* Fixed cases in which the user location indicator floated around when the user was stopped at an intersection in an urban canyon. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
+* Fixed cases where the user location indicator floated around when the user was stopped at an intersection in an urban canyon. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
 * Fixed poor location snapping while the user is inside a tunnel. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
 
 ### Map
