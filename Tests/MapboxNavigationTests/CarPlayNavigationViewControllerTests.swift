@@ -40,7 +40,7 @@ class CarPlayNavigationViewControllerTests: TestCase {
         carPlayNavigationViewController.startNavigationSession(for: trip)
         
         guard let firstCoordinate = navigationService.routeProgress.currentLeg.shape.coordinates.first else {
-            XCTFail("First coorindate should be valid.")
+            XCTFail("First coordinate should be valid.")
             return
         }
         let userInfo: [RouteController.NotificationUserInfoKey: Any] = [
