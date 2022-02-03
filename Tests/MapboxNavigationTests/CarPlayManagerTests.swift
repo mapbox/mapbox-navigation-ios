@@ -259,6 +259,92 @@ class CarPlayManagerTests: TestCase {
                        styles,
                        "CarPlayManager should persist the initial styles given to it.")
     }
+    
+    func testFinalDestinationAnnotationIsPresentInCarPlayMapViewController() {
+        
+        class CarPlayManagerDelegateMock: CarPlayManagerDelegate {
+            
+            var parentViewController: UIViewController? = nil
+            
+            var didAddFinalDestinationAnnotation = false
+            
+            func carPlayManager(_ carPlayManager: CarPlayManager,
+                                didAdd finalDestinationAnnotation: PointAnnotation,
+                                to parentViewController: UIViewController,
+                                pointAnnotationManager: PointAnnotationManager) {
+                didAddFinalDestinationAnnotation = true
+                self.parentViewController = parentViewController
+            }
+        }
+        
+        let carPlayManagerDelegateMock = CarPlayManagerDelegateMock()
+        
+        let carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
+        carPlayManager.delegate = carPlayManagerDelegateMock
+        
+        simulateCarPlayConnection(carPlayManager)
+        
+        let navigationRouteOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
+            CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
+        ])
+        
+        let route = Fixture.route(from: "route-with-banner-instructions",
+                                  options: navigationRouteOptions)
+        
+        carPlayManager.carPlayMapViewController?.navigationMapView.showWaypoints(on: route)
+        
+        // Right after calling `NavigationMapView.showWaypoints(on:legIndex:)` and before loading actual
+        // `MapView` style it is expected that `NavigationMapView.finalDestinationAnnotation` is assigned
+        // to non-nil value.
+        XCTAssertNotNil(carPlayManager.carPlayMapViewController?.navigationMapView.finalDestinationAnnotation,
+                        "Final destination annotation should not be nil.")
+        XCTAssertNil(carPlayManager.carPlayMapViewController?.navigationMapView.pointAnnotationManager,
+                     "Point annotation manager should be nil.")
+        
+        let styleJSONObject: [String: Any] = [
+            "version": 1,
+            "center": [
+                37.763330, -122.385563
+            ],
+            "zoom": 15,
+            "sources": [],
+            "layers": []
+        ]
+        
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+        
+        let didAddFinalDestinationAnnotationExpectation = self.expectation {
+            return carPlayManagerDelegateMock.didAddFinalDestinationAnnotation
+        }
+        
+        carPlayManager.carPlayMapViewController?.navigationMapView.mapView.mapboxMap.loadStyleJSON(styleJSON)
+        
+        wait(for: [didAddFinalDestinationAnnotationExpectation], timeout: 5.0)
+        
+        let navigationMapView = carPlayManager.carPlayMapViewController?.navigationMapView
+        
+        // After fully loading style `NavigationMapView.finalDestinationAnnotation` should be assigned to nil and
+        // `NavigationMapView.pointAnnotationManager` must become valid.
+        XCTAssertNil(navigationMapView?.finalDestinationAnnotation,
+                     "Final destination annotation should be nil.")
+        XCTAssertNotNil(navigationMapView?.pointAnnotationManager,
+                        "Point annotation manager should not be nil.")
+        XCTAssertEqual(navigationMapView?.pointAnnotationManager?.annotations.count,
+                       1,
+                       "Only final destination annotation should be present.")
+        XCTAssertEqual(navigationMapView?.pointAnnotationManager?.annotations.first?.id,
+                       NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation,
+                       "Point annotation identifiers should be equal.")
+        // Since `PointAnnotation` was added to the `CarPlayMapViewController`, parent `UIViewController`
+        // from the delegate method and `CarPlayManager.carPlayMapViewController` should be the same.
+        XCTAssertEqual(carPlayManagerDelegateMock.parentViewController,
+                       carPlayManager.carPlayMapViewController,
+                       "UIViewControllers should be equal.")
+        
+        simulateCarPlayDisconnection(carPlayManager)
+    }
 }
 
 @available(iOS 12.0, *)
