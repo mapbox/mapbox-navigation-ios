@@ -57,18 +57,20 @@ open class PassiveLocationManager: NSObject {
     
     private var _eventsManager: NavigationEventsManager?
     
+    private let sharedNavigator = Navigator.shared
+    
     /**
      The underlying navigator that performs map matching.
      */
     var navigator: MapboxNavigationNative.Navigator {
-        return Navigator.shared.navigator
+        return sharedNavigator.navigator
     }
     
     /**
      A `TileStore` instance used by navigator
      */
     open var navigatorTileStore: TileStore {
-        return Navigator.shared.tileStore
+        return sharedNavigator.tileStore
     }
     
     /**
@@ -119,7 +121,7 @@ open class PassiveLocationManager: NSObject {
         }
         
         for location in locations {
-            Navigator.shared.updateLocation(location) { success in
+            sharedNavigator.updateLocation(location) { success in
                 let result: Result<CLLocation, Error>
                 if success {
                     result = .success(location)
@@ -172,14 +174,14 @@ open class PassiveLocationManager: NSObject {
      - note: The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
      */
     public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions? = nil) {
-        Navigator.shared.startUpdatingElectronicHorizon(with: options)
+        sharedNavigator.startUpdatingElectronicHorizon(with: options)
     }
 
     /**
      Stops electronic horizon updates.
      */
     public func stopUpdatingElectronicHorizon() {
-        Navigator.shared.stopUpdatingElectronicHorizon()
+        sharedNavigator.stopUpdatingElectronicHorizon()
     }
 
     @objc private func navigationStatusDidChange(_ notification: NSNotification) {
@@ -304,17 +306,17 @@ open class PassiveLocationManager: NSObject {
     
     /// The road graph that is updated as the passive location manager tracks the user’s location.
     public var roadGraph: RoadGraph {
-        return Navigator.shared.roadGraph
+        return sharedNavigator.roadGraph
     }
     
     /// The road object store that is updated as the passive location manager tracks the user’s location.
     public var roadObjectStore: RoadObjectStore {
-        return Navigator.shared.roadObjectStore
+        return sharedNavigator.roadObjectStore
     }
 
     /// The road object matcher that allows to match user-defined road objects.
     public var roadObjectMatcher: RoadObjectMatcher {
-        return Navigator.shared.roadObjectMatcher
+        return sharedNavigator.roadObjectMatcher
     }
 }
 

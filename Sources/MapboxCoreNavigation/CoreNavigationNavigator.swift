@@ -19,30 +19,40 @@ class Navigator {
     
     private(set) var cacheHandle: CacheHandle
     
-    var mostRecentNavigationStatus: NavigationStatus? = nil
+    var mostRecentNavigationStatus: NavigationStatus? {
+        navigatorStatusObserver?.mostRecentNavigationStatus
+    }
     
     private(set) var tileStore: TileStore
     
     /**
      Current Navigator status in terms of tile versioning.
      */
-    private(set) var tileVersionState: TileVersionState
+    var tileVersionState: NavigatorFallbackVersionsObserver.TileVersionState {
+        navigatorFallbackVersionsObserver?.tileVersionState ?? .nominal
+    }
     
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
      satisfying provided configuration (`tilesVersion` and `NavigationSettings`).
      */
     static var shared: Navigator {
-        return _navigator
+        var navigator = _navigator
+        if !isSharedInstanceCreated {
+            navigator = .init()
+            _navigator = navigator
+        }
+        return _navigator!
     }
 
     /// `True` when `Navigator.shared` requested at least once.
-    static private(set) var isSharedInstanceCreated: Bool = false
+    static var isSharedInstanceCreated: Bool {
+        _navigator != nil
+    }
     
+    private static weak var _navigator: Navigator?
     // Used in tests to recreate the navigator
-    static var _navigator: Navigator = .init()
-    
-    static func _recreateNavigator() { _navigator = .init() }
+    static func _recreateNavigator() { _navigator = nil }
     
     /**
      Restrict direct initializer access.
@@ -53,7 +63,6 @@ class Navigator {
                                             credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL)
-        tileVersionState = .nominal
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
@@ -63,7 +72,6 @@ class Navigator {
         roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
         
         subscribeNavigator()
-        Self.isSharedInstanceCreated = true
     }
 
     /**
@@ -74,7 +82,6 @@ class Navigator {
      */
     func restartNavigator(forcing version: String? = nil) {
         unsubscribeNavigator()
-        tileVersionState = .nominal
         navigator.shutdown()
         
         let factory = NativeHandlersFactory(tileStorePath: NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
@@ -94,17 +101,30 @@ class Navigator {
         subscribeNavigator()
     }
     
+    private weak var navigatorStatusObserver: NavigatorStatusObserver?
+    private weak var navigatorFallbackVersionsObserver: NavigatorFallbackVersionsObserver?
+    private weak var navigatorElectronicHorizonObserver: NavigatorElectronicHorizonObserver?
+    
     private func subscribeNavigator() {
         if isSubscribedToElectronicHorizon {
             startUpdatingElectronicHorizon(with: electronicHorizonOptions)
         }
-        navigator.addObserver(for: self)
-        navigator.setFallbackVersionsObserverFor(self)
+        
+        let statusObserver = NavigatorStatusObserver()
+        navigatorStatusObserver = statusObserver
+        navigator.addObserver(for: statusObserver)
+        
+        let versionsObserver = NavigatorFallbackVersionsObserver()
+        navigatorFallbackVersionsObserver = versionsObserver
+        navigator.setFallbackVersionsObserverFor(versionsObserver)
     }
     
     private func unsubscribeNavigator() {
         stopUpdatingElectronicHorizon()
-        navigator.removeObserver(for: self)
+        if let navigatorStatusObserver = navigatorStatusObserver {
+            navigator.removeObserver(for: navigatorStatusObserver)
+        }
+        
         navigator.setFallbackVersionsObserverFor(nil)
     }
     
@@ -138,7 +158,10 @@ class Navigator {
     
     func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions?) {
         isSubscribedToElectronicHorizon = true
-        navigator.setElectronicHorizonObserverFor(self)
+        
+        let observer = NavigatorElectronicHorizonObserver()
+        navigatorElectronicHorizonObserver = observer
+        navigator.setElectronicHorizonObserverFor(observer)
         electronicHorizonOptions = options
     }
     
@@ -191,7 +214,9 @@ class Navigator {
     }
 }
 
-extension Navigator: FallbackVersionsObserver {
+class NavigatorFallbackVersionsObserver: FallbackVersionsObserver {
+    
+    private(set) var tileVersionState: TileVersionState = .nominal
     
     enum TileVersionState {
         /// No tiles version switch is required. Navigator has enough tiles for map matching.
@@ -245,7 +270,7 @@ extension Navigator: FallbackVersionsObserver {
     }
 }
 
-extension Navigator: ElectronicHorizonObserver {
+class NavigatorElectronicHorizonObserver: ElectronicHorizonObserver {
     public func onPositionUpdated(for position: ElectronicHorizonPosition, distances: [MapboxNavigationNative.RoadObjectDistance]) {
         let userInfo: [RoadGraph.NotificationUserInfoKey: Any] = [
             .positionKey: RoadGraph.Position(position.position()),
@@ -280,7 +305,9 @@ extension Navigator: ElectronicHorizonObserver {
     }
 }
 
-extension Navigator: NavigatorObserver {
+class NavigatorStatusObserver: NavigatorObserver {
+    var mostRecentNavigationStatus: NavigationStatus? = nil
+    
     func onStatus(for origin: NavigationStatusOrigin, status: NavigationStatus) {
         assert(Thread.isMainThread)
 
