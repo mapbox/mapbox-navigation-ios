@@ -38,17 +38,30 @@ class CarPlayManagerTests: TestCase {
     }
     
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
-        let exampleDelegate = TestCarPlayManagerDelegate()
+        
+        class CarPlayManagerDelegateMock: CarPlayManagerDelegate {
+            
+            var leadingBarButtons: [CPBarButton]?
+            
+            func carPlayManager(_ carPlayManager: CarPlayManager,
+                                leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
+                                in: CPTemplate,
+                                for activity: CarPlayActivity) -> [CPBarButton]? {
+                return leadingBarButtons
+            }
+        }
+        
+        let carPlayManagerDelegateMock = CarPlayManagerDelegateMock()
         let searchDelegate = TestCarPlaySearchControllerDelegate()
         let searchButtonHandler: ((CPBarButton) -> Void) = { [weak self] _ in
             guard let self = self else { return }
             self.carPlayManager.interfaceController?.pushTemplate(CPSearchTemplate(), animated: true)
         }
-        exampleDelegate.leadingBarButtons = [
+        carPlayManagerDelegateMock.leadingBarButtons = [
             CPBarButton(type: .image, handler: searchButtonHandler)
         ]
         
-        carPlayManager.delegate = exampleDelegate
+        carPlayManager.delegate = carPlayManagerDelegateMock
         carPlaySearchController.delegate = searchDelegate
         
         simulateCarPlayConnection(carPlayManager)
@@ -252,31 +265,6 @@ class CarPlayManagerTests: TestCase {
         XCTAssertEqual(carPlayManagerWithModifiedStyles.styles,
                        styles,
                        "CarPlayManager should persist the initial styles given to it.")
-    }
-    
-    func testCurrentActivity() {
-        let carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
-        XCTAssertNil(carPlayManager.currentActivity,
-                     "Current activity should not be defined by default.")
-        
-        // `CPInterfaceControllerDelegate.templateWillAppear(_:animated:)` will only be called after
-        // opening CarPlay application.
-        simulateCarPlayConnection(carPlayManager)
-        XCTAssertNil(carPlayManager.currentActivity,
-                     "After connection current activity shoudl remain nil.")
-        
-        guard let interfaceController = carPlayManager.interfaceController else {
-            XCTFail("Interface controller should be valid.")
-            return
-        }
-        
-        interfaceController.delegate?.templateWillAppear?(interfaceController.rootTemplate, animated: false)
-        
-        XCTAssertEqual(carPlayManager.currentActivity,
-                       CarPlayActivity.browsing,
-                       "Current activity should not be defined by default.")
-        
-        simulateCarPlayDisconnection(carPlayManager)
     }
 }
 

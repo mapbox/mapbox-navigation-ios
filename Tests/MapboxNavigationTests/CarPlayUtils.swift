@@ -80,8 +80,6 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
     public fileprivate(set) var navigationInitiated = false
     public fileprivate(set) var currentService: NavigationService?
 
-    public var leadingBarButtons: [CPBarButton]?
-
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         navigationServiceFor routeResponse: RouteResponse,
                         routeIndex: Int,
@@ -98,22 +96,10 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
                                                         simulating: desiredSimulationMode)
         return navigationService
     }
-
-    func carPlayManager(_ carPlayManager: CarPlayManager,
-                        leadingNavigationBarButtonsCompatibleWith traitCollection: UITraitCollection,
-                        in: CPTemplate,
-                        for activity: CarPlayActivity) -> [CPBarButton]? {
-        return leadingBarButtons
-    }
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         didBeginNavigationWith service: NavigationService) {
         currentService = service
-    }
-    
-    func carPlayManager(_ carPlayManager: CarPlayManager,
-                        shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
-        return true
     }
     
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
