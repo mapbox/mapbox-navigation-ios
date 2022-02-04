@@ -25,9 +25,9 @@ class SpriteRepository {
     func updateRepository(updateStyleURI: StyleURI? = nil, updateBaseURL: String? = nil, completion: @escaping CompletionHandler) {
         let styleURI = updateStyleURI ?? styleURI
         let baseURL = updateBaseURL ?? baseURL
-        let styleID = styleURI.rawValue.components(separatedBy: "styles")[1]
         
-        guard let accessToken = NavigationSettings.shared.directions.credentials.accessToken,
+        guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
+              let accessToken = NavigationSettings.shared.directions.credentials.accessToken,
               let spriteRequestURL = URL(string: baseURL + styleID + "/sprite@2x.png?access_token=" + accessToken),
               let metadataRequestURL = URL(string: baseURL + styleID + "/sprite@2x?access_token=" + accessToken) else {
                   return
