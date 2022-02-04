@@ -623,7 +623,9 @@ extension CarPlayManager {
 @available(iOS 12.0, *)
 extension CarPlayManager: CPMapTemplateDelegate {
     
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
+    public func mapTemplate(_ mapTemplate: CPMapTemplate,
+                            startedTrip trip: CPTrip,
+                            using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
               let carPlayMapViewController = carPlayMapViewController else {
                   return
@@ -698,10 +700,13 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
                             selectedPreviewFor trip: CPTrip,
                             using routeChoice: CPRouteChoice) {
-        guard let carPlayMapViewController = carPlayMapViewController,
-              let routeResponse = routeChoice.routeResponseFromUserInfo,
+        guard let carPlayMapViewController = carPlayMapViewController else { return }
+        
+        guard let routeResponse = routeChoice.routeResponseFromUserInfo,
               var routes = routeResponse.response.routes,
-              routes.indices.contains(routeResponse.routeIndex) else { return }
+              routes.indices.contains(routeResponse.routeIndex) else {
+                  preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
+              }
         
         let route = routes[routeResponse.routeIndex]
         let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
