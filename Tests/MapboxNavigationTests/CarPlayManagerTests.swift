@@ -29,18 +29,12 @@ class CarPlayManagerTests: TestCase {
         super.tearDown()
     }
     
-    func testEventsEnqueuedAndFlushedWhenCarPlayConnected() {
+    func testEventsEnqueuedAndFlushedWhenCarPlayConnectedAndDisconnected() {
         simulateCarPlayConnection(carPlayManager)
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEventTypeNavigationCarplayConnect))
         
-        let expectedEventName = MMEventTypeNavigationCarplayConnect
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
-    }
-    
-    func testEventsEnqueuedAndFlushedWhenCarPlayDisconnected() {
         simulateCarPlayDisconnection(carPlayManager)
-        
-        let expectedEventName = MMEventTypeNavigationCarplayDisconnect
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: expectedEventName))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEventTypeNavigationCarplayDisconnect))
     }
     
     func testWindowAndIntefaceControllerAreSetUpWithSearchWhenConnected() {
@@ -260,88 +254,27 @@ class CarPlayManagerTests: TestCase {
                        "CarPlayManager should persist the initial styles given to it.")
     }
     
-    func testFinalDestinationAnnotationIsPresentInCarPlayMapViewController() {
-        
-        class CarPlayManagerDelegateMock: CarPlayManagerDelegate {
-            
-            var parentViewController: UIViewController? = nil
-            
-            var didAddFinalDestinationAnnotation = false
-            
-            func carPlayManager(_ carPlayManager: CarPlayManager,
-                                didAdd finalDestinationAnnotation: PointAnnotation,
-                                to parentViewController: UIViewController,
-                                pointAnnotationManager: PointAnnotationManager) {
-                didAddFinalDestinationAnnotation = true
-                self.parentViewController = parentViewController
-            }
-        }
-        
-        let carPlayManagerDelegateMock = CarPlayManagerDelegateMock()
-        
+    func testCurrentActivity() {
         let carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
-        carPlayManager.delegate = carPlayManagerDelegateMock
+        XCTAssertNil(carPlayManager.currentActivity,
+                     "Current activity should not be defined by default.")
         
+        // `CPInterfaceControllerDelegate.templateWillAppear(_:animated:)` will only be called after
+        // opening CarPlay application.
         simulateCarPlayConnection(carPlayManager)
+        XCTAssertNil(carPlayManager.currentActivity,
+                     "After connection current activity shoudl remain nil.")
         
-        let navigationRouteOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
-            CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
-        ])
-        
-        let route = Fixture.route(from: "route-with-banner-instructions",
-                                  options: navigationRouteOptions)
-        
-        carPlayManager.carPlayMapViewController?.navigationMapView.showWaypoints(on: route)
-        
-        // Right after calling `NavigationMapView.showWaypoints(on:legIndex:)` and before loading actual
-        // `MapView` style it is expected that `NavigationMapView.finalDestinationAnnotation` is assigned
-        // to non-nil value.
-        XCTAssertNotNil(carPlayManager.carPlayMapViewController?.navigationMapView.finalDestinationAnnotation,
-                        "Final destination annotation should not be nil.")
-        XCTAssertNil(carPlayManager.carPlayMapViewController?.navigationMapView.pointAnnotationManager,
-                     "Point annotation manager should be nil.")
-        
-        let styleJSONObject: [String: Any] = [
-            "version": 1,
-            "center": [
-                37.763330, -122.385563
-            ],
-            "zoom": 15,
-            "sources": [],
-            "layers": []
-        ]
-        
-        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
-        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
-        
-        let didAddFinalDestinationAnnotationExpectation = self.expectation {
-            return carPlayManagerDelegateMock.didAddFinalDestinationAnnotation
+        guard let interfaceController = carPlayManager.interfaceController else {
+            XCTFail("Interface controller should be valid.")
+            return
         }
         
-        carPlayManager.carPlayMapViewController?.navigationMapView.mapView.mapboxMap.loadStyleJSON(styleJSON)
+        interfaceController.delegate?.templateWillAppear?(interfaceController.rootTemplate, animated: false)
         
-        wait(for: [didAddFinalDestinationAnnotationExpectation], timeout: 5.0)
-        
-        let navigationMapView = carPlayManager.carPlayMapViewController?.navigationMapView
-        
-        // After fully loading style `NavigationMapView.finalDestinationAnnotation` should be assigned to nil and
-        // `NavigationMapView.pointAnnotationManager` must become valid.
-        XCTAssertNil(navigationMapView?.finalDestinationAnnotation,
-                     "Final destination annotation should be nil.")
-        XCTAssertNotNil(navigationMapView?.pointAnnotationManager,
-                        "Point annotation manager should not be nil.")
-        XCTAssertEqual(navigationMapView?.pointAnnotationManager?.annotations.count,
-                       1,
-                       "Only final destination annotation should be present.")
-        XCTAssertEqual(navigationMapView?.pointAnnotationManager?.annotations.first?.id,
-                       NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation,
-                       "Point annotation identifiers should be equal.")
-        // Since `PointAnnotation` was added to the `CarPlayMapViewController`, parent `UIViewController`
-        // from the delegate method and `CarPlayManager.carPlayMapViewController` should be the same.
-        XCTAssertEqual(carPlayManagerDelegateMock.parentViewController,
-                       carPlayManager.carPlayMapViewController,
-                       "UIViewControllers should be equal.")
+        XCTAssertEqual(carPlayManager.currentActivity,
+                       CarPlayActivity.browsing,
+                       "Current activity should not be defined by default.")
         
         simulateCarPlayDisconnection(carPlayManager)
     }

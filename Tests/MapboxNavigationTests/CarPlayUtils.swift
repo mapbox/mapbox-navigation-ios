@@ -9,12 +9,12 @@ import TestHelper
 
 @available(iOS 12.0, *)
 func simulateCarPlayConnection(_ carPlayManager: CarPlayManager) {
-    let fakeInterfaceController = FakeCPInterfaceController(context: #function)
-    let fakeWindow = CPWindow()
+    let interfaceController = FakeCPInterfaceController(context: #function)
+    let window = CPWindow()
     
     carPlayManager.application(UIApplication.shared,
-                               didConnectCarInterfaceController: fakeInterfaceController,
-                               to: fakeWindow)
+                               didConnectCarInterfaceController: interfaceController,
+                               to: window)
     
     if let mapViewController = carPlayManager.carWindow?.rootViewController?.view {
         carPlayManager.carWindow?.addSubview(mapViewController)
@@ -23,12 +23,14 @@ func simulateCarPlayConnection(_ carPlayManager: CarPlayManager) {
 
 @available(iOS 12.0, *)
 func simulateCarPlayDisconnection(_ carPlayManager: CarPlayManager) {
-    let fakeInterfaceController = FakeCPInterfaceController(context: #function)
-    let fakeWindow = CPWindow()
+    guard let interfaceController = carPlayManager.interfaceController else {
+        preconditionFailure("Instance of CPInterfaceController should be valid.")
+    }
+    let window = CPWindow()
     
     carPlayManager.application(UIApplication.shared,
-                               didDisconnectCarInterfaceController: fakeInterfaceController,
-                               from: fakeWindow)
+                               didDisconnectCarInterfaceController: interfaceController,
+                               from: window)
 }
 
 @available(iOS 12.0, *)
