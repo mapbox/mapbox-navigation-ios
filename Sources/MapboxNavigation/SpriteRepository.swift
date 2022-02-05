@@ -1,6 +1,7 @@
 import UIKit
 import MapboxMaps
 import MapboxCoreNavigation
+import MapboxDirections
 
 class SpriteRepository {
     let imageCache: BimodalImageCache
@@ -22,9 +23,9 @@ class SpriteRepository {
         self.imageDownloader = downloader
     }
     
-    func updateRepository(updateStyleURI: StyleURI? = nil, updateBaseURL: String? = nil, completion: @escaping CompletionHandler) {
-        let styleURI = updateStyleURI ?? styleURI
-        let baseURL = updateBaseURL ?? baseURL
+    func updateRepository(styleURI: StyleURI? = nil, shield: VisualInstruction.Component.ShieldRepresentation? = nil, completion: @escaping CompletionHandler) {
+        let baseURL = shield?.baseURL.absoluteString ?? self.baseURL
+        let styleURI = styleURI ?? self.styleURI
         
         guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
               let accessToken = NavigationSettings.shared.directions.credentials.accessToken,
