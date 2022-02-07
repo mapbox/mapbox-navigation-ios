@@ -429,8 +429,10 @@ extension GeocodedPlacemark {
 @available(iOS 12.0, *)
 extension AppDelegate: CPListTemplateDelegate {
     
-    func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
-        // Selected a favorite
+    func listTemplate(_ listTemplate: CPListTemplate,
+                      didSelect item: CPListItem,
+                      completionHandler: @escaping () -> Void) {
+        // Selected a list item for the list of favorites.
         if let userInfo = item.userInfo as? CarPlayUserInfo,
             let waypoint = userInfo[CarPlayWaypointKey] as? Waypoint {
             carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)

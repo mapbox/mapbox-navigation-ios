@@ -97,6 +97,9 @@ let DefaultApproachingDestinationThresholdDistance: CLLocationDistance = 250.0
 
 /**
  Dictionary, which contains any custom user info related data on CarPlay (for example it's used by `CPTrip`,
- while filling it with `CPRouteChoice` objects).
+ while filling it with `CPRouteChoice` objects or for storing user information in `CPListItem`).
+ 
+ In case if `CPRouteChoice`, `CPListItem` or other `CarPlayUserInfo` dependant object uses different
+ type in `userInfo` it may lead to undefined behavior.
  */
 public typealias CarPlayUserInfo = [String: Any?]
