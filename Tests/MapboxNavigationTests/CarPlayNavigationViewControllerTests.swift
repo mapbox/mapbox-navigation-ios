@@ -1,16 +1,32 @@
+import XCTest
+import CarPlay
+import TestHelper
+import CarPlayTestHelper
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
-import MapboxDirections
-import XCTest
-import Foundation
-import TestHelper
-import CarPlay
-import CarPlayTestHelper
 
 @available(iOS 12.0, *)
 class CarPlayNavigationViewControllerTests: TestCase {
     
     func testTravelEstimates() {
+        
+        class MapTemplateMock: CPMapTemplate {
+            
+            var travelEstimates: CPTravelEstimates?
+            
+            var navigationSession: CPNavigationSession!
+            
+            override func update(_ estimates: CPTravelEstimates,
+                                 for trip: CPTrip,
+                                 with timeRemainingColor: CPTimeRemainingColor) {
+                travelEstimates = estimates
+            }
+            
+            override func startNavigationSession(for trip: CPTrip) -> CPNavigationSession {
+                return navigationSession
+            }
+        }
+        
         let navigationRouteOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 9.519172, longitude: 47.210823),
             CLLocationCoordinate2D(latitude: 9.52222, longitude: 47.214268),
@@ -24,19 +40,21 @@ class CarPlayNavigationViewControllerTests: TestCase {
                                                         routeIndex: 0,
                                                         routeOptions: navigationRouteOptions)
         
-        let mapTemplate = MapTemplateSpy()
+        let mapTemplateMock = MapTemplateMock()
         let navigationSession = CPNavigationSessionFake(maneuvers: [CPManeuver()])
-        mapTemplate.fakeSession = navigationSession
+        mapTemplateMock.navigationSession = navigationSession
         
         let interfaceController = FakeCPInterfaceController(context: #function)
         
         let carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
         
         let carPlayNavigationViewController = CarPlayNavigationViewController(navigationService: navigationService,
-                                                                              mapTemplate: mapTemplate,
+                                                                              mapTemplate: mapTemplateMock,
                                                                               interfaceController: interfaceController,
                                                                               manager: carPlayManager)
-        let trip = CPTrip(origin: MKMapItem(), destination: MKMapItem(), routeChoices: [])
+        let trip = CPTrip(origin: MKMapItem(),
+                          destination: MKMapItem(),
+                          routeChoices: [])
         carPlayNavigationViewController.startNavigationSession(for: trip)
         
         guard let firstCoordinate = navigationService.routeProgress.currentLeg.shape.coordinates.first else {
@@ -56,7 +74,7 @@ class CarPlayNavigationViewControllerTests: TestCase {
         let distanceRemaining = Measurement(distance: navigationService.routeProgress.distanceRemaining).localized()
         let expectedTravelEstimates = CPTravelEstimates(distanceRemaining: distanceRemaining,
                                                         timeRemaining: navigationService.routeProgress.durationRemaining)
-        let actualTravelEstimates = mapTemplate.estimatesUpdate?.0
+        let actualTravelEstimates = mapTemplateMock.travelEstimates
         
         XCTAssertEqual(actualTravelEstimates?.distanceRemaining.value,
                        expectedTravelEstimates.distanceRemaining.value,
