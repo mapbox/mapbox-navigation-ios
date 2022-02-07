@@ -232,12 +232,6 @@ class CarPlayManagerSpec: QuickSpec {
                                                  tileStoreConfiguration: .default)
             let mockedHandler = BillingHandler.__createMockedHandler(with: BillingServiceMock())
             BillingHandler.__replaceSharedInstance(with: mockedHandler)
-            let navigatorResetExpectation = self.expectation(description: "Navigator should be reset successfully.")
-            Navigator.shared.navigator.reset {
-                navigatorResetExpectation.fulfill()
-            }
-            self.wait(for: [navigatorResetExpectation], timeout: 1.0)
-            Navigator._recreateNavigator()
             
             CarPlayMapViewController.swizzleMethods()
             manager = CarPlayManager(styles: nil, routingProvider: MapboxRoutingProvider(.offline), eventsManager: nil)

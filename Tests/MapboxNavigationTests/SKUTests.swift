@@ -7,6 +7,18 @@ import MapboxNavigation
 import MapboxCommon_Private
 
 class SKUTests: TestCase {
+    private var navigator: MapboxCoreNavigation.Navigator? = nil
+
+    override func setUp() {
+        super.setUp()
+        navigator = Navigator.shared
+    }
+
+    override func tearDown() {
+        super.tearDown()
+        navigator = nil
+    }
+    
     func testDirectionsSKU() {
         let expected: String = UUID().uuidString
         billingServiceMock.onGetSKUTokenIfValid = { _ in

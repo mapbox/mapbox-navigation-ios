@@ -15,7 +15,7 @@ final class TilesetDescriptorFactoryTests: TestCase {
     func testLatestDescriptorsAreFromGlobalNavigatorCacheHandle() {
         NavigationSettings.shared.initialize(directions: .mocked,
                                              tileStoreConfiguration: .custom(FileManager.default.temporaryDirectory))
-        MapboxCoreNavigation.Navigator._recreateNavigator()
+        let navigator = Navigator.shared
 
         let tilesetReceived = expectation(description: "Tileset received")
         TilesetDescriptorFactory.getLatest(completionQueue: .global()) { latestTilesetDescriptor in
