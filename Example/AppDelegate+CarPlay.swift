@@ -433,13 +433,13 @@ extension AppDelegate: CPListTemplateDelegate {
                       didSelect item: CPListItem,
                       completionHandler: @escaping () -> Void) {
         // Selected a list item for the list of favorites.
-        if let userInfo = item.userInfo as? CarPlayUserInfo,
-            let waypoint = userInfo[CarPlayWaypointKey] as? Waypoint {
-            carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
-            return
-        }
+        guard let userInfo = item.userInfo as? CarPlayUserInfo,
+              let waypoint = userInfo[CarPlayWaypointKey] as? Waypoint else {
+                  completionHandler()
+                  return
+              }
         
-        completionHandler()
+        carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
     }
 }
 

@@ -25,7 +25,7 @@ extension CPRouteChoice {
     }
     
     var routeResponseFromUserInfo: RouteResponseUserInfo? {
-        guard let userInfo = userInfo as? [String: Any?] else {
+        guard let userInfo = userInfo as? CarPlayUserInfo else {
             return nil
         }
         
