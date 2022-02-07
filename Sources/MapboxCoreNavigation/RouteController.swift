@@ -763,6 +763,7 @@ extension RouteController: InternalRouter { }
 
 extension RouteController: ReroutingObserverDelegate {
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) {
+        print(">>> \(#function)")
         guard let location = location else { return }
         
         if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
@@ -775,6 +776,7 @@ extension RouteController: ReroutingObserverDelegate {
     }
     
     func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions) {
+        print(">>> \(#function)")
         updateRoute(with: IndexedRouteResponse(routeResponse: response,
                                                routeIndex: 0),
                     routeOptions: options,
@@ -784,11 +786,13 @@ extension RouteController: ReroutingObserverDelegate {
     }
     
     func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController) {
+        print(">>> \(#function)")
         announcReroutingError(with: ReroutingError.cancelled)
         self.isRerouting = false
     }
     
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: ReroutingError) {
+        print(">>> \(#function)")
         announcReroutingError(with: error)
         self.isRerouting = false
     }

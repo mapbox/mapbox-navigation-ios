@@ -112,6 +112,7 @@ extension RerouteController: RerouteObserver {
     }
     
     func onRerouteDetected(forRouteRequest routeRequest: String) {
+        print(">>> \(#function)")
         isCancelled = false
         recentRouteResponse = nil
         guard reroutesProactively else { return }
@@ -146,6 +147,7 @@ extension RerouteController: RerouteObserver {
     }
     
     func onRerouteCancelled() {
+        print(">>> \(#function)")
         recentRouteResponse = nil
         guard reroutesProactively else { return }
         
@@ -153,6 +155,7 @@ extension RerouteController: RerouteObserver {
     }
     
     func onRerouteFailed(forError error: RerouteError) {
+        print(">>> \(#function)")
         recentRouteResponse = nil
         guard reroutesProactively else { return }
         
