@@ -91,11 +91,27 @@ class SpriteRepositoryTests: TestCase {
         XCTAssertEqual(expectedMetaData, spriteMetaData, "Failed to retrieve metadata from cache.")
     }
     
+    func testGeneratingSpriteURL() {
+        guard let styleID = repository.styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
+              let accessToken = NavigationSettings.shared.directions.credentials.accessToken else {
+            XCTFail("Failed to form request URL from SpriteRepository")
+            return
+        }
+        
+        let baseURLstring = repository.baseURL.absoluteString
+        let spriteRequestURL = URL(string: baseURLstring + styleID + "/sprite@2x.png?access_token=" + accessToken)
+        let metadataRequestURL = URL(string: baseURLstring + styleID + "/sprite@2x?access_token=" + accessToken)
+        
+        let expetecSpriteRequestURL = repository.spriteURL(isImage: true, baseURL: repository.baseURL, styleID: styleID)
+        let expectedMetadataRequestURL = repository.spriteURL(isImage: false, baseURL: repository.baseURL, styleID: styleID)
+        XCTAssertEqual(spriteRequestURL, expetecSpriteRequestURL, "Failed to generate sprite request URL from SpriteRepository.")
+        XCTAssertEqual(metadataRequestURL, expectedMetadataRequestURL, "Failed to generate sprite metadata request URL from SpriteRepository.")
+    }
+    
     func testUpdateRepository() {
-        let styleID = repository.styleURI.rawValue.components(separatedBy: "styles")[1]
-        guard let accessToken = NavigationSettings.shared.directions.credentials.accessToken,
-              let spriteRequestURL = URL(string: repository.baseURL + styleID + "/sprite@2x.png?access_token=" + accessToken),
-              let metadataRequestURL = URL(string: repository.baseURL + styleID + "/sprite@2x?access_token=" + accessToken) else {
+        guard let styleID = repository.styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
+              let spriteRequestURL = repository.spriteURL(isImage: true, baseURL: repository.baseURL, styleID: styleID),
+              let metadataRequestURL = repository.spriteURL(isImage: false, baseURL: repository.baseURL, styleID: styleID) else {
                   XCTFail("Failed to form request to update SpriteRepository")
                   return
               }

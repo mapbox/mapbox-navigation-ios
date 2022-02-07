@@ -7,7 +7,7 @@ class SpriteRepository {
     let imageCache: BimodalImageCache
     let metadataCache =  SpriteMetaDataCache()
     var styleURI: StyleURI = .navigationDay
-    var baseURL: String = "https://api.mapbox.com/styles/v1"
+    var baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
     
     public var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
         didSet {
@@ -24,13 +24,12 @@ class SpriteRepository {
     }
     
     func updateRepository(styleURI: StyleURI? = nil, shield: VisualInstruction.Component.ShieldRepresentation? = nil, completion: @escaping CompletionHandler) {
-        let baseURL = shield?.baseURL.absoluteString ?? self.baseURL
+        let baseURL = shield?.baseURL ?? self.baseURL
         let styleURI = styleURI ?? self.styleURI
         
         guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
-              let accessToken = NavigationSettings.shared.directions.credentials.accessToken,
-              let spriteRequestURL = URL(string: baseURL + styleID + "/sprite@2x.png?access_token=" + accessToken),
-              let metadataRequestURL = URL(string: baseURL + styleID + "/sprite@2x?access_token=" + accessToken) else {
+              let spriteRequestURL = spriteURL(isImage: true, baseURL: baseURL, styleID: styleID),
+              let metadataRequestURL = spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) else {
                   return
               }
 
@@ -51,6 +50,17 @@ class SpriteRepository {
             self.baseURL = baseURL
             completion()
         }
+    }
+    
+    func spriteURL(isImage: Bool, baseURL: URL, styleID: String) -> URL? {
+        guard var urlComponent = URLComponents(url: baseURL, resolvingAgainstBaseURL: false),
+              let accessToken = NavigationSettings.shared.directions.credentials.accessToken else { return nil }
+        
+        let requestTyep = isImage ? "/sprite@2x.png" : "/sprite@2x"
+        urlComponent.path += styleID
+        urlComponent.path += requestTyep
+        urlComponent.queryItems = [URLQueryItem(name: "access_token", value: accessToken)]
+        return urlComponent.url
     }
     
     func downloadMetadata(_ metadataURL: URL, completion: @escaping (Data?) -> Void) {
