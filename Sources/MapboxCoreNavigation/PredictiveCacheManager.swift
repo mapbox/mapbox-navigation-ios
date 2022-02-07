@@ -91,17 +91,18 @@ public class PredictiveCacheManager {
                                                  dataset: String = "mapbox",
                                                  maxConcurrentRequests: UInt32 = 2) -> PredictiveCacheController? {
         let predictiveLocationTrackerOptions = PredictiveLocationTrackerOptions(options)
+        let navigator = Navigator.shared
         if let tileStore = tileStore {
             let cacheOptions = PredictiveCacheControllerOptions(version: version,
                                                                 dataset: dataset,
                                                                 dataDomain: .maps,
                                                                 concurrency: maxConcurrentRequests,
                                                                 maxAverageDownloadBytesPerSecond: 0)
-            return Navigator.shared.navigator.createPredictiveCacheController(for: tileStore,
-                                                                              cacheOptions: cacheOptions,
-                                                                              locationTrackerOptions: predictiveLocationTrackerOptions)
+            return navigator.navigator.createPredictiveCacheController(for: tileStore,
+                                                                cacheOptions: cacheOptions,
+                                                                locationTrackerOptions: predictiveLocationTrackerOptions)
         } else {
-            return Navigator.shared.navigator.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
+            return navigator.navigator.createPredictiveCacheController(for: predictiveLocationTrackerOptions)
         }
     }
 }

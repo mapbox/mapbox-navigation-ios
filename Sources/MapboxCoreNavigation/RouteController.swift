@@ -39,7 +39,7 @@ open class RouteController: NSObject {
      A `TileStore` instance used by navigator
      */
     open var navigatorTileStore: TileStore {
-        return Navigator.shared.tileStore
+        return sharedNavigator.tileStore
     }
     
     /**
@@ -105,7 +105,7 @@ open class RouteController: NSObject {
      */
     var snappedLocation: CLLocation? {
         guard lastLocationUpdateDate != nil,
-              let status = Navigator.shared.mostRecentNavigationStatus else {
+              let status = sharedNavigator.mostRecentNavigationStatus else {
             return nil
         }
         
@@ -156,14 +156,14 @@ open class RouteController: NSObject {
      - note: The Mapbox Electronic Horizon feature of the Mapbox Navigation SDK is in public beta and is subject to changes, including its pricing. Use of the feature is subject to the beta product restrictions in the Mapbox Terms of Service. Mapbox reserves the right to eliminate any free tier or free evaluation offers at any time and require customers to place an order to purchase the Mapbox Electronic Horizon feature, regardless of the level of use of the feature.
      */
     public func startUpdatingElectronicHorizon(with options: ElectronicHorizonOptions? = nil) {
-        Navigator.shared.startUpdatingElectronicHorizon(with: options)
+        sharedNavigator.startUpdatingElectronicHorizon(with: options)
     }
 
     /**
      Stops electronic horizon updates.
      */
     public func stopUpdatingElectronicHorizon() {
-        Navigator.shared.stopUpdatingElectronicHorizon()
+        sharedNavigator.stopUpdatingElectronicHorizon()
     }
 
     func changeRouteProgress(_ routeProgress: RouteProgress,
@@ -202,8 +202,10 @@ open class RouteController: NSObject {
     
     // MARK: Navigating
     
+    private let sharedNavigator = Navigator.shared
+    
     var navigator: MapboxNavigationNative.Navigator {
-        return Navigator.shared.navigator
+        return sharedNavigator.navigator
     }
     
     var userSnapToStepDistanceFromManeuver: CLLocationDistance?
@@ -220,7 +222,7 @@ open class RouteController: NSObject {
         rawLocation = location
         
         locations.forEach {
-            Navigator.shared.updateLocation($0) { _ in
+            sharedNavigator.updateLocation($0) { _ in
                 // No-op
             }
         }
@@ -253,7 +255,7 @@ open class RouteController: NSObject {
                             legIndex: UInt32(progress.legIndex),
                             routesRequest: routeRequest)
 
-        Navigator.shared.setRoutes(routes) { result in
+        sharedNavigator.setRoutes(routes) { result in
             completion?(result)
         }
     }
@@ -587,17 +589,17 @@ open class RouteController: NSObject {
     
     /// The road graph that is updated as the route controller tracks the user’s location.
     public var roadGraph: RoadGraph {
-        return Navigator.shared.roadGraph
+        return sharedNavigator.roadGraph
     }
 
     /// The road object store that is updated as the route controller tracks the user’s location.
     public var roadObjectStore: RoadObjectStore {
-        return Navigator.shared.roadObjectStore
+        return sharedNavigator.roadObjectStore
     }
 
     /// The road object matcher that allows to match user-defined road objects.
     public var roadObjectMatcher: RoadObjectMatcher {
-        return Navigator.shared.roadObjectMatcher
+        return sharedNavigator.roadObjectMatcher
     }
 }
 
@@ -625,7 +627,7 @@ extension RouteController: Router {
         }
         
         // If we still wait for the first status from NavNative, there is no need to reroute
-        guard let status = status ?? Navigator.shared.mostRecentNavigationStatus else { return true }
+        guard let status = status ?? sharedNavigator.mostRecentNavigationStatus else { return true }
 
         /// NavNative doesn't support reroutes after arrival.
         /// The code below is a port of logic from LegacyRouteController
@@ -724,7 +726,7 @@ extension RouteController: Router {
     }
 
     private func removeRoutes(completion: ((Error?) -> Void)?) {
-        Navigator.shared.setRoutes(nil) { result in
+        sharedNavigator.setRoutes(nil) { result in
             switch result {
             case .success:
                 completion?(nil)

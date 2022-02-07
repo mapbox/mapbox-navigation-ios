@@ -11,6 +11,7 @@ final class BillingHandlerUnitTests: TestCase {
     private var handler: BillingHandler!
     private let freeRideToken = UUID().uuidString
     private let activeGuidanceToken = UUID().uuidString
+    private var navigator: MapboxCoreNavigation.Navigator? = nil
 
     override func setUp() {
         super.setUp()
@@ -22,12 +23,14 @@ final class BillingHandlerUnitTests: TestCase {
             case .freeDrive: return freeRideToken
             }
         }
+        navigator = Navigator.shared
     }
 
     override func tearDown() {
         super.tearDown()
         billingService = nil
         handler = nil
+        navigator = nil
     }
 
     func testSessionStop() {

@@ -62,7 +62,9 @@ public extension HistoryRecording {
     }
 
     static func startRecordingHistory() {
-        Navigator.shared.historyRecorder?.startRecording()
+        if Navigator.isSharedInstanceCreated {
+            Navigator.shared.historyRecorder?.startRecording()
+        }
     }
 
     static func pushHistoryEvent(type: String, jsonData: Data?) throws {
@@ -74,11 +76,14 @@ public extension HistoryRecording {
             }
             jsonString = value
         }
-        Navigator.shared.historyRecorder?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
+        if Navigator.isSharedInstanceCreated {
+            Navigator.shared.historyRecorder?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
+        }
     }
 
     static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
-        guard let historyRecorder = Navigator.shared.historyRecorder else {
+        guard Navigator.isSharedInstanceCreated,
+              let historyRecorder = Navigator.shared.historyRecorder else {
             completionHandler(nil)
             return
         }

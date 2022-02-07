@@ -77,12 +77,6 @@ class PassiveLocationManagerTests: TestCase {
     }
     
     func testManualLocations() {
-        let navigatorResetExpectation = expectation(description: "Navigator should be reset successfully.")
-        Navigator.shared.navigator.reset {
-            navigatorResetExpectation.fulfill()
-        }
-        wait(for: [navigatorResetExpectation], timeout: 1.0)
-        
         let locationUpdateExpectation = expectation(description: "Location manager takes some time to start mapping locations to a road graph")
         locationUpdateExpectation.expectedFulfillmentCount = 1
         
@@ -108,7 +102,6 @@ class PassiveLocationManagerTests: TestCase {
     
     func testNoHistoryRecording() {
         PassiveLocationManager.historyDirectoryURL = nil
-        Navigator._recreateNavigator()
         PassiveLocationManager.startRecordingHistory()
                 
         let historyCallbackExpectation = XCTestExpectation(description: "History callback should be called")
@@ -123,7 +116,7 @@ class PassiveLocationManagerTests: TestCase {
         let supportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!.appendingPathComponent("test")
         
         PassiveLocationManager.historyDirectoryURL = supportDir
-        Navigator._recreateNavigator()
+        let navigator = Navigator.shared
         PassiveLocationManager.startRecordingHistory()
                 
         let historyCallbackExpectation = XCTestExpectation(description: "History callback should be called")
