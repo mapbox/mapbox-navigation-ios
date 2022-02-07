@@ -20,8 +20,6 @@ class CarPlayManagerSpec: QuickSpec {
                                                  tileStoreConfiguration: .default)
             let mockedHandler = BillingHandler.__createMockedHandler(with: BillingServiceMock())
             BillingHandler.__replaceSharedInstance(with: mockedHandler)
-            Navigator.shared.navigator.reset { }
-            Navigator._recreateNavigator()
             
             CarPlayMapViewController.swizzleMethods()
             carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
