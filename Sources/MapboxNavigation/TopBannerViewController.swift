@@ -347,6 +347,18 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         routeProgress = progress
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
+        
+        if progress.remainingSteps.count < 2 {
+            instructionsBannerView.showStepIndicator = false
+            
+            if let steps = stepsViewController {
+                isDisplayingSteps = false
+                steps.dismiss()
+                stepsViewController = nil
+            }
+        } else {
+            instructionsBannerView.showStepIndicator = true
+        }
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
@@ -428,7 +440,9 @@ extension TopBannerViewController: StepsViewControllerDelegate {
     
     public func didDismissStepsViewController(_ viewController: StepsViewController) {
         dismissStepsTable()
-        instructionsBannerView.showStepIndicator = true
+        if let stepCount = routeProgress?.remainingSteps.count, stepCount > 1 {
+            instructionsBannerView.showStepIndicator = true
+        }
     }
 }
 
