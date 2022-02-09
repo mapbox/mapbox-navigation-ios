@@ -67,7 +67,8 @@ public class InstructionsCardView: BaseInstructionsBannerView {
                                                     constant: -BaseInstructionsBannerView.padding).isActive = true
         distanceLabel.topAnchor.constraint(greaterThanOrEqualTo: maneuverView.bottomAnchor).isActive = true
         
-        maneuverView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+        maneuverView.leadingAnchor.constraint(equalTo: leadingAnchor,
+                                              constant: 10).isActive = true
         maneuverView.heightAnchor.constraint(equalToConstant: BaseInstructionsBannerView.maneuverViewSize.height).isActive = true
         maneuverView.topAnchor.constraint(equalTo: topAnchor,
                                           constant: BaseInstructionsBannerView.padding).isActive = true
@@ -76,17 +77,19 @@ public class InstructionsCardView: BaseInstructionsBannerView {
         maneuverView.centerXAnchor.constraint(equalTo: leadingAnchor,
                                               constant: firstColumnWidth / 2).isActive = true
         
-        primaryLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: InstructionsCardConstants.primaryLabelWidth).isActive = true
         primaryLabel.leadingAnchor.constraint(equalTo: maneuverView.trailingAnchor,
-                                              constant: InstructionsCardConstants.primaryLabelLeadingPadding).isActive = true
+                                              constant: 10).isActive = true
         primaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor,
-                                               constant: -18).isActive = true
+                                               constant: -10).isActive = true
         baselineConstraints.append(primaryLabel.topAnchor.constraint(equalTo: maneuverView.topAnchor,
-                                                                     constant: -BaseInstructionsBannerView.padding/2))
+                                                                     constant: -BaseInstructionsBannerView.padding / 2))
         centerYConstraints.append(primaryLabel.centerYAnchor.constraint(equalTo: centerYAnchor))
         
-        secondaryLabel.widthAnchor.constraint(lessThanOrEqualToConstant: InstructionsCardConstants.secondaryLabelWidth).isActive = true
-        secondaryLabel.leadingAnchor.constraint(equalTo: maneuverView.trailingAnchor).isActive = true
+        secondaryLabel.leadingAnchor.constraint(equalTo: maneuverView.trailingAnchor,
+                                                constant: 10).isActive = true
+        secondaryLabel.trailingAnchor.constraint(equalTo: trailingAnchor,
+                                                 constant: -10).isActive = true
+        
         baselineConstraints.append(secondaryLabel.lastBaselineAnchor.constraint(equalTo: distanceLabel.lastBaselineAnchor,
                                                                                 constant: -BaseInstructionsBannerView.padding / 2))
         baselineConstraints.append(secondaryLabel.topAnchor.constraint(greaterThanOrEqualTo: primaryLabel.bottomAnchor,
