@@ -18,7 +18,7 @@
 
 ### CarPlay
 
-* Added `CarPlayUserInfo` type alias for storing CarPlay-related user information. ([#3709](https://github.com/mapbox/mapbox-navigation-ios/pull/3709))
+* Added `CarPlayUserInfo` type alias for storing CarPlay-related user information. This type will be used by `CPRouteChoice` or `CPListItem` while presenting trip with multiple route choices or when selecting list item from search results, respectively. ([#3709](https://github.com/mapbox/mapbox-navigation-ios/pull/3709))
 
 ### Offline routing
 

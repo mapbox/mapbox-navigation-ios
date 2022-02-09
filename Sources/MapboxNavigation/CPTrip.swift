@@ -50,6 +50,5 @@ extension CPTrip {
         self.init(origin: originMapItem,
                   destination: destinationMapItem,
                   routeChoices: routeChoices)
-        userInfo = directionsOptions
     }
 }
