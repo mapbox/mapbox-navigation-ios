@@ -70,8 +70,8 @@ public extension CarPlayNavigationViewControllerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carPlayNavigationViewControllerDidDismiss(_ carPlayNavigationViewController: CarPlayNavigationViewController,
-                                                   shouldPresentArrivalUIFor waypoint: Waypoint) {
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         shouldPresentArrivalUIFor waypoint: Waypoint) {
         logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
     }
     

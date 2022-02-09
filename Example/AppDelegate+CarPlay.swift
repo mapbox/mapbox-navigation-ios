@@ -100,7 +100,8 @@ extension AppDelegate: CarPlayManagerDelegate {
         navigationViewController.waypointStyle = .extrudedBuilding
     }
     
-    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager,
+                                        byCanceling canceled: Bool) {
         // Dismiss NavigationViewController if it's present in the navigation stack
         currentAppRootViewController?.dismissActiveNavigationViewController()
     }
