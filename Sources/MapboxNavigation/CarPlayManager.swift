@@ -623,28 +623,35 @@ extension CarPlayManager {
 @available(iOS 12.0, *)
 extension CarPlayManager: CPMapTemplateDelegate {
     
-    public func mapTemplate(_ mapTemplate: CPMapTemplate, startedTrip trip: CPTrip, using routeChoice: CPRouteChoice) {
+    public func mapTemplate(_ mapTemplate: CPMapTemplate,
+                            startedTrip trip: CPTrip,
+                            using routeChoice: CPRouteChoice) {
         guard let interfaceController = interfaceController,
-              let carPlayMapViewController = carPlayMapViewController,
-              let (routeResponse, routeIndex, options) = routeChoice.userInfo as? (RouteResponse, Int, RouteOptions) else {
-            return
-        }
+              let carPlayMapViewController = carPlayMapViewController else {
+                  return
+              }
+        
+        guard let routeResponse = routeChoice.routeResponseFromUserInfo,
+              let routeOptions = routeResponse.options as? RouteOptions else {
+                  preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
+              }
 
         mapTemplate.hideTripPreviews()
         
         let desiredSimulationMode: SimulationMode = simulatesLocations ? .always : .inTunnels
         
         let navigationService = self.navigationService ??
-            delegate?.carPlayManager(self, navigationServiceFor: routeResponse,
-                                     routeIndex: routeIndex,
-                                     routeOptions: options,
-                                     desiredSimulationMode: desiredSimulationMode) ??
-            MapboxNavigationService(routeResponse: routeResponse,
-                                    routeIndex: routeIndex,
-                                    routeOptions: options,
-                                    routingProvider: NavigationSettings.shared.directions,
-                                    credentials: NavigationSettings.shared.directions.credentials,
-                                    simulating: desiredSimulationMode)
+        delegate?.carPlayManager(self,
+                                 navigationServiceFor: routeResponse.response,
+                                 routeIndex: routeResponse.routeIndex,
+                                 routeOptions: routeOptions,
+                                 desiredSimulationMode: desiredSimulationMode) ??
+        MapboxNavigationService(routeResponse: routeResponse.response,
+                                routeIndex: routeResponse.routeIndex,
+                                routeOptions: routeOptions,
+                                routingProvider: NavigationSettings.shared.directions,
+                                credentials: NavigationSettings.shared.directions.credentials,
+                                simulating: desiredSimulationMode)
         
         // Store newly created `MapboxNavigationService`.
         self.navigationService = navigationService
@@ -693,12 +700,15 @@ extension CarPlayManager: CPMapTemplateDelegate {
     public func mapTemplate(_ mapTemplate: CPMapTemplate,
                             selectedPreviewFor trip: CPTrip,
                             using routeChoice: CPRouteChoice) {
-        guard let carPlayMapViewController = carPlayMapViewController,
-              let (routeResponse, routeIndex, _) = routeChoice.userInfo as? (RouteResponse, Int, RouteOptions),
-              var routes = routeResponse.routes,
-              routes.indices.contains(routeIndex) else { return }
+        guard let carPlayMapViewController = carPlayMapViewController else { return }
         
-        let route = routes[routeIndex]
+        guard let routeResponse = routeChoice.routeResponseFromUserInfo,
+              var routes = routeResponse.response.routes,
+              routes.indices.contains(routeResponse.routeIndex) else {
+                  preconditionFailure("CPRouteChoice should contain `RouteResponseUserInfo` struct.")
+              }
+        
+        let route = routes[routeResponse.routeIndex]
         let estimates = CPTravelEstimates(distanceRemaining: Measurement(distance: route.distance).localized(),
                                           timeRemaining: route.expectedTravelTime)
         mapTemplate.updateEstimates(estimates, for: trip)
@@ -792,7 +802,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
     
     public func mapTemplateDidDismissPanningInterface(_ mapTemplate: CPMapTemplate) {
-        guard let userInfo = mapTemplate.userInfo as? [String: Any],
+        guard let userInfo = mapTemplate.userInfo as? CarPlayUserInfo,
               let currentActivity = userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity else {
                   return
               }
@@ -892,7 +902,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
      - parameter mapTemplate: `CPMapTemplate` instance, for which buttons update will be performed.
      */
     private func updateNavigationButtons(for mapTemplate: CPMapTemplate) {
-        guard let userInfo = mapTemplate.userInfo as? [String: Any],
+        guard let userInfo = mapTemplate.userInfo as? CarPlayUserInfo,
               let currentActivity = userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity else {
                   return
               }

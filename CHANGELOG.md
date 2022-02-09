@@ -16,6 +16,10 @@
 
 * Added `MapView.showsTileSet(with:layerIdentifier:)` and `MapView.setShowsTileSet(_:with:layerIdentifier:)` to provide the ability to show and hide custom tile set identifiers on the map view. ([#3700](https://github.com/mapbox/mapbox-navigation-ios/pull/3700))
 
+### CarPlay
+
+* Added `CarPlayUserInfo` type alias for storing CarPlay-related user information. This type will be used by `CPRouteChoice` or `CPListItem` while presenting trip with multiple route choices or when selecting list item from search results, respectively. ([#3709](https://github.com/mapbox/mapbox-navigation-ios/pull/3709))
+
 ### Offline routing
 
 * If routing tiles in local storage are corrupted, the tiles are now redownloaded. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))

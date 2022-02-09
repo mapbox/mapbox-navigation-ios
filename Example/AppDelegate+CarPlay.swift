@@ -353,7 +353,7 @@ extension AppDelegate: CarPlaySearchControllerDelegate {
     func searchTemplate(_ searchTemplate: CPSearchTemplate,
                         selectedResult item: CPListItem,
                         completionHandler: @escaping () -> Void) {
-        guard let userInfo = item.userInfo as? [String: Any],
+        guard let userInfo = item.userInfo as? CarPlayUserInfo,
               let placemark = userInfo[CarPlaySearchController.CarPlayGeocodedPlacemarkKey] as? NavigationGeocodedPlacemark,
               let location = placemark.routableLocations?.first ?? placemark.location else {
             completionHandler()
@@ -429,15 +429,17 @@ extension GeocodedPlacemark {
 @available(iOS 12.0, *)
 extension AppDelegate: CPListTemplateDelegate {
     
-    func listTemplate(_ listTemplate: CPListTemplate, didSelect item: CPListItem, completionHandler: @escaping () -> Void) {
-        // Selected a favorite
-        if let userInfo = item.userInfo as? [String: Any],
-            let waypoint = userInfo[CarPlayWaypointKey] as? Waypoint {
-            carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
-            return
-        }
+    func listTemplate(_ listTemplate: CPListTemplate,
+                      didSelect item: CPListItem,
+                      completionHandler: @escaping () -> Void) {
+        // Selected a list item for the list of favorites.
+        guard let userInfo = item.userInfo as? CarPlayUserInfo,
+              let waypoint = userInfo[CarPlayWaypointKey] as? Waypoint else {
+                  completionHandler()
+                  return
+              }
         
-        completionHandler()
+        carPlayManager.previewRoutes(to: waypoint, completionHandler: completionHandler)
     }
 }
 
