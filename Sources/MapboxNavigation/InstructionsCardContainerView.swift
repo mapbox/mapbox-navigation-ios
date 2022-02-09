@@ -16,13 +16,13 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     
     /**
      Color of the background that will be used in case if distance to the next maneuver is higher
-     than threshold distance, defined in `InstructionsCardConstants.highlightDistance`.
+     than threshold distance, defined in `InstructionCardHighlightDistance`.
      */
     @objc dynamic public var customBackgroundColor: UIColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     
     /**
      Color of the background that will be used when remaining distance to the next maneuver is below
-     threshold distance, defined in `InstructionsCardConstants.highlightDistance`.
+     threshold distance, defined in `InstructionCardHighlightDistance`.
      */
     @objc dynamic public var highlightedBackgroundColor: UIColor = #colorLiteral(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
     
@@ -34,7 +34,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     /**
      Color of the separator between `InstructionsCardView` or `LanesView`/`NextBannerView` that will
      be used when remaining distance to the next maneuver is below threshold distance, defined in
-     `InstructionsCardConstants.highlightDistance`..
+     `InstructionCardHighlightDistance`.
      */
     @objc dynamic public var highlightedSeparatorColor: UIColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
     
@@ -117,9 +117,9 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     
     public func updateInstructionCard(distance: CLLocationDistance, isCurrentCardStep: Bool = false) {
         // In case if instruction card is the closest one to the next maneuver and if distance to it
-        // is below threshold defined in `InstructionsCardConstants.highlightDistance` - highlight it.
+        // is below threshold defined in `InstructionCardHighlightDistance` - highlight it.
         if isCurrentCardStep,
-           distance < InstructionsCardConstants.highlightDistance {
+           distance < InstructionCardHighlightDistance {
             state = .highighted
         } else {
             state = .unhighlighted
@@ -257,7 +257,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
                                                            as: presented) {
             return presented
         } else {
-            let highlighted = instructionsCardView.distanceFromCurrentLocation < InstructionsCardConstants.highlightDistance
+            let highlighted = instructionsCardView.distanceFromCurrentLocation < InstructionCardHighlightDistance
             let textColor = highlighted ? instructionsCardView.primaryLabel.textColor : instructionsCardView.primaryLabel.textColorHighlighted
             let attributes = [
                 NSAttributedString.Key.foregroundColor: textColor as Any
