@@ -52,8 +52,6 @@ open class InstructionsCardViewController: UIViewController {
     
     // MARK: Viewing Instructions
     
-    typealias InstructionsCardCollectionLayout = UICollectionViewFlowLayout
-    
     public private(set) var isInPreview = false
     
     /**
@@ -63,7 +61,7 @@ open class InstructionsCardViewController: UIViewController {
     
     var currentInstruction: VisualInstructionBanner?
     var instructionCollectionView: UICollectionView!
-    var instructionsCardLayout: InstructionsCardCollectionLayout!
+    var instructionsCardLayout: UICollectionViewFlowLayout!
     
     fileprivate var contentOffsetBeforeSwipe = CGPoint(x: 0, y: 0)
     fileprivate var indexBeforeSwipe = IndexPath(row: 0, section: 0)
@@ -71,26 +69,13 @@ open class InstructionsCardViewController: UIViewController {
     fileprivate let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
     
     var cardSize: CGSize {
-        let cardWidth: Double
-        
-        let interfaceOrientations: [UIInterfaceOrientation] = [
-            .unknown,
-            .portrait
-        ]
-        
-        if interfaceOrientations.contains(UIApplication.shared.statusBarOrientation)
-            || (traitCollection.verticalSizeClass == .regular && traitCollection.horizontalSizeClass == .regular) {
-            cardWidth = UIScreen.main.bounds.width - 20.0
-        } else {
-            cardWidth = view.frame.width - view.safeAreaInsets.left - 20.0
-        }
-        
         let cardSize: CGSize
         
         if let customSize = cardCollectionDelegate?.instructionsCardCollection(self, cardSizeFor: traitCollection) {
             cardSize = customSize
         } else {
-            cardSize = CGSize(width: cardWidth, height: 130.0)
+            cardSize = CGSize(width: instructionCollectionView.bounds.width,
+                              height: 130.0)
         }
 
         return cardSize
@@ -150,10 +135,11 @@ open class InstructionsCardViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.clipsToBounds = false
         
-        instructionsCardLayout = InstructionsCardCollectionLayout()
+        instructionsCardLayout = UICollectionViewFlowLayout()
         instructionsCardLayout.scrollDirection = .horizontal
         instructionCollectionView = UICollectionView(frame: .zero, collectionViewLayout: instructionsCardLayout)
         instructionCollectionView.register(InstructionsCardCell.self, forCellWithReuseIdentifier: cardCollectionCellIdentifier)
+        instructionCollectionView.contentInsetAdjustmentBehavior = .never
         instructionCollectionView.dataSource = self
         instructionCollectionView.delegate = self
         instructionCollectionView.showsVerticalScrollIndicator = false
@@ -191,16 +177,34 @@ open class InstructionsCardViewController: UIViewController {
         instructionCollectionViewContraints = [
             instructionCollectionView.topAnchor.constraint(equalTo: view.safeTopAnchor,
                                                            constant: 10.0),
-            instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
-                                                               constant: 10.0),
             instructionCollectionView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
                                                                 constant: -10.0),
             instructionCollectionView.heightAnchor.constraint(equalToConstant: cardSize.height),
             instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
         
-        NSLayoutConstraint.activate(instructionCollectionViewContraints)
+        // Device is in landscape mode and notch (if present) is located on the left side.
+        if UIApplication.shared.statusBarOrientation == .landscapeRight {
+            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                // Language with right-to-left interface layout is used.
+                instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                                                                              constant: 10.0))
+            } else {
+                // Language with left-to-right interface layout is used.
+                instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
+                                                                                                              constant: 10.0))
+            }
+        } else {
+            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
+                                                                                                              constant: 10.0))
+            } else {
+                instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                                                                              constant: 10.0))
+            }
+        }
         
+        NSLayoutConstraint.activate(instructionCollectionViewContraints)
         
         NSLayoutConstraint.deactivate(junctionViewConstraints)
         junctionViewConstraints = []

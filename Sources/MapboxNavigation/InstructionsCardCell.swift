@@ -39,8 +39,8 @@ public class InstructionsCardCell: UICollectionViewCell {
                           instruction: VisualInstructionBanner? = nil,
                           isCurrentCardStep: Bool = false) {
         container.updateInstruction(for: step,
-                                    distance: distance,
-                                    instruction: instruction,
-                                    isCurrentCardStep: isCurrentCardStep)
+                                       distance: distance,
+                                       instruction: instruction,
+                                       isCurrentCardStep: isCurrentCardStep)
     }
 }
