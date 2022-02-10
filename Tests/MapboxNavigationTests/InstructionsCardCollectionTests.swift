@@ -1,151 +1,260 @@
 import XCTest
-import MapboxDirections
 import CoreLocation
-@testable import TestHelper
+import MapboxDirections
+import TestHelper
+import MapboxCoreNavigation
 @testable import MapboxNavigation
-@testable import MapboxCoreNavigation
 
-/// :nodoc:
-class InstructionsCardCollectionTests: TestCase {
+class InstructionsCardViewControllerTests: TestCase {
+    
     lazy var initialRouteResponse: RouteResponse = {
         return Fixture.routeResponse(from: jsonFileName, options: routeOptions)
     }()
     
-    var instructionsCardCollectionDataSource: (collection: InstructionsCardViewController, progress: RouteProgress, service: MapboxNavigationService, delegate: InstructionsCardCollectionDelegateSpy)!
+    var dataSource: (
+        instructionsCardViewController: InstructionsCardViewController,
+        routeProgress: RouteProgress,
+        navigationService: MapboxNavigationService,
+        instructionsCardCollectionDelegate: InstructionsCardCollectionDelegateMock
+    )!
 
     override func setUp() {
         super.setUp()
 
-        instructionsCardCollectionDataSource = {
-            let host = UIViewController(nibName: nil, bundle: nil)
-            let container = UIView.forAutoLayout()
-            let subject = InstructionsCardViewController(nibName: nil, bundle: nil)
-            let delegate = InstructionsCardCollectionDelegateSpy()
-            subject.cardCollectionDelegate = delegate
-
-            host.view.addSubview(container)
-            constrain(container, to: host.view)
-
-            embed(parent: host, child: subject, in: container) { (parent, guidanceCard) -> [NSLayoutConstraint] in
+        dataSource = {
+            let hostViewController = UIViewController(nibName: nil, bundle: nil)
+            let containerView = UIView.forAutoLayout()
+            let instructionsCardViewController = InstructionsCardViewController(nibName: nil, bundle: nil)
+            let instructionsCardCollectionDelegateMock = InstructionsCardCollectionDelegateMock()
+            instructionsCardViewController.cardCollectionDelegate = instructionsCardCollectionDelegateMock
+            
+            hostViewController.view.addSubview(containerView)
+            constrain(containerView, to: hostViewController.view)
+            
+            embed(parent: hostViewController,
+                  child: instructionsCardViewController,
+                  in: containerView) { (parent, guidanceCard) -> [NSLayoutConstraint] in
                 guidanceCard.view.translatesAutoresizingMaskIntoConstraints = false
-                return guidanceCard.view.constraintsForPinning(to: container)
+                return guidanceCard.view.constraintsForPinning(to: containerView)
             }
-
-            let fakeOptions = NavigationRouteOptions(coordinates: [
+            
+            let navigationRouteOptions = NavigationRouteOptions(coordinates: [
                 CLLocationCoordinate2D(latitude: 37.764793, longitude: -122.463161),
                 CLLocationCoordinate2D(latitude: 34.054081, longitude: -118.243412),
             ])
-            let fakeRoute = Fixture.route(from: "route-with-banner-instructions", options: fakeOptions)
-
-            let service = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                  routeIndex: 0,
-                                                  routeOptions: fakeOptions,
-                                                  routingProvider: MapboxRoutingProvider(.offline),
-                                                  credentials: Fixture.credentials,
-                                                  simulating: .never)
-            let routeProgress = RouteProgress(route: fakeRoute, options: fakeOptions)
-            subject.routeProgress = routeProgress
-
-            return (collection: subject, progress: routeProgress, service: service, delegate: delegate)
+            
+            let route = Fixture.route(from: "route-with-banner-instructions",
+                                      options: navigationRouteOptions)
+            
+            let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                                            routeIndex: 0,
+                                                            routeOptions: navigationRouteOptions,
+                                                            routingProvider: MapboxRoutingProvider(.offline),
+                                                            credentials: Fixture.credentials,
+                                                            simulating: .never)
+            let routeProgress = RouteProgress(route: route, options: navigationRouteOptions)
+            instructionsCardViewController.routeProgress = routeProgress
+            
+            return (instructionsCardViewController: instructionsCardViewController,
+                    routeProgress: routeProgress,
+                    navigationService: navigationService,
+                    instructionsCardCollectionDelegate: instructionsCardCollectionDelegateMock)
         }()
     }
 
     override func tearDown() {
         super.tearDown()
-        instructionsCardCollectionDataSource = nil
+        
+        dataSource = nil
     }
 
-    func testInstructionsCardCollectionScrollViewWillEndDragging_ShouldScrollToNextItem() {
-        let subject = instructionsCardCollectionDataSource.collection
-        let routeProgress = instructionsCardCollectionDataSource.progress
-        let service = instructionsCardCollectionDataSource.service
-        let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
+    func testShouldScrollToNextItem() {
+        let instructionsCardViewController = dataSource.instructionsCardViewController
+        let routeProgress = dataSource.routeProgress
+        let navigationService = dataSource.navigationService
+        let instructionsCardCollectionDelegate = dataSource.instructionsCardCollectionDelegate
+        guard let instructionCollectionView = instructionsCardViewController.instructionCollectionView else {
+            XCTFail("InstructionCollectionView should be valid.")
+            return
+        }
         
-        let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
-        let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
-        subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
+        guard let intersectionLocation = routeProgress.route.legs.first?.steps.first?.intersections?.first?.location else {
+            XCTFail("Intersection location should be valid.")
+            return
+        }
         
-        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container.instructionsCardView
-        XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
+        let location = CLLocation(latitude: intersectionLocation.latitude,
+                                  longitude: intersectionLocation.longitude)
         
-        let nextCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 1, section: 0)) as! InstructionsCardCell).container.instructionsCardView
-        XCTAssertEqual(nextCard.step!.instructions, "Turn right onto Lincoln Way")
+        instructionsCardViewController.navigationService(navigationService,
+                                                         didUpdate: routeProgress,
+                                                         with: location,
+                                                         rawLocation: location)
         
-        /// Simulation: Scroll to the next card step instructions.
-        let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
-        simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
-        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
-        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
+        let currentIndexPath = IndexPath(row: 0, section: 0)
+        guard let currentInstructionsCardCell = instructionCollectionView.dataSource?.collectionView(instructionCollectionView,
+                                                                                                     cellForItemAt: currentIndexPath) as? InstructionsCardCell else {
+            XCTFail("InstructionsCardCell should be valid.")
+            return
+        }
+        instructionCollectionView.delegate?.collectionView?(instructionCollectionView,
+                                                            willDisplay: currentInstructionsCardCell,
+                                                            forItemAt: currentIndexPath)
+        let currentInstructionsCardView = currentInstructionsCardCell.container.instructionsCardView
+        XCTAssertEqual(currentInstructionsCardView.step?.instructions, "Head north on 6th Avenue")
         
-        /// Validation: Preview step instructions should be equal to next card step instructions
-        XCTAssertTrue(subject.isInPreview)
-        let previewStep = instructionsCardCollectionSpy.step
-        XCTAssertEqual(previewStep!.instructions, nextCard.step!.instructions)
+        let nextIndexPath = IndexPath(row: 1, section: 0)
+        guard let nextInstructionsCardCell = instructionCollectionView.dataSource?.collectionView(instructionCollectionView,
+                                                                                                  cellForItemAt: nextIndexPath) as? InstructionsCardCell else {
+            XCTFail("InstructionsCardCell should be valid.")
+            return
+        }
+        instructionCollectionView.delegate?.collectionView?(instructionCollectionView,
+                                                            willDisplay: nextInstructionsCardCell,
+                                                            forItemAt: nextIndexPath)
+        let nextInstructionsCardView = nextInstructionsCardCell.container.instructionsCardView
+        XCTAssertEqual(nextInstructionsCardView.step?.instructions, "Turn right onto Lincoln Way")
+        
+        // Scroll to the next card step instructions.
+        let contentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
+        contentOffset.pointee = CGPoint(x: 0, y: 50)
+        instructionsCardViewController.scrollViewWillBeginDragging(instructionsCardViewController.instructionCollectionView)
+        instructionsCardViewController.scrollViewWillEndDragging(instructionsCardViewController.instructionCollectionView,
+                                                                 withVelocity: CGPoint(x: 2.0, y: 0.0),
+                                                                 targetContentOffset: contentOffset)
+        
+        // Preview step instructions should be equal to next card step instructions.
+        XCTAssertTrue(instructionsCardViewController.isInPreview)
+        let previewStep = instructionsCardCollectionDelegate.step
+        XCTAssertEqual(previewStep?.instructions, nextInstructionsCardView.step?.instructions)
     }
     
-    func testInstructionsCardCollectionScrollViewWillEndDragging_ShouldScrollToPreviousItem() {
-        let subject = instructionsCardCollectionDataSource.collection
-        let routeProgress = instructionsCardCollectionDataSource.progress
-        let service = instructionsCardCollectionDataSource.service
-        let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
-
-        let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
-        let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
-        subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
-
-        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container.instructionsCardView
-        XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
-
-        let nextCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 1, section: 0)) as! InstructionsCardCell).container.instructionsCardView
-        XCTAssertEqual(nextCard.step!.instructions, "Turn right onto Lincoln Way")
-
-        /// Simulation: Scroll to the previous card step instructions.
-        let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
-        simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
-        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
-        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
-
-        /// Validation: Preview step instructions should be equal to next card step instructions
-        XCTAssertTrue(subject.isInPreview)
-        var previewStep = instructionsCardCollectionSpy.step
-        XCTAssertEqual(previewStep!.instructions, "Turn right onto Lincoln Way")
-
-        /// Validation: Preview step instructions should be equal to first card step instructions
-        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
-        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: -2.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
-        previewStep = instructionsCardCollectionSpy.step
-        XCTAssertEqual(previewStep!.instructions, "Head north on 6th Avenue")
+    func testShouldScrollToPreviousItem() {
+        let instructionsCardViewController = dataSource.instructionsCardViewController
+        let routeProgress = dataSource.routeProgress
+        let navigationService = dataSource.navigationService
+        let instructionsCardCollectionDelegate = dataSource.instructionsCardCollectionDelegate
+        guard let instructionCollectionView = instructionsCardViewController.instructionCollectionView else {
+            XCTFail("InstructionCollectionView should be valid.")
+            return
+        }
+        
+        guard let intersectionLocation = routeProgress.route.legs.first?.steps.first?.intersections?.first?.location else {
+            XCTFail("Intersection location should be valid.")
+            return
+        }
+        
+        let location = CLLocation(latitude: intersectionLocation.latitude,
+                                  longitude: intersectionLocation.longitude)
+        
+        instructionsCardViewController.navigationService(navigationService,
+                                                         didUpdate: routeProgress,
+                                                         with: location,
+                                                         rawLocation: location)
+        
+        let currentIndexPath = IndexPath(row: 0, section: 0)
+        guard let currentInstructionsCardCell = instructionCollectionView.dataSource?.collectionView(instructionCollectionView,
+                                                                                                     cellForItemAt: currentIndexPath) as? InstructionsCardCell else {
+            XCTFail("InstructionsCardCell should be valid.")
+            return
+        }
+        
+        let currentInstructionsCardView = currentInstructionsCardCell.container.instructionsCardView
+        instructionCollectionView.delegate?.collectionView?(instructionCollectionView,
+                                                            willDisplay: currentInstructionsCardCell,
+                                                            forItemAt: currentIndexPath)
+        XCTAssertEqual(currentInstructionsCardView.step?.instructions, "Head north on 6th Avenue")
+        
+        let nextIndexPath = IndexPath(row: 1, section: 0)
+        guard let nextInstructionsCardCell = instructionCollectionView.dataSource?.collectionView(instructionCollectionView,
+                                                                                                  cellForItemAt: nextIndexPath) as? InstructionsCardCell else {
+            XCTFail("InstructionsCardCell should be valid.")
+            return
+        }
+        instructionCollectionView.delegate?.collectionView?(instructionCollectionView,
+                                                            willDisplay: nextInstructionsCardCell,
+                                                            forItemAt: nextIndexPath)
+        let nextInstructionsCardView = nextInstructionsCardCell.container.instructionsCardView
+        XCTAssertEqual(nextInstructionsCardView.step?.instructions, "Turn right onto Lincoln Way")
+        
+        // Scroll to the previous card step instructions.
+        let contentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
+        contentOffset.pointee = CGPoint(x: 0, y: 50)
+        instructionsCardViewController.scrollViewWillBeginDragging(instructionCollectionView)
+        instructionsCardViewController.scrollViewWillEndDragging(instructionCollectionView,
+                                                                 withVelocity: CGPoint(x: 2.0, y: 0.0),
+                                                                 targetContentOffset: contentOffset)
+        
+        // Preview step instructions should be equal to next card step instructions.
+        XCTAssertTrue(instructionsCardViewController.isInPreview)
+        
+        var previewStep = instructionsCardCollectionDelegate.step
+        XCTAssertEqual(previewStep?.instructions, "Turn right onto Lincoln Way")
+        
+        // Preview step instructions should be equal to first card step instructions.
+        instructionsCardViewController.scrollViewWillBeginDragging(instructionCollectionView)
+        instructionsCardViewController.scrollViewWillEndDragging(instructionCollectionView,
+                                                                 withVelocity: CGPoint(x: -2.0, y: 0.0),
+                                                                 targetContentOffset: contentOffset)
+        previewStep = instructionsCardCollectionDelegate.step
+        XCTAssertEqual(previewStep?.instructions, "Head north on 6th Avenue")
     }
     
-    func testInstructionsCardCollectionScrollViewWillEndDragging_ScrollLessThanThresholdShouldNotScroll() {
-        let subject = instructionsCardCollectionDataSource.collection
-        let routeProgress = instructionsCardCollectionDataSource.progress
-        let service = instructionsCardCollectionDataSource.service
-        let instructionsCardCollectionSpy = instructionsCardCollectionDataSource.delegate
-
-        let intersectionLocation = routeProgress.route.legs.first!.steps.first!.intersections!.first!.location
-        let fakeLocation = CLLocation(latitude: intersectionLocation.latitude, longitude: intersectionLocation.longitude)
-        subject.navigationService(service, didUpdate: routeProgress, with: fakeLocation, rawLocation: fakeLocation)
-
-        let activeCard = (subject.instructionCollectionView.dataSource!.collectionView(subject.instructionCollectionView, cellForItemAt: IndexPath(row: 0, section: 0)) as! InstructionsCardCell).container.instructionsCardView
-        XCTAssertEqual(activeCard.step!.instructions, "Head north on 6th Avenue")
-
-        /// Simulation: Attempt to scroll to the next card step instructions.
-        let simulatedTargetContentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
-        simulatedTargetContentOffset.pointee = CGPoint(x: 0, y: 50)
-        subject.scrollViewWillBeginDragging(subject.instructionCollectionView)
-        subject.scrollViewWillEndDragging(subject.instructionCollectionView, withVelocity: CGPoint(x: 0.0, y: 0.0), targetContentOffset: simulatedTargetContentOffset)
-
-        XCTAssertTrue(subject.isInPreview)
-        XCTAssertNotNil(instructionsCardCollectionSpy.step)
+    func testScrollLessThanThresholdShouldNotScroll() {
+        let instructionsCardViewController = dataSource.instructionsCardViewController
+        let routeProgress = dataSource.routeProgress
+        let navigationService = dataSource.navigationService
+        let instructionsCardCollectionDelegate = dataSource.instructionsCardCollectionDelegate
+        guard let instructionCollectionView = instructionsCardViewController.instructionCollectionView else {
+            XCTFail("InstructionCollectionView should be valid.")
+            return
+        }
+        
+        guard let intersectionLocation = routeProgress.route.legs.first?.steps.first?.intersections?.first?.location else {
+            XCTFail("Intersection location should be valid.")
+            return
+        }
+        
+        let location = CLLocation(latitude: intersectionLocation.latitude,
+                                  longitude: intersectionLocation.longitude)
+        
+        instructionsCardViewController.navigationService(navigationService,
+                                                         didUpdate: routeProgress,
+                                                         with: location,
+                                                         rawLocation: location)
+        
+        let indexPath = IndexPath(row: 0, section: 0)
+        guard let instructionsCardCell = instructionCollectionView.dataSource?.collectionView(instructionCollectionView,
+                                                                                              cellForItemAt: indexPath) as? InstructionsCardCell else {
+            XCTFail("InstructionsCardCell should be valid.")
+            return
+        }
+        
+        let instructionsCardView = instructionsCardCell.container.instructionsCardView
+        instructionCollectionView.delegate?.collectionView?(instructionCollectionView,
+                                                            willDisplay: instructionsCardCell,
+                                                            forItemAt: indexPath)
+        XCTAssertEqual(instructionsCardView.step?.instructions, "Head north on 6th Avenue")
+        
+        // Attempt to scroll to the next card step instructions.
+        let contentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
+        contentOffset.pointee = CGPoint(x: 0, y: 50)
+        instructionsCardViewController.scrollViewWillBeginDragging(instructionCollectionView)
+        instructionsCardViewController.scrollViewWillEndDragging(instructionCollectionView,
+                                                                 withVelocity: CGPoint(x: 0.0, y: 0.0),
+                                                                 targetContentOffset: contentOffset)
+        
+        XCTAssertTrue(instructionsCardViewController.isInPreview)
+        XCTAssertNotNil(instructionsCardCollectionDelegate.step)
     }
 }
 
-/// :nodoc:
-class InstructionsCardCollectionDelegateSpy: NSObject, InstructionsCardCollectionDelegate {
+class InstructionsCardCollectionDelegateMock: InstructionsCardCollectionDelegate {
+    
     var step: RouteStep? = nil
     
-    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController, didPreview step: RouteStep) {
+    func instructionsCardCollection(_ instructionsCardCollection: InstructionsCardViewController,
+                                    didPreview step: RouteStep) {
         self.step = step
     }
 }

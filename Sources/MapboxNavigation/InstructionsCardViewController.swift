@@ -128,8 +128,8 @@ open class InstructionsCardViewController: UIViewController {
     public func instructionContainerView(at indexPath: IndexPath) -> InstructionsCardContainerView? {
         guard let cell = instructionCollectionView.cellForItem(at: indexPath),
               cell.subviews.count > 1 else {
-            return nil
-        }
+                  return nil
+              }
         
         return cell.subviews.compactMap({ $0 as? InstructionsCardContainerView }).first
     }
