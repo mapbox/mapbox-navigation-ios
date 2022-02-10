@@ -72,7 +72,7 @@ open class InstructionsCardViewController: UIViewController {
         let cardWidth: Double
         // Regardless of interface orientation on iPad, always fit instruction card width to screen width.
         if traitCollection.verticalSizeClass == .regular && traitCollection.horizontalSizeClass == .regular {
-            cardWidth = UIScreen.main.bounds.width - CGFloat(20.0)
+            cardWidth = UIScreen.main.bounds.width - 20.0
         } else {
             cardWidth = instructionCollectionView.bounds.width
         }
