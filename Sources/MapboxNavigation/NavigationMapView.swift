@@ -549,7 +549,7 @@ open class NavigationMapView: UIView {
                     }
                 }
                 
-                try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: layerPosition)
+                try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
             } catch {
                 NSLog("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).")
             }
@@ -636,7 +636,7 @@ open class NavigationMapView: UIView {
                     }
                 }
                 
-                try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: layerPosition)
+                try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
             } catch {
                 NSLog("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).")
             }
@@ -692,7 +692,7 @@ open class NavigationMapView: UIView {
                 if let parentLayerIndentifier = parentLayerIndentifier {
                     layerPosition = .below(parentLayerIndentifier)
                 }
-                try mapView.mapboxMap.style.addLayer(lineLayer, layerPosition: layerPosition)
+                try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
             } catch {
                 NSLog("Failed to add route casing layer \(layerIdentifier) with error: \(error.localizedDescription).")
             }
@@ -1077,10 +1077,10 @@ open class NavigationMapView: UIView {
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
                     
                     if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
-                        try mapView.mapboxMap.style.addLayer(circlesLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
+                        try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                     } else {
                         let layerIdentifier = route.identifier(.route(isMainRoute: true))
-                        try mapView.mapboxMap.style.addLayer(circlesLayer, layerPosition: .above(layerIdentifier))
+                        try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: .above(layerIdentifier))
                     }
                     
                     let waypointSymbolLayerIdentifier = NavigationMapView.LayerIdentifier.waypointSymbolLayer
@@ -1088,7 +1088,7 @@ open class NavigationMapView: UIView {
                                                                    waypointSymbolLayerWithIdentifier: waypointSymbolLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointSymbolLayer()
                     
-                    try mapView.mapboxMap.style.addLayer(symbolsLayer, layerPosition: .above(circlesLayer.id))
+                    try mapView.mapboxMap.style.addPersistentLayer(symbolsLayer, layerPosition: .above(circlesLayer.id))
                 }
             } catch {
                 NSLog("Failed to perform operation while adding waypoint with error: \(error.localizedDescription).")
@@ -1253,7 +1253,7 @@ open class NavigationMapView: UIView {
         shapeLayer.iconOffset = .expression(offsetExpression)
         shapeLayer.textOffset = .expression(offsetExpression)
         
-        try style.addLayer(shapeLayer)
+        try style.addPersistentLayer(shapeLayer)
     }
     
     /**
