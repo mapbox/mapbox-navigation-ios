@@ -31,11 +31,7 @@ class NativeHandlersFactoryTests: TestCase {
     }
     
     func testDefaultCustomConfig() {
-        let expectedCustomConfig: [String: Any] = [
-            "features": [
-                "historyAutorecording": true
-            ]
-        ]
+        let expectedCustomConfig: [String: Any] = [:]
         _ = handlersFactory.configHandle
         let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
         XCTAssertTrue(config == expectedCustomConfig)
@@ -49,7 +45,6 @@ class NativeHandlersFactoryTests: TestCase {
         ], forKey: customConfigKey)
         let expectedCustomConfig = [
             "features": [
-                "historyAutorecording": true,
                 "custom_feature_key": "custom_feature_value"
             ]
         ]
