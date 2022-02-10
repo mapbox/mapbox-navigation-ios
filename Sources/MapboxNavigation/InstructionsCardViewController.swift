@@ -69,7 +69,7 @@ open class InstructionsCardViewController: UIViewController {
     fileprivate let direction: UICollectionView.ScrollPosition = UIApplication.shared.userInterfaceLayoutDirection == .leftToRight ? .left : .right
     
     var cardSize: CGSize {
-        let cardWidth: Double
+        let cardWidth: CGFloat
         // Regardless of interface orientation on iPad, always fit instruction card width to screen width.
         if traitCollection.verticalSizeClass == .regular && traitCollection.horizontalSizeClass == .regular {
             cardWidth = UIScreen.main.bounds.width - 20.0
