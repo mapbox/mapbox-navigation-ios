@@ -40,7 +40,22 @@ extension ViewController: InstructionsCardContainerViewDelegate {
     public func primaryLabel(_ primaryLabel: InstructionLabel,
                              willPresent instruction: VisualInstruction,
                              as presented: NSAttributedString) -> NSAttributedString? {
-        // Override to customize the primary label displayed on the visible instructions card.
-        return nil
+        let updatedPrimaryLabel = NSMutableAttributedString(attributedString: presented)
+        updatedPrimaryLabel.addAttribute(.backgroundColor,
+                                         value: UIColor.blue,
+                                         range: NSMakeRange(0, presented.length))
+        
+        return updatedPrimaryLabel
+    }
+    
+    public func secondaryLabel(_ secondaryLabel: InstructionLabel,
+                               willPresent instruction: VisualInstruction,
+                               as presented: NSAttributedString) -> NSAttributedString? {
+        let updatedSecondaryLabel = NSMutableAttributedString(attributedString: presented)
+        updatedSecondaryLabel.addAttribute(.backgroundColor,
+                                           value: UIColor.red,
+                                           range: NSMakeRange(0, presented.length))
+        
+        return updatedSecondaryLabel
     }
 }

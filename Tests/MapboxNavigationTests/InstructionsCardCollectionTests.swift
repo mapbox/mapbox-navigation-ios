@@ -102,6 +102,7 @@ class InstructionsCardViewControllerTests: TestCase {
                                                             forItemAt: currentIndexPath)
         let currentInstructionsCardView = currentInstructionsCardCell.container.instructionsCardView
         XCTAssertEqual(currentInstructionsCardView.step?.instructions, "Head north on 6th Avenue")
+        XCTAssertFalse(instructionsCardViewController.isInPreview, "InstructionsCardViewController should not be in preview.")
         
         let nextIndexPath = IndexPath(row: 1, section: 0)
         guard let nextInstructionsCardCell = instructionCollectionView.dataSource?.collectionView(instructionCollectionView,
@@ -164,6 +165,7 @@ class InstructionsCardViewControllerTests: TestCase {
                                                             willDisplay: currentInstructionsCardCell,
                                                             forItemAt: currentIndexPath)
         XCTAssertEqual(currentInstructionsCardView.step?.instructions, "Head north on 6th Avenue")
+        XCTAssertFalse(instructionsCardViewController.isInPreview, "InstructionsCardViewController should not be in preview.")
         
         let nextIndexPath = IndexPath(row: 1, section: 0)
         guard let nextInstructionsCardCell = instructionCollectionView.dataSource?.collectionView(instructionCollectionView,
@@ -235,6 +237,7 @@ class InstructionsCardViewControllerTests: TestCase {
                                                             willDisplay: instructionsCardCell,
                                                             forItemAt: indexPath)
         XCTAssertEqual(instructionsCardView.step?.instructions, "Head north on 6th Avenue")
+        XCTAssertFalse(instructionsCardViewController.isInPreview, "InstructionsCardViewController should not be in preview.")
         
         // Attempt to scroll to the next card step instructions.
         let contentOffset = UnsafeMutablePointer<CGPoint>.allocate(capacity: 1)
