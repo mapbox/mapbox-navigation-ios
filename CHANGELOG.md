@@ -6,6 +6,7 @@
 
 * Fixed route line blinking when a route is refreshed. ([#3647](https://github.com/mapbox/mapbox-navigation-ios/pull/3647))
 * Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
+* Instruction cards now have flat appearance. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
 * Renamed the `NextBannerView.update(for:)`, `NextBannerView.show()` and `NextBannerView.hide()` methods to `NextBannerView.update(for:animated:duration:completion:)`, `NextBannerView.show(animated:duration:completion:)`, `NextBannerView.hide(animated:duration:completion:)`, respectively. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
 * Renamed the `LanesView.update(for:)`, `LanesView.show()` and `LanesView.hide()` methods to `LanesView.update(for:animated:duration:completion:)`, `LanesView.show(animated:duration:completion:)`, `LanesView.hide(animated:duration:completion:)`, respectively. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
 * Added the `InstructionsCardContainerView.separatorColor` and `InstructionsCardContainerView.highlightedSeparatorColor` to be able to change instruction card's separator colors. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))

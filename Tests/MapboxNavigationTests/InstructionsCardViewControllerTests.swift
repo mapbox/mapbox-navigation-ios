@@ -33,9 +33,9 @@ class InstructionsCardViewControllerTests: TestCase {
             
             embed(parent: hostViewController,
                   child: instructionsCardViewController,
-                  in: containerView) { (parent, guidanceCard) -> [NSLayoutConstraint] in
-                guidanceCard.view.translatesAutoresizingMaskIntoConstraints = false
-                return guidanceCard.view.constraintsForPinning(to: containerView)
+                  in: containerView) { (parent, instructionsCard) -> [NSLayoutConstraint] in
+                instructionsCard.view.translatesAutoresizingMaskIntoConstraints = false
+                return instructionsCard.view.constraintsForPinning(to: containerView)
             }
             
             let navigationRouteOptions = NavigationRouteOptions(coordinates: [
