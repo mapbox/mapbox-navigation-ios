@@ -29,7 +29,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     /**
      Color of the separator between `InstructionsCardView` or `LanesView`/`NextBannerView`.
      */
-    @objc dynamic public var customSeparatorColor: UIColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
+    @objc dynamic public var separatorColor: UIColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
     
     /**
      Color of the separator between `InstructionsCardView` or `LanesView`/`NextBannerView` that will
@@ -166,7 +166,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         let backgroundColor: UIColor
         switch state {
         case .unhighlighted:
-            borderColor = customSeparatorColor
+            borderColor = separatorColor
             backgroundColor = customBackgroundColor
         case .highighted:
             borderColor = highlightedSeparatorColor
@@ -186,7 +186,7 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         case .unhighlighted:
             shouldUseHighlightedColors = false
             backgroundColor = customBackgroundColor
-            separatorColor = customSeparatorColor
+            separatorColor = self.separatorColor
         case .highighted:
             shouldUseHighlightedColors = true
             backgroundColor = highlightedBackgroundColor
