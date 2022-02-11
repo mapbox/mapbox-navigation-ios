@@ -34,7 +34,6 @@ extension UIColor {
     class var alternativeTrafficModerate: UIColor { get { return #colorLiteral(red: 0.75, green: 0.63, blue: 0.53, alpha: 1.0) } }
     class var alternativeTrafficHeavy: UIColor { get { return #colorLiteral(red: 0.71, green: 0.51, blue: 0.51, alpha: 1.0) } }
     class var alternativeTrafficSevere: UIColor { get { return #colorLiteral(red: 0.71, green: 0.51, blue: 0.51, alpha: 1.0) } }
-    class var defaultBuildingColor: UIColor { get { return #colorLiteral(red: 0.9833194452, green: 0.9843137255, blue: 0.9331936657, alpha: 0.8019049658) } }
     class var defaultBuildingHighlightColor: UIColor { get { return #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 0.949406036) } }
     
     class var defaultRouteRestrictedAreaColor: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)} }
@@ -222,7 +221,6 @@ open class DayStyle: Style {
         NavigationMapView.appearance().alternativeTrafficModerateColor = .alternativeTrafficModerate
         NavigationMapView.appearance().alternativeTrafficSevereColor = .alternativeTrafficSevere
         NavigationMapView.appearance().alternativeTrafficUnknownColor = .alternativeTrafficUnknown
-        NavigationMapView.appearance().buildingDefaultColor = .defaultBuildingColor
         NavigationMapView.appearance().buildingHighlightColor = .defaultBuildingHighlightColor
         NavigationMapView.appearance().routeDurationAnnotationColor = .routeDurationAnnotationColor
         NavigationMapView.appearance().routeDurationAnnotationSelectedColor = .selectedRouteDurationAnnotationColor

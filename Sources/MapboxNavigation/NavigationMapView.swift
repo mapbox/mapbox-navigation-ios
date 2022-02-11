@@ -711,7 +711,13 @@ open class NavigationMapView: UIView {
     
     // MARK: Building Extrusion Highlighting
     
-    @objc dynamic public var buildingDefaultColor: UIColor = .defaultBuildingColor
+    @available(*, deprecated, message: "NavigationMapView.buildingDefaultColor is no longer used.")
+    @objc dynamic public var buildingDefaultColor: UIColor = .clear
+    
+    /**
+     Color of the building, which is highlighted by calling
+     `NavigationMapView.highlightBuildings(at:in3D:completion:)`.
+     */
     @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
     
     // MARK: User Tracking Features

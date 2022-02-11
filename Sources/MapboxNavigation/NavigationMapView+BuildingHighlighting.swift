@@ -132,4 +132,19 @@ extension NavigationMapView {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
         }
     }
+    
+    func updateBuildingsLayerIfPresent() {
+        let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
+        
+        guard mapView.mapboxMap.style.layerExists(withId: identifier) else { return }
+        
+        do {
+            try mapView.mapboxMap.style.updateLayer(withId: identifier,
+                                                    type: FillExtrusionLayer.self) { buildingExtrusionLayer in
+                buildingExtrusionLayer.fillExtrusionColor = .constant(.init(buildingHighlightColor))
+            }
+        } catch {
+            NSLog("Failed to update building extrusion layer color with error: \(error.localizedDescription).")
+        }
+    }
 }
