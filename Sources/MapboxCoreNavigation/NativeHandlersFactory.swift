@@ -93,15 +93,7 @@ class NativeHandlersFactory {
     }()
     
     lazy var configHandle: ConfigHandle = {
-        let historyAutorecordingConfig = [
-            customConfigFeaturesKey: [
-                "historyAutorecording": true
-            ]
-        ]
-        
-        var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]
-        customConfig.deepMerge(with: historyAutorecordingConfig, uniquingKeysWith: { first, _ in first })
-        
+        let customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]        
         let customConfigJSON: String
         if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: customConfig, options: []),
            let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {

@@ -105,14 +105,17 @@ class NavigationServiceTests: TestCase {
         // Create list of 3 coordinates which are located on actual route
         let coordinatesOnRoute = route.shape!.coordinates.prefix(3)
         let now = Date()
-        let locationsOnRoute = coordinatesOnRoute.enumerated().map {
-            CLLocation(coordinate: $0.element,
-                       altitude: -1,
-                       horizontalAccuracy: 10,
-                       verticalAccuracy: -1,
-                       course: -1,
-                       speed: 10,
-                       timestamp: now + $0.offset)
+        let locationsOnRoute = coordinatesOnRoute.enumerated().map { tuple -> CLLocation in
+            // NavNative can filter locations if the distance diff looks too big for the current speed and time diff
+            // so we use a big time delta here
+            let timestamp = now + 100 * tuple.offset
+            return CLLocation(coordinate: tuple.element,
+                              altitude: -1,
+                              horizontalAccuracy: 10,
+                              verticalAccuracy: -1,
+                              course: -1,
+                              speed: 10,
+                              timestamp: timestamp)
         }
         
         // Iterate over each location on the route and simulate location update
@@ -124,32 +127,29 @@ class NavigationServiceTests: TestCase {
             // Verify whether current location is located on the route
             XCTAssertTrue(navigation.router.userIsOnRoute($0), "User should be on the route")
         }
-        
-        // Create list of 3 coordinates: all coordinates have distance component slightly changed, which means that they're off the route
-        let coordinatesOffRoute: [CLLocationCoordinate2D] = (0...2).map { _ in locationsOnRoute.first!.coordinate.coordinate(at: 100, facing: 90) }
+
+        // Create list of 3 coordinates: all coordinates have distance component slightly changed,
+        // which means that they're off the route
+        let coordinatesOffRoute: [CLLocationCoordinate2D] = (1...3).map {
+            locationsOnRoute.last!.coordinate.coordinate(at: LocationDistance($0 * 100), facing: 90)
+        }
         let locationsOffRoute = coordinatesOffRoute.enumerated().map {
             CLLocation(coordinate: $0.element,
                        altitude: -1,
                        horizontalAccuracy: 10,
                        verticalAccuracy: -1,
                        course: -1,
-                       speed: 10,
-                       timestamp: now + locationsOnRoute.count + $0.offset)
+                       speed: 50,
+                       timestamp: now + 100 * (locationsOnRoute.count + $0.offset))
         }
         
-        // Iterate over the list of locations which are off the route and verify whether all locations except first one are off the route.
-        // Even though first location is off the route as per navigation native logic it sometimes can return tracking route state
-        // even if location is visually off-route.
+        // Iterate over the list of locations which are off the route and verify whether they all are off the route
         locationsOffRoute.enumerated().forEach {
             navigation.router.locationManager!(navigation.locationManager, didUpdateLocations: [$0.element])
             
             waitForNavNativeCallbacks()
-            
-            if ($0.offset == 0) {
-                XCTAssertTrue(navigation.router.userIsOnRoute($0.element), "For the first coordinate user is still on the route")
-            } else {
-                XCTAssertFalse(navigation.router.userIsOnRoute($0.element), "User should be off route")
-            }
+
+            XCTAssertFalse(navigation.router.userIsOnRoute($0.element), "User should be off route")
         }
     }
 

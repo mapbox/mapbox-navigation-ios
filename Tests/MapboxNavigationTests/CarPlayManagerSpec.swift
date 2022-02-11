@@ -173,7 +173,7 @@ class CarPlayManagerSpec: QuickSpec {
                 }
             }
         }
-        
+#if arch(x86_64) && canImport(Darwin)
         describe("Starting an invalid trip.") {
             context("Precondition should be triggered if CPRouteChoice is invalid.") {
                 let routeChoice = createInvalidRouteChoice()
@@ -185,6 +185,7 @@ class CarPlayManagerSpec: QuickSpec {
                 }.to(throwAssertion())
             }
         }
+#endif
     }
     
     private class CustomTripPreviewDelegate: CarPlayManagerDelegate {
