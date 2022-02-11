@@ -5,7 +5,7 @@ import MapboxDirections
 
 class SpriteRepository {
     let imageCache: BimodalImageCache
-    let metadataCache =  SpriteMetaDataCache()
+    let infoCache =  SpriteInfoCache()
     var styleURI: StyleURI = .navigationDay
     var baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
     
@@ -26,22 +26,23 @@ class SpriteRepository {
     func updateRepository(styleURI: StyleURI? = nil, shield: VisualInstruction.Component.ShieldRepresentation? = nil, completion: @escaping CompletionHandler) {
         let baseURL = shield?.baseURL ?? self.baseURL
         let styleURI = styleURI ?? self.styleURI
+        resetCache()
         
         guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
               let spriteRequestURL = spriteURL(isImage: true, baseURL: baseURL, styleID: styleID),
-              let metadataRequestURL = spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) else {
+              let infoRequestURL = spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) else {
                   return
               }
 
         let dispatchGroup = DispatchGroup()
         
         dispatchGroup.enter()
-        downloadMetadata(metadataRequestURL) { (_) in
+        downloadInfo(infoRequestURL) { (_) in
             dispatchGroup.leave()
         }
         
         dispatchGroup.enter()
-        downLoadSprite(spriteRequestURL) { (_) in
+        downloadSprite(spriteRequestURL) { (_) in
             dispatchGroup.leave()
         }
         
@@ -56,17 +57,15 @@ class SpriteRepository {
         guard var urlComponent = URLComponents(url: baseURL, resolvingAgainstBaseURL: false),
               let accessToken = NavigationSettings.shared.directions.credentials.accessToken else { return nil }
         
-        let requestTyep = isImage ? "/sprite@2x.png" : "/sprite@2x"
+        let requestType = isImage ? "/sprite@2x.png" : "/sprite@2x"
         urlComponent.path += styleID
-        urlComponent.path += requestTyep
+        urlComponent.path += requestType
         urlComponent.queryItems = [URLQueryItem(name: "access_token", value: accessToken)]
         return urlComponent.url
     }
     
-    func downloadMetadata(_ metadataURL: URL, completion: @escaping (Data?) -> Void) {
-        metadataCache.clearMemory()
-        
-        let _ = imageDownloader.downloadImage(with: metadataURL, completion: { [weak self] (_, data, error)  in
+    func downloadInfo(_ infoURL: URL, completion: @escaping (Data?) -> Void) {
+        let _ = imageDownloader.downloadImage(with: infoURL, completion: { [weak self] (_, data, error)  in
             guard let strongSelf = self, let data = data else {
                 completion(nil)
                 return
@@ -77,14 +76,12 @@ class SpriteRepository {
                 return
             }
 
-            strongSelf.metadataCache.store(data)
+            strongSelf.infoCache.store(data)
             completion(data)
         })
     }
     
-    func downLoadSprite(_ spriteURL: URL, completion: @escaping (UIImage?) -> Void) {
-        imageCache.clearMemory()
-        
+    func downloadSprite(_ spriteURL: URL, completion: @escaping (UIImage?) -> Void) {
         let _ = imageDownloader.downloadImage(with: spriteURL, completion: { [weak self] (image, data, error) in
             guard let strongSelf = self, let image = image else {
                 completion(nil)
@@ -104,12 +101,12 @@ class SpriteRepository {
     
     func getShield(displayRef: String, name: String) -> UIImage? {
         let iconLeght = (displayRef.count < 2 ) ? 2 : displayRef.count
-        let metadataName = name + "-\(iconLeght)"
+        let infoName = name + "-\(iconLeght)"
         
         guard let spriteImage = imageCache.image(forKey: "Sprite"),
-              let spriteMetaData = metadataCache.spriteMetaData(forKey: metadataName) else { return nil }
+              let spriteInfo = infoCache.spriteInfo(forKey: infoName) else { return nil }
         
-        let shieldRect = CGRect(x: spriteMetaData.x, y: spriteMetaData.y, width: spriteMetaData.width, height: spriteMetaData.height)
+        let shieldRect = CGRect(x: spriteInfo.x, y: spriteInfo.y, width: spriteInfo.width, height: spriteInfo.height)
         if let croppedCGIImage = spriteImage.cgImage?.cropping(to: shieldRect) {
             return UIImage(cgImage: croppedCGIImage)
         }
@@ -141,7 +138,7 @@ class SpriteRepository {
     
     func resetCache() {
         imageCache.clearMemory()
-        metadataCache.clearMemory()
+        infoCache.clearMemory()
     }
 
 }
