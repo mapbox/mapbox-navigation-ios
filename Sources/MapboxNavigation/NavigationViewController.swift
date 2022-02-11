@@ -330,6 +330,9 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     deinit {
         navigationService?.stop()
+        if let navigationMapView = navigationMapView {
+            router.alternativesStore?.removeObserver(navigationMapView)
+        }
     }
     
     open override func loadView() {
@@ -352,6 +355,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         setupNavigationService()
         setupVoiceController()
         setupNavigationCamera()
+        
+        if let navigationMapView = navigationMapView {
+            router.alternativesStore?.addObserver(navigationMapView)
+        }
     }
     
     open override func viewWillAppear(_ animated: Bool) {

@@ -111,6 +111,7 @@ class Navigator {
         rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
         
         subscribeNavigator()
+        setupAlternativesControllerIfNeeded()
     }
 
     /**
@@ -141,11 +142,25 @@ class Navigator {
         rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
         
         subscribeNavigator()
+        setupAlternativesControllerIfNeeded()
     }
     
     private weak var navigatorStatusObserver: NavigatorStatusObserver?
     private weak var navigatorFallbackVersionsObserver: NavigatorFallbackVersionsObserver?
     private weak var navigatorElectronicHorizonObserver: NavigatorElectronicHorizonObserver?
+    private weak var navigatorAlternativesObserver: NavigatorRouteAlternativesObserver?
+    
+    private func setupAlternativesControllerIfNeeded() {
+        guard NavigationSettings.shared.alternativeRoutesOptions.enabled else { return }
+        
+        let controller = navigator.getRouteAlternativesController()
+        controller.enableOnEmptyAlternativesRequest(forEnable: NavigationSettings.shared.alternativeRoutesOptions.refreshWhenNoAvailableAlternatives)
+        controller.enableRequestAfterFork(forEnable: NavigationSettings.shared.alternativeRoutesOptions.refreshAfterAlternativeFork)
+        
+        let options = RouteAlternativesOptions(requestIntervalSeconds: NavigationSettings.shared.alternativeRoutesOptions.refreshInterval,
+                                               minTimeBeforeManeuverSeconds: rerouteController.initialManeuverAvoidanceRadius)
+        controller.setRouteAlternativesOptionsFor(options)
+    }
     
     private func subscribeNavigator() {
         if isSubscribedToElectronicHorizon {
@@ -159,6 +174,13 @@ class Navigator {
         let versionsObserver = NavigatorFallbackVersionsObserver()
         navigatorFallbackVersionsObserver = versionsObserver
         navigator.setFallbackVersionsObserverFor(versionsObserver)
+        
+        if NavigationSettings.shared.alternativeRoutesOptions.enabled {
+            let alternativesObserver = NavigatorRouteAlternativesObserver()
+            navigatorAlternativesObserver = alternativesObserver
+            navigator.getRouteAlternativesController().addObserver(for: alternativesObserver)
+        }
+        
     }
     
     private func unsubscribeNavigator() {
@@ -168,6 +190,10 @@ class Navigator {
         }
         
         navigator.setFallbackVersionsObserverFor(nil)
+        
+        if let navigatorAlternativesObserver = navigatorAlternativesObserver {
+            navigator.getRouteAlternativesController().removeObserver(for: navigatorAlternativesObserver)
+        }
     }
     
     // MARK: History
@@ -349,6 +375,66 @@ class NavigatorStatusObserver: NavigatorObserver {
         NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
         
         mostRecentNavigationStatus = status
+    }
+}
+
+class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
+    
+    func onRouteAlternativesChanged(for routeAlternatives: [RouteAlternative], removed: [RouteAlternative]) -> [NSNumber] {
+        print(">>> \(#function)")
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .alternativesListKey: routeAlternatives,
+            .removedAlternativesKey: removed,
+        ]
+        NotificationCenter.default.post(name: .navigatorDidChangeAlternativeRoutes, object: nil, userInfo: userInfo)
+        return []
+    }
+    
+    public func onError(forMessage message: String) {
+        print(">>> \(#function)")
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .messageKey: message,
+        ]
+        NotificationCenter.default.post(name: .navigatorFailToChangeAlternativeRoutes, object: nil, userInfo: userInfo)
+    }
+}
+
+extension Navigator {
+    
+    static internal func decode(routeRequest: String, routeResponse: String) -> (routeOptions: RouteOptions, routeResponse: RouteResponse)? {
+        guard let decodedRequest = decode(routeRequest: routeRequest),
+              let decodedResponse = decode(routeResponse: routeResponse,
+                                           routeOptions: decodedRequest.routeOptions,
+                                           credentials: decodedRequest.credentials) else {
+            return nil
+        }
+        
+        return (decodedRequest.routeOptions, decodedResponse)
+    }
+    
+    static internal func decode(routeRequest: String) -> (routeOptions: RouteOptions, credentials: Credentials)? {
+        print(">>> \(#function)")
+        guard let requestURL = URL(string: routeRequest),
+              let credentials = Credentials(requestURL: requestURL) else {
+                  return nil
+        }
+        return (RouteOptions(url: requestURL), credentials)
+    }
+    
+    static internal func decode(routeResponse: String,
+                                routeOptions: RouteOptions,
+                                credentials: Credentials) -> RouteResponse? {
+        print(">>> \(#function)")
+        guard let data = routeResponse.data(using: .utf8) else {
+            return nil
+        }
+        
+        let decoder = JSONDecoder()
+        decoder.userInfo[.options] = routeOptions
+        decoder.userInfo[.credentials] = credentials
+        
+        return try? decoder.decode(RouteResponse.self,
+                                   from: data)
     }
 }
 

@@ -119,7 +119,8 @@ class NativeHandlersFactory {
         let historyAutorecordingConfig = [
             customConfigFeaturesKey: [
                 "useInternalReroute": true
-            ]
+            ],
+            "navigation": [ "alternativeRoutes": [ "traveledDistanceBeforeRemove": 10 ] ]
         ]
         
         var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]

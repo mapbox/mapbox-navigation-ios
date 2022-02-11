@@ -181,6 +181,8 @@ public protocol Router: CLLocationManagerDelegate {
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
                      completion: ((Bool) -> Void)?)
+    
+    var alternativesStore: NavigatorAlternativesStore? { get }
 }
 
 protocol InternalRouter: AnyObject {

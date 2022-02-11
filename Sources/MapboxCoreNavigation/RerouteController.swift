@@ -108,7 +108,14 @@ extension RerouteController: RerouteObserver {
                                routeResponse: String,
                                routeRequest: String,
                                origin: RouterOrigin) {
-        // to be filled with Continuous Alternatives implementation
+        print(">>> \(#function)")
+        guard let decoded = Navigator.decode(routeRequest: routeRequest, routeResponse: routeResponse) else {
+            return
+        }
+        
+        delegate?.rerouteControllerWantsSwitchToAlternative(self,
+                                                            response: decoded.routeResponse,
+                                                            options: decoded.routeOptions)
     }
     
     func onRerouteDetected(forRouteRequest routeRequest: String) {
@@ -122,7 +129,7 @@ extension RerouteController: RerouteObserver {
     func onRerouteReceived(forRouteResponse routeResponse: String, routeRequest: String, origin: RouterOrigin) {
         guard reroutesProactively else { return }
         
-        guard let decodedRequest = decode(routeRequest: routeRequest) else {
+        guard let decodedRequest = Navigator.decode(routeRequest: routeRequest) else {
             delegate?.rerouteControllerDidFailToReroute(self, with: ReroutingError.decodingError)
             return
         }
@@ -133,9 +140,9 @@ extension RerouteController: RerouteObserver {
                                                          response: recentRouteResponse.response,
                                                          options: recentRouteResponse.options)
         } else {
-            guard let decodedResponse = decode(routeResponse: routeResponse,
-                                               routeOptions: decodedRequest.routeOptions,
-                                               credentials: decodedRequest.credentials) else {
+            guard let decodedResponse = Navigator.decode(routeResponse: routeResponse,
+                                                         routeOptions: decodedRequest.routeOptions,
+                                                         credentials: decodedRequest.credentials) else {
                 delegate?.rerouteControllerDidFailToReroute(self, with: ReroutingError.decodingError)
                 return
             }

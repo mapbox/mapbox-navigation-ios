@@ -524,6 +524,15 @@ public extension Notification.Name {
     internal static let navigationStatusDidChange: Notification.Name = .init(rawValue: "NavigationStatusDidChange")
 }
 
+public extension Notification.Name {
+    
+    // MARK: Handling Alternative Routes
+    
+    internal static let navigatorDidChangeAlternativeRoutes: Notification.Name = .init(rawValue: "NavigatorDidChangeAlternativeRoutes")
+    
+    internal static let navigatorFailToChangeAlternativeRoutes: Notification.Name = .init(rawValue: "NavigatorFailToChangeAlternativeRoutes")
+}
+
 extension Navigator {
     /**
      Keys in the user info dictionaries of various notifications posted by instances of `Navigator`.
@@ -546,5 +555,11 @@ extension Navigator {
         static let originKey: NotificationUserInfoKey = .init(rawValue: "origin")
         
         static let statusKey: NotificationUserInfoKey = .init(rawValue: "status")
+        
+        static let alternativesListKey: NotificationUserInfoKey = .init(rawValue: "alternativesList")
+        
+        static let removedAlternativesKey: NotificationUserInfoKey = .init(rawValue: "removedAlternatives")
+        
+        static let messageKey: NotificationUserInfoKey = .init(rawValue: "message")
     }
 }

@@ -225,7 +225,9 @@ extension NavigationMapView {
         let mainRouteCasingLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor)
         setLayerLineGradient(for: mainRouteCasingLayerIdentifier, exp: mainRouteCasingLayerGradientExpression)
         
-        if showsRestrictedAreasOnRoute {
+        if showsRestrictedAreasOnRoute,
+           let currentRestrictedAreasStops = navigationRouteLines.routeLine(for: route)?.routeLineRestrictedAreasGradientStops
+        {
             let restrictedAreaLayerGradient = updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentRestrictedAreasStops, baseColor: routeRestrictedAreaColor)
             let restrictedAreaLayerGradientExpression = Expression.routeLineGradientExpression(restrictedAreaLayerGradient, lineBaseColor: traversedRouteColor)
             setLayerLineGradient(for: restrictedAreaLayerIdentifier, exp: restrictedAreaLayerGradientExpression)
@@ -397,6 +399,16 @@ extension NavigationMapView {
                                                     return self.routeCasingColor
                                                 })
         return routeLineFeaturesGradient(congestionFeatures, lineSettings: lineSettings)
+    }
+    
+    func alternativeRouteLineGradient(_ fractionTraveled: Double, baseColor: UIColor) -> [Double: UIColor] {
+        var gradient = [0.0: .defaultTraversedRouteColor,
+                        1.0: baseColor]
+        if fractionTraveled != 0.0 && fractionTraveled != 1.0 {
+            gradient[fractionTraveled] = baseColor
+        }
+        
+        return gradient
     }
     
     /**

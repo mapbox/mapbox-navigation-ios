@@ -4,6 +4,53 @@ import MapboxCoreMaps
 import MapboxDirections
 import MapboxCoreNavigation
 import Turf
+import SwiftUI
+
+// when to create/update gradient stops:
+// set Routes
+// set Alternatives
+// enable TrackRouteProgress
+// enable ShowRestrictedAreas
+// enabled TrackRouteProgress + did travel along route
+
+// when to apply (add) Layers:
+// set Routes
+// set Alternatives
+// enable ShowRestrictedAreas
+
+class NavigationRouteLine {
+    let route: Route
+    let isMain: Bool
+    var routeLineGradientStops: NavigationMapView.RouteLineGradientStops?
+    var routeLineCasingGradientStops: NavigationMapView.RouteLineGradientStops?
+    var routeLineRestrictedAreasGradientStops: NavigationMapView.RouteLineGradientStops?
+    
+    init(_ route: Route,
+         isMain: Bool = false,
+         routeLineExpression: NavigationMapView.RouteLineGradientStops? = nil,
+         routeLineCasingExpression: NavigationMapView.RouteLineGradientStops? = nil,
+         routeLineRestrictedAreasExpression: NavigationMapView.RouteLineGradientStops? = nil) {
+        self.route = route
+        self.isMain = isMain
+        self.routeLineGradientStops = routeLineExpression
+        self.routeLineCasingGradientStops = routeLineCasingExpression
+        self.routeLineRestrictedAreasGradientStops = routeLineRestrictedAreasExpression
+    }
+}
+
+class NavigationRouteLinesMap {
+    var storage: [UnsafeMutableRawPointer: NavigationRouteLine] = [:]
+    
+    func routeLine(for route: Route) -> NavigationRouteLine? {
+        return storage[Unmanaged.passUnretained(route).toOpaque()]
+    }
+    func setRouteLine(for route: Route, routeLine: NavigationRouteLine) {
+        storage[Unmanaged.passUnretained(route).toOpaque()] = routeLine
+    }
+    func removeRouteLine(for route: Route) {
+        storage.removeValue(forKey: Unmanaged.passUnretained(route).toOpaque())
+    }
+}
 
 /**
  `NavigationMapView` is a subclass of `UIView`, which draws `MapView` on its surface and provides
@@ -41,11 +88,31 @@ open class NavigationMapView: UIView {
      */
     public var showsRestrictedAreasOnRoute: Bool = false {
         didSet {
-            updateRestrictedAreasGradientStops(along: self.routes?.first)
+            updateRestrictedAreasGradientStops()
+            updateAlternativesRestrictedAreasGradientStops()
             if let routes = self.routes {
                 if routeLineTracksTraversal {
-                    if showsRestrictedAreasOnRoute, let route = routes.first {
-                        addRouteRestrictedAreaLayer(route, above: route.identifier(.route(isMainRoute: true)))
+                    if showsRestrictedAreasOnRoute,
+                       let route = routes.first,
+                       let currentRestrictedAreasStops = navigationRouteLines.routeLine(for: route)?.routeLineRestrictedAreasGradientStops {
+                        addRouteRestrictedAreaLayer(route,
+                                                    fractionTraveled: fractionTraveled,
+                                                    routeLineGradientStops: currentRestrictedAreasStops,
+                                                    above: route.identifier(.route(isMainRoute: true)))
+                        
+                        alternativeRoutes?.forEach { routeAlternative in
+                            guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
+                                return
+                            }
+                            
+                            let offSet = (route.distance - routeAlternative.statsFromFork.distance) / route.distance
+                            if let gradientStops = navigationRouteLines.routeLine(for: route)?.routeLineRestrictedAreasGradientStops {
+                                addRouteRestrictedAreaLayer(route,
+                                                            fractionTraveled: offSet,
+                                                            routeLineGradientStops: gradientStops,
+                                                            above: route.identifier(.route(isMainRoute: false)))
+                            }
+                        }
                     } else {
                         removeRestrictedRouteArea()
                     }
@@ -114,8 +181,11 @@ open class NavigationMapView: UIView {
      */
     var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
     
-    var currentLineGradientStops = [Double: UIColor]()
-    var currentRestrictedAreasStops = [Double: UIColor]()
+    var navigationRouteLines = NavigationRouteLinesMap()
+    
+    typealias RouteLineGradientStops = [Double: UIColor]
+    
+    var currentLineGradientStops = RouteLineGradientStops()
     var routeLineTracksTraversal: Bool = false {
         didSet {
             if routeLineTracksTraversal, let route = self.routes?.first {
@@ -124,7 +194,8 @@ open class NavigationMapView: UIView {
             } else {
                 removeLineGradientStops()
             }
-            updateRestrictedAreasGradientStops(along: self.routes?.first)
+            updateRestrictedAreasGradientStops()
+            updateAlternativesRestrictedAreasGradientStops()
         }
     }
     
@@ -146,6 +217,23 @@ open class NavigationMapView: UIView {
             
             return true
         }
+    }
+    
+    public var showsAlternativeRoutesDurations: Bool = true {
+        didSet {
+            updateAlternativeRoutesDurationsDisplay()
+        }
+    }
+    
+    func updateAlternativeRoutesDurationsDisplay() {
+        // remove duration callouts
+        // diffe from original route durations layer and source
+        guard let mainRoute = routes?.first,
+              let alternativeRoutes = alternativeRoutes else {
+                  return
+        }
+        showRouteDurations(along: alternativeRoutes.compactMap(\.indexedRouteResponse.currentRoute),
+                           comparisonDuration: mainRoute.expectedTravelTime)
     }
     
     /**
@@ -221,23 +309,79 @@ open class NavigationMapView: UIView {
         self.routes = routes
         currentLegIndex = legIndex
         
+        applyRoutesDisplay()
+    }
+    
+    func applyRoutesDisplay() {
+        guard let routes = routes else { return }
+        
+        updateRestrictedAreasGradientStops()
         var parentLayerIdentifier: String? = nil
         for (index, route) in routes.enumerated() {
             if index == 0 {
-                updateRestrictedAreasGradientStops(along: route)
-                
                 if routeLineTracksTraversal {
                     initPrimaryRoutePoints(route: route)
                     setUpLineGradientStops(along: route)
                 }
             }
             
-            if showsRestrictedAreasOnRoute {
-                parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
+            if showsRestrictedAreasOnRoute, let gradientStops = navigationRouteLines.routeLine(for: route)?.routeLineRestrictedAreasGradientStops {
+                parentLayerIdentifier = addRouteRestrictedAreaLayer(route,
+                                                                    fractionTraveled: fractionTraveled,
+                                                                    routeLineGradientStops: gradientStops,
+                                                                    below: parentLayerIdentifier)
             }
-            parentLayerIdentifier = addRouteLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0, legIndex: legIndex)
-            parentLayerIdentifier = addRouteCasingLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0)
+            parentLayerIdentifier = addRouteLayer(route,
+                                                  fractionTraveled: fractionTraveled,
+                                                  below: parentLayerIdentifier,
+                                                  isMainRoute: index == 0,
+                                                  legIndex: currentLegIndex)
+            parentLayerIdentifier = addRouteCasingLayer(route,
+                                                        fractionTraveled: fractionTraveled,
+                                                        below: parentLayerIdentifier,
+                                                        isMainRoute: index == 0)
         }
+        
+        updateAlternativesRestrictedAreasGradientStops()
+        guard let alternativeRoutes = alternativeRoutes else { return }
+
+        for routeAlternative in alternativeRoutes {
+            guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
+                continue
+            }
+
+            let offSet = (route.distance - routeAlternative.statsFromFork.distance) / route.distance
+            if showsRestrictedAreasOnRoute,
+               let gradientStops = navigationRouteLines.routeLine(for: route)?.routeLineRestrictedAreasGradientStops {
+                parentLayerIdentifier = addRouteRestrictedAreaLayer(route,
+                                                                    fractionTraveled: offSet,
+                                                                    routeLineGradientStops: gradientStops,
+                                                                    below: parentLayerIdentifier)
+            }
+            parentLayerIdentifier = addRouteLayer(route,
+                                                  fractionTraveled: offSet,
+                                                  below: parentLayerIdentifier,
+                                                  isMainRoute: false,
+                                                  legIndex: currentLegIndex)
+            parentLayerIdentifier = addRouteCasingLayer(route,
+                                                        fractionTraveled: offSet,
+                                                        below: parentLayerIdentifier,
+                                                        isMainRoute: false)
+        }
+    }
+    
+    func show(_ routeAlternatives: [AlternativeRoute]) {
+        
+        removeAlternativeRoutes()
+        
+        self.alternativeRoutes = routeAlternatives
+        
+        guard let routes = self.routes,
+              !routes.isEmpty else { return }
+        applyRoutesDisplay()
+        
+            // add callouts with "faster Xmins/shorter Xmiles"?
+        // add tap recognizers with a reroute?
     }
     
     /**
@@ -255,6 +399,8 @@ open class NavigationMapView: UIView {
             layerIdentifiers.insert($0.element.identifier(.route(isMainRoute: $0.offset == 0)))
             layerIdentifiers.insert($0.element.identifier(.routeCasing(isMainRoute: $0.offset == 0)))
             layerIdentifiers.insert($0.element.identifier(.restrictedRouteAreaRoute))
+            
+            navigationRouteLines.removeRouteLine(for: $0.element)
         }
         
         mapView.mapboxMap.style.removeLayers(layerIdentifiers)
@@ -262,15 +408,36 @@ open class NavigationMapView: UIView {
         
         routes = nil
         removeLineGradientStops()
-        updateRestrictedAreasGradientStops(along: nil)
+    }
+    
+    func removeAlternativeRoutes() {
+        var sourceIdentifiers = Set<String>()
+        var layerIdentifiers = Set<String>()
+        
+        alternativeRoutes?.compactMap(\.indexedRouteResponse.currentRoute).forEach {
+            sourceIdentifiers.insert($0.identifier(.source(isMainRoute: false, isSourceCasing: true)))
+            sourceIdentifiers.insert($0.identifier(.source(isMainRoute: false, isSourceCasing: false)))
+            sourceIdentifiers.insert($0.identifier(.restrictedRouteAreaSource))
+            layerIdentifiers.insert($0.identifier(.route(isMainRoute: false)))
+            layerIdentifiers.insert($0.identifier(.routeCasing(isMainRoute: false)))
+            layerIdentifiers.insert($0.identifier(.restrictedRouteAreaRoute))
+            
+            navigationRouteLines.removeRouteLine(for: $0)
+        }
+        
+        mapView.mapboxMap.style.removeLayers(layerIdentifiers)
+        mapView.mapboxMap.style.removeSources(sourceIdentifiers)
+        
+        alternativeRoutes = nil
     }
     
     func removeRestrictedRouteArea() {
-        guard let sourceIdentifier = routes?.first?.identifier(.restrictedRouteAreaSource),
-              let layerIdentifier = routes?.first?.identifier(.restrictedRouteAreaRoute) else { return }
+        let allRoutes = (routes ?? []) + (alternativeRoutes?.compactMap(\.indexedRouteResponse.currentRoute) ?? [])
+        let sourceIdentifiers = allRoutes.map({ $0.identifier(.restrictedRouteAreaSource) })
+        let layerIdentifiers = allRoutes.map({ $0.identifier(.restrictedRouteAreaRoute) })
         
-        mapView.mapboxMap.style.removeLayers(Set([layerIdentifier]))
-        mapView.mapboxMap.style.removeSources(Set([sourceIdentifier]))
+        mapView.mapboxMap.style.removeLayers(Set(layerIdentifiers))
+        mapView.mapboxMap.style.removeSources(Set(sourceIdentifiers))
     }
     
     /**
@@ -464,12 +631,44 @@ open class NavigationMapView: UIView {
         }
     }
     
-    func updateRestrictedAreasGradientStops(along route: Route?) {
-        if showsRestrictedAreasOnRoute, let route = route {
-            currentRestrictedAreasStops = routeLineRestrictionsGradient(route.restrictedRoadsFeatures(),
-                                                                    fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
-        } else {
-            currentRestrictedAreasStops.removeAll()
+    func updateRestrictedAreasGradientStops() {
+        if showsRestrictedAreasOnRoute, let routes = routes {
+            routes.enumerated().forEach {
+                if let navigationRouteLine = navigationRouteLines.routeLine(for: $0.element) {
+                    if navigationRouteLine.routeLineRestrictedAreasGradientStops == nil {
+                        navigationRouteLine.routeLineRestrictedAreasGradientStops = routeLineRestrictionsGradient($0.element.restrictedRoadsFeatures(),
+                                                                                                                  fractionTraveled: routeLineTracksTraversal && $0.offset == 0 ? fractionTraveled : 0.0)
+                    }
+                } else {
+                    let navigationRouteLine = NavigationRouteLine($0.element, isMain: $0.offset == 0)
+                    navigationRouteLine.routeLineRestrictedAreasGradientStops = routeLineRestrictionsGradient($0.element.restrictedRoadsFeatures(),
+                                                                                                              fractionTraveled: routeLineTracksTraversal && $0.offset == 0 ? fractionTraveled : 0.0)
+                    navigationRouteLines.setRouteLine(for: $0.element,
+                                                         routeLine: navigationRouteLine)
+                }
+            }
+        }
+    }
+    
+    func updateAlternativesRestrictedAreasGradientStops() {
+        if showsRestrictedAreasOnRoute, let alternativeRoutes = alternativeRoutes {
+            alternativeRoutes.forEach {
+                guard let route = $0.indexedRouteResponse.currentRoute else { return }
+                let offSet = (route.distance - $0.statsFromFork.distance) / route.distance
+                
+                if let navigationRouteLine = navigationRouteLines.routeLine(for: route) {
+                    if navigationRouteLine.routeLineRestrictedAreasGradientStops == nil {
+                        navigationRouteLine.routeLineRestrictedAreasGradientStops = routeLineRestrictionsGradient(route.restrictedRoadsFeatures(),
+                                                                                                                  fractionTraveled: offSet)
+                    }
+                } else {
+                    let navigationRouteLine = NavigationRouteLine(route)
+                    navigationRouteLine.routeLineRestrictedAreasGradientStops = routeLineRestrictionsGradient(route.restrictedRoadsFeatures(),
+                                                                                                              fractionTraveled: offSet)
+                    navigationRouteLines.setRouteLine(for: route,
+                                                         routeLine: navigationRouteLine)
+                }
+            }
         }
     }
     
@@ -490,6 +689,8 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addRouteRestrictedAreaLayer(_ route: Route,
+                                                        fractionTraveled: Double,
+                                                        routeLineGradientStops: RouteLineGradientStops,
                                                         below parentLayerIndentifier: String? = nil,
                                                         above aboveLayerIdentifier: String? = nil) -> String? {
         let sourceIdentifier = route.identifier(.restrictedRouteAreaSource)
@@ -531,12 +732,12 @@ open class NavigationMapView: UIView {
             lineLayer?.lineCap = .constant(.round)
             lineLayer?.lineOpacity = .constant(0.5)
             
-            if !currentRestrictedAreasStops.isEmpty {
-                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(currentRestrictedAreasStops,
+            if !routeLineGradientStops.isEmpty {
+                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineGradientStops,
                                                                                              lineBaseColor: routeRestrictedAreaColor))
             } else {
                 let routeLineStops = routeLineRestrictionsGradient(restrictedRoadsFeatures,
-                                                               fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                                                                   fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
                                                                                              lineBaseColor: routeRestrictedAreaColor))
             }
@@ -566,6 +767,7 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addRouteLayer(_ route: Route,
+                                          fractionTraveled: Double,
                                           below parentLayerIndentifier: String? = nil,
                                           isMainRoute: Bool = true,
                                           legIndex: Int? = nil) -> String? {
@@ -624,7 +826,14 @@ open class NavigationMapView: UIView {
                                                                                                   lineBaseColor: alternativeTrafficUnknownColor,
                                                                                                   isSoft: crossfadesCongestionSegments)))
                 } else {
-                    lineLayer?.lineColor = .constant(.init(routeAlternateColor))
+                    if routeLineTracksTraversal {
+                        let gradientStops = alternativeRouteLineGradient(fractionTraveled, baseColor: routeAlternateColor)
+                        lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                                                                                                      lineBaseColor: routeAlternateColor,
+                                                                                                      isSoft: false)))
+                    } else {
+                        lineLayer?.lineColor = .constant(.init(routeAlternateColor))
+                    }
                 }
             }
         }
@@ -653,6 +862,7 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addRouteCasingLayer(_ route: Route,
+                                                fractionTraveled: Double,
                                                 below parentLayerIndentifier: String? = nil,
                                                 isMainRoute: Bool = true) -> String? {
         guard let defaultShape = route.shape else { return nil }
@@ -689,7 +899,14 @@ open class NavigationMapView: UIView {
                 let gradientStops = routeLineCongestionGradient(fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
-                lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))
+                if routeLineTracksTraversal {
+                    let gradientStops = alternativeRouteLineGradient(fractionTraveled, baseColor: routeAlternateCasingColor)
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                                                                                                  lineBaseColor: routeAlternateCasingColor,
+                                                                                                  isSoft: false)))
+                } else {
+                    lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))
+                }
             }
         }
         
@@ -884,7 +1101,7 @@ open class NavigationMapView: UIView {
      Useful as a way to give the user more information when picking between multiple route alternatives.
      If the route contains any tolled segments then the callout will specify that as well.
      */
-    public func showRouteDurations(along routes: [Route]?) {
+    public func showRouteDurations(along routes: [Route]?, comparisonDuration: TimeInterval? = nil) {
         guard let visibleRoutes = routes, visibleRoutes.count > 0 else { return }
         
         do {
@@ -893,13 +1110,13 @@ open class NavigationMapView: UIView {
             NSLog("Error occured while updating annotation symbol images: \(error.localizedDescription).")
         }
         
-        updateRouteDurations(along: visibleRoutes)
+        updateRouteDurations(along: visibleRoutes, comparisonDuration: comparisonDuration)
     }
     
     /**
      Remove any old route duration callouts and generate new ones for each passed in route.
      */
-    private func updateRouteDurations(along routes: [Route]?) {
+    private func updateRouteDurations(along routes: [Route]?, comparisonDuration: TimeInterval? = nil) {
         let style = mapView.mapboxMap.style
         
         // Remove any existing route annotation.
@@ -930,6 +1147,7 @@ open class NavigationMapView: UIView {
         for (index, route) in routes.enumerated() {
             let allSteps = route.legs.flatMap { return $0.steps }
             let alternateSteps = allSteps.filter { !excludedSteps.contains($0) }
+            let isSelectedRoute = index == 0 && comparisonDuration == nil
             
             excludedSteps.append(contentsOf: alternateSteps)
             let visibleAlternateSteps = alternateSteps.filter { $0.intersects(visibleBoundingBox) }
@@ -944,6 +1162,7 @@ open class NavigationMapView: UIView {
                 continuousLine.coordinates.count > 0 {
                 coordinate = continuousLine.coordinates[0]
                 
+                let sampleRange = comparisonDuration == nil ? 0.3...0.8 : 0.1...0.1
                 // Pick a coordinate using some randomness in order to give visual variety.
                 // Take care to snap that coordinate to one that lays on the original route line.
                 // If the chosen snapped coordinate is not visible on the screen, then we walk back
@@ -951,7 +1170,7 @@ open class NavigationMapView: UIView {
                 // If none of the earlier points are on screen then we walk forward along the route
                 // coordinates until we find one that is.
                 if let distance = continuousLine.distance(),
-                    let sampleCoordinate = continuousLine.indexedCoordinateFromStart(distance: distance * CLLocationDistance.random(in: 0.3...0.8))?.coordinate,
+                    let sampleCoordinate = continuousLine.indexedCoordinateFromStart(distance: distance * CLLocationDistance.random(in: sampleRange))?.coordinate,
                     let routeShape = route.shape,
                     let snappedCoordinate = routeShape.closestCoordinate(to: sampleCoordinate) {
                     var foundOnscreenCoordinate = false
@@ -984,7 +1203,9 @@ open class NavigationMapView: UIView {
             guard let annotationCoordinate = coordinate else { return }
             
             // Form the appropriate text string for the annotation.
-            let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
+            let labelText = self.annotationLabelForRoute(route,
+                                                         tolls: routesContainTolls,
+                                                         comparisonDuration: comparisonDuration)
             
             // Create the feature for this route annotation. Set the styling attributes that will be
             // used to render the annotation in the style layer.
@@ -1006,17 +1227,17 @@ open class NavigationMapView: UIView {
             var imageName = tailPosition == .leading ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
             
             // The selected route uses the colored annotation image.
-            if index == 0 {
+            if isSelectedRoute {
                 imageName += "-Selected"
             }
             
             // Set the feature attributes which will be used in styling the symbol style layer.
             feature.properties = [
-                "selected": .boolean(index == 0),
+                "selected": .boolean(isSelectedRoute),
                 "tailPosition": .number(Double(tailPosition.rawValue)),
                 "text": .string(labelText),
                 "imageName": .string(imageName),
-                "sortOrder": .number(Double(index == 0 ? index : -index)),
+                "sortOrder": .number(Double(isSelectedRoute ? index : -index)),
             ]
             
             features.append(feature)
@@ -1279,8 +1500,20 @@ open class NavigationMapView: UIView {
      Generate the text for the label to be shown on screen. It will include estimated duration
      and info on Tolls, if applicable.
      */
-    private func annotationLabelForRoute(_ route: Route, tolls: Bool) -> String {
-        var eta = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
+    private func annotationLabelForRoute(_ route: Route, tolls: Bool, comparisonDuration: TimeInterval? = nil) -> String {
+        var eta = ""
+        if let comparisonDuration = comparisonDuration {
+            if abs(comparisonDuration - route.expectedTravelTime) < 60 {
+                eta = "Same Time" // TODO: localize
+            } else {
+                if comparisonDuration < route.expectedTravelTime {
+                    eta = "+"
+                }
+                eta += DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime - comparisonDuration) ?? ""
+            }
+        } else {
+            eta = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
+        }
         
         let hasTolls = (route.tollIntersections?.count ?? 0) > 0
         if hasTolls {
@@ -1373,7 +1606,16 @@ open class NavigationMapView: UIView {
     
     // MARK: Map Rendering and Observing
     
-    var routes: [Route]?
+    var routes: [Route]? {
+        didSet {
+            updateAlternativeRoutesDurationsDisplay()
+        }
+    }
+    var alternativeRoutes: [AlternativeRoute]? {
+        didSet {
+            updateAlternativeRoutesDurationsDisplay()
+        }
+    }
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?

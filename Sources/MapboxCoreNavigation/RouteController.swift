@@ -277,6 +277,10 @@ open class RouteController: NSObject {
                             legIndex: UInt32(legIndex),
                             routesRequest: routeRequest)
 
+        if let route = indexedRouteResponse.currentRoute {
+            alternativesStore?.mainRoute = route
+        }
+        
         sharedNavigator.setRoutes(routes, uuid: sessionUUID) { result in
             completion?(result)
         }
@@ -573,6 +577,9 @@ open class RouteController: NSObject {
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+        if NavigationSettings.shared.alternativeRoutesOptions.enabled {
+            self.alternativesStore = NavigatorAlternativesStore(mainRoute: routeProgress.route)
+        }
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
@@ -636,6 +643,8 @@ open class RouteController: NSObject {
     public var roadObjectMatcher: RoadObjectMatcher {
         return sharedNavigator.roadObjectMatcher
     }
+    
+    public private(set) var alternativesStore: NavigatorAlternativesStore?
 }
 
 extension RouteController: HistoryRecording { }
@@ -762,6 +771,15 @@ extension RouteController: Router {
 extension RouteController: InternalRouter { }
 
 extension RouteController: ReroutingObserverDelegate {
+    func rerouteControllerWantsSwitchToAlternative(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions) {
+        print(">>> \(#function)")
+        updateRoute(with: IndexedRouteResponse(routeResponse: response,
+                                               routeIndex: 0),
+                    routeOptions: options,
+                    isProactive: false,
+                    completion: nil)
+    }
+    
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) {
         print(">>> \(#function)")
         guard let location = location else { return }

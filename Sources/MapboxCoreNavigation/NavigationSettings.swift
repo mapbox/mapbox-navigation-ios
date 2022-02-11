@@ -36,12 +36,14 @@ public class NavigationSettings {
         static var `default`: State {
             .init(directions: .shared,
                   tileStoreConfiguration: .default,
-                  navigationRouterType: .hybrid)
+                  navigationRouterType: .hybrid,
+                  alternativeRoutesOptions: .init())
         }
 
         var directions: Directions
         var tileStoreConfiguration: TileStoreConfiguration
         var navigationRouterType: NavigationRouterType
+        var alternativeRoutesOptions: AlternativeRoutesOptions
     }
 
     /// Protects access to `_state`.
@@ -89,6 +91,10 @@ public class NavigationSettings {
         state.navigationRouterType
     }
     
+    public var alternativeRoutesOptions: AlternativeRoutesOptions {
+        state.alternativeRoutesOptions
+    }
+    
     /**
      Initializes the settings with custom instances of globally used types.
 
@@ -106,16 +112,18 @@ public class NavigationSettings {
      */
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,
-                           navigationRouterType: NavigationRouterType) {
+                           navigationRouterType: NavigationRouterType,
+                           alternativeRoutesOptions: AlternativeRoutesOptions) {
         lock.lock(); defer {
             lock.unlock()
         }
         if _state != nil {
-            print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `navigationRouterType`. This might result in an undefined behaviour. ")
+            print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRoutesOptions:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `navigationRouterType`, `alternativeRoutesOptions`. This might result in an undefined behaviour. ")
         }
         _state = .init(directions: directions,
                        tileStoreConfiguration: tileStoreConfiguration,
-                       navigationRouterType: navigationRouterType)
+                       navigationRouterType: navigationRouterType,
+                       alternativeRoutesOptions: alternativeRoutesOptions)
     }
     
     /**

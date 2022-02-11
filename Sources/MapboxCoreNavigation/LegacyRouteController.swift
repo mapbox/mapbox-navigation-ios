@@ -48,6 +48,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         }
     }
 
+    public private(set) var alternativesStore: NavigatorAlternativesStore? = nil
+    
     // MARK: Tracking the Progress
     
     public weak var delegate: RouterDelegate?
