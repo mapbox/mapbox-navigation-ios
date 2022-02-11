@@ -349,10 +349,13 @@ extension TopBannerViewController: NavigationComponent {
         instructionsBannerView.updateDistance(for: progress.currentLegProgress.currentStepProgress)
         
         if progress.remainingSteps.count < 2 {
-            instructionsBannerView.showStepIndicator = false
+            if isDisplayingPreviewInstructions {
+                stopPreviewing(showingSecondaryChildren: false)
+            }
             if isDisplayingSteps {
                 dismissStepsTable()
             }
+            instructionsBannerView.showStepIndicator = false
         } else {
             instructionsBannerView.showStepIndicator = true
         }
