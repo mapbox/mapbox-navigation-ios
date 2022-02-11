@@ -330,11 +330,11 @@ open class NavigationMapView: UIView {
                     arrowLayer.source = NavigationMapView.SourceIdentifier.arrowSource
                     
                     if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
-                        try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(puckLayer))
+                        try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: .below(puckLayer))
                     } else if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.LayerIdentifier.waypointCircleLayer) {
-                        try mapView.mapboxMap.style.addLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
+                        try mapView.mapboxMap.style.addPersistentLayer(arrowLayer, layerPosition: .below(NavigationMapView.LayerIdentifier.waypointCircleLayer))
                     } else {
-                        try mapView.mapboxMap.style.addLayer(arrowLayer)
+                        try mapView.mapboxMap.style.addPersistentLayer(arrowLayer)
                     }
                 }
                 
@@ -356,7 +356,7 @@ open class NavigationMapView: UIView {
                     arrowStrokeLayer.source = NavigationMapView.SourceIdentifier.arrowStrokeSource
                     
                     let arrowStrokeLayerPosition = allLayerIds.contains(mainRouteLayerIdentifier) ? LayerPosition.above(mainRouteLayerIdentifier) : LayerPosition.below(NavigationMapView.LayerIdentifier.arrowLayer)
-                    try mapView.mapboxMap.style.addLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPosition)
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowStrokeLayer, layerPosition: arrowStrokeLayerPosition)
                 }
                 
                 let point = Point(shaftStrokeCoordinates.last!)
@@ -400,11 +400,11 @@ open class NavigationMapView: UIView {
                     arrowSymbolCasingLayer.source = NavigationMapView.SourceIdentifier.arrowSymbolSource
                     
                     if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
-                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer, layerPosition: .below(puckLayer))
+                        try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer, layerPosition: .below(puckLayer))
                     } else {
-                        try mapView.mapboxMap.style.addLayer(arrowSymbolLayer)
+                        try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolLayer)
                     }
-                    try mapView.mapboxMap.style.addLayer(arrowSymbolCasingLayer,
+                    try mapView.mapboxMap.style.addPersistentLayer(arrowSymbolCasingLayer,
                                                          layerPosition: .below(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                 }
             }
@@ -1448,14 +1448,14 @@ open class NavigationMapView: UIView {
                 symbolLayer.textOpacity = .constant(0.75)
                 symbolLayer.textAnchor = .constant(.bottom)
                 symbolLayer.textJustify = .constant(.left)
-                try mapView.mapboxMap.style.addLayer(symbolLayer)
+                try mapView.mapboxMap.style.addPersistentLayer(symbolLayer)
                 
                 var circleLayer = CircleLayer(id: NavigationMapView.LayerIdentifier.voiceInstructionCircleLayer)
                 circleLayer.source = NavigationMapView.SourceIdentifier.voiceInstructionSource
                 circleLayer.circleRadius = .constant(5)
                 circleLayer.circleOpacity = .constant(0.75)
                 circleLayer.circleColor = .constant(.init(.white))
-                try mapView.mapboxMap.style.addLayer(circleLayer)
+                try mapView.mapboxMap.style.addPersistentLayer(circleLayer)
             }
         } catch {
             NSLog("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).")
