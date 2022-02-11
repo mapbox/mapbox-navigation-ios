@@ -71,10 +71,6 @@ extension NavigationMapView {
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
-            if mapView.mapboxMap.style.layerExists(withId: identifier) {
-                try mapView.mapboxMap.style.removeLayer(withId: identifier)
-            }
-            
             if identifiers.isEmpty { return }
             var highlightedBuildingsLayer = FillExtrusionLayer(id: identifier)
             highlightedBuildingsLayer.source = "composite"
@@ -121,7 +117,17 @@ extension NavigationMapView {
             highlightedBuildingsLayer.fillExtrusionColor = .constant(.init(buildingHighlightColor))
             highlightedBuildingsLayer.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
             highlightedBuildingsLayer.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
-            try mapView.mapboxMap.style.addPersistentLayer(highlightedBuildingsLayer, layerPosition: layerPosition)
+            
+            // In case if highlighted buildings layer is already present, instead of removing it - update it.
+            if mapView.mapboxMap.style.layerExists(withId: identifier) {
+                try mapView.mapboxMap.style.updateLayer(withId: identifier,
+                                                        type: FillExtrusionLayer.self,
+                                                        update: { oldHighlightedBuildingsLayer in
+                    oldHighlightedBuildingsLayer = highlightedBuildingsLayer
+                })
+            } else {
+                try mapView.mapboxMap.style.addPersistentLayer(highlightedBuildingsLayer, layerPosition: layerPosition)
+            }
         } catch {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
         }
