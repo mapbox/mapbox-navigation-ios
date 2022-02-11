@@ -121,7 +121,7 @@ extension NavigationMapView {
             highlightedBuildingsLayer.fillExtrusionColor = .constant(.init(buildingHighlightColor))
             highlightedBuildingsLayer.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
             highlightedBuildingsLayer.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
-            try mapView.mapboxMap.style.addLayer(highlightedBuildingsLayer, layerPosition: layerPosition)
+            try mapView.mapboxMap.style.addPersistentLayer(highlightedBuildingsLayer, layerPosition: layerPosition)
         } catch {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
         }

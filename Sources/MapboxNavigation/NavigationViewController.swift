@@ -1002,8 +1002,26 @@ extension NavigationViewController: StyleManagerDelegate {
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         guard let mapboxMap = navigationMapView?.mapView.mapboxMap,
               let styleURI = mapboxMap.style.uri else { return }
-
-        mapboxMap.loadStyleURI(styleURI)
+        
+        mapboxMap.loadStyleURI(styleURI) { result in
+            switch result {
+            case .success(_):
+                let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
+                guard let navigationMapView = self.navigationMapView,
+                      navigationMapView.mapView.mapboxMap.style.layerExists(withId: identifier) else { return }
+                
+                do {
+                    try navigationMapView.mapView.mapboxMap.style.updateLayer(withId: identifier,
+                                                                              type: FillExtrusionLayer.self) { buildingExtrusionLayer in
+                        buildingExtrusionLayer.fillExtrusionColor = .constant(.init(navigationMapView.buildingHighlightColor))
+                    }
+                } catch {
+                    NSLog("Failed to update building extrusion layer color with error: \(error.localizedDescription).")
+                }
+            case .failure(let error):
+                NSLog("Failed to load \(styleURI) with error: \(error.localizedDescription).")
+            }
+        }
     }
 }
 
