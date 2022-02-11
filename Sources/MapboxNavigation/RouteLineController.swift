@@ -26,12 +26,11 @@ extension NavigationMapView {
         
         func navigationViewDidLoad(_ view: UIView) {
             navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
-                self?.navigationMapView.localizeLabels()
-                self?.navigationMapView.mapView.showsTraffic = false
-                self?.showRouteIfNeeded()
+                guard let self = self else { return }
                 
-                // FIXME: In case when building highlighting feature is enabled due to style changes and no info currently being stored
-                // regarding building identification such highlighted building will disappear.
+                self.navigationMapView.localizeLabels()
+                self.navigationMapView.mapView.showsTraffic = false
+                self.showRouteIfNeeded()
             }
         }
         
