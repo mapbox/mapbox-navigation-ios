@@ -106,7 +106,7 @@ class NavigationServiceTests: TestCase {
         let coordinatesOnRoute = route.shape!.coordinates.prefix(3)
         let now = Date()
         let locationsOnRoute = coordinatesOnRoute.enumerated().map { tuple -> CLLocation in
-            // NavNative can filter locations if the disntance diff looks too big for the current speed and time diff
+            // NavNative can filter locations if the distance diff looks too big for the current speed and time diff
             // so we use a big time delta here
             let timestamp = now + 100 * tuple.offset
             return CLLocation(coordinate: tuple.element,
