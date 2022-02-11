@@ -19,6 +19,7 @@
 ### Map
 
 * Added `MapView.showsTileSet(with:layerIdentifier:)` and `MapView.setShowsTileSet(_:with:layerIdentifier:)` to provide the ability to show and hide custom tile set identifiers on the map view. ([#3700](https://github.com/mapbox/mapbox-navigation-ios/pull/3700))
+* Fixed the route layers disappearance in preview mode and in passive navigation when map style changes. ([#3734](https://github.com/mapbox/mapbox-navigation-ios/pull/3734))
 
 ### CarPlay
 
