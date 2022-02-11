@@ -165,7 +165,6 @@
 		41E8E2B2278ED1B6006990F3 /* NavigationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41E8E2B1278ED1B6006990F3 /* NavigationStatus.swift */; };
 		4303A3992332CD6200B5737D /* UnimplementedLogging.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4303A3982332CD6200B5737D /* UnimplementedLogging.swift */; };
 		4316D95C24340555000DD8F8 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4316D95B24340555000DD8F8 /* Match.swift */; };
-		439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */; };
 		43FB386923A202420064481E /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0557202154EF4700A1F2AA /* Route.swift */; };
 		5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */; };
 		5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */; };
@@ -185,6 +184,9 @@
 		8A2DFA8626168A300034A87E /* NavigationCameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */; };
 		8A30113C25DDCC8A00CE192A /* NavigationCameraConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */; };
 		8A3474F5269F8B9D00BCF135 /* MapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3474F3269F8B9D00BCF135 /* MapViewTests.swift */; };
+		8A379B0927B5E38000CE0A23 /* InstructionsCardSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A379B0827B5E38000CE0A23 /* InstructionsCardSnapshotTests.swift */; };
+		8A379B0B27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A379B0A27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift */; };
+		8A379B0D27B5E3C600CE0A23 /* EndOfRouteFeedbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A379B0C27B5E3C600CE0A23 /* EndOfRouteFeedbackTests.swift */; };
 		8A38B42126C5AC130088E168 /* CPMapTemplate+MBTestable.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316AE26BB315100C3AC76 /* CPMapTemplate+MBTestable.m */; };
 		8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */; };
 		8A4038F92759526800F8C75C /* route-with-10-legs.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A4038F72759526800F8C75C /* route-with-10-legs.json */; };
@@ -283,7 +285,6 @@
 		AE47A32C22B1F6AE0096458C /* InstructionsCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */; };
 		AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */; };
 		AE47A33422B1F6AE0096458C /* InstructionsCardContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */; };
-		AE47A33822B27D8D0096458C /* InstructionsCardCollectionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE47A33622B27D8D0096458C /* InstructionsCardCollectionTests.swift */; };
 		AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */; };
 		AE7DE6C621A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE7DE6C521A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift */; };
 		AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */; };
@@ -696,7 +697,6 @@
 		41E8E2B1278ED1B6006990F3 /* NavigationStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationStatus.swift; sourceTree = "<group>"; };
 		4303A3982332CD6200B5737D /* UnimplementedLogging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnimplementedLogging.swift; sourceTree = "<group>"; };
 		4316D95B24340555000DD8F8 /* Match.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Match.swift; sourceTree = "<group>"; };
-		439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GuidanceCardsSnapshotTests.swift; sourceTree = "<group>"; };
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
 		5A1C075724BDEB44000A6330 /* PassiveLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationProvider.swift; sourceTree = "<group>"; };
 		5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassiveLocationManager.swift; sourceTree = "<group>"; };
@@ -716,6 +716,9 @@
 		8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCameraDebugView.swift; sourceTree = "<group>"; };
 		8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraConstants.swift; sourceTree = "<group>"; };
 		8A3474F3269F8B9D00BCF135 /* MapViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewTests.swift; sourceTree = "<group>"; };
+		8A379B0827B5E38000CE0A23 /* InstructionsCardSnapshotTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardSnapshotTests.swift; sourceTree = "<group>"; };
+		8A379B0A27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardViewControllerTests.swift; sourceTree = "<group>"; };
+		8A379B0C27B5E3C600CE0A23 /* EndOfRouteFeedbackTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndOfRouteFeedbackTests.swift; sourceTree = "<group>"; };
 		8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreNavigationNavigator.swift; sourceTree = "<group>"; };
 		8A4038F72759526800F8C75C /* route-with-10-legs.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-with-10-legs.json"; sourceTree = "<group>"; };
 		8A4038F82759526800F8C75C /* route-for-off-route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-off-route.json"; sourceTree = "<group>"; };
@@ -825,7 +828,6 @@
 		AE47A32222B1F6AD0096458C /* InstructionsCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardViewController.swift; sourceTree = "<group>"; };
 		AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardView.swift; sourceTree = "<group>"; };
 		AE47A32A22B1F6AE0096458C /* InstructionsCardContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardContainerView.swift; sourceTree = "<group>"; };
-		AE47A33622B27D8D0096458C /* InstructionsCardCollectionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollectionTests.swift; sourceTree = "<group>"; };
 		AE7DE6C321A47A03002653D1 /* CarPlaySearchController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarPlaySearchController.swift; sourceTree = "<group>"; };
 		AE7DE6C521A47A23002653D1 /* CarPlaySearchController+CPSearchTemplateDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CarPlaySearchController+CPSearchTemplateDelegate.swift"; sourceTree = "<group>"; };
 		AE87207D22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionsCardCollectionDelegate.swift; sourceTree = "<group>"; };
@@ -1213,7 +1215,7 @@
 				C51923B41EA55C5E002AF9E1 /* Extensions */,
 				C51923B51EA55CD4002AF9E1 /* Views */,
 				8DFD94A52225AF5C00152F45 /* Banners */,
-				AE47A32022B1F6790096458C /* Guidance Cards */,
+				AE47A32022B1F6790096458C /* Instructions Card */,
 				C54C655120336F2600D338E0 /* Constants.swift */,
 				351BEC201E5BD4DC006FE110 /* Supporting files */,
 			);
@@ -1265,12 +1267,13 @@
 				8AB316C026BC9FAB00C3AC76 /* Instructions */,
 				8AB316C126BC9FFC00C3AC76 /* Cache */,
 				8AB316BE26BC9F6A00C3AC76 /* Style */,
+				8A379B0E27B5E3E000CE0A23 /* End of Route */,
 				8AB316BF26BC9F8900C3AC76 /* Speech */,
 				8AB316BC26BC9E1E00C3AC76 /* CarPlay */,
 				16E11B53212B3D4700027CD3 /* Extensions */,
 				8AB316C326BCA0A300C3AC76 /* Views */,
 				8AD12F3B26BCADF30008AE55 /* Banners */,
-				8AD12F3126BCADC10008AE55 /* Guidance Cards */,
+				8AD12F3126BCADC10008AE55 /* Instructions Card */,
 				8AB316C626BCA29B00C3AC76 /* SKU */,
 				8AB316C726BCA4CF00C3AC76 /* Misc */,
 				35022319205BC94E00E1449A /* Constants.swift */,
@@ -1411,6 +1414,14 @@
 			name = Instructions;
 			sourceTree = "<group>";
 		};
+		8A379B0E27B5E3E000CE0A23 /* End of Route */ = {
+			isa = PBXGroup;
+			children = (
+				8A379B0C27B5E3C600CE0A23 /* EndOfRouteFeedbackTests.swift */,
+			);
+			name = "End of Route";
+			sourceTree = "<group>";
+		};
 		8AB316BC26BC9E1E00C3AC76 /* CarPlay */ = {
 			isa = PBXGroup;
 			children = (
@@ -1460,7 +1471,6 @@
 				166224442025699600EA4824 /* ImageRepositoryTests.swift */,
 				8D54F149206ECF720038736D /* InstructionPresenterTests.swift */,
 				35DC585C1FABC61100B5A956 /* InstructionsBannerViewIntegrationTests.swift */,
-				AE47A33622B27D8D0096458C /* InstructionsCardCollectionTests.swift */,
 				16E3625B201265D600DF0592 /* ImageDownloadOperationSpy.swift */,
 				1662244620256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift */,
 				35A262B82050A5CD00AEFF6D /* InstructionsBannerViewSnapshotTests.swift */,
@@ -1526,12 +1536,13 @@
 			name = Misc;
 			sourceTree = "<group>";
 		};
-		8AD12F3126BCADC10008AE55 /* Guidance Cards */ = {
+		8AD12F3126BCADC10008AE55 /* Instructions Card */ = {
 			isa = PBXGroup;
 			children = (
-				439FFC242304BF54004C20AA /* GuidanceCardsSnapshotTests.swift */,
+				8A379B0A27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift */,
+				8A379B0827B5E38000CE0A23 /* InstructionsCardSnapshotTests.swift */,
 			);
-			name = "Guidance Cards";
+			name = "Instructions Card";
 			sourceTree = "<group>";
 		};
 		8AD12F3B26BCADF30008AE55 /* Banners */ = {
@@ -1609,7 +1620,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		AE47A32022B1F6790096458C /* Guidance Cards */ = {
+		AE47A32022B1F6790096458C /* Instructions Card */ = {
 			isa = PBXGroup;
 			children = (
 				AE47A32122B1F6AD0096458C /* InstructionsCardCell.swift */,
@@ -1619,7 +1630,7 @@
 				AE47A32622B1F6AE0096458C /* InstructionsCardView.swift */,
 				8A460FB7279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift */,
 			);
-			name = "Guidance Cards";
+			name = "Instructions Card";
 			sourceTree = "<group>";
 		};
 		B47C1AA8261FCDF30078546C /* CTestHelper */ = {
@@ -2653,7 +2664,6 @@
 				2B81EC28241A237E00145086 /* SpeechSynthesizersControllerTests.swift in Sources */,
 				35BC7178226F6667003BB5F1 /* CarPlayCompassViewTests.swift in Sources */,
 				35F1F5931FD57EFD00F8E502 /* StyleManagerTests.swift in Sources */,
-				439FFC252304BF54004C20AA /* GuidanceCardsSnapshotTests.swift in Sources */,
 				E2D14980265CFD33008135A3 /* CarPlayUtils.swift in Sources */,
 				35E5B963227B4B620033A124 /* CarPlayCompassViewSnapshotTests.swift in Sources */,
 				AE00A73A209A2C38006A3DC7 /* StepsViewControllerTests.swift in Sources */,
@@ -2668,7 +2678,6 @@
 				8D54F14A206ECF720038736D /* InstructionPresenterTests.swift in Sources */,
 				166224452025699600EA4824 /* ImageRepositoryTests.swift in Sources */,
 				160D827B2059973C00D278D6 /* DataCacheTests.swift in Sources */,
-				AE47A33822B27D8D0096458C /* InstructionsCardCollectionTests.swift in Sources */,
 				16E3625C201265D600DF0592 /* ImageDownloadOperationSpy.swift in Sources */,
 				B40B1C61270380EC0065F57D /* VanishingRouteLineTests.swift in Sources */,
 				1662244B2029059C00EA4824 /* ImageCacheTests.swift in Sources */,
@@ -2747,10 +2756,13 @@
 				8AFF2D2326F137CB008267BF /* RoadObjectKind.swift in Sources */,
 				41E8E2B2278ED1B6006990F3 /* NavigationStatus.swift in Sources */,
 				118D883426F8CA0700B2ED7B /* FeedbackEvent.swift in Sources */,
+				8A379B0D27B5E3C600CE0A23 /* EndOfRouteFeedbackTests.swift in Sources */,
 				E2C623A726CBFCE1005769FA /* OnMainQueue.swift in Sources */,
+				8A379B0927B5E38000CE0A23 /* InstructionsCardSnapshotTests.swift in Sources */,
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
+				8A379B0B27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */,
 				DA2A01F025F308B100AAB4C6 /* RoadGraphPath.swift in Sources */,
 				DAF27248264E028B00C0AC37 /* Geometry.swift in Sources */,
 				2BEF16472775C8FD0085E3C6 /* MapMatchingResult.swift in Sources */,
