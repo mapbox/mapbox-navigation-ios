@@ -145,9 +145,7 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     @objc func swipedInstructionBannerLeft(_ sender: Any) {
-        if !swipeable {
-            return
-        }
+        guard swipeable && showStepIndicator else { return }
 
         if let gestureRecognizer = sender as? UISwipeGestureRecognizer,
            gestureRecognizer.state == .ended {
@@ -158,9 +156,7 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     @objc func swipedInstructionBannerRight(_ sender: Any) {
-        if !swipeable {
-            return
-        }
+        guard swipeable && showStepIndicator else { return }
         
         if let gestureRecognizer = sender as? UISwipeGestureRecognizer,
            gestureRecognizer.state == .ended {
@@ -171,21 +167,18 @@ open class BaseInstructionsBannerView: UIControl {
     }
     
     @objc func swipedInstructionBannerDown(_ sender: Any) {
+        guard showStepIndicator else { return }
         if let gestureRecognizer = sender as? UISwipeGestureRecognizer,
            gestureRecognizer.state == .ended {
-            if showStepIndicator {
-                stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
-            }
-            
+            stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
             delegate?.didSwipeInstructionsBanner(self, swipeDirection: .down)
         }
     }
         
     @objc func tappedInstructionsBanner(_ sender: Any) {
+        guard showStepIndicator else { return }
         if let delegate = delegate {
-            if showStepIndicator {
-                stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
-            }
+            stepListIndicatorView.isHidden = !stepListIndicatorView.isHidden
             delegate.didTapInstructionsBanner(self)
         }
     }
