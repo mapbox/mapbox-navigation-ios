@@ -350,11 +350,8 @@ extension TopBannerViewController: NavigationComponent {
         
         if progress.remainingSteps.count < 2 {
             instructionsBannerView.showStepIndicator = false
-            
-            if let steps = stepsViewController {
-                isDisplayingSteps = false
-                steps.dismiss()
-                stepsViewController = nil
+            if isDisplayingSteps {
+                dismissStepsTable()
             }
         } else {
             instructionsBannerView.showStepIndicator = true
