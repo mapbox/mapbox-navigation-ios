@@ -23,26 +23,31 @@ class SpriteRepository {
         self.imageDownloader = downloader
     }
     
-    func updateRepository(styleURI: StyleURI? = nil, shield: VisualInstruction.Component.ShieldRepresentation? = nil, completion: @escaping CompletionHandler) {
-        let baseURL = shield?.baseURL ?? self.baseURL
+    func updateRepository(styleURI: StyleURI? = nil, representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
+        let baseURL = representation?.shield?.baseURL ?? self.baseURL
         let styleURI = styleURI ?? self.styleURI
-        resetCache()
         
-        guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
-              let spriteRequestURL = spriteURL(isImage: true, baseURL: baseURL, styleID: styleID),
-              let infoRequestURL = spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) else {
-                  return
-              }
-
+        resetCache()
         let dispatchGroup = DispatchGroup()
         
-        dispatchGroup.enter()
-        downloadInfo(infoRequestURL) { (_) in
-            dispatchGroup.leave()
+        if let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1] {
+            if let infoRequestURL = spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) {
+                dispatchGroup.enter()
+                downloadInfo(infoRequestURL) { (_) in
+                    dispatchGroup.leave()
+                }
+            }
+            
+            if let spriteRequestURL = spriteURL(isImage: true, baseURL: baseURL, styleID: styleID) {
+                dispatchGroup.enter()
+                downloadSprite(spriteRequestURL) { (_) in
+                    dispatchGroup.leave()
+                }
+            }
         }
         
         dispatchGroup.enter()
-        downloadSprite(spriteRequestURL) { (_) in
+        downloadLegacyShield(representation: representation) { (_) in
             dispatchGroup.leave()
         }
         
@@ -57,7 +62,7 @@ class SpriteRepository {
         guard var urlComponent = URLComponents(url: baseURL, resolvingAgainstBaseURL: false),
               let accessToken = NavigationSettings.shared.directions.credentials.accessToken else { return nil }
         
-        let requestType = isImage ? "/sprite@2x.png" : "/sprite@2x"
+        let requestType = isImage ? "/sprite@\(Int(VisualInstruction.Component.scale))x.png" : "/sprite@\(Int(VisualInstruction.Component.scale))x"
         urlComponent.path += styleID
         urlComponent.path += requestType
         urlComponent.queryItems = [URLQueryItem(name: "access_token", value: accessToken)]
@@ -99,6 +104,29 @@ class SpriteRepository {
         })
     }
     
+    func downloadLegacyShield(representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping (UIImage?) -> Void) {
+        guard let legacyURL = representation?.imageURL(scale: VisualInstruction.Component.scale, format: .png) else {
+            completion(nil)
+            return
+        }
+        
+        let _ = imageDownloader.downloadImage(with: legacyURL, completion: { [weak self] (image, data, error) in
+            guard let strongSelf = self, let image = image else {
+                completion(nil)
+                return
+            }
+
+            guard error == nil else {
+                completion(image)
+                return
+            }
+
+            strongSelf.imageCache.store(image, forKey: "Legacy", toDisk: false, completion: {
+                completion(image)
+            })
+        })
+    }
+    
     func getShield(displayRef: String, name: String) -> UIImage? {
         let iconLeght = (displayRef.count < 2 ) ? 2 : displayRef.count
         let infoName = name + "-\(iconLeght)"
@@ -114,26 +142,8 @@ class SpriteRepository {
         return nil
     }
     
-    func getLegacyShield(imageBaseUrl: String, completion: @escaping (UIImage?) -> Void) {
-        guard let requestURL = URL(string: imageBaseUrl + "@2x.png") else {
-            completion(nil)
-            return
-        }
-        
-        let _ = imageDownloader.downloadImage(with: requestURL, completion: { (image, data, error) in
-            guard let image = image else {
-                completion(nil)
-                return
-            }
-
-            guard error == nil else {
-                completion(image)
-                return
-            }
-
-            completion(image)
-            return
-        })
+    func getLegacyShield() -> UIImage? {
+        return imageCache.image(forKey: "Legacy")
     }
     
     func resetCache() {

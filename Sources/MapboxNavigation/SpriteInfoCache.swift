@@ -1,6 +1,6 @@
 import UIKit
 
-public struct SpriteInfo: Codable, Equatable {
+struct SpriteInfo: Codable, Equatable {
     var width: Double
     var height: Double
     var x: Double
@@ -10,7 +10,7 @@ public struct SpriteInfo: Codable, Equatable {
     var visible: Bool
 }
 
-public class SpriteInfoWrapper<SpriteSpriteInfo>: NSObject {
+class SpriteInfoWrapper<SpriteSpriteInfo>: NSObject {
     let spriteInfo: SpriteInfo
     
     init(_ spriteInfo: SpriteInfo) {
@@ -18,7 +18,7 @@ public class SpriteInfoWrapper<SpriteSpriteInfo>: NSObject {
     }
 }
 
-public class SpriteInfoCache {
+class SpriteInfoCache {
     let memoryCache: NSCache<NSString, SpriteInfoWrapper<SpriteInfo>>
 
     public init() {
@@ -30,7 +30,7 @@ public class SpriteInfoCache {
     /**
      Stores data in the memory cache.
      */
-    public func store(_ data: Data) {
+    func store(_ data: Data) {
         guard let spriteInfoDictionary = parseSpriteInfo(data: data) else { return }
         spriteInfoDictionary.forEach({ storeDataInMemoryCache($0.value, forKey: $0.key) })
     }
@@ -38,7 +38,7 @@ public class SpriteInfoCache {
     /**
      Returns `SpriteInfo` from the cache for the given key from the memory cache.
      */
-    public func spriteInfo(forKey key: String?) -> SpriteInfo? {
+    func spriteInfo(forKey key: String?) -> SpriteInfo? {
         guard let key = key else {
             return nil
         }
@@ -53,7 +53,7 @@ public class SpriteInfoCache {
     /**
      Parse data to the Sprite info.
      */
-    public func parseSpriteInfo(data: Data) -> [String: SpriteInfo]? {
+    private func parseSpriteInfo(data: Data) -> [String: SpriteInfo]? {
         do {
             let decodedObject = try JSONDecoder().decode([String : SpriteInfo].self, from: data)
             return decodedObject
@@ -67,7 +67,7 @@ public class SpriteInfoCache {
     /**
      Clears out the memory cache.
      */
-    @objc public func clearMemory() {
+    @objc func clearMemory() {
         memoryCache.removeAllObjects()
     }
 
