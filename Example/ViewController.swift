@@ -271,14 +271,14 @@ class ViewController: UIViewController {
         let night: ActionHandler = { _ in self.startNavigation(styles: [NightStyle()]) }
         let custom: ActionHandler = { _ in self.startCustomNavigation() }
         let styled: ActionHandler = { _ in self.startStyledNavigation() }
-        let guidanceCards: ActionHandler = { _ in self.startGuidanceCardsNavigation() }
+        let instructionsCard: ActionHandler = { _ in self.startInstructionsCardNavigation() }
         
         let actionPayloads: [(String, UIAlertAction.Style, ActionHandler?)] = [
             ("Default UI", .default, basic),
             ("DayStyle UI", .default, day),
             ("NightStyle UI", .default, night),
             ("Custom UI", .default, custom),
-            ("Guidance Card UI", .default, guidanceCards),
+            ("Instructions Card UI", .default, instructionsCard),
             ("Styled UI", .default, styled),
             ("Cancel", .cancel, nil)
         ]
@@ -362,14 +362,30 @@ class ViewController: UIViewController {
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     
-    func startGuidanceCardsNavigation() {
+    func startInstructionsCardNavigation() {
         guard let response = response, case let .route(routeOptions) = response.options else { return }
+        
+        // Styles are passed explicitly to be able to easily test how instructions cards look.
+        let styles = [
+            DayStyle(),
+            NightStyle()
+        ]
+        let navigationService = self.navigationService(response: response,
+                                                       routeIndex: currentRouteIndex,
+                                                       options: routeOptions)
         
         let instructionsCardCollection = InstructionsCardViewController()
         instructionsCardCollection.cardCollectionDelegate = self
         
-        let options = NavigationOptions(navigationService: navigationService(response: response, routeIndex: currentRouteIndex, options: routeOptions), topBanner: instructionsCardCollection, predictiveCacheOptions: PredictiveCacheOptions())
-        let navigationViewController = NavigationViewController(for: response, routeIndex: currentRouteIndex, routeOptions: routeOptions, navigationOptions: options)
+        let navigationOptions = NavigationOptions(styles: styles,
+                                                  navigationService: navigationService,
+                                                  topBanner: instructionsCardCollection,
+                                                  predictiveCacheOptions: PredictiveCacheOptions())
+        
+        let navigationViewController = NavigationViewController(for: response,
+                                                                   routeIndex: currentRouteIndex,
+                                                                   routeOptions: routeOptions,
+                                                                   navigationOptions: navigationOptions)
         navigationViewController.delegate = self
         
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)

@@ -103,3 +103,10 @@ let DefaultApproachingDestinationThresholdDistance: CLLocationDistance = 250.0
  type in `userInfo` it may lead to undefined behavior.
  */
 public typealias CarPlayUserInfo = [String: Any?]
+
+/**
+ In case if distance to the next maneuver on the route is lower than the value defined in
+ `InstructionCardHighlightDistance`, `InstructionsCardView`'s background color will be highlighted
+ to a color defined in `InstructionsCardContainerView.highlightedBackgroundColor`.
+ */
+let InstructionCardHighlightDistance: CLLocationDistance = 152.4 // 500 ft

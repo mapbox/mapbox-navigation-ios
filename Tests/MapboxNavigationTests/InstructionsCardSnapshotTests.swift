@@ -7,9 +7,8 @@ import CoreLocation
 @testable import MapboxNavigation
 @testable import TestHelper
 
-@available(iOS 11.0, *)
-/// :nodoc:
-class GuidanceCardsSnapshotTests: TestCase {
+class InstructionsCardSnapshotTests: TestCase {
+    
     let tertiaryRouteOptions = NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 39.749216, longitude: -105.008272),
         CLLocationCoordinate2D(latitude: 39.694833, longitude: -104.976949),

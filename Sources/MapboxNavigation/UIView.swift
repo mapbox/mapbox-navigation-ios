@@ -22,12 +22,28 @@ extension UIView {
     
     // MARK: Animating
     
-    class func defaultAnimation(_ duration: TimeInterval, delay: TimeInterval = 0, animations: @escaping () -> Void, completion: ((_ completed: Bool) -> Void)?) {
-        UIView.animate(withDuration: duration, delay: delay, options: .curveEaseInOut, animations: animations, completion: completion)
+    class func defaultAnimation(_ duration: TimeInterval,
+                                delay: TimeInterval = 0,
+                                animations: @escaping () -> Void,
+                                completion: ((_ completed: Bool) -> Void)?) {
+        UIView.animate(withDuration: duration,
+                       delay: delay,
+                       options: .curveEaseInOut,
+                       animations: animations,
+                       completion: completion)
     }
     
-    class func defaultSpringAnimation(_ duration: TimeInterval, delay: TimeInterval = 0, animations: @escaping () -> Void, completion: ((_ completed: Bool) -> Void)?) {
-        UIView.animate(withDuration: duration, delay: delay, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.6, options: [.beginFromCurrentState], animations: animations, completion: completion)
+    class func defaultSpringAnimation(_ duration: TimeInterval,
+                                      delay: TimeInterval = 0,
+                                      animations: @escaping () -> Void,
+                                      completion: ((_ completed: Bool) -> Void)?) {
+        UIView.animate(withDuration: duration,
+                       delay: delay,
+                       usingSpringWithDamping: 0.6,
+                       initialSpringVelocity: 0.6,
+                       options: [.beginFromCurrentState],
+                       animations: animations,
+                       completion: completion)
     }
     
     // MARK: Layer Styling
@@ -178,4 +194,3 @@ protocol Anchorable {
 
 extension UIView: Anchorable {}
 extension UILayoutGuide: Anchorable {}
-

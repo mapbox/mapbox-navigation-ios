@@ -16,53 +16,120 @@ open class LanesView: UIView, NavigationComponent {
     var trailingSeparatorView: SeparatorView!
     
     /**
-     Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
+     A closure that is called after either presenting or dismissing lanes view.
+     
+     - parameter completed: Boolean value that indicates whether or not the animation actually
+     finished before the completion handler was called.
      */
-    public func update(for visualInstruction: VisualInstructionBanner?) {
+    public typealias CompletionHandler = (_ completed: Bool) -> Void
+    
+    /**
+     Updates the tertiary instructions banner info with a given `VisualInstructionBanner`.
+     
+     - parameter visualInstruction: Current instruction, which will be displayed in the lanes view.
+     - parameter animated: If `true`, lanes view presentation or dismissal is animated.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called once lanes view is either shown or hidden.
+     */
+    public func update(for visualInstruction: VisualInstructionBanner?,
+                       animated: Bool = true,
+                       duration: TimeInterval = 0.5,
+                       completion: CompletionHandler? = nil) {
         clearLaneViews()
         
         guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction else {
-            hide()
+            hide(animated: animated,
+                 duration: duration) { completed in
+                completion?(completed)
+            }
             return
         }
         
         let subviews = tertiaryInstruction.components.compactMap { (component) -> LaneView? in
-
-            if case let .lane(indications: indications, isUsable: isUsable, preferredDirection: preferredDirection) = component {
+            if case let .lane(indications: indications,
+                              isUsable: isUsable,
+                              preferredDirection: preferredDirection) = component {
                 let maneuverDirection = preferredDirection ?? visualInstruction?.primaryInstruction.maneuverDirection
-                return LaneView(indications: indications, isUsable: isUsable, direction: maneuverDirection)
+                return LaneView(indications: indications,
+                                isUsable: isUsable,
+                                direction: maneuverDirection)
             } else {
                 return nil
             }
         }
         
         guard !subviews.isEmpty && subviews.contains(where: { !$0.isValid }) else {
-            hide()
+            hide(animated: animated,
+                 duration: duration) { completed in
+                completion?(completed)
+            }
             return
         }
         
         stackView.addArrangedSubviews(subviews)
-        show()
-    }
-    
-    public func show(animated: Bool = true) {
-        guard isHidden == true else { return }
-        if animated {
-            UIView.defaultAnimation(0.3, animations: {
-                self.isCurrentlyVisible = true
-                self.isHidden = false
-            }, completion: nil)
-        } else {
-            self.isHidden = false
+        show(animated: animated,
+             duration: duration) { completed in
+            completion?(completed)
         }
     }
     
-    public func hide() {
-        guard isHidden == false else { return }
-        UIView.defaultAnimation(0.3, animations: {
-            self.isCurrentlyVisible = false
-            self.isHidden = true
-        }, completion: nil)
+    /**
+     Shows lanes view.
+     
+     - parameter animated: If `true`, lanes view presentation is animated. Defaults to `true`.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called once lanes view is shown.
+     */
+    public func show(animated: Bool = true,
+                     duration: TimeInterval = 0.5,
+                     completion: CompletionHandler? = nil) {
+        guard isHidden else {
+            completion?(true)
+            return
+        }
+        
+        if animated {
+            UIView.defaultAnimation(duration, animations: {
+                self.isCurrentlyVisible = true
+                self.isHidden = false
+            }) { completed in
+                completion?(completed)
+            }
+        } else {
+            isHidden = false
+            completion?(true)
+        }
+    }
+    
+    /**
+     Hides lanes view.
+     
+     - parameter animated: If `true`, lanes view dismissal is animated. Defaults to `true`.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called after lanes view dismissal.
+     */
+    public func hide(animated: Bool = true,
+                     duration: TimeInterval = 0.5,
+                     completion: CompletionHandler? = nil) {
+        guard !isHidden else {
+            completion?(true)
+            return
+        }
+        
+        if animated {
+            UIView.defaultAnimation(duration, animations: {
+                self.isCurrentlyVisible = false
+                self.isHidden = true
+            }) { completed in
+                completion?(completed)
+            }
+        } else {
+            isHidden = true
+            completion?(true)
+        }
     }
     
     fileprivate func clearLaneViews() {
@@ -74,7 +141,9 @@ open class LanesView: UIView, NavigationComponent {
     
     // MARK: NavigationComponent Implementation
     
-    public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService,
+                                  didPassVisualInstructionPoint instruction: VisualInstructionBanner,
+                                  routeProgress: RouteProgress) {
         update(for: instruction)
     }
     
@@ -125,14 +194,14 @@ open class LanesView: UIView, NavigationComponent {
         addSubview(stackView)
         self.stackView = stackView
         
+        stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
+        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        
         let separatorView = SeparatorView()
         separatorView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(separatorView)
         self.separatorView = separatorView
-        
-        stackView.topAnchor.constraint(equalTo: topAnchor).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        stackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         
         separatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         separatorView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
@@ -147,7 +216,7 @@ open class LanesView: UIView, NavigationComponent {
         trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         trailingSeparatorView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         trailingSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        trailingSeparatorView.leadingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        trailingSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

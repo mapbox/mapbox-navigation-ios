@@ -140,6 +140,9 @@ extension BottomBannerViewController {
     }
     
     open func reinstallConstraints() {
+        NSLayoutConstraint.deactivate(verticalCompactConstraints)
+        NSLayoutConstraint.deactivate(verticalRegularConstraints)
+        
         verticalCompactConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass == .compact }
         verticalRegularConstraints.forEach { $0.isActive = traitCollection.verticalSizeClass == .regular }
     }
@@ -147,7 +150,9 @@ extension BottomBannerViewController {
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         
-        setupConstraints()
+        if previousTraitCollection?.verticalSizeClass != traitCollection.verticalSizeClass {
+            setupConstraints()
+        }
         
         // Do not show trailing separator view in case of regular layout.
         if traitCollection.verticalSizeClass == .regular {

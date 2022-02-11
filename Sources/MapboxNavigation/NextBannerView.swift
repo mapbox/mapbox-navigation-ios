@@ -8,6 +8,7 @@ open class NextInstructionLabel: InstructionLabel {}
 /// :nodoc:
 @IBDesignable
 open class NextBannerView: UIView, NavigationComponent {
+    
     weak var maneuverView: ManeuverView!
     weak var instructionLabel: NextInstructionLabel!
     weak var bottomSeparatorView: SeparatorView!
@@ -25,6 +26,14 @@ open class NextBannerView: UIView, NavigationComponent {
      A vertical separator for the trailing side of the view.
      */
     var trailingSeparatorView: SeparatorView!
+    
+    /**
+     A closure that is called after either presenting or dismissing next banner view.
+     
+     - parameter completed: Boolean value that indicates whether or not the animation actually
+     finished before the completion handler was called.
+     */
+    public typealias CompletionHandler = (_ completed: Bool) -> Void
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -75,7 +84,7 @@ open class NextBannerView: UIView, NavigationComponent {
         trailingSeparatorView.widthAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
         trailingSeparatorView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         trailingSeparatorView.bottomAnchor.constraint(equalTo: bottomAnchor).isActive = true
-        trailingSeparatorView.leadingAnchor.constraint(equalTo: trailingAnchor).isActive = true
+        trailingSeparatorView.trailingAnchor.constraint(equalTo: trailingAnchor).isActive = true
         
         clipsToBounds = true
     }
@@ -93,6 +102,10 @@ open class NextBannerView: UIView, NavigationComponent {
 
         if previousTraitCollection == traitCollection { return }
         
+        updateTrailingSeparatorView()
+    }
+    
+    func updateTrailingSeparatorView() {
         // Do not show trailing separator view in case of regular layout.
         if traitCollection.verticalSizeClass == .regular {
             trailingSeparatorView.isHidden = true
@@ -102,7 +115,7 @@ open class NextBannerView: UIView, NavigationComponent {
     }
     
     func setupLayout() {
-        let heightConstraint = heightAnchor.constraint(equalToConstant: 44)
+        let heightConstraint = heightAnchor.constraint(equalToConstant: 40)
         heightConstraint.priority = UILayoutPriority(rawValue: 999)
         heightConstraint.isActive = true
         
@@ -122,88 +135,149 @@ open class NextBannerView: UIView, NavigationComponent {
         bottomSeparatorView.heightAnchor.constraint(equalToConstant: 1 / UIScreen.main.scale).isActive = true
     }
     
-    public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+    public func navigationService(_ service: NavigationService,
+                                  didPassVisualInstructionPoint instruction: VisualInstructionBanner,
+                                  routeProgress: RouteProgress) {
         guard shouldShowNextBanner(for: routeProgress) else {
             hide()
             return
         }
-
+        
         update(for: instruction)
     }
     
     func shouldShowNextBanner(for routeProgress: RouteProgress) -> Bool {
-        guard let upcomingStep = routeProgress.currentLegProgress.upcomingStep else {
-            return false
-        }
-        
         let durationForNext = RouteControllerHighAlertInterval * RouteControllerLinkedInstructionBufferMultiplier
         
-        guard routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= durationForNext, upcomingStep.expectedTravelTime <= durationForNext else {
-            return false
-        }
-        guard let _ = upcomingStep.instructionsDisplayedAlongStep?.last else {
-            return false
-        }
+        guard let upcomingStep = routeProgress.currentLegProgress.upcomingStep,
+              routeProgress.currentLegProgress.currentStepProgress.durationRemaining <= durationForNext,
+              upcomingStep.expectedTravelTime <= durationForNext,
+              let _ = upcomingStep.instructionsDisplayedAlongStep?.last else {
+                  return false
+              }
         
         return true
     }
-            
+    
     /**
      Updates the instructions banner info with a given `VisualInstructionBanner`.
+     
+     - parameter visualInstruction: Current instruction, which will be displayed in the next banner view.
+     - parameter animated: If `true`, next banner view presentation or dismissal is animated.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called once next banner view is either shown or hidden.
      */
-    public func update(for visualInstruction: VisualInstructionBanner?) {
-        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction, tertiaryInstruction.laneComponents.isEmpty else {
-            hide()
-            return
-        }
+    public func update(for visualInstruction: VisualInstructionBanner?,
+                       animated: Bool = true,
+                       duration: TimeInterval = 0.5,
+                       completion: CompletionHandler? = nil) {
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction,
+              tertiaryInstruction.laneComponents.isEmpty else {
+                  hide(animated: animated,
+                       duration: duration) { completed in
+                      completion?(completed)
+                  }
+                  return
+              }
         
         maneuverView.visualInstruction = tertiaryInstruction
         maneuverView.drivingSide = visualInstruction?.drivingSide ?? .right
         instructionLabel.instruction = tertiaryInstruction
-        show()
+        show(animated: animated,
+             duration: duration) { completed in
+            completion?(completed)
+        }
+        updateTrailingSeparatorView()
     }
     
-    public func show() {
-        guard isHidden, !isCurrentlyVisible else { return }
+    /**
+     Shows next banner view.
+     
+     - parameter animated: If `true`, next banner view presentation is animated. Defaults to `true`.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called once next banner is shown.
+     */
+    public func show(animated: Bool = true,
+                     duration: TimeInterval = 0.5,
+                     completion: CompletionHandler? = nil) {
+        guard isHidden, !isCurrentlyVisible else {
+            completion?(true)
+            return
+        }
         
-        shouldShow = true
-        
-        if !isAnimating {
-            isAnimating = true
+        if animated {
+            shouldShow = true
             
-            UIView.defaultAnimation(1.0, animations: {
-                self.isCurrentlyVisible = true
-                self.isHidden = false
-            }) { _ in
-                self.shouldShow = false
-                self.isAnimating = false
+            if !isAnimating {
+                isAnimating = true
                 
-                if self.shouldHide {
-                    self.hide()
+                UIView.defaultAnimation(duration, animations: {
+                    self.isCurrentlyVisible = true
+                    self.isHidden = false
+                }) { completed in
+                    self.shouldShow = false
+                    self.isAnimating = false
+                    
+                    if self.shouldHide {
+                        self.hide()
+                    }
+                    
+                    completion?(completed)
                 }
+            } else {
+                completion?(true)
             }
+        } else {
+            isHidden = false
+            isCurrentlyVisible = true
+            completion?(true)
         }
     }
     
-    public func hide() {
-        guard !isHidden, isCurrentlyVisible else { return }
+    /**
+     Hides next banner view.
+     
+     - parameter animated: If `true`, next banner view dismissal is animated. Defaults to `true`.
+     - parameter duration: Duration of the animation (in seconds). In case if `animated` parameter
+     is set to `false` this value is ignored.
+     - parameter completion: A completion handler that will be called after next banner view dismissal.
+     */
+    public func hide(animated: Bool = true,
+                     duration: TimeInterval = 0.5,
+                     completion: CompletionHandler? = nil) {
+        guard !isHidden, isCurrentlyVisible else {
+            completion?(true)
+            return
+        }
         
-        shouldHide = true
-        
-        if !isAnimating {
-            isAnimating = true
+        if animated {
+            shouldHide = true
             
-            UIView.defaultAnimation(1.0, animations: {
-                self.isCurrentlyVisible = false
-                self.isHidden = true
-            }) { _ in
-                self.shouldHide = false
-                self.isAnimating = false
+            if !isAnimating {
+                isAnimating = true
                 
-                if self.shouldShow {
-                    self.show()
+                UIView.defaultAnimation(duration, animations: {
+                    self.isCurrentlyVisible = false
+                    self.isHidden = true
+                }) { completed in
+                    self.shouldHide = false
+                    self.isAnimating = false
+                    
+                    if self.shouldShow {
+                        self.show()
+                    }
+                    
+                    completion?(completed)
                 }
+            } else {
+                completion?(true)
             }
+        } else {
+            isHidden = true
+            isCurrentlyVisible = false
+            completion?(true)
         }
     }
 }
