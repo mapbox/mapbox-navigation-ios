@@ -184,9 +184,9 @@
 		8A2DFA8626168A300034A87E /* NavigationCameraDebugView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2DFA8526168A300034A87E /* NavigationCameraDebugView.swift */; };
 		8A30113C25DDCC8A00CE192A /* NavigationCameraConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A30113B25DDCC8A00CE192A /* NavigationCameraConstants.swift */; };
 		8A3474F5269F8B9D00BCF135 /* MapViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3474F3269F8B9D00BCF135 /* MapViewTests.swift */; };
-		8A379B0B27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A379B0A27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift */; };
 		8A379B0F27B5E81B00CE0A23 /* EndOfRouteFeedbackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A379B0C27B5E3C600CE0A23 /* EndOfRouteFeedbackTests.swift */; };
 		8A379B1027B5E98700CE0A23 /* InstructionsCardSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A379B0827B5E38000CE0A23 /* InstructionsCardSnapshotTests.swift */; };
+		8A379B1127B5EADB00CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A379B0A27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift */; };
 		8A38B42126C5AC130088E168 /* CPMapTemplate+MBTestable.m in Sources */ = {isa = PBXBuildFile; fileRef = 8AB316AE26BB315100C3AC76 /* CPMapTemplate+MBTestable.m */; };
 		8A3A219025EEC00200EDA999 /* CoreNavigationNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */; };
 		8A4038F92759526800F8C75C /* route-with-10-legs.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A4038F72759526800F8C75C /* route-with-10-legs.json */; };
@@ -2648,6 +2648,7 @@
 				1662244720256C0700EA4824 /* ImageLoadingURLProtocolSpy.swift in Sources */,
 				8AB316CB26BCA72300C3AC76 /* CGSize.swift in Sources */,
 				AE291FFF20975A7E00F23DFC /* NavigationViewControllerTests.swift in Sources */,
+				8A379B1127B5EADB00CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */,
 				16EF6C1E21193A9600AA580B /* CarPlayManagerTests.swift in Sources */,
 				8AF23ED527AA0B9C0038B40D /* CarPlayManagerSpec.swift in Sources */,
 				DADD82802161EC0300B8B47D /* UIViewAnimationOptionsTests.swift in Sources */,
@@ -2762,7 +2763,6 @@
 				C5C94C1C1DDCD2340097296A /* LegacyRouteController.swift in Sources */,
 				3A8187C924BDAE9C00708F19 /* URLSession.swift in Sources */,
 				359574A81F28CC5A00838209 /* CLLocation.swift in Sources */,
-				8A379B0B27B5E3A000CE0A23 /* InstructionsCardViewControllerTests.swift in Sources */,
 				DA2A01F025F308B100AAB4C6 /* RoadGraphPath.swift in Sources */,
 				DAF27248264E028B00C0AC37 /* Geometry.swift in Sources */,
 				2BEF16472775C8FD0085E3C6 /* MapMatchingResult.swift in Sources */,
