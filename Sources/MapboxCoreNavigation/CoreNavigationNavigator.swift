@@ -42,7 +42,7 @@ class Navigator {
             navigator = .init()
             _navigator = navigator
         }
-        return _navigator!
+        return navigator!
     }
 
     /// `True` when `Navigator.shared` requested at least once.
