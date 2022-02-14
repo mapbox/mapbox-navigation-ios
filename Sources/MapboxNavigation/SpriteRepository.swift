@@ -131,11 +131,21 @@ class SpriteRepository {
         let iconLeght = (displayRef.count < 2 ) ? 2 : displayRef.count
         let infoName = name + "-\(iconLeght)"
         
+        // Retrieve the single shield icon if it has been cached.
+        if let shieldIcon = imageCache.image(forKey: infoName) {
+            return shieldIcon
+        }
+        
         guard let spriteImage = imageCache.image(forKey: "Sprite"),
               let spriteInfo = infoCache.spriteInfo(forKey: infoName) else { return nil }
         
         let shieldRect = CGRect(x: spriteInfo.x, y: spriteInfo.y, width: spriteInfo.width, height: spriteInfo.height)
         if let croppedCGIImage = spriteImage.cgImage?.cropping(to: shieldRect) {
+            
+            // Cache the single shield icon if it hasn't been stored.
+            let shieldIcon = UIImage(cgImage: croppedCGIImage)
+            imageCache.store(shieldIcon, forKey: infoName, toDisk: false, completion: nil)
+            
             return UIImage(cgImage: croppedCGIImage)
         }
         
