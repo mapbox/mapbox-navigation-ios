@@ -255,7 +255,7 @@ open class RouteController: NSObject {
                             legIndex: UInt32(progress.legIndex),
                             routesRequest: routeRequest)
 
-        sharedNavigator.setRoutes(routes) { result in
+        sharedNavigator.setRoutes(routes, uuid: sessionUUID) { result in
             completion?(result)
         }
     }
@@ -296,7 +296,9 @@ open class RouteController: NSObject {
     }
 
     private func update(to status: NavigationStatus) {
-        guard let rawLocation = rawLocation else { return }
+        guard let rawLocation = rawLocation,
+              isValidNavigationStatus(status)
+        else { return }
         
         let snappedLocation = CLLocation(status.location)
         
@@ -365,6 +367,10 @@ open class RouteController: NSObject {
     
     @objc func restoreToOnline(_ notification: Notification) {
         updateNavigator(with: self.routeProgress, completion: nil)
+    }
+
+    func isValidNavigationStatus(_ status: NavigationStatus) -> Bool {
+        return routeProgress.currentLegProgress.leg.steps.indices.contains(Int(status.stepIndex))
     }
     
     func updateIndexes(status: NavigationStatus, progress: RouteProgress) {
@@ -726,7 +732,7 @@ extension RouteController: Router {
     }
 
     private func removeRoutes(completion: ((Error?) -> Void)?) {
-        sharedNavigator.setRoutes(nil) { result in
+        sharedNavigator.setRoutes(nil, uuid: sessionUUID) { result in
             switch result {
             case .success:
                 completion?(nil)
