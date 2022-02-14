@@ -2,12 +2,161 @@ import Foundation
 import UIKit
 import Turf
 import MapboxMaps
+import MapboxDirections
 
 /**
  A label that is used to show a road name and a shield icon.
  */
 @objc(MBWayNameLabel)
-open class WayNameLabel: StylableLabel {}
+open class WayNameLabel: StylableLabel {
+    var spriteRepository = SpriteRepository.shared
+    var representation: VisualInstruction.Component.ImageRepresentation?
+    
+    // When the map style changes, update the sprite repository and the label.
+    func updateStyle(styleURI: StyleURI) {
+        spriteRepository.updateRepository(styleURI: styleURI, representation: representation) { [weak self] in
+            guard let self = self else { return }
+            if let roadName = self.text {
+                self.setUpWith(roadName: roadName)
+            }
+        }
+    }
+    
+    func updateRoad(roadName: String, imageRepresentation: VisualInstruction.Component.ImageRepresentation? = nil) {
+        // When the imageRepresentation changes, update the sprite repository and the label.
+        if imageRepresentation != representation {
+            spriteRepository.updateRepository(representation: imageRepresentation) { [weak self] in
+                guard let self = self else { return }
+                self.updateLabel(roadName: roadName, imageRepresentation: imageRepresentation)
+            }
+        }
+        updateLabel(roadName: roadName, imageRepresentation: imageRepresentation)
+    }
+    
+    private func updateLabel(roadName: String, imageRepresentation: VisualInstruction.Component.ImageRepresentation? = nil) {
+        self.representation = imageRepresentation
+        setUpWith(roadName: roadName)
+    }
+    
+    // Set up the `WayNameLabel` with the road name. Try to use the Mapbox designed shield first, if failed, fall back to use the legacy road shield icon.
+    // If there's no valid shield image, display the road name only.
+    private func setUpWith(roadName: String) {
+        var didSetUp = false
+        
+        if let shield = representation?.shield,
+           let shieldIcon = spriteRepository.getShield(displayRef: shield.text, name: shield.name) {
+            didSetUp = setupWithShield(roadName: roadName, shieldIcon: shieldIcon)
+        }
+        
+        if !didSetUp,
+           let shieldLegacyIcon = spriteRepository.getLegacyShield() {
+            didSetUp = setupWithLegacy(roadName: roadName, shieldIcon: shieldLegacyIcon)
+        }
+        
+        if !didSetUp {
+            text = roadName
+        }
+    }
+
+    /**
+     Fills contents of the `WayNameLabel` with the road name and legacy shield icon.
+     
+     - parameter roadName: The road name `String` that should be presented on the view.
+     - parameter shieldIcon: The legacy `UIImage` that represents the current road.
+     - returns: `true` if operation was successful, `false` otherwise.
+     */
+    @discardableResult
+    private func setupWithLegacy(roadName: String, shieldIcon: UIImage) -> Bool {
+        var currentShieldName: NSAttributedString?, currentRoadName: String?
+        var didSetup = false
+
+        let attachment = ShieldAttachment()
+        let fontSize = frame.size.height / 2.5
+        attachment.image = shieldIcon.withFontSize(font: UIFont.boldSystemFont(ofSize: fontSize),
+                                                   size: frame.size)
+        currentShieldName = NSAttributedString(attachment: attachment)
+
+        if !roadName.isEmpty {
+            currentRoadName = roadName
+            text = roadName
+            didSetup = true
+        }
+
+        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
+            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
+            compositeShield.insert(compositeShieldImage, at: 0)
+            attributedText = compositeShield
+            didSetup = true
+        }
+        return didSetup
+    }
+    
+    /**
+     Fills contents of the `WayNameLabel` with the road name and shield icon from the spriteRepository.
+     
+     - parameter roadName: The road name `String` that should be presented on the view.
+     - parameter shieldIcon: The  `UIImage` that represents the current road shield.
+     - returns: `true` if operation was successful, `false` otherwise.
+     */
+    @discardableResult
+    private func setupWithShield(roadName: String, shieldIcon: UIImage) -> Bool {
+        guard let shield = representation?.shield else { return false }
+
+        var currentShieldName: NSAttributedString?, currentRoadName: String?
+        var didSetup = false
+        currentShieldName = roadShieldAttributedText(for: shield.text, textColor: shield.textColor, image: shieldIcon)
+
+        if !roadName.isEmpty {
+            currentRoadName = roadName
+            text = roadName
+            didSetup = true
+        }
+        
+        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
+            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
+            compositeShield.insert(compositeShieldImage, at: 0)
+            attributedText = compositeShield
+            didSetup = true
+        }
+        
+        return didSetup
+    }
+    
+    private func shieldColor(from shieldTextColor: String) -> UIColor {
+        switch shieldTextColor {
+        case "black":
+            return .black
+        case "blue":
+            return .blue
+        case "green":
+            return .green
+        case "red":
+            return .red
+        case "white":
+            return .white
+        case "yellow":
+            return .yellow
+        case "orange":
+            return .orange
+        default:
+            return .black
+        }
+    }
+    
+    private func roadShieldAttributedText(for text: String,
+                                          textColor: String,
+                                          image: UIImage) -> NSAttributedString? {
+        let attachment = ShieldAttachment()
+        // To correctly scale size of the font its height is based on the label where it is shown.
+        let fontSize = frame.size.height / 2.5
+        attachment.image = image.withCenteredText(text,
+                                                  color: shieldColor(from: textColor),
+                                                  font: UIFont.boldSystemFont(ofSize: fontSize),
+                                                  size: frame.size)
+        return NSAttributedString(attachment: attachment)
+    }
+    
+}
 
 /**
  A host view for `WayNameLabel` that shows a road name and a shield icon.
@@ -114,83 +263,13 @@ open class WayNameView: UIView {
         containerView.layer.cornerRadius = bounds.midY
     }
     
-    /**
-     Fills contents of the `WayNameLabel` with the road name and shield icon by extracting it from the
-     `Turf.Feature` and `MapboxMaps.Style` objects (if it's valid and available).
-     
-     - parameter feature: `Turf.Feature` object, properties of which will be checked for the appropriate
-     shield image related information.
-     - parameter style: Style of the map view instance.
-     - returns: `true` if operation was successful, `false` otherwise.
-     */
-    @discardableResult
-    func setupWith(feature: Turf.Feature, using style: MapboxMaps.Style?) -> Bool {
-        var currentShieldName: NSAttributedString?, currentRoadName: String?
-        var didSetup = false
-        
-        if case let .string(ref) = feature.properties?["ref"],
-           case let .string(shield) = feature.properties?["shield"],
-           case let .number(reflen) = feature.properties?["reflen"] {
-            let textColor = roadShieldTextColor(line: feature) ?? .black
-            let imageName = "\(shield)-\(Int(reflen))"
-            currentShieldName = roadShieldAttributedText(for: ref, textColor: textColor, style: style, imageName: imageName)
-        }
-        
-        if case let .string(roadName) = feature.properties?["name"], !roadName.isEmpty {
-            currentRoadName = roadName
-            self.text = roadName
-            didSetup = true
-        }
-        
-        if let compositeShieldImage = currentShieldName, let roadName = currentRoadName {
-            let compositeShield = NSMutableAttributedString(string: " \(roadName)")
-            compositeShield.insert(compositeShieldImage, at: 0)
-            self.attributedText = compositeShield
-            didSetup = true
-        }
-        
-        return didSetup
+    func updateStyle(styleURI: StyleURI?) {
+        guard let styleURI = styleURI else { return }
+        label.updateStyle(styleURI: styleURI)
     }
     
-    private func roadShieldTextColor(line: Turf.Feature) -> UIColor? {
-        guard case let .string(shield) = line.properties?["shield"] else {
-            return nil
-        }
-        
-        // shield_text_color is present in Mapbox Streets source v8 but not v7.
-        guard case let .string(shieldTextColor) = line.properties?["shield_text_color"] else {
-            let currentShield = HighwayShield.RoadType(rawValue: shield)
-            return currentShield?.textColor
-        }
-        
-        switch shieldTextColor {
-        case "black":
-            return .black
-        case "blue":
-            return .blue
-        case "white":
-            return .white
-        case "yellow":
-            return .yellow
-        case "orange":
-            return .orange
-        default:
-            return .black
-        }
+    func updateRoad(roadName: String, imageRepresentation: VisualInstruction.Component.ImageRepresentation? = nil) {
+        label.updateRoad(roadName: roadName, imageRepresentation: imageRepresentation)
     }
     
-    private func roadShieldAttributedText(for text: String,
-                                          textColor: UIColor,
-                                          style: MapboxMaps.Style?,
-                                          imageName: String) -> NSAttributedString? {
-        guard let image = style?.image(withId: imageName) else { return nil }
-        let attachment = ShieldAttachment()
-        // To correctly scale size of the font its height is based on the label where it is shown.
-        let fontSize = label.frame.size.height / 2.5
-        attachment.image = image.withCenteredText(text,
-                                                  color: textColor,
-                                                  font: UIFont.boldSystemFont(ofSize: fontSize),
-                                                  size: label.frame.size)
-        return NSAttributedString(attachment: attachment)
-    }
 }

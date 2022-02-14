@@ -15,6 +15,23 @@ extension UIImage {
         self.init(cgImage: cgImage)
     }
     
+    func withFontSize(font: UIFont,
+                      size: CGSize?) -> UIImage {
+        let maxHeight = size?.height ?? font.lineHeight * 2
+        var constrainedSize = self.size
+        constrainedSize.width = min(constrainedSize.width,
+                                    constrainedSize.width * maxHeight / constrainedSize.height)
+
+        constrainedSize.height = min(constrainedSize.height,
+                                     maxHeight)
+
+        let renderer = UIGraphicsImageRenderer(size: constrainedSize)
+        return renderer.image { _ in
+            let rect = CGRect(origin: .zero, size: constrainedSize)
+            draw(in: rect)
+        }
+    }
+    
     func withCenteredText(_ text: String,
                           color: UIColor,
                           font: UIFont,

@@ -432,10 +432,11 @@ open class RouteController: NSObject {
     }
     
     func updateRoadName(status: NavigationStatus) {
-        let roadName = status.roadName
-        NotificationCenter.default.post(name: .currentRoadNameDidChange, object: self, userInfo: [
-            NotificationUserInfoKey.roadNameKey: roadName
-        ])
+        let userInfo: [NotificationUserInfoKey: Any] = [
+            NotificationUserInfoKey.roadNameKey: status.roadName,
+            NotificationUserInfoKey.imageRepresentationKey: status.imageRepresentation
+        ]
+        NotificationCenter.default.post(name: .currentRoadNameDidChange, object: self, userInfo: userInfo)
     }
     
     func updateRouteLegProgress(status: NavigationStatus) {

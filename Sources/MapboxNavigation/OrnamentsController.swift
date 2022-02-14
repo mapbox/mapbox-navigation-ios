@@ -170,36 +170,43 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     
     var labelRoadNameCompletionHandler: (LabelRoadNameCompletionHandler)?
     
-    var roadNameFromStatus: String?
-    
     @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
-        roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
+        let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
+        if let roadName = roadNameFromStatus?.nonEmptyString {
+            let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.imageRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
+            navigationView.wayNameView.updateRoad(roadName: roadName, imageRepresentation: representation)
+            
+            // The `WayNameView` will be hidden when not under following camera state.
+            navigationView.wayNameView.containerView.isHidden = !navigationView.resumeButton.isHidden
+        } else {
+            navigationView.wayNameView.text = nil
+            navigationView.wayNameView.containerView.isHidden = true
+            return
+        }
     }
     
     /**
-     Updates the current road name label to reflect the road on which the user is currently traveling.
+     Update the sprite repository of current road label when map style changes.
      
-     - parameter at: The user’s current location as provided by the system location management system. This has less priority then `snappedLocation` (see below) and is used only if method will attempt to resolve road name automatically.
-     - parameter suggestedName: The road name to put onto label. If not provided - method will attempt to extract the closest road name from map features.
-     - parameter snappedLocation: User's location, snapped to the road network. Has higher priority then `at` location.
+     - parameter styleURI: The `StyleURI` that the map is presenting.
      */
-    func labelCurrentRoad(at rawLocation: CLLocation, suggestedName roadName: String?, for snappedLocation: CLLocation? = nil) {
+    func updateStyle(styleURI: StyleURI?) {
+        navigationView.wayNameView.updateStyle(styleURI: styleURI)
+    }
+    
+    /**
+     Update the current road name label to reflect the road name user suggested.
+     
+     - parameter suggestedName: The road name to put onto label. If not provided - method will ignore it.
+     */
+    func labelCurrentRoadName(suggestedName roadName: String?) {
+        // The `WayNameView` will be hidden when not under following camera state.
         guard navigationView.resumeButton.isHidden else { return }
-        
+
         if let roadName = roadName {
             navigationView.wayNameView.text = roadName.nonEmptyString
             navigationView.wayNameView.containerView.isHidden = roadName.isEmpty
-            
             return
-        }
-        
-        navigationMapView.labelCurrentRoadFeature(at: snappedLocation ?? rawLocation,
-                                                  router: navigationViewData.router,
-                                                  wayNameView: navigationView.wayNameView,
-                                                  roadNameFromStatus: roadNameFromStatus)
-        
-        if let labelRoadNameCompletionHandler = labelRoadNameCompletionHandler {
-            labelRoadNameCompletionHandler(true)
         }
     }
     

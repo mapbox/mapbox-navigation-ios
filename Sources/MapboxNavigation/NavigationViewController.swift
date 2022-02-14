@@ -781,11 +781,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         let preventRerouting = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
         let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint && (progress.currentLegProgress.distanceRemaining <= 0)
 
-        if snapsUserLocationAnnotationToRoute && (!userArrivedAtWaypoint || preventRerouting) {
-            ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation), for: location)
-        } else  {
-            ornamentsController?.labelCurrentRoad(at: rawLocation, suggestedName: roadName(at: rawLocation))
-        }
+        ornamentsController?.labelCurrentRoadName(suggestedName: roadName(at: rawLocation))
 
         let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
         if movePuckToCurrentLocation {
@@ -992,7 +988,10 @@ extension NavigationViewController: StyleManagerDelegate {
     
     private func updateMapStyle(_ style: Style) {
         if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
-            navigationMapView?.mapView.mapboxMap.style.uri = StyleURI(url: style.mapStyleURL)
+            let styleURI = StyleURI(url: style.mapStyleURL)
+            navigationMapView?.mapView.mapboxMap.style.uri = styleURI
+            // Update the sprite repository of wayNameView when map style changes.
+            ornamentsController?.updateStyle(styleURI: styleURI)
         }
         
         currentStatusBarStyle = style.statusBarStyle ?? .default
