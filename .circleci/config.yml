@@ -680,30 +680,30 @@ workflows:
   main-workflow:
     jobs:
       - build-job:
-          name: "Xcode_12.5.1_iOS_14.5_Debug"
-          xcode: "12.5.1"
-          iOS: "14.5"
+          name: "Xcode_13.2.1_iOS_15.2_Debug"
+          xcode: "13.2.1"
+          iOS: "15.2"
           device: "iPhone 12 Pro Max"
           context: Slack Orb
       - build-job:
-          name: "Xcode_12.5.1_iOS_14.5_SPM_Debug"
-          xcode: "12.5.1"
-          iOS: "14.5"
+          name: "Xcode_13.2.1_iOS_15.2_SPM_Debug"
+          xcode: "13.2.1"
+          iOS: "15.2"
           device: "iPhone 12 Pro Max"
           spm: true
           codecoverage: false
           context: Slack Orb
       - build-job:
-          name: "Xcode_12.5.1_iOS_14.5_Release"
-          xcode: "12.5.1"
-          iOS: "14.5"
+          name: "Xcode_13.2.1_iOS_15.2_Release"
+          xcode: "13.2.1"
+          iOS: "15.2"
           device: "iPhone 12 Pro Max"
           context: Slack Orb
           configuration: "Release"
       - build-job:
-          name: "Xcode_12.5.1_iOS_14.5_SPM_Release"
-          xcode: "12.5.1"
-          iOS: "14.5"
+          name: "Xcode_13.2.1_iOS_15.2_SPM_Release"
+          xcode: "13.2.1"
+          iOS: "15.2"
           device: "iPhone 12 Pro Max"
           spm: true
           codecoverage: false
