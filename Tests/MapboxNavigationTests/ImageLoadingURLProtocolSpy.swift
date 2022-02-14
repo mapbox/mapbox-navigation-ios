@@ -72,16 +72,13 @@ final class ImageLoadingURLProtocolSpy: URLProtocol {
 
                 switch result {
                 case .success(let imageData):
-                    guard let image: UIImage = UIImage(data: imageData) else {
-                        XCTFail("Invalid image data found"); return
-                    }
                     // send an NSHTTPURLResponse to the client
                     let response = HTTPURLResponse.init(url: url, statusCode: 200, httpVersion: "1.1", headerFields: nil)
                     client.urlProtocol(self, didReceive: response!, cacheStoragePolicy: .notAllowed)
 
                     ImageLoadingURLProtocolSpy.imageLoadingSemaphore.wait()
 
-                    client.urlProtocol(self, didLoad: image.pngData()!)
+                    client.urlProtocol(self, didLoad: imageData)
                 case .failure(let error):
                     switch error {
                     case .other(let otherError):
