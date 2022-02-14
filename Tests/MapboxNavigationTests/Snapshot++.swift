@@ -8,6 +8,8 @@ let snapshotDeviceName: String = {
         .replacingOccurrences(of: ",", with: "_")
 }()
 
+let operatingSystemVersion: String = UIDevice.current.systemVersion
+
 func assertImageSnapshot<Value, Format>(
     matching value: @autoclosure () throws -> Value,
     as snapshotting: Snapshotting<Value, Format>,
@@ -25,6 +27,7 @@ func assertImageSnapshot<Value, Format>(
         .deletingLastPathComponent()
         .appendingPathComponent("__Snapshots__")
         .appendingPathComponent(snapshotDeviceName)
+        .appendingPathComponent(operatingSystemVersion)
         .appendingPathComponent(fileName)
 
     let failure = verifySnapshot(
