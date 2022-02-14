@@ -37,12 +37,12 @@ class Navigator {
      satisfying provided configuration (`tilesVersion` and `NavigationSettings`).
      */
     static var shared: Navigator {
-        var navigator = _navigator
-        if !isSharedInstanceCreated {
-            navigator = .init()
+        guard let navigator = _navigator else {
+            let navigator = Navigator()
             _navigator = navigator
+            return navigator
         }
-        return navigator!
+        return navigator
     }
 
     /// `True` when `Navigator.shared` requested at least once.
