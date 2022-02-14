@@ -340,6 +340,9 @@ jobs:
       verify_localization:
         type: boolean
         default: true
+      configuration:
+        type: string
+        default: "Debug"
     macos:
       xcode: << parameters.xcode >>
     environment:
@@ -374,7 +377,7 @@ jobs:
                 xcode: << parameters.xcode >>
             - run:
                 name: MapboxCoreNavigation
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -project MapboxNavigation.xcodeproj -scheme MapboxCoreNavigation -configuration << parameters.configuration >> clean build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
       - when:
           condition: << parameters.spm >>
           steps:
@@ -383,7 +386,7 @@ jobs:
                 command: rm -rf *.xcodeproj
             - run:
                 name: MapboxNavigation-Package
-                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >>
+                command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>' -scheme MapboxNavigation-Package -configuration << parameters.configuration >> build <<# parameters.test >>test <</ parameters.test >> <<# parameters.codecoverage >>-enableCodeCoverage YES<</ parameters.codecoverage >> ENABLE_TESTABILITY=YES
       - when:
           condition: << parameters.codecoverage >>
           steps:
@@ -677,19 +680,35 @@ workflows:
   main-workflow:
     jobs:
       - build-job:
-          name: "Xcode_12.5.1_iOS_14.5"
+          name: "Xcode_12.5.1_iOS_14.5_Debug"
           xcode: "12.5.1"
           iOS: "14.5"
           device: "iPhone 12 Pro Max"
           context: Slack Orb
       - build-job:
-          name: "Xcode_12.5.1_iOS_14.5_SPM"
+          name: "Xcode_12.5.1_iOS_14.5_SPM_Debug"
           xcode: "12.5.1"
           iOS: "14.5"
           device: "iPhone 12 Pro Max"
           spm: true
           codecoverage: false
           context: Slack Orb
+      - build-job:
+          name: "Xcode_12.5.1_iOS_14.5_Release"
+          xcode: "12.5.1"
+          iOS: "14.5"
+          device: "iPhone 12 Pro Max"
+          context: Slack Orb
+          configuration: "Release"
+      - build-job:
+          name: "Xcode_12.5.1_iOS_14.5_SPM_Release"
+          xcode: "12.5.1"
+          iOS: "14.5"
+          device: "iPhone 12 Pro Max"
+          spm: true
+          codecoverage: false
+          context: Slack Orb
+          configuration: "Release"
       - pod-job:
           name: "Xcode_12.5_iOS_14.5_CP_install"
           update: false
@@ -720,7 +739,6 @@ workflows:
           filters:
             tags:
               only: /^v\d+\.\d+\.\d+(-.+)?$/
-        
       - ios-trigger-metrics:
           filters:
             branches:

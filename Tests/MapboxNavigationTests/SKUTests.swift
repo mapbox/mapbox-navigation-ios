@@ -6,6 +6,7 @@ import MapboxSpeech
 import MapboxNavigation
 import MapboxCommon_Private
 
+#if DEBUG
 class SKUTests: TestCase {
     private var navigator: MapboxCoreNavigation.Navigator? = nil
 
@@ -18,7 +19,7 @@ class SKUTests: TestCase {
         super.tearDown()
         navigator = nil
     }
-    
+
     func testDirectionsSKU() {
         let expected: String = UUID().uuidString
         billingServiceMock.onGetSKUTokenIfValid = { _ in
@@ -66,3 +67,4 @@ class SKUTests: TestCase {
         XCTAssertEqual(viewController.directionsToken, skuToken)
     }
 }
+#endif

@@ -6,7 +6,7 @@ import MapboxNavigation
 import MapboxDirections
 import MapboxSpeech
 
-
+#if DEBUG
 class TokenTestViewController: UIViewController {
     
     var mapViewToken: String?
@@ -61,3 +61,4 @@ class TokenTestViewController: UIViewController {
         }
     }
 }
+#endif
