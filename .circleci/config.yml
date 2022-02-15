@@ -264,10 +264,10 @@ jobs:
         default: false
       iOS:
         type: string
-        default: "14.5"
+        default: "15.2"
       xcode:
         type: string
-        default: "12.5.1"
+        default: "13.2.1"
       lint:
         type: boolean
         default: false
@@ -295,7 +295,7 @@ jobs:
           condition: << parameters.update >>
           steps:
             - run: cd Tests/CocoaPodsTest/PodInstall && bundle exec pod install --repo-update
-      - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 8 Plus' clean build
+      - run: cd Tests/CocoaPodsTest/PodInstall && xcodebuild -workspace PodInstall.xcworkspace -scheme PodInstall -destination 'platform=iOS Simulator,OS=<< parameters.iOS >>,name=iPhone 13 Pro Max' clean build
       - when:
           condition: << parameters.archive >>
           steps:
@@ -705,17 +705,17 @@ workflows:
           context: Slack Orb
           configuration: "Release"
       - pod-job:
-          name: "Xcode_12.5_iOS_14.5_CP_install"
+          name: "Xcode_13.2.1_iOS_15.2_CP_install"
           update: false
-          xcode: "12.5.0"
-          iOS: "14.5"
+          xcode: "13.2.1"
+          iOS: "15.2"
           archive: true
           context: Slack Orb
       - pod-job:
-          name: "Xcode_12.5_iOS_14.5_CP_update"
+          name: "Xcode_13.2.1_iOS_15.2_CP_update"
           update: true
-          xcode: "12.5.0"
-          iOS: "14.5"
+          xcode: "13.2.1"
+          iOS: "15.2"
           lint: true
           context: Slack Orb
       - build-example:
