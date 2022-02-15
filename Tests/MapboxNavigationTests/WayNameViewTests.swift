@@ -34,14 +34,20 @@ class WayNameViewTests: TestCase {
     func loadingURL(baseURL: URL, styleID: String) {
         guard let spriteRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: true, baseURL: baseURL, styleID: styleID),
               let metadataRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) else {
-                  XCTFail("Failed to form request to update SpriteRepository")
+                  XCTFail("Failed to form request to update SpriteRepository.")
                   return
               }
         
         let scale = Int(VisualInstruction.Component.scale)
-        ImageLoadingURLProtocolSpy.registerData(ShieldImage.shield.image.pngData()!, forURL: spriteRequestURL)
+        guard let shieldData = ShieldImage.shield.image.pngData(),
+              let scaleShieldImageURL = URL(string: ShieldImage.i280.baseURL.absoluteString + "@\(scale)x.png") else {
+                  XCTFail("No data or URL found for shield image.")
+                  return
+              }
+        
+        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
         ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(ShieldImage.shield.image.pngData()!, forURL:  URL(string: ShieldImage.i280.baseURL.absoluteString + "@\(scale)x.png")!)
+        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: scaleShieldImageURL)
     }
     
     func testUpdateStyle() {
@@ -65,7 +71,12 @@ class WayNameViewTests: TestCase {
         waitForExpectations(timeout: 3, handler: nil)
         
         XCTAssertEqual(wayNameView.label.spriteRepository.styleURI, styleURI, "Failed to update the styleURI of Sprite Repository.")
-        XCTAssertTrue(wayNameView.label.attributedText!.containsAttachments(in: NSRange(location: 0, length: 1)), "Failed to update the shield images when update style.")
+        
+        guard let attributedText = wayNameView.label.attributedText else {
+            XCTFail("Failed to update the label attributed string.")
+            return
+        }
+        XCTAssertTrue(attributedText.containsAttachments(in: NSRange(location: 0, length: 1)), "Failed to update the shield images when update style.")
     }
     
     func testUpdateRoad() {
@@ -77,17 +88,22 @@ class WayNameViewTests: TestCase {
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: baseURL, name: "us-interstate", textColor: "white", text: "280")
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: shield)
         
-        wayNameView.updateRoad(roadName: roadName, imageRepresentation: representation)
+        wayNameView.updateRoad(roadName: roadName, representation: representation)
         expectation(description: "Road label updated.") {
             self.wayNameView.label.text != nil
         }
         waitForExpectations(timeout: 3, handler: nil)
         
         XCTAssertEqual(wayNameView.label.representation, representation, "Failed to update the imageRepresentation of WayNameView label.")
-        XCTAssertTrue(wayNameView.label.attributedText!.containsAttachments(in: NSRange(location: 0, length: 1)), "Failed to update the shield images when update style.")
+        
+        guard let attributedText = wayNameView.label.attributedText else {
+            XCTFail("Failed to update the label attributed string.")
+            return
+        }
+        XCTAssertTrue(attributedText.containsAttachments(in: NSRange(location: 0, length: 1)), "Failed to update the shield images when update style.")
         
         roadName = "101"
-        wayNameView.updateRoad(roadName: roadName, imageRepresentation: nil)
+        wayNameView.updateRoad(roadName: roadName, representation: nil)
         expectation(description: "Road label updated with the new imageRepresentation.") {
             self.wayNameView.label.representation == nil
         }

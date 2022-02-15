@@ -173,11 +173,9 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
         let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
-            let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.imageRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
-            navigationView.wayNameView.updateRoad(roadName: roadName, imageRepresentation: representation)
-            
-            // The `WayNameView` will be hidden when not under following camera state.
-            navigationView.wayNameView.containerView.isHidden = !navigationView.resumeButton.isHidden
+            let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
+            navigationView.wayNameView.updateRoad(roadName: roadName, representation: representation)
+            navigationView.wayNameView.containerView.isHidden = false
         } else {
             navigationView.wayNameView.text = nil
             navigationView.wayNameView.containerView.isHidden = true
@@ -200,9 +198,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
      - parameter suggestedName: The road name to put onto label. If not provided - method will ignore it.
      */
     func labelCurrentRoadName(suggestedName roadName: String?) {
-        // The `WayNameView` will be hidden when not under following camera state.
-        guard navigationView.resumeButton.isHidden else { return }
-
         if let roadName = roadName {
             navigationView.wayNameView.text = roadName.nonEmptyString
             navigationView.wayNameView.containerView.isHidden = roadName.isEmpty

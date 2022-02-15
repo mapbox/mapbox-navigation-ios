@@ -22,51 +22,45 @@ open class WayNameLabel: StylableLabel {
         }
     }
     
-    func updateRoad(roadName: String, imageRepresentation: VisualInstruction.Component.ImageRepresentation? = nil) {
-        // When the imageRepresentation changes, update the sprite repository and the label.
-        if imageRepresentation != representation {
-            spriteRepository.updateRepository(representation: imageRepresentation) { [weak self] in
+    func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
+        // When the imageRepresentation of road shield changes, update the sprite repository and the label.
+        if representation != self.representation {
+            spriteRepository.updateRepository(representation: representation) { [weak self] in
                 guard let self = self else { return }
-                self.updateLabel(roadName: roadName, imageRepresentation: imageRepresentation)
+                self.representation = representation
+                self.setUpWith(roadName: roadName)
             }
         }
-        updateLabel(roadName: roadName, imageRepresentation: imageRepresentation)
-    }
-    
-    private func updateLabel(roadName: String, imageRepresentation: VisualInstruction.Component.ImageRepresentation? = nil) {
-        self.representation = imageRepresentation
+        self.representation = representation
         setUpWith(roadName: roadName)
     }
     
     // Set up the `WayNameLabel` with the road name. Try to use the Mapbox designed shield first, if failed, fall back to use the legacy road shield icon.
     // If there's no valid shield image, display the road name only.
     private func setUpWith(roadName: String) {
-        var didSetUp = false
-        
+        // TODO: Use shield for us-state shield first
         if let shield = representation?.shield,
-           let shieldIcon = spriteRepository.getShield(displayRef: shield.text, name: shield.name) {
-            didSetUp = setupWithShield(roadName: roadName, shieldIcon: shieldIcon)
+           shield.name != "us-state",
+           setAttributedText(roadName: roadName, shield: shield) {
+            return
         }
         
-        if !didSetUp,
-           let shieldLegacyIcon = spriteRepository.getLegacyShield() {
-            didSetUp = setupWithLegacy(roadName: roadName, shieldIcon: shieldLegacyIcon)
+        if setAttributedText(roadName: roadName) {
+            return
         }
         
-        if !didSetUp {
-            text = roadName
-        }
+        text = roadName
     }
 
     /**
      Fills contents of the `WayNameLabel` with the road name and legacy shield icon.
      
      - parameter roadName: The road name `String` that should be presented on the view.
-     - parameter shieldIcon: The legacy `UIImage` that represents the current road.
      - returns: `true` if operation was successful, `false` otherwise.
      */
     @discardableResult
-    private func setupWithLegacy(roadName: String, shieldIcon: UIImage) -> Bool {
+    private func setAttributedText(roadName: String) -> Bool {
+        guard let shieldIcon = spriteRepository.getLegacyShield() else { return false }
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false
 
@@ -92,15 +86,15 @@ open class WayNameLabel: StylableLabel {
     }
     
     /**
-     Fills contents of the `WayNameLabel` with the road name and shield icon from the spriteRepository.
+     Fills contents of the `WayNameLabel` with the road name and road shield.
      
      - parameter roadName: The road name `String` that should be presented on the view.
-     - parameter shieldIcon: The  `UIImage` that represents the current road shield.
+     - parameter shield: The  `ShieldRepresentation`object that represents the current road shield.
      - returns: `true` if operation was successful, `false` otherwise.
      */
     @discardableResult
-    private func setupWithShield(roadName: String, shieldIcon: UIImage) -> Bool {
-        guard let shield = representation?.shield else { return false }
+    private func setAttributedText(roadName: String, shield: VisualInstruction.Component.ShieldRepresentation) -> Bool {
+        guard let shieldIcon = spriteRepository.getShield(displayRef: shield.text, name: shield.name) else { return false }
 
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false
@@ -268,8 +262,8 @@ open class WayNameView: UIView {
         label.updateStyle(styleURI: styleURI)
     }
     
-    func updateRoad(roadName: String, imageRepresentation: VisualInstruction.Component.ImageRepresentation? = nil) {
-        label.updateRoad(roadName: roadName, imageRepresentation: imageRepresentation)
+    func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
+        label.updateRoad(roadName: roadName, representation: representation)
     }
     
 }

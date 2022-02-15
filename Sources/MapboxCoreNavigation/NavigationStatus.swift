@@ -8,8 +8,8 @@ extension NavigationStatus {
         roads.map({ $0.text }).prefix(while: { $0 != "/" }).joined(separator: " ")
     }
     
-    // This `imageRepresentation` property returns the image representation of current road based on the `roads` array as the `VisualInstruction.Component.ImageRepresentation`.
-    var imageRepresentation: VisualInstruction.Component.ImageRepresentation {
+    // This `routeShieldRepresentation` property returns the image representation of current road shield based on the `roads` array as the `VisualInstruction.Component.ImageRepresentation`.
+    var routeShieldRepresentation: VisualInstruction.Component.ImageRepresentation {
         var shield: VisualInstruction.Component.ShieldRepresentation? = nil
         var imageBaseUrl: URL? = nil
         
