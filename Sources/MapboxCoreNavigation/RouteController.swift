@@ -37,6 +37,7 @@ open class RouteController: NSObject {
 
 
     private let sessionUUID: UUID = .init()
+    private var isInitialized: Bool = false
     
     // MARK: Configuring Route-Related Data
     
@@ -375,7 +376,7 @@ open class RouteController: NSObject {
     }
 
     func isValidNavigationStatus(_ status: NavigationStatus) -> Bool {
-        return routeProgress.currentLegProgress.leg.steps.indices.contains(Int(status.stepIndex))
+        return isInitialized && routeProgress.currentLegProgress.leg.steps.indices.contains(Int(status.stepIndex))
     }
     
     func updateIndexes(status: NavigationStatus, progress: RouteProgress) {
@@ -574,7 +575,9 @@ open class RouteController: NSObject {
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
-        updateNavigator(with: routeProgress, completion: nil)
+        updateNavigator(with: routeProgress) { [weak self] _ in
+            self?.isInitialized = true
+        }
         Self.instanceLock.lock()
         Self.instance = self
         Self.instanceLock.unlock()
