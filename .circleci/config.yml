@@ -249,12 +249,6 @@ step-library:
         command: |
           for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
 
-  - &build-Example
-      run:
-        name: Build Example
-        command: |
-          xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=14.5,name=iPhone 8 Plus' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build
-
   - &trigger-metrics
       run:
         name: Trigger metrics
@@ -396,11 +390,11 @@ jobs:
       - notify-build-finished
 
 
-  xcode-12-examples:
+  build-example:
     parameters:
       xcode:
         type: string
-        default: "12.5.1"
+        default: "13.2.1"
       spm:
         type: boolean
         default: true
@@ -413,9 +407,10 @@ jobs:
       - *prepare-mapbox-file
       - *prepare-netrc-file
       - *add-github-to-known-hosts
-      - *build-Example
+      - run:
+          name: Build Example app
+          command: xcodebuild -sdk iphonesimulator -destination 'platform=iOS Simulator,OS=15.2,name=iPhone 13 Pro Max' -project MapboxNavigation-SPM.xcodeproj -scheme Example clean build
       - notify-build-finished
-      
 
   ios-trigger-metrics:
     parameters:
@@ -723,7 +718,8 @@ workflows:
           iOS: "14.5"
           lint: true
           context: Slack Orb
-      - xcode-12-examples:
+      - build-example:
+          name: "Build Example"
           context: Slack Orb
       - spm-test-job:
           name: "swift test; Xcode 12.5; iOS 14.5"
