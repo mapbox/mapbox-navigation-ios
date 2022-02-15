@@ -221,7 +221,7 @@ extension NavigationMapView {
         let mainRouteLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor, isSoft: crossfadesCongestionSegments)
         setLayerLineGradient(for: mainRouteLayerIdentifier, exp: mainRouteLayerGradientExpression)
         
-        let mainRouteCasingLayerGradient = routeLineCongestionGradient(fractionTraveled: fractionTraveled)
+        let mainRouteCasingLayerGradient = routeLineCongestionGradient(route, fractionTraveled: fractionTraveled)
         let mainRouteCasingLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor)
         setLayerLineGradient(for: mainRouteCasingLayerIdentifier, exp: mainRouteCasingLayerGradientExpression)
         
@@ -247,16 +247,64 @@ extension NavigationMapView {
         }
     }
     
+    func lineLayerColorIfPresent(from route: Route?) -> UIColor? {
+        guard let route = route else { return nil }
+        
+        var overriddenLineLayerColor: UIColor? = nil
+        let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
+        let mainRouteSourceIdentifier = route.identifier(.source(isMainRoute: true, isSourceCasing: false))
+        if let lineLayer = delegate?.navigationMapView(self,
+                                                       routeLineLayerWithIdentifier: mainRouteLayerIdentifier,
+                                                       sourceIdentifier: mainRouteSourceIdentifier),
+           let color = lineLayer.lineColor {
+            
+            switch color {
+            case .constant(let constant):
+                overriddenLineLayerColor = UIColor(constant)
+            case .expression(_):
+                // TODO: Handle case when route line color is provided as an expression.
+                break
+            }
+        }
+        
+        return overriddenLineLayerColor
+    }
+    
+    func lineLayerCasingColorIfPresent(from route: Route?) -> UIColor? {
+        guard let route = route else { return nil }
+        
+        var overriddenLineLayerCasingColor: UIColor? = nil
+        let mainRouteCasingLayerIdentifier = route.identifier(.routeCasing(isMainRoute: true))
+        let mainRouteCasingSourceIdentifier = route.identifier(.source(isMainRoute: true, isSourceCasing: true))
+        if let lineLayer = delegate?.navigationMapView(self,
+                                                       routeCasingLineLayerWithIdentifier: mainRouteCasingLayerIdentifier,
+                                                       sourceIdentifier: mainRouteCasingSourceIdentifier),
+           let color = lineLayer.lineColor {
+            
+            switch color {
+            case .constant(let constant):
+                overriddenLineLayerCasingColor = UIColor(constant)
+            case .expression(_):
+                // TODO: Handle case when route line color is provided as an expression.
+                break
+            }
+        }
+        
+        return overriddenLineLayerCasingColor
+    }
+    
     func updateRouteLineGradientStops(fractionTraveled: Double, gradientStops: [Double: UIColor], baseColor: UIColor) -> [Double: UIColor] {
         // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply its color to the `fractionTraveled` stop.
         var minimumSegment: (Double, UIColor) = (0.0, baseColor)
         var filteredGradientStops = [Double: UIColor]()
         
-        for (key,value) in gradientStops {
+        let overriddenLineLayerColor = lineLayerColorIfPresent(from: routes?.first)
+        
+        for (key, value) in gradientStops {
             if key > fractionTraveled {
-                filteredGradientStops[key] = value
+                filteredGradientStops[key] = overriddenLineLayerColor ?? value
             } else if key >= minimumSegment.0 {
-                minimumSegment = (key, value)
+                minimumSegment = (key, overriddenLineLayerColor ?? value)
             }
         }
         
@@ -379,23 +427,34 @@ extension NavigationMapView {
         return gradientStops
     }
     
-    func routeLineCongestionGradient(_ congestionFeatures: [Turf.Feature]? = nil, fractionTraveled: Double, isMain: Bool = true, isSoft: Bool = false) -> [Double: UIColor] {
+    func routeLineCongestionGradient(_ route: Route,
+                                     congestionFeatures: [Turf.Feature]? = nil,
+                                     fractionTraveled: Double,
+                                     isMain: Bool = true,
+                                     isSoft: Bool = false) -> [Double: UIColor] {
+        let overriddenLineLayerCasingColor = lineLayerCasingColorIfPresent(from: route)
         
         let lineSettings = LineGradientSettings(fractionTraveled: fractionTraveled,
                                                 isSoft: isSoft,
-                                                startingColor: isMain ? .trafficUnknown : .alternativeTrafficUnknown,
-                                                baseColor: routeCasingColor,
+                                                startingColor: overriddenLineLayerCasingColor ?? (isMain ? .trafficUnknown : .alternativeTrafficUnknown),
+                                                baseColor: overriddenLineLayerCasingColor ?? routeCasingColor,
                                                 featureColor: {
-                                                    if case let .boolean(isCurrentLeg) = $0.properties?[CurrentLegAttribute],
-                                                       isCurrentLeg {
-                                                        if case let .string(congestionLevel) = $0.properties?[CongestionAttribute] {
-                                                            return self.congestionColor(for: congestionLevel, isMain: isMain)
-                                                        } else {
-                                                            return self.congestionColor(for: nil, isMain: isMain)
-                                                        }
-                                                    }
-                                                    return self.routeCasingColor
-                                                })
+            if let overriddenLineLayerCasingColor = overriddenLineLayerCasingColor {
+                return overriddenLineLayerCasingColor
+            } else {
+                if case let .boolean(isCurrentLeg) = $0.properties?[CurrentLegAttribute],
+                   isCurrentLeg {
+                    if case let .string(congestionLevel) = $0.properties?[CongestionAttribute] {
+                        return self.congestionColor(for: congestionLevel, isMain: isMain)
+                    } else {
+                        return self.congestionColor(for: nil, isMain: isMain)
+                    }
+                }
+                
+                return self.routeCasingColor
+            }
+        })
+        
         return routeLineFeaturesGradient(congestionFeatures, lineSettings: lineSettings)
     }
     
@@ -423,12 +482,14 @@ extension NavigationMapView {
                                                 startingColor: traversedRouteColor,
                                                 baseColor: routeRestrictedAreaColor,
                                                 featureColor: {
-                                                    if case let .boolean(isRestricted) = $0.properties?[RestrictedRoadClassAttribute],
-                                                       isRestricted {
-                                                        return self.routeRestrictedAreaColor
-                                                    }
-                                                    return .defaultTraversedRouteColor // forcing hiding non-restricted areas
-                                                })
+            if case let .boolean(isRestricted) = $0.properties?[RestrictedRoadClassAttribute],
+               isRestricted {
+                return self.routeRestrictedAreaColor
+            }
+            
+            return .defaultTraversedRouteColor // forcing hiding non-restricted areas
+        })
+        
         return routeLineFeaturesGradient(restrictionFeatures, lineSettings: lineSettings)
     }
 }

@@ -1001,6 +1001,22 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
                                  to: carPlayNavigationViewController,
                                  pointAnnotationManager: pointAnnotationManager)
     }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                routeLineLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> LineLayer? {
+        return delegate?.carPlayManager(self,
+                                        routeLineLayerWithIdentifier: identifier,
+                                        sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                routeCasingLineLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> LineLayer? {
+        return delegate?.carPlayManager(self,
+                                        routeCasingLineLayerWithIdentifier: identifier,
+                                        sourceIdentifier: sourceIdentifier)
+    }
 }
 
 // MARK: CarPlayMapViewControllerDelegate Methods

@@ -1,4 +1,5 @@
 import UIKit
+import MapboxMaps
 
 extension UIColor {
 
@@ -68,5 +69,16 @@ extension UIColor {
             self.setFill()
             rendererContext.fill(CGRect(origin: .zero, size: size))
         }
+    }
+    
+    /**
+     Convenience initializer, which allows to convert `StyleColor` to `UIColor`. This initializer
+     is primarily used while retrieving color information from `LineLayer`.
+     */
+    convenience init(_ styleColor: StyleColor) {
+        self.init(red: CGFloat(styleColor.red / 255.0),
+                  green: CGFloat(styleColor.green / 255.0),
+                  blue: CGFloat(styleColor.blue / 255.0),
+                  alpha: CGFloat(styleColor.alpha))
     }
 }

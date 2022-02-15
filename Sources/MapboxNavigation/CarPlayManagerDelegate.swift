@@ -285,6 +285,14 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         templateDidDisappear template: CPTemplate,
                         animated: Bool)
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> LineLayer?
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeCasingLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> LineLayer?
 }
 
 @available(iOS 12.0, *)
@@ -472,5 +480,25 @@ public extension CarPlayManagerDelegate {
                         templateDidDisappear template: CPTemplate,
                         animated: Bool) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeCasingLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return nil
     }
 }

@@ -4,6 +4,7 @@ import CarPlay
 import MapboxGeocoder
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMaps
 
 let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 
@@ -234,6 +235,32 @@ extension AppDelegate: CarPlayManagerDelegate {
         case .previewing, .navigating, .panningInBrowsingMode, .panningInNavigationMode:
             return nil
         }
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> LineLayer? {
+        var lineLayer = LineLayer(id: identifier)
+        lineLayer.source = sourceIdentifier
+        lineLayer.lineColor = .constant(StyleColor(.red))
+        lineLayer.lineWidth = .constant(15.0)
+        lineLayer.lineJoin = .constant(.round)
+        lineLayer.lineCap = .constant(.round)
+        
+        return lineLayer
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeCasingLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String) -> LineLayer? {
+        var lineLayer = LineLayer(id: identifier)
+        lineLayer.source = sourceIdentifier
+        lineLayer.lineColor = .constant(StyleColor(.cyan))
+        lineLayer.lineWidth = .constant(30.0)
+        lineLayer.lineJoin = .constant(.round)
+        lineLayer.lineCap = .constant(.round)
+        
+        return lineLayer
     }
 }
 

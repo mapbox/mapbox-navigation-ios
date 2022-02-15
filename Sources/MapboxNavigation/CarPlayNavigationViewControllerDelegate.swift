@@ -46,6 +46,14 @@ public protocol CarPlayNavigationViewControllerDelegate: AnyObject, Unimplemente
     func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
                                          didAdd finalDestinationAnnotation: PointAnnotation,
                                          pointAnnotationManager: PointAnnotationManager)
+
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         routeLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer?
+    
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         routeCasingLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer?
 }
 
 @available(iOS 12.0, *)
@@ -82,5 +90,25 @@ public extension CarPlayNavigationViewControllerDelegate {
                                          didAdd finalDestinationAnnotation: PointAnnotation,
                                          pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         routeLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         routeCasingLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+        return nil
     }
 }
