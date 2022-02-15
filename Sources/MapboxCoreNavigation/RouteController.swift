@@ -19,6 +19,7 @@ import os.log
 
  - important: Creating an instance of this type will start an Active Guidance session. The trip session is stopped when
  the instance is deallocated. From more info read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+ - precondition: There should be only one `RouteController` alive to any given time.
  */
 open class RouteController: NSObject {
     public enum DefaultBehavior {
@@ -30,6 +31,10 @@ open class RouteController: NSObject {
     }
 
     public static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "RouteController")
+    /// Holds currently alive instance of `RouteController`.
+    private static weak var instance: RouteController?
+    private static let instanceLock: NSLock = .init()
+
 
     private let sessionUUID: UUID = .init()
     
@@ -551,6 +556,13 @@ open class RouteController: NSObject {
                          options: RouteOptions,
                          routingProvider: RoutingProvider,
                          dataSource source: RouterDataSource) {
+        Self.instanceLock.lock()
+        let twoInstances = Self.instance != nil
+        Self.instanceLock.unlock()
+        if twoInstances {
+            os_log("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController and RouteController is deallocated once not in use.", log: Self.log, type: .fault)
+        }
+
         self.routingProvider = routingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
@@ -563,6 +575,9 @@ open class RouteController: NSObject {
 
         subscribeNotifications()
         updateNavigator(with: routeProgress, completion: nil)
+        Self.instanceLock.lock()
+        Self.instance = self
+        Self.instanceLock.unlock()
     }
     
     deinit {
@@ -570,6 +585,9 @@ open class RouteController: NSObject {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         unsubscribeNotifications()
         routeTask?.cancel()
+        Self.instanceLock.lock()
+        Self.instance = nil
+        Self.instanceLock.unlock()
     }
 
     private func subscribeNotifications() {
