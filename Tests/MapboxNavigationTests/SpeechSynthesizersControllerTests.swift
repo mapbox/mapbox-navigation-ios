@@ -4,6 +4,8 @@ import MapboxDirections
 import TestHelper
 import CoreLocation
 @testable import MapboxNavigation
+import class MapboxSpeech.SpeechSynthesizer
+import class MapboxSpeech.SpeechOptions
 
 class FailingSpeechSynthesizerMock: SpeechSynthesizerStub {
     var failing = false
@@ -30,6 +32,10 @@ class MapboxSpeechSynthMock: MapboxSpeechSynthesizer {
         super.init(accessToken: .mockedAccessToken, host: nil)
     }
     
+    override init(remoteSpeechSynthesizer: SpeechSynthesizer) {
+        super.init(remoteSpeechSynthesizer: remoteSpeechSynthesizer)
+    }
+    
     override func speak(_ instruction: SpokenInstruction, during legProgress: RouteLegProgress, locale: Locale?) {
         super.speak(instruction, during: legProgress,locale: locale)
         
@@ -44,6 +50,15 @@ class SystemSpeechSynthMock: SystemSpeechSynthesizer {
         super.speak(instruction, during: legProgress, locale: locale)
         
         speakExpectation?.fulfill()
+    }
+}
+
+class SpeechSythesizerMock: SpeechSynthesizer {
+    var dataExpectation: XCTestExpectation?
+    
+    override func audioData(with options: SpeechOptions, completionHandler: @escaping SpeechSynthesizer.CompletionHandler) -> URLSessionDataTask {
+        dataExpectation?.fulfill()
+        return super.audioData(with: options, completionHandler: completionHandler)
     }
 }
 
@@ -207,6 +222,21 @@ class SpeechSynthesizersControllerTests: TestCase {
                                     ssmlText: "text"),
                   during: Fixture.routeLegProgress(),
                   locale: nil)
+        
+        wait(for: [expectation], timeout: 2)
+    }
+    
+    func testCustomSynthesizerOnMapboxSynth() {
+        let expectation = XCTestExpectation(description: "Custom SpeechSynthesizer should be called")
+        let sut = SpeechSythesizerMock(accessToken: .mockedAccessToken)
+        sut.dataExpectation = expectation
+        let synth = MapboxSpeechSynthMock(remoteSpeechSynthesizer: sut)
+        
+        synth.speak(SpokenInstruction(distanceAlongStep: .init(),
+                                      text: "text",
+                                      ssmlText: "text"),
+                    during: Fixture.routeLegProgress(),
+                    locale: nil)
         
         wait(for: [expectation], timeout: 2)
     }

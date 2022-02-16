@@ -54,10 +54,13 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
     
     // MARK: Instructions vocalization
     
+    /// Checks if speech synthesizer is now pronouncing an instruction.
     public var isSpeaking: Bool {
         return audioPlayer?.isPlaying ?? false
     }
     
+    
+    /// Creates new `MapboxSpeechSynthesizer` with standard `SpeechSynthesizer` for converting text to audio.
     public init(accessToken: String? = nil, host: String? = nil) {
         self.cache = DataCache()
         
@@ -67,6 +70,12 @@ open class MapboxSpeechSynthesizer: NSObject, SpeechSynthesizing {
         }
         
         self.remoteSpeechSynthesizer = SpeechSynthesizer(accessToken: accessToken, host: hostString)
+    }
+    
+    /// Creates new `MapboxSpeechSynthesizer` with provided `SpeechSynthesizer` instance for converting text to audio.
+    public init(remoteSpeechSynthesizer: SpeechSynthesizer) {
+        self.cache = DataCache()
+        self.remoteSpeechSynthesizer = remoteSpeechSynthesizer
     }
     
     deinit {
