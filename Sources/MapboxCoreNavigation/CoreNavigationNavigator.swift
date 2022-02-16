@@ -213,11 +213,15 @@ class Navigator {
     }
 
     func pause() {
-        navigator.pause()
+        onMainQueueSync {
+            navigator.pause()
+        }
     }
 
     func resume() {
-        navigator.resume()
+        onMainQueueSync {
+            navigator.resume()
+        }
     }
     
     deinit {
