@@ -90,7 +90,8 @@ open class NavigationMapView: UIView {
     // MARK: Customizing and Displaying the Route Line(s)
     
     /**
-     Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
+     Maximum distance (in screen points) the user can tap for a selection to be valid when selecting
+     an alternate route.
      */
     public var tapGestureDistanceThreshold: CGFloat = 50
     
@@ -1644,7 +1645,7 @@ open class NavigationMapView: UIView {
     @objc func didReceiveTap(sender: UITapGestureRecognizer) {
         guard let routes = routes, let tapPoint = sender.point else { return }
         
-        let waypointTest = waypoints(on: routes, closeTo: tapPoint)
+        let waypointTest = legSeparatingWaypoints(on: routes, closeTo: tapPoint)
         if let selected = waypointTest?.first {
             delegate?.navigationMapView(self, didSelect: selected)
             return
@@ -1670,7 +1671,7 @@ open class NavigationMapView: UIView {
      - returns: List of the waypoints, which were found. If no routes have more than one leg, `nil`
      will be returned.
      */
-    public func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
+    public func legSeparatingWaypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
         // In case if route does not contain more than one leg - do nothing.
         let multipointRoutes = routes.filter({ $0.legs.count > 1 })
         guard multipointRoutes.count > 0 else { return nil }
