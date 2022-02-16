@@ -455,7 +455,7 @@ final class BillingHandler {
         lock.lock()
         let hasRunningSession = _sessions.values.contains { !$0.isPaused }
         lock.unlock()
-        assert(Navigator.isSharedInstanceCreated, "Billing attempted to update `Navigator` while it is deallocated.")
+
         if Navigator.isSharedInstanceCreated {
             if hasRunningSession {
                 navigator.resume()
