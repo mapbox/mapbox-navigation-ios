@@ -22,6 +22,7 @@
 * Added `MapView.showsTileSet(with:layerIdentifier:)` and `MapView.setShowsTileSet(_:with:layerIdentifier:)` to provide the ability to show and hide custom tile set identifiers on the map view. ([#3700](https://github.com/mapbox/mapbox-navigation-ios/pull/3700))
 * Fixed the route layers disappearance in preview mode and in passive navigation when map style changes. ([#3734](https://github.com/mapbox/mapbox-navigation-ios/pull/3734))
 * Fixed an issue where highlighted buildings were removed from the map during style change. ([#3736](https://github.com/mapbox/mapbox-navigation-ios/pull/3736))
+* Renamed the `NavigationMapView.highlightBuildings(at:in3D:completion:)` method to `NavigationMapView.highlightBuildings(at:in3D:extrudeAll:completion:)` to provide the ability to extrude not only buildings at specific coordinates, but all other buildings as well. ([#3736](https://github.com/mapbox/mapbox-navigation-ios/pull/3736))
 
 ### CarPlay
 
