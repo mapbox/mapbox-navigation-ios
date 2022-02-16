@@ -174,7 +174,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
             let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
-            navigationView.wayNameView.updateRoad(roadName: roadName, representation: representation)
+            navigationView.wayNameView.label.updateRoad(roadName: roadName, representation: representation)
             navigationView.wayNameView.containerView.isHidden = false
         } else {
             navigationView.wayNameView.text = nil
@@ -189,7 +189,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
      - parameter styleURI: The `StyleURI` that the map is presenting.
      */
     func updateStyle(styleURI: StyleURI?) {
-        navigationView.wayNameView.updateStyle(styleURI: styleURI)
+        navigationView.wayNameView.label.updateStyle(styleURI: styleURI)
     }
     
     /**

@@ -670,7 +670,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
         if let roadName = roadNameFromStatus?.nonEmptyString {
             let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
-            wayNameView.updateRoad(roadName: roadName, representation: representation)
+            wayNameView.label.updateRoad(roadName: roadName, representation: representation)
             wayNameView.containerView.isHidden = false
         } else {
             wayNameView.text = nil
@@ -835,7 +835,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
             let styleURI = StyleURI(url: style.mapStyleURL)
             mapboxMapStyle?.uri = styleURI
             // Update the sprite repository of wayNameView when map style changes.
-            wayNameView?.updateStyle(styleURI: styleURI)
+            wayNameView?.label.updateStyle(styleURI: styleURI)
         }
     }
     

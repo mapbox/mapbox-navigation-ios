@@ -781,7 +781,8 @@ extension NavigationViewController: NavigationServiceDelegate {
         let preventRerouting = navigationService.delegate?.navigationService(navigationService, shouldPreventReroutesWhenArrivingAt: destination) ?? RouteController.DefaultBehavior.shouldPreventReroutesWhenArrivingAtWaypoint
         let userArrivedAtWaypoint = progress.currentLegProgress.userHasArrivedAtWaypoint && (progress.currentLegProgress.distanceRemaining <= 0)
 
-        ornamentsController?.labelCurrentRoadName(suggestedName: roadName(at: rawLocation))
+        let roadName = roadName(at: location) ?? roadName(at: rawLocation)
+        ornamentsController?.labelCurrentRoadName(suggestedName: roadName)
 
         let movePuckToCurrentLocation = !(userArrivedAtWaypoint && snapsUserLocationAnnotationToRoute && preventRerouting)
         if movePuckToCurrentLocation {

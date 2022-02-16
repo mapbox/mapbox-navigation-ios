@@ -13,7 +13,8 @@ open class WayNameLabel: StylableLabel {
     var representation: VisualInstruction.Component.ImageRepresentation?
     
     // When the map style changes, update the sprite repository and the label.
-    func updateStyle(styleURI: StyleURI) {
+    func updateStyle(styleURI: StyleURI?) {
+        guard let styleURI = styleURI else { return }
         spriteRepository.updateRepository(styleURI: styleURI, representation: representation) { [weak self] in
             guard let self = self else { return }
             if let roadName = self.text {
@@ -237,14 +238,4 @@ open class WayNameView: UIView {
         super.layoutSubviews()
         containerView.layer.cornerRadius = bounds.midY
     }
-    
-    func updateStyle(styleURI: StyleURI?) {
-        guard let styleURI = styleURI else { return }
-        label.updateStyle(styleURI: styleURI)
-    }
-    
-    func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
-        label.updateRoad(roadName: roadName, representation: representation)
-    }
-    
 }

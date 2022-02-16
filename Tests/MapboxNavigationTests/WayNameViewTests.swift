@@ -63,7 +63,7 @@ class WayNameViewTests: TestCase {
         wayNameView.label.representation = representation
         
         let styleURI = StyleURI.navigationNight
-        wayNameView.updateStyle(styleURI: styleURI)
+        wayNameView.label.updateStyle(styleURI: styleURI)
         
         expectation(description: "Label text updated with shield image presented.") {
             self.wayNameView.label.text != roadName
@@ -88,7 +88,7 @@ class WayNameViewTests: TestCase {
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: baseURL, name: "us-interstate", textColor: "white", text: "280")
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: shield)
         
-        wayNameView.updateRoad(roadName: roadName, representation: representation)
+        wayNameView.label.updateRoad(roadName: roadName, representation: representation)
         expectation(description: "Road label updated.") {
             self.wayNameView.label.text != nil
         }
@@ -103,7 +103,7 @@ class WayNameViewTests: TestCase {
         XCTAssertTrue(attributedText.containsAttachments(in: NSRange(location: 0, length: 1)), "Failed to update the shield images when update style.")
         
         roadName = "101"
-        wayNameView.updateRoad(roadName: roadName, representation: nil)
+        wayNameView.label.updateRoad(roadName: roadName, representation: nil)
         expectation(description: "Road label updated with the new imageRepresentation.") {
             self.wayNameView.label.representation == nil
         }
