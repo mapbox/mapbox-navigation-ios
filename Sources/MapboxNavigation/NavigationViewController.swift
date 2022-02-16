@@ -1002,8 +1002,16 @@ extension NavigationViewController: StyleManagerDelegate {
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
         guard let mapboxMap = navigationMapView?.mapView.mapboxMap,
               let styleURI = mapboxMap.style.uri else { return }
-
-        mapboxMap.loadStyleURI(styleURI)
+        
+        mapboxMap.loadStyleURI(styleURI) { [weak self] result in
+            switch result {
+            case .success(_):
+                // In case if buildings layer present - update its background color.
+                self?.navigationMapView?.updateBuildingsLayerIfPresent()
+            case .failure(let error):
+                NSLog("Failed to load \(styleURI) with error: \(error.localizedDescription).")
+            }
+        }
     }
 }
 

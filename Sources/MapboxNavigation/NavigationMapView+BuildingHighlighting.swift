@@ -7,14 +7,21 @@ extension NavigationMapView {
     // MARK: Building Extrusion Highlighting
     
     /**
-     Receives coordinates for searching the map for buildings. If buildings are found, they will be highlighted in 2D or 3D depending on the `in3D` value.
+     Receives coordinates for searching the map for buildings. If buildings are found, they will be
+     highlighted in 2D or 3D depending on the `in3D` value.
      
      - parameter coordinates: Coordinates which represent building locations.
-     - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D. Defaults to true.
-     - parameter completion: An escaping closure to be executed when the `MapView` feature querying for all `coordinates` ends. A single `Boolean` argument in closure indicates whether or not buildings were found for all coordinates.
+     - parameter extrudesBuildings: Switch which allows to highlight buildings in either 2D or 3D.
+     Defaults to `true`.
+     - parameter extrudeAll: Switch which allows to extrude either all or only buildings at a
+     specific coordinates. Defaults to `false`.
+     - parameter completion: An escaping closure to be executed when the `MapView` feature querying
+     for all `coordinates` ends. A single `Boolean` argument in closure indicates whether or not
+     buildings were found for all coordinates.
      */
     public func highlightBuildings(at coordinates: [CLLocationCoordinate2D],
                                    in3D extrudesBuildings: Bool = true,
+                                   extrudeAll: Bool = false,
                                    completion: ((_ foundAllBuildings: Bool) -> Void)? = nil) {
         var foundBuildingIds = Set<Int64>()
         let group = DispatchGroup()
@@ -47,7 +54,10 @@ extension NavigationMapView {
         }
 
         group.notify(queue: DispatchQueue.main) {
-            self.addBuildingsLayer(with: foundBuildingIds, in3D: extrudesBuildings, layerPosition: layerPosition)
+            self.addBuildingsLayer(with: foundBuildingIds,
+                                   in3D: extrudesBuildings,
+                                   extrudeAll: extrudeAll,
+                                   layerPosition: layerPosition)
             completion?(foundBuildingIds.count == coordinates.count)
         }
     }
@@ -67,14 +77,13 @@ extension NavigationMapView {
         }
     }
 
-    private func addBuildingsLayer(with identifiers: Set<Int64>, in3D: Bool = false, extrudeAll: Bool = false, layerPosition: LayerPosition? = nil) {
+    private func addBuildingsLayer(with identifiers: Set<Int64>,
+                                   in3D: Bool = false,
+                                   extrudeAll: Bool = false,
+                                   layerPosition: LayerPosition? = nil) {
         let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
         
         do {
-            if mapView.mapboxMap.style.layerExists(withId: identifier) {
-                try mapView.mapboxMap.style.removeLayer(withId: identifier)
-            }
-            
             if identifiers.isEmpty { return }
             var highlightedBuildingsLayer = FillExtrusionLayer(id: identifier)
             highlightedBuildingsLayer.source = "composite"
@@ -118,12 +127,49 @@ extension NavigationMapView {
                 }
             )
             
-            highlightedBuildingsLayer.fillExtrusionColor = .constant(.init(buildingHighlightColor))
+            highlightedBuildingsLayer.fillExtrusionColor = .expression(
+                Exp(.switchCase) {
+                    Exp(.inExpression) {
+                        Exp(.id)
+                        Exp(.literal) {
+                            identifiers.map({ Double($0) })
+                        }
+                    }
+                    buildingHighlightColor
+                    buildingDefaultColor
+                }
+            )
+            
             highlightedBuildingsLayer.fillExtrusionHeightTransition = StyleTransition(duration: 0.8, delay: 0)
             highlightedBuildingsLayer.fillExtrusionOpacityTransition = StyleTransition(duration: 0.8, delay: 0)
-            try mapView.mapboxMap.style.addLayer(highlightedBuildingsLayer, layerPosition: layerPosition)
+            
+            // In case if highlighted buildings layer is already present, instead of removing it - update it.
+            if mapView.mapboxMap.style.layerExists(withId: identifier) {
+                try mapView.mapboxMap.style.updateLayer(withId: identifier,
+                                                        type: FillExtrusionLayer.self,
+                                                        update: { oldHighlightedBuildingsLayer in
+                    oldHighlightedBuildingsLayer = highlightedBuildingsLayer
+                })
+            } else {
+                try mapView.mapboxMap.style.addPersistentLayer(highlightedBuildingsLayer, layerPosition: layerPosition)
+            }
         } catch {
             NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
+        }
+    }
+    
+    func updateBuildingsLayerIfPresent() {
+        let identifier = NavigationMapView.LayerIdentifier.buildingExtrusionLayer
+        
+        guard mapView.mapboxMap.style.layerExists(withId: identifier) else { return }
+        
+        do {
+            try mapView.mapboxMap.style.updateLayer(withId: identifier,
+                                                    type: FillExtrusionLayer.self) { buildingExtrusionLayer in
+                buildingExtrusionLayer.fillExtrusionColor = .constant(.init(buildingHighlightColor))
+            }
+        } catch {
+            NSLog("Failed to update building extrusion layer color with error: \(error.localizedDescription).")
         }
     }
 }

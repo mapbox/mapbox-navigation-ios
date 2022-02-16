@@ -388,6 +388,9 @@ class ViewController: UIViewController {
                                                                    navigationOptions: navigationOptions)
         navigationViewController.delegate = self
         
+        // Example of building highlighting in 2D.
+        navigationViewController.waypointStyle = .building
+        
         presentAndRemoveNavigationMapView(navigationViewController, completion: beginCarPlayNavigation)
     }
     

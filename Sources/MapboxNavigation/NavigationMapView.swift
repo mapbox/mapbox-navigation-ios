@@ -711,8 +711,19 @@ open class NavigationMapView: UIView {
     
     // MARK: Building Extrusion Highlighting
     
-    @objc dynamic public var buildingDefaultColor: UIColor = .defaultBuildingColor
+    /**
+     Color of the buildings, which were found at specific coordinates by calling
+     `NavigationMapView.highlightBuildings(at:in3D:extrudeAll:completion:)` and when `extrudeAll`
+     parameter is set to `false`.
+     */
     @objc dynamic public var buildingHighlightColor: UIColor = .defaultBuildingHighlightColor
+    
+    /**
+     Color of all other buildings, which will be highlighted after calling
+     `NavigationMapView.highlightBuildings(at:in3D:extrudeAll:completion:)` and when `extrudeAll`
+     parameter is set to `true`.
+     */
+    @objc dynamic public var buildingDefaultColor: UIColor = .defaultBuildingColor
     
     // MARK: User Tracking Features
     
@@ -726,6 +737,7 @@ open class NavigationMapView: UIView {
             setupUserLocation()
         }
     }
+    
     var inActiveNavigation: Bool = false {
         didSet {
             setupUserLocation()
