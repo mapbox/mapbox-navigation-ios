@@ -90,9 +90,16 @@ open class NavigationMapView: UIView {
     // MARK: Customizing and Displaying the Route Line(s)
     
     /**
-     Maximum distance the user can tap for a selection to be valid when selecting an alternate route.
+     Maximum distance (in screen points) the user can tap for a selection to be valid when selecting
+     an alternate route.
      */
     public var tapGestureDistanceThreshold: CGFloat = 50
+    
+    /**
+     Gesture recognizer, that is used to detect taps on waypoints and routes that are currently
+     present on the map. Enabled by default.
+     */
+    public private(set) var mapViewTapGestureRecognizer: UITapGestureRecognizer!
     
     @objc dynamic public var routeCasingColor: UIColor = .defaultRouteCasing
     @objc dynamic public var routeAlternateColor: UIColor = .defaultAlternateLine
@@ -1627,7 +1634,7 @@ open class NavigationMapView: UIView {
     
     func setupGestureRecognizers() {
         // Gesture recognizer, which is used to detect taps on route line and waypoint.
-        let mapViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didReceiveTap(sender:)))
+        mapViewTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(didReceiveTap(sender:)))
         mapViewTapGestureRecognizer.delegate = self
         mapView.addGestureRecognizer(mapViewTapGestureRecognizer)
     }
@@ -1638,7 +1645,7 @@ open class NavigationMapView: UIView {
     @objc func didReceiveTap(sender: UITapGestureRecognizer) {
         guard let routes = routes, let tapPoint = sender.point else { return }
         
-        let waypointTest = waypoints(on: routes, closeTo: tapPoint)
+        let waypointTest = legSeparatingWaypoints(on: routes, closeTo: tapPoint)
         if let selected = waypointTest?.first {
             delegate?.navigationMapView(self, didSelect: selected)
             return
@@ -1654,15 +1661,27 @@ open class NavigationMapView: UIView {
         }
     }
     
-    private func waypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
-        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
-        let multipointRoutes = routes.filter { $0.legs.count > 1}
+    /**
+     Returns a list of waypoints, that are located on the routes with more than one leg and are
+     close to a certain point and are within threshold distance defined in
+     `NavigationMapView.tapGestureDistanceThreshold`.
+     
+     - parameter routes: List of the routes.
+     - parameter point: Point on the screen.
+     - returns: List of the waypoints, which were found. If no routes have more than one leg, `nil`
+     will be returned.
+     */
+    public func legSeparatingWaypoints(on routes: [Route], closeTo point: CGPoint) -> [Waypoint]? {
+        // In case if route does not contain more than one leg - do nothing.
+        let multipointRoutes = routes.filter({ $0.legs.count > 1 })
         guard multipointRoutes.count > 0 else { return nil }
+        
         let waypoints = multipointRoutes.compactMap { route in
-            route.legs.dropLast().compactMap { $0.destination }
-        }.flatMap {$0}
+            route.legs.dropLast().compactMap({ $0.destination })
+        }.flatMap({ $0 })
         
         // Sort the array in order of closest to tap.
+        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
         let closest = waypoints.sorted { (left, right) -> Bool in
             let leftDistance = left.coordinate.projectedDistance(to: tapCoordinate)
             let rightDistance = right.coordinate.projectedDistance(to: tapCoordinate)
@@ -1679,13 +1698,20 @@ open class NavigationMapView: UIView {
         return candidates
     }
     
-    private func routes(closeTo point: CGPoint) -> [Route]? {
-        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
-        
+    /**
+     Returns a list of the routes, that are close to a certain point and are within threshold distance
+     defined in `NavigationMapView.tapGestureDistanceThreshold`.
+     
+     - parameter point: Point on the screen.
+     - returns: List of the routes, which were found. If there are no routes on the map view `nil`
+     will be returned.
+     */
+    public func routes(closeTo point: CGPoint) -> [Route]? {
         // Filter routes with at least 2 coordinates.
         guard let routes = routes?.filter({ $0.shape?.coordinates.count ?? 0 > 1 }) else { return nil }
         
         // Sort routes by closest distance to tap gesture.
+        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
         let closest = routes.sorted { (left, right) -> Bool in
             // Existence has been assured through use of filter.
             let leftLine = left.shape!

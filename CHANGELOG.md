@@ -23,6 +23,7 @@
 * Fixed the route layers disappearance in preview mode and in passive navigation when map style changes. ([#3734](https://github.com/mapbox/mapbox-navigation-ios/pull/3734))
 * Fixed an issue where highlighted buildings were removed from the map during style change. ([#3736](https://github.com/mapbox/mapbox-navigation-ios/pull/3736))
 * Renamed the `NavigationMapView.highlightBuildings(at:in3D:completion:)` method to `NavigationMapView.highlightBuildings(at:in3D:extrudeAll:completion:)` to provide the ability to extrude not only buildings at specific coordinates, but all other buildings as well. ([#3736](https://github.com/mapbox/mapbox-navigation-ios/pull/3736))
+* Added the `NavigationMapView.mapViewTapGestureRecognizer` property and the `NavigationMapView.legSeparatingWaypoints(on:closeTo:)` and `NavigationMapView.routes(closeTo:)` methods for configuring how the map view responds to tap gestures when previewing a route. ([#3746](https://github.com/mapbox/mapbox-navigation-ios/pull/3746))
 
 ### CarPlay
 
