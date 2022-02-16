@@ -156,6 +156,27 @@ class SpriteRepository {
         return imageCache.image(forKey: "Legacy")
     }
     
+    func shieldColor(from shieldTextColor: String) -> UIColor {
+        switch shieldTextColor {
+        case "black":
+            return .black
+        case "blue":
+            return .blue
+        case "green":
+            return #colorLiteral(red: 0, green: 0.5, blue: 0, alpha: 1)
+        case "red":
+            return .red
+        case "white":
+            return .white
+        case "yellow":
+            return .yellow
+        case "orange":
+            return #colorLiteral(red: 1, green: 0.65, blue: 0, alpha: 1)
+        default:
+            return .black
+        }
+    }
+    
     func resetCache() {
         imageCache.clearMemory()
         infoCache.clearMemory()

@@ -98,7 +98,9 @@ open class WayNameLabel: StylableLabel {
 
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false
-        currentShieldName = roadShieldAttributedText(for: shield.text, textColor: shield.textColor, image: shieldIcon)
+        
+        let shieldColor = spriteRepository.shieldColor(from: shield.textColor)
+        currentShieldName = roadShieldAttributedText(for: shield.text, shieldColor: shieldColor, image: shieldIcon)
 
         if !roadName.isEmpty {
             currentRoadName = roadName
@@ -116,35 +118,14 @@ open class WayNameLabel: StylableLabel {
         return didSetup
     }
     
-    private func shieldColor(from shieldTextColor: String) -> UIColor {
-        switch shieldTextColor {
-        case "black":
-            return .black
-        case "blue":
-            return .blue
-        case "green":
-            return .green
-        case "red":
-            return .red
-        case "white":
-            return .white
-        case "yellow":
-            return .yellow
-        case "orange":
-            return .orange
-        default:
-            return .black
-        }
-    }
-    
     private func roadShieldAttributedText(for text: String,
-                                          textColor: String,
+                                          shieldColor: UIColor,
                                           image: UIImage) -> NSAttributedString? {
         let attachment = ShieldAttachment()
         // To correctly scale size of the font its height is based on the label where it is shown.
         let fontSize = frame.size.height / 2.5
         attachment.image = image.withCenteredText(text,
-                                                  color: shieldColor(from: textColor),
+                                                  color: shieldColor,
                                                   font: UIFont.boldSystemFont(ofSize: fontSize),
                                                   size: frame.size)
         return NSAttributedString(attachment: attachment)
