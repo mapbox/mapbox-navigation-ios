@@ -2,6 +2,12 @@
 
 ## v2.3.0
 
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.3.0). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
+* MapboxCoreNavigation now requires [MapboxDirections v2._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.3.0-rc.1). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v88._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/88.0.0). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
+
 ### User interface
 
 * Fixed route line blinking when a route is refreshed. ([#3647](https://github.com/mapbox/mapbox-navigation-ios/pull/3647))
