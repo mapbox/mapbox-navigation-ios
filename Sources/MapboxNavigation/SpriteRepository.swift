@@ -24,21 +24,23 @@ class SpriteRepository {
     }
     
     func updateRepository(styleURI: StyleURI? = nil, representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
-        let baseURL = representation?.shield?.baseURL ?? self.baseURL
-        let styleURI = styleURI ?? self.styleURI
-        
-        resetCache()
         let dispatchGroup = DispatchGroup()
-        
-        if let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1] {
-            if let infoRequestURL = spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) {
+
+        // Reset cache and download the Sprite image and Sprite info only when the map style changes or the shield baseURL changes.
+        if (styleURI != self.styleURI) || (representation?.shield?.baseURL != self.baseURL) {
+            resetCache()
+            let styleURI = styleURI ?? self.styleURI
+            let baseURL = representation?.shield?.baseURL ?? self.baseURL
+            
+            if let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
+               let infoRequestURL = spriteURL(isImage: false, baseURL: baseURL, styleID: styleID),
+               let spriteRequestURL = spriteURL(isImage: true, baseURL: baseURL, styleID: styleID) {
+                
                 dispatchGroup.enter()
                 downloadInfo(infoRequestURL) { (_) in
                     dispatchGroup.leave()
                 }
-            }
-            
-            if let spriteRequestURL = spriteURL(isImage: true, baseURL: baseURL, styleID: styleID) {
+                
                 dispatchGroup.enter()
                 downloadSprite(spriteRequestURL) { (_) in
                     dispatchGroup.leave()
@@ -52,8 +54,8 @@ class SpriteRepository {
         }
         
         dispatchGroup.notify(queue: .main) {
-            self.styleURI = styleURI
-            self.baseURL = baseURL
+            self.styleURI = styleURI ?? self.styleURI
+            self.baseURL = representation?.shield?.baseURL ?? self.baseURL
             completion()
         }
     }
