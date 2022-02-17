@@ -18,19 +18,12 @@ public class MapboxRoutingProvider: RoutingProvider {
      
      - parameter source: routing engine source to use.
      - parameter settings: settings object, used to get credentials and cache configuration.
+     - parameter datasetProfileIdentifier: profile setting, used for selecting tiles type for navigation. If set to `nil` (default) - will detect the same profile as used for current navigation.
      */
-    public init(_ source: Source = .hybrid, settings: NavigationSettings = .shared) {
+    public init(_ source: Source = .hybrid, settings: NavigationSettings = .shared, datasetProfileIdentifier: ProfileIdentifier? = nil) {
         self.source = source
         self.settings = settings
-        
-        let factory = NativeHandlersFactory(tileStorePath: settings.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
-                                            credentials: settings.directions.credentials,
-                                            tilesVersion: Navigator.tilesVersion,
-                                            historyDirectoryURL: Navigator.historyDirectoryURL)
-        self.router = RouterFactory.build(for: source.nativeSource,
-                                             cache: factory.cacheHandle,
-                                             config: factory.configHandle,
-                                             historyRecorder: factory.historyRecorder)
+        self.datasetProfileIdentifier = datasetProfileIdentifier
     }
     
     // MARK: Configuration
@@ -77,6 +70,11 @@ public class MapboxRoutingProvider: RoutingProvider {
     
     private let settings: NavigationSettings
     
+    /**
+     Profile setting, used for selecting tiles type for navigation.
+     */
+    public let datasetProfileIdentifier: ProfileIdentifier?
+    
     static var __testRoutesStub: ((_: RouteOptions, _: @escaping Directions.RouteCompletionHandler) -> Request?)? = nil
     
     // MARK: Performing and Parsing Requests
@@ -119,7 +117,18 @@ public class MapboxRoutingProvider: RoutingProvider {
     public private(set) var activeRequests: [RequestId : Request] = [:]
     
     private let requestsLock = NSLock()
-    private let router: RouterInterfaceNative
+    
+    private lazy var router: RouterInterfaceNative = {
+        let factory = NativeHandlersFactory(tileStorePath: settings.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
+                                            credentials: settings.directions.credentials,
+                                            tilesVersion: Navigator.tilesVersion,
+                                            historyDirectoryURL: Navigator.historyDirectoryURL,
+                                            datasetProfileIdentifier: datasetProfileIdentifier ?? Navigator.datasetProfileIdentifier)
+        return RouterFactory.build(for: source.nativeSource,
+                                      cache: factory.cacheHandle,
+                                      config: factory.configHandle,
+                                      historyRecorder: factory.historyRecorder)
+    } ()
     
     private func complete(requestId: RequestId, with result: @escaping () -> Void) {
         DispatchQueue.main.async { [self] in

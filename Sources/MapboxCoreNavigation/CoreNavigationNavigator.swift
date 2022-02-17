@@ -81,6 +81,14 @@ class Navigator {
     static func _recreateNavigator() { _navigator = nil }
     
     /**
+     Profile setting, used for selecting tiles type for navigation.
+     
+     This property can only be modified before creating `Navigator` shared instance, all
+     further changes to this property will have no effect. Defaults to `automobile`.
+     */
+    static var datasetProfileIdentifier: ProfileIdentifier = .automobile
+    
+    /**
      Restrict direct initializer access.
      */
     private init() {
@@ -88,7 +96,8 @@ class Navigator {
         let factory = NativeHandlersFactory(tileStorePath: tileStorePath ?? "",
                                             credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: Self.tilesVersion,
-                                            historyDirectoryURL: Self.historyDirectoryURL)
+                                            historyDirectoryURL: Self.historyDirectoryURL,
+                                            datasetProfileIdentifier: Self.datasetProfileIdentifier)
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
@@ -114,7 +123,8 @@ class Navigator {
                                             credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: version ?? Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL,
-                                            targetVersion: version.map { _ in Self.tilesVersion })
+                                            targetVersion: version.map { _ in Self.tilesVersion },
+                                            datasetProfileIdentifier: Self.datasetProfileIdentifier)
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle

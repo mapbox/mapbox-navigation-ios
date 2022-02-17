@@ -255,13 +255,19 @@ open class PassiveLocationManager: NSObject {
      - parameter systemLocationManager: The system location manager that provides raw locations for the receiver to match against the road network.
      - parameter eventsManagerType: An optional events manager type to use.
      - parameter userInfo: An optional metadata to be provided as initial value of `NavigationEventsManager.userInfo` property.
+     - parameter datasetProfileIdentifier: custom profile setting, used for selecting tiles type for navigation. If set to `nil` - will not modify current profile setting.
      
      - postcondition: Call `startUpdatingLocation()` afterwards to begin receiving location updates.
      */
     public required init(directions: Directions = NavigationSettings.shared.directions,
                          systemLocationManager: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
-                         userInfo: [String: String?]? = nil) {
+                         userInfo: [String: String?]? = nil,
+                         datasetProfileIdentifier: ProfileIdentifier? = nil) {
+        if let datasetProfileIdentifier = datasetProfileIdentifier {
+            Navigator.datasetProfileIdentifier = datasetProfileIdentifier
+        }
+        
         self.directions = directions
         
         self.systemLocationManager = systemLocationManager ?? NavigationLocationManager()
@@ -371,15 +377,16 @@ extension TileEndpointConfiguration {
            - parameter tilesVersion: Routing tile version.
            - parameter minimumDaysToPersistVersion: The minimum age in days that a tile version much reach before a new version can be requested from the tile endpoint.
            - parameter targetVersion: Routing tile version, which navigator would like to eventually switch to if it becomes available
+           - parameter datasetProfileIdentifier: profile setting, used for selecting tiles type for navigation.
      */
-    convenience init(credentials: Credentials, tilesVersion: String, minimumDaysToPersistVersion: Int?, targetVersion: String?) {
+    convenience init(credentials: Credentials, tilesVersion: String, minimumDaysToPersistVersion: Int?, targetVersion: String?, datasetProfileIdentifier: ProfileIdentifier) {
         let host = credentials.host.absoluteString
         guard let accessToken = credentials.accessToken, !accessToken.isEmpty else {
             preconditionFailure("No access token specified in Info.plist")
         }
-
+        
         self.init(host: host,
-                  dataset: "mapbox/driving",
+                  dataset: datasetProfileIdentifier.rawValue,
                   version: tilesVersion,
                   token: accessToken,
                   userAgent: URLSession.userAgent,
