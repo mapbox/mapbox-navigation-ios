@@ -38,14 +38,14 @@ class UserHaloCourseViewSnapshotTests: TestCase {
         
         XCTAssertEqual(userHaloCourseView.layer.sublayers?.count, 1, "UserHaloCourseView should contain only one layer.")
         
-        assertImageSnapshot(matching: userHaloCourseView, as: .image(precision: 1.00))
+        assertImageSnapshot(matching: userHaloCourseView, as: .image(precision: 0.95))
         
         userHaloCourseView.haloColor = .red
         userHaloCourseView.haloRingColor = .yellow
         userHaloCourseView.haloRadius = 20.0
         userHaloCourseView.haloBorderWidth = 10.0
         
-        assertImageSnapshot(matching: userHaloCourseView, as: .image(precision: 1.00))
+        assertImageSnapshot(matching: userHaloCourseView, as: .image(precision: 0.95))
     }
     
     @available(iOS 13.0, *)
