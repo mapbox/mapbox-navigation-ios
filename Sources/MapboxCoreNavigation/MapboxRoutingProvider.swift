@@ -28,8 +28,9 @@ public class MapboxRoutingProvider: RoutingProvider {
                                             tilesVersion: Navigator.tilesVersion,
                                             historyDirectoryURL: Navigator.historyDirectoryURL)
         self.router = RouterFactory.build(for: source.nativeSource,
-                                          cache: factory.cacheHandle,
-                                          historyRecorder: factory.historyRecorder)
+                                             cache: factory.cacheHandle,
+                                             config: factory.configHandle,
+                                             historyRecorder: factory.historyRecorder)
     }
     
     // MARK: Configuration
