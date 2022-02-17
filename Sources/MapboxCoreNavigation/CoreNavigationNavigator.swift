@@ -31,6 +31,32 @@ class Navigator {
     var tileVersionState: NavigatorFallbackVersionsObserver.TileVersionState {
         navigatorFallbackVersionsObserver?.tileVersionState ?? .nominal
     }
+
+    private lazy var routeCoordinator: RoutesCoordinator = {
+        .init(setRoutesHandler: { [weak self] routes, completion in
+            self?.navigator.setRoutesFor(routes) { result in
+                if result.isValue() {
+                    let routeInfo = result.value as! RouteInfo
+                    os_log("Navigator has been updated",
+                           log: Navigator.log,
+                           type: .debug)
+                    completion(.success(routeInfo))
+                }
+                else if result.isError() {
+                    let reason = (result.error as? String) ?? ""
+                    os_log("Failed to update navigator with reason: %{public}@",
+                           log: Navigator.log,
+                           type: .error,
+                           reason)
+                    completion(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
+                }
+                else {
+                    assertionFailure("Invalid Expected value: \(result)")
+                    completion(.failure(NavigatorError.failedToUpdateRoutes(reason: "Unexpected internal response")))
+                }
+            }
+        })
+    }()
     
     /**
      Provides a new or an existing `MapboxCoreNavigation.Navigator` instance. Upon first initialization will trigger creation of `MapboxNavigationNative.Navigator` and `HistoryRecorderHandle` instances,
@@ -173,27 +199,12 @@ class Navigator {
 
     // MARK: - Navigator Updates
 
-    func setRoutes(_ routes: Routes?, completion: @escaping (Result<RouteInfo, Error>) -> Void) {
-        navigator.setRoutesFor(routes) { result in
-            if result.isValue() {
-                let routeInfo = result.value as! RouteInfo
-                os_log("Navigator has been updated",
-                       log: Navigator.log,
-                       type: .debug)
-                completion(.success(routeInfo))
-            }
-            else if result.isError() {
-                let reason = (result.error as? String) ?? ""
-                os_log("Failed to update navigator with reason: %{public}@",
-                       log: Navigator.log,
-                       type: .error,
-                       reason)
-                completion(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
-            }
-            else {
-                assertionFailure("Invalid Expected value: \(result)")
-                completion(.failure(NavigatorError.failedToUpdateRoutes(reason: "Unexpected internal response")))
-            }
+    func setRoutes(_ routes: Routes?, uuid: UUID, completion: @escaping (Result<RouteInfo, Error>) -> Void) {
+        if let routes = routes {
+            routeCoordinator.beginActiveNavigation(with: routes, uuid: uuid, completion: completion)
+        }
+        else {
+            routeCoordinator.endActiveNavigation(with: uuid, completion: completion)
         }
     }
 
@@ -202,11 +213,15 @@ class Navigator {
     }
 
     func pause() {
-        navigator.pause()
+        onMainQueueSync {
+            navigator.pause()
+        }
     }
 
     func resume() {
-        navigator.resume()
+        onMainQueueSync {
+            navigator.resume()
+        }
     }
     
     deinit {

@@ -453,6 +453,7 @@
 		E2D1497D265CFB5B008135A3 /* 878.gph.gz in Resources */ = {isa = PBXBuildFile; fileRef = E2D1497A265CFB5B008135A3 /* 878.gph.gz */; };
 		E2D14980265CFD33008135A3 /* CarPlayUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D1497E265CFD33008135A3 /* CarPlayUtils.swift */; };
 		E2D14983265CFD3C008135A3 /* StatusViewTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2D14982265CFD3C008135A3 /* StatusViewTests.swift */; };
+		E2DAFABA27BCF3C200BA12BD /* RoutesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DAFAB927BCF3C200BA12BD /* RoutesCoordinator.swift */; };
 		E2F08C70269DB17C002EFDC5 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F08C6F269DB17C002EFDC5 /* AccessToken.swift */; };
 		F46FF187260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */; };
 /* End PBXBuildFile section */
@@ -1077,6 +1078,7 @@
 		E2D1497A265CFB5B008135A3 /* 878.gph.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = 878.gph.gz; sourceTree = "<group>"; };
 		E2D1497E265CFD33008135A3 /* CarPlayUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CarPlayUtils.swift; sourceTree = "<group>"; };
 		E2D14982265CFD3C008135A3 /* StatusViewTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatusViewTests.swift; sourceTree = "<group>"; };
+		E2DAFAB927BCF3C200BA12BD /* RoutesCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesCoordinator.swift; sourceTree = "<group>"; };
 		E2F08C6F269DB17C002EFDC5 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
 		F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DateComponentsFormatter+NavigationAdditions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1914,6 +1916,7 @@
 				E2805A5726CB994500165DB9 /* NSLock+MapboxInternal.swift */,
 				2E6656F8264EC912009463EE /* Result+Expected.swift */,
 				E2C623A626CBFCE1005769FA /* OnMainQueue.swift */,
+				E2DAFAB927BCF3C200BA12BD /* RoutesCoordinator.swift */,
 			);
 			name = MapboxCoreNavigation;
 			path = Sources/MapboxCoreNavigation;
@@ -2820,6 +2823,7 @@
 				DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */,
 				DAF27252264E02D800C0AC37 /* RoadObject.swift in Sources */,
 				5A39B9282498F9890026DFD1 /* PassiveLocationManager.swift in Sources */,
+				E2DAFABA27BCF3C200BA12BD /* RoutesCoordinator.swift in Sources */,
 				118D883526F8CA0700B2ED7B /* EndOfRouteFeedback.swift in Sources */,
 				C5C94C1D1DDCD2370097296A /* RouteProgress.swift in Sources */,
 				2BBED93B267A3AB900F90032 /* BillingHandler.swift in Sources */,

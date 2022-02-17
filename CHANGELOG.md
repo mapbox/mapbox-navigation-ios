@@ -2,6 +2,8 @@
 
 ## v2.3.0
 
+* v2.2 introduced a [fix](https://github.com/mapbox/mapbox-navigation-ios/pull/3652) saying "It is a programmer error to have more than one alive `NavigationViewController`, `NavigationService` or `RouteController` simultaneously". Now you will receive a log message with fault level helping you to spot the issue. To pause debugger when SDK detect the problematic situation, you shall enable "All Runtime Issues" breakpoint in Xcode. Learn more about breakpoints in [Xcode documentation](https://developer.apple.com/documentation/xcode/setting-breakpoints-to-pause-your-running-app). ([#3740](https://github.com/mapbox/mapbox-navigation-ios/pull/3740))
+
 ### Packaging
 
 * MapboxNavigation now requires [MapboxMaps v10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.3.0). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))

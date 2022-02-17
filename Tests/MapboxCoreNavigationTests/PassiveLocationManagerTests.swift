@@ -116,15 +116,16 @@ class PassiveLocationManagerTests: TestCase {
         let supportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!.appendingPathComponent("test")
         
         PassiveLocationManager.historyDirectoryURL = supportDir
-        let navigator = Navigator.shared
-        PassiveLocationManager.startRecordingHistory()
-                
-        let historyCallbackExpectation = XCTestExpectation(description: "History callback should be called")
-        PassiveLocationManager.stopRecordingHistory { url in
-            XCTAssertNotNil(url)
-            historyCallbackExpectation.fulfill()
+        withExtendedLifetime(Navigator.shared) { _ in
+            PassiveLocationManager.startRecordingHistory()
+
+            let historyCallbackExpectation = XCTestExpectation(description: "History callback should be called")
+            PassiveLocationManager.stopRecordingHistory { url in
+                XCTAssertNotNil(url)
+                historyCallbackExpectation.fulfill()
+            }
+            wait(for: [historyCallbackExpectation], timeout: 3)
         }
-        wait(for: [historyCallbackExpectation], timeout: 3)
     }
 }
 

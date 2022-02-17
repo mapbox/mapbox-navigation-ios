@@ -19,6 +19,7 @@ import os.log
 
  - important: Creating an instance of this type will start an Active Guidance session. The trip session is stopped when
  the instance is deallocated. From more info read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+ - precondition: There should be only one `RouteController` alive to any given time.
  */
 open class RouteController: NSObject {
     public enum DefaultBehavior {
@@ -30,8 +31,13 @@ open class RouteController: NSObject {
     }
 
     public static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "RouteController")
+    /// Holds currently alive instance of `RouteController`.
+    private static weak var instance: RouteController?
+    private static let instanceLock: NSLock = .init()
+
 
     private let sessionUUID: UUID = .init()
+    private var isInitialized: Bool = false
     
     // MARK: Configuring Route-Related Data
     
@@ -255,7 +261,7 @@ open class RouteController: NSObject {
                             legIndex: UInt32(progress.legIndex),
                             routesRequest: routeRequest)
 
-        sharedNavigator.setRoutes(routes) { result in
+        sharedNavigator.setRoutes(routes, uuid: sessionUUID) { result in
             completion?(result)
         }
     }
@@ -296,7 +302,9 @@ open class RouteController: NSObject {
     }
 
     private func update(to status: NavigationStatus) {
-        guard let rawLocation = rawLocation else { return }
+        guard let rawLocation = rawLocation,
+              isValidNavigationStatus(status)
+        else { return }
         
         let snappedLocation = CLLocation(status.location)
         
@@ -365,6 +373,10 @@ open class RouteController: NSObject {
     
     @objc func restoreToOnline(_ notification: Notification) {
         updateNavigator(with: self.routeProgress, completion: nil)
+    }
+
+    func isValidNavigationStatus(_ status: NavigationStatus) -> Bool {
+        return isInitialized && routeProgress.currentLegProgress.leg.steps.indices.contains(Int(status.stepIndex))
     }
     
     func updateIndexes(status: NavigationStatus, progress: RouteProgress) {
@@ -545,6 +557,13 @@ open class RouteController: NSObject {
                          options: RouteOptions,
                          routingProvider: RoutingProvider,
                          dataSource source: RouterDataSource) {
+        Self.instanceLock.lock()
+        let twoInstances = Self.instance != nil
+        Self.instanceLock.unlock()
+        if twoInstances {
+            os_log("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController and RouteController is deallocated once not in use.", log: Self.log, type: .fault)
+        }
+
         self.routingProvider = routingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
@@ -556,7 +575,12 @@ open class RouteController: NSObject {
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
-        updateNavigator(with: routeProgress, completion: nil)
+        updateNavigator(with: routeProgress) { [weak self] _ in
+            self?.isInitialized = true
+        }
+        Self.instanceLock.lock()
+        Self.instance = self
+        Self.instanceLock.unlock()
     }
     
     deinit {
@@ -564,6 +588,9 @@ open class RouteController: NSObject {
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
         unsubscribeNotifications()
         routeTask?.cancel()
+        Self.instanceLock.lock()
+        Self.instance = nil
+        Self.instanceLock.unlock()
     }
 
     private func subscribeNotifications() {
@@ -726,7 +753,7 @@ extension RouteController: Router {
     }
 
     private func removeRoutes(completion: ((Error?) -> Void)?) {
-        sharedNavigator.setRoutes(nil) { result in
+        sharedNavigator.setRoutes(nil, uuid: sessionUUID) { result in
             switch result {
             case .success:
                 completion?(nil)
