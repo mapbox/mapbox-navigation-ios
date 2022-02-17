@@ -606,7 +606,7 @@ class NavigationCameraTests: TestCase {
         XCTAssertFalse(animatorPitch.isRunning, "Pitch animator should not be running.")
     }
     
-#if arch(x86_64)
+#if arch(x86_64) && DEBUG
     func testNavigationCameraFollowingCameraOptionsZoomRanges() {
         let navigationMapView = NavigationMapView(frame: .zero)
         guard let navigationViewportDataSource = navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource else {
@@ -628,7 +628,7 @@ class NavigationCameraTests: TestCase {
     }
 #endif
     
-#if arch(x86_64)
+#if arch(x86_64) && DEBUG
     // NOTE: We are running this test only on arch(x86_64) because `throwAssertion` doesn't work on ARM chips.
     func testNavigationCameraOverviewCameraOptionsMaximumZoomLevel() {
         let navigationMapView = NavigationMapView(frame: .zero)
