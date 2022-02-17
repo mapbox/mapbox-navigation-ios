@@ -18,12 +18,12 @@ public class MapboxRoutingProvider: RoutingProvider {
      
      - parameter source: routing engine source to use.
      - parameter settings: settings object, used to get credentials and cache configuration.
-     - parameter datasetProfile: profile setting, used for selecting tiles type for navigation. If set to `nil` (default) - will detect the same profile as used for current navigation.
+     - parameter datasetProfileIdentifier: profile setting, used for selecting tiles type for navigation. If set to `nil` (default) - will detect the same profile as used for current navigation.
      */
-    public init(_ source: Source = .hybrid, settings: NavigationSettings = .shared, datasetProfile: ProfileIdentifier? = nil) {
+    public init(_ source: Source = .hybrid, settings: NavigationSettings = .shared, datasetProfileIdentifier: ProfileIdentifier? = nil) {
         self.source = source
         self.settings = settings
-        self.datasetProfile = datasetProfile
+        self.datasetProfileIdentifier = datasetProfileIdentifier
     }
     
     // MARK: Configuration
@@ -73,7 +73,7 @@ public class MapboxRoutingProvider: RoutingProvider {
     /**
      Profile setting, used for selecting tiles type for navigation.
      */
-    public let datasetProfile: ProfileIdentifier?
+    public let datasetProfileIdentifier: ProfileIdentifier?
     
     static var __testRoutesStub: ((_: RouteOptions, _: @escaping Directions.RouteCompletionHandler) -> Request?)? = nil
     
@@ -123,7 +123,7 @@ public class MapboxRoutingProvider: RoutingProvider {
                                             credentials: settings.directions.credentials,
                                             tilesVersion: Navigator.tilesVersion,
                                             historyDirectoryURL: Navigator.historyDirectoryURL,
-                                            datasetProfile: datasetProfile ?? Navigator.datasetProfile)
+                                            datasetProfileIdentifier: datasetProfileIdentifier ?? Navigator.datasetProfileIdentifier)
         return RouterFactory.build(for: source.nativeSource,
                                       cache: factory.cacheHandle,
                                       config: factory.configHandle,

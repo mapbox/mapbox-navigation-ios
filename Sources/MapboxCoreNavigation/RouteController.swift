@@ -549,7 +549,7 @@ open class RouteController: NSObject {
             os_log("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController and RouteController is deallocated once not in use.", log: Self.log, type: .fault)
         }
 
-        Navigator.datasetProfile = options.profileIdentifier
+        Navigator.datasetProfileIdentifier = options.profileIdentifier
         
         self.routingProvider = routingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)

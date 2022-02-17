@@ -8,7 +8,7 @@ protocol HandlerData {
     var historyDirectoryURL: URL? { get }
     var targetVersion: String? { get }
     var configFactoryType: ConfigFactory.Type { get }
-    var datasetProfile: ProfileIdentifier { get }
+    var datasetProfileIdentifier: ProfileIdentifier { get }
 }
 
 extension NativeHandlersFactory: HandlerData { }
@@ -28,7 +28,7 @@ class HandlerFactory<HandlerType, Arguments> {
         let historyDirectoryURL: URL?
         let targetVersion: String?
         let configFactoryType: ConfigFactory.Type
-        let datasetProfile: ProfileIdentifier
+        let datasetProfileIdentifier: ProfileIdentifier
         
         init(data: HandlerData) {
             self.tileStorePath = data.tileStorePath
@@ -37,7 +37,7 @@ class HandlerFactory<HandlerType, Arguments> {
             self.historyDirectoryURL = data.historyDirectoryURL
             self.targetVersion = data.targetVersion
             self.configFactoryType = data.configFactoryType
-            self.datasetProfile = data.datasetProfile
+            self.datasetProfileIdentifier = data.datasetProfileIdentifier
         }
         
         static func != (lhs: CacheKey, rhs: HandlerData) -> Bool {
@@ -47,7 +47,7 @@ class HandlerFactory<HandlerType, Arguments> {
                 lhs.historyDirectoryURL?.absoluteString != rhs.historyDirectoryURL?.absoluteString ||
                 lhs.targetVersion != rhs.targetVersion ||
                 lhs.configFactoryType != rhs.configFactoryType ||
-                lhs.datasetProfile != rhs.datasetProfile
+                lhs.datasetProfileIdentifier != rhs.datasetProfileIdentifier
         }
     }
     

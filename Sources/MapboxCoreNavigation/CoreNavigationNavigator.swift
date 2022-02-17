@@ -86,7 +86,7 @@ class Navigator {
      This property can only be modified before creating `Navigator` shared instance, all
      further changes to this property will have no effect. Defaults to `automobile`.
      */
-    static var datasetProfile: ProfileIdentifier = .automobile
+    static var datasetProfileIdentifier: ProfileIdentifier = .automobile
     
     /**
      Restrict direct initializer access.
@@ -97,7 +97,7 @@ class Navigator {
                                             credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL,
-                                            datasetProfile: Self.datasetProfile)
+                                            datasetProfileIdentifier: Self.datasetProfileIdentifier)
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
@@ -124,7 +124,7 @@ class Navigator {
                                             tilesVersion: version ?? Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL,
                                             targetVersion: version.map { _ in Self.tilesVersion },
-                                            datasetProfile: Self.datasetProfile)
+                                            datasetProfileIdentifier: Self.datasetProfileIdentifier)
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
