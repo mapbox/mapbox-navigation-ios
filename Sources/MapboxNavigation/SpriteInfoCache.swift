@@ -29,10 +29,15 @@ class SpriteInfoCache {
     
     /**
      Stores data in the memory cache.
+     
+     - parameter data: The `Data` that will be parsed and stored in the memory.
+     - returns: `true` if the data was successful parsed to SpriteInfo Dictionary and saved in the memory.
      */
-    func store(_ data: Data) {
-        guard let spriteInfoDictionary = parseSpriteInfo(data: data) else { return }
+    @discardableResult
+    func store(_ data: Data) -> Bool {
+        guard let spriteInfoDictionary = parseSpriteInfo(data: data) else { return false }
         spriteInfoDictionary.forEach({ storeDataInMemoryCache($0.value, forKey: $0.key) })
+        return true
     }
 
     /**

@@ -6,7 +6,7 @@ import MapboxDirections
 
 class SpriteRepositoryTests: TestCase {
     lazy var repository: SpriteRepository = {
-        let repo = SpriteRepository.shared
+        let repo = SpriteRepository()
         let config = URLSessionConfiguration.default
         config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
         repo.sessionConfiguration = config

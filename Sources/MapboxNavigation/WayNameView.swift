@@ -9,7 +9,7 @@ import MapboxDirections
  */
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {
-    var spriteRepository = SpriteRepository.shared
+    var spriteRepository = SpriteRepository()
     var representation: VisualInstruction.Component.ImageRepresentation?
     
     // When the map style changes, update the sprite repository and the label.

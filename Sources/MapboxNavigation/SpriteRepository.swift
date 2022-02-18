@@ -4,25 +4,18 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 class SpriteRepository {
-    let imageCache: BimodalImageCache
+    let imageCache = ImageCache()
     let infoCache =  SpriteInfoCache()
     var styleURI: StyleURI = .navigationDay
     var baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
+    fileprivate(set) var imageDownloader: ReentrantImageDownloader = ImageDownloader()
     
-    public var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
+    var sessionConfiguration: URLSessionConfiguration = URLSessionConfiguration.default {
         didSet {
             imageDownloader = ImageDownloader(sessionConfiguration: sessionConfiguration)
         }
     }
 
-    public static let shared = SpriteRepository.init()
-    fileprivate(set) var imageDownloader: ReentrantImageDownloader
-    
-    init(imageCache: BimodalImageCache = ImageCache(), withDownloader downloader: ReentrantImageDownloader = ImageDownloader()) {
-        self.imageCache = imageCache
-        self.imageDownloader = downloader
-    }
-    
     func updateRepository(styleURI: StyleURI? = nil, representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
         let dispatchGroup = DispatchGroup()
 
@@ -43,6 +36,8 @@ class SpriteRepository {
                 
                 dispatchGroup.enter()
                 downloadSprite(spriteRequestURL) { (_) in
+                    self.styleURI = styleURI
+                    self.baseURL = baseURL
                     dispatchGroup.leave()
                 }
             }
@@ -54,8 +49,6 @@ class SpriteRepository {
         }
         
         dispatchGroup.notify(queue: .main) {
-            self.styleURI = styleURI ?? self.styleURI
-            self.baseURL = representation?.shield?.baseURL ?? self.baseURL
             completion()
         }
     }
@@ -78,12 +71,11 @@ class SpriteRepository {
                 return
             }
 
-            guard error == nil else {
-                completion(data)
+            guard strongSelf.infoCache.store(data) else {
+                completion(nil)
                 return
             }
-
-            strongSelf.infoCache.store(data)
+            
             completion(data)
         })
     }
@@ -92,11 +84,6 @@ class SpriteRepository {
         let _ = imageDownloader.downloadImage(with: spriteURL, completion: { [weak self] (image, data, error) in
             guard let strongSelf = self, let image = image else {
                 completion(nil)
-                return
-            }
-
-            guard error == nil else {
-                completion(image)
                 return
             }
 
@@ -115,11 +102,6 @@ class SpriteRepository {
         let _ = imageDownloader.downloadImage(with: legacyURL, completion: { [weak self] (image, data, error) in
             guard let strongSelf = self, let image = image else {
                 completion(nil)
-                return
-            }
-
-            guard error == nil else {
-                completion(image)
                 return
             }
 
