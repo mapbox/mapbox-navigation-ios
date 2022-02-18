@@ -92,7 +92,25 @@ class CLLocationTests: TestCase {
                                   speedAccuracy: speedAccuracy,
                                   timestamp: timestamp)
         }
-        
+        #if compiler(>=5.5)
+        if #available(iOS 15.0, *) {
+            let sourceInfo = CLLocationSourceInformation(
+                softwareSimulationState: true,
+                andExternalAccessoryState: false
+            )
+            location = CLLocation(coordinate: coordinate,
+                                  altitude: altitude,
+                                  horizontalAccuracy: horizontalAccuracy,
+                                  verticalAccuracy: verticalAccuracy,
+                                  course: bearing,
+                                  courseAccuracy: bearingAccuracy,
+                                  speed: speed,
+                                  speedAccuracy: speedAccuracy,
+                                  timestamp: timestamp,
+                                  sourceInfo: sourceInfo)
+        }
+        #endif
+
         let fixLocation = FixLocation(location)
         
         XCTAssertEqual(fixLocation.coordinate.latitude, coordinate.latitude)
@@ -108,6 +126,11 @@ class CLLocationTests: TestCase {
             XCTAssertEqual(fixLocation.bearingAccuracy?.doubleValue, bearingAccuracy)
             XCTAssertEqual(fixLocation.speedAccuracy?.doubleValue, speedAccuracy)
         }
+        #if compiler(>=5.5)
+        if #available(iOS 15.0, *) {
+            XCTAssertEqual(fixLocation.provider, "sim:1,acc:0")
+        }
+        #endif
     }
 }
 
