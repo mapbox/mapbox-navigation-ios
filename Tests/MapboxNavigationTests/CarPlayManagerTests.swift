@@ -181,7 +181,9 @@ class CarPlayManagerTests: TestCase {
         class CarPlayManagerDelegateMock: CarPlayManagerDelegate {
             
             var navigationStarted = false
+            var legacyNavigationEnded = false
             var navigationEnded = false
+            var navigationEndedByCanceling = false
             
             func carPlayManager(_ carPlayManager: CarPlayManager,
                                 didPresent navigationViewController: CarPlayNavigationViewController) {
@@ -189,10 +191,17 @@ class CarPlayManagerTests: TestCase {
                 navigationStarted = true
             }
             
+            // TODO: This delegate method should be removed in next major release.
+            func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+                XCTAssertTrue(navigationStarted)
+                legacyNavigationEnded = true
+            }
+            
             func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager,
                                                 byCanceling canceled: Bool) {
                 XCTAssertTrue(navigationStarted)
                 navigationEnded = true
+                navigationEndedByCanceling = canceled
             }
         }
         
@@ -216,8 +225,14 @@ class CarPlayManagerTests: TestCase {
                       "The CarPlayManagerDelegate should have been told that navigation was initiated.")
         
         carPlayManager.carPlayNavigationViewController?.exitNavigation(byCanceling: true)
+        XCTAssertTrue(carPlayManagerDelegateMock.legacyNavigationEnded,
+                      "The CarPlayManagerDelegate should have been told that navigation ended.")
+        
         XCTAssertTrue(carPlayManagerDelegateMock.navigationEnded,
                       "The CarPlayManagerDelegate should have been told that navigation ended.")
+        
+        XCTAssertTrue(carPlayManagerDelegateMock.navigationEndedByCanceling,
+                      "The CarPlayManagerDelegate should have been told that navigation ended by canceling.")
         
         CarPlayMapViewController.unswizzleMethods()
     }
