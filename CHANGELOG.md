@@ -36,7 +36,7 @@
 ### CarPlay
 
 * Added `CarPlayUserInfo` type alias for storing CarPlay-related user information. This type will be used by `CPRouteChoice` or `CPListItem` while presenting trip with multiple route choices or when selecting list item from search results, respectively. ([#3709](https://github.com/mapbox/mapbox-navigation-ios/pull/3709))
-* Deprecated `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:)` in favor of `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:byCanceling:)`. ([#3731](https://github.com/mapbox/mapbox-navigation-ios/pull/3731))
+* Added the `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:byCanceling:)` method, which is similar to the existing `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:)` method but indicates whether the user canceled the navigation session. ([#3731](https://github.com/mapbox/mapbox-navigation-ios/pull/3731))
 
 ### Offline routing
 
