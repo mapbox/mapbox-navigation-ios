@@ -269,7 +269,7 @@ open class RouteController: NSObject {
               let routeJSONString = String(data: routeData, encoding: .utf8) else {
                   completion?(.failure(RouteControllerError.failedToSerializeRoute))
                   return
-              }
+        }
 
         let routeRequest = Directions().url(forCalculating: routeOptions).absoluteString
         let routes = Routes(routesResponse: routeJSONString,

@@ -26,7 +26,7 @@ class RerouteController {
     }
     
     var customRoutingProvider: RoutingProvider? = nil {
-        didSet { // rethink if we need to restore back to default at all if Navigator is deallocated.
+        didSet {
             self.navigator?.setRerouteControllerForController(
                 customRoutingProvider.map { _ in self } ?? defaultRerouteController
             )
