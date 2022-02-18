@@ -388,8 +388,11 @@ public extension CarPlayManagerDelegate {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
-        // No-op, deprecated method.
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
     /**
