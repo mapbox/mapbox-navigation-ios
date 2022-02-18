@@ -189,7 +189,8 @@ class CarPlayManagerTests: TestCase {
                 navigationStarted = true
             }
             
-            func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+            func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager,
+                                                byCanceling canceled: Bool) {
                 XCTAssertTrue(navigationStarted)
                 navigationEnded = true
             }
