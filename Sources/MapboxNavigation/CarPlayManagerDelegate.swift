@@ -171,9 +171,22 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      Called when navigation ends so that the containing app can update accordingly.
      This delegate method will be called after dismissing `CarPlayNavigationViewController`.
      
+     If you need to know whether the navigation ended because the user arrived or canceled it, use the
+     `carPlayManagerDidEndNavigation(_:byCanceling:)` method.
+     
      - parameter carPlayManager: The CarPlay manager instance.
      */
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager)
+    
+    /**
+     Called when navigation ends so that the containing app can update accordingly.
+     This delegate method will be called after dismissing `CarPlayNavigationViewController`.
+     
+     - parameter carPlayManager: The CarPlay manager instance.
+     - parameter canceled: A Boolean value indicating whether this method is being called because
+     the user canceled the trip, as opposed to letting it run to completion/being canceled by the system.
+     */
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager, byCanceling canceled: Bool)
     
     /**
      Called when the CarPlayManager detects the user arrives at the destination waypoint for a route leg.
@@ -370,7 +383,8 @@ public extension CarPlayManagerDelegate {
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
-    func carPlayManagerWillEndNavigation(_ carPlayManager: CarPlayManager, byCanceling canceled: Bool) {
+    func carPlayManagerWillEndNavigation(_ carPlayManager: CarPlayManager,
+                                         byCanceling canceled: Bool) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     
@@ -378,6 +392,14 @@ public extension CarPlayManagerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager,
+                                        byCanceling canceled: Bool) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
     }
     

@@ -102,7 +102,8 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         currentService = service
     }
     
-    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager) {
+    func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager,
+                                        byCanceling canceled: Bool) {
         currentService = nil
     }
     
