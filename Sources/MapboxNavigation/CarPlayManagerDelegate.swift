@@ -167,16 +167,13 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      */
     func carPlayManagerWillEndNavigation(_ carPlayManager: CarPlayManager, byCanceling canceled: Bool)
     
-    @available(*, deprecated, renamed: "carPlayManagerDidEndNavigation(_:byCanceling:)")
     /**
-     :nodoc:
+     Called when navigation ends so that the containing app can update accordingly.
+     This delegate method will be called after dismissing `CarPlayNavigationViewController`.
      
-     `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:)` is no longer called due to
-     warnings, which are emitted after deprecating it. It's also not possible to make this delegate
-     method obsolete because of `Protocol members can only be marked unavailable in an @objc protocol`
-     error.
-     Use `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:byCanceling:)` instead.
+     - parameter carPlayManager: The CarPlay manager instance.
      */
+    @available(*, deprecated, renamed: "carPlayManagerDidEndNavigation(_:byCanceling:)")
     func carPlayManagerDidEndNavigation(_ carPlayManager: CarPlayManager)
     
     /**

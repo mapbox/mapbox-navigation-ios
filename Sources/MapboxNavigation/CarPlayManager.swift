@@ -733,7 +733,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         if let passiveLocationProvider = navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider {
             passiveLocationProvider.locationManager.resumeTripSession()
         }
-        
+        delegate?.carPlayManagerDidEndNavigation(self)
         delegate?.carPlayManagerDidEndNavigation(self, byCanceling: false)
     }
     
@@ -980,7 +980,7 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
         }
         
         self.carPlayNavigationViewController = nil
-        
+        delegate?.carPlayManagerDidEndNavigation(self)
         delegate?.carPlayManagerDidEndNavigation(self, byCanceling: canceled)
     }
     
