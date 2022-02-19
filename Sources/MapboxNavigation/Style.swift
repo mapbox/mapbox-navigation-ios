@@ -407,53 +407,6 @@ open class TitleLabel: StylableLabel { }
 open class SubtitleLabel: StylableLabel { }
 
 /// :nodoc:
-@objc(MBProgressBar)
-public class ProgressBar: UIView {
-    let bar = UIView()
-    
-    // Sets the color of the progress bar.
-    @objc dynamic public var barColor: UIColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1) {
-        didSet {
-            bar.backgroundColor = barColor
-        }
-    }
-    
-    // Set the progress between 0.0-1.0
-    var progress: CGFloat = 0 {
-        didSet {
-            self.updateProgressBar()
-            self.layoutIfNeeded()
-        }
-    }
-    
-    override open var description: String {
-        return super.description + "; progress = \(progress)"
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        if bar.superview == nil {
-            addSubview(bar)
-        }
-        
-        updateProgressBar()
-    }
-    
-    func updateProgressBar() {
-        if let superview = superview {
-            let origin: CGPoint
-            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                origin = CGPoint(x: superview.bounds.width * (1 - progress), y: 0)
-            } else {
-                origin = .zero
-            }
-            bar.frame = CGRect(origin: origin, size: CGSize(width: superview.bounds.width * progress, height: bounds.height))
-        }
-    }
-}
-
-/// :nodoc:
 @objc(MBLineView)
 public class LineView: UIView {
     // Set the line color on all line views.
@@ -534,49 +487,3 @@ open class TopBannerView: UIView { }
 open class BottomBannerView: UIView { }
 
 open class BottomPaddingView: BottomBannerView { }
-
-/// :nodoc:
-@objc(MBMarkerView)
-public class MarkerView: UIView {
-    // Sets the inner color on the pin.
-    @objc public dynamic var innerColor: UIColor = .white {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    // Sets the shadow color under the marker view.
-    @objc public dynamic var shadowColor: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 0.1) {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    // Sets the color on the marker view.
-    @objc public dynamic var pinColor: UIColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1) {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    // Sets the stroke color on the marker view.
-    @objc public dynamic var strokeColor: UIColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0) {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    override public var intrinsicContentSize: CGSize {
-        return CGSize(width: 39, height: 51)
-    }
-    
-    public override func layoutSubviews() {
-        super.layoutSubviews()
-        backgroundColor = .clear
-    }
-    
-    override public func draw(_ rect: CGRect) {
-        super.draw(rect)
-        StyleKitMarker.drawMarker(innerColor: innerColor, shadowColor: shadowColor, pinColor: pinColor, strokeColor: strokeColor)
-    }
-}
