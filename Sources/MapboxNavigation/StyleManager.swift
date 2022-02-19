@@ -1,71 +1,7 @@
 import UIKit
+import CoreLocation
 import Solar
 import MapboxCoreNavigation
-import CoreLocation
-
-/**
- The `StyleManagerDelegate` protocol defines a set of methods used for controlling the style.
- */
-public protocol StyleManagerDelegate: AnyObject, UnimplementedLogging {
-    /**
-     Asks the delegate for a location to use when calculating sunset and sunrise
-     */
-    func location(for styleManager: StyleManager) -> CLLocation?
-    
-    /**
-     Asks the delegate for the view to be used when refreshing appearance. 
-     
-     The default implementation of this method will attempt to cast the delegate to type
-     `UIViewController` and use its `view` property.
-     */
-    func styleManager(_ styleManager: StyleManager, viewForApplying currentStyle: Style?) -> UIView?
-    
-    /**
-     Informs the delegate that a style was applied.
-     
-     This delegate method is the equivalent of `Notification.Name.styleManagerDidApplyStyle`.
-     */
-    func styleManager(_ styleManager: StyleManager, didApply style: Style)
-    
-    /**
-     Informs the delegate that the manager forcefully refreshed UIAppearance.
-     */
-    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager)
-}
-
-public extension StyleManagerDelegate {
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func location(for styleManager: StyleManager) -> CLLocation? {
-        logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
-        return nil
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func styleManager(_ styleManager: StyleManager, didApply style: Style) {
-        logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
-        logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
-    }
-    
-    func styleManager(_ styleManager: StyleManager, viewForApplying currentStyle: Style?) -> UIView? {
-        // Short-circuit refresh logic if the view hasn't yet loaded since we don't want the `self.view` 
-        // call to trigger `loadView`.
-        if let vc = self as? UIViewController, vc.isViewLoaded { 
-            return vc.view
-        }
-        
-        return nil
-    }
-}
 
 /**
  A manager that handles `Style` objects. The manager listens for significant time changes
@@ -269,38 +205,5 @@ open class StyleManager {
         }
         
         delegate?.styleManagerDidRefreshAppearance(self)
-    }
-}
-
-extension Date {
-    func intervalUntilTimeOfDayChanges(sunrise: Date, sunset: Date) -> TimeInterval? {
-        let calendar = Calendar.current
-        let components = calendar.dateComponents([.hour, .minute, .second], from: self)
-        guard let date = calendar.date(from: components) else {
-            return nil
-        }
-        
-        if isNighttime(sunrise: sunrise, sunset: sunset) {
-            let sunriseComponents = calendar.dateComponents([.hour, .minute, .second], from: sunrise)
-            guard let sunriseDate = calendar.date(from: sunriseComponents) else {
-                return nil
-            }
-            let interval = sunriseDate.timeIntervalSince(date)
-            return interval >= 0 ? interval : (interval + 24 * 3600)
-        } else {
-            let sunsetComponents = calendar.dateComponents([.hour, .minute, .second], from: sunset)
-            guard let sunsetDate = calendar.date(from: sunsetComponents) else {
-                return nil
-            }
-            return sunsetDate.timeIntervalSince(date)
-        }
-    }
-    
-    fileprivate func isNighttime(sunrise: Date, sunset: Date) -> Bool {
-        let calendar = Calendar.current
-        let currentSecondsFromMidnight = calendar.component(.hour, from: self) * 3600 + calendar.component(.minute, from: self) * 60 + calendar.component(.second, from: self)
-        let sunriseSecondsFromMidnight = calendar.component(.hour, from: sunrise) * 3600 + calendar.component(.minute, from: sunrise) * 60 + calendar.component(.second, from: sunrise)
-        let sunsetSecondsFromMidnight = calendar.component(.hour, from: sunset) * 3600 + calendar.component(.minute, from: sunset) * 60 + calendar.component(.second, from: sunset)
-        return currentSecondsFromMidnight < sunriseSecondsFromMidnight || currentSecondsFromMidnight > sunsetSecondsFromMidnight
     }
 }
