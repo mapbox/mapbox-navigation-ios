@@ -1,0 +1,26 @@
+import UIKit
+
+/// :nodoc:
+@objc(MBReportButton)
+public class ReportButton: Button {
+    
+    static let defaultInsets: UIEdgeInsets = 10.0
+    static let defaultCornerRadius: CGFloat = 4.0
+    
+    public required init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
+        
+        commonInit()
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        commonInit()
+    }
+    
+    private func commonInit() {
+        contentEdgeInsets = ReportButton.defaultInsets
+        applyDefaultCornerRadiusShadow(cornerRadius: ReportButton.defaultCornerRadius)
+    }
+}
