@@ -252,7 +252,7 @@
 				KnownAssetTags = (
 					New,
 				);
-				LastSwiftUpdateCheck = 1220;
+				LastSwiftUpdateCheck = 1320;
 				LastUpgradeCheck = 1320;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {

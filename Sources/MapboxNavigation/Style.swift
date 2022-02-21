@@ -84,6 +84,7 @@ open class FloatingButton: Button {
         constraint.priority = FloatingButton.sizeConstraintPriority
         return constraint
     }()
+    
     lazy var heightConstraint: NSLayoutConstraint = {
         let constraint = self.heightAnchor.constraint(equalToConstant: FloatingButton.buttonSize.height)
         constraint.priority = FloatingButton.sizeConstraintPriority
@@ -140,14 +141,6 @@ public class ReportButton: Button {
         applyDefaultCornerRadiusShadow(cornerRadius: ReportButton.defaultCornerRadius)
     }
 }
-
-/**
- :nodoc:
- `HighlightedButton` sets the button’s titleColor for normal control state according to the style in addition to the styling behavior inherited from
- `Button`.
- */
-@objc(MBHighlightedButton)
-public class HighlightedButton: Button { }
 
 /// :nodoc:
 @IBDesignable

@@ -238,8 +238,9 @@
 		8AD220A727C08EA2000734A5 /* ProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220A627C08EA2000734A5 /* ProgressBar.swift */; };
 		8AD220A927C08F7C000734A5 /* MarkerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220A827C08F7C000734A5 /* MarkerView.swift */; };
 		8AD220AB27C091EE000734A5 /* Solar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220AA27C091EE000734A5 /* Solar.swift */; };
-		8AD220AD27C09307000734A5 /* StyleManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220AC27C09307000734A5 /* StyleManagerDelegate.swift */; };
 		8AD220AF27C09544000734A5 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220AE27C09544000734A5 /* Date.swift */; };
+		8AD220B127C097F3000734A5 /* HighlightedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220B027C097F3000734A5 /* HighlightedButton.swift */; };
+		8AD2210227C1A65A000734A5 /* StyleManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD2210127C1A65A000734A5 /* StyleManagerDelegate.swift */; };
 		8AD635BB278F667300218D5A /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD635BA278F667300218D5A /* StepTableViewCell.swift */; };
 		8AD635BD278F66FC00218D5A /* StepsViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD635BC278F66FC00218D5A /* StepsViewControllerDelegate.swift */; };
 		8AD6F25B272216A500326D13 /* MapViewStyleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD6F25A272216A500326D13 /* MapViewStyleTests.swift */; };
@@ -781,8 +782,9 @@
 		8AD220A627C08EA2000734A5 /* ProgressBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressBar.swift; sourceTree = "<group>"; };
 		8AD220A827C08F7C000734A5 /* MarkerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkerView.swift; sourceTree = "<group>"; };
 		8AD220AA27C091EE000734A5 /* Solar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Solar.swift; sourceTree = "<group>"; };
-		8AD220AC27C09307000734A5 /* StyleManagerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = StyleManagerDelegate.swift; path = Resources/StyleManagerDelegate.swift; sourceTree = "<group>"; };
 		8AD220AE27C09544000734A5 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
+		8AD220B027C097F3000734A5 /* HighlightedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightedButton.swift; sourceTree = "<group>"; };
+		8AD2210127C1A65A000734A5 /* StyleManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleManagerDelegate.swift; sourceTree = "<group>"; };
 		8AD635BA278F667300218D5A /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
 		8AD635BC278F66FC00218D5A /* StepsViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepsViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8AD6F25A272216A500326D13 /* MapViewStyleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewStyleTests.swift; sourceTree = "<group>"; };
@@ -1372,11 +1374,10 @@
 				35726EE71F0856E900AFA1B6 /* DayStyle.swift */,
 				8A0E0A51257AD9C300C2E924 /* NightStyle.swift */,
 				353AA55F1FCEF583009F0384 /* StyleManager.swift */,
+				8AD2210127C1A65A000734A5 /* StyleManagerDelegate.swift */,
 				C5A6B2DC1F4CE8E8004260EA /* StyleType.swift */,
 				8AA849E824E722410008EE59 /* WaypointStyle.swift */,
-				8AD220A627C08EA2000734A5 /* ProgressBar.swift */,
-				8AD220A827C08F7C000734A5 /* MarkerView.swift */,
-				8AD220AC27C09307000734A5 /* StyleManagerDelegate.swift */,
+				8AD220B227C098C4000734A5 /* Deprecations */,
 			);
 			name = Style;
 			sourceTree = "<group>";
@@ -1581,6 +1582,16 @@
 				8DFD949D221F66BE00152F45 /* BottomBannerSnapshotTests.swift */,
 			);
 			name = Banners;
+			sourceTree = "<group>";
+		};
+		8AD220B227C098C4000734A5 /* Deprecations */ = {
+			isa = PBXGroup;
+			children = (
+				8AD220A827C08F7C000734A5 /* MarkerView.swift */,
+				8AD220A627C08EA2000734A5 /* ProgressBar.swift */,
+				8AD220B027C097F3000734A5 /* HighlightedButton.swift */,
+			);
+			name = Deprecations;
 			sourceTree = "<group>";
 		};
 		8AD866EA25CA1BC90019A638 /* Camera */ = {
@@ -2553,6 +2564,7 @@
 				8A1856752631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift in Sources */,
 				8D9ADEA720A0C61A0067E845 /* GenericRouteShield.swift in Sources */,
 				35DC9D911F4323AA001ECD64 /* LanesView.swift in Sources */,
+				8AD2210227C1A65A000734A5 /* StyleManagerDelegate.swift in Sources */,
 				AE7DE6C421A47A03002653D1 /* CarPlaySearchController.swift in Sources */,
 				DA8F3A7623B5D84900B56786 /* SpeedLimitView.swift in Sources */,
 				8AA849E924E722410008EE59 /* WaypointStyle.swift in Sources */,
@@ -2595,13 +2607,13 @@
 				355ED3701FAB724F00BCE1B8 /* BottomBannerViewLayout.swift in Sources */,
 				8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */,
 				8A50A3C526EC09FB00894A8E /* FeedbackViewControllerType.swift in Sources */,
+				8AD220B127C097F3000734A5 /* HighlightedButton.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
 				AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */,
 				AE47A33022B1F6AE0096458C /* InstructionsCardView.swift in Sources */,
 				8DCB4248218A540A00D6FCAD /* NavigationComponent.swift in Sources */,
 				8AD866FB25CA1BF10019A638 /* NavigationCameraState.swift in Sources */,
 				351BEC051E5BCC6C006FE110 /* LaneView.swift in Sources */,
-				8AD220AD27C09307000734A5 /* StyleManagerDelegate.swift in Sources */,
 				C5A7EC5C1FD610A80008B9BA /* VisualInstructionComponent.swift in Sources */,
 				CFD47D9020FD85EC00BC1E49 /* ResourceOptionsManager.swift in Sources */,
 				8A7AFE672733483C004617DC /* RoutesPresentationStyle.swift in Sources */,
