@@ -1,6 +1,7 @@
 import UIKit
 
-/// :nodoc:
+// :nodoc:
+@available(*, deprecated, message: "This class is no longer used.")
 @objc(MBReportButton)
 public class ReportButton: Button {
     

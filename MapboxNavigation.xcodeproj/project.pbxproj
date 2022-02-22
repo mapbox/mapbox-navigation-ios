@@ -1411,7 +1411,6 @@
 				8AA849E824E722410008EE59 /* WaypointStyle.swift */,
 				8AD2210C27C433D8000734A5 /* StepListIndicatorView.swift */,
 				8AD2210827C42E9D000734A5 /* DistanceLabel.swift */,
-				8AD2211427C437F3000734A5 /* ReportButton.swift */,
 				8AD2211827C43B66000734A5 /* ResumeButton.swift */,
 				8AD2211A27C43BB1000734A5 /* StylableLabel.swift */,
 				8AD2211C27C43C13000734A5 /* StylableButton.swift */,
@@ -1631,6 +1630,7 @@
 		8AD220B227C098C4000734A5 /* Deprecations */ = {
 			isa = PBXGroup;
 			children = (
+				8AD2211427C437F3000734A5 /* ReportButton.swift */,
 				8AD220A827C08F7C000734A5 /* MarkerView.swift */,
 				8AD220A627C08EA2000734A5 /* ProgressBar.swift */,
 				8AD220B027C097F3000734A5 /* HighlightedButton.swift */,
