@@ -44,6 +44,15 @@ extension UIColor {
 
     class var routeDurationAnnotationTextColor: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
     class var selectedRouteDurationAnnotationTextColor: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
+    
+    class var roadShieldDefaultColor: UIColor { get { return .black } }
+    class var roadShieldBlackColor: UIColor { get { return roadShieldDefaultColor } }
+    class var roadShieldBlueColor: UIColor { get { return .blue } }
+    class var roadShieldGreenColor: UIColor { get { return #colorLiteral(red: 0, green: 0.5, blue: 0, alpha: 1) } }
+    class var roadShieldRedColor: UIColor { get { return .red } }
+    class var roadShieldWhiteColor: UIColor { get { return .white } }
+    class var roadShieldYellowColor: UIColor { get { return .yellow } }
+    class var roadShieldOrangeColor: UIColor { get { return #colorLiteral(red: 1, green: 0.65, blue: 0, alpha: 1) } }
 
 }
 
@@ -288,6 +297,14 @@ open class DayStyle: Style {
         UserHaloCourseView.appearance().haloRadius = 100.0
         WayNameLabel.appearance().normalFont = UIFont.systemFont(ofSize:20, weight: .medium).adjustedFont
         WayNameLabel.appearance().normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        WayNameLabel.appearance().roadShieldBlackColor = .roadShieldBlackColor
+        WayNameLabel.appearance().roadShieldBlueColor = .roadShieldBlueColor
+        WayNameLabel.appearance().roadShieldGreenColor = .roadShieldGreenColor
+        WayNameLabel.appearance().roadShieldRedColor = .roadShieldRedColor
+        WayNameLabel.appearance().roadShieldWhiteColor = .roadShieldWhiteColor
+        WayNameLabel.appearance().roadShieldYellowColor = .roadShieldYellowColor
+        WayNameLabel.appearance().roadShieldOrangeColor = .roadShieldOrangeColor
+        WayNameLabel.appearance().roadShieldDefaultColor = .roadShieldDefaultColor
         WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
         WayNameView.appearance().borderWidth = 1.0

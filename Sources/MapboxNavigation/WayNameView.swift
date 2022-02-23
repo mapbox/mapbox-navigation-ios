@@ -12,6 +12,15 @@ open class WayNameLabel: StylableLabel {
     var spriteRepository = SpriteRepository()
     var representation: VisualInstruction.Component.ImageRepresentation?
     
+    @objc dynamic public var roadShieldBlackColor: UIColor = .roadShieldBlackColor
+    @objc dynamic public var roadShieldBlueColor: UIColor = .roadShieldBlueColor
+    @objc dynamic public var roadShieldGreenColor: UIColor = .roadShieldGreenColor
+    @objc dynamic public var roadShieldRedColor: UIColor = .roadShieldRedColor
+    @objc dynamic public var roadShieldWhiteColor: UIColor = .roadShieldWhiteColor
+    @objc dynamic public var roadShieldYellowColor: UIColor = .roadShieldYellowColor
+    @objc dynamic public var roadShieldOrangeColor: UIColor = .roadShieldOrangeColor
+    @objc dynamic public var roadShieldDefaultColor: UIColor = .roadShieldDefaultColor
+    
     // When the map style changes, update the sprite repository and the label.
     func updateStyle(styleURI: StyleURI?) {
         guard let styleURI = styleURI else { return }
@@ -39,11 +48,15 @@ open class WayNameLabel: StylableLabel {
     // Set up the `WayNameLabel` with the road name. Try to use the Mapbox designed shield first, if failed, fall back to use the legacy road shield icon.
     // If there's no valid shield image, display the road name only.
     private func setUpWith(roadName: String) {
-        // TODO: Use shield for us-state shield first
-        if let shield = representation?.shield,
-           shield.name != "us-state",
-           setAttributedText(roadName: roadName, shield: shield) {
-            return
+        if let shield = representation?.shield {
+            // For `us-state` shield, use the legacy shield first, then fall back to use the generic shield icon.
+            // For non `us-state` shield, use the generic shield icon first, then fall back to use the legacy shield.
+            if shield.name == "us-state",
+               setAttributedText(roadName: roadName) {
+                return
+            } else if setAttributedText(roadName: roadName, shield: shield) {
+                return
+            }
         }
         
         if setAttributedText(roadName: roadName) {
@@ -100,8 +113,7 @@ open class WayNameLabel: StylableLabel {
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false
         
-        let shieldColor = spriteRepository.shieldColor(from: shield.textColor)
-        currentShieldName = roadShieldAttributedText(for: shield.text, shieldColor: shieldColor, image: shieldIcon)
+        currentShieldName = roadShieldAttributedText(for: shield.text, textColor: shield.textColor, image: shieldIcon)
 
         if !roadName.isEmpty {
             currentRoadName = roadName
@@ -119,12 +131,34 @@ open class WayNameLabel: StylableLabel {
         return didSetup
     }
     
+    private func shieldColor(from shieldTextColor: String) -> UIColor {
+        switch shieldTextColor {
+        case "black":
+            return roadShieldBlackColor
+        case "blue":
+            return roadShieldBlueColor
+        case "green":
+            return roadShieldGreenColor
+        case "red":
+            return roadShieldRedColor
+        case "white":
+            return roadShieldWhiteColor
+        case "yellow":
+            return roadShieldYellowColor
+        case "orange":
+            return roadShieldOrangeColor
+        default:
+            return roadShieldDefaultColor
+        }
+    }
+    
     private func roadShieldAttributedText(for text: String,
-                                          shieldColor: UIColor,
+                                          textColor: String,
                                           image: UIImage) -> NSAttributedString? {
         let attachment = ShieldAttachment()
         // To correctly scale size of the font its height is based on the label where it is shown.
         let fontSize = frame.size.height / 2.5
+        let shieldColor = shieldColor(from: textColor)
         attachment.image = image.withCenteredText(text,
                                                   color: shieldColor,
                                                   font: UIFont.boldSystemFont(ofSize: fontSize),
