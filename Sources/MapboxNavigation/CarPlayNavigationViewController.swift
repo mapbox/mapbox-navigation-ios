@@ -87,7 +87,6 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     var carInterfaceController: CPInterfaceController
     
     private var isTraversingTunnel = false
-    private var roadNameFromStatus: String?
     
     private var safeTrailingSpeedLimitViewConstraint: NSLayoutConstraint!
     private var trailingSpeedLimitViewConstraint: NSLayoutConstraint!
@@ -612,11 +611,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView?.travelAlongRouteLine(to: location.coordinate)
         }
-        
-        navigationMapView?.labelCurrentRoadFeature(at: location,
-                                                   router: navigationService.router,
-                                                   wayNameView: wayNameView,
-                                                   roadNameFromStatus: roadNameFromStatus)
+
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
@@ -672,7 +667,15 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     @objc func didUpdateRoadNameFromStatus(_ notification: Notification) {
-        roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
+        let roadNameFromStatus = notification.userInfo?[RouteController.NotificationUserInfoKey.roadNameKey] as? String
+        if let roadName = roadNameFromStatus?.nonEmptyString {
+            let representation = notification.userInfo?[RouteController.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
+            wayNameView.label.updateRoad(roadName: roadName, representation: representation)
+            wayNameView.containerView.isHidden = false
+        } else {
+            wayNameView.text = nil
+            wayNameView.containerView.isHidden = true
+        }
     }
     
     func setUpSimulatedLocationProvider(routeProgress: RouteProgress, speedMultiplier: Double) {
@@ -829,7 +832,10 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let mapboxMapStyle = navigationMapView?.mapView.mapboxMap.style
         if mapboxMapStyle?.uri?.rawValue != style.mapStyleURL.absoluteString {
-            mapboxMapStyle?.uri = StyleURI(url: style.mapStyleURL)
+            let styleURI = StyleURI(url: style.mapStyleURL)
+            mapboxMapStyle?.uri = styleURI
+            // Update the sprite repository of wayNameView when map style changes.
+            wayNameView?.label.updateStyle(styleURI: styleURI)
         }
     }
     

@@ -290,10 +290,13 @@ open class CarPlayMapViewController: UIViewController {
         speedLimitView.signStandard = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
         speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
         
-        if let roadName = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.roadNameKey] as? String {
-            wayNameView.text = roadName.nonEmptyString
-            wayNameView.containerView.isHidden = roadName.isEmpty
+        let roadNameFromStatus = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.roadNameKey] as? String
+        if let roadName = roadNameFromStatus?.nonEmptyString {
+            let representation = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.routeShieldRepresentationKey] as? VisualInstruction.Component.ImageRepresentation
+            wayNameView.label.updateRoad(roadName: roadName, representation: representation)
+            wayNameView.containerView.isHidden = false
         } else {
+            wayNameView.text = nil
             wayNameView.containerView.isHidden = true
         }
     }
@@ -366,7 +369,10 @@ extension CarPlayMapViewController: StyleManagerDelegate {
     public func styleManager(_ styleManager: StyleManager, didApply style: Style) {
         let mapboxMapStyle = navigationMapView.mapView.mapboxMap.style
         if mapboxMapStyle.uri?.rawValue != style.mapStyleURL.absoluteString {
-            mapboxMapStyle.uri = StyleURI(url: style.previewMapStyleURL)
+            let styleURI = StyleURI(url: style.mapStyleURL)
+            mapboxMapStyle.uri = styleURI
+            // Update the sprite repository of wayNameView when map style changes.
+            wayNameView?.label.updateStyle(styleURI: styleURI)
         }
     }
     
