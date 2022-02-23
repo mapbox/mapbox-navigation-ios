@@ -108,5 +108,8 @@ open class NightStyle: DayStyle {
         TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         TopBannerView.appearance().backgroundColor = backgroundColor
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
+        
+        StepsTableHeaderView.appearance().normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
+        StepsTableHeaderView.appearance().normalBackgroundColor = backgroundColor
     }
 }

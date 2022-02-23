@@ -308,6 +308,9 @@ open class DayStyle: Style {
         WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
         WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
         WayNameView.appearance().borderWidth = 1.0
+        StepsTableHeaderView.appearance().normalTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
+        StepsTableHeaderView.appearance().normalBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        StepsTableHeaderView.appearance().normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
     }
     
     @available(iOS 12.0, *)

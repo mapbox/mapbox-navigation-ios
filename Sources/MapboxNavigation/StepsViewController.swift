@@ -239,7 +239,7 @@ extension StepsViewController: UITableViewDataSource {
         cell.separatorView.isHidden = isLastRowInSection
     }
 
-    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func titleForHeader(in section: Int) -> String? {
         if section == 0 {
             return nil
         }
@@ -257,5 +257,15 @@ extension StepsViewController: UITableViewDataSource {
         } else {
             return leg.name
         }
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return (section == 0) ? 0.0 : tableView.sectionHeaderHeight
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = StepsTableHeaderView()
+        view.text = titleForHeader(in: section)
+        return view
     }
 }
