@@ -19,9 +19,6 @@ class RouteControllerTests: TestCase {
         super.tearDown()
     }
     
-    // FIXME: In case if `testRerouteAfterArrival` is called before `testRouteSnappingOvershooting`,
-    // precondition will be triggered in `RouteController.updateIndexes(status:progress:)`, which will lead
-    // to a test failure.
     func testRouteSnappingOvershooting() {
         let options = NavigationMatchOptions(coordinates: [
             .init(latitude: 59.337928, longitude: 18.076841),

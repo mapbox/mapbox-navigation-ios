@@ -658,8 +658,6 @@ final class BillingHandlerUnitTests: TestCase {
         billingServiceMock.assertEvents(expectedEvents)
     }
 
-    // FIXME: Regardless of location, which was provided, `Navigator.updateLocation(for:callback:)`
-    // will always return `false`, this in turn will lead to a test failure.
     func testPausedFreeDrivePausesNavNativeNavigator() {
         let locationManager = ReplayLocationManager(locations: [.init(coordinate: .init(latitude: 0, longitude: 0))])
         locationManager.speedMultiplier = 100
