@@ -6,7 +6,7 @@
 
 * v2.2.0 [clarified](https://github.com/mapbox/mapbox-navigation-ios/pull/3652) that is an error to have more than one instance of `NavigationViewController`, `NavigationService`, or `RouteController` running simultaneously. Now you will receive a log message at the fault level helping you to spot the issue. To pause the debugger when the SDK detect the problematic situation, enable the “All Runtime Issues” breakpoint in Xcode. Learn more about breakpoints in [Xcode documentation](https://developer.apple.com/documentation/xcode/setting-breakpoints-to-pause-your-running-app). ([#3740](https://github.com/mapbox/mapbox-navigation-ios/pull/3740))
 * MapboxNavigation now requires [MapboxMaps v10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.3.0). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
-* MapboxCoreNavigation now requires [MapboxDirections v2._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.3.0-rc.1). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
+* MapboxCoreNavigation now requires [MapboxDirections v2.3.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.3.0-rc.2). ([#3762](https://github.com/mapbox/mapbox-navigation-ios/pull/3762))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v88._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/88.0.0). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
 
 ### User interface
