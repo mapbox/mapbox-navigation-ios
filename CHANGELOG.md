@@ -2,6 +2,10 @@
 
 ## v2.4.0
 
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.4.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.0-beta.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+
 ### User interface
 
 * `FeedbackViewController` now supports changing styles based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
