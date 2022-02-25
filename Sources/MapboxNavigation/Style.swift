@@ -255,43 +255,6 @@ open class StylableLabel: UILabel {
 }
 
 /// :nodoc:
-@objc(MBStepsTableHeaderView)
-open class StepsTableHeaderView: UITableViewHeaderFooterView {
-    @objc dynamic open var normalTextColor: UIColor = .black {
-        didSet { update() }
-    }
-    
-    @objc dynamic open var normalBackgroundColor: UIColor = .white {
-        didSet { update() }
-    }
-    
-    @objc dynamic open var text: String? {
-        didSet { update() }
-    }
-    
-    @objc dynamic open var normalFont: UIFont = .systemFont(ofSize: 16) {
-        didSet { update() }
-    }
-    
-    open func update() {
-        if #available(iOS 14.0, *) {
-            var content = UIListContentConfiguration.groupedHeader()
-            content.textProperties.transform = .none
-            content.textProperties.color = normalTextColor
-            content.text = text
-            content.textProperties.font = normalFont
-            contentConfiguration = content
-        } else {
-            textLabel?.text = text
-            textLabel?.font = normalFont
-            textLabel?.textColor = normalTextColor
-        }
-        
-        tintColor = normalBackgroundColor
-    }
-}
-
-/// :nodoc:
 @objc(MBStylableView)
 open class StylableView: UIView {
     @objc dynamic public var borderWidth: CGFloat = 0.0 {

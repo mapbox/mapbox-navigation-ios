@@ -264,8 +264,17 @@ extension StepsViewController: UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard section != 0 else { return nil }
         let view = StepsTableHeaderView()
-        view.text = titleForHeader(in: section)
+        view.textLabel?.text = titleForHeader(in: section)
         return view
+    }
+}
+
+class StepsTableHeaderView: UITableViewHeaderFooterView {
+    @objc dynamic var normalTextColor: UIColor = .black {
+        didSet {
+            self.textLabel?.textColor = normalTextColor
+        }
     }
 }

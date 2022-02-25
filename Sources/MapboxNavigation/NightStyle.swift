@@ -109,7 +109,9 @@ open class NightStyle: DayStyle {
         TopBannerView.appearance().backgroundColor = backgroundColor
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         
+        if #available(iOS 15.0, *) {} else {
+            StepsTableHeaderView.appearance().tintColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+        }
         StepsTableHeaderView.appearance().normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
-        StepsTableHeaderView.appearance().normalBackgroundColor = backgroundColor
     }
 }
