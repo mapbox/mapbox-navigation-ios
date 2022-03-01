@@ -74,6 +74,10 @@ class EndOfRouteViewController: UIViewController {
         preferredContentSize.height = height(for: .normal)
         updateInterface()
     }
+    
+    override func viewDidLayoutSubviews() {
+        rating == 0 ? hideComments() : showComments()
+    }
 
     // MARK: IBActions
     @IBAction func endNavigationPressed(_ sender: Any) {
