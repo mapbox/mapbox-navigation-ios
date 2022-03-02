@@ -9,8 +9,8 @@ open class StepsBackgroundView: UIView { }
 /// :nodoc:
 public class StepsViewController: UIViewController {
     weak var tableView: UITableView!
-    weak var backgroundView: UIView!
-    weak var bottomView: UIView!
+    weak var backgroundView: StepsBackgroundView!
+    weak var bottomView: StepsBackgroundView!
     weak var separatorBottomView: SeparatorView!
     weak var dismissButton: DismissButton!
     public weak var delegate: StepsViewControllerDelegate?
@@ -109,7 +109,6 @@ public class StepsViewController: UIViewController {
 
         let tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.separatorColor = .clear
-        tableView.backgroundColor = .clear
         tableView.backgroundView = nil
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
@@ -125,9 +124,8 @@ public class StepsViewController: UIViewController {
         view.addSubview(dismissButton)
         self.dismissButton = dismissButton
 
-        let bottomView = UIView()
+        let bottomView = StepsBackgroundView()
         bottomView.translatesAutoresizingMaskIntoConstraints = false
-        bottomView.backgroundColor = DismissButton.appearance().backgroundColor
         view.addSubview(bottomView)
         self.bottomView = bottomView
 
