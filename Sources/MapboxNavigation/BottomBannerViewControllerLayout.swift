@@ -1,6 +1,7 @@
 import UIKit
 
 extension BottomBannerViewController {
+    
     func setupRootViews() {
         let children = [bottomBannerView, bottomPaddingView]
         view.addSubviews(children)
@@ -10,34 +11,31 @@ extension BottomBannerViewController {
     func setupRootViewConstraints() {
         let constraints = [
             bottomBannerView.topAnchor.constraint(equalTo: view.topAnchor),
+            bottomBannerView.bottomAnchor.constraint(equalTo: bottomPaddingView.topAnchor),
             bottomBannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomBannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomBannerView.bottomAnchor.constraint(equalTo: bottomPaddingView.topAnchor),
             
             bottomPaddingView.topAnchor.constraint(equalTo: view.safeBottomAnchor),
+            bottomPaddingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             bottomPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             bottomPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            bottomPaddingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ]
         
         NSLayoutConstraint.activate(constraints)
     }
     
     func setupBottomBanner() {
-        let timeRemainingLabel = TimeRemainingLabel()
-        timeRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
+        let timeRemainingLabel: TimeRemainingLabel = .forAutoLayout()
         timeRemainingLabel.font = .systemFont(ofSize: 28, weight: .medium)
         bottomBannerView.addSubview(timeRemainingLabel)
         self.timeRemainingLabel = timeRemainingLabel
         
-        let distanceRemainingLabel = DistanceRemainingLabel()
-        distanceRemainingLabel.translatesAutoresizingMaskIntoConstraints = false
+        let distanceRemainingLabel: DistanceRemainingLabel = .forAutoLayout()
         distanceRemainingLabel.font = .systemFont(ofSize: 18, weight: .medium)
         bottomBannerView.addSubview(distanceRemainingLabel)
         self.distanceRemainingLabel = distanceRemainingLabel
         
-        let arrivalTimeLabel = ArrivalTimeLabel()
-        arrivalTimeLabel.translatesAutoresizingMaskIntoConstraints = false
+        let arrivalTimeLabel: ArrivalTimeLabel = .forAutoLayout()
         bottomBannerView.addSubview(arrivalTimeLabel)
         self.arrivalTimeLabel = arrivalTimeLabel
         
@@ -47,18 +45,15 @@ extension BottomBannerViewController {
         bottomBannerView.addSubview(cancelButton)
         self.cancelButton = cancelButton
         
-        let verticalDivider = SeparatorView()
-        verticalDivider.translatesAutoresizingMaskIntoConstraints = false
+        let verticalDivider: SeparatorView = .forAutoLayout()
         bottomBannerView.addSubview(verticalDivider)
         self.verticalDividerView = verticalDivider
         
-        let horizontalDividerView = SeparatorView()
-        horizontalDividerView.translatesAutoresizingMaskIntoConstraints = false
+        let horizontalDividerView: SeparatorView = .forAutoLayout()
         bottomBannerView.addSubview(horizontalDividerView)
         self.horizontalDividerView = horizontalDividerView
         
-        let trailingSeparatorView = SeparatorView()
-        trailingSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        let trailingSeparatorView: SeparatorView = .forAutoLayout()
         bottomBannerView.addSubview(trailingSeparatorView)
         self.trailingSeparatorView = trailingSeparatorView
         

@@ -553,10 +553,10 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         ]
         
         subviewInits.append { [weak self] in
-            if let topBanner = self?.addTopBanner(navigationOptions),
-               let bottomBanner = self?.addBottomBanner(navigationOptions) {
-                self?.ornamentsController?.embedBanners(topBanner: topBanner,
-                                                        bottomBanner: bottomBanner)
+            if let topBannerViewController = self?.addTopBanner(navigationOptions),
+               let bottomBannerViewController = self?.addBottomBanner(navigationOptions) {
+                self?.ornamentsController?.embedBanners(topBannerViewController: topBannerViewController,
+                                                        bottomBannerViewController: bottomBannerViewController)
             }
         }
         

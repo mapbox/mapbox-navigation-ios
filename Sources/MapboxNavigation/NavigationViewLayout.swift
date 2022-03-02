@@ -62,12 +62,10 @@ extension NavigationView {
 
         let bottomBannerContainerViewTrailingConstraint = bottomBannerContainerView.trailingAnchor.constraint(equalTo: trailingAnchor)
         let bottomBannerContainerViewLeadingConstraint = bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor)
-        let bottomBannerContainerViewBottomConstraint = bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor)
 
         let bottomBannerConstraints = [
             bottomBannerContainerViewTrailingConstraint,
-            bottomBannerContainerViewLeadingConstraint,
-            bottomBannerContainerViewBottomConstraint
+            bottomBannerContainerViewLeadingConstraint
         ]
         
         layoutConstraints.append(contentsOf: bottomBannerConstraints)
@@ -192,12 +190,10 @@ extension NavigationView {
 
         let bottomBannerContainerViewTrailingConstraint = bottomBannerContainerView.trailingAnchor.constraint(equalTo: topBannerContainerView.trailingAnchor)
         let bottomBannerContainerViewLeadingConstraint = bottomBannerContainerView.leadingAnchor.constraint(equalTo: leadingAnchor)
-        let bottomBannerContainerViewBottomConstraint = bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor)
         
         let bottomBannerConstraints = [
             bottomBannerContainerViewTrailingConstraint,
-            bottomBannerContainerViewLeadingConstraint,
-            bottomBannerContainerViewBottomConstraint
+            bottomBannerContainerViewLeadingConstraint
         ]
         
         layoutConstraints.append(contentsOf: bottomBannerConstraints)
