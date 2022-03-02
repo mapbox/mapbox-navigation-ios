@@ -76,6 +76,7 @@ class EndOfRouteViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         rating == 0 ? hideComments() : showComments()
     }
 
