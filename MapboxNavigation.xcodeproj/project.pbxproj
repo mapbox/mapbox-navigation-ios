@@ -241,6 +241,7 @@
 		8AD220AF27C09544000734A5 /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220AE27C09544000734A5 /* Date.swift */; };
 		8AD220B127C097F3000734A5 /* HighlightedButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220B027C097F3000734A5 /* HighlightedButton.swift */; };
 		8AD2210227C1A65A000734A5 /* StyleManagerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD2210127C1A65A000734A5 /* StyleManagerDelegate.swift */; };
+		8AD2210427C1A668000734A5 /* PreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD2210327C1A668000734A5 /* PreviewViewController.swift */; };
 		8AD2210927C42E9E000734A5 /* DistanceLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD2210827C42E9D000734A5 /* DistanceLabel.swift */; };
 		8AD2210B27C43180000734A5 /* VisualInstructionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD2210A27C43180000734A5 /* VisualInstructionDelegate.swift */; };
 		8AD2210D27C433D8000734A5 /* StepListIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD2210C27C433D8000734A5 /* StepListIndicatorView.swift */; };
@@ -801,6 +802,7 @@
 		8AD220AE27C09544000734A5 /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		8AD220B027C097F3000734A5 /* HighlightedButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HighlightedButton.swift; sourceTree = "<group>"; };
 		8AD2210127C1A65A000734A5 /* StyleManagerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StyleManagerDelegate.swift; sourceTree = "<group>"; };
+		8AD2210327C1A668000734A5 /* PreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewViewController.swift; sourceTree = "<group>"; };
 		8AD2210827C42E9D000734A5 /* DistanceLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DistanceLabel.swift; sourceTree = "<group>"; };
 		8AD2210A27C43180000734A5 /* VisualInstructionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VisualInstructionDelegate.swift; sourceTree = "<group>"; };
 		8AD2210C27C433D8000734A5 /* StepListIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepListIndicatorView.swift; sourceTree = "<group>"; };
@@ -1439,6 +1441,7 @@
 				8AC4091D279918470075248E /* NavigationViewLayout.swift */,
 				2B3ED3B3260A162900861A84 /* NavigationViewData.swift */,
 				351BEBEA1E5BCC63006FE110 /* NavigationViewController.swift */,
+				8AD2210327C1A668000734A5 /* PreviewViewController.swift */,
 				2B3ED3952609FB2300861A84 /* CameraController.swift */,
 				8DEDEF3321E3FBE80049E114 /* NavigationViewControllerDelegate.swift */,
 				8D3322262200E4CA001D44AA /* NavigationOptions.swift */,
@@ -2573,6 +2576,7 @@
 				351BEBFF1E5BCC63006FE110 /* ManeuversStyleKit.swift in Sources */,
 				8A460FB8279B3ED000E3C017 /* InstructionsCardContainerViewDelegate.swift in Sources */,
 				C54C655220336F2600D338E0 /* Constants.swift in Sources */,
+				8AD2210427C1A668000734A5 /* PreviewViewController.swift in Sources */,
 				B493FB1D2767EDDB002AF455 /* InstructionsBannerViewDelegate.swift in Sources */,
 				353610CE1FAB6A8F00FB1746 /* BottomBannerViewController.swift in Sources */,
 				8A50A3CD26EC0A3100894A8E /* DialogViewController.swift in Sources */,

@@ -17,6 +17,11 @@
 		8A092F9C25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */; };
 		8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
 		8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
+		8AD220EE27C1A433000734A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220ED27C1A433000734A5 /* AppDelegate.swift */; };
+		8AD220F027C1A433000734A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220EF27C1A433000734A5 /* SceneDelegate.swift */; };
+		8AD220F727C1A435000734A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AD220F627C1A435000734A5 /* Assets.xcassets */; };
+		8AD220FA27C1A435000734A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */; };
+		8AD2210627C1A772000734A5 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 8AD2210527C1A772000734A5 /* MapboxNavigation */; };
 		AED6285622CBE4CE00058A51 /* ViewController+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+InstructionsCard.swift */; };
 		C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC31620F689F800400CE7 /* CustomStyles.swift */; };
 		C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
@@ -57,6 +62,12 @@
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
 		8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ViewController+FreeDrive.swift"; path = "Example/ViewController+FreeDrive.swift"; sourceTree = "<group>"; };
 		8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StyledFeature.swift; path = Example/StyledFeature.swift; sourceTree = "<group>"; };
+		8AD220EB27C1A433000734A5 /* PreviewViewControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewViewControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8AD220ED27C1A433000734A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8AD220EF27C1A433000734A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		8AD220F627C1A435000734A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8AD220F927C1A435000734A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8AD220FB27C1A435000734A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8AE82687267A2003009103A7 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8DF8E4DE2202696800B29FEF /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
@@ -107,6 +118,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8AD220E827C1A433000734A5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AD2210627C1A772000734A5 /* MapboxNavigation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C53F2EE920EBC95600D9798F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -152,6 +171,18 @@
 			name = Example;
 			sourceTree = "<group>";
 		};
+		8AD220EC27C1A433000734A5 /* PreviewViewControllerExample */ = {
+			isa = PBXGroup;
+			children = (
+				8AD220ED27C1A433000734A5 /* AppDelegate.swift */,
+				8AD220EF27C1A433000734A5 /* SceneDelegate.swift */,
+				8AD220F627C1A435000734A5 /* Assets.xcassets */,
+				8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */,
+				8AD220FB27C1A435000734A5 /* Info.plist */,
+			);
+			path = PreviewViewControllerExample;
+			sourceTree = "<group>";
+		};
 		8DF8E4DD2202694100B29FEF /* Documents */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,6 +210,7 @@
 			isa = PBXGroup;
 			children = (
 				8DF8E4DD2202694100B29FEF /* Documents */,
+				8AD220EC27C1A433000734A5 /* PreviewViewControllerExample */,
 				35B711DB1E5E7B70001EDA8D /* Example */,
 				DA1A1AFC25E085D40097BBD7 /*  */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
@@ -193,6 +225,7 @@
 			children = (
 				358D14631E5E3B7700ADE590 /* Example.app */,
 				C53F2F0720EBC95600D9798F /* Example.app */,
+				8AD220EB27C1A433000734A5 /* PreviewViewControllerExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -219,6 +252,27 @@
 			);
 			productName = "Example-Swift";
 			productReference = 358D14631E5E3B7700ADE590 /* Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8AD220EA27C1A433000734A5 /* PreviewViewControllerExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8AD220FC27C1A435000734A5 /* Build configuration list for PBXNativeTarget "PreviewViewControllerExample" */;
+			buildPhases = (
+				8AD220E727C1A433000734A5 /* Sources */,
+				8AD220E827C1A433000734A5 /* Frameworks */,
+				8AD220E927C1A433000734A5 /* Resources */,
+				8AD2210727C1AEAA000734A5 /* Apply Mapbox Access Token */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PreviewViewControllerExample;
+			packageProductDependencies = (
+				8AD2210527C1A772000734A5 /* MapboxNavigation */,
+			);
+			productName = PreviewViewControllerExample;
+			productReference = 8AD220EB27C1A433000734A5 /* PreviewViewControllerExample.app */;
 			productType = "com.apple.product-type.application";
 		};
 		C53F2EDE20EBC95600D9798F /* Example-CarPlay */ = {
@@ -261,6 +315,9 @@
 						DevelopmentTeam = GJZR2MEM28;
 						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
+					};
+					8AD220EA27C1A433000734A5 = {
+						CreatedOnToolsVersion = 13.2.1;
 					};
 					C53F2EDE20EBC95600D9798F = {
 						DevelopmentTeam = GJZR2MEM28;
@@ -315,6 +372,7 @@
 			targets = (
 				358D14621E5E3B7700ADE590 /* Example */,
 				C53F2EDE20EBC95600D9798F /* Example-CarPlay */,
+				8AD220EA27C1A433000734A5 /* PreviewViewControllerExample */,
 			);
 		};
 /* End PBXProject section */
@@ -333,6 +391,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		8AD220E927C1A433000734A5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AD220FA27C1A435000734A5 /* LaunchScreen.storyboard in Resources */,
+				8AD220F727C1A435000734A5 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C53F2EF220EBC95600D9798F /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -347,6 +414,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		8AD2210727C1AEAA000734A5 /* Apply Mapbox Access Token */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(TARGET_BUILD_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Apply Mapbox Access Token";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This Run Script build phase helps to keep the navigation SDK’s developers from exposing their own access tokens during development. See <https://www.mapbox.com/help/ios-private-access-token/> for more information. If you are developing an application privately, you may add the MGLMapboxAccessToken key directly to your Info.plist file and delete this build phase.\n\ntoken_file=~/.mapbox\ntoken_file2=~/mapbox\ntoken=\"$(cat $token_file 2>/dev/null || cat $token_file2 2>/dev/null)\"\nif [ \"$token\" ]; then\n  plutil -replace MBXAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nelse\n  echo 'warning: Missing Mapbox access token'\n  open 'https://www.mapbox.com/account/access-tokens/'\n  echo \"warning: Get an access token from <https://www.mapbox.com/account/access-tokens/>, then create a new file at $token_file or $token_file2 that contains the access token.\"\nfi\n";
+		};
 		C53F2F0320EBC95600D9798F /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -391,6 +477,15 @@
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8AD220E727C1A433000734A5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AD220EE27C1A433000734A5 /* AppDelegate.swift in Sources */,
+				8AD220F027C1A433000734A5 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -446,6 +541,14 @@
 				DA75C2C326A6021D00BAD63D /* es-ES */,
 			);
 			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8AD220F927C1A435000734A5 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
 		DA303C9D21B76B5C00F921DC /* LaunchScreen.storyboard */ = {
@@ -512,6 +615,82 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Example/Example-Swift-BridgingHeader.h";
+			};
+			name = Release;
+		};
+		8AD220FD27C1A435000734A5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PreviewViewControllerExample/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.PreviewViewControllerExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8AD220FE27C1A435000734A5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = PreviewViewControllerExample/Info.plist;
+				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.PreviewViewControllerExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -702,6 +881,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		8AD220FC27C1A435000734A5 /* Build configuration list for PBXNativeTarget "PreviewViewControllerExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8AD220FD27C1A435000734A5 /* Debug */,
+				8AD220FE27C1A435000734A5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		C53F2F0420EBC95600D9798F /* Build configuration list for PBXNativeTarget "Example-CarPlay" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -734,6 +922,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8AD2210527C1A772000734A5 /* MapboxNavigation */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MapboxNavigation;
+		};
 		DA1A1B0325E087A20097BBD7 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigation;
