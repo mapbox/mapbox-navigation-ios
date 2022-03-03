@@ -19,6 +19,7 @@
 * Added the `InstructionsCardContainerView.separatorColor` and `InstructionsCardContainerView.highlightedSeparatorColor` to be able to change instruction card's separator colors. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
 * Fixed an issue where the top banner instruction shows empty remaining steps in pull-down table when user is on final step. ([#3729](https://github.com/mapbox/mapbox-navigation-ios/pull/3729))
 * Fixed an issue where the end of route view has a gap between the screen bottom in landscape mode. ([#3769](https://github.com/mapbox/mapbox-navigation-ios/pull/3769))
+* Fixed an issue where the leg separator in drop down `StepsViewController` shows day style during active navigation in night style. ([#3760](https://github.com/mapbox/mapbox-navigation-ios/pull/3760))
 
 ### Location tracking
 

@@ -9,8 +9,8 @@ open class StepsBackgroundView: UIView { }
 /// :nodoc:
 public class StepsViewController: UIViewController {
     weak var tableView: UITableView!
-    weak var backgroundView: UIView!
-    weak var bottomView: UIView!
+    weak var backgroundView: StepsBackgroundView!
+    weak var bottomView: StepsBackgroundView!
     weak var separatorBottomView: SeparatorView!
     weak var dismissButton: DismissButton!
     public weak var delegate: StepsViewControllerDelegate?
@@ -109,7 +109,6 @@ public class StepsViewController: UIViewController {
 
         let tableView = UITableView(frame: view.bounds, style: .plain)
         tableView.separatorColor = .clear
-        tableView.backgroundColor = .clear
         tableView.backgroundView = nil
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.delegate = self
@@ -125,9 +124,8 @@ public class StepsViewController: UIViewController {
         view.addSubview(dismissButton)
         self.dismissButton = dismissButton
 
-        let bottomView = UIView()
+        let bottomView = StepsBackgroundView()
         bottomView.translatesAutoresizingMaskIntoConstraints = false
-        bottomView.backgroundColor = DismissButton.appearance().backgroundColor
         view.addSubview(bottomView)
         self.bottomView = bottomView
 
@@ -239,7 +237,7 @@ extension StepsViewController: UITableViewDataSource {
         cell.separatorView.isHidden = isLastRowInSection
     }
 
-    public func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func titleForHeader(in section: Int) -> String? {
         if section == 0 {
             return nil
         }
@@ -256,6 +254,25 @@ extension StepsViewController: UITableViewDataSource {
             return String.localizedStringWithFormat(NSLocalizedString("WAYPOINT_SOURCE_DESTINATION_FORMAT", bundle: .mapboxNavigation, value: "%@ and %@", comment: "Format for displaying start and endpoint for leg; 1 = source ; 2 = destination"), sourceName, destinationName)
         } else {
             return leg.name
+        }
+    }
+    
+    public func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return (section == 0) ? 0.0 : tableView.sectionHeaderHeight
+    }
+    
+    public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard section != 0 else { return nil }
+        let view = StepsTableHeaderView()
+        view.textLabel?.text = titleForHeader(in: section)
+        return view
+    }
+}
+
+class StepsTableHeaderView: UITableViewHeaderFooterView {
+    @objc dynamic var normalTextColor: UIColor = .black {
+        didSet {
+            self.textLabel?.textColor = normalTextColor
         }
     }
 }
