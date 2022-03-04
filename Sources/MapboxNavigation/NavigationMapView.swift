@@ -1863,7 +1863,7 @@ open class NavigationMapView: UIView {
      */
     func setInitialCamera(_ coordinate: CLLocationCoordinate2D) {
         guard let navigationViewportDataSource = navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
-        
+        layoutIfNeeded() // mapView isn't able to properly convert coordinates before layout.
         mapView.mapboxMap.setCamera(to: CameraOptions(center: coordinate,
                                                       zoom: CGFloat(navigationViewportDataSource.options.followingCameraOptions.zoomRange.upperBound)))
         moveUserLocation(to: CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude))

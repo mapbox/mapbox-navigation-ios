@@ -393,8 +393,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     public override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupNavigationMapView()
         setupOrnaments()
+        setupNavigationMapView()
         setupStyleManager()
         
         observeNotifications(navigationService)
