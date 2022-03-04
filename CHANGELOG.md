@@ -2,42 +2,40 @@
 
 ## v2.3.0
 
+The v2.2.0 release notes [clarified](https://github.com/mapbox/mapbox-navigation-ios/pull/3652) that is an error to have more than one instance of `NavigationViewController`, `NavigationService`, or `RouteController` running simultaneously. Now you will receive a log message at the fault level helping you to spot the issue. To pause the debugger when the SDK detect the problematic situation, enable the “All Runtime Issues” breakpoint in Xcode. Learn more about breakpoints in [Xcode documentation](https://developer.apple.com/documentation/xcode/setting-breakpoints-to-pause-your-running-app). ([#3740](https://github.com/mapbox/mapbox-navigation-ios/pull/3740))
+
 ### Packaging
 
-* v2.2.0 [clarified](https://github.com/mapbox/mapbox-navigation-ios/pull/3652) that is an error to have more than one instance of `NavigationViewController`, `NavigationService`, or `RouteController` running simultaneously. Now you will receive a log message at the fault level helping you to spot the issue. To pause the debugger when the SDK detect the problematic situation, enable the “All Runtime Issues” breakpoint in Xcode. Learn more about breakpoints in [Xcode documentation](https://developer.apple.com/documentation/xcode/setting-breakpoints-to-pause-your-running-app). ([#3740](https://github.com/mapbox/mapbox-navigation-ios/pull/3740))
-* MapboxNavigation now requires [MapboxMaps v10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.3.0). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
-* MapboxCoreNavigation now requires [MapboxDirections v2.3.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.3.0-rc.2). ([#3762](https://github.com/mapbox/mapbox-navigation-ios/pull/3762))
+* MapboxNavigation now requires [MapboxMaps v10.3._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.3.0). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
+* MapboxCoreNavigation now requires [MapboxDirections v2.3._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.3.0). ([#3723](https://github.com/mapbox/mapbox-navigation-ios/pull/3723))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v88._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/88.0.0). ([#3748](https://github.com/mapbox/mapbox-navigation-ios/pull/3748))
-
-### User interface
-
-* Fixed route line blinking when a route is refreshed. ([#3647](https://github.com/mapbox/mapbox-navigation-ios/pull/3647))
-* Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
-* Instruction cards now have flat appearance. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
-* Renamed the `NextBannerView.update(for:)`, `NextBannerView.show()` and `NextBannerView.hide()` methods to `NextBannerView.update(for:animated:duration:completion:)`, `NextBannerView.show(animated:duration:completion:)`, `NextBannerView.hide(animated:duration:completion:)`, respectively. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
-* Renamed the `LanesView.update(for:)`, `LanesView.show()` and `LanesView.hide()` methods to `LanesView.update(for:animated:duration:completion:)`, `LanesView.show(animated:duration:completion:)`, `LanesView.hide(animated:duration:completion:)`, respectively. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
-* Added the `InstructionsCardContainerView.separatorColor` and `InstructionsCardContainerView.highlightedSeparatorColor` to be able to change instruction card's separator colors. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
-* Fixed an issue where the top banner instruction shows empty remaining steps in pull-down table when user is on final step. ([#3729](https://github.com/mapbox/mapbox-navigation-ios/pull/3729))
-* Fixed an issue where the end of route view has a gap between the screen bottom in landscape mode. ([#3769](https://github.com/mapbox/mapbox-navigation-ios/pull/3769))
-* Fixed an issue where the leg separator in drop down `StepsViewController` shows day style during active navigation in night style. ([#3760](https://github.com/mapbox/mapbox-navigation-ios/pull/3760))
-
-### Location tracking
-
-* Fixed cases where the user location indicator floated around when the user was stopped at an intersection in an urban canyon. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
-* Fixed poor location snapping while the user is inside a tunnel. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
 
 ### Map
 
-* Added `MapView.showsTileSet(with:layerIdentifier:)` and `MapView.setShowsTileSet(_:with:layerIdentifier:)` to provide the ability to show and hide custom tile set identifiers on the map view. ([#3700](https://github.com/mapbox/mapbox-navigation-ios/pull/3700))
-* Fixed the route layers disappearance in preview mode and in passive navigation when map style changes. ([#3734](https://github.com/mapbox/mapbox-navigation-ios/pull/3734))
-* Fixed an issue where highlighted buildings were removed from the map during style change. ([#3736](https://github.com/mapbox/mapbox-navigation-ios/pull/3736))
 * Renamed the `NavigationMapView.highlightBuildings(at:in3D:completion:)` method to `NavigationMapView.highlightBuildings(at:in3D:extrudeAll:completion:)` to provide the ability to extrude not only buildings at specific coordinates, but all other buildings as well. ([#3736](https://github.com/mapbox/mapbox-navigation-ios/pull/3736))
+* Added `MapView.showsTileSet(with:layerIdentifier:)` and `MapView.setShowsTileSet(_:with:layerIdentifier:)` to provide the ability to show and hide custom tile set identifiers on the map view. ([#3700](https://github.com/mapbox/mapbox-navigation-ios/pull/3700))
 * Added the `NavigationMapView.mapViewTapGestureRecognizer` property and the `NavigationMapView.legSeparatingWaypoints(on:closeTo:)` and `NavigationMapView.routes(closeTo:)` methods for configuring how the map view responds to tap gestures when previewing a route. ([#3746](https://github.com/mapbox/mapbox-navigation-ios/pull/3746))
+* Fixed an issue where the route line and 3D building highlights disappeared from a standalone `NavigationMapView` when the map style changed. ([#3734](https://github.com/mapbox/mapbox-navigation-ios/pull/3734), [#3736](https://github.com/mapbox/mapbox-navigation-ios/pull/3736))
+* Fixed an issue where the route line blinked when refreshing the route. ([#3647](https://github.com/mapbox/mapbox-navigation-ios/pull/3647))
 
-### CarPlay
+### Visual instructions
 
-* Added `CarPlayUserInfo` type alias for storing CarPlay-related user information. This type will be used by `CPRouteChoice` or `CPListItem` while presenting trip with multiple route choices or when selecting list item from search results, respectively. ([#3709](https://github.com/mapbox/mapbox-navigation-ios/pull/3709))
-* Added the `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:byCanceling:)` method, which is similar to the existing `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:)` method but indicates whether the user canceled the navigation session. ([#3731](https://github.com/mapbox/mapbox-navigation-ios/pull/3731))
+* Renamed the `NextBannerView.update(for:)`, `NextBannerView.show()` and `NextBannerView.hide()` methods to `NextBannerView.update(for:animated:duration:completion:)`, `NextBannerView.show(animated:duration:completion:)`, `NextBannerView.hide(animated:duration:completion:)`, respectively. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
+* Renamed the `LanesView.update(for:)`, `LanesView.show()` and `LanesView.hide()` methods to `LanesView.update(for:animated:duration:completion:)`, `LanesView.show(animated:duration:completion:)`, `LanesView.hide(animated:duration:completion:)`, respectively. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
+* Added the `InstructionsCardContainerView.separatorColor` and `InstructionsCardContainerView.highlightedSeparatorColor` to be able to change instruction card's separator colors. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
+* Added `routeShieldRepresentationKey` to the user info dictionary of `Notification.Name.passiveLocationManagerDidUpdate` posted by `PassiveLocationManager`, and the `Notification.Name.currentRoadNameDidChange` posted by `RouteController`. The corresponding value is a `MapboxDirections.VisualInstruction.Component.ImageRepresentation` object representing the road shield the user is currently traveling on. ([#3723](https://github.com/mapbox/mapbox-navigation-ios/pull/3723))
+* `InstructionsCardViewController` now has a flat appearance. ([#3704](https://github.com/mapbox/mapbox-navigation-ios/pull/3704))
+* Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
+* Fixed an issue where the step list in `StepsViewController` is empty whle the user is on the final step of a route leg. ([#3729](https://github.com/mapbox/mapbox-navigation-ios/pull/3729))
+* Fixed the color of leg section headers in `StepsViewController` to switch between the day and night styles like the rest of the view controller. ([#3760](https://github.com/mapbox/mapbox-navigation-ios/pull/3760))
+
+### Location tracking
+
+* Added an optional `datasetProfileIdentifier` argument to the `MapboxRoutingProvider(_:settings:datasetProfileIdentifier:)`, `PassiveLocationManager(directions:systemLocationManager:eventsManagerType:userInfo:datasetProfileIdentifier:),` `TilesetDescriptorFactory.getSpecificVersion(version:completionQueue:datasetProfileIdentifier:completion:)`, and `TilesetDescriptorFactory.getLatest(completionQueue:datasetProfileIdentifier:completion:)` methods for obtaining routing tiles optimized for a particular mode of transportation. Make sure to configure `MapboxRoutingProvider` and `TilesetDescriptorFactory` with the correct dataset profile if you customize `Directions.profileIdentifier`. ([#3717](https://github.com/mapbox/mapbox-navigation-ios/pull/3717))
+* Fixed a crash that sometimes occurred in Release configuration when initializing a `PassiveLocationManager` or `RouteController`. ([#3738](https://github.com/mapbox/mapbox-navigation-ios/pull/3738))
+* Fixed an issue where the user location indicator floated around when the user was stopped at an intersection in an urban canyon. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
+* Fixed poor location snapping while the user is inside a tunnel. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
+* Fixed a leak of location tracking and routing resources after stopping all instances `RouteController` and `PassiveLocationManager`. ([#3724](https://github.com/mapbox/mapbox-navigation-ios/pull/3724))
 
 ### Offline routing
 
@@ -46,21 +44,20 @@
 * Fixed an issue where `Directions.calculateOffline(options:completionHandler:)` calculated the route by making a network request. ([#3702](https://github.com/mapbox/mapbox-navigation-ios/pull/3702))
 * Fixed an issue where offline directions contained instructions in English regardless of the `DirectionsOptions.locale` property. ([#3705](https://github.com/mapbox/mapbox-navigation-ios/pull/3705))
 
-### Other Changes
+### Other changes
 
-* Fixed an issue where changes made to `NavigationViewController.showsReportFeedback`, `NavigationViewController.showsSpeedLimits`, `NavigationViewController.detailedFeedbackEnabled`, `NavigationViewController.floatingButtonsPosition` and `NavigationViewController.floatingButtons` before `NavigationViewController` presentation were not saved. ([#3718](https://github.com/mapbox/mapbox-navigation-ios/pull/3718))
+* Added `CarPlayUserInfo` type alias for storing CarPlay-related user information. This type will be used by `CPRouteChoice` or `CPListItem` while presenting trip with multiple route choices or when selecting list item from search results, respectively. ([#3709](https://github.com/mapbox/mapbox-navigation-ios/pull/3709))
+* Added the `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:byCanceling:)` method, which is similar to the existing `CarPlayManagerDelegate.carPlayManagerDidEndNavigation(_:)` method but indicates whether the user canceled the navigation session. ([#3731](https://github.com/mapbox/mapbox-navigation-ios/pull/3731))
+* Fixed an issue where changing `NavigationViewController.showsReportFeedback`, `NavigationViewController.showsSpeedLimits`, `NavigationViewController.detailedFeedbackEnabled`, `NavigationViewController.floatingButtonsPosition` and `NavigationViewController.floatingButtons` before presenting `NavigationViewController` had no effect. ([#3718](https://github.com/mapbox/mapbox-navigation-ios/pull/3718))
 * Fixed an issue where `SpeechSynthesizing.managesAudioSession` was ignored by `RouteVoiceController`. ([#3572](https://github.com/mapbox/mapbox-navigation-ios/pull/3572))
-* Location tracking and routing resources are now freed if no `RouteController` or `PassiveLocationManager` instance is actively being used. ([#3724](https://github.com/mapbox/mapbox-navigation-ios/pull/3724))
-* Added an optional `datasetProfileIdentifier` argument to the `MapboxRoutingProvider(_:settings:datasetProfileIdentifier:)`, `PassiveLocationManager(directions:systemLocationManager:eventsManagerType:userInfo:datasetProfileIdentifier:),` `TilesetDescriptorFactory.getSpecificVersion(version:completionQueue:datasetProfileIdentifier:completion:)`, and `TilesetDescriptorFactory.getLatest(completionQueue:datasetProfileIdentifier:completion:)` methods for obtaining routing tiles optimized for a particular mode of transportation. Make sure to configure `MapboxRoutingProvider` and `TilesetDescriptorFactory` with the correct dataset profile if you customize `Directions.profileIdentifier`. ([#3717](https://github.com/mapbox/mapbox-navigation-ios/pull/3717))
-* Fixed an issue where release builds would crash on invalid navigator initialization. ([#3738](https://github.com/mapbox/mapbox-navigation-ios/pull/3738))
-* Added `routeShieldRepresentationKey` to the user info dictionary of `Notification.Name.passiveLocationManagerDidUpdate` posted by `PassiveLocationManager`, and the `Notification.Name.currentRoadNameDidChange` posted by `RouteController`. The corresponding value is a `MapboxDirections.VisualInstruction.Component.ImageRepresentation` object representing the road shield the user is currently traveling on. ([#3723](https://github.com/mapbox/mapbox-navigation-ios/pull/3723))
+* Fixed the gap between the end-of-route feedback panel and the bottom of the screen in landscape orientation. ([#3769](https://github.com/mapbox/mapbox-navigation-ios/pull/3769))
 
 ## v2.2.0
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.2.0). ([#3665](https://github.com/mapbox/mapbox-navigation-ios/pull/3665))
-* MapboxCoreNavigation now requires [MapboxDirections v2._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.2.0). ([#3694](https://github.com/mapbox/mapbox-navigation-ios/pull/3694))
+* MapboxNavigation now requires [MapboxMaps v10.2._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.2.0). ([#3665](https://github.com/mapbox/mapbox-navigation-ios/pull/3665))
+* MapboxCoreNavigation now requires [MapboxDirections v2.2._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.2.0). ([#3694](https://github.com/mapbox/mapbox-navigation-ios/pull/3694))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v83._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/83.0.0). ([#3683](https://github.com/mapbox/mapbox-navigation-ios/pull/3683))
 
 ### Map
