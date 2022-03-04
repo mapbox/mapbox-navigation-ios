@@ -322,7 +322,6 @@ open class DayStyle: Style {
             UITableView.appearance(whenContainedInInstancesOf: [StepsViewController.self]).sectionHeaderTopPadding = 0.0
         }
         #endif
-        
     }
     
     @available(iOS 12.0, *)
