@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "5813f7bff225d1ecb2309ad9babb9fd0bf7bf72d",
-          "version": "90.0.0"
+          "revision": "7e8ea99c691db36c84b8d42a26a1fd4ff193623b",
+          "version": "90.0.1"
         }
       },
       {
@@ -105,8 +105,8 @@
         "repositoryURL": "https://github.com/raphaelmor/Polyline.git",
         "state": {
           "branch": null,
-          "revision": "36f7b1222aaf8fa741d0d179c12e186998d97f42",
-          "version": "5.0.2"
+          "revision": "554a15b15ff33cf6757f4cb693c5c285fe58694e",
+          "version": "5.0.3"
         }
       },
       {
@@ -132,8 +132,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "e394bf350e38cb100b6bc4172834770ede1b7232",
-          "version": "1.0.3"
+          "revision": "82905286cc3f0fa8adc4674bf49437cab65a8373",
+          "version": "1.1.1"
         }
       },
       {

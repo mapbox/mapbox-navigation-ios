@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "5813f7bff225d1ecb2309ad9babb9fd0bf7bf72d",
-          "version": "90.0.0"
+          "revision": "7e8ea99c691db36c84b8d42a26a1fd4ff193623b",
+          "version": "90.0.1"
         }
       },
       {
@@ -159,8 +159,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "a7db78a2281ffe79966443ebe5687766d6c024c7",
-          "version": "2.3.0"
+          "revision": "436682278bd65a1dbfbad53902af6f4cc0af1a33",
+          "version": "2.2.0"
         }
       }
     ]
