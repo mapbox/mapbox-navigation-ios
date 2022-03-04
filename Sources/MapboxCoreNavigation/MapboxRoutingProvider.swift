@@ -300,19 +300,13 @@ public class MapboxRoutingProvider: RoutingProvider {
         
         let routeIndex = UInt32(indexedRouteResponse.routeIndex)
         
-        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
-              let routeJSONString = String(data: routeData, encoding: .utf8) else {
-            preconditionFailure("Could not serialize route data for refreshing.")
-        }
-        
         var requestId: RequestId!
         let refreshOptions = RouteRefreshOptions(requestId: responseIdentifier,
                                                  routeIndex: routeIndex,
                                                  legIndex: startLegIndex,
                                                  routingProfile: routeOptions.profileIdentifier.nativeProfile)
         
-        requestId = router.getRouteRefresh(for: refreshOptions,
-                                           route: routeJSONString) { [weak self] result, _ in
+        requestId = router.getRouteRefresh(for: refreshOptions, callback: { [weak self] result, _ in
             guard let self = self else { return }
             
             self.parseResponse(requestId: requestId,
@@ -321,7 +315,7 @@ public class MapboxRoutingProvider: RoutingProvider {
                                result: result) { (response: Result<RouteResponse, DirectionsError>) in
                 completionHandler(session, response)
             }
-        }
+        })
         let request = Request(requestIdentifier: requestId,
                               routingProvider: self)
         requestsLock {
