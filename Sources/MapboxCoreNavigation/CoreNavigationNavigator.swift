@@ -415,10 +415,12 @@ extension Navigator {
     static internal func decode(routeRequest: String) -> (routeOptions: RouteOptions, credentials: Credentials)? {
         print(">>> \(#function)")
         guard let requestURL = URL(string: routeRequest),
-              let credentials = Credentials(requestURL: requestURL) else {
+              let routeOptions = RouteOptions(url: requestURL) else {
                   return nil
         }
-        return (RouteOptions(url: requestURL), credentials)
+        
+        return (routeOptions: routeOptions,
+                credentials: Credentials(requestURL: requestURL))
     }
     
     static internal func decode(routeResponse: String,

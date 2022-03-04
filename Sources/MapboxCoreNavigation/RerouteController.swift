@@ -81,29 +81,6 @@ class RerouteController {
 
 extension RerouteController: RerouteObserver {
     
-    private func decode(routeRequest: String) -> (routeOptions: RouteOptions, credentials: Credentials)? {
-        guard let requestURL = URL(string: routeRequest),
-              let credentials = Credentials(requestURL: requestURL) else {
-                  return nil
-        }
-        return (RouteOptions(url: requestURL), credentials)
-    }
-    
-    private func decode(routeResponse: String,
-                        routeOptions: RouteOptions,
-                        credentials: Credentials) -> RouteResponse? {
-        guard let data = routeResponse.data(using: .utf8) else {
-            return nil
-        }
-        
-        let decoder = JSONDecoder()
-        decoder.userInfo[.options] = routeOptions
-        decoder.userInfo[.credentials] = credentials
-        
-        return try? decoder.decode(RouteResponse.self,
-                                   from: data)
-    }
-    
     func onSwitchToAlternative(forAlternativeId alternativeId: UInt32,
                                routeResponse: String,
                                routeRequest: String,
@@ -184,7 +161,12 @@ extension RerouteController: RerouteControllerInterface {
             return
         }
         
-        let routeOptions = RouteOptions(url: URL(string: url)!)
+        guard let requestURL = URL(string: url),
+              let routeOptions = RouteOptions(url: requestURL) else {
+                  callback(.init(error: RerouteError(message: "Could not decode request URL string into valid Options object.",
+                                                     type: .wrongRequest)))
+            return
+        }
         
         reroutingRequest = customRoutingProvider.calculateRoutes(options: routeOptions) { session, result in
             switch result {

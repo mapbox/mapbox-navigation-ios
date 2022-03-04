@@ -42,7 +42,7 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-directions-swift.git",
         "state": {
           "branch": "vk/1324-options-decoding",
-          "revision": "20b9e336db0f288c44ed2df555dbe4bacc3d1440",
+          "revision": "43aecdc8056f5107ea92eed178b9eb4b902b8cde",
           "version": null
         }
       },
@@ -159,8 +159,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "436682278bd65a1dbfbad53902af6f4cc0af1a33",
-          "version": "2.2.0"
+          "revision": "a7db78a2281ffe79966443ebe5687766d6c024c7",
+          "version": "2.3.0"
         }
       }
     ]
