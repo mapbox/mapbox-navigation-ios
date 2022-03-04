@@ -33,6 +33,7 @@ The v2.2.0 release notes [clarified](https://github.com/mapbox/mapbox-navigation
 * Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
 * Fixed an issue where the step list in `StepsViewController` is empty whle the user is on the final step of a route leg. ([#3729](https://github.com/mapbox/mapbox-navigation-ios/pull/3729))
 * Fixed the color of leg section headers in `StepsViewController` to switch between the day and night styles like the rest of the view controller. ([#3760](https://github.com/mapbox/mapbox-navigation-ios/pull/3760))
+* The `FeedbackViewController` now supports the style change. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
 
 ### Location tracking
 

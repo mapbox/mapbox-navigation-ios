@@ -110,6 +110,11 @@ open class NightStyle: DayStyle {
         TopBannerView.appearance().backgroundColor = backgroundColor
         StepsTableHeaderView.appearance().tintColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
         StepsTableHeaderView.appearance().normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
+        UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
+        UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).textColor = .white
+        FeedbackStyleView.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
+        FeedbackCollectionView.appearance().backgroundColor = .black
+        FeedbackCollectionView.appearance().cellColor = .white
         
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         WayNameLabel.appearance().roadShieldBlackColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)

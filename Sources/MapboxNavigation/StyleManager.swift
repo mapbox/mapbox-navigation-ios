@@ -177,9 +177,9 @@ open class StyleManager {
      Applies the `Style` with type matching `type`and notifies `StyleManager.delegate` upon completion. 
      */
     public func applyStyle(type styleType: StyleType) {
-        guard currentStyleType != styleType else { return }
-        
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
+        if currentStyleType != styleType {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
+        }
         
         for style in styles {
             if style.styleType == styleType {

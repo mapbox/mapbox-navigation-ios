@@ -311,12 +311,18 @@ open class DayStyle: Style {
         WayNameView.appearance().borderWidth = 1.0
         StepsTableHeaderView.appearance().tintColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         StepsTableHeaderView.appearance().normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
+        UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .white
+        UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).textColor = .black
+        FeedbackStyleView.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .white
+        FeedbackCollectionView.appearance().backgroundColor = .white
+        FeedbackCollectionView.appearance().cellColor = .black
         
         #if swift(>=5.5)
         if #available(iOS 15.0, *) {
             UITableView.appearance(whenContainedInInstancesOf: [StepsViewController.self]).sectionHeaderTopPadding = 0.0
         }
         #endif
+        
     }
     
     @available(iOS 12.0, *)

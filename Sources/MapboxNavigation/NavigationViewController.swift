@@ -997,6 +997,18 @@ extension NavigationViewController: StyleManagerDelegate {
         
         currentStatusBarStyle = style.statusBarStyle ?? .default
         setNeedsStatusBarAppearanceUpdate()
+        updateFeedbackViewControllerStyle()
+    }
+    
+    private func updateFeedbackViewControllerStyle() {
+        if let feedbackViewController = presentedViewController as? FeedbackViewController {
+            for window in UIApplication.shared.windows {
+                if !window.isKind(of: NSClassFromString("UITextEffectsWindow") ?? NSString.classForCoder()) {
+                    feedbackViewController.view.removeFromSuperview()
+                    window.addSubview(feedbackViewController.view)
+                }
+            }
+        }
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
