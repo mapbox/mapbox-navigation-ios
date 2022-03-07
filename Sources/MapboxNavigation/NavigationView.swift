@@ -39,6 +39,29 @@ import MapboxCoreNavigation
 @IBDesignable
 open class NavigationView: UIView {
     
+    enum BottomBannerContainerViewState {
+        case expanded
+        case collapsed
+    }
+    
+    var swipeOffset: CGFloat = 50.0
+    
+    var state: BottomBannerContainerViewState = .collapsed {
+        didSet {
+            if oldValue == state { return }
+            
+            if state == .expanded {
+                bottomBannerContainerViewBottomConstraint.constant = 0.0
+            } else {
+                bottomBannerContainerViewBottomConstraint.constant = swipeOffset
+            }
+        }
+    }
+    
+    var bottomBannerContainerViewBottomConstraint: NSLayoutConstraint!
+    
+    var animationDuration: TimeInterval = 0.2
+    
     private enum Constants {
         static let endOfRouteHeight: CGFloat = 260.0
         static let buttonSpacing: CGFloat = 8.0
@@ -173,6 +196,27 @@ open class NavigationView: UIView {
         updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
     }
     
+    @objc func didPan(_ recognizer: UIPanGestureRecognizer) {
+        guard let view = recognizer.view else { return }
+        
+        if recognizer.state == .ended {
+            let velocity = recognizer.velocity(in: view)
+            
+            if velocity.y <= 0 {
+                state = .expanded
+            } else {
+                state = .collapsed
+            }
+            
+            UIView.animate(withDuration: animationDuration,
+                           delay: 0.0,
+                           options: [.allowUserInteraction],
+                           animations: {
+                self.layoutIfNeeded()
+            }, completion: nil)
+        }
+    }
+    
     convenience init(delegate: NavigationViewDelegate) {
         self.init(frame: .zero)
         self.delegate = delegate
@@ -196,6 +240,19 @@ open class NavigationView: UIView {
         floatingButtons = [overviewButton, muteButton, reportButton]
         setupViews()
         setupConstraints()
+        
+        bottomBannerContainerViewBottomConstraint = bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        
+        if state == .expanded {
+            bottomBannerContainerViewBottomConstraint.constant = 0.0
+        } else {
+            bottomBannerContainerViewBottomConstraint.constant = swipeOffset
+        }
+        
+        bottomBannerContainerViewBottomConstraint.isActive = true
+        
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan))
+        bottomBannerContainerView.addGestureRecognizer(panGestureRecognizer)
     }
     
     func setupViews() {
