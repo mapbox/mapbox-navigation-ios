@@ -281,10 +281,4 @@ extension NavigationView {
         compactConstraints.forEach({ $0.isActive = traitCollection.verticalSizeClass == .compact })
         regularConstraints.forEach({ $0.isActive = traitCollection.verticalSizeClass == .regular })
     }
-    
-    open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        if previousTraitCollection == traitCollection { return }
-        
-        setupConstraints()
-    }
 }
