@@ -152,7 +152,7 @@ open class NavigationView: UIView {
         }
     }
     
-    var floatingButtons : [UIButton]? {
+    var floatingButtons: [UIButton]? {
         didSet {
             clearStackViews()
             setupStackViews()
