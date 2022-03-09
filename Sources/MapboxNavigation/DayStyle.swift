@@ -45,13 +45,13 @@ extension UIColor {
     class var routeDurationAnnotationTextColor: UIColor { get { return #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) } }
     class var selectedRouteDurationAnnotationTextColor: UIColor { get { return #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) } }
     
-    class var roadShieldDefaultColor: UIColor { get { return .black } }
+    class var roadShieldDefaultColor: UIColor { get { return #colorLiteral(red: 0.11, green: 0.11, blue: 0.15, alpha: 1) } }
     class var roadShieldBlackColor: UIColor { get { return roadShieldDefaultColor } }
-    class var roadShieldBlueColor: UIColor { get { return .blue } }
-    class var roadShieldGreenColor: UIColor { get { return #colorLiteral(red: 0, green: 0.5, blue: 0, alpha: 1) } }
-    class var roadShieldRedColor: UIColor { get { return .red } }
-    class var roadShieldWhiteColor: UIColor { get { return .white } }
-    class var roadShieldYellowColor: UIColor { get { return .yellow } }
+    class var roadShieldBlueColor: UIColor { get { return #colorLiteral(red: 0.28, green: 0.36, blue: 0.8, alpha: 1) } }
+    class var roadShieldGreenColor: UIColor { get { return #colorLiteral(red: 0.1, green: 0.64, blue: 0.28, alpha: 1) } }
+    class var roadShieldRedColor: UIColor { get { return #colorLiteral(red: 0.95, green: 0.23, blue: 0.23, alpha: 1) } }
+    class var roadShieldWhiteColor: UIColor { get { return #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1) } }
+    class var roadShieldYellowColor: UIColor { get { return #colorLiteral(red: 1.0, green: 0.9, blue: 0.4, alpha: 1) } }
     class var roadShieldOrangeColor: UIColor { get { return #colorLiteral(red: 1, green: 0.65, blue: 0, alpha: 1) } }
 
 }
