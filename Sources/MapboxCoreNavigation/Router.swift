@@ -246,7 +246,7 @@ extension InternalRouter where Self: Router {
                 return
             }
             
-            self.routeProgress.refreshRoute(with: currentRoute, at: location)
+            self.routeProgress.refreshRoute(with: currentRoute, at: self.location ?? location)
             
             var userInfo = [RouteController.NotificationUserInfoKey: Any]()
             userInfo[.routeProgressKey] = self.routeProgress
