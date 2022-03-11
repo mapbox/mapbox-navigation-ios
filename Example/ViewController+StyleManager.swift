@@ -21,18 +21,5 @@ extension ViewController : StyleManagerDelegate {
         if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
             navigationMapView?.mapView.mapboxMap.style.uri = StyleURI(url: style.mapStyleURL)
         }
-        updateFeedbackViewControllerStyle()
-    }
-    
-    func updateFeedbackViewControllerStyle() {
-        if let feedbackViewController = presentedViewController as? FeedbackViewController {
-            for window in UIApplication.shared.windows {
-                if !window.isKind(of: NSClassFromString("UITextEffectsWindow") ?? NSString.classForCoder()),
-                   feedbackViewController.view.isDescendant(of: window) {
-                    feedbackViewController.view.removeFromSuperview()
-                    window.addSubview(feedbackViewController.view)
-                }
-            }
-        }
     }
 }
