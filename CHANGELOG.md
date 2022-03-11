@@ -2,6 +2,14 @@
 
 ## v2.4.0
 
+### User interface
+
+* `FeedbackViewController` now supports changing styles based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
+* Deprecated the optional `StyleManagerDelegate.styleManager(_:viewForApplying:)` method. All views appearance will be refreshed based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
+* Fixed an issue where the map’s floating buttons are misaligned with its attribution button and sometimes untappable after rotating the device during turn-by-turn navigatio. ([#3776](https://github.com/mapbox/mapbox-navigation-ios/pull/3776))
+
+### Other changes
+
 * Fixed an issue where the route line appeared to begin away from the user’s current location after the route was refreshed. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
 * Fixed a memory leak after ending a turn-by-turn navigation session. ([#3782](https://github.com/mapbox/mapbox-navigation-ios/pull/3782))
 
@@ -33,8 +41,6 @@ The v2.2.0 release notes [clarified](https://github.com/mapbox/mapbox-navigation
 * Fixed a crash when approaching an intersection in which one of the lanes is a merge lane. ([#3699](https://github.com/mapbox/mapbox-navigation-ios/pull/3699))
 * Fixed an issue where the step list in `StepsViewController` is empty whle the user is on the final step of a route leg. ([#3729](https://github.com/mapbox/mapbox-navigation-ios/pull/3729))
 * Fixed the color of leg section headers in `StepsViewController` to switch between the day and night styles like the rest of the view controller. ([#3760](https://github.com/mapbox/mapbox-navigation-ios/pull/3760))
-* `FeedbackViewController` now supports changing styles based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
-* Deprecated the optional `StyleManagerDelegate.styleManager(_:viewForApplying:)` method. All views appearance will be refreshed based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
 
 ### Location tracking
 
@@ -58,7 +64,6 @@ The v2.2.0 release notes [clarified](https://github.com/mapbox/mapbox-navigation
 * Fixed an issue where changing `NavigationViewController.showsReportFeedback`, `NavigationViewController.showsSpeedLimits`, `NavigationViewController.detailedFeedbackEnabled`, `NavigationViewController.floatingButtonsPosition` and `NavigationViewController.floatingButtons` before presenting `NavigationViewController` had no effect. ([#3718](https://github.com/mapbox/mapbox-navigation-ios/pull/3718))
 * Fixed an issue where `SpeechSynthesizing.managesAudioSession` was ignored by `RouteVoiceController`. ([#3572](https://github.com/mapbox/mapbox-navigation-ios/pull/3572))
 * Fixed the gap between the end-of-route feedback panel and the bottom of the screen in landscape orientation. ([#3769](https://github.com/mapbox/mapbox-navigation-ios/pull/3769))
-* Fixed an issue where the map’s floating buttons are misaligned with its attribution button and sometimes untappable after rotating the device during turn-by-turn navigatio. ([#3776](https://github.com/mapbox/mapbox-navigation-ios/pull/3776))
 
 ## v2.2.0
 
