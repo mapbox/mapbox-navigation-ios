@@ -11,7 +11,7 @@ final class RoutesCoordinator {
         case activeNavigation(UUID)
     }
 
-    typealias SetRoutesHandler = (Routes?, _ completion: @escaping (Result<RouteInfo, Error>) -> Void) -> Void
+    typealias SetRoutesHandler = (NavigationRoutes?, _ legIndex: UInt32, _ completion: @escaping (Result<RouteInfo, Error>) -> Void) -> Void
 
     private struct ActiveNavigationSession {
         let uuid: UUID
@@ -33,8 +33,10 @@ final class RoutesCoordinator {
 
     /// - Parameters:
     ///   - uuid: The UUID of the current active guidances session. All reroutes should have the same uuid.
-    func beginActiveNavigation(with routes: Routes,
+    ///   - legIndex: The index of the leg along which to begin navigating.
+    func beginActiveNavigation(with routes: NavigationRoutes,
                                uuid: UUID,
+                               legIndex: UInt32,
                                completion: @escaping (Result<RouteInfo, Error>) -> Void) {
         lock.lock()
         if case .activeNavigation(let currentUUID) = state, currentUUID != uuid {
@@ -44,7 +46,7 @@ final class RoutesCoordinator {
         state = .activeNavigation(uuid)
         lock.unlock()
 
-        setRoutes(routes, completion)
+        setRoutes(routes, legIndex, completion)
     }
 
     /// - Parameters:
@@ -58,7 +60,8 @@ final class RoutesCoordinator {
         }
         state = .passiveNavigation
         lock.unlock()
-        setRoutes(nil, completion)
+        // TODO: Is it safe to set the leg index to 0 when unsetting a route?
+        setRoutes(nil, 0, completion)
     }
 }
 

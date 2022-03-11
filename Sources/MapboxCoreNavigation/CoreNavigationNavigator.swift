@@ -33,8 +33,8 @@ class Navigator {
     }
 
     private lazy var routeCoordinator: RoutesCoordinator = {
-        .init(setRoutesHandler: { [weak self] routes, completion in
-            self?.navigator.setRoutesFor(routes) { result in
+        .init(setRoutesHandler: { [weak self] routes, legIndex, completion in
+            self?.navigator.setRoutesFor(routes, legIndex: legIndex) { result in
                 if result.isValue() {
                     let routeInfo = result.value as! RouteInfo
                     os_log("Navigator has been updated",
@@ -209,13 +209,12 @@ class Navigator {
 
     // MARK: - Navigator Updates
 
-    func setRoutes(_ routes: Routes?, uuid: UUID, completion: @escaping (Result<RouteInfo, Error>) -> Void) {
-        if let routes = routes {
-            routeCoordinator.beginActiveNavigation(with: routes, uuid: uuid, completion: completion)
-        }
-        else {
-            routeCoordinator.endActiveNavigation(with: uuid, completion: completion)
-        }
+    func setRoutes(_ routes: NavigationRoutes, uuid: UUID, legIndex: UInt32, completion: @escaping (Result<RouteInfo, Error>) -> Void) {
+        routeCoordinator.beginActiveNavigation(with: routes, uuid: uuid, legIndex: legIndex, completion: completion)
+    }
+    
+    func unsetRoutes(uuid: UUID, completion: @escaping (Result<RouteInfo, Error>) -> Void) {
+        routeCoordinator.endActiveNavigation(with: uuid, completion: completion)
     }
 
     func updateLocation(_ location: CLLocation, completion: @escaping (Bool) -> Void) {

@@ -8,8 +8,8 @@ final class RoutesCoordinatorTests: TestCase {
     func testNormalCase() {
         let uuid = UUID()
         runTestCases([
-            .init(routes: generateRoutes(), uuid: uuid, expectedResult: .success(())),
-            .init(routes: nil, uuid: uuid, expectedResult: .success(()))
+            .init(routes: generateRoutes(), uuid: uuid, routeIndex: 0, expectedResult: .success(())),
+            .init(routes: nil, uuid: uuid, routeIndex: 0, expectedResult: .success(()))
         ])
     }
 
@@ -17,45 +17,48 @@ final class RoutesCoordinatorTests: TestCase {
         let uuid1 = UUID()
         let uuid2 = UUID()
         runTestCases([
-            .init(routes: generateRoutes(), uuid: uuid1, expectedResult: .success(())),
-            .init(routes: generateRoutes(), uuid: uuid2, expectedResult: .success(())),
-            .init(routes: nil, uuid: uuid1, expectedResult: .failure(.endingInvalidActiveNavigation)),
+            .init(routes: generateRoutes(), uuid: uuid1, routeIndex: 0, expectedResult: .success(())),
+            .init(routes: generateRoutes(), uuid: uuid2, routeIndex: 0, expectedResult: .success(())),
+            .init(routes: nil, uuid: uuid1, routeIndex: 0, expectedResult: .failure(.endingInvalidActiveNavigation)),
         ])
     }
 
     func testReroutes() {
         let uuid = UUID()
         runTestCases([
-            .init(routes: generateRoutes(), uuid: uuid, expectedResult: .success(())),
-            .init(routes: generateRoutes(), uuid: uuid, expectedResult: .success(())),
-            .init(routes: nil, uuid: uuid, expectedResult: .success(())),
+            .init(routes: generateRoutes(), uuid: uuid, routeIndex: 0, expectedResult: .success(())),
+            .init(routes: generateRoutes(), uuid: uuid, routeIndex: 0, expectedResult: .success(())),
+            .init(routes: nil, uuid: uuid, routeIndex: 0, expectedResult: .success(())),
         ])
     }
 }
 
 private extension RoutesCoordinatorTests {
-    func generateRoutes() -> Routes {
-        .init(routesResponse: UUID().uuidString, routeIndex: 0, legIndex: 0, routesRequest: "")
+    func generateRoutes() -> NavigationRoutes {
+        .init(primaryRouteId: UUID().uuidString, routes: [])
     }
 
     struct RoutesCoordinatorTestCase {
-        let routes: Routes?
+        let routes: NavigationRoutes?
         let uuid: UUID
+        let routeIndex: UInt32
         let expectedResult: Result<Void, RoutesCoordinatorError>
 
     }
 
     func runTestCases(_ testCases: [RoutesCoordinatorTestCase]) {
-        var expectedRoutes: Routes? = generateRoutes()
+        var expectedRoutes: NavigationRoutes? = generateRoutes()
+        var expectedRouteIndex = UInt32.max
         var expectedResult: Result<RouteInfo, RoutesCoordinatorError>!
 
-        let handler: RoutesCoordinator.SetRoutesHandler = { routes, completion in
+        let handler: RoutesCoordinator.SetRoutesHandler = { routes, routeIndex, completion in
             XCTAssertEqual(routes, expectedRoutes)
+            XCTAssertEqual(routeIndex, expectedRouteIndex)
             completion(expectedResult.mapError { $0 as Error })
         }
 
-        let coordinator = RoutesCoordinator { routes, completion in
-            handler(routes, completion)
+        let coordinator = RoutesCoordinator { routes, routeIndex, completion in
+            handler(routes, routeIndex, completion)
         }
 
         for testCase in testCases {
@@ -64,7 +67,8 @@ private extension RoutesCoordinatorTests {
                 expectedResult = testCase.expectedResult
                     .map { .init(alerts: []) }
                 expectedRoutes = routes
-                coordinator.beginActiveNavigation(with: routes, uuid: testCase.uuid) { result in
+                expectedRouteIndex = testCase.routeIndex
+                coordinator.beginActiveNavigation(with: routes, uuid: testCase.uuid, legIndex: testCase.routeIndex) { result in
                     switch (result, expectedResult) {
                     case (.success(let routeInfo), .success(let expectedRouteInfo)):
                         XCTAssertEqual(routeInfo, expectedRouteInfo)

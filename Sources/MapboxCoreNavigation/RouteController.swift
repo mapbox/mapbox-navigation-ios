@@ -256,12 +256,17 @@ open class RouteController: NSObject {
         }
 
         let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
-        let routes = Routes(routesResponse: routeJSONString,
-                            routeIndex: 0,
-                            legIndex: UInt32(progress.legIndex),
-                            routesRequest: routeRequest)
+        // Based on MBNNRouteIndex.routeId documentation.
+        // FIXME: Distinguish onboard routes with “local@” prefix.
+        let routeResponseIdentifier = indexedRouteResponse.routeResponse.identifier ?? ""
+        let routeIndices = (indexedRouteResponse.routeResponse.routes ?? []).enumerated().map { index, route in
+            RouteIndex(routeId: "\(routeResponseIdentifier)#\(index)", indexInResponse: UInt32(index))
+        }
+        let navigationRouteResponse = NavigationRouteResponse(routeIndices: routeIndices, directionsResponse: routeJSONString, directionsRequest: routeRequest)
+        let primaryRouteIdentifier = "\(routeResponseIdentifier)#\(indexedRouteResponse.routeIndex)"
+        let navigationRoutes = NavigationRoutes(primaryRouteId: primaryRouteIdentifier, routes: [navigationRouteResponse])
 
-        sharedNavigator.setRoutes(routes, uuid: sessionUUID) { result in
+        sharedNavigator.setRoutes(navigationRoutes, uuid: sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
             completion?(result)
         }
     }
@@ -741,7 +746,7 @@ extension RouteController: Router {
     }
 
     private func removeRoutes(completion: ((Error?) -> Void)?) {
-        sharedNavigator.setRoutes(nil, uuid: sessionUUID) { result in
+        sharedNavigator.unsetRoutes(uuid: sessionUUID) { result in
             switch result {
             case .success:
                 completion?(nil)
