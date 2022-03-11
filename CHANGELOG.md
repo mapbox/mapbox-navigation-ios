@@ -1,9 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
-## Next
+## v2.4.0
 
-* Fixed an issue where after a route was refreshed the vanishing route line would be incorrectly drawn. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
-* Fixed an issue that caused `ImageDownloader` to leak. ([#3782](https://github.com/mapbox/mapbox-navigation-ios/pull/3782))
+* Fixed an issue where the route line appeared to begin away from the user’s current location after the route was refreshed. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
+* Fixed a memory leak after ending a turn-by-turn navigation session. ([#3782](https://github.com/mapbox/mapbox-navigation-ios/pull/3782))
 
 ## v2.3.0
 
