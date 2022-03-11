@@ -456,7 +456,7 @@ open class RouteController: NSObject {
         // We are at least at the "You will arrive" instruction
         if legProgress.remainingSteps.count <= 2 && remainingVoiceInstructions.count <= 2 {
             let willArrive = status.routeState == .tracking
-            let didArrive = status.routeState == .complete && currentDestination != previousArrivalWaypoint
+            let didArrive = status.routeState == .complete && currentDestination != previousArrivalWaypoint && legProgress.distanceRemaining <= RouteControllerDistanceForArrival
             
             if willArrive {
                 delegate?.router(self, willArriveAt: currentDestination, after: legProgress.durationRemaining, distance: legProgress.distanceRemaining)

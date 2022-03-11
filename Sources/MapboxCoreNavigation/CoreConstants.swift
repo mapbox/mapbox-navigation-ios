@@ -41,6 +41,11 @@ public var RouteControllerMinimumDurationRemainingForProactiveRerouting: TimeInt
 public var RouteControllerProactiveReroutingInterval: TimeInterval = 120
 
 /**
+ The distance threshold to the current leg destination to anounce the arrival of the waypoint.
+ */
+public var RouteControllerDistanceForArrival: CLLocationDistance = 10
+
+/**
  Minimum number of consecutive incorrect course updates before rerouting occurs.
  */
 public var RouteControllerMinNumberOfInCorrectCourses: Int = 4
