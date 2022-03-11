@@ -6,7 +6,20 @@
 
 * MapboxNavigation now requires [MapboxMaps v10.4.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.0-beta.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v90._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/88.0.0). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+
+### Offline routing
+
+* In [bilingual and multilingual areas](https://wiki.openstreetmap.org/wiki/Multilingual_names), spoken and visual instructions include street names and destinations in the user’s preferred language when that language is signposted. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* Fixed `Intersection.outletIndex` values that were off by one. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* High-occupancy vehicle roads in OpenStreetMap that lack a [`hov:minimum`](https://wiki.openstreetmap.org/wiki/Key:hov:minimum) tag are now assumed to be HOV&nbsp;2+ roads, requiring one or more passengers. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* Decreased memory usage when starting turn-by-turn navigation along a long-distance route. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* Fixed an issue where street names in spoken instructions could be go unpronounced if tagged with a [pronunciation](https://wiki.openstreetmap.org/wiki/Key:name:pronunciation). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* Added support for [the workaround](https://github.com/mapbox/mapbox-directions-swift/issues/662) for requesting a route that avoids an arbitrary set of coordinates. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+
+### Other changes
+
 * Added the `RoadObject.Kind.railroadCrossing` enumeration case to represent a railroad crossing along the route. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
 ### User interface
 
