@@ -48,6 +48,8 @@ class ViewController: UIViewController {
         }
     }
     
+    var styleManager = MapboxNavigation.StyleManager()
+    
     var waypoints: [Waypoint] = [] {
         didSet {
             waypoints.forEach {
@@ -183,8 +185,8 @@ class ViewController: UIViewController {
         navigationMapView.mapView.ornaments.options.attributionButton.margins.y = mapOrnamentsMargin
         navigationMapView.delegate = self
         navigationMapView.userLocationStyle = .puck2D()
-        navigationMapView.mapView.mapboxMap.loadStyleURI(.navigationDay)
         
+        setupStyleManager()
         setupGestureRecognizers()
         setupPerformActionBarButtonItem()
         if let cameraState = activeNavigationViewController?.navigationMapView?.mapView.cameraState {
@@ -193,6 +195,11 @@ class ViewController: UIViewController {
                                                  duration: 0,
                                                  completion: nil)
         }
+    }
+    
+    private func setupStyleManager() {
+        styleManager.delegate = self
+        styleManager.styles = [DayStyle(), NightStyle()]
     }
     
     private func uninstall(_ navigationMapView: NavigationMapView) {
@@ -463,11 +470,10 @@ class ViewController: UIViewController {
     }
     
     func toggleDayNightStyle() {
-        let style = navigationMapView.mapView?.mapboxMap.style
-        if style?.uri == .navigationNight {
-            style?.uri = .navigationDay
+        if styleManager.currentStyleType == .day {
+            styleManager.applyStyle(type: .night)
         } else {
-            style?.uri = .navigationNight
+            styleManager.applyStyle(type: .day)
         }
     }
     
