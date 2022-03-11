@@ -56,6 +56,7 @@ The v2.2.0 release notes [clarified](https://github.com/mapbox/mapbox-navigation
 * Fixed an issue where changing `NavigationViewController.showsReportFeedback`, `NavigationViewController.showsSpeedLimits`, `NavigationViewController.detailedFeedbackEnabled`, `NavigationViewController.floatingButtonsPosition` and `NavigationViewController.floatingButtons` before presenting `NavigationViewController` had no effect. ([#3718](https://github.com/mapbox/mapbox-navigation-ios/pull/3718))
 * Fixed an issue where `SpeechSynthesizing.managesAudioSession` was ignored by `RouteVoiceController`. ([#3572](https://github.com/mapbox/mapbox-navigation-ios/pull/3572))
 * Fixed the gap between the end-of-route feedback panel and the bottom of the screen in landscape orientation. ([#3769](https://github.com/mapbox/mapbox-navigation-ios/pull/3769))
+* Fixed an issue where the map’s floating buttons are misaligned with its attribution button and sometimes untappable after rotating the device during turn-by-turn navigatio. ([#3776](https://github.com/mapbox/mapbox-navigation-ios/pull/3776))
 
 ## v2.2.0
 
