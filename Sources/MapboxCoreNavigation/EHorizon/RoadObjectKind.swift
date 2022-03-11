@@ -56,6 +56,11 @@ extension RoadObject {
         case bridge
         
         /**
+         An alert about an railroad crossing at grade, also known as a level crossing.
+         */
+        case railroadCrossing
+        
+        /**
          Reserved for future use.
          */
         case userDefined
@@ -76,6 +81,8 @@ extension RoadObject {
                 self = .restrictedArea
             case .bridge:
                 self = .bridge
+            case .railwayCrossing:
+                self = .railroadCrossing
             case .custom:
                 self = .userDefined
             @unknown default:
@@ -99,6 +106,8 @@ extension RoadObject {
                 self = .restrictedArea
             case .bridge:
                 self = .bridge
+            case .railwayCrossing:
+                self = .railroadCrossing
             case .custom:
                 self = .userDefined
             @unknown default:
