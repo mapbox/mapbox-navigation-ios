@@ -51,7 +51,7 @@ class SpeechSynthesizersControllerTests: TestCase {
     
     var delegateErrorBlock: ((SpeechError) -> ())?
     var synthesizers: [SpeechSynthesizing] = []
-    let routeResponse: RouteResponse = {
+    static let routeResponse: RouteResponse = {
         var options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
             CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
@@ -59,6 +59,8 @@ class SpeechSynthesizersControllerTests: TestCase {
         options.shapeFormat = .polyline
         return Fixture.routeResponse(from: "route-with-instructions", options: options)
     }()
+
+    var routeResponse: RouteResponse { Self.routeResponse }
     
     override func setUp() {
         super.setUp()

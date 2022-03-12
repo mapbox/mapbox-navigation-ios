@@ -10,7 +10,7 @@ public class DummyRoute: Route {
                            distance: 0,
                            expectedTravelTime: 0,
                            typicalTravelTime: nil,
-                           profileIdentifier: .automobile)
+                           profileIdentifier: .automobileAvoidingTraffic)
         super.init(legs: [leg], shape: nil, distance: 0, expectedTravelTime: 0, typicalTravelTime: nil)
     }
 

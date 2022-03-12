@@ -50,7 +50,7 @@ class RouteTests: TestCase {
             .init(latitude: 59.3383085323927, longitude: 18.0749662844197),
             .init(latitude: 59.3386507394432, longitude: 18.0749292910378),
             .init(latitude: 59.3396600470949, longitude: 18.0757133256584),
-        ], profileIdentifier: .automobile)
+        ], profileIdentifier: .automobileAvoidingTraffic)
         options.shapeFormat = .polyline
         let response = Fixture.mapMatchingResponse(from: "route-doubling-back", options: options)
         let routes = response.matches

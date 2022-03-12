@@ -54,9 +54,7 @@ public class Fixture: NSObject {
     }
     
     public class func downloadRouteFixture(coordinates: [CLLocationCoordinate2D], fileName: String, completion: @escaping () -> Void) {
-        let accessToken = "<# Mapbox Access Token #>"
-        let credentials = Credentials(accessToken: accessToken)
-        let directions = Directions(credentials: credentials)
+        let directions = Directions.mocked
         
         let options = RouteOptions(coordinates: coordinates, profileIdentifier: .automobileAvoidingTraffic)
         options.includesSteps = true
@@ -174,11 +172,11 @@ public class Fixture: NSObject {
                                               name: "empty",
                                               distance: 0.0,
                                               expectedTravelTime: 0.0,
-                                              profileIdentifier: .automobile))
+                                              profileIdentifier: .automobileAvoidingTraffic))
     }
 
     public static func route(waypoints: [CLLocationCoordinate2D],
-                             profileIdentifier: ProfileIdentifier = .automobile,
+                             profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic,
                              transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {
         precondition(waypoints.count >= 2)
         func routeDistance(between waypoints: [CLLocationCoordinate2D]) -> CLLocationDistance {
@@ -221,7 +219,7 @@ public class Fixture: NSObject {
     public static func route(between origin: CLLocationCoordinate2D,
                              and destination: CLLocationCoordinate2D,
                              legsCount: Int = 1,
-                             profileIdentifier: ProfileIdentifier = .automobile,
+                             profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic,
                              transportType: TransportType = .automobile) -> (response: RouteResponse, route: Route) {
         precondition(legsCount > 0)
         var waypoints: [CLLocationCoordinate2D] = [origin]
@@ -257,7 +255,7 @@ public class Fixture: NSObject {
 
     public static func generateLeg(between origin: CLLocationCoordinate2D,
                                    and destination: CLLocationCoordinate2D,
-                                   profileIdentifier: ProfileIdentifier = .automobile,
+                                   profileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic,
                                    transportType: TransportType = .automobile) -> RouteLeg {
         let distance = origin.distance(to: destination)
         let shape = LineString([origin, destination])

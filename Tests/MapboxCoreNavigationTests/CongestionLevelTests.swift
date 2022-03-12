@@ -21,7 +21,7 @@ class CongestionLevelTests: TestCase {
                                 name: "5th Street",
                                 distance: 92.2,
                                 expectedTravelTime: 24.6,
-                                profileIdentifier: .automobile)
+                                profileIdentifier: .automobileAvoidingTraffic)
 
         routeLeg.segmentCongestionLevels = [.heavy, .low, .low, .moderate]
         routeLeg.segmentNumericCongestionLevels = [nil, 3, 50]
@@ -34,7 +34,7 @@ class CongestionLevelTests: TestCase {
                                 name: "5th Street",
                                 distance: 92.2,
                                 expectedTravelTime: 24.6,
-                                profileIdentifier: .automobile)
+                                profileIdentifier: .automobileAvoidingTraffic)
 
         routeLeg.segmentCongestionLevels = [.heavy, .low, .low, .moderate]
         routeLeg.segmentNumericCongestionLevels = nil
@@ -47,7 +47,7 @@ class CongestionLevelTests: TestCase {
                                 name: "5th Street",
                                 distance: 92.2,
                                 expectedTravelTime: 24.6,
-                                profileIdentifier: .automobile)
+                                profileIdentifier: .automobileAvoidingTraffic)
 
         routeLeg.segmentCongestionLevels = nil
         routeLeg.segmentNumericCongestionLevels = nil

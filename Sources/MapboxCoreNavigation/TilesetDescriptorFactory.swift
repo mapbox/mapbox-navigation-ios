@@ -14,7 +14,7 @@ extension TilesetDescriptorFactory {
      */
     public class func getSpecificVersion(version: String,
                                          completionQueue: DispatchQueue = .main,
-                                         datasetProfileIdentifier: ProfileIdentifier = .automobile,
+                                         datasetProfileIdentifier: ProfileIdentifier = NavigationSettings.shared.defaultDirectionsProfileIdentifier,
                                          completion: @escaping (TilesetDescriptor) -> Void) {
         let factory = NativeHandlersFactory(tileStorePath: NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
                                             credentials: NavigationSettings.shared.directions.credentials,
@@ -35,7 +35,7 @@ extension TilesetDescriptorFactory {
        - completion: A completion that will be used to pass the latest tileset descriptor.
      */
     public class func getLatest(completionQueue: DispatchQueue = .main,
-                                datasetProfileIdentifier: ProfileIdentifier = .automobile,
+                                datasetProfileIdentifier: ProfileIdentifier = NavigationSettings.shared.defaultDirectionsProfileIdentifier,
                                 completion: @escaping (_ latestTilesetDescriptor: TilesetDescriptor) -> Void) {
         let factory = NativeHandlersFactory(tileStorePath: NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
                                             credentials: NavigationSettings.shared.directions.credentials,

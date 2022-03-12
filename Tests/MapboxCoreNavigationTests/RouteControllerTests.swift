@@ -23,7 +23,7 @@ class RouteControllerTests: TestCase {
         let options = NavigationMatchOptions(coordinates: [
             .init(latitude: 59.337928, longitude: 18.076841),
             .init(latitude: 59.33865, longitude: 18.074935),
-        ])
+        ], profileIdentifier: .automobile) // We use `automobile` here because `automobileAvoidingTraffic` isn't supported for map matching. 
         let routeResponse = Fixture.routeResponseFromMatches(at: "sthlm-double-back", options: options)
         let locations = Array<CLLocation>.locations(from: "sthlm-double-back-replay").shiftedToPresent()
         let locationManager = ReplayLocationManager(locations: locations)

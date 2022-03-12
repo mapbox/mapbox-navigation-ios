@@ -9,10 +9,11 @@ import CoreLocation
 
 class InstructionsCardSnapshotTests: TestCase {
     
-    let tertiaryRouteOptions = NavigationRouteOptions(coordinates: [
+    static let tertiaryRouteOptions: NavigationRouteOptions = .init(coordinates: [
         CLLocationCoordinate2D(latitude: 39.749216, longitude: -105.008272),
         CLLocationCoordinate2D(latitude: 39.694833, longitude: -104.976949),
     ])
+    var tertiaryRouteOptions: NavigationRouteOptions { Self.tertiaryRouteOptions }
         
     override func setUp() {
         super.setUp()

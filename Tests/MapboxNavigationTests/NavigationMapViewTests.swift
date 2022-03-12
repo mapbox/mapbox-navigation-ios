@@ -7,10 +7,11 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 
 class NavigationMapViewTests: TestCase {
-    let response = Fixture.routeResponse(from: "route-with-instructions", options: NavigationRouteOptions(coordinates: [
+    static let response = Fixture.routeResponse(from: "route-with-instructions", options: NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 40.311012, longitude: -112.47926),
         CLLocationCoordinate2D(latitude: 29.99908, longitude: -102.828197),
     ]))
+    var response: RouteResponse { Self.response }
     var navigationMapView: NavigationMapView!
     
     lazy var route: Route = {

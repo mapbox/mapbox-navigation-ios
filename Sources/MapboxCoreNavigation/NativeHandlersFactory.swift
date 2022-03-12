@@ -27,7 +27,7 @@ class NativeHandlersFactory {
          historyDirectoryURL: URL? = nil,
          targetVersion: String? = nil,
          configFactoryType: ConfigFactory.Type = ConfigFactory.self,
-         datasetProfileIdentifier: ProfileIdentifier = ProfileIdentifier.automobile) {
+         datasetProfileIdentifier: ProfileIdentifier = NavigationSettings.shared.defaultDirectionsProfileIdentifier) {
         self.tileStorePath = tileStorePath
         self.credentials = credentials
         self.tilesVersion = tilesVersion

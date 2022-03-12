@@ -16,13 +16,13 @@ fileprivate let coordinateThreshold: CLLocationDistance = 0.0005
 
 class NavigationServiceTests: TestCase {
     var eventsManagerSpy: NavigationEventsManagerSpy!
-    let directionsClientSpy = DirectionsSpy()
-    let delegate = NavigationServiceDelegateSpy()
+    var directionsClientSpy: DirectionsSpy!
+    var delegate: NavigationServiceDelegateSpy!
 
     typealias RouteLocations = (firstLocation: CLLocation, penultimateLocation: CLLocation, lastLocation: CLLocation)
 
     var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations)!
-    
+
     func createDependencies(locationSource: NavigationLocationManager? = nil) -> (navigationService: NavigationService, routeLocations: RouteLocations) {
         let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
                                                         routeIndex: 0,
@@ -50,21 +50,27 @@ class NavigationServiceTests: TestCase {
         return (navigationService: navigationService, routeLocations: routeLocations)
     }
 
-    let initialRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+    static let initialRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+    static let alternateRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+    static let alternateRoute = Fixture.route(from: jsonFileName, options: routeOptions)
 
-    let alternateRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
-    let alternateRoute = Fixture.route(from: jsonFileName, options: routeOptions)
-
+    var initialRouteResponse: RouteResponse { Self.initialRouteResponse }
+    var alternateRouteResponse: RouteResponse { Self.alternateRouteResponse }
+    var alternateRoute: Route { Self.alternateRoute }
+    
     override func setUp() {
         super.setUp()
 
-        directionsClientSpy.reset()
+        directionsClientSpy = .init()
+        delegate = .init()
         delegate.reset()
     }
     
     override func tearDown() {
         super.tearDown()
         dependencies = nil
+        directionsClientSpy = nil
+        delegate = nil
         MapboxRoutingProvider.__testRoutesStub = nil
     }
 

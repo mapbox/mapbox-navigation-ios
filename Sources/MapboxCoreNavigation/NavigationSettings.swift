@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import os.log
 
 /**
  Global settings that are used across the SDK for altering navigation behavior.
@@ -11,12 +12,14 @@ import MapboxDirections
  To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class
  when initializing a `NavigationViewController`.
 
- To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:)` method.
+ To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:defaultDirectionsProfileIdentifier:)` method.
  */
 public class NavigationSettings {
     
     public enum StoredProperty: CaseIterable {
-        case voiceVolume, voiceMuted, distanceUnit
+        case voiceVolume
+        case voiceMuted
+        case distanceUnit
 
         public var key: String {
             switch self {
@@ -32,12 +35,17 @@ public class NavigationSettings {
 
     private struct State {
         static var `default`: State {
-            .init(directions: .shared, tileStoreConfiguration: .default)
+            .init(directions: .shared,
+                  tileStoreConfiguration: .default,
+                  defaultDirectionsProfileIdentifier: .automobileAvoidingTraffic)
         }
 
         var directions: Directions
         var tileStoreConfiguration: TileStoreConfiguration
+        var defaultDirectionsProfileIdentifier: ProfileIdentifier
     }
+
+    private static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "Configuration")
 
     /// Protects access to `_state`.
     private let lock: NSLock = .init()
@@ -60,7 +68,7 @@ public class NavigationSettings {
     /**
      Default `Directions` instance. By default, `Directions.shared` is used.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:defaultDirectionsProfileIdentifier:)` method.
      */
     public var directions: Directions {
         state.directions
@@ -69,10 +77,30 @@ public class NavigationSettings {
     /**
      Global `TileStoreConfiguration` instance.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:defaultDirectionsProfileIdentifier:)` method.
      */
     public var tileStoreConfiguration: TileStoreConfiguration {
         state.tileStoreConfiguration
+    }
+
+    /**
+     Default `MapboxDirections.ProfileIdentifier` value that is used across Navigation SDK.
+
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:defaultDirectionsProfileIdentifier:)` method.
+
+     By default `MapboxDirections.ProfileIdentifier.automobileAvoidingTraffic` is used.
+
+     */
+    public var defaultDirectionsProfileIdentifier: ProfileIdentifier {
+        state.defaultDirectionsProfileIdentifier
+    }
+
+    @available(*, deprecated, message: "Use NavigationSettings.initialize(directions:tileStoreConfiguration:defaultDirectionsProfileIdentifier:) instead.")
+    public func initialize(directions: Directions,
+                           tileStoreConfiguration: TileStoreConfiguration) {
+        initialize(directions: directions,
+                   tileStoreConfiguration: tileStoreConfiguration,
+                   defaultDirectionsProfileIdentifier: .automobileAvoidingTraffic)
     }
 
     /**
@@ -88,16 +116,20 @@ public class NavigationSettings {
      fall back to the `NavigationSettings.directions` by default.
        - tileStoreConfiguration: Options for configuring how map and navigation tiles are stored on the device. See
      `TileStoreConfiguration` for more details.
+       - defaultDirectionsProfileIdentifier: TODO
      */
     public func initialize(directions: Directions,
-                           tileStoreConfiguration: TileStoreConfiguration) {
+                           tileStoreConfiguration: TileStoreConfiguration,
+                           defaultDirectionsProfileIdentifier: ProfileIdentifier) {
         lock.lock(); defer {
             lock.unlock()
         }
         if _state != nil {
-            print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`. This might result in an undefined behaviour. ")
+            os_log("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:defaultDirectionsProfileIdentifier:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`. This might result in an undefined behavior.", log: Self.log, type:.fault)
         }
-        _state = .init(directions: directions, tileStoreConfiguration: tileStoreConfiguration)
+        _state = .init(directions: directions,
+                       tileStoreConfiguration: tileStoreConfiguration,
+                       defaultDirectionsProfileIdentifier: defaultDirectionsProfileIdentifier)
     }
     
     /**
@@ -119,7 +151,7 @@ public class NavigationSettings {
             notifyChanged(property: .voiceMuted, value: voiceMuted)
         }
     }
-    
+
     /**
      Specifies the preferred distance measurement unit.
      Meters and feet will be used when the presented distances are small enough. See `DistanceFormatter` for more information.

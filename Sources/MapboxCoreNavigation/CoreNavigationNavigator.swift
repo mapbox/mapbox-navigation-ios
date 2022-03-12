@@ -86,7 +86,7 @@ class Navigator {
      This property can only be modified before creating `Navigator` shared instance, all
      further changes to this property will have no effect. Defaults to `automobile`.
      */
-    static var datasetProfileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic
+    static var datasetProfileIdentifier: ProfileIdentifier = NavigationSettings.shared.defaultDirectionsProfileIdentifier
     
     /**
      Restrict direct initializer access.

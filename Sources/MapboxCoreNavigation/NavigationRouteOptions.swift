@@ -17,7 +17,8 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
      - seealso: `RouteOptions`
      */
-    public required init(waypoints: [Waypoint], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
+    public required init(waypoints: [Waypoint],
+                         profileIdentifier: ProfileIdentifier? = NavigationSettings.shared.defaultDirectionsProfileIdentifier) {
         super.init(waypoints: waypoints.map {
             $0.coordinateAccuracy = -1
             return $0
@@ -51,7 +52,8 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
      - seealso: `RouteOptions`
      */
-    public convenience init(locations: [CLLocation], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
+    public convenience init(locations: [CLLocation],
+                            profileIdentifier: ProfileIdentifier? = NavigationSettings.shared.defaultDirectionsProfileIdentifier) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
     }
 
@@ -60,7 +62,8 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
      - seealso: `RouteOptions`
      */
-    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
+    public convenience init(coordinates: [CLLocationCoordinate2D],
+                            profileIdentifier: ProfileIdentifier? = NavigationSettings.shared.defaultDirectionsProfileIdentifier) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
     
@@ -82,7 +85,8 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
      
      - seealso: `RouteOptions`
      */
-    public required init(waypoints: [Waypoint], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
+    public required init(waypoints: [Waypoint],
+                         profileIdentifier: ProfileIdentifier? = NavigationSettings.shared.defaultDirectionsProfileIdentifier) {
         super.init(waypoints: waypoints.map {
             $0.coordinateAccuracy = -1
             return $0
@@ -101,7 +105,8 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
      
      - seealso: `MatchOptions`
      */
-    public convenience init(locations: [CLLocation], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
+    public convenience init(locations: [CLLocation],
+                            profileIdentifier: ProfileIdentifier? = NavigationSettings.shared.defaultDirectionsProfileIdentifier) {
         self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
     }
     
@@ -110,7 +115,8 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
      
      - seealso: `MatchOptions`
      */
-    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
+    public convenience init(coordinates: [CLLocationCoordinate2D],
+                            profileIdentifier: ProfileIdentifier? = NavigationSettings.shared.defaultDirectionsProfileIdentifier) {
         self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
     }
     

@@ -8,11 +8,12 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 
 class ManeuverArrowSnapshotTests: TestCase {
-    let waypointRoute = Fixture.route(from: "waypoint-after-turn", options: NavigationRouteOptions(coordinates: [
+    static let waypointRoute: Route = Fixture.route(from: "waypoint-after-turn", options: NavigationRouteOptions(coordinates: [
         CLLocationCoordinate2D(latitude: 37.787358, longitude: -122.408231),
         CLLocationCoordinate2D(latitude: 37.790177, longitude: -122.408687),
         CLLocationCoordinate2D(latitude: 37.788986, longitude: -122.406892),
     ]))
+    var waypointRoute: Route { Self.waypointRoute }
 
     override func setUp() {
         super.setUp()
