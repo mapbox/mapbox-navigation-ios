@@ -26,7 +26,7 @@ class CustomViewController: UIViewController {
     var previewStepIndex: Int?
     
     // View that is placed over the instructions banner while we are previewing
-    var previewInstructionsView: StepInstructionsView?
+    var previewInstructionsView: InstructionsBannerView?
     
     @IBOutlet var navigationMapView: NavigationMapView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -223,10 +223,9 @@ class CustomViewController: UIViewController {
         guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
         // create a StepInstructionsView and display that over the current instructions banner
-        let previewInstructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
+        let previewInstructionsView = InstructionsBannerView(frame: instructionsBannerView.frame)
         previewInstructionsView.delegate = self
         previewInstructionsView.swipeable = true
-        previewInstructionsView.backgroundColor = instructionsBannerView.backgroundColor
         view.addSubview(previewInstructionsView)
         
         // update instructions banner to show all information about this step

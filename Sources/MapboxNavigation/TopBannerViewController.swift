@@ -170,7 +170,7 @@ open class TopBannerViewController: UIViewController {
     private(set) var previewSteps: [RouteStep]?
     private(set) var currentPreviewStep: (RouteStep, Int)?
     
-    private(set) var previewInstructionsView: StepInstructionsView?
+    private(set) var previewInstructionsView: InstructionsBannerView?
     
     public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep], completion: CompletionHandler? = nil) {
         guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.firstIndex(of: step) else {
@@ -184,7 +184,7 @@ open class TopBannerViewController: UIViewController {
         
         guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
-        let instructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
+        let instructionsView = InstructionsBannerView(frame: instructionsBannerView.frame)
         instructionsView.heightAnchor.constraint(equalToConstant: instructionsBannerHeight).isActive = true
         
         instructionsView.delegate = self
