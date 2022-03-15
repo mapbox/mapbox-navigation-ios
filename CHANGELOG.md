@@ -8,6 +8,10 @@
 * Deprecated the optional `StyleManagerDelegate.styleManager(_:viewForApplying:)` method. All views appearance will be refreshed based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
 * Fixed an issue where the map’s floating buttons are misaligned with its attribution button and sometimes untappable after rotating the device during turn-by-turn navigation. ([#3776](https://github.com/mapbox/mapbox-navigation-ios/pull/3776))
 
+### Visual instructions
+
+* Fixed an issue where the top instruction banner couldn't be swiped back to the current one. ([#3785](https://github.com/mapbox/mapbox-navigation-ios/pull/3785))
+
 ### Other changes
 
 * Fixed an issue where the route line appeared to begin away from the user’s current location after the route was refreshed. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
