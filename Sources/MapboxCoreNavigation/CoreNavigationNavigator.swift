@@ -84,7 +84,7 @@ class Navigator {
      Profile setting, used for selecting tiles type for navigation.
      
      This property can only be modified before creating `Navigator` shared instance, all
-     further changes to this property will have no effect. Defaults to `automobile`.
+     further changes to this property will have no effect. Defaults to `automobileAvoidingTraffic`.
      */
     static var datasetProfileIdentifier: ProfileIdentifier = .automobileAvoidingTraffic
     
