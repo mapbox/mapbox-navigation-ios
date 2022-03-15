@@ -47,7 +47,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
     /**
      Value of default viewport padding.
      */
-    var viewportPadding: UIEdgeInsets = .zero
+    public var viewportPadding: UIEdgeInsets = .zero
     
     weak var mapView: MapView?
     
