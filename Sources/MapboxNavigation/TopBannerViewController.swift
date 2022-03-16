@@ -164,13 +164,13 @@ open class TopBannerViewController: UIViewController {
     // MARK: Previewing Steps
     
     public var isDisplayingPreviewInstructions: Bool {
-        return previewInstructionsView != nil
+        return previewBannerView != nil
     }
     
     private(set) var previewSteps: [RouteStep]?
     private(set) var currentPreviewStep: (RouteStep, Int)?
     
-    private(set) var previewInstructionsView: InstructionsBannerView?
+    private(set) var previewBannerView: InstructionsBannerView?
     
     public func preview(step stepOverride: RouteStep? = nil, maneuverStep: RouteStep, distance: CLLocationDistance, steps: [RouteStep], completion: CompletionHandler? = nil) {
         guard !steps.isEmpty, let step = stepOverride ?? steps.first, let index = steps.firstIndex(of: step) else {
@@ -194,13 +194,13 @@ open class TopBannerViewController: UIViewController {
         instructionsBannerView.removeFromSuperview()
         informationStackView.insertArrangedSubview(instructionsView, at: 0)
         instructionsView.update(for: instructions)
-        previewInstructionsView = instructionsView
+        previewBannerView = instructionsView
         
         hideSecondaryChildren(completion: completion)
     }
     
     public func stopPreviewing(showingSecondaryChildren: Bool = true) {
-        guard let view = previewInstructionsView else {
+        guard let view = previewBannerView else {
             return
         }
         
@@ -210,7 +210,7 @@ open class TopBannerViewController: UIViewController {
         informationStackView.removeArrangedSubview(view)
         view.removeFromSuperview()
         addInstructionsBanner()
-        previewInstructionsView = nil
+        previewBannerView = nil
         
         if showingSecondaryChildren {
             showSecondaryChildren()
