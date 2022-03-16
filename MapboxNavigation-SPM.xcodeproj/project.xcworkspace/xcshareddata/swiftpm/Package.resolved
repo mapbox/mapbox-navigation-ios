@@ -114,8 +114,8 @@
         "repositoryURL": "https://github.com/raphaelmor/Polyline.git",
         "state": {
           "branch": null,
-          "revision": "36f7b1222aaf8fa741d0d179c12e186998d97f42",
-          "version": "5.0.2"
+          "revision": "554a15b15ff33cf6757f4cb693c5c285fe58694e",
+          "version": "5.0.3"
         }
       },
       {
@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "e394bf350e38cb100b6bc4172834770ede1b7232",
-          "version": "1.0.3"
+          "revision": "82905286cc3f0fa8adc4674bf49437cab65a8373",
+          "version": "1.1.1"
         }
       },
       {
@@ -159,8 +159,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "436682278bd65a1dbfbad53902af6f4cc0af1a33",
-          "version": "2.2.0"
+          "revision": "a7db78a2281ffe79966443ebe5687766d6c024c7",
+          "version": "2.3.0"
         }
       }
     ]
