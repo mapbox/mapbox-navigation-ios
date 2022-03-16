@@ -4,8 +4,8 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.4.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.0-beta.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v90._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/88.0.0). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* MapboxNavigation now requires [MapboxMaps v10.4.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.0-rc.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v92._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/92.0.0). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
 ### Offline routing
 
