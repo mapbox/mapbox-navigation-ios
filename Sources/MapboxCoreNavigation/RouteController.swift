@@ -275,7 +275,7 @@ open class RouteController: NSObject {
     private func updateRouteLeg(to value: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
         let legIndex = UInt32(value)
         
-        navigator.changeRouteLeg(forRoute: 0, leg: legIndex) { [weak self] success in
+        navigator.changeLeg(forLeg: legIndex) { [weak self] success in
             guard let self = self else {
                 completionHandler?(.failure(RouteControllerError.internalError))
                 return
@@ -289,7 +289,7 @@ open class RouteController: NSObject {
                 /** NOTE:
                  `navigator.changeRouteLeg(forRoute:leg:)` will return true if the leg actually changed.
                  */
-                BillingHandler.shared.beginNewBillingSessionIfRunning(with: self.sessionUUID)                
+                BillingHandler.shared.beginNewBillingSessionIfRunning(with: self.sessionUUID)
             } else {
                 result = .failure(RouteControllerError.failedToChangeRouteLeg)
             }
