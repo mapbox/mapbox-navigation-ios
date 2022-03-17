@@ -13,7 +13,7 @@ protocol ReentrantImageDownloader {
 class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegate {
     private let sessionConfiguration: URLSessionConfiguration
 
-    private var urlSession: URLSession!
+    private let urlSession: URLSession
     private let downloadQueue: OperationQueue
     private let accessQueue: DispatchQueue
 
@@ -30,14 +30,17 @@ class ImageDownloader: NSObject, ReentrantImageDownloader, URLSessionDataDelegat
         self.downloadQueue = OperationQueue()
         self.downloadQueue.name = Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloader"
         self.accessQueue = DispatchQueue(label: Bundle.mapboxNavigation.bundleIdentifier! + ".ImageDownloaderInternal")
+
+        let urlSessionDelegateProxy = URLSessionDelegateProxy()
+        urlSession = URLSession(configuration: sessionConfiguration, delegate: urlSessionDelegateProxy, delegateQueue: nil)
         super.init()
 
-        // TODO: Write `URLSessionDelegate` proxy to break retain cycle between `Self` and `URLSession.delegate`.
-        urlSession = URLSession(configuration: sessionConfiguration, delegate: self, delegateQueue: nil)
+        urlSessionDelegateProxy.delegate = self
     }
 
     deinit {
         self.downloadQueue.cancelAllOperations()
+        urlSession.invalidateAndCancel()
     }
 
     func downloadImage(with url: URL, completion: ImageDownloadCompletionBlock?) {

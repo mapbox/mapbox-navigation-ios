@@ -26,7 +26,7 @@ class CustomViewController: UIViewController {
     var previewStepIndex: Int?
     
     // View that is placed over the instructions banner while we are previewing
-    var previewInstructionsView: StepInstructionsView?
+    var previewBannerView: InstructionsBannerView?
     
     @IBOutlet var navigationMapView: NavigationMapView!
     @IBOutlet weak var cancelButton: UIButton!
@@ -115,7 +115,7 @@ class CustomViewController: UIViewController {
     // Notifications sent on all location updates
     @objc func progressDidChange(_ notification: NSNotification) {
         // do not update if we are previewing instruction steps
-        guard previewInstructionsView == nil,
+        guard previewBannerView == nil,
               let routeProgress = notification.userInfo?[RouteController.NotificationUserInfoKey.routeProgressKey] as? RouteProgress,
               let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation else { return }
         
@@ -223,28 +223,27 @@ class CustomViewController: UIViewController {
         guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
         // create a StepInstructionsView and display that over the current instructions banner
-        let previewInstructionsView = StepInstructionsView(frame: instructionsBannerView.frame)
-        previewInstructionsView.delegate = self
-        previewInstructionsView.swipeable = true
-        previewInstructionsView.backgroundColor = instructionsBannerView.backgroundColor
-        view.addSubview(previewInstructionsView)
+        let previewBannerView = InstructionsBannerView(frame: instructionsBannerView.frame)
+        previewBannerView.delegate = self
+        previewBannerView.swipeable = true
+        view.addSubview(previewBannerView)
         
         // update instructions banner to show all information about this step
-        previewInstructionsView.updateDistance(for: RouteStepProgress(step: step))
-        previewInstructionsView.update(for: instructions)
+        previewBannerView.updateDistance(for: RouteStepProgress(step: step))
+        previewBannerView.update(for: instructions)
         
-        self.previewInstructionsView = previewInstructionsView
+        self.previewBannerView = previewBannerView
     }
     
     func removePreviewInstruction() {
-        guard let view = previewInstructionsView else { return }
+        guard let view = previewBannerView else { return }
         view.removeFromSuperview()
         
         // reclaim the delegate, from the preview banner
         instructionsBannerView.delegate = self
         
         // nil out both the view and index
-        previewInstructionsView = nil
+        previewBannerView = nil
         previewStepIndex = nil
     }
 }

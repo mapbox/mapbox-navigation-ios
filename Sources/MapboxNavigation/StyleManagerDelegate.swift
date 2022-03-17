@@ -6,7 +6,7 @@ import MapboxCoreNavigation
  The `StyleManagerDelegate` protocol defines a set of methods used for controlling the style.
  */
 public protocol StyleManagerDelegate: AnyObject, UnimplementedLogging {
-    
+
     /**
      Asks the delegate for a location to use when calculating sunset and sunrise
      */
@@ -18,6 +18,7 @@ public protocol StyleManagerDelegate: AnyObject, UnimplementedLogging {
      The default implementation of this method will attempt to cast the delegate to type
      `UIViewController` and use its `view` property.
      */
+    @available(*, deprecated, message: "All views appearance will be refreshed without the `UITextEffectsWindow`.")
     func styleManager(_ styleManager: StyleManager, viewForApplying currentStyle: Style?) -> UIView?
     
     /**
@@ -34,7 +35,7 @@ public protocol StyleManagerDelegate: AnyObject, UnimplementedLogging {
 }
 
 public extension StyleManagerDelegate {
-    
+
     /**
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
@@ -57,6 +58,7 @@ public extension StyleManagerDelegate {
         logUnimplemented(protocolType: StyleManagerDelegate.self, level: .debug)
     }
     
+    @available(*, deprecated, message: "All views appearance will be refreshed without the `UITextEffectsWindow`.")
     func styleManager(_ styleManager: StyleManager, viewForApplying currentStyle: Style?) -> UIView? {
         // Short-circuit refresh logic if the view hasn't yet loaded since we don't want the `self.view`
         // call to trigger `loadView`.

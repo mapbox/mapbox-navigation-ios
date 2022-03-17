@@ -79,10 +79,9 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         type.feedbackItems
     }
 
-    lazy var collectionView: UICollectionView = {
-        let view: UICollectionView = UICollectionView(frame: .zero, collectionViewLayout: flowLayout)
+    lazy var collectionView: FeedbackCollectionView = {
+        let view: FeedbackCollectionView = FeedbackCollectionView(frame: .zero, collectionViewLayout: flowLayout)
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = .clear
         view.delegate = self
         view.dataSource = self
         view.contentInset = FeedbackViewController.contentInset
@@ -96,6 +95,8 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
         label.text = FeedbackViewController.sceneTitle
         return label
     }()
+    
+    lazy var bottomPaddingView: FeedbackStyleView = .forAutoLayout()
     
     lazy var flowLayout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
@@ -229,24 +230,34 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     }
     
     internal func setupViews() {
-        let children = [reportIssueLabel, collectionView]
+        let children = [reportIssueLabel, collectionView, bottomPaddingView]
         view.addSubviews(children)
     }
     
     internal func setupConstraints() {
-        let labelTop = reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor)
-        let labelHeight = reportIssueLabel.heightAnchor.constraint(equalToConstant: FeedbackViewController.titleHeaderHeight)
-        let labelLeading = reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        let labelTrailing = reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        let collectionLabelSpacing = collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor)
-        let collectionLeading = collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor)
-        let collectionTrailing = collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        let collectionBarSpacing = collectionView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
+        let labelConstraints = [
+            reportIssueLabel.topAnchor.constraint(equalTo: view.topAnchor),
+            reportIssueLabel.heightAnchor.constraint(equalToConstant: FeedbackViewController.titleHeaderHeight),
+            reportIssueLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            reportIssueLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ]
         
-        let constraints = [labelTop, labelHeight, labelLeading, labelTrailing,
-                           collectionLabelSpacing, collectionLeading, collectionTrailing, collectionBarSpacing]
+        let collectionConstraints = [
+            collectionView.topAnchor.constraint(equalTo: reportIssueLabel.bottomAnchor),
+            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
+        ]
         
-        NSLayoutConstraint.activate(constraints)
+        let bottomPaddingConstraints = [
+            bottomPaddingView.topAnchor.constraint(equalTo: view.safeBottomAnchor),
+            bottomPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomPaddingView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        ]
+        
+        let layoutConstraints = labelConstraints + collectionConstraints + bottomPaddingConstraints
+        NSLayoutConstraint.activate(layoutConstraints)
     }
     
     func send(_ item: FeedbackItem) {
@@ -263,8 +274,11 @@ extension FeedbackViewController: UICollectionViewDataSource {
         let item = sections[indexPath.row]
         
         cell.titleLabel.text = item.title
-        cell.imageView.tintColor = .white
         cell.imageView.image = item.image
+        
+        cell.titleLabel.textColor = self.collectionView.cellColor
+        cell.circleColor = self.collectionView.cellColor
+        cell.imageView.tintColor = self.collectionView.backgroundColor
         
         return cell
     }
@@ -332,5 +346,15 @@ extension String {
         let constraintRect = CGSize(width: width, height: .greatestFiniteMagnitude)
         let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
         return ceil(boundingBox.height)
+    }
+}
+
+class FeedbackStyleView: UIView {}
+
+class FeedbackCollectionView: UICollectionView {
+    @objc dynamic var cellColor: UIColor = .black {
+        didSet {
+            reloadData()
+        }
     }
 }

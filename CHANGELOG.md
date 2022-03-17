@@ -1,5 +1,23 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.4.0
+
+### User interface
+
+* `FeedbackViewController` now supports changing styles based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
+* Deprecated the optional `StyleManagerDelegate.styleManager(_:viewForApplying:)` method. All views appearance will be refreshed based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
+* Fixed an issue where the map’s floating buttons are misaligned with its attribution button and sometimes untappable after rotating the device during turn-by-turn navigation. ([#3776](https://github.com/mapbox/mapbox-navigation-ios/pull/3776))
+
+### Visual instructions
+
+* Fixed an issue where the top instruction banner couldn't be swiped back to the current one. ([#3785](https://github.com/mapbox/mapbox-navigation-ios/pull/3785))
+
+### Other changes
+
+* Fixed an issue where the route line appeared to begin away from the user’s current location after the route was refreshed. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
+* Fixed a memory leak after ending a turn-by-turn navigation session. ([#3782](https://github.com/mapbox/mapbox-navigation-ios/pull/3782))
+* Added the `MapboxSpeechSynthesizer(remoteSpeechSynthesizer:)` initializer for creating a `MapboxSpeechSynthesizer` object that uses a custom `SpeechSynthesizer` instance. ([#3747](https://github.com/mapbox/mapbox-navigation-ios/pull/3747))
+
 ## v2.3.0
 
 The v2.2.0 release notes [clarified](https://github.com/mapbox/mapbox-navigation-ios/pull/3652) that is an error to have more than one instance of `NavigationViewController`, `NavigationService`, or `RouteController` running simultaneously. Now you will receive a log message at the fault level helping you to spot the issue. To pause the debugger when the SDK detect the problematic situation, enable the “All Runtime Issues” breakpoint in Xcode. Learn more about breakpoints in [Xcode documentation](https://developer.apple.com/documentation/xcode/setting-breakpoints-to-pause-your-running-app). ([#3740](https://github.com/mapbox/mapbox-navigation-ios/pull/3740))

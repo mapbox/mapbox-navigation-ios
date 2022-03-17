@@ -18,6 +18,8 @@
 		8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
 		8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
 		AED6285622CBE4CE00058A51 /* ViewController+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+InstructionsCard.swift */; };
+		B4FC994927D19E3A00FB6D4A /* ViewController+StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FC994827D19E3A00FB6D4A /* ViewController+StyleManager.swift */; };
+		B4FC994A27D19E3A00FB6D4A /* ViewController+StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FC994827D19E3A00FB6D4A /* ViewController+StyleManager.swift */; };
 		C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51FC31620F689F800400CE7 /* CustomStyles.swift */; };
 		C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358D14671E5E3B7700ADE590 /* ViewController.swift */; };
 		C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */; };
@@ -68,6 +70,7 @@
 		8DF8E4E52202696800B29FEF /* MapboxNavigation.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = MapboxNavigation.podspec; sourceTree = "<group>"; };
 		8DF8E4E62202696800B29FEF /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
 		AED6285522CBE4CE00058A51 /* ViewController+InstructionsCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ViewController+InstructionsCard.swift"; path = "Example/ViewController+InstructionsCard.swift"; sourceTree = "<group>"; };
+		B4FC994827D19E3A00FB6D4A /* ViewController+StyleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ViewController+StyleManager.swift"; path = "Example/ViewController+StyleManager.swift"; sourceTree = "<group>"; };
 		C51FC31620F689F800400CE7 /* CustomStyles.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomStyles.swift; path = Example/CustomStyles.swift; sourceTree = "<group>"; };
 		C53F2F0720EBC95600D9798F /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C57AD98920EAA39A0087B24B /* Entitlements.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Entitlements.plist; sourceTree = "<group>"; };
@@ -141,6 +144,7 @@
 				35002D721E5F6C830090E733 /* Supporting files */,
 				AED6285522CBE4CE00058A51 /* ViewController+InstructionsCard.swift */,
 				8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */,
+				B4FC994827D19E3A00FB6D4A /* ViewController+StyleManager.swift */,
 				3577B877214FF35800094294 /* FavoritesList.swift */,
 				358D14651E5E3B7700ADE590 /* AppDelegate.swift */,
 				35379CFB21480BFB00FD402E /* AppDelegate+CarPlay.swift */,
@@ -390,6 +394,7 @@
 				8A092F9B25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */,
 				C51FC31720F689F800400CE7 /* CustomStyles.swift in Sources */,
 				8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */,
+				B4FC994927D19E3A00FB6D4A /* ViewController+StyleManager.swift in Sources */,
 				358D14661E5E3B7700ADE590 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -404,6 +409,7 @@
 				8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */,
 				DA8805002316EAED00B54D87 /* ViewController+InstructionsCard.swift in Sources */,
 				8A092F9C25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */,
+				B4FC994A27D19E3A00FB6D4A /* ViewController+StyleManager.swift in Sources */,
 				35379CFD21480C0500FD402E /* AppDelegate+CarPlay.swift in Sources */,
 				C53F2EE820EBC95600D9798F /* AppDelegate.swift in Sources */,
 				3577B878214FF35800094294 /* FavoritesList.swift in Sources */,
@@ -600,7 +606,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 95;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -665,7 +671,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 94;
+				CURRENT_PROJECT_VERSION = 95;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
