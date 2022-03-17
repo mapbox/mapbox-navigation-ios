@@ -2,7 +2,10 @@ import Foundation
 import XCTest
 import TestHelper
 import MapboxNavigationNative
+import MapboxDirections
 @testable import MapboxCoreNavigation
+@_implementationOnly import MapboxCommon_Private
+@_implementationOnly import MapboxNavigationNative_Private
 
 final class RoutesCoordinatorTests: TestCase {
     func testNormalCase() {
@@ -34,12 +37,35 @@ final class RoutesCoordinatorTests: TestCase {
 }
 
 private extension RoutesCoordinatorTests {
-    func generateRoutes() -> NavigationRoutes {
-        .init(primaryRouteId: UUID().uuidString, routes: [])
+    func generateRoutes() -> RouteInterface? {
+        let route = Fixture.route(between: .init(latitude: 0, longitude: 0),
+                                  and: .init(latitude: 1, longitude: 1))
+        guard case let .route(routeOptions) = route.response.options else {
+            XCTFail("Failed to generate test Route.")
+            return nil
+        }
+        let encoder = JSONEncoder()
+        encoder.userInfo[.options] = routeOptions
+        guard let routeData = try? encoder.encode(route.route),
+              let routeJSONString = String(data: routeData, encoding: .utf8) else {
+                  XCTFail("Failed to encode generated test Route.")
+                  return nil
+        }
+        
+        let routeRequest = Directions(credentials: Fixture.credentials).url(forCalculating: routeOptions).absoluteString
+        
+        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
+                                                               request: routeRequest)
+        
+        guard let generatedRoute = (parsedRoutes.value as? [RouteInterface])?.first else {
+            XCTFail("Failed to parse generated test Route.")
+            return nil
+        }
+        return generatedRoute
     }
 
     struct RoutesCoordinatorTestCase {
-        let routes: NavigationRoutes?
+        let routes: RouteInterface?
         let uuid: UUID
         let routeIndex: UInt32
         let expectedResult: Result<Void, RoutesCoordinatorError>
@@ -47,12 +73,12 @@ private extension RoutesCoordinatorTests {
     }
 
     func runTestCases(_ testCases: [RoutesCoordinatorTestCase]) {
-        var expectedRoutes: NavigationRoutes? = generateRoutes()
+        var expectedRoutes: RouteInterface? = generateRoutes()
         var expectedRouteIndex = UInt32.max
         var expectedResult: Result<RouteInfo, RoutesCoordinatorError>!
 
         let handler: RoutesCoordinator.SetRoutesHandler = { routes, routeIndex, completion in
-            XCTAssertEqual(routes, expectedRoutes)
+            XCTAssertEqual(routes?.getRouteId(), expectedRoutes?.getRouteId())
             XCTAssertEqual(routeIndex, expectedRouteIndex)
             completion(expectedResult.mapError { $0 as Error })
         }
