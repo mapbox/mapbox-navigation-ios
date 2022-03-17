@@ -265,15 +265,11 @@ open class RouteController: NSObject {
             if parsedRoutes.isValue(),
                let route = (parsedRoutes.value as? [RouteInterface])?.first {
                 self.sharedNavigator.setRoutes(route, uuid: self.sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
-                    DispatchQueue.main.async {
-                        completion?(result)
-                    }
+                    completion?(result)
                 }
             } else if parsedRoutes.isError() {
                 let reason = (parsedRoutes.error as? String) ?? ""
-                DispatchQueue.main.async {
-                    completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
-                }
+                completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
             }
         }
     }
