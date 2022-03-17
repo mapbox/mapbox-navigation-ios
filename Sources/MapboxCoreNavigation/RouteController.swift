@@ -255,7 +255,9 @@ open class RouteController: NSObject {
                   return
         }
         
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
             let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
             
             let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
