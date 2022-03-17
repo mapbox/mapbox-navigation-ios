@@ -254,20 +254,25 @@ open class RouteController: NSObject {
                   completion?(.failure(RouteControllerError.failedToSerializeRoute))
                   return
         }
-
-        let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
-        // Based on MBNNRouteIndex.routeId documentation.
-        // FIXME: Distinguish onboard routes with “local@” prefix.
-        let routeResponseIdentifier = indexedRouteResponse.routeResponse.identifier ?? ""
-        let routeIndices = (indexedRouteResponse.routeResponse.routes ?? []).enumerated().map { index, route in
-            RouteIndex(routeId: "\(routeResponseIdentifier)#\(index)", indexInResponse: UInt32(index))
-        }
-        let navigationRouteResponse = NavigationRouteResponse(routeIndices: routeIndices, directionsResponse: routeJSONString, directionsRequest: routeRequest)
-        let primaryRouteIdentifier = "\(routeResponseIdentifier)#\(indexedRouteResponse.routeIndex)"
-        let navigationRoutes = NavigationRoutes(primaryRouteId: primaryRouteIdentifier, routes: [navigationRouteResponse])
-
-        sharedNavigator.setRoutes(navigationRoutes, uuid: sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
-            completion?(result)
+        
+        DispatchQueue.global().async {
+            let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
+            
+            let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
+                                                                   request: routeRequest)
+            if parsedRoutes.isValue(),
+               let route = (parsedRoutes.value as? [RouteInterface])?.first {
+                self.sharedNavigator.setRoutes(route, uuid: self.sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
+                    DispatchQueue.main.async {
+                        completion?(result)
+                    }
+                }
+            } else if parsedRoutes.isError() {
+                let reason = (parsedRoutes.error as? String) ?? ""
+                DispatchQueue.main.async {
+                    completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
+                }
+            }
         }
     }
     

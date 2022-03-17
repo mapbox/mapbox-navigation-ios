@@ -295,9 +295,6 @@ public class MapboxRoutingProvider: RoutingProvider {
             return nil
         }
         
-        let encoder = JSONEncoder()
-        encoder.userInfo[.options] = routeOptions
-        
         let routeIndex = UInt32(indexedRouteResponse.routeIndex)
         
         var requestId: RequestId!
@@ -310,10 +307,31 @@ public class MapboxRoutingProvider: RoutingProvider {
             guard let self = self else { return }
             
             self.parseResponse(requestId: requestId,
-                               userInfo: [.options: routeOptions,
+                               userInfo: [.responseIdentifier: responseIdentifier,
+                                          .routeIndex: indexedRouteResponse.routeIndex,
+                                          .startLegIndex: Int(startLegIndex),
                                           .credentials: self.settings.directions.credentials],
-                               result: result) { (response: Result<RouteResponse, DirectionsError>) in
-                completionHandler(session, response)
+                               result: result) { (response: Result<RouteRefreshResponse, DirectionsError>) in
+                switch response {
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        completionHandler(session, .failure(error))
+                    }
+                case .success(let routeRefreshResponse):
+                    DispatchQueue.global().async {
+                        do {
+                            let routeResponse = try indexedRouteResponse.routeResponse.copy(with: routeOptions)
+                            routeResponse.routes?[indexedRouteResponse.routeIndex].refreshLegAttributes(from: routeRefreshResponse.route)
+                            DispatchQueue.main.async {
+                                completionHandler(session, .success(routeResponse))
+                            }
+                        } catch {
+                            DispatchQueue.main.async {
+                                completionHandler(session, .failure(.unknown(response: nil, underlying: error, code: nil, message: nil)))
+                            }
+                        }
+                    }
+                }
             }
         })
         let request = Request(requestIdentifier: requestId,

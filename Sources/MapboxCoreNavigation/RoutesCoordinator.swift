@@ -11,7 +11,7 @@ final class RoutesCoordinator {
         case activeNavigation(UUID)
     }
 
-    typealias SetRoutesHandler = (NavigationRoutes?, _ legIndex: UInt32, _ completion: @escaping (Result<RouteInfo, Error>) -> Void) -> Void
+    typealias SetRoutesHandler = (RouteInterface?, _ legIndex: UInt32, _ completion: @escaping (Result<RouteInfo, Error>) -> Void) -> Void
 
     private struct ActiveNavigationSession {
         let uuid: UUID
@@ -34,7 +34,7 @@ final class RoutesCoordinator {
     /// - Parameters:
     ///   - uuid: The UUID of the current active guidances session. All reroutes should have the same uuid.
     ///   - legIndex: The index of the leg along which to begin navigating.
-    func beginActiveNavigation(with routes: NavigationRoutes,
+    func beginActiveNavigation(with route: RouteInterface,
                                uuid: UUID,
                                legIndex: UInt32,
                                completion: @escaping (Result<RouteInfo, Error>) -> Void) {
@@ -46,7 +46,7 @@ final class RoutesCoordinator {
         state = .activeNavigation(uuid)
         lock.unlock()
 
-        setRoutes(routes, legIndex, completion)
+        setRoutes(route, legIndex, completion)
     }
 
     /// - Parameters:
