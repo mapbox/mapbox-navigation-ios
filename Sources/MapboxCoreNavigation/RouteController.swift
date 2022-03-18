@@ -254,15 +254,19 @@ open class RouteController: NSObject {
                   completion?(.failure(RouteControllerError.failedToSerializeRoute))
                   return
         }
-
+        
         let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
-        let routes = Routes(routesResponse: routeJSONString,
-                            routeIndex: 0,
-                            legIndex: UInt32(progress.legIndex),
-                            routesRequest: routeRequest)
-
-        sharedNavigator.setRoutes(routes, uuid: sessionUUID) { result in
-            completion?(result)
+        
+        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
+                                                               request: routeRequest)
+        if parsedRoutes.isValue(),
+           let route = (parsedRoutes.value as? [RouteInterface])?.first {
+            self.sharedNavigator.setRoutes(route, uuid: sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
+                completion?(result)
+            }
+        } else if parsedRoutes.isError() {
+            let reason = (parsedRoutes.error as? String) ?? ""
+            completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
         }
     }
     
@@ -270,7 +274,7 @@ open class RouteController: NSObject {
     private func updateRouteLeg(to value: Int, completionHandler: AdvanceLegCompletionHandler? = nil) {
         let legIndex = UInt32(value)
         
-        navigator.changeRouteLeg(forRoute: 0, leg: legIndex) { [weak self] success in
+        navigator.changeLeg(forLeg: legIndex) { [weak self] success in
             guard let self = self else {
                 completionHandler?(.failure(RouteControllerError.internalError))
                 return
@@ -284,7 +288,7 @@ open class RouteController: NSObject {
                 /** NOTE:
                  `navigator.changeRouteLeg(forRoute:leg:)` will return true if the leg actually changed.
                  */
-                BillingHandler.shared.beginNewBillingSessionIfRunning(with: self.sessionUUID)                
+                BillingHandler.shared.beginNewBillingSessionIfRunning(with: self.sessionUUID)
             } else {
                 result = .failure(RouteControllerError.failedToChangeRouteLeg)
             }
@@ -741,7 +745,7 @@ extension RouteController: Router {
     }
 
     private func removeRoutes(completion: ((Error?) -> Void)?) {
-        sharedNavigator.setRoutes(nil, uuid: sessionUUID) { result in
+        sharedNavigator.unsetRoutes(uuid: sessionUUID) { result in
             switch result {
             case .success:
                 completion?(nil)

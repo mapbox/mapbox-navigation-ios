@@ -17,11 +17,13 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
      - seealso: `RouteOptions`
      */
-    public required init(waypoints: [Waypoint], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
+    public required init(waypoints: [Waypoint], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic, queryItems: [URLQueryItem]? = nil) {
         super.init(waypoints: waypoints.map {
             $0.coordinateAccuracy = -1
             return $0
-        }, profileIdentifier: profileIdentifier)
+        },
+                   profileIdentifier: profileIdentifier,
+                   queryItems: queryItems)
         includesAlternativeRoutes = true
         attributeOptions = [.expectedTravelTime, .maximumSpeedLimit]
         if profileIdentifier == .cycling {
@@ -51,8 +53,8 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
      - seealso: `RouteOptions`
      */
-    public convenience init(locations: [CLLocation], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
-        self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
+    public convenience init(locations: [CLLocation], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic, queryItems: [URLQueryItem]? = nil) {
+        self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier, queryItems: queryItems)
     }
 
     /**
@@ -60,8 +62,8 @@ open class NavigationRouteOptions: RouteOptions, OptimizedForNavigation {
 
      - seealso: `RouteOptions`
      */
-    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
-        self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
+    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic, queryItems: [URLQueryItem]? = nil) {
+        self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier, queryItems: queryItems)
     }
     
     required public init(from decoder: Decoder) throws {
@@ -82,11 +84,13 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
      
      - seealso: `RouteOptions`
      */
-    public required init(waypoints: [Waypoint], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
+    public required init(waypoints: [Waypoint], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic, queryItems: [URLQueryItem]? = nil) {
         super.init(waypoints: waypoints.map {
             $0.coordinateAccuracy = -1
             return $0
-        }, profileIdentifier: profileIdentifier)
+        },
+                   profileIdentifier: profileIdentifier,
+                   queryItems: queryItems)
         attributeOptions = [.numericCongestionLevel, .expectedTravelTime]
         if profileIdentifier == .automobile || profileIdentifier == .automobileAvoidingTraffic {
             attributeOptions.insert(.maximumSpeedLimit)
@@ -101,8 +105,8 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
      
      - seealso: `MatchOptions`
      */
-    public convenience init(locations: [CLLocation], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
-        self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier)
+    public convenience init(locations: [CLLocation], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic, queryItems: [URLQueryItem]? = nil) {
+        self.init(waypoints: locations.map { Waypoint(location: $0) }, profileIdentifier: profileIdentifier, queryItems: queryItems)
     }
     
     /**
@@ -110,8 +114,8 @@ open class NavigationMatchOptions: MatchOptions, OptimizedForNavigation {
      
      - seealso: `MatchOptions`
      */
-    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic) {
-        self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier)
+    public convenience init(coordinates: [CLLocationCoordinate2D], profileIdentifier: ProfileIdentifier? = .automobileAvoidingTraffic, queryItems: [URLQueryItem]? = nil) {
+        self.init(waypoints: coordinates.map { Waypoint(coordinate: $0) }, profileIdentifier: profileIdentifier, queryItems: queryItems)
     }
     
     required public init(from decoder: Decoder) throws {
