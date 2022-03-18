@@ -8,12 +8,21 @@
 * MapboxCoreNavigation now requires [MapboxNavigationNative v92._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/92.0.0). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * MapboxCoreNavigation now requires [MapboxDirections v2.4.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0-beta.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
+### User interface
+
+* `FeedbackViewController` now supports changing styles based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
+* Deprecated the optional `StyleManagerDelegate.styleManager(_:viewForApplying:)` method. All views appearance will be refreshed based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
+* Fixed an issue where the map’s floating buttons are misaligned with its attribution button and sometimes untappable after rotating the device during turn-by-turn navigation. ([#3776](https://github.com/mapbox/mapbox-navigation-ios/pull/3776))
+* Fixed an issue where the top instruction banner couldn't be swiped back to the current one. ([#3785](https://github.com/mapbox/mapbox-navigation-ios/pull/3785))
+
 ### Location tracking
 
 * Added the `RoadObject.Kind.railroadCrossing` enumeration case to represent a railroad crossing along the route. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * Throttled requests to the Mapbox Directions API while the user moves around in a parking lot that has not been mapped in detail. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * If the user backtracks from the beginning of one leg of the route to the end of the previous leg, the user is no longer considered to be off-route; instead, `RouteProgress.currentLegProgress` decrements and other properties follow suit. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * Fixed a crash starting turn-by-turn navigation on some routes that included bridges and restricted-access roads. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* Fixed an issue where the route line appeared to begin away from the user’s current location after the route was refreshed. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
+* Fixed a memory leak after ending a turn-by-turn navigation session. ([#3782](https://github.com/mapbox/mapbox-navigation-ios/pull/3782))
 
 ### Offline routing
 
@@ -24,20 +33,8 @@
 * Fixed an issue where street names in spoken instructions could be go unpronounced if tagged with a [pronunciation](https://wiki.openstreetmap.org/wiki/Key:name:pronunciation). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * Added support for [the workaround](https://github.com/mapbox/mapbox-directions-swift/issues/662) for requesting a route that avoids an arbitrary set of coordinates. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
-### User interface
-
-* `FeedbackViewController` now supports changing styles based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
-* Deprecated the optional `StyleManagerDelegate.styleManager(_:viewForApplying:)` method. All views appearance will be refreshed based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
-* Fixed an issue where the map’s floating buttons are misaligned with its attribution button and sometimes untappable after rotating the device during turn-by-turn navigation. ([#3776](https://github.com/mapbox/mapbox-navigation-ios/pull/3776))
-
-### Visual instructions
-
-* Fixed an issue where the top instruction banner couldn't be swiped back to the current one. ([#3785](https://github.com/mapbox/mapbox-navigation-ios/pull/3785))
-
 ### Other changes
 
-* Fixed an issue where the route line appeared to begin away from the user’s current location after the route was refreshed. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
-* Fixed a memory leak after ending a turn-by-turn navigation session. ([#3782](https://github.com/mapbox/mapbox-navigation-ios/pull/3782))
 * Added the `MapboxSpeechSynthesizer(remoteSpeechSynthesizer:)` initializer for creating a `MapboxSpeechSynthesizer` object that uses a custom `SpeechSynthesizer` instance. ([#3747](https://github.com/mapbox/mapbox-navigation-ios/pull/3747))
 * MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
