@@ -19,9 +19,9 @@ final class TilesetDescriptorFactoryTests: TestCase {
 
         let tilesetReceived = expectation(description: "Tileset received")
         TilesetDescriptorFactory.getLatest(completionQueue: .global(), datasetProfileIdentifier: MapboxCoreNavigation.Navigator.datasetProfileIdentifier) { latestTilesetDescriptor in
-            tilesetReceived.fulfill()
             XCTAssertEqual(latestTilesetDescriptor,
                            TilesetDescriptorFactory.getLatestForCache(Navigator.shared.cacheHandle))
+            tilesetReceived.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
     }
