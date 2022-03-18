@@ -7,6 +7,13 @@
 * MapboxNavigation now requires [MapboxMaps v10.4.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.0-rc.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v92._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/92.0.0). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
+### Location tracking
+
+* Added the `RoadObject.Kind.railroadCrossing` enumeration case to represent a railroad crossing along the route. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* Throttled requests to the Mapbox Directions API while the user moves around in a parking lot that has not been mapped in detail. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* If the user backtracks from the beginning of one leg of the route to the end of the previous leg, the user is no longer considered to be off-route; instead, `RouteProgress.currentLegProgress` decrements and other properties follow suit. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* Fixed a crash starting turn-by-turn navigation on some routes that included bridges and restricted-access roads. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+
 ### Offline routing
 
 * In [bilingual and multilingual areas](https://wiki.openstreetmap.org/wiki/Multilingual_names), spoken and visual instructions include street names and destinations in the user’s preferred language when that language is signposted. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
@@ -16,9 +23,6 @@
 * Fixed an issue where street names in spoken instructions could be go unpronounced if tagged with a [pronunciation](https://wiki.openstreetmap.org/wiki/Key:name:pronunciation). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * Added support for [the workaround](https://github.com/mapbox/mapbox-directions-swift/issues/662) for requesting a route that avoids an arbitrary set of coordinates. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
-### Other changes
-
-* Added the `RoadObject.Kind.railroadCrossing` enumeration case to represent a railroad crossing along the route. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
 ### User interface
