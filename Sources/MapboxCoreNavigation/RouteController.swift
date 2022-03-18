@@ -255,22 +255,18 @@ open class RouteController: NSObject {
                   return
         }
         
-        DispatchQueue.global().async { [weak self] in
-            guard let self = self else { return }
-            
-            let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
-            
-            let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
-                                                                   request: routeRequest)
-            if parsedRoutes.isValue(),
-               let route = (parsedRoutes.value as? [RouteInterface])?.first {
-                self.sharedNavigator.setRoutes(route, uuid: self.sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
-                    completion?(result)
-                }
-            } else if parsedRoutes.isError() {
-                let reason = (parsedRoutes.error as? String) ?? ""
-                completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
+        let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
+        
+        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
+                                                               request: routeRequest)
+        if parsedRoutes.isValue(),
+           let route = (parsedRoutes.value as? [RouteInterface])?.first {
+            self.sharedNavigator.setRoutes(route, uuid: sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
+                completion?(result)
             }
+        } else if parsedRoutes.isError() {
+            let reason = (parsedRoutes.error as? String) ?? ""
+            completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
         }
     }
     
