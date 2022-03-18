@@ -24,8 +24,6 @@
 * Fixed an issue where street names in spoken instructions could be go unpronounced if tagged with a [pronunciation](https://wiki.openstreetmap.org/wiki/Key:name:pronunciation). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * Added support for [the workaround](https://github.com/mapbox/mapbox-directions-swift/issues/662) for requesting a route that avoids an arbitrary set of coordinates. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
-* MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
-
 ### User interface
 
 * `FeedbackViewController` now supports changing styles based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
@@ -41,6 +39,7 @@
 * Fixed an issue where the route line appeared to begin away from the user’s current location after the route was refreshed. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
 * Fixed a memory leak after ending a turn-by-turn navigation session. ([#3782](https://github.com/mapbox/mapbox-navigation-ios/pull/3782))
 * Added the `MapboxSpeechSynthesizer(remoteSpeechSynthesizer:)` initializer for creating a `MapboxSpeechSynthesizer` object that uses a custom `SpeechSynthesizer` instance. ([#3747](https://github.com/mapbox/mapbox-navigation-ios/pull/3747))
+* MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
 ## v2.3.0
 
