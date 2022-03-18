@@ -2,6 +2,7 @@ import MapboxCommon
 import MapboxNavigationNative
 import MapboxDirections
 import Foundation
+@_implementationOnly import MapboxCommon_Private
 
 public let customConfigKey = "com.mapbox.navigation.custom-config"
 public let customConfigFeaturesKey = "features"
@@ -49,10 +50,12 @@ class NativeHandlersFactory {
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
         onMainQueueSync { // Make sure that Navigator pick ups Main Thread RunLoop.
-            MapboxNavigationNative.Navigator(config: configHandle,
-                                             cache: cacheHandle,
-                                             historyRecorder: historyRecorder,
-                                             router: nil)
+            LogConfiguration.getInstance().setFilterLevelFor(LoggingLevel.info)
+            
+            return MapboxNavigationNative.Navigator(config: configHandle,
+                                                    cache: cacheHandle,
+                                                    historyRecorder: historyRecorder,
+                                                    router: nil)
         }
     }()
     
