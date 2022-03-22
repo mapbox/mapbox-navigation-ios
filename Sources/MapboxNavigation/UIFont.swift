@@ -1,6 +1,7 @@
 import UIKit
 
 extension UIFont {
+    
     var fontSizeMultiplier: CGFloat {
         get {
             switch UIApplication.shared.preferredContentSizeCategory {
@@ -32,5 +33,13 @@ extension UIFont {
     func with(multiplier: CGFloat) -> UIFont {
         let font = UIFont(descriptor: fontDescriptor, size: pointSize * multiplier)
         return font
+    }
+    
+    class var defaultNavigationSymbolLayerFontNames: [String] {
+        return [
+            "DIN Pro Medium",
+            "Noto Sans CJK JP Medium",
+            "Arial Unicode MS Regular"
+        ]
     }
 }
