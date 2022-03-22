@@ -113,9 +113,9 @@ open class StyleManager {
      Applies the `Style` with type matching `type`and notifies `StyleManager.delegate` upon completion. 
      */
     public func applyStyle(type styleType: StyleType) {
-        guard currentStyleType != styleType else { return }
-        
-        NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
+        if currentStyleType != styleType {
+            NSObject.cancelPreviousPerformRequests(withTarget: self, selector: #selector(timeOfDayChanged), object: nil)
+        }
         
         for style in styles {
             if style.styleType == styleType {
@@ -193,15 +193,16 @@ open class StyleManager {
         forceRefreshAppearance()
     }
     
-    // workaround to refresh appearance by removing the view and then adding it again
+    // Workaround to refresh appearance by removing all views and then adding them again.
+    // UITextEffectsWindow will be created when system keyboard is shown and cannot be safely removed.
     func forceRefreshAppearance() {
-        if 
-            let view = delegate?.styleManager(self, viewForApplying: currentStyle), 
-            let superview = view.superview, 
-            let index = superview.subviews.firstIndex(of: view) 
-        {
-            view.removeFromSuperview()
-            superview.insertSubview(view, at: index)
+        for window in UIApplication.shared.windows {
+            if !window.isKind(of: NSClassFromString("UITextEffectsWindow") ?? NSString.classForCoder()) {
+                for view in window.subviews {
+                    view.removeFromSuperview()
+                    window.addSubview(view)
+                }
+            }
         }
         
         delegate?.styleManagerDidRefreshAppearance(self)

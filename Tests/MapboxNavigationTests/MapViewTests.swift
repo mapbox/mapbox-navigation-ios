@@ -41,6 +41,7 @@ class MapViewTests: TestCase {
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
         
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
         
         mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()
@@ -111,6 +112,7 @@ class MapViewTests: TestCase {
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
         
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
         
         mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()
@@ -182,6 +184,7 @@ class MapViewTests: TestCase {
         XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
         
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
         
         mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()

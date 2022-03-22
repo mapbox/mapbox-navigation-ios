@@ -47,6 +47,7 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     }
     
     @objc func orientationDidChange(_ notification: Notification) {
+        navigationViewData.navigationView.setupConstraints()
         updateMapViewOrnaments()
     }
     
@@ -155,10 +156,10 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
                                                                                             y: y - navigationView.safeAreaInsets.bottom)
         case .compact:
             if UIApplication.shared.statusBarOrientation == .landscapeRight {
-                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: -navigationView.safeAreaInsets.right,
+                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x - navigationView.safeAreaInsets.right,
                                                                                                 y: defaultOffset - navigationView.safeAreaInsets.bottom)
             } else {
-                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: 0.0,
+                navigationMapView.mapView.ornaments.options.attributionButton.margins = CGPoint(x: x,
                                                                                                 y: defaultOffset - navigationView.safeAreaInsets.bottom)
             }
         @unknown default:

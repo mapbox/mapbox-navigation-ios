@@ -333,7 +333,7 @@ class NavigationViewControllerTests: TestCase {
                        newRouteResponse.identifier)
     }
     
-    func testPuck3DLayerPosition() {
+    func disabled_testPuck3DLayerPosition() {
         let service = MapboxNavigationService(routeResponse: initialRouteResponse,
                                               routeIndex: 0,
                                               routeOptions: routeOptions,

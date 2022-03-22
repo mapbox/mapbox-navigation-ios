@@ -295,15 +295,7 @@ public class MapboxRoutingProvider: RoutingProvider {
             return nil
         }
         
-        let encoder = JSONEncoder()
-        encoder.userInfo[.options] = routeOptions
-        
         let routeIndex = UInt32(indexedRouteResponse.routeIndex)
-        
-        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
-              let routeJSONString = String(data: routeData, encoding: .utf8) else {
-            preconditionFailure("Could not serialize route data for refreshing.")
-        }
         
         var requestId: RequestId!
         let refreshOptions = RouteRefreshOptions(requestId: responseIdentifier,
@@ -311,17 +303,37 @@ public class MapboxRoutingProvider: RoutingProvider {
                                                  legIndex: startLegIndex,
                                                  routingProfile: routeOptions.profileIdentifier.nativeProfile)
         
-        requestId = router.getRouteRefresh(for: refreshOptions,
-                                           route: routeJSONString) { [weak self] result, _ in
+        requestId = router.getRouteRefresh(for: refreshOptions, callback: { [weak self] result, _ in
             guard let self = self else { return }
             
             self.parseResponse(requestId: requestId,
-                               userInfo: [.options: routeOptions,
+                               userInfo: [.responseIdentifier: responseIdentifier,
+                                          .routeIndex: indexedRouteResponse.routeIndex,
+                                          .startLegIndex: Int(startLegIndex),
                                           .credentials: self.settings.directions.credentials],
-                               result: result) { (response: Result<RouteResponse, DirectionsError>) in
-                completionHandler(session, response)
+                               result: result) { (response: Result<RouteRefreshResponse, DirectionsError>) in
+                switch response {
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        completionHandler(session, .failure(error))
+                    }
+                case .success(let routeRefreshResponse):
+                    DispatchQueue.global().async {
+                        do {
+                            let routeResponse = try indexedRouteResponse.routeResponse.copy(with: routeOptions)
+                            routeResponse.routes?[indexedRouteResponse.routeIndex].refreshLegAttributes(from: routeRefreshResponse.route)
+                            DispatchQueue.main.async {
+                                completionHandler(session, .success(routeResponse))
+                            }
+                        } catch {
+                            DispatchQueue.main.async {
+                                completionHandler(session, .failure(.unknown(response: nil, underlying: error, code: nil, message: nil)))
+                            }
+                        }
+                    }
+                }
             }
-        }
+        })
         let request = Request(requestIdentifier: requestId,
                               routingProvider: self)
         requestsLock {

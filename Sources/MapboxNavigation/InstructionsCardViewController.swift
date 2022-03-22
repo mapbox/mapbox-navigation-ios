@@ -189,25 +189,35 @@ open class InstructionsCardViewController: UIViewController {
             instructionCollectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ]
         
-        // Device is in landscape mode and notch (if present) is located on the left side.
-        if UIApplication.shared.statusBarOrientation == .landscapeRight {
-            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                // Language with right-to-left interface layout is used.
-                instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
-                                                                                                              constant: 10.0))
+        switch traitCollection.verticalSizeClass {
+        case .unspecified:
+            fallthrough
+        case .regular:
+            instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                                                                          constant: 10.0))
+        case .compact:
+            // Device is in landscape mode and notch (if present) is located on the left side.
+            if UIApplication.shared.statusBarOrientation == .landscapeRight {
+                if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                    // Language with right-to-left interface layout is used.
+                    instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                                                                                  constant: 10.0))
+                } else {
+                    // Language with left-to-right interface layout is used.
+                    instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
+                                                                                                                  constant: 10.0))
+                }
             } else {
-                // Language with left-to-right interface layout is used.
-                instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
-                                                                                                              constant: 10.0))
+                if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
+                    instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
+                                                                                                                  constant: 10.0))
+                } else {
+                    instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
+                                                                                                                  constant: 10.0))
+                }
             }
-        } else {
-            if UIApplication.shared.userInterfaceLayoutDirection == .rightToLeft {
-                instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.safeLeadingAnchor,
-                                                                                                              constant: 10.0))
-            } else {
-                instructionCollectionViewContraints.append(instructionCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,
-                                                                                                              constant: 10.0))
-            }
+        @unknown default:
+            break
         }
         
         NSLayoutConstraint.activate(instructionCollectionViewContraints)

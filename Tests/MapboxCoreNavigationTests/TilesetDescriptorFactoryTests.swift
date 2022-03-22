@@ -15,13 +15,13 @@ final class TilesetDescriptorFactoryTests: TestCase {
     func testLatestDescriptorsAreFromGlobalNavigatorCacheHandle() {
         NavigationSettings.shared.initialize(directions: .mocked,
                                              tileStoreConfiguration: .custom(FileManager.default.temporaryDirectory))
-        let navigator = Navigator.shared
+        _ = Navigator.shared
 
         let tilesetReceived = expectation(description: "Tileset received")
         TilesetDescriptorFactory.getLatest(completionQueue: .global(), datasetProfileIdentifier: MapboxCoreNavigation.Navigator.datasetProfileIdentifier) { latestTilesetDescriptor in
-            tilesetReceived.fulfill()
             XCTAssertEqual(latestTilesetDescriptor,
                            TilesetDescriptorFactory.getLatestForCache(Navigator.shared.cacheHandle))
+            tilesetReceived.fulfill()
         }
         waitForExpectations(timeout: 2, handler: nil)
     }

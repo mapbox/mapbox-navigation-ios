@@ -1057,7 +1057,11 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
                 guard let currentStepIndex = banner.currentPreviewStep?.1 else { return }
                 let remainingSteps = progress.remainingSteps
                 let prevStepIndex = currentStepIndex.advanced(by: -1)
-                guard prevStepIndex >= 0 else { return }
+                guard prevStepIndex >= 0 else {
+                    banner.stopPreviewing()
+                    cameraController?.recenter(self)
+                    return
+                }
                 
                 let prevStep = remainingSteps[prevStepIndex]
                 preview(step: prevStep, in: banner, remaining: remainingSteps, route: route)
