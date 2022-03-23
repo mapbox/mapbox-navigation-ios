@@ -33,6 +33,10 @@
 * Fixed an issue where street names in spoken instructions could be go unpronounced if tagged with a [pronunciation](https://wiki.openstreetmap.org/wiki/Key:name:pronunciation). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * Added support for [the workaround](https://github.com/mapbox/mapbox-directions-swift/issues/662) for requesting a route that avoids an arbitrary set of coordinates. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
+### CarPlay
+
+* Fixed an issue where CarPlay application was crashing during template dismissal on iOS 14 and higher. ([#3794](https://github.com/mapbox/mapbox-navigation-ios/pull/3794))
+
 ### Other changes
 
 * Added the `MapboxSpeechSynthesizer(remoteSpeechSynthesizer:)` initializer for creating a `MapboxSpeechSynthesizer` object that uses a custom `SpeechSynthesizer` instance. ([#3747](https://github.com/mapbox/mapbox-navigation-ios/pull/3747))
