@@ -2,6 +2,14 @@ import UIKit
 import MapboxDirections
 
 /**
+ Indicates which view mode to display, the current speed or the speed limit.
+ */
+public enum SpeedViewMode {
+    case speed
+    case speedLimit
+}
+
+/**
  A view that displays a speed limit and resembles a real-world speed limit sign.
  */
 public class SpeedLimitView: UIView {
@@ -39,6 +47,17 @@ public class SpeedLimitView: UIView {
     // MARK: Populating the Sign
     
     /**
+     The speed view mode to display. Defaults to `.speedLimit`.
+     */
+    public var speedViewMode: SpeedViewMode = .speedLimit {
+        didSet {
+            if speedViewMode != oldValue {
+                update()
+            }
+        }
+    }
+    
+    /**
      The speed limit to display.
      
      The view displays the value of this property as is without converting it to another unit.
@@ -46,6 +65,19 @@ public class SpeedLimitView: UIView {
     public var speedLimit: Measurement<UnitSpeed>? {
         didSet {
             if speedLimit != oldValue {
+                update()
+            }
+        }
+    }
+    
+    /**
+     The current speed to display.
+     
+     The view displays the value of this property as is without converting it to another unit.
+     */
+    public var speed: Measurement<UnitSpeed>? {
+        didSet {
+            if speed != oldValue {
                 update()
             }
         }
@@ -116,7 +148,19 @@ public class SpeedLimitView: UIView {
     override public func draw(_ rect: CGRect) {
         super.draw(rect)
         
-        guard let signStandard = signStandard else { return }
+        switch speedViewMode {
+        case .speedLimit:
+            drawSpeedLimit()
+        case .speed:
+            // TODO: Add the function to draw speed view.
+            break
+        }
+    }
+    
+    func drawSpeedLimit() {
+        guard let speedLimit = speedLimit, let signStandard = signStandard else {
+            return
+        }
         
         let formattedSpeedLimit: String
 

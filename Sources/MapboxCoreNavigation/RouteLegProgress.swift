@@ -176,6 +176,15 @@ open class RouteLegProgress: Codable {
         }
     }
     
+    public func currentSpeed(from location: CLLocation) -> Measurement<UnitSpeed>? {
+        guard location.speed >= 0 else { return nil }
+        if let speedUnit = currentStep.speedLimitUnit ?? currentSpeedLimit?.unit {
+            return Measurement(value: location.speed, unit: .metersPerSecond).converted(to: speedUnit)
+        } else {
+            return nil
+        }
+    }
+    
     /**
      Intializes a new `RouteLegProgress`.
 

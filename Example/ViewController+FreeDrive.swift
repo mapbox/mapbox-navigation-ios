@@ -56,6 +56,7 @@ extension ViewController {
         
         speedLimitView.signStandard = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
         speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
+        speedLimitView.speed = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedKey] as? Measurement<UnitSpeed>
         
         updateFreeDriveStyledFeatures()
     }

@@ -198,6 +198,7 @@ open class PassiveLocationManager: NSObject {
         
         let lastLocation = CLLocation(status.location)
         var speedLimit: Measurement<UnitSpeed>?
+        var speed: Measurement<UnitSpeed>?
         var signStandard: SignStandard?
 
         snappedLocation = lastLocation
@@ -217,18 +218,25 @@ open class PassiveLocationManager: NSObject {
         case .some(_):
             break
         }
+        
+        let actualSpeed: Measurement<UnitSpeed>? = (lastLocation.speed >= 0) ? Measurement(value: lastLocation.speed, unit: .metersPerSecond) : nil
+        var speedLimitKmph: Measurement<UnitSpeed>? = nil
+        if let speedKmph = status.speedLimit?.speedKmph as? Double {
+            speedLimitKmph = Measurement(value: speedKmph, unit: .kilometersPerHour)
+        }
 
-        if let speed = status.speedLimit?.speedKmph as? Double {
-            switch status.speedLimit?.localeUnit {
-            case .milesPerHour:
-                speedLimit = Measurement(value: speed, unit: .kilometersPerHour).converted(to: .milesPerHour)
-            case .kilometresPerHour:
-                speedLimit = Measurement(value: speed, unit: .kilometersPerHour)
-            case .none:
-                speedLimit = nil
-            case .some(_):
-                break
-            }
+        switch status.speedLimit?.localeUnit {
+        case .milesPerHour:
+            speedLimit = speedLimitKmph?.converted(to: .milesPerHour)
+            speed = actualSpeed?.converted(to: .milesPerHour)
+        case .kilometresPerHour:
+            speedLimit = speedLimitKmph
+            speed = actualSpeed?.converted(to: .kilometersPerHour)
+        case .none:
+            speedLimit = nil
+            speed = nil
+        case .some(_):
+            break
         }
         
         var userInfo: [NotificationUserInfoKey: Any] = [
@@ -240,6 +248,9 @@ open class PassiveLocationManager: NSObject {
         ]
         if let speedLimit = speedLimit {
             userInfo[.speedLimitKey] = speedLimit
+        }
+        if let speed = speed {
+            userInfo[.speedKey] = speed
         }
         if let signStandard = signStandard {
             userInfo[.signStandardKey] = signStandard

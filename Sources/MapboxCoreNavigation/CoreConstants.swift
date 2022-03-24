@@ -377,6 +377,11 @@ extension PassiveLocationManager {
         public static let speedLimitKey: NotificationUserInfoKey = .init(rawValue: "speedLimit")
         
         /**
+         A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `Measurement<UnitSpeed>` representing the current traveling speed.
+         */
+        public static let speedKey: NotificationUserInfoKey = .init(rawValue: "speed")
+        
+        /**
          A key in the user info dictionary of a `Notification.Name.passiveLocationManagerDidUpdate` notification. The corresponding value is a `SignStandard` representing the sign standard used for speed limit signs along the current road.
          */
         public static let signStandardKey: NotificationUserInfoKey = .init(rawValue: "signStandard")
