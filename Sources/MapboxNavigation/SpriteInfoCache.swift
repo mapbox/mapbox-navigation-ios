@@ -34,9 +34,9 @@ class SpriteInfoCache {
      - returns: `true` if the data was successful parsed to SpriteInfo Dictionary and saved in the memory.
      */
     @discardableResult
-    func store(_ data: Data) -> Bool {
+    func store(_ data: Data, spriteKey: String) -> Bool {
         guard let spriteInfoDictionary = parseSpriteInfo(data: data) else { return false }
-        spriteInfoDictionary.forEach({ storeDataInMemoryCache($0.value, forKey: $0.key) })
+        spriteInfoDictionary.forEach({ storeDataInMemoryCache($0.value, forKey: $0.key + "-\(spriteKey)") })
         return true
     }
 
