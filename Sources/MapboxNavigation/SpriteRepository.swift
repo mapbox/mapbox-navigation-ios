@@ -174,7 +174,7 @@ class SpriteRepository {
         guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1] else { return nil }
         let spriteKey = "\(styleID)-\(shield.baseURL.absoluteString)"
 
-        let iconLeght = (shield.text.count < 2 ) ? 2 : shield.text.count
+        let iconLeght = max(shield.text.count, 2)
         let shieldKey = shield.name + "-\(iconLeght)" + "-\(spriteKey)"
         
         // Retrieve the single shield icon if it has been cached.
