@@ -73,7 +73,7 @@ public class SpeedLimitView: UIView {
 
     /**
      Defines the view behavior if the `speedLimit` property is `nil`.
-     Setting this flag to `true` will cause the speed limit view to display `"--"` as a speed limit instead of being invisible.
+     Setting this flag to `true` will cause the view to display `"--"` as a speed limit instead of being invisible.
      */
     public var shouldShowUknownSpeedLimit: Bool = false {
         didSet {
