@@ -49,7 +49,8 @@ public class SpeedLimitView: UIView {
     /**
      The speed view mode to display. Defaults to `.speedLimit`.
      */
-    public var speedViewMode: SpeedViewMode = .speedLimit {
+    var speedViewMode: SpeedViewMode = .speedLimit {
+        // TODO: After added the function to draw speed view, make this property public.
         didSet {
             if speedViewMode != oldValue {
                 update()
