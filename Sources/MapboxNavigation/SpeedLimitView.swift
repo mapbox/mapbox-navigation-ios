@@ -70,6 +70,16 @@ public class SpeedLimitView: UIView {
             update()
         }
     }
+
+    /**
+     Defines the view behavior if the `speedLimit` property is `nil`.
+     Setting this flag to `true` will cause the speed limit view to display `"--"` as a speed limit instead of being invisible.
+     */
+    public var shouldShowUknownSpeedLimit: Bool = false {
+        didSet {
+            update()
+        }
+    }
     
     let measurementFormatter: MeasurementFormatter = {
         let formatter = MeasurementFormatter()
@@ -91,7 +101,7 @@ public class SpeedLimitView: UIView {
     }
     
     var canDraw: Bool {
-        return !isAlwaysHidden && speedLimit != nil && signStandard != nil
+        return !isAlwaysHidden && signStandard != nil && (speedLimit != nil || shouldShowUknownSpeedLimit)
     }
     
     func update() {
@@ -106,15 +116,22 @@ public class SpeedLimitView: UIView {
     override public func draw(_ rect: CGRect) {
         super.draw(rect)
         
-        guard let speedLimit = speedLimit, let signStandard = signStandard else {
+        guard let signStandard = signStandard else {
             return
         }
         
         let formattedSpeedLimit: String
-        if speedLimit.value.isInfinite {
-            formattedSpeedLimit = "∞"
+
+        if let speedLimit = speedLimit {
+            if speedLimit.value.isInfinite {
+                formattedSpeedLimit = "∞"
+            } else {
+                formattedSpeedLimit = measurementFormatter.numberFormatter.string(for: speedLimit.value) ?? "\(speedLimit.value)"
+            }
+        } else if shouldShowUknownSpeedLimit {
+            formattedSpeedLimit = "--"
         } else {
-            formattedSpeedLimit = measurementFormatter.numberFormatter.string(for: speedLimit.value) ?? "\(speedLimit.value)"
+            return
         }
         
         switch signStandard {
