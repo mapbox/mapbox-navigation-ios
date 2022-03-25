@@ -38,6 +38,7 @@
 
 * Added the `MapboxSpeechSynthesizer(remoteSpeechSynthesizer:)` initializer for creating a `MapboxSpeechSynthesizer` object that uses a custom `SpeechSynthesizer` instance. ([#3747](https://github.com/mapbox/mapbox-navigation-ios/pull/3747))
 * MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* Fixed a bug which caused `RouteOptions.profileIdentifier` to be ignored in active navigation. This may have caused elevated network usage. ([#3796](https://github.com/mapbox/mapbox-navigation-ios/pull/3796))
 
 ## v2.3.0
 
