@@ -116,9 +116,7 @@ public class SpeedLimitView: UIView {
     override public func draw(_ rect: CGRect) {
         super.draw(rect)
         
-        guard let signStandard = signStandard else {
-            return
-        }
+        guard let signStandard = signStandard else { return }
         
         let formattedSpeedLimit: String
 
