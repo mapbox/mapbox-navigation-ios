@@ -239,28 +239,56 @@ extension AppDelegate: CarPlayManagerDelegate {
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         routeLineLayerWithIdentifier identifier: String,
-                        sourceIdentifier: String) -> LineLayer? {
-        var lineLayer = LineLayer(id: identifier)
-        lineLayer.source = sourceIdentifier
-        lineLayer.lineColor = .constant(StyleColor(.red))
-        lineLayer.lineWidth = .constant(15.0)
-        lineLayer.lineJoin = .constant(.round)
-        lineLayer.lineCap = .constant(.round)
-        
-        return lineLayer
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer? {
+        if parentViewController is CarPlayMapViewController {
+            var lineLayer = LineLayer(id: identifier)
+            lineLayer.source = sourceIdentifier
+            lineLayer.lineColor = .constant(StyleColor(.yellow))
+            lineLayer.lineWidth = .constant(15.0)
+            lineLayer.lineJoin = .constant(.round)
+            lineLayer.lineCap = .constant(.round)
+            
+            return lineLayer
+        } else if parentViewController is CarPlayNavigationViewController {
+            var lineLayer = LineLayer(id: identifier)
+            lineLayer.source = sourceIdentifier
+            lineLayer.lineColor = .constant(StyleColor(.red))
+            lineLayer.lineWidth = .constant(20.0)
+            lineLayer.lineJoin = .constant(.miter)
+            lineLayer.lineCap = .constant(.square)
+            
+            return lineLayer
+        }
+
+        return nil
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         routeCasingLineLayerWithIdentifier identifier: String,
-                        sourceIdentifier: String) -> LineLayer? {
-        var lineLayer = LineLayer(id: identifier)
-        lineLayer.source = sourceIdentifier
-        lineLayer.lineColor = .constant(StyleColor(.cyan))
-        lineLayer.lineWidth = .constant(30.0)
-        lineLayer.lineJoin = .constant(.round)
-        lineLayer.lineCap = .constant(.round)
-        
-        return lineLayer
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer? {
+        if parentViewController is CarPlayMapViewController {
+            var lineLayer = LineLayer(id: identifier)
+            lineLayer.source = sourceIdentifier
+            lineLayer.lineColor = .constant(StyleColor(.blue))
+            lineLayer.lineWidth = .constant(30.0)
+            lineLayer.lineJoin = .constant(.round)
+            lineLayer.lineCap = .constant(.round)
+            
+            return lineLayer
+        } else if parentViewController is CarPlayNavigationViewController {
+            var lineLayer = LineLayer(id: identifier)
+            lineLayer.source = sourceIdentifier
+            lineLayer.lineColor = .constant(StyleColor(.green))
+            lineLayer.lineWidth = .constant(30.0)
+            lineLayer.lineJoin = .constant(.miter)
+            lineLayer.lineCap = .constant(.square)
+            
+            return lineLayer
+        }
+
+        return nil
     }
 }
 

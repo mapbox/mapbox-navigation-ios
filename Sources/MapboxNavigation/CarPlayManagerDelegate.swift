@@ -286,13 +286,36 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
                         templateDidDisappear template: CPTemplate,
                         animated: Bool)
     
+    /**
+     Asks the receiver to return a `LineLayer` for the route line, given a layer identifier and a source identifier.
+     This method is invoked when the map view loads and any time routes are added.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - parameter parentViewController: The view controller that contains the map view, which is an
+     instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         routeLineLayerWithIdentifier identifier: String,
-                        sourceIdentifier: String) -> LineLayer?
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer?
     
+    /**
+     Asks the receiver to return a `LineLayer` for the casing layer that surrounds route line,
+     given a layer identifier and a source identifier.
+     This method is invoked when the map view loads and any time routes are added.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - parameter parentViewController: The view controller that contains the map view, which is an
+     instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         routeCasingLineLayerWithIdentifier identifier: String,
-                        sourceIdentifier: String) -> LineLayer?
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer?
 }
 
 @available(iOS 12.0, *)
@@ -487,7 +510,8 @@ public extension CarPlayManagerDelegate {
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         routeLineLayerWithIdentifier identifier: String,
-                        sourceIdentifier: String) -> LineLayer? {
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
     }
@@ -497,7 +521,8 @@ public extension CarPlayManagerDelegate {
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         routeCasingLineLayerWithIdentifier identifier: String,
-                        sourceIdentifier: String) -> LineLayer? {
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
     }

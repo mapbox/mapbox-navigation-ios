@@ -262,7 +262,6 @@ extension NavigationMapView {
             case .constant(let constant):
                 overriddenLineLayerColor = UIColor(constant)
             case .expression(_):
-                // TODO: Handle case when route line color is provided as an expression.
                 break
             }
         }
@@ -285,7 +284,6 @@ extension NavigationMapView {
             case .constant(let constant):
                 overriddenLineLayerCasingColor = UIColor(constant)
             case .expression(_):
-                // TODO: Handle case when route line color is provided as an expression.
                 break
             }
         }

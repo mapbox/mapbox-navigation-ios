@@ -396,5 +396,21 @@ extension CarPlayMapViewController: NavigationMapViewDelegate {
                                            didAdd: finalDestinationAnnotation,
                                            pointAnnotationManager: pointAnnotationManager)
     }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayMapViewController(self,
+                                           routeLineLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeCasingLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayMapViewController(self,
+                                           routeCasingLineLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
+    }
 }
 #endif
