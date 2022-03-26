@@ -309,7 +309,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     // MARK: Navigating the Route
     
     /**
-     The view controller’s delegate.
+     The view controller’s delegate, that is used by the `CarPlayManager`.
+     
+     Do not overwrite this property and use `CarPlayManagerDelegate` methods directly.
      */
     public weak var delegate: CarPlayNavigationViewControllerDelegate?
     

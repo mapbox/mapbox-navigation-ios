@@ -15,7 +15,9 @@ open class CarPlayMapViewController: UIViewController {
     // MARK: UI Elements Configuration
     
     /**
-     The view controller’s delegate.
+     The view controller’s delegate, that is used by the `CarPlayManager`.
+     
+     Do not overwrite this property and use `CarPlayManagerDelegate` methods directly.
      */
     public weak var delegate: CarPlayMapViewControllerDelegate?
     
