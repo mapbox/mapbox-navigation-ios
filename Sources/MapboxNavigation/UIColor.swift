@@ -74,6 +74,8 @@ extension UIColor {
     /**
      Convenience initializer, which allows to convert `StyleColor` to `UIColor`. This initializer
      is primarily used while retrieving color information from `LineLayer`.
+     
+     - parameter styleColor: Color, defined by the Mapbox Style Specification.
      */
     convenience init(_ styleColor: StyleColor) {
         self.init(red: CGFloat(styleColor.red / 255.0),
