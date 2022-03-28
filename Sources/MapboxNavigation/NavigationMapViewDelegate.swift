@@ -20,6 +20,9 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
      - parameter identifier: The `LineLayer` identifier.
      - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied to the route line.
+     
+     - seealso: `CarPlayManagerDelegate.carPlayManager(_:routeLineLayerWithIdentifier:sourceIdentifier:for:)`,
+     `NavigationViewControllerDelegate.navigationViewController(_:routeLineLayerWithIdentifier:sourceIdentifier:)`.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
     
@@ -31,6 +34,9 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
      - parameter identifier: The `LineLayer` identifier.
      - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied as a casing around the route line.
+     
+     - seealso: `CarPlayManagerDelegate.carPlayManager(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:for:)`,
+     `NavigationViewControllerDelegate.navigationViewController(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:)`.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
     

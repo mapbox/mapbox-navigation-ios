@@ -38,6 +38,9 @@
 ### CarPlay
 
 * Fixed an issue where CarPlay application was crashing during template dismissal on iOS 14 and higher. ([#3794](https://github.com/mapbox/mapbox-navigation-ios/pull/3794))
+* Added the ability to style each route line differently on CarPlay during route preview and active navigation using such delegate methods ([#3744](https://github.com/mapbox/mapbox-navigation-ios/pull/3744)):
+  * `CarPlayManagerDelegate.carPlayManager(_:routeLineLayerWithIdentifier:sourceIdentifier:for:)` to style the route.
+  * `CarPlayManagerDelegate.carPlayManager(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:for:)` to style the casing of the route.
 
 ### Other changes
 

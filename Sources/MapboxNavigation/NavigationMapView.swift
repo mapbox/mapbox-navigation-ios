@@ -457,7 +457,8 @@ open class NavigationMapView: UIView {
         if let legIndex = currentLegIndex {
             let congestionFeatures = route.congestionFeatures(legIndex: legIndex,
                                                               roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-            currentLineGradientStops = routeLineCongestionGradient(congestionFeatures,
+            currentLineGradientStops = routeLineCongestionGradient(route,
+                                                                   congestionFeatures: congestionFeatures,
                                                                    fractionTraveled: fractionTraveled,
                                                                    isSoft: crossfadesCongestionSegments)
             pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
@@ -467,7 +468,7 @@ open class NavigationMapView: UIView {
     func updateRestrictedAreasGradientStops(along route: Route?) {
         if showsRestrictedAreasOnRoute, let route = route {
             currentRestrictedAreasStops = routeLineRestrictionsGradient(route.restrictedRoadsFeatures(),
-                                                                    fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                                                                        fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
         } else {
             currentRestrictedAreasStops.removeAll()
         }
@@ -536,7 +537,7 @@ open class NavigationMapView: UIView {
                                                                                              lineBaseColor: routeRestrictedAreaColor))
             } else {
                 let routeLineStops = routeLineRestrictionsGradient(restrictedRoadsFeatures,
-                                                               fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                                                                   fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
                                                                                              lineBaseColor: routeRestrictedAreaColor))
             }
@@ -606,7 +607,8 @@ open class NavigationMapView: UIView {
                                                                                                   isSoft: crossfadesCongestionSegments)))
                 } else {
                     let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-                    let gradientStops = routeLineCongestionGradient(congestionFeatures,
+                    let gradientStops = routeLineCongestionGradient(route,
+                                                                    congestionFeatures: congestionFeatures,
                                                                     fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
                                                                     isSoft: crossfadesCongestionSegments)
                     
@@ -616,7 +618,8 @@ open class NavigationMapView: UIView {
                 }
             } else {
                 if showsCongestionForAlternativeRoutes {
-                    let gradientStops = routeLineCongestionGradient(route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
+                    let gradientStops = routeLineCongestionGradient(route,
+                                                                    congestionFeatures: route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
                                                                     fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
                                                                     isMain: false,
                                                                     isSoft: crossfadesCongestionSegments)
@@ -686,7 +689,8 @@ open class NavigationMapView: UIView {
             lineLayer?.lineCap = .constant(.round)
             
             if isMainRoute {
-                let gradientStops = routeLineCongestionGradient(fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                let gradientStops = routeLineCongestionGradient(route,
+                                                                fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
                 lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))

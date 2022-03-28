@@ -4,6 +4,7 @@ import CarPlay
 import MapboxGeocoder
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMaps
 
 let CarPlayWaypointKey: String = "MBCarPlayWaypoint"
 
@@ -234,6 +235,80 @@ extension AppDelegate: CarPlayManagerDelegate {
         case .previewing, .navigating, .panningInBrowsingMode, .panningInNavigationMode:
             return nil
         }
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer? {
+        let lineColor = UIColor.lightGray
+        
+        if parentViewController is CarPlayMapViewController {
+            var lineLayer = LineLayer(id: identifier)
+            lineLayer.source = sourceIdentifier
+            lineLayer.lineColor = .constant(StyleColor(lineColor))
+            lineLayer.lineWidth = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel
+            })
+            lineLayer.lineJoin = .constant(.round)
+            lineLayer.lineCap = .constant(.round)
+            
+            return lineLayer
+        } else if parentViewController is CarPlayNavigationViewController {
+            var lineLayer = LineLayer(id: identifier)
+            lineLayer.source = sourceIdentifier
+            lineLayer.lineColor = .constant(StyleColor(lineColor))
+            lineLayer.lineWidth = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel
+            })
+            lineLayer.lineJoin = .constant(.miter)
+            lineLayer.lineCap = .constant(.square)
+            
+            return lineLayer
+        }
+
+        return nil
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeCasingLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer? {
+        let lineColor = UIColor.darkGray
+        
+        if parentViewController is CarPlayMapViewController {
+            var lineLayer = LineLayer(id: identifier)
+            lineLayer.source = sourceIdentifier
+            lineLayer.lineColor = .constant(StyleColor(lineColor))
+            lineLayer.lineWidth = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel.multiplied(by: 1.5)
+            })
+            lineLayer.lineJoin = .constant(.round)
+            lineLayer.lineCap = .constant(.round)
+            
+            return lineLayer
+        } else if parentViewController is CarPlayNavigationViewController {
+            var lineLayer = LineLayer(id: identifier)
+            lineLayer.source = sourceIdentifier
+            lineLayer.lineColor = .constant(StyleColor(lineColor))
+            lineLayer.lineWidth = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel.multiplied(by: 1.5)
+            })
+            lineLayer.lineJoin = .constant(.miter)
+            lineLayer.lineCap = .constant(.square)
+            
+            return lineLayer
+        }
+
+        return nil
     }
 }
 

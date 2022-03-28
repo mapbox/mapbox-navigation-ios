@@ -285,6 +285,45 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         templateDidDisappear template: CPTemplate,
                         animated: Bool)
+    
+    /**
+     Asks the receiver to return a `LineLayer` for the route line, given a layer identifier and a source identifier.
+     This method is invoked when the map view loads and any time routes are added.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - parameter parentViewController: The view controller that contains the map view, which is an
+     instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     - returns: A `LineLayer` that is applied to the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)`,
+     `NavigationViewControllerDelegate.navigationViewController.carPlayManager(_:routeLineLayerWithIdentifier:sourceIdentifier:)`.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer?
+    
+    /**
+     Asks the receiver to return a `LineLayer` for the casing layer that surrounds route line,
+     given a layer identifier and a source identifier.
+     This method is invoked when the map view loads and any time routes are added.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - parameter parentViewController: The view controller that contains the map view, which is an
+     instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     - returns: A `LineLayer` that is applied as a casing around the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:)`,
+     `NavigationViewControllerDelegate.navigationViewController.carPlayManager(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:)`.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeCasingLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer?
 }
 
 @available(iOS 12.0, *)
@@ -472,5 +511,27 @@ public extension CarPlayManagerDelegate {
                         templateDidDisappear template: CPTemplate,
                         animated: Bool) {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        routeCasingLineLayerWithIdentifier identifier: String,
+                        sourceIdentifier: String,
+                        for parentViewController: UIViewController) -> LineLayer? {
+        logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
+        return nil
     }
 }

@@ -46,6 +46,33 @@ public protocol CarPlayNavigationViewControllerDelegate: AnyObject, Unimplemente
     func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
                                          didAdd finalDestinationAnnotation: PointAnnotation,
                                          pointAnnotationManager: PointAnnotationManager)
+
+    /**
+     Asks the receiver to return a `LineLayer` for the route line, given a layer identifier and a source identifier.
+     This method is invoked when the map view loads and any time routes are added.
+     
+     - parameter carPlayNavigationViewController: The `CarPlayNavigationViewController` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - returns: A `LineLayer` that is applied to the route line.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         routeLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer?
+    
+    /**
+     Asks the receiver to return a `LineLayer` for the casing layer that surrounds route line,
+     given a layer identifier and a source identifier.
+     This method is invoked when the map view loads and any time routes are added.
+     
+     - parameter carPlayNavigationViewController: The `CarPlayNavigationViewController` object.
+     - parameter identifier: The `LineLayer` identifier.
+     - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
+     - returns: A `LineLayer` that is applied as a casing around the route line.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         routeCasingLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer?
 }
 
 @available(iOS 12.0, *)
@@ -82,5 +109,25 @@ public extension CarPlayNavigationViewControllerDelegate {
                                          didAdd finalDestinationAnnotation: PointAnnotation,
                                          pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         routeLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                         routeCasingLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer? {
+        logUnimplemented(protocolType: CarPlayNavigationViewControllerDelegate.self, level: .debug)
+        return nil
     }
 }
