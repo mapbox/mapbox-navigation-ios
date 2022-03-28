@@ -295,6 +295,10 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - parameter parentViewController: The view controller that contains the map view, which is an
      instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     - returns: A `LineLayer` that is applied to the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)`,
+     `NavigationViewControllerDelegate.navigationViewController.carPlayManager(_:routeLineLayerWithIdentifier:sourceIdentifier:)`.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         routeLineLayerWithIdentifier identifier: String,
@@ -311,6 +315,10 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - parameter parentViewController: The view controller that contains the map view, which is an
      instance of either `CarPlayMapViewController` or `CarPlayNavigationViewController`.
+     - returns: A `LineLayer` that is applied as a casing around the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:)`,
+     `NavigationViewControllerDelegate.navigationViewController.carPlayManager(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:)`.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         routeCasingLineLayerWithIdentifier identifier: String,

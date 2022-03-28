@@ -68,7 +68,7 @@ public protocol CarPlayNavigationViewControllerDelegate: AnyObject, Unimplemente
      - parameter carPlayNavigationViewController: The `CarPlayNavigationViewController` object.
      - parameter identifier: The `LineLayer` identifier.
      - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
-     - returns: A `LineLayer` that is applied to the route line.
+     - returns: A `LineLayer` that is applied as a casing around the route line.
      */
     func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
                                          routeCasingLineLayerWithIdentifier identifier: String,
