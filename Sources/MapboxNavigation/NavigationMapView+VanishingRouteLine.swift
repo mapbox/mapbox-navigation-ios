@@ -431,20 +431,20 @@ extension NavigationMapView {
                                      isMain: Bool = true,
                                      isSoft: Bool = false) -> [Double: UIColor] {
         // If `congestionFeatures` is set to nil - check if overridden route line casing is used.
-        let overriddenLineLayerCasingColor: UIColor?
+        let overriddenLineLayerColor: UIColor?
         if let _ = congestionFeatures {
-            overriddenLineLayerCasingColor = lineLayerColorIfPresent(from: route)
+            overriddenLineLayerColor = lineLayerColorIfPresent(from: route)
         } else {
-            overriddenLineLayerCasingColor = lineLayerCasingColorIfPresent(from: route)
+            overriddenLineLayerColor = lineLayerCasingColorIfPresent(from: route)
         }
         
         let lineSettings = LineGradientSettings(fractionTraveled: fractionTraveled,
                                                 isSoft: isSoft,
-                                                startingColor: overriddenLineLayerCasingColor ?? (isMain ? .trafficUnknown : .alternativeTrafficUnknown),
-                                                baseColor: overriddenLineLayerCasingColor ?? routeCasingColor,
+                                                startingColor: overriddenLineLayerColor ?? (isMain ? .trafficUnknown : .alternativeTrafficUnknown),
+                                                baseColor: overriddenLineLayerColor ?? routeCasingColor,
                                                 featureColor: {
-            if let overriddenLineLayerCasingColor = overriddenLineLayerCasingColor {
-                return overriddenLineLayerCasingColor
+            if let overriddenLineLayerColor = overriddenLineLayerColor {
+                return overriddenLineLayerColor
             } else {
                 if case let .boolean(isCurrentLeg) = $0.properties?[CurrentLegAttribute],
                    isCurrentLeg {
