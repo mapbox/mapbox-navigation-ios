@@ -241,11 +241,17 @@ extension AppDelegate: CarPlayManagerDelegate {
                         routeLineLayerWithIdentifier identifier: String,
                         sourceIdentifier: String,
                         for parentViewController: UIViewController) -> LineLayer? {
+        let lineColor = UIColor.lightGray
+        
         if parentViewController is CarPlayMapViewController {
             var lineLayer = LineLayer(id: identifier)
             lineLayer.source = sourceIdentifier
-            lineLayer.lineColor = .constant(StyleColor(.yellow))
-            lineLayer.lineWidth = .constant(15.0)
+            lineLayer.lineColor = .constant(StyleColor(lineColor))
+            lineLayer.lineWidth = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel
+            })
             lineLayer.lineJoin = .constant(.round)
             lineLayer.lineCap = .constant(.round)
             
@@ -253,8 +259,12 @@ extension AppDelegate: CarPlayManagerDelegate {
         } else if parentViewController is CarPlayNavigationViewController {
             var lineLayer = LineLayer(id: identifier)
             lineLayer.source = sourceIdentifier
-            lineLayer.lineColor = .constant(StyleColor(.red))
-            lineLayer.lineWidth = .constant(20.0)
+            lineLayer.lineColor = .constant(StyleColor(lineColor))
+            lineLayer.lineWidth = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel
+            })
             lineLayer.lineJoin = .constant(.miter)
             lineLayer.lineCap = .constant(.square)
             
@@ -268,11 +278,17 @@ extension AppDelegate: CarPlayManagerDelegate {
                         routeCasingLineLayerWithIdentifier identifier: String,
                         sourceIdentifier: String,
                         for parentViewController: UIViewController) -> LineLayer? {
+        let lineColor = UIColor.darkGray
+        
         if parentViewController is CarPlayMapViewController {
             var lineLayer = LineLayer(id: identifier)
             lineLayer.source = sourceIdentifier
-            lineLayer.lineColor = .constant(StyleColor(.blue))
-            lineLayer.lineWidth = .constant(30.0)
+            lineLayer.lineColor = .constant(StyleColor(lineColor))
+            lineLayer.lineWidth = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel.multiplied(by: 1.5)
+            })
             lineLayer.lineJoin = .constant(.round)
             lineLayer.lineCap = .constant(.round)
             
@@ -280,8 +296,12 @@ extension AppDelegate: CarPlayManagerDelegate {
         } else if parentViewController is CarPlayNavigationViewController {
             var lineLayer = LineLayer(id: identifier)
             lineLayer.source = sourceIdentifier
-            lineLayer.lineColor = .constant(StyleColor(.green))
-            lineLayer.lineWidth = .constant(30.0)
+            lineLayer.lineColor = .constant(StyleColor(lineColor))
+            lineLayer.lineWidth = .expression(Exp(.interpolate) {
+                Exp(.linear)
+                Exp(.zoom)
+                RouteLineWidthByZoomLevel.multiplied(by: 1.5)
+            })
             lineLayer.lineJoin = .constant(.miter)
             lineLayer.lineCap = .constant(.square)
             
