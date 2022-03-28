@@ -425,7 +425,7 @@ extension NavigationMapView {
         return gradientStops
     }
     
-    func routeLineCongestionGradient(_ route: Route,
+    func routeLineCongestionGradient(_ route: Route? = nil,
                                      congestionFeatures: [Turf.Feature]? = nil,
                                      fractionTraveled: Double,
                                      isMain: Bool = true,
