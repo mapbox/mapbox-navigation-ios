@@ -27,6 +27,8 @@ fileprivate class SimulatedLocation: CLLocation {
  The `SimulatedLocationManager` class simulates location updates along a given route.
  
  The route will be replaced upon a `RouteControllerDidReroute` notification.
+
+ The manager calls delegate methods on a background thread.
  */
 open class SimulatedLocationManager: NavigationLocationManager {
     
