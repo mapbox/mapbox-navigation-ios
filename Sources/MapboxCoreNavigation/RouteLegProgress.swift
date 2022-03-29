@@ -176,6 +176,9 @@ open class RouteLegProgress: Codable {
         }
     }
     
+    /**
+     Returns the current speed for the current location along the route. Returns `nil` if the current speed is invalid or the speed unit is unknow.
+     */
     public func currentSpeed(from location: CLLocation) -> Measurement<UnitSpeed>? {
         guard location.speed >= 0 else { return nil }
         if let speedUnit = currentStep.speedLimitUnit ?? currentSpeedLimit?.unit {

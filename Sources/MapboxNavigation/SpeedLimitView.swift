@@ -159,7 +159,7 @@ public class SpeedLimitView: UIView {
     }
     
     func drawSpeedLimit() {
-        guard let speedLimit = speedLimit, let signStandard = signStandard else {
+        guard let signStandard = signStandard else {
             return
         }
         
