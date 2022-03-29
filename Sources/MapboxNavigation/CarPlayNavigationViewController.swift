@@ -402,7 +402,6 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         navigationService.start()
         carPlayManager.delegate?.carPlayManager(carPlayManager, didBeginNavigationWith: navigationService)
         currentLegIndexMapped = navigationService.router.routeProgress.legIndex
-        navigationMapView?.inActiveNavigation = true
         navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation
         
         updateTripEstimateStyle(traitCollection.userInterfaceStyle)

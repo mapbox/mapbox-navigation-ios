@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 import MapboxMaps
 import MapboxCoreMaps
 import MapboxDirections
@@ -74,6 +75,11 @@ open class NavigationMapView: UIView {
             }
         }
     }
+    
+    /**
+     Location manager that is used to track accuracy and status authorization changes.
+     */
+    var locationManager = CLLocationManager()
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -749,27 +755,13 @@ open class NavigationMapView: UIView {
         }
     }
     
-    var inActiveNavigation: Bool = false {
-        didSet {
-            setupUserLocation()
-        }
-    }
-    
     /**
      Most recent user location, which is used to place `UserCourseView`.
      */
     var mostRecentUserCourseViewLocation: CLLocation?
     
     func setupUserLocation() {
-        // Since Mapbox Maps will not provide location data in case if `LocationOptions.puckType` is
-        // set to nil, we have to draw empty and transparent `UIImage` instead of puck. This is used
-        // in case when user wants to stop showing location puck or draw a custom one.
-        let clearImage = UIColor.clear.image(CGSize(size: 1.0))
-        let emptyPuckConfiguration = Puck2DConfiguration(topImage: clearImage,
-                                                         bearingImage: clearImage,
-                                                         shadowImage: clearImage,
-                                                         scale: nil,
-                                                         showsAccuracyRing: false)
+        if !locationManager.isAuthorized() { return }
         
         // In case if location puck style is changed (e.g. when setting
         // `NavigationMapView.reducedAccuracyActivatedMode` to `true` or when setting
@@ -779,14 +771,14 @@ open class NavigationMapView: UIView {
         }
         
         if let reducedAccuracyUserHaloCourseView = reducedAccuracyUserHaloCourseView {
-            mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
+            mapView.location.options.puckType = nil
             
             reducedAccuracyUserHaloCourseView.tag = NavigationMapView.userCourseViewTag
             mapView.addSubview(reducedAccuracyUserHaloCourseView)
         } else {
             switch userLocationStyle {
             case .courseView(let courseView):
-                mapView.location.options.puckType = inActiveNavigation ? nil : .puck2D(emptyPuckConfiguration)
+                mapView.location.options.puckType = nil
                 
                 courseView.tag = NavigationMapView.userCourseViewTag
                 mapView.addSubview(courseView)
@@ -795,10 +787,15 @@ open class NavigationMapView: UIView {
             case .puck3D(configuration: let configuration):
                 mapView.location.options.puckType = .puck3D(configuration)
             case .none:
-                mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
+                mapView.location.options.puckType = nil
             }
             mapView.location.options.puckBearingSource = .course
         }
+    }
+    
+    func setupLocationManager() {
+        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
+        locationManager.delegate = self
     }
     
     /**
@@ -810,7 +807,17 @@ open class NavigationMapView: UIView {
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
             if reducedAccuracyActivatedMode {
-                reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: CGRect(origin: .zero, size: 75.0))
+                // In case if the most recent user location is available use it while adding
+                // `UserHaloCourseView` on a map.
+                let userHaloCourseViewOrigin: CGPoint
+                if let mostRecentUserCourseViewLocation = mostRecentUserCourseViewLocation {
+                    userHaloCourseViewOrigin = mapView.mapboxMap.point(for: mostRecentUserCourseViewLocation.coordinate)
+                } else {
+                    userHaloCourseViewOrigin = .zero
+                }
+                
+                let userHaloCourseViewFrame = CGRect(origin: userHaloCourseViewOrigin, size: 75.0)
+                reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: userHaloCourseViewFrame)
             } else {
                 reducedAccuracyUserHaloCourseView = nil
             }
@@ -835,19 +842,34 @@ open class NavigationMapView: UIView {
     public func moveUserLocation(to location: CLLocation, animated: Bool = false) {
         guard CLLocationCoordinate2DIsValid(location.coordinate) else { return }
         
+        let previousUserCourseViewLocation = mostRecentUserCourseViewLocation
         mostRecentUserCourseViewLocation = location
         
         if let reducedAccuracyUserHaloCourseView = reducedAccuracyUserHaloCourseView {
-            move(reducedAccuracyUserHaloCourseView, to: location, animated: animated)
+            move(reducedAccuracyUserHaloCourseView,
+                 from: previousUserCourseViewLocation,
+                 to: location,
+                 animated: animated)
             return
         }
         
         if case let .courseView(view) = userLocationStyle {
-            move(view, to: location, animated: animated)
+            move(view,
+                 from: previousUserCourseViewLocation,
+                 to: location,
+                 animated: animated)
         }
     }
     
-    func move(_ userCourseView: UserCourseView, to location: CLLocation, animated: Bool = false) {
+    func move(_ userCourseView: UserCourseView,
+              from previousLocation: CLLocation? = nil,
+              to location: CLLocation,
+              animated: Bool = false) {
+        if let previousLocation = previousLocation {
+            let point = mapView.mapboxMap.point(for: previousLocation.coordinate)
+            userCourseView.center = point
+        }
+        
         // While animating to overview mode, don't animate the puck.
         let duration: TimeInterval = animated && navigationCamera.state != .transitionToOverview ? 1 : 0
         UIView.animate(withDuration: duration, delay: 0, options: [.curveLinear]) { [weak self] in
@@ -1526,6 +1548,7 @@ open class NavigationMapView: UIView {
     }
     
     fileprivate func commonInit() {
+        setupLocationManager()
         makeGestureRecognizersResetFrameRate()
         setupGestureRecognizers()
         subscribeForNotifications()
@@ -1594,7 +1617,8 @@ open class NavigationMapView: UIView {
                     self.travelAlongRouteLine(to: location.coordinate)
                 }
             default:
-                if self.simulatesLocation, self.inActiveNavigation, let locationProvider = self.mapView.location.locationProvider as? NavigationLocationProvider {
+                if self.simulatesLocation,
+                   let locationProvider = self.mapView.location.locationProvider as? NavigationLocationProvider {
                     locationProvider.didUpdateLocations(locations: [location])
                 }
             }
