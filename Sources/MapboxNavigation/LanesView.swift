@@ -74,6 +74,53 @@ open class LanesView: UIView, NavigationComponent {
         }
     }
     
+    public func update(for visualInstruction: VisualInstructionBanner?,
+                       animated: Bool = true,
+                       duration: TimeInterval = 0.5,
+                       isDisplayingSteps: Bool,
+                       completion: CompletionHandler? = nil) {
+        clearLaneViews()
+
+        guard let tertiaryInstruction = visualInstruction?.tertiaryInstruction else {
+            hide(animated: animated,
+                 duration: duration) { completed in
+                completion?(completed)
+            }
+            return
+        }
+
+        let subviews = tertiaryInstruction.components.compactMap { (component) -> LaneView? in
+            if case let .lane(indications: indications,
+                              isUsable: isUsable,
+                              preferredDirection: preferredDirection) = component {
+                let maneuverDirection = preferredDirection ?? visualInstruction?.primaryInstruction.maneuverDirection
+                let laneView = LaneView(indications: indications,
+                                isUsable: isUsable,
+                                direction: maneuverDirection)
+                return laneView
+            } else {
+                return nil
+            }
+        }
+
+        guard !subviews.isEmpty && subviews.contains(where: { !$0.isValid }) else {
+            hide(animated: animated,
+                 duration: duration) { completed in
+                completion?(completed)
+            }
+            return
+        }
+
+        stackView.addArrangedSubviews(subviews)
+        
+        if !isDisplayingSteps {
+            show(animated: animated,
+                 duration: duration) { completed in
+                completion?(completed)
+            }
+        }
+    }
+    
     /**
      Shows lanes view.
      
