@@ -4,7 +4,7 @@ import MapboxDirections
 /**
  Indicates which view mode to display, the current speed or the speed limit.
  */
-public enum SpeedViewMode {
+enum SpeedViewMode {
     case speed
     case speedLimit
 }
