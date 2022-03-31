@@ -275,7 +275,7 @@ open class RouteProgress: Codable {
         guard coordinatesLeftOnStepCount >= 0 else { return .unknown }
 
         guard legIndex < congestionTravelTimesSegmentsByStep.count,
-            currentLegProgress.stepIndex < congestionTravelTimesSegmentsByStep[legIndex].count else { return .unknown }
+              currentLegProgress.stepIndex < congestionTravelTimesSegmentsByStep[legIndex].count else { return .unknown }
 
         let congestionTimesForStep = congestionTravelTimesSegmentsByStep[legIndex][currentLegProgress.stepIndex]
         guard coordinatesLeftOnStepCount <= congestionTimesForStep.count else { return .unknown }

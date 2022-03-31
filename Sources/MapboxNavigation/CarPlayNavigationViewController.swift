@@ -309,7 +309,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     // MARK: Navigating the Route
     
     /**
-     The view controller’s delegate.
+     The view controller’s delegate, that is used by the `CarPlayManager`.
+     
+     Do not overwrite this property and use `CarPlayManagerDelegate` methods directly.
      */
     public weak var delegate: CarPlayNavigationViewControllerDelegate?
     
@@ -883,6 +885,22 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
         delegate?.carPlayNavigationViewController(self,
                                                   didAdd: finalDestinationAnnotation,
                                                   pointAnnotationManager: pointAnnotationManager)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        return delegate?.carPlayNavigationViewController(self,
+                                                         routeLineLayerWithIdentifier: identifier,
+                                                         sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeCasingLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        return delegate?.carPlayNavigationViewController(self,
+                                                         routeCasingLineLayerWithIdentifier: identifier,
+                                                         sourceIdentifier: sourceIdentifier)
     }
 }
 

@@ -10,16 +10,19 @@ extension VisualInstruction.Component {
             let exitCode = representation.text
             return "exit-" + exitCode + "-\(VisualInstruction.Component.scale)"
         case let .image(imageRepresentation, alternativeText):
-            guard let imageURL = imageRepresentation.imageBaseURL else {
-                return "generic-" + alternativeText.text
-            }
-            
-            return "\(imageURL.absoluteString)-\(VisualInstruction.Component.scale)"
+            return imageRepresentation.legacyCacheKey ?? "generic-" + alternativeText.text
         case .text, .delimiter, .lane:
             return nil
         case .guidanceView(let guidanceViewRepresentation, _):
             guard let imageURL = guidanceViewRepresentation.imageURL else { return nil }
             return "guidance-" + imageURL.absoluteString
         }
+    }
+}
+
+extension VisualInstruction.Component.ImageRepresentation {
+    var legacyCacheKey: String? {
+        guard let key = imageBaseURL?.absoluteString else { return nil }
+        return "\(key)-\(VisualInstruction.Component.scale)"
     }
 }

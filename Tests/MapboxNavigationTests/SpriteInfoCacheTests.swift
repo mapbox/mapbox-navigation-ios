@@ -4,6 +4,8 @@ import TestHelper
 
 class SpriteInfoCacheTests: TestCase {
     let cache: SpriteInfoCache = SpriteInfoCache()
+    let spriteKey = "SpriteKey"
+    var dataKey = "default-3"
 
     override func setUp() {
         super.setUp()
@@ -12,11 +14,11 @@ class SpriteInfoCacheTests: TestCase {
         cache.clearMemory()
     }
 
-    let dataKey = "default-3"
-
     func storeData() {
         let data = Fixture.JSONFromFileNamed(name: "sprite-info")
-        cache.store(data)
+        cache.store(data, spriteKey: spriteKey)
+        // The cached Sprite info object attaches spriteKey to its key.
+        dataKey += "-\(spriteKey)"
     }
 
     func testStoringAndRetrievingData() {

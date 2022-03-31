@@ -208,7 +208,9 @@ open class RouteController: NSObject {
     
     // MARK: Navigating
     
-    private let sharedNavigator = Navigator.shared
+    private lazy var sharedNavigator: Navigator = {
+        return Navigator.shared
+    }()
     
     var navigator: MapboxNavigationNative.Navigator {
         return sharedNavigator.navigator

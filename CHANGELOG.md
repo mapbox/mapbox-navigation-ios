@@ -4,9 +4,9 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.4.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.0-rc.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v92._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/92.0.0). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
-* MapboxCoreNavigation now requires [MapboxDirections v2.4.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0-beta.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* MapboxNavigation now requires [MapboxMaps v10.4.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.1). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v94._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/94.0.0). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
+* MapboxCoreNavigation now requires [MapboxDirections v2.4.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0-rc.1). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
 
 ### User interface
 
@@ -14,6 +14,8 @@
 * Deprecated the optional `StyleManagerDelegate.styleManager(_:viewForApplying:)` method. All views appearance will be refreshed based on `StyleManager`. ([#3764](https://github.com/mapbox/mapbox-navigation-ios/pull/3764))
 * Fixed an issue where the map’s floating buttons are misaligned with its attribution button and sometimes untappable after rotating the device during turn-by-turn navigation. ([#3776](https://github.com/mapbox/mapbox-navigation-ios/pull/3776))
 * Fixed an issue where the top instruction banner couldn't be swiped back to the current one. ([#3785](https://github.com/mapbox/mapbox-navigation-ios/pull/3785))
+* Fixed an issue where the road name label shows wrong shield image when applying custom style under poor network connection. ([#3792](https://github.com/mapbox/mapbox-navigation-ios/pull/3792))
+* Added the `SpeedLimitView.shouldShowUnknownSpeedLimit` property which defines the view behavior if the `SpeedLimitView.speedLimit` property is `nil`. Setting this property to `true` will cause the view to display `"--"` as a speed limit instead of the `SpeedLimitView` being invisible. ([#3798](https://github.com/mapbox/mapbox-navigation-ios/pull/3798))
 
 ### Location tracking
 
@@ -24,6 +26,7 @@
 * Fixed an issue where the route line appeared to begin away from the user’s current location after the route was refreshed. ([#3781](https://github.com/mapbox/mapbox-navigation-ios/pull/3781))
 * Fixed a memory leak after ending a turn-by-turn navigation session. ([#3782](https://github.com/mapbox/mapbox-navigation-ios/pull/3782))
 * Fixed an issue where `RouteControllerWillReroute` notification was incorrectly sent when a reroute was already in progress. ([#3772](https://github.com/mapbox/mapbox-navigation-ios/pull/3772))
+* Fixed an issue when `SimulatedLocationManager` could freeze the main thread when working with long routes. The manager now calls delegate methods from a background thread. ([#3672](https://github.com/mapbox/mapbox-navigation-ios/pull/3672))
 
 ### Offline routing
 
@@ -34,10 +37,19 @@
 * Fixed an issue where street names in spoken instructions could be go unpronounced if tagged with a [pronunciation](https://wiki.openstreetmap.org/wiki/Key:name:pronunciation). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * Added support for [the workaround](https://github.com/mapbox/mapbox-directions-swift/issues/662) for requesting a route that avoids an arbitrary set of coordinates. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 
+### CarPlay
+
+* Fixed an issue where CarPlay application was crashing during template dismissal on iOS 14 and higher. ([#3794](https://github.com/mapbox/mapbox-navigation-ios/pull/3794))
+* Added the ability to style each route line differently on CarPlay during route preview and active navigation using such delegate methods ([#3744](https://github.com/mapbox/mapbox-navigation-ios/pull/3744)):
+  * `CarPlayManagerDelegate.carPlayManager(_:routeLineLayerWithIdentifier:sourceIdentifier:for:)` to style the route.
+  * `CarPlayManagerDelegate.carPlayManager(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:for:)` to style the casing of the route.
+
 ### Other changes
 
 * Added the `MapboxSpeechSynthesizer(remoteSpeechSynthesizer:)` initializer for creating a `MapboxSpeechSynthesizer` object that uses a custom `SpeechSynthesizer` instance. ([#3747](https://github.com/mapbox/mapbox-navigation-ios/pull/3747))
 * MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* `HistoryRecording` static methods are deprecated in favor of instance methods. Using these instance variants on `RouteController` or `PassiveLocationManager` ensures correct history events recording and storing. ([#3791](https://github.com/mapbox/mapbox-navigation-ios/pull/3791))
+* Fixed a bug which caused `RouteOptions.profileIdentifier` to be ignored in active navigation. This may have caused elevated network usage. ([#3796](https://github.com/mapbox/mapbox-navigation-ios/pull/3796))
 
 ## v2.3.0
 

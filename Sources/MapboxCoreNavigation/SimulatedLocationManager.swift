@@ -27,6 +27,8 @@ fileprivate class SimulatedLocation: CLLocation {
  The `SimulatedLocationManager` class simulates location updates along a given route.
  
  The route will be replaced upon a `RouteControllerDidReroute` notification.
+
+ The manager calls delegate methods on a background thread.
  */
 open class SimulatedLocationManager: NavigationLocationManager {
     
@@ -58,7 +60,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         self.currentDistance = currentDistance
         self.route = route
 
-        self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: .main) { [weak self] in
+        self.timer = DispatchTimer(countdown: .milliseconds(0), repeating: updateInterval, accuracy: accuracy, executingOn: queue) { [weak self] in
             self?.tick()
         }
         
@@ -103,13 +105,15 @@ open class SimulatedLocationManager: NavigationLocationManager {
     
     // MARK: Simulation Logic
     
-    internal var currentDistance: CLLocationDistance = 0
-    fileprivate var currentSpeed: CLLocationSpeed = 30
-    fileprivate let accuracy: DispatchTimeInterval = .milliseconds(50)
-    let updateInterval: DispatchTimeInterval = .milliseconds(1000)
-    fileprivate var timer: DispatchTimer!
-    fileprivate var locations: [SimulatedLocation]!
-    fileprivate var routeShape: LineString!
+    var currentDistance: CLLocationDistance = 0
+    private var currentSpeed: CLLocationSpeed = 30
+    private let accuracy: DispatchTimeInterval = .milliseconds(50)
+    private let updateInterval: DispatchTimeInterval = .milliseconds(1000)
+    private var timer: DispatchTimer!
+    private var locations: [SimulatedLocation]!
+    private var routeShape: LineString!
+
+    private let queue = DispatchQueue(label: "com.mapbox.SimulatedLocationManager")
     
     var route: Route? {
         didSet {
@@ -160,9 +164,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
                                   course: newCoordinate.direction(to: lookAheadCoordinate).wrap(min: 0, max: 360),
                                   speed: currentSpeed,
                                   timestamp: Date())
-        
+
         self.simulatedLocation = location
-        
+
         delegate?.locationManager?(self, didUpdateLocations: [location])
         currentDistance = calculateCurrentDistance(currentDistance)
     }
