@@ -22,7 +22,7 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         lightUserPuckСourseView.puckView.overrideUserInterfaceStyle = .light
         lightUserPuckСourseView.puckColor = puckColor
         lightUserPuckСourseView.stalePuckColor = puckColor
-        lightUserPuckСourseView.puckView.draw(frame)
+        lightUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: lightUserPuckСourseView, as: .image(precision: 0.95))
         
         // Simulate `UserPuckCourseView` puck color appearance in dark mode.
@@ -30,7 +30,7 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         darkUserPuckСourseView.puckView.overrideUserInterfaceStyle = .dark
         darkUserPuckСourseView.puckColor = puckColor
         darkUserPuckСourseView.stalePuckColor = puckColor
-        darkUserPuckСourseView.puckView.draw(frame)
+        darkUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: darkUserPuckСourseView, as: .image(precision: 0.95))
     }
     
@@ -45,7 +45,7 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         lightUserPuckСourseView.puckView.overrideUserInterfaceStyle = .light
         lightUserPuckСourseView.fillColor = fillColor
         lightUserPuckСourseView.shadowColor = shadowColor
-        lightUserPuckСourseView.puckView.draw(frame)
+        lightUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: lightUserPuckСourseView, as: .image(precision: 0.95))
         
         // Simulate `UserPuckCourseView` fill and shadow colors appearance in dark mode.
@@ -53,7 +53,7 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         darkUserPuckСourseView.puckView.overrideUserInterfaceStyle = .dark
         darkUserPuckСourseView.fillColor = fillColor
         darkUserPuckСourseView.shadowColor = shadowColor
-        darkUserPuckСourseView.puckView.draw(frame)
+        darkUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: darkUserPuckСourseView, as: .image(precision: 0.95))
     }
     
@@ -64,7 +64,7 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         userPuckСourseView.stalePuckColor = .red
         userPuckСourseView.staleInterval = 1.0
         userPuckСourseView.staleRefreshInterval = 0.1
-        userPuckСourseView.puckView.draw(frame)
+        userPuckСourseView.setNeedsDisplay()
         
         // Right after `UserPuckCourseView` creation and when it's not yet stale its puck color
         // should be green.
@@ -78,7 +78,7 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         let stalePuckExpectation = expectation(description: "Stale puck expectation")
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            userPuckСourseView.puckView.draw(frame)
+            userPuckСourseView.setNeedsDisplay()
             stalePuckExpectation.fulfill()
         }
         
@@ -124,7 +124,7 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         userPuckСourseView.puckColor = .red
         userPuckСourseView.fillColor = .green
         userPuckСourseView.shadowColor = .blue
-        userPuckСourseView.puckView.draw(frame)
+        userPuckСourseView.setNeedsDisplay()
         
         // It is expected that the `UserPuckCourseView` is scaled by the customized frame instead of being trimmed.
         assertImageSnapshot(matching: userPuckСourseView, as: .image(precision: 0.95))
