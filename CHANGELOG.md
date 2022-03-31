@@ -4,9 +4,9 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.4.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.0-rc.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v93._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/93.0.0). ([#3801](https://github.com/mapbox/mapbox-navigation-ios/pull/3801))
-* MapboxCoreNavigation now requires [MapboxDirections v2.4.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0-beta.1). ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
+* MapboxNavigation now requires [MapboxMaps v10.4.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.1). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v94._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/94.0.0). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
+* MapboxCoreNavigation now requires [MapboxDirections v2.4.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0-rc.1). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
 
 ### User interface
 
