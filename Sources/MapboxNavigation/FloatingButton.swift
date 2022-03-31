@@ -43,12 +43,14 @@ open class FloatingButton: Button {
      
      - parameter image: The `UIImage` of this button.
      - parameter selectedImage: The `UIImage` of this button when selected.
-     - parameter size: The size of this button,  or `FloatingButton.buttonSize` if this argument is not specified.
+     - parameter type: `UIButton` type. Defaults to `.custom`.
+     - parameter size: The size of this button, or `FloatingButton.buttonSize` if this argument is not specified.
      */
     public class func rounded<T: FloatingButton>(image: UIImage? = nil,
                                                  selectedImage: UIImage? = nil,
+                                                 type: UIButton.ButtonType = .custom,
                                                  size: CGSize = FloatingButton.buttonSize) -> T {
-        let button = T.init(type: .custom)
+        let button = T.init(type: type)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size
         button.setImage(image, for: .normal)
