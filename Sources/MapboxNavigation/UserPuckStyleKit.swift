@@ -11,10 +11,10 @@
 
 import UIKit
 
-public class UserPuckStyleKit : NSObject {
+class UserPuckStyleKit : NSObject {
     //// Drawing Methods
 
-    @objc dynamic public class func drawNavigationPuck(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 75, height: 75), resizing: ResizingBehavior = .aspectFit, fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000), shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160), circleColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
+    @objc dynamic class func drawNavigationPuck(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 75, height: 75), resizing: ResizingBehavior = .aspectFit, fillColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), puckColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 1.000), shadowColor: UIColor = UIColor(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.160), circleColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000)) {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
         
@@ -92,7 +92,7 @@ public class UserPuckStyleKit : NSObject {
     }
 
     @objc(UserPuckStyleKitResizingBehavior)
-    public enum ResizingBehavior: Int {
+    enum ResizingBehavior: Int {
         case aspectFit /// The content is proportionally resized to fit into the target rectangle.
         case aspectFill /// The content is proportionally resized to completely fill the target rectangle.
         case stretch /// The content is stretched to match the entire target rectangle.
