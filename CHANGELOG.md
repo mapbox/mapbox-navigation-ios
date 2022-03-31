@@ -84,6 +84,7 @@
 * `HistoryRecording` static methods are deprecated in favor of instance methods. Using these instance variants on `RouteController` or `PassiveLocationManager` ensures correct history events recording and storing. ([#3791](https://github.com/mapbox/mapbox-navigation-ios/pull/3791))
 * Fixed a bug which caused `RouteOptions.profileIdentifier` to be ignored in active navigation. This may have caused elevated network usage. ([#3796](https://github.com/mapbox/mapbox-navigation-ios/pull/3796))
 * Added the ability to expose current speed in `SpeedLimitView`. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
+* Added the `RouteLegProgress.currentSpeed(for:)` method to provide the current speed for the location along the route. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
 
 ## v2.3.0
 
