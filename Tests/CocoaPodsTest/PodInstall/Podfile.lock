@@ -3,10 +3,10 @@ PODS:
   - MapboxCoreMaps (10.4.1):
     - MapboxCommon (~> 21.2)
   - MapboxCoreNavigation (2.4.0-rc.1):
-    - MapboxDirections-pre (= 2.4.0-beta.1)
+    - MapboxDirections-pre (= 2.4.0-rc.1)
     - MapboxMobileEvents (~> 1.0)
     - MapboxNavigationNative (~> 94.0)
-  - MapboxDirections-pre (2.4.0-beta.1):
+  - MapboxDirections-pre (2.4.0-rc.1):
     - Polyline (~> 5.0)
     - Turf (~> 2.0)
   - MapboxMaps (10.4.1):
@@ -54,8 +54,8 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   MapboxCommon: eb826fdc45e8b77f87aca2519986d992fd4881b7
   MapboxCoreMaps: 13892567aa2a0e1cf8713887678f82998e2ff015
-  MapboxCoreNavigation: bfa08eb6de6ae6c1dbbb87226ca850d844b9d268
-  MapboxDirections-pre: b31da472d0d8190602b8ceacd74c281743fa6255
+  MapboxCoreNavigation: 7c4becf21080038075037c79fb3134b8dd2726e6
+  MapboxDirections-pre: 8d80dba7d137332c0ca757f54afda55d9eb782d9
   MapboxMaps: 92e3eb21102beee5eca7cb4d9144162d6d1813c5
   MapboxMobileEvents: f7f3e8daeb4b83688ae62a4172dce79169a97233
   MapboxNavigation: 77c3b52b60b22f959300d01a7ad2760363a1bb84
