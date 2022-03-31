@@ -684,14 +684,13 @@ extension RouteController: Router {
             }
         }
         
-        announceImpendingReroute(at: location)
-        
-        self.lastRerouteLocation = location
-        
         // Avoid interrupting an ongoing reroute
         if isRerouting { return }
         isRerouting = true
-        
+
+        announceImpendingReroute(at: location)
+        self.lastRerouteLocation = location
+
         calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
             guard let self = self else { return }
 
