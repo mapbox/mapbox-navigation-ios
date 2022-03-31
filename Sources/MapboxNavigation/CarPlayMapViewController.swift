@@ -15,7 +15,9 @@ open class CarPlayMapViewController: UIViewController {
     // MARK: UI Elements Configuration
     
     /**
-     The view controller’s delegate.
+     The view controller’s delegate, that is used by the `CarPlayManager`.
+     
+     Do not overwrite this property and use `CarPlayManagerDelegate` methods directly.
      */
     public weak var delegate: CarPlayMapViewControllerDelegate?
     
@@ -395,6 +397,22 @@ extension CarPlayMapViewController: NavigationMapViewDelegate {
         delegate?.carPlayMapViewController(self,
                                            didAdd: finalDestinationAnnotation,
                                            pointAnnotationManager: pointAnnotationManager)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayMapViewController(self,
+                                           routeLineLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeCasingLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayMapViewController(self,
+                                           routeCasingLineLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
     }
 }
 #endif

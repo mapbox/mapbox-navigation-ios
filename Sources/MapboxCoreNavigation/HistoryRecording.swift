@@ -23,7 +23,15 @@ public protocol HistoryRecording {
 
      - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
      */
+    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func startRecordingHistory()
+    
+    /**
+     Starts recording history for debugging purposes.
+
+     - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
+     */
+    func startRecordingHistory()
 
     /**
      Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
@@ -33,7 +41,18 @@ public protocol HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
+    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func pushHistoryEvent(type: String, jsonData: Data?) throws
+    
+    /**
+     Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
+
+     - parameter type: The event type in the events log for your custom event.
+     - parameter jsonData: The data value that contains a valid JSON to attach to the event.
+
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     */
+    func pushHistoryEvent(type: String, jsonData: Data?) throws
 
     /**
      Stops recording history, asynchronously writing any recorded history to a file.
@@ -45,7 +64,20 @@ public protocol HistoryRecording {
 
      - parameter completionHandler: A closure to be executed when the history file is ready.
      */
+    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler)
+    
+    /**
+     Stops recording history, asynchronously writing any recorded history to a file.
+
+     Upon completion, the completion handler is called with the URL to a file in the directory specified by `historyDirectoryURL`. The file contains details about the passive location manager’s activity that may be useful to include when reporting an issue to Mapbox.
+
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     - postcondition: To write history incrementally without an interruption in history recording, use the `startRecordingHistory()` method immediately after this method. If you use the `startRecordingHistory()` method inside the completion handler of this method, history recording will be paused while the file is being prepared.
+
+     - parameter completionHandler: A closure to be executed when the history file is ready.
+     */
+    func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler)
 }
 
 /*
@@ -62,12 +94,28 @@ public extension HistoryRecording {
     }
 
     static func startRecordingHistory() {
+        Self.startRecordingHistoryImplementation()
+    }
+    
+    func startRecordingHistory() {
+        Self.startRecordingHistoryImplementation()
+    }
+
+    static func startRecordingHistoryImplementation() {
         if Navigator.isSharedInstanceCreated {
             Navigator.shared.historyRecorder?.startRecording()
         }
     }
-
+    
     static func pushHistoryEvent(type: String, jsonData: Data?) throws {
+        try Self.pushHistoryEventImplementation(type: type, jsonData: jsonData)
+    }
+    
+    func pushHistoryEvent(type: String, jsonData: Data?) throws {
+        try Self.pushHistoryEventImplementation(type: type, jsonData: jsonData)
+    }
+    
+    static private func pushHistoryEventImplementation(type: String, jsonData: Data?) throws {
         var jsonString: String?
         if let jsonData = jsonData {
             guard let value = String(data: jsonData, encoding: .utf8) else {
@@ -82,6 +130,14 @@ public extension HistoryRecording {
     }
 
     static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
+        Self.stopRecordingHistoryImplementation(writingFileWith: completionHandler)
+    }
+    
+    func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
+        Self.stopRecordingHistoryImplementation(writingFileWith: completionHandler)
+    }
+    
+    private static func stopRecordingHistoryImplementation(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
         guard Navigator.isSharedInstanceCreated,
               let historyRecorder = Navigator.shared.historyRecorder else {
             completionHandler(nil)
@@ -110,11 +166,28 @@ public extension HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
+    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func pushHistoryEvent<Value: Encodable>(type: String, value: Value?, encoder: JSONEncoder? = nil) throws {
         let data = try value.map { value -> Data in
             try (encoder ?? JSONEncoder()).encode(value)
         }
-        try pushHistoryEvent(type: type, jsonData: data)
+        try pushHistoryEventImplementation(type: type, jsonData: data)
+    }
+    
+    /**
+     Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
+
+     - parameter type: The event type in the events log for your custom event.
+     - parameter value: The value that implements `Encodable` protocol and can be encoded into a valid JSON to attach to the event.
+     - parameter encoder: The instance of `JSONEncoder` to be used for the value encoding. If this argument is omitted, the default `JSONEncoder` will be used.
+
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     */
+    func pushHistoryEvent<Value: Encodable>(type: String, value: Value?, encoder: JSONEncoder? = nil) throws {
+        let data = try value.map { value -> Data in
+            try (encoder ?? JSONEncoder()).encode(value)
+        }
+        try Self.pushHistoryEventImplementation(type: type, jsonData: data)
     }
 
     /**
@@ -125,10 +198,26 @@ public extension HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
+    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func pushHistoryEvent(type: String, dictionary value: [String: Any?]?) throws {
         let data = try value.map { value -> Data in
             try JSONSerialization.data(withJSONObject: value, options: [])
         }
-        try pushHistoryEvent(type: type, jsonData: data)
+        try pushHistoryEventImplementation(type: type, jsonData: data)
+    }
+    
+    /**
+     Appends a custom event to the current history log. This can be useful to log things that happen during navigation that are specific to your application.
+
+     - parameter type: The event type in the events log for your custom event.
+     - parameter value: The value disctionary that can be encoded into a JSON to attach to the event.
+
+     - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
+     */
+    func pushHistoryEvent(type: String, dictionary value: [String: Any?]?) throws {
+        let data = try value.map { value -> Data in
+            try JSONSerialization.data(withJSONObject: value, options: [])
+        }
+        try Self.pushHistoryEventImplementation(type: type, jsonData: data)
     }
 }

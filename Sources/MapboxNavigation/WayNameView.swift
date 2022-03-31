@@ -24,7 +24,7 @@ open class WayNameLabel: StylableLabel {
     // When the map style changes, update the sprite repository and the label.
     func updateStyle(styleURI: StyleURI?) {
         guard let styleURI = styleURI else { return }
-        spriteRepository.updateRepository(styleURI: styleURI, representation: representation) { [weak self] in
+        spriteRepository.updateStyle(styleURI: styleURI, representation: representation) { [weak self] in
             guard let self = self else { return }
             if let roadName = self.text {
                 self.setUpWith(roadName: roadName)
@@ -35,13 +35,12 @@ open class WayNameLabel: StylableLabel {
     func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
         // When the imageRepresentation of road shield changes, update the sprite repository and the label.
         if representation != self.representation {
-            spriteRepository.updateRepository(representation: representation) { [weak self] in
+            spriteRepository.updateRepresentation(representation: representation) { [weak self] in
                 guard let self = self else { return }
                 self.representation = representation
                 self.setUpWith(roadName: roadName)
             }
         }
-        self.representation = representation
         setUpWith(roadName: roadName)
     }
     
@@ -52,14 +51,13 @@ open class WayNameLabel: StylableLabel {
             // For `us-state` shield, use the legacy shield first, then fall back to use the generic shield icon.
             // For non `us-state` shield, use the generic shield icon first, then fall back to use the legacy shield.
             if shield.name == "us-state",
-               setAttributedText(roadName: roadName) {
+               setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) {
                 return
             } else if setAttributedText(roadName: roadName, shield: shield) {
                 return
             }
         }
-        
-        if setAttributedText(roadName: roadName) {
+        if setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) {
             return
         }
         
@@ -73,8 +71,8 @@ open class WayNameLabel: StylableLabel {
      - returns: `true` if operation was successful, `false` otherwise.
      */
     @discardableResult
-    private func setAttributedText(roadName: String) -> Bool {
-        guard let shieldIcon = spriteRepository.getLegacyShield() else { return false }
+    private func setAttributedText(roadName: String, cacheKey: String?) -> Bool {
+        guard let shieldIcon = spriteRepository.getLegacyShield(with: cacheKey) else { return false }
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false
 
@@ -108,7 +106,7 @@ open class WayNameLabel: StylableLabel {
      */
     @discardableResult
     private func setAttributedText(roadName: String, shield: VisualInstruction.Component.ShieldRepresentation) -> Bool {
-        guard let shieldIcon = spriteRepository.getShield(displayRef: shield.text, name: shield.name) else { return false }
+        guard let shieldIcon = spriteRepository.getShieldIcon(shield: shield) else { return false }
 
         var currentShieldName: NSAttributedString?, currentRoadName: String?
         var didSetup = false

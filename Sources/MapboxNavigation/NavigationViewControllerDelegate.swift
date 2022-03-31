@@ -144,6 +144,9 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter identifier: The `LineLayer` identifier.
      - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied to the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:routeLineLayerWithIdentifier:sourceIdentifier:)`,
+     `CarPlayManagerDelegate.carPlayManager(_:routeLineLayerWithIdentifier:sourceIdentifier:for:)`.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
     
@@ -156,6 +159,9 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - parameter identifier: The `LineLayer` identifier.
      - parameter sourceIdentifier: Identifier of the source, which contains the route data that this method would style.
      - returns: A `LineLayer` that is applied as a casing around the route line.
+     
+     - seealso: `NavigationMapViewDelegate.navigationMapView(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:)`,
+     `CarPlayManagerDelegate.carPlayManager(_:routeCasingLineLayerWithIdentifier:sourceIdentifier:for:)`.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer?
     

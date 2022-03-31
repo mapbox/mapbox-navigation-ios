@@ -875,10 +875,14 @@ extension CarPlayManager: CPMapTemplateDelegate {
     }
 
     private func popToRootTemplate(interfaceController: CPInterfaceController?, animated: Bool) {
-        guard let interfaceController = interfaceController else { return }
-        if interfaceController.templates.count > 1 {
-            // TODO: CPInterfaceController.popToRootTemplate(animated:completion:) (available on iOS 14/Xcode 12)
-            // should be used after Xcode 11 support is dropped.
+        guard let interfaceController = interfaceController,
+              interfaceController.templates.count > 1 else { return }
+        
+        if #available(iOS 14.0, *) {
+            interfaceController.popToRootTemplate(animated: animated) { _, _ in
+                // No-op
+            }
+        } else {
             interfaceController.popToRootTemplate(animated: animated)
         }
     }
@@ -997,6 +1001,24 @@ extension CarPlayManager: CarPlayNavigationViewControllerDelegate {
                                  to: carPlayNavigationViewController,
                                  pointAnnotationManager: pointAnnotationManager)
     }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                routeLineLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> LineLayer? {
+        return delegate?.carPlayManager(self,
+                                        routeLineLayerWithIdentifier: identifier,
+                                        sourceIdentifier: sourceIdentifier,
+                                        for: carPlayNavigationViewController)
+    }
+    
+    public func carPlayNavigationViewController(_ carPlayNavigationViewController: CarPlayNavigationViewController,
+                                                routeCasingLineLayerWithIdentifier identifier: String,
+                                                sourceIdentifier: String) -> LineLayer? {
+        return delegate?.carPlayManager(self,
+                                        routeCasingLineLayerWithIdentifier: identifier,
+                                        sourceIdentifier: sourceIdentifier,
+                                        for: carPlayNavigationViewController)
+    }
 }
 
 // MARK: CarPlayMapViewControllerDelegate Methods
@@ -1011,6 +1033,24 @@ extension CarPlayManager: CarPlayMapViewControllerDelegate {
                                  didAdd: finalDestinationAnnotation,
                                  to: carPlayMapViewController,
                                  pointAnnotationManager: pointAnnotationManager)
+    }
+    
+    public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
+                                         routeLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayManager(self,
+                                 routeLineLayerWithIdentifier: identifier,
+                                 sourceIdentifier: sourceIdentifier,
+                                 for: carPlayMapViewController)
+    }
+    
+    public func carPlayMapViewController(_ carPlayMapViewController: CarPlayMapViewController,
+                                         routeCasingLineLayerWithIdentifier identifier: String,
+                                         sourceIdentifier: String) -> LineLayer? {
+        delegate?.carPlayManager(self,
+                                 routeCasingLineLayerWithIdentifier: identifier,
+                                 sourceIdentifier: sourceIdentifier,
+                                 for: carPlayMapViewController)
     }
 }
 
