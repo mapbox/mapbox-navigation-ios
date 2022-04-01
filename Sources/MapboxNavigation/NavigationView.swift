@@ -44,23 +44,25 @@ open class NavigationView: UIView {
         case collapsed
     }
     
-    var swipeOffset: CGFloat = 50.0
+    var isBottomBannerContainerViewExpandable: Bool = false
     
-    var state: BottomBannerContainerViewState = .collapsed {
+    var bottomBannerContainerViewOffset: CGFloat = 50.0
+    
+    var bottomBannerContainerViewState: BottomBannerContainerViewState = .collapsed {
         didSet {
-            if oldValue == state { return }
+            if oldValue == bottomBannerContainerViewState { return }
             
-            if state == .expanded {
+            if bottomBannerContainerViewState == .expanded {
                 bottomBannerContainerViewBottomConstraint.constant = 0.0
             } else {
-                bottomBannerContainerViewBottomConstraint.constant = swipeOffset
+                bottomBannerContainerViewBottomConstraint.constant = bottomBannerContainerViewOffset
             }
         }
     }
     
     var bottomBannerContainerViewBottomConstraint: NSLayoutConstraint!
     
-    var animationDuration: TimeInterval = 0.2
+    var initialBottomOffset: CGFloat = 0.0
     
     private enum Constants {
         static let endOfRouteHeight: CGFloat = 260.0
@@ -199,16 +201,31 @@ open class NavigationView: UIView {
     @objc func didPan(_ recognizer: UIPanGestureRecognizer) {
         guard let view = recognizer.view else { return }
         
+        if recognizer.state == .began {
+            initialBottomOffset = bottomBannerContainerViewBottomConstraint.constant
+        }
+        
+        let translation = recognizer.translation(in: view)
+        let currentOffset = initialBottomOffset + translation.y
+        
+        if currentOffset < 0.0 {
+            bottomBannerContainerViewBottomConstraint.constant = 0.0
+        } else if currentOffset > bottomBannerContainerViewOffset {
+            bottomBannerContainerViewBottomConstraint.constant = bottomBannerContainerViewOffset
+        } else {
+            bottomBannerContainerViewBottomConstraint.constant = currentOffset
+        }
+        
         if recognizer.state == .ended {
             let velocity = recognizer.velocity(in: view)
             
             if velocity.y <= 0 {
-                state = .expanded
+                bottomBannerContainerViewState = .expanded
             } else {
-                state = .collapsed
+                bottomBannerContainerViewState = .collapsed
             }
             
-            UIView.animate(withDuration: animationDuration,
+            UIView.animate(withDuration: 0.2,
                            delay: 0.0,
                            options: [.allowUserInteraction],
                            animations: {
@@ -240,19 +257,26 @@ open class NavigationView: UIView {
         floatingButtons = [overviewButton, muteButton, reportButton]
         setupViews()
         setupConstraints()
-        
+        setupBottomBannerContainerViewConstraints()
+    }
+    
+    func setupBottomBannerContainerViewConstraints() {
         bottomBannerContainerViewBottomConstraint = bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor)
         
-        if state == .expanded {
-            bottomBannerContainerViewBottomConstraint.constant = 0.0
+        if isBottomBannerContainerViewExpandable {
+            if bottomBannerContainerViewState == .expanded {
+                bottomBannerContainerViewBottomConstraint.constant = 0.0
+            } else {
+                bottomBannerContainerViewBottomConstraint.constant = bottomBannerContainerViewOffset
+            }
+            
+            let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan))
+            bottomBannerContainerView.addGestureRecognizer(panGestureRecognizer)
         } else {
-            bottomBannerContainerViewBottomConstraint.constant = swipeOffset
+            bottomBannerContainerViewBottomConstraint.constant = 0.0
         }
         
         bottomBannerContainerViewBottomConstraint.isActive = true
-        
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan))
-        bottomBannerContainerView.addGestureRecognizer(panGestureRecognizer)
     }
     
     func setupViews() {
