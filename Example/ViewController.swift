@@ -576,7 +576,9 @@ class ViewController: UIViewController {
         
         present(navigationViewController, animated: true) {
             completion?()
+            // Cleaning up the `PassiveLocationManager`. The `PassiveLocationManager` during active navigation may lead to location jump.
             self.navigationMapView = nil
+            self.passiveLocationManager = nil
             navigationViewController.navigationMapView?.showsRestrictedAreasOnRoute = true
         }
     }
