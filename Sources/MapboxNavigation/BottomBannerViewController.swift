@@ -4,17 +4,6 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 /**
- `BottomBannerViewControllerDelegate` provides a method for reacting to the user tapping on the "cancel" button in the `BottomBannerViewController`.
- */
-public protocol BottomBannerViewControllerDelegate: AnyObject {
-    /**
-     A method that is invoked when the user taps on the cancel button.
-     - parameter sender: The button that originated the tap event.
-     */
-    func didTapCancel(_ sender: Any)
-}
-
-/**
  A user interface element designed to display the estimated arrival time, distance, and time remaining, as well as give the user a control the cancel the navigation session.
  */
 @IBDesignable
