@@ -302,6 +302,9 @@ public extension NavigationServiceDelegate {
         return MapboxNavigationService.Default.shouldPreventReroutesWhenArrivingAtWaypoint
     }
     
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
     func navigationServiceDidChangeAuthorization(_ service: NavigationService, didChangeAuthorizationFor locationManager: CLLocationManager) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
     }
