@@ -95,6 +95,8 @@ public class SpeedLimitView: UIView {
         return formatter
     }()
     
+    let locale = Locale.current
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -141,8 +143,13 @@ public class SpeedLimitView: UIView {
         
         switch signStandard {
         case .mutcd:
-            let legend = NSLocalizedString("SPEED_LIMIT_LEGEND", bundle: .mapboxNavigation, value: "Max", comment: "Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible.").uppercased()
-            SpeedLimitStyleKit.drawMUTCD(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legend)
+            if locale.identifier == "en_US" {
+                let legend = NSLocalizedString("SPEED_LIMIT_LEGEND", bundle: .mapboxNavigation, value: "Speed Limit", comment: "Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible.").uppercased()
+                SpeedLimitStyleKit.drawMUTCDForUS(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legend)
+            } else {
+                let legend = NSLocalizedString("SPEED_LIMIT_LEGEND", bundle: .mapboxNavigation, value: "Max", comment: "Label above the speed limit in an MUTCD-style speed limit sign. Keep as short as possible.").uppercased()
+                SpeedLimitStyleKit.drawMUTCD(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, limit: formattedSpeedLimit, legend: legend)
+            }
         case .viennaConvention:
             SpeedLimitStyleKit.drawVienna(frame: bounds, resizing: .aspectFit, signBackColor: signBackColor, strokeColor: textColor, regulatoryColor: regulatoryBorderColor, limit: formattedSpeedLimit)
         }

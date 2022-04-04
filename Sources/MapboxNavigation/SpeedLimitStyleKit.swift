@@ -91,6 +91,82 @@ public class SpeedLimitStyleKit : NSObject {
 
     }
 
+    @objc dynamic public class func drawMUTCDForUS(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 68, height: 85), resizing: ResizingBehavior = .aspectFit, signBackColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), strokeColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), limit: String = "50", legend: String = "SPEED LIMIT") {
+        //// General Declarations
+        let context = UIGraphicsGetCurrentContext()!
+        
+        //// Resize to Target Frame
+        context.saveGState()
+        let resizedFrame: CGRect = resizing.apply(rect: CGRect(x: 0, y: 0, width: 68, height: 85), target: targetFrame)
+        context.translateBy(x: resizedFrame.minX, y: resizedFrame.minY)
+        context.scaleBy(x: resizedFrame.width / 68, y: resizedFrame.height / 85)
+
+
+
+        //// Variable Declarations
+        let limitFontSize: CGFloat = CGFloat(limit.count) > 2 ? 24 : 32
+
+        //// Sign
+        //// Sign Back Drawing
+        let signBackPath = UIBezierPath(roundedRect: CGRect(x: 3, y: 3, width: 68, height: 80), cornerRadius: 10)
+        signBackColor.setFill()
+        signBackPath.fill()
+        signBackColor.setStroke()
+        signBackPath.lineWidth = 4
+        signBackPath.lineJoinStyle = .bevel
+        signBackPath.stroke()
+
+
+        //// Border Drawing
+        let borderPath = UIBezierPath(roundedRect: CGRect(x: 3, y: 3, width: 68, height: 80), cornerRadius: 10)
+        UIColor.lightGray.setStroke()
+        borderPath.lineWidth = 3
+        borderPath.lineJoinStyle = .bevel
+        borderPath.stroke()
+
+
+
+
+        //// Group
+        //// Limit Label Drawing
+        let limitLabelRect = CGRect(x: 3, y: 40, width: 68, height: 45)
+        let limitLabelStyle = NSMutableParagraphStyle()
+        limitLabelStyle.alignment = .center
+        let limitLabelFontAttributes = [
+            .font: UIFont.systemFont(ofSize: limitFontSize, weight: .semibold),
+            .foregroundColor: strokeColor,
+            .paragraphStyle: limitLabelStyle,
+        ] as [NSAttributedString.Key: Any]
+
+        let limitLabelTextHeight: CGFloat = limit.boundingRect(with: CGSize(width: limitLabelRect.width, height: CGFloat.infinity), options: .usesLineFragmentOrigin, attributes: limitLabelFontAttributes, context: nil).height
+        context.saveGState()
+        context.clip(to: limitLabelRect)
+        limit.draw(in: CGRect(x: limitLabelRect.minX, y: limitLabelRect.minY + (limitLabelRect.height - limitLabelTextHeight) / 2, width: limitLabelRect.width, height: limitLabelTextHeight), withAttributes: limitLabelFontAttributes)
+        context.restoreGState()
+
+
+        //// Legend Label Drawing
+        let legendLabelRect = CGRect(x: 3, y: 10, width: 68, height: 37)
+        let legendLabelStyle = NSMutableParagraphStyle()
+        legendLabelStyle.alignment = .center
+        legendLabelStyle.lineSpacing = 0.05
+        legendLabelStyle.paragraphSpacing = 0.05
+        let legendLabelFontAttributes = [
+            .font: UIFont.systemFont(ofSize: UIFont.labelFontSize, weight: .semibold),
+            .foregroundColor: strokeColor,
+            .paragraphStyle: legendLabelStyle,
+        ] as [NSAttributedString.Key: Any]
+
+        let legendLabelTextHeight: CGFloat = legend.boundingRect(with: CGSize(width: legendLabelRect.width, height: CGFloat.infinity), options: .usesLineFragmentOrigin, attributes: legendLabelFontAttributes, context: nil).height
+        context.saveGState()
+        context.clip(to: legendLabelRect)
+        legend.draw(in: CGRect(x: legendLabelRect.minX, y: legendLabelRect.minY + legendLabelRect.height - legendLabelTextHeight, width: legendLabelRect.width, height: legendLabelTextHeight), withAttributes: legendLabelFontAttributes)
+        context.restoreGState()
+        
+        context.restoreGState()
+
+    }
+    
     @objc dynamic public class func drawVienna(frame targetFrame: CGRect = CGRect(x: 0, y: 0, width: 70, height: 70), resizing: ResizingBehavior = .aspectFit, signBackColor: UIColor = UIColor(red: 1.000, green: 1.000, blue: 1.000, alpha: 1.000), strokeColor: UIColor = UIColor(red: 0.000, green: 0.000, blue: 0.000, alpha: 1.000), regulatoryColor: UIColor = UIColor(red: 0.800, green: 0.000, blue: 0.000, alpha: 1.000), limit: String = "50") {
         //// General Declarations
         let context = UIGraphicsGetCurrentContext()!
