@@ -52,7 +52,6 @@ class CustomViewController: UIViewController {
                                                     credentials: NavigationSettings.shared.directions.credentials,
                                                     locationSource: locationManager,
                                                     simulating: simulateLocation ? .always : .inTunnels)
-        navigationService.delegate = self
         
         navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         
@@ -314,19 +313,6 @@ extension CustomViewController: StepsViewControllerDelegate {
                              cell: StepTableViewCell) {
         viewController.dismiss { [weak self] in
             self?.stepsViewController = nil
-        }
-    }
-}
-
-extension CustomViewController: NavigationServiceDelegate {
-    
-    public func navigationServiceDidChangeAuthorization(_ service: NavigationService,
-                                                        didChangeAuthorizationFor locationManager: CLLocationManager) {
-        if #available(iOS 14.0, *),
-           locationManager.accuracyAuthorization == .reducedAccuracy {
-            navigationMapView?.reducedAccuracyActivatedMode = true
-        } else {
-            navigationMapView?.reducedAccuracyActivatedMode = false
         }
     }
 }

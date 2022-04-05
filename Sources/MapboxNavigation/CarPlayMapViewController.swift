@@ -301,6 +301,11 @@ open class CarPlayMapViewController: UIViewController {
             wayNameView.text = nil
             wayNameView.containerView.isHidden = true
         }
+        
+        if let location = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {            
+            // Update user puck to the most recent location.
+            navigationMapView.moveUserLocation(to: location, animated: true)
+        }
     }
     
     // MARK: UIViewController Lifecycle Methods
