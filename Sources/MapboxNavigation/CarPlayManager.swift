@@ -547,6 +547,38 @@ extension CarPlayManager {
         }
     }
     
+    /**
+     Allows to preview routes for a specific `RouteResponse` object.
+     
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes that will be
+     previewed.
+     */
+    public func previewRoutes(for routeResponse: RouteResponse) {
+        let trip = CPTrip(routeResponse: routeResponse)
+        previewRoutes(for: trip)
+    }
+    
+    func previewRoutes(for trip: CPTrip) {
+        guard let traitCollection = (self.carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
+              let interfaceController = interfaceController else {
+                  return
+              }
+        
+        let modifiedTrip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
+        
+        let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: modifiedTrip,
+                                                                 traitCollection: traitCollection,
+                                                                 mapDelegate: self)
+        
+        var previewText = defaultTripPreviewTextConfiguration()
+        if let customPreviewText = delegate?.carPlayManager(self, willPreview: modifiedTrip, with: previewText) {
+            previewText = customPreviewText
+        }
+        
+        previewMapTemplate.showTripPreviews([modifiedTrip], textConfiguration: previewText)
+        interfaceController.pushTemplate(previewMapTemplate, animated: true)
+    }
+    
     func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
         routingProvider.calculateRoutes(options: options, completionHandler: completionHandler)
     }
@@ -573,25 +605,8 @@ extension CarPlayManager {
             popToRootTemplate(interfaceController: interfaceController, animated: true)
             mapTemplate?.present(navigationAlert: alert, animated: true)
             return
-        case let .success(response):
-            if let traitCollection = (self.carWindow?.rootViewController as? CarPlayMapViewController)?.traitCollection,
-               let interfaceController = interfaceController {
-                
-                var trip = CPTrip(routeResponse: response)
-                trip = delegate?.carPlayManager(self, willPreview: trip) ?? trip
-
-                let previewMapTemplate = mapTemplateProvider.mapTemplate(forPreviewing: trip,
-                                                                         traitCollection: traitCollection,
-                                                                         mapDelegate: self)
-                
-                var previewText = defaultTripPreviewTextConfiguration()
-                if let customPreviewText = delegate?.carPlayManager(self, willPreview: trip, with: previewText) {
-                    previewText = customPreviewText
-                }
-                
-                previewMapTemplate.showTripPreviews([trip], textConfiguration: previewText)
-                interfaceController.pushTemplate(previewMapTemplate, animated: true)
-            }
+        case let .success(routeResponse):
+            previewRoutes(for: routeResponse)
         }
     }
 
