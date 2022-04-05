@@ -79,7 +79,7 @@ open class NavigationMapView: UIView {
     /**
      Location manager that is used to track accuracy and status authorization changes.
      */
-    var locationManager = CLLocationManager()
+    let locationManager = CLLocationManager()
     
     @objc dynamic public var trafficUnknownColor: UIColor = .trafficUnknown
     @objc dynamic public var trafficLowColor: UIColor = .trafficLow
@@ -794,7 +794,6 @@ open class NavigationMapView: UIView {
     }
     
     func setupLocationManager() {
-        locationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
         locationManager.delegate = self
     }
     
