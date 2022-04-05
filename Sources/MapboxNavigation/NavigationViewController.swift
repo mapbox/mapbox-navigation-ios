@@ -942,9 +942,14 @@ extension NavigationViewController: NavigationServiceDelegate {
         return navigationComponents.allSatisfy { $0.navigationServiceShouldDisableBatteryMonitoring(service) }
     }
     
-    public func navigationServiceDidChangeAuthorization(_ service: NavigationService, didChangeAuthorizationFor locationManager: CLLocationManager) {
-        if #available(iOS 14.0, *), locationManager.accuracyAuthorization == .reducedAccuracy {
-            let title = NSLocalizedString("ENABLE_PRECISE_LOCATION", bundle: .mapboxNavigation, value: "Enable precise location to navigate", comment: "Label indicating precise location is off and needs to be turned on to navigate")
+    public func navigationServiceDidChangeAuthorization(_ service: NavigationService,
+                                                        didChangeAuthorizationFor locationManager: CLLocationManager) {
+        if #available(iOS 14.0, *),
+           locationManager.accuracyAuthorization == .reducedAccuracy {
+            let title = NSLocalizedString("ENABLE_PRECISE_LOCATION",
+                                          bundle: .mapboxNavigation,
+                                          value: "Enable precise location to navigate",
+                                          comment: "Label indicating precise location is off and needs to be turned on to navigate")
             show(StatusView.Status(identifier: "ENABLE_PRECISE_LOCATION",
                                    title: title,
                                    spinner: false,
@@ -952,11 +957,6 @@ extension NavigationViewController: NavigationServiceDelegate {
                                    animated: true,
                                    interactive: false,
                                    priority: 1))
-            navigationMapView?.reducedAccuracyActivatedMode = true
-        } else {
-            // Fallback on earlier versions
-            navigationMapView?.reducedAccuracyActivatedMode = false
-            return
         }
     }
 }
