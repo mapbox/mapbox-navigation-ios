@@ -805,21 +805,25 @@ open class NavigationMapView: UIView {
      */
     @objc dynamic public var reducedAccuracyActivatedMode: Bool = false {
         didSet {
-            if reducedAccuracyActivatedMode {
-                // In case if the most recent user location is available use it while adding
-                // `UserHaloCourseView` on a map.
-                let userHaloCourseViewOrigin: CGPoint
-                if let mostRecentUserCourseViewLocation = mostRecentUserCourseViewLocation {
-                    userHaloCourseViewOrigin = mapView.mapboxMap.point(for: mostRecentUserCourseViewLocation.coordinate)
-                } else {
-                    userHaloCourseViewOrigin = .zero
-                }
-                
-                let userHaloCourseViewFrame = CGRect(origin: userHaloCourseViewOrigin, size: 75.0)
-                reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: userHaloCourseViewFrame)
+            applyReducedAccuracyMode(shouldApply: reducedAccuracyActivatedMode)
+        }
+    }
+    
+    func applyReducedAccuracyMode(shouldApply: Bool) {
+        if shouldApply {
+            // In case if the most recent user location is available use it while adding
+            // `UserHaloCourseView` on a map.
+            let userHaloCourseViewOrigin: CGPoint
+            if let mostRecentUserCourseViewLocation = mostRecentUserCourseViewLocation {
+                userHaloCourseViewOrigin = mapView.mapboxMap.point(for: mostRecentUserCourseViewLocation.coordinate)
             } else {
-                reducedAccuracyUserHaloCourseView = nil
+                userHaloCourseViewOrigin = .zero
             }
+            
+            let userHaloCourseViewFrame = CGRect(origin: userHaloCourseViewOrigin, size: 75.0)
+            reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: userHaloCourseViewFrame)
+        } else {
+            reducedAccuracyUserHaloCourseView = nil
         }
     }
     
