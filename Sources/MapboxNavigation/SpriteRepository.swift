@@ -169,7 +169,8 @@ class SpriteRepository {
         })
     }
     
-    func getShieldIcon(shield: VisualInstruction.Component.ShieldRepresentation) -> UIImage? {
+    func getShieldIcon(shield: VisualInstruction.Component.ShieldRepresentation?) -> UIImage? {
+        guard let shield = shield else { return nil }
         // Use the styleURI and baseURL of current repository for spriteKey.
         guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1] else { return nil }
         let spriteKey = "\(styleID)-\(shield.baseURL.absoluteString)"

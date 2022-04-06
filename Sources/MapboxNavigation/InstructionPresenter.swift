@@ -6,6 +6,7 @@ protocol InstructionPresenterDataSource: AnyObject {
     var font: UIFont! { get }
     var textColor: UIColor! { get }
     var shieldHeight: CGFloat { get }
+    func shieldColor(from textColor: String) -> UIColor
 }
 
 typealias DataSource = InstructionPresenterDataSource
@@ -30,22 +31,21 @@ class InstructionPresenter {
 
     required init(_ instruction: VisualInstruction,
                   dataSource: DataSource,
-                  imageRepository: ImageRepository = .shared,
+                  spriteRepository: SpriteRepository = .init(),
                   traitCollection: UITraitCollection,
                   downloadCompletion: ShieldDownloadCompletion?) {
         self.instruction = instruction
         self.dataSource = dataSource
-        self.imageRepository = imageRepository
+        self.spriteRepository = spriteRepository
         self.traitCollection = traitCollection
         self.onShieldDownload = downloadCompletion
     }
 
-    typealias ImageDownloadCompletion = (UIImage?) -> Void
     typealias ShieldDownloadCompletion = (NSAttributedString) -> ()
     
     let onShieldDownload: ShieldDownloadCompletion?
-
-    private let imageRepository: ImageRepository
+    
+    private let spriteRepository: SpriteRepository
     
     private let traitCollection: UITraitCollection
     
@@ -53,7 +53,7 @@ class InstructionPresenter {
         guard let source = self.dataSource,
               let attributedTextRepresentation = self.attributedTextRepresentation(of: instruction,
                                                                                    dataSource: source,
-                                                                                   imageRepository: imageRepository,
+                                                                                   spriteRepository: spriteRepository,
                                                                                    onImageDownload: completeShieldDownload).mutableCopy() as? NSMutableAttributedString else {
             return NSAttributedString()
         }
@@ -98,13 +98,20 @@ class InstructionPresenter {
     
     func attributedTextRepresentation(of instruction: VisualInstruction,
                                       dataSource: DataSource,
-                                      imageRepository: ImageRepository,
-                                      onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString {
+                                      spriteRepository: SpriteRepository,
+                                      onImageDownload: @escaping CompletionHandler) -> NSAttributedString {
         var components = instruction.components
         
         let isShield: (_ key: VisualInstruction.Component?) -> Bool = { (component) in
             guard let key = component?.cacheKey else { return false }
-            return imageRepository.cachedImageForKey(key) != nil
+            switch component {
+            case .image(let representation, _):
+                let image = spriteRepository.getShieldIcon(shield: representation.shield)
+                ?? spriteRepository.legacyCache.image(forKey: key)
+                return image != nil
+            default:
+                return spriteRepository.legacyCache.image(forKey: key) != nil
+            }
         }
         
         components.removeSeparators { (precedingComponent, component, followingComponent) -> Bool in
@@ -138,13 +145,9 @@ class InstructionPresenter {
                     ], range: wholeRange)
                 }
                 return attributedString
-            case .image(let image, let alternativeText):
+            case .image(let representation, let alternativeText):
                 // Ideally represent the image component as a shield image.
-                return attributedString(forShieldComponent: image,
-                                        repository: imageRepository,
-                                        dataSource: dataSource,
-                                        cacheKey: component.cacheKey!,
-                                        onImageDownload: onImageDownload)
+                return attributedString(for: representation, in: spriteRepository, dataSource: dataSource, onImageDownload: onImageDownload)
                     // Fall back to a generic shield if no shield image is available.
                     ?? genericShield(text: alternativeText.text, dataSource: dataSource, cacheKey: component.cacheKey!)
                     // Finally, fall back to a plain text representation if the generic shield couldn’t be rendered.
@@ -168,34 +171,57 @@ class InstructionPresenter {
         return attributedTextRepresentations.joined(separator: separator)
     }
     
-    func attributedString(forShieldComponent shield: VisualInstruction.Component.ImageRepresentation,
-                          repository: ImageRepository,
+    func attributedString(for representation: VisualInstruction.Component.ImageRepresentation,
+                          in repository: SpriteRepository,
                           dataSource: DataSource,
-                          cacheKey: String,
-                          onImageDownload: @escaping ImageDownloadCompletion) -> NSAttributedString? {
-        if let cachedImage = repository.cachedImageForKey(cacheKey) {
-            return attributedString(withFont: dataSource.font, shieldImage: cachedImage)
+                          onImageDownload: @escaping CompletionHandler) -> NSAttributedString? {
+        
+        if spriteRepository.getSpriteImage() == nil {
+            spriteRepository.updateRepresentation(representation: representation, completion: onImageDownload)
+            return nil
         }
         
-        shieldImageForComponent(representation: shield, in: repository, cacheKey: cacheKey, completion: onImageDownload)
+        if let shield = representation.shield {
+            if shield.name == "us-state",
+               let legacyAttributedString = legacyAttributedString(for: representation, in: repository, dataSource: dataSource) {
+                return legacyAttributedString
+            } else if let shieldAttributedString = shieldAttributedString(for: representation, in: repository, dataSource: dataSource) {
+                return shieldAttributedString
+            }
+        }
+        
+        if let legacyAttributedString = legacyAttributedString(for: representation, in: repository, dataSource: dataSource) {
+            return legacyAttributedString
+        }
         
         // Return nothing in the meantime, triggering downstream behavior (generic shield or text).
         return nil
     }
     
-    private func shieldImageForComponent(representation: VisualInstruction.Component.ImageRepresentation,
-                                         in repository: ImageRepository,
-                                         cacheKey: String,
-                                         completion: @escaping ImageDownloadCompletion) {
-        guard let imageURL = representation.imageURL(scale: VisualInstruction.Component.scale, format: .png) else { return }
+    private func legacyAttributedString(for representation: VisualInstruction.Component.ImageRepresentation,
+                                        in repository: SpriteRepository,
+                                        dataSource: DataSource) -> NSAttributedString? {
+        guard let cachedImage = repository.legacyCache.image(forKey: representation.legacyCacheKey)  else { return nil }
         
-        repository.imageWithURL(imageURL, cacheKey: cacheKey, completion: completion)
-    }
-
-    private func attributedString(withFont font: UIFont, shieldImage: UIImage) -> NSAttributedString {
         let attachment = ShieldAttachment()
-        attachment.font = font
-        attachment.image = shieldImage
+        attachment.font = dataSource.font
+        attachment.image = cachedImage
+        return NSAttributedString(attachment: attachment)
+    }
+    
+    private func shieldAttributedString(for representation: VisualInstruction.Component.ImageRepresentation,
+                                        in repository: SpriteRepository,
+                                        dataSource: DataSource) -> NSAttributedString? {
+        guard let shield = representation.shield,
+              let cachedImage = repository.getShieldIcon(shield: shield) else { return nil }
+        
+        let attachment = ShieldAttachment()
+        attachment.font = dataSource.font
+        let shieldColor = dataSource.shieldColor(from: shield.textColor)
+        let fontSize = dataSource.font.with(multiplier: 0.5)
+        attachment.image = cachedImage.withCenteredText(shield.text,
+                                                        color: shieldColor,
+                                                        font: fontSize)
         return NSAttributedString(attachment: attachment)
     }
     
@@ -207,7 +233,7 @@ class InstructionPresenter {
         let attachment = GenericShieldAttachment()
         
         let key = [cacheKey, additionalKey].joined(separator: "-")
-        if let image = imageRepository.cachedImageForKey(key) {
+        if let image = spriteRepository.legacyCache.image(forKey: key) {
             attachment.image = image
         } else {
             let genericRouteShield = GenericRouteShield(pointSize: dataSource.font.pointSize,
@@ -235,7 +261,7 @@ class InstructionPresenter {
             genericRouteShield.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: genericRouteShield) else { return nil }
-            imageRepository.storeImage(image, forKey: key, toDisk: false)
+            spriteRepository.legacyCache.store(image, forKey: key, toDisk: false, completion: nil)
             attachment.image = image
         }
         
@@ -254,7 +280,7 @@ class InstructionPresenter {
         let attachment = ExitAttachment()
 
         let key = [cacheKey, additionalKey].joined(separator: "-")
-        if let image = imageRepository.cachedImageForKey(key) {
+        if let image = spriteRepository.legacyCache.image(forKey: key) {
             attachment.image = image
         } else {
             let exitView = ExitView(pointSize: dataSource.font.pointSize,
@@ -283,7 +309,7 @@ class InstructionPresenter {
             exitView.cornerRadius = appearance.cornerRadius
             
             guard let image = takeSnapshot(on: exitView) else { return nil }
-            imageRepository.storeImage(image, forKey: key, toDisk: false)
+            spriteRepository.legacyCache.store(image, forKey: key, toDisk: false, completion: nil)
             attachment.image = image
         }
         
@@ -292,12 +318,8 @@ class InstructionPresenter {
         return NSAttributedString(attachment: attachment)
     }
     
-    private func completeShieldDownload(_ image: UIImage?) {
-        guard image != nil else { return }
-        // We *must* be on main thread here, because attributedText() looks at object properties only accessible on main thread.
-        DispatchQueue.main.async {
-            self.onShieldDownload?(self.attributedText()) //FIXME: Can we work with the image directly?
-        }
+    private func completeShieldDownload() {
+        self.onShieldDownload?(self.attributedText())
     }
     
     private func takeSnapshot(on view: UIView) -> UIImage? {

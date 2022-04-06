@@ -4,6 +4,14 @@ import MapboxDirections
 
 /// :nodoc:
 open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
+    @objc dynamic var roadShieldBlackColor: UIColor = .roadShieldBlackColor
+    @objc dynamic var roadShieldBlueColor: UIColor = .roadShieldBlueColor
+    @objc dynamic var roadShieldGreenColor: UIColor = .roadShieldGreenColor
+    @objc dynamic var roadShieldRedColor: UIColor = .roadShieldRedColor
+    @objc dynamic var roadShieldWhiteColor: UIColor = .roadShieldWhiteColor
+    @objc dynamic var roadShieldYellowColor: UIColor = .roadShieldYellowColor
+    @objc dynamic var roadShieldOrangeColor: UIColor = .roadShieldOrangeColor
+    @objc dynamic var roadShieldDefaultColor: UIColor = .roadShieldDefaultColor
     
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
@@ -12,7 +20,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     // displayed. The bounds of `InstructionLabel` will be used if this view is unset.
     weak var viewForAvailableBoundsCalculation: UIView?
     var shieldHeight: CGFloat = 30
-    var imageRepository: ImageRepository = .shared
+    var spriteRepository: SpriteRepository = .init()
     var imageDownloadCompletion: (() -> Void)?
     weak var instructionDelegate: VisualInstructionDelegate?
     
@@ -31,7 +39,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             
             let presenter = InstructionPresenter(instruction,
                                                  dataSource: self,
-                                                 imageRepository: imageRepository,
+                                                 spriteRepository: spriteRepository,
                                                  traitCollection: traitCollection,
                                                  downloadCompletion: update)
             
@@ -50,7 +58,28 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         update()
-        imageRepository.resetImageCache(nil)
+        spriteRepository.resetCache()
+    }
+    
+    func shieldColor(from textColor: String) -> UIColor {
+        switch textColor {
+        case "black":
+            return roadShieldBlackColor
+        case "blue":
+            return roadShieldBlueColor
+        case "green":
+            return roadShieldGreenColor
+        case "red":
+            return roadShieldRedColor
+        case "white":
+            return roadShieldWhiteColor
+        case "yellow":
+            return roadShieldYellowColor
+        case "orange":
+            return roadShieldOrangeColor
+        default:
+            return roadShieldDefaultColor
+        }
     }
     
     private var instructionPresenter: InstructionPresenter?
