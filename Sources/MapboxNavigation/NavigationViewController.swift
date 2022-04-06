@@ -1093,19 +1093,11 @@ extension NavigationViewController: TopBannerViewControllerDelegate {
         let legProgress = RouteLegProgress(leg: leg, stepIndex: stepIndex)
         guard let upcomingStep = legProgress.upcomingStep else { return }
         
-        let previewBanner: CompletionHandler = {
-            banner.preview(step: legProgress.currentStep,
-                           maneuverStep: upcomingStep,
-                           distance: legProgress.currentStep.distance,
-                           steps: remaining)
-        }
-        
         cameraController?.center(on: upcomingStep,
                                  route: route,
                                  legIndex: legIndex,
                                  stepIndex: stepIndex + 1,
-                                 animated: animated,
-                                 completion: previewBanner)
+                                 animated: animated)
         
         banner.preview(step: legProgress.currentStep,
                        maneuverStep: upcomingStep,
