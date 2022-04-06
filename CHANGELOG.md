@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.5.0
+
+### Location tracking
+
+- Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
+
 ## v2.4.0
 
 ### Pricing
