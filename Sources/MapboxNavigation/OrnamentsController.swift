@@ -187,15 +187,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     }
     
     /**
-     Update the sprite repository of current road label when map style changes.
-     
-     - parameter styleURI: The `StyleURI` that the map is presenting.
-     */
-    func updateStyle(styleURI: StyleURI?) {
-        navigationView.wayNameView.label.updateStyle(styleURI: styleURI)
-    }
-    
-    /**
      Update the current road name label to reflect the road name user suggested.
      
      - parameter suggestedName: The road name to put onto label. If not provided - method will ignore it.
@@ -237,5 +228,18 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
         navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
         navigationView.speedLimitView.speedLimit = progress.currentLegProgress.currentSpeedLimit
         navigationView.speedLimitView.currentSpeed = location.speed
+    }
+}
+
+extension OrnamentsController: NavigationMapInteractionObserver {
+    func navigationViewController(didCenterOn location: CLLocation) {}
+    
+    /**
+     Update the sprite repository of current road label when map style changes.
+     
+     - parameter styleURI: The `StyleURI` that the map is presenting.
+     */
+    func navigationViewController(updateTo styleURI: StyleURI?) {
+        navigationView.wayNameView.label.updateStyle(styleURI: styleURI)
     }
 }

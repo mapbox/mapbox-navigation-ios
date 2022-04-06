@@ -1,6 +1,7 @@
 import Foundation
 import MapboxCoreNavigation
 import CoreLocation
+import MapboxMaps
 
 /**
  A navigation component is a member of the navigation UI view hierarchy that responds as the user progresses along a route according to the `NavigationServiceDelegate` protocol.
@@ -15,6 +16,11 @@ public protocol NavigationMapInteractionObserver: AnyObject {
      Called when the NavigationMapView centers on a location.
      */
     func navigationViewController(didCenterOn location: CLLocation)
+    
+    /**
+     Called when the NavigationMapView updates on style.
+     */
+    func navigationViewController(updateTo styleURI: StyleURI?)
 }
 
 /**

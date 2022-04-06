@@ -122,5 +122,13 @@ open class NightStyle: DayStyle {
         WayNameLabel.appearance().roadShieldWhiteColor = #colorLiteral(red: 0.78, green: 0.78, blue: 0.78, alpha: 1)
         WayNameLabel.appearance().roadShieldYellowColor = #colorLiteral(red: 1.0, green: 0.85, blue: 0.08, alpha: 1)
         WayNameLabel.appearance().roadShieldDefaultColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
+        
+        InstructionLabel.appearance().roadShieldBlackColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
+        InstructionLabel.appearance().roadShieldBlueColor = #colorLiteral(red: 0.18, green: 0.26, blue: 0.66, alpha: 1)
+        InstructionLabel.appearance().roadShieldGreenColor = #colorLiteral(red: 0.07, green: 0.51, blue: 0.22, alpha: 1)
+        InstructionLabel.appearance().roadShieldRedColor = #colorLiteral(red: 0.86, green: 0.06, blue: 0.06, alpha: 1)
+        InstructionLabel.appearance().roadShieldWhiteColor = #colorLiteral(red: 0.78, green: 0.78, blue: 0.78, alpha: 1)
+        InstructionLabel.appearance().roadShieldYellowColor = #colorLiteral(red: 1.0, green: 0.85, blue: 0.08, alpha: 1)
+        InstructionLabel.appearance().roadShieldDefaultColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
     }
 }

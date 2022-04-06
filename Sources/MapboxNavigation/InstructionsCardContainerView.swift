@@ -75,6 +75,12 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         super.init(coder: decoder)
         commonInit()
     }
+    
+    func updateSpriteRepository(respository: SpriteRepository) {
+        instructionsCardView.primaryLabel.spriteRepository = respository
+        instructionsCardView.secondaryLabel.spriteRepository = respository
+        nextBannerView.instructionLabel.spriteRepository = respository
+    }
 
     public func updateInstruction(for step: RouteStep,
                                   distance: CLLocationDistance,

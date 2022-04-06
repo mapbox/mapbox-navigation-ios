@@ -61,6 +61,24 @@ class SpriteRepository {
         }
     }
     
+    func updateSpriteFor(instructionBanner: VisualInstructionBanner, completion: @escaping CompletionHandler) {
+        let components = instructionBanner.primaryInstruction.components
+        let baseURLs = components.compactMap { (component) -> URL? in
+            if case let VisualInstruction.Component.image(image: representation, alternativeText: _) = component {
+                return representation.shield?.baseURL
+            } else {
+                return nil
+            }
+        }
+        
+        let baseURL = baseURLs.first ?? self.baseURL
+        if baseURL != self.baseURL || getSpriteImage() == nil {
+            updateSprite(styleURI: self.styleURI, baseURL: baseURL, completion: completion)
+        } else {
+            completion()
+        }
+    }
+    
     func updateSprite(styleURI: StyleURI, baseURL: URL, completion: @escaping CompletionHandler) {
         spriteCache.clearMemory()
         infoCache.clearMemory()

@@ -2,6 +2,7 @@ import CoreLocation
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
+import MapboxMaps
 
 /**
  A view controller that displays the current maneuver instruction as a “card” resembling a user
@@ -53,6 +54,8 @@ open class InstructionsCardViewController: UIViewController {
     // MARK: Viewing Instructions
     
     public private(set) var isInPreview = false
+    
+    private var spriteRepository: SpriteRepository = .init()
     
     /**
      The InstructionsCardCollection delegate.
@@ -131,7 +134,10 @@ open class InstructionsCardViewController: UIViewController {
                   return nil
               }
         
-        return cell.subviews.compactMap({ $0 as? InstructionsCardContainerView }).first
+        let instructionsCardContainerView = cell.subviews.compactMap({ $0 as? InstructionsCardContainerView }).first
+        // Update the spriteRepository of the instruction labels in instructionsCardContainerView.
+        instructionsCardContainerView?.updateSpriteRepository(respository: spriteRepository)
+        return instructionsCardContainerView
     }
     
     open override func viewDidLoad() {
@@ -419,10 +425,13 @@ extension InstructionsCardViewController: NavigationComponent {
                                   routeProgress: RouteProgress) {
         self.routeProgress = routeProgress
         currentInstruction = instruction
-        updateCurrentVisibleInstructionCard(for: instruction)
         junctionView.update(for: instruction, service: service)
         
-        reloadDataSource()
+        spriteRepository.updateSpriteFor(instructionBanner: instruction) { [weak self] in
+            guard let self = self else { return }
+            self.updateCurrentVisibleInstructionCard(for: instruction)
+            self.reloadDataSource()
+        }
     }
     
     public func navigationService(_ service: NavigationService,
@@ -463,5 +472,16 @@ extension InstructionsCardViewController: NavigationMapInteractionObserver {
     
     public func navigationViewController(didCenterOn location: CLLocation) {
         stopPreview()
+    }
+    
+    public func navigationViewController(updateTo styleURI: StyleURI?) {
+        guard let styleURI = styleURI else { return }
+        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
+            guard let self = self else { return }
+            if let currentInstruction = self.currentInstruction {
+                self.updateCurrentVisibleInstructionCard(for: currentInstruction)
+            }
+            self.reloadDataSource()
+        }
     }
 }

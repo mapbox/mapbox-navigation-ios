@@ -991,8 +991,7 @@ extension NavigationViewController: StyleManagerDelegate {
         if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
             let styleURI = StyleURI(url: style.mapStyleURL)
             navigationMapView?.mapView.mapboxMap.style.uri = styleURI
-            // Update the sprite repository of wayNameView when map style changes.
-            ornamentsController?.updateStyle(styleURI: styleURI)
+            navigationComponents.compactMap({ $0 as? NavigationMapInteractionObserver }).forEach { $0.navigationViewController(updateTo: styleURI) }
         }
         
         currentStatusBarStyle = style.statusBarStyle ?? .default
