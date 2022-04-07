@@ -5,11 +5,11 @@ import MapboxDirections
 
 class SpriteRepository {
     // Caching the Sprite and single shield icon images.
-    let spriteCache = ImageCache()
+    var spriteCache = ImageCache()
     // Caching the single legacy shield icon images.
-    let legacyCache = ImageCache()
+    var legacyCache = ImageCache()
     // Caching the metadata info for Sprite.
-    let infoCache =  SpriteInfoCache()
+    var infoCache =  SpriteInfoCache()
     var styleURI: StyleURI = .navigationDay
     var baseURL: URL = URL(string: "https://api.mapbox.com/styles/v1")!
     fileprivate(set) var imageDownloader: ReentrantImageDownloader = ImageDownloader()
@@ -35,7 +35,27 @@ class SpriteRepository {
             return
         }
         
-        // Reset Sprite cache when style changes with valid ImageRepresentation.
+        // Reset Sprite cache when style changes with valid baseURL.
+        updateSprite(styleURI: styleURI, baseURL: baseURL, completion: completion)
+    }
+    
+    func updateStyle(styleURI: StyleURI,
+                     instructionBanner: VisualInstructionBanner? = nil,
+                     completion: @escaping CompletionHandler) {
+        guard styleURI != self.styleURI else {
+            completion()
+            return
+        }
+        
+        // Reset the default styleURI when style changes without valid VisualInstructionBanner.
+        guard let instructionBanner = instructionBanner else {
+            self.styleURI = styleURI
+            completion()
+            return
+        }
+        
+        // Reset Sprite cache when style changes with valid baseURL.
+        let baseURL = baseURLFor(instructionBanner: instructionBanner)
         updateSprite(styleURI: styleURI, baseURL: baseURL, completion: completion)
     }
 
@@ -44,7 +64,7 @@ class SpriteRepository {
 
         // Reset Sprite cache when the baseURL changes or no valid Sprite image cached.
         let baseURL = representation?.shield?.baseURL ?? self.baseURL
-        if baseURL != self.baseURL || (getSpriteImage() == nil) {
+        if needUpdateSprite(for: baseURL) {
             dispatchGroup.enter()
             updateSprite(styleURI: self.styleURI, baseURL: baseURL) {
                 dispatchGroup.leave()
@@ -59,6 +79,15 @@ class SpriteRepository {
         dispatchGroup.notify(queue: .main) {
             completion()
         }
+    }
+    
+    func updateInstructionBanner(instructionBanner: VisualInstructionBanner, completion: @escaping CompletionHandler) {
+        let baseURL = baseURLFor(instructionBanner: instructionBanner)
+        guard needUpdateSprite(for: baseURL) else {
+            completion()
+            return
+        }
+        updateSprite(styleURI: self.styleURI, baseURL: baseURL, completion: completion)
     }
     
     func updateSprite(styleURI: StyleURI, baseURL: URL, completion: @escaping CompletionHandler) {
@@ -121,7 +150,11 @@ class SpriteRepository {
         return urlComponent.url
     }
     
-    func baseURLFor(instructionBanner: VisualInstructionBanner) -> URL? {
+    func needUpdateSprite(for baseURL: URL) -> Bool {
+        return baseURL != self.baseURL || getSpriteImage() == nil
+    }
+    
+    func baseURLFor(instructionBanner: VisualInstructionBanner) -> URL {
         let components = instructionBanner.primaryInstruction.components
         let baseURLs = components.compactMap { (component) -> URL? in
             if case let VisualInstruction.Component.image(image: representation, alternativeText: _) = component {
@@ -130,13 +163,7 @@ class SpriteRepository {
                 return nil
             }
         }
-        
-        let baseURL = baseURLs.first ?? self.baseURL
-        if baseURL != self.baseURL || getSpriteImage() == nil {
-            return baseURL
-        } else {
-            return nil
-        }
+        return baseURLs.first ?? self.baseURL
     }
     
     func downloadInfo(_ infoURL: URL, spriteKey: String, completion: @escaping (Data?) -> Void) {

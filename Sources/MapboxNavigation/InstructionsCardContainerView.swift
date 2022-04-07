@@ -77,9 +77,8 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
     }
     
     func updateSpriteRepository(respository: SpriteRepository) {
-        instructionsCardView.primaryLabel.spriteRepository = respository
-        instructionsCardView.secondaryLabel.spriteRepository = respository
-        nextBannerView.instructionLabel.spriteRepository = respository
+        instructionsCardView.updateLabelSprite(respository)
+        nextBannerView.updateLabelSprite(respository)
     }
 
     public func updateInstruction(for step: RouteStep,

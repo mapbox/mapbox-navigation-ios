@@ -427,15 +427,10 @@ extension InstructionsCardViewController: NavigationComponent {
         currentInstruction = instruction
         junctionView.update(for: instruction, service: service)
         
-        if let baseURL = spriteRepository.baseURLFor(instructionBanner: instruction) {
-            spriteRepository.updateSprite(styleURI: spriteRepository.styleURI, baseURL: baseURL) { [weak self] in
-                guard let self = self else { return }
-                self.updateCurrentVisibleInstructionCard(for: instruction)
-                self.reloadDataSource()
-            }
-        } else {
-            updateCurrentVisibleInstructionCard(for: instruction)
-            reloadDataSource()
+        spriteRepository.updateInstructionBanner(instructionBanner: instruction) { [weak self] in
+            guard let self = self else { return }
+            self.updateCurrentVisibleInstructionCard(for: instruction)
+            self.reloadDataSource()
         }
     }
     
@@ -481,7 +476,7 @@ extension InstructionsCardViewController: NavigationMapInteractionObserver {
     
     public func navigationViewController(updateTo styleURI: StyleURI?) {
         guard let styleURI = styleURI else { return }
-        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
+        spriteRepository.updateStyle(styleURI: styleURI, instructionBanner: currentInstruction) { [weak self] in
             guard let self = self else { return }
             if let currentInstruction = self.currentInstruction {
                 self.updateCurrentVisibleInstructionCard(for: currentInstruction)

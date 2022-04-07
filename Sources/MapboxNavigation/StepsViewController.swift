@@ -157,6 +157,11 @@ public class StepsViewController: UIViewController {
 
         tableView.register(StepTableViewCell.self, forCellReuseIdentifier: cellId)
     }
+    
+    func updateLabelSprite(_ spriteRepository: SpriteRepository) {
+        self.spriteRepository = spriteRepository
+        tableView.reloadData()
+    }
 
     @IBAction func tappedDismiss(_ sender: Any) {
         delegate?.didDismissStepsViewController(self)
@@ -212,8 +217,7 @@ extension StepsViewController: UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
-        cell.instructionsView.primaryLabel.spriteRepository = spriteRepository
-        cell.instructionsView.secondaryLabel.spriteRepository = spriteRepository
+        cell.instructionsView.updateLabelSprite(spriteRepository)
         return cell
     }
 

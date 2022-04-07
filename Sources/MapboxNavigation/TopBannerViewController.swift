@@ -53,6 +53,7 @@ open class TopBannerViewController: UIViewController {
     public var junctionView: JunctionView = .forAutoLayout(hidden: true)
     
     private var spriteRepository: SpriteRepository = .init()
+    private var currentInstruction: VisualInstructionBanner?
     
     private let instructionsBannerHeight: CGFloat = 100.0
     
@@ -348,26 +349,21 @@ open class TopBannerViewController: UIViewController {
     }
     
     private func updateSpriteRepositoryForViews() {
-        instructionsBannerView.primaryLabel.spriteRepository = spriteRepository
-        instructionsBannerView.secondaryLabel.spriteRepository = spriteRepository
-        nextBannerView.instructionLabel.spriteRepository = spriteRepository
-        previewBannerView?.primaryLabel.spriteRepository = spriteRepository
-        previewBannerView?.secondaryLabel.spriteRepository = spriteRepository
+        instructionsBannerView.updateLabelSprite(spriteRepository)
+        nextBannerView.updateLabelSprite(spriteRepository)
+        previewBannerView?.updateLabelSprite(spriteRepository)
     }
     
     private func updateCurrentVisibleInstructions() {
-        instructionsBannerView.primaryLabel.update()
-        instructionsBannerView.secondaryLabel.update()
+        instructionsBannerView.updateInstructionLabels()
         nextBannerView.instructionLabel.update()
         
         if isDisplayingSteps {
-            stepsViewController?.spriteRepository = spriteRepository
-            stepsViewController?.tableView.reloadData()
+            stepsViewController?.updateLabelSprite(spriteRepository)
         }
         
         if isDisplayingPreviewInstructions {
-            previewBannerView?.primaryLabel.update()
-            previewBannerView?.secondaryLabel.update()
+            previewBannerView?.updateInstructionLabels()
         }
     }
 }
@@ -392,19 +388,15 @@ extension TopBannerViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+        currentInstruction = instruction
         lanesView.update(for: instruction)
         junctionView.update(for: instruction, service: service)
         
-        if let baseURL = spriteRepository.baseURLFor(instructionBanner: instruction) {
-            spriteRepository.updateSprite(styleURI: spriteRepository.styleURI, baseURL: baseURL) { [weak self] in
-                guard let self = self else { return }
-                self.updateSpriteRepositoryForViews()
-                self.instructionsBannerView.update(for: instruction)
-                self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
-            }
-        } else {
-            instructionsBannerView.update(for: instruction)
-            nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
+        spriteRepository.updateInstructionBanner(instructionBanner: instruction) { [weak self] in
+            guard let self = self else { return }
+            self.updateSpriteRepositoryForViews()
+            self.instructionsBannerView.update(for: instruction)
+            self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         }
     }
     
@@ -513,7 +505,7 @@ extension TopBannerViewController: NavigationMapInteractionObserver {
     
     public func navigationViewController(updateTo styleURI: StyleURI?) {
         guard let styleURI = styleURI else { return }
-        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
+        spriteRepository.updateStyle(styleURI: styleURI, instructionBanner: currentInstruction) { [weak self] in
             guard let self = self else { return }
             self.updateSpriteRepositoryForViews()
             self.updateCurrentVisibleInstructions()
