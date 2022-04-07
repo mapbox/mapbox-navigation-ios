@@ -644,7 +644,7 @@ final class BillingHandlerUnitTests: TestCase {
                 return true
             }
 
-            locationManager.speedMultiplier = 50
+            locationManager.speedMultiplier = 10
             locationManager.startUpdatingLocation()
             waitForExpectations(timeout: locationManager.expectedReplayTime, handler: nil)
             locationManager.stopUpdatingLocation()
