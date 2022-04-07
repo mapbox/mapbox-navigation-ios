@@ -175,12 +175,6 @@ class InstructionPresenter {
                           in repository: SpriteRepository,
                           dataSource: DataSource,
                           onImageDownload: @escaping CompletionHandler) -> NSAttributedString? {
-        
-        if spriteRepository.getSpriteImage() == nil {
-            spriteRepository.updateRepresentation(representation: representation, completion: onImageDownload)
-            return nil
-        }
-        
         if let shield = representation.shield {
             if shield.name == "us-state",
                let legacyAttributedString = legacyAttributedString(for: representation, in: repository, dataSource: dataSource) {
@@ -195,6 +189,7 @@ class InstructionPresenter {
         }
         
         // Return nothing in the meantime, triggering downstream behavior (generic shield or text).
+        spriteRepository.updateRepresentation(representation: representation, completion: onImageDownload)
         return nil
     }
     

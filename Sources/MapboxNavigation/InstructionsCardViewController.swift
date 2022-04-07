@@ -427,10 +427,15 @@ extension InstructionsCardViewController: NavigationComponent {
         currentInstruction = instruction
         junctionView.update(for: instruction, service: service)
         
-        spriteRepository.updateSpriteFor(instructionBanner: instruction) { [weak self] in
-            guard let self = self else { return }
-            self.updateCurrentVisibleInstructionCard(for: instruction)
-            self.reloadDataSource()
+        if let baseURL = spriteRepository.baseURLFor(instructionBanner: instruction) {
+            spriteRepository.updateSprite(styleURI: spriteRepository.styleURI, baseURL: baseURL) { [weak self] in
+                guard let self = self else { return }
+                self.updateCurrentVisibleInstructionCard(for: instruction)
+                self.reloadDataSource()
+            }
+        } else {
+            updateCurrentVisibleInstructionCard(for: instruction)
+            reloadDataSource()
         }
     }
     
