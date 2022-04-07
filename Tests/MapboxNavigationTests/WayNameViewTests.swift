@@ -114,7 +114,7 @@ class WayNameViewTests: TestCase {
 }
 
 class SpriteRepositoryStub: SpriteRepository {    
-    override func getShieldIcon(shield: VisualInstruction.Component.ShieldRepresentation) -> UIImage? {
-        return shield.text == "280" ? ShieldImage.shield.image : nil
+    override func getShieldIcon(shield: VisualInstruction.Component.ShieldRepresentation?) -> UIImage? {
+        return shield?.text == "280" ? ShieldImage.shield.image : nil
     }
 }
