@@ -3,6 +3,7 @@ import Foundation
 import UIKit
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxMaps
 
 /**
  A view controller that displays the current maneuver instruction as a “banner” flush with the edges of the containing view. The user swipes to one side to preview a subsequent maneuver.
@@ -50,6 +51,9 @@ open class TopBannerViewController: UIViewController {
      A view that indicates the layout of a highway junction.
      */
     public var junctionView: JunctionView = .forAutoLayout(hidden: true)
+    
+    private var currentInstruction: VisualInstructionBanner?
+    private var spriteRepository: SpriteRepository = .init()
     
     private let instructionsBannerHeight: CGFloat = 100.0
     
@@ -340,6 +344,34 @@ open class TopBannerViewController: UIViewController {
             self.stepsViewController = nil
         }
     }
+    
+    private func updateSpriteRepositoryForViews() {
+        instructionsBannerView.primaryLabel.spriteRepository = spriteRepository
+        instructionsBannerView.secondaryLabel.spriteRepository = spriteRepository
+        nextBannerView.instructionLabel.spriteRepository = spriteRepository
+        previewBannerView?.primaryLabel.spriteRepository = spriteRepository
+        previewBannerView?.secondaryLabel.spriteRepository = spriteRepository
+    }
+    
+    private func updateCurrentVisibleInstructions() {
+        if let instruction = currentInstruction {
+            instructionsBannerView.update(for: instruction)
+            if let tertiaryInstruction = instruction.tertiaryInstruction,
+               tertiaryInstruction.laneComponents.isEmpty {
+                nextBannerView.instructionLabel.instruction = instruction.tertiaryInstruction
+            }
+        }
+        
+        if isDisplayingSteps {
+            stepsViewController?.spriteRepository = spriteRepository
+            stepsViewController?.tableView.reloadData()
+        }
+        
+        if isDisplayingPreviewInstructions {
+            previewBannerView?.primaryLabel.update()
+            previewBannerView?.secondaryLabel.update()
+        }
+    }
 }
 
 // MARK: - NavigationComponent Conformance
@@ -362,10 +394,16 @@ extension TopBannerViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        instructionsBannerView.update(for: instruction)
+        currentInstruction = instruction
         lanesView.update(for: instruction)
-        nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         junctionView.update(for: instruction, service: service)
+        
+        spriteRepository.updateSpriteFor(instructionBanner: instruction) { [weak self] in
+            guard let self = self else { return }
+            self.updateSpriteRepositoryForViews()
+            self.instructionsBannerView.update(for: instruction)
+            self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
+        }
     }
     
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
@@ -469,5 +507,14 @@ extension TopBannerViewController: NavigationStatusPresenter {
 extension TopBannerViewController: NavigationMapInteractionObserver {
     public func navigationViewController(didCenterOn location: CLLocation) {
         stopPreviewing()
+    }
+    
+    public func navigationViewController(updateTo styleURI: StyleURI?) {
+        guard let styleURI = styleURI else { return }
+        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
+            guard let self = self else { return }
+            self.updateSpriteRepositoryForViews()
+            self.updateCurrentVisibleInstructions()
+        }
     }
 }

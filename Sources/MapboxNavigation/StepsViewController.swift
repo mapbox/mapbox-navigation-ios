@@ -23,6 +23,7 @@ public class StepsViewController: UIViewController {
 
     var previousLegIndex: Int = NSNotFound
     var previousStepIndex: Int = NSNotFound
+    var spriteRepository: SpriteRepository = .init()
 
     /**
      Initializes StepsViewController with a RouteProgress object.
@@ -211,6 +212,8 @@ extension StepsViewController: UITableViewDataSource {
 
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: cellId, for: indexPath) as! StepTableViewCell
+        cell.instructionsView.primaryLabel.spriteRepository = spriteRepository
+        cell.instructionsView.secondaryLabel.spriteRepository = spriteRepository
         return cell
     }
 
