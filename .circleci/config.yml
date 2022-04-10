@@ -154,7 +154,7 @@ commands:
             LOG=$(./scripts/swift-api-diff/.build/release/swift-api-diff breaking_changes << parameters.base_api_path >> << parameters.new_api_path >> --ignore-undocumented true)
             if [ ! -z "$CIRCLE_PULL_REQUEST" ]; then
               if [ -z "$LOG" ]; then
-                gh pr comment -b "No breaking changes detected in << parameters.module_name >>"
+                echo "No breaking changes detected in << parameters.module_name >>"
               else
                 PR_COMMENT=$'# Breaking Changes in << parameters.module_name >>\n\n'
                 PR_COMMENT+="$LOG"
