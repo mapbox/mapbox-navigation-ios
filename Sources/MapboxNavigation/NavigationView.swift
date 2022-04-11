@@ -44,7 +44,11 @@ open class NavigationView: UIView {
         case collapsed
     }
     
-    var isBottomBannerContainerViewExpandable: Bool = false
+    var isBottomBannerContainerViewExpandable: Bool = false {
+        didSet {
+            setupBottomBannerContainerViewConstraints()
+        }
+    }
     
     var bottomBannerContainerViewOffset: CGFloat = 50.0
     
@@ -261,6 +265,10 @@ open class NavigationView: UIView {
     }
     
     func setupBottomBannerContainerViewConstraints() {
+        if bottomBannerContainerViewBottomConstraint != nil {
+            NSLayoutConstraint.deactivate([bottomBannerContainerViewBottomConstraint])
+        }
+        
         bottomBannerContainerViewBottomConstraint = bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor)
         
         if isBottomBannerContainerViewExpandable {
