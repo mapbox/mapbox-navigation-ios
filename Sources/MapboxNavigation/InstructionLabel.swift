@@ -20,7 +20,11 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     // displayed. The bounds of `InstructionLabel` will be used if this view is unset.
     weak var viewForAvailableBoundsCalculation: UIView?
     var shieldHeight: CGFloat = 30
-    var spriteRepository: SpriteRepository = .init()
+    var spriteRepository: SpriteRepository = .init() {
+        didSet {
+            update()
+        }
+    }
     var imageDownloadCompletion: (() -> Void)?
     weak var instructionDelegate: VisualInstructionDelegate?
     
@@ -57,8 +61,8 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
+        spriteRepository.legacyCache.clearMemory()
         update()
-        spriteRepository.resetCache()
     }
     
     func shieldColor(from textColor: String) -> UIColor {

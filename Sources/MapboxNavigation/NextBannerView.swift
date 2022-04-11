@@ -115,9 +115,7 @@ open class NextBannerView: UIView, NavigationComponent {
     }
     
     func updateLabelSprite(_ spriteRepository: SpriteRepository) {
-        let legacyCache = instructionLabel.spriteRepository.legacyCache
         instructionLabel.spriteRepository = spriteRepository
-        instructionLabel.spriteRepository.legacyCache = legacyCache
     }
     
     func setupLayout() {

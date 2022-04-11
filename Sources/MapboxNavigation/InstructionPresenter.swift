@@ -189,7 +189,7 @@ class InstructionPresenter {
         }
         
         // Return nothing in the meantime, triggering downstream behavior (generic shield or text).
-        spriteRepository.updateRepresentation(representation: representation, completion: onImageDownload)
+        spriteRepository.updateRepresentation(for: representation, completion: onImageDownload)
         return nil
     }
     

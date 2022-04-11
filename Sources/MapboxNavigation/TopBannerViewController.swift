@@ -352,19 +352,7 @@ open class TopBannerViewController: UIViewController {
         instructionsBannerView.updateLabelSprite(spriteRepository)
         nextBannerView.updateLabelSprite(spriteRepository)
         previewBannerView?.updateLabelSprite(spriteRepository)
-    }
-    
-    private func updateCurrentVisibleInstructions() {
-        instructionsBannerView.updateInstructionLabels()
-        nextBannerView.instructionLabel.update()
-        
-        if isDisplayingSteps {
-            stepsViewController?.updateLabelSprite(spriteRepository)
-        }
-        
-        if isDisplayingPreviewInstructions {
-            previewBannerView?.updateInstructionLabels()
-        }
+        stepsViewController?.updateLabelSprite(spriteRepository)
     }
 }
 
@@ -392,11 +380,16 @@ extension TopBannerViewController: NavigationComponent {
         lanesView.update(for: instruction)
         junctionView.update(for: instruction, service: service)
         
-        spriteRepository.updateInstructionBanner(instructionBanner: instruction) { [weak self] in
-            guard let self = self else { return }
-            self.updateSpriteRepositoryForViews()
-            self.instructionsBannerView.update(for: instruction)
-            self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
+        if spriteRepository.needUpdateSprite(for: instruction) {
+            spriteRepository.updateInstruction(for: instruction) { [weak self] in
+                guard let self = self else { return }
+                self.updateSpriteRepositoryForViews()
+                self.instructionsBannerView.update(for: instruction)
+                self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
+            }
+        } else {
+            instructionsBannerView.update(for: instruction)
+            nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         }
     }
     
@@ -505,10 +498,9 @@ extension TopBannerViewController: NavigationMapInteractionObserver {
     
     public func navigationViewController(updateTo styleURI: StyleURI?) {
         guard let styleURI = styleURI else { return }
-        spriteRepository.updateStyle(styleURI: styleURI, instructionBanner: currentInstruction) { [weak self] in
+        spriteRepository.updateInstructionStyle(styleURI: styleURI, instruction: currentInstruction) { [weak self] in
             guard let self = self else { return }
             self.updateSpriteRepositoryForViews()
-            self.updateCurrentVisibleInstructions()
         }
     }
 }

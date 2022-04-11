@@ -20,9 +20,9 @@ class SpriteRepository {
         }
     }
     
-    func updateStyle(styleURI: StyleURI,
-                     representation: VisualInstruction.Component.ImageRepresentation? = nil,
-                     completion: @escaping CompletionHandler) {
+    func updateRepresentationStyle(styleURI: StyleURI,
+                                   representation: VisualInstruction.Component.ImageRepresentation? = nil,
+                                   completion: @escaping CompletionHandler) {
         guard styleURI != self.styleURI else {
             completion()
             return
@@ -39,27 +39,27 @@ class SpriteRepository {
         updateSprite(styleURI: styleURI, baseURL: baseURL, completion: completion)
     }
     
-    func updateStyle(styleURI: StyleURI,
-                     instructionBanner: VisualInstructionBanner? = nil,
-                     completion: @escaping CompletionHandler) {
+    func updateInstructionStyle(styleURI: StyleURI,
+                                instruction: VisualInstructionBanner? = nil,
+                                completion: @escaping CompletionHandler) {
         guard styleURI != self.styleURI else {
             completion()
             return
         }
         
         // Reset the default styleURI when style changes without valid VisualInstructionBanner.
-        guard let instructionBanner = instructionBanner else {
+        guard let instruction = instruction else {
             self.styleURI = styleURI
             completion()
             return
         }
         
         // Reset Sprite cache when style changes with valid baseURL.
-        let baseURL = baseURLFor(instructionBanner: instructionBanner)
+        let baseURL = baseURLFor(instruction: instruction)
         updateSprite(styleURI: styleURI, baseURL: baseURL, completion: completion)
     }
 
-    func updateRepresentation(representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
+    func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
         let dispatchGroup = DispatchGroup()
 
         // Reset Sprite cache when the baseURL changes or no valid Sprite image cached.
@@ -81,8 +81,8 @@ class SpriteRepository {
         }
     }
     
-    func updateInstructionBanner(instructionBanner: VisualInstructionBanner, completion: @escaping CompletionHandler) {
-        let baseURL = baseURLFor(instructionBanner: instructionBanner)
+    func updateInstruction(for instruction: VisualInstructionBanner, completion: @escaping CompletionHandler) {
+        let baseURL = baseURLFor(instruction: instruction)
         guard needUpdateSprite(for: baseURL) else {
             completion()
             return
@@ -150,12 +150,17 @@ class SpriteRepository {
         return urlComponent.url
     }
     
+    func needUpdateSprite(for instruction: VisualInstructionBanner) -> Bool {
+        let baseURL = baseURLFor(instruction: instruction)
+        return needUpdateSprite(for: baseURL)
+    }
+    
     func needUpdateSprite(for baseURL: URL) -> Bool {
         return baseURL != self.baseURL || getSpriteImage() == nil
     }
     
-    func baseURLFor(instructionBanner: VisualInstructionBanner) -> URL {
-        let components = instructionBanner.primaryInstruction.components
+    func baseURLFor(instruction: VisualInstructionBanner) -> URL {
+        let components = instruction.primaryInstruction.components
         let baseURLs = components.compactMap { (component) -> URL? in
             if case let VisualInstruction.Component.image(image: representation, alternativeText: _) = component {
                 return representation.shield?.baseURL
