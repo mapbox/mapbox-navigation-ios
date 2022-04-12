@@ -159,6 +159,11 @@ public class Fixture: NSObject {
             locationManager.tick()
         }
         
+        // Include the last coodinate to the locationManager update to complete the final step of route.
+        if let lastCoordinate = route.shape?.coordinates.last {
+            locationManager.delegate?.locationManager?(locationManager, didUpdateLocations: [CLLocation(coordinate: lastCoordinate)])
+        }
+        
         return traceCollector.locations
     }
     
