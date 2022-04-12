@@ -19,6 +19,8 @@ open class TopBannerViewController: UIViewController {
     
     var routeProgress: RouteProgress?
     
+    var currentInstruction: VisualInstructionBanner?
+    
     lazy var informationStackBottomPinConstraint: NSLayoutConstraint = view.bottomAnchor.constraint(equalTo: informationStackView.bottomAnchor)
     
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
@@ -331,6 +333,7 @@ open class TopBannerViewController: UIViewController {
             
             if !self.isDisplayingPreviewInstructions {
                 self.showSecondaryChildren(completion: complete)
+                self.lanesView.update(for: self.currentInstruction)
             } else {
                 complete()
             }
@@ -363,8 +366,9 @@ extension TopBannerViewController: NavigationComponent {
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         instructionsBannerView.update(for: instruction)
-//        lanesView.update(for: instruction)
-        lanesView.update(for: instruction, isDisplayingSteps: isDisplayingSteps)
+        currentInstruction = instruction
+        lanesView.isTopBannerDisplayingSteps = isDisplayingSteps
+        lanesView.update(for: instruction)
         nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         junctionView.update(for: instruction, service: service)
     }
