@@ -22,7 +22,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var shieldHeight: CGFloat = 30
     var spriteRepository: SpriteRepository = .init() {
         didSet {
-            update()
+            updateLabelAttributedText()
         }
     }
     var imageDownloadCompletion: (() -> Void)?
@@ -30,38 +30,40 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     
     var instruction: VisualInstruction? {
         didSet {
-            guard let instruction = instruction else {
-                text = nil
-                instructionPresenter = nil
-                return
-            }
-            let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
-                guard let self = self else { return }
-                self.attributedText = attributedText
-                self.imageDownloadCompletion?()
-            }
-            
-            let presenter = InstructionPresenter(instruction,
-                                                 dataSource: self,
-                                                 spriteRepository: spriteRepository,
-                                                 traitCollection: traitCollection,
-                                                 downloadCompletion: update)
-            
-            let attributed = presenter.attributedText()
-            attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
-            instructionPresenter = presenter
+            updateLabelAttributedText()
         }
+    }
+    
+    private func updateLabelAttributedText() {
+        guard let instruction = instruction else {
+            text = nil
+            return
+        }
+        let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
+            guard let self = self else { return }
+            self.attributedText = attributedText
+            self.imageDownloadCompletion?()
+        }
+        let presenter = InstructionPresenter(instruction,
+                                             dataSource: self,
+                                             spriteRepository: spriteRepository,
+                                             traitCollection: traitCollection,
+                                             downloadCompletion: update)
+        
+        let attributed = presenter.attributedText()
+        attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
     }
 
     open override func update() {
+        super.update()
+        // When style changes or traitCollection changes, clear the legacy cache for generic shields and exit shields.
+        spriteRepository.legacyCache.clearMemory()
         let previousInstruction = instruction
         instruction = previousInstruction
-        super.update()
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        spriteRepository.legacyCache.clearMemory()
         update()
     }
     
@@ -85,8 +87,6 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             return roadShieldDefaultColor
         }
     }
-    
-    private var instructionPresenter: InstructionPresenter?
 }
 
 /// :nodoc:
