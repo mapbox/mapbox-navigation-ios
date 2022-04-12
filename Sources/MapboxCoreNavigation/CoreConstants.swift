@@ -42,8 +42,10 @@ public var RouteControllerProactiveReroutingInterval: TimeInterval = 120
 
 /**
  The distance threshold to the current leg destination to anounce the arrival of the waypoint.
+ 
+ During active navigation, when the remaining distance of current route leg is equal or smaller than the `RouteControllerDistanceForArrival`, the arrival event at current leg waypoint would be announced.
  */
-public var RouteControllerDistanceForArrival: CLLocationDistance = 10
+public var RouteControllerDistanceForArrival: CLLocationDistance = 50
 
 /**
  Minimum number of consecutive incorrect course updates before rerouting occurs.

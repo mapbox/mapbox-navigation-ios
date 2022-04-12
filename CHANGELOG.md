@@ -57,6 +57,7 @@
 * MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * `HistoryRecording` static methods are deprecated in favor of instance methods. Using these instance variants on `RouteController` or `PassiveLocationManager` ensures correct history events recording and storing. ([#3791](https://github.com/mapbox/mapbox-navigation-ios/pull/3791))
 * Fixed a bug which caused `RouteOptions.profileIdentifier` to be ignored in active navigation. This may have caused elevated network usage. ([#3796](https://github.com/mapbox/mapbox-navigation-ios/pull/3796))
+* Added `RouteControllerDistanceForArrival` to provide custom distance threshold to anounce the arrival of the waypoint. During active navigation, when the remaining distance of current route leg is equal or smaller than the `RouteControllerDistanceForArrival`, the arrival event at current leg waypoint would be announced. ([#3780](https://github.com/mapbox/mapbox-navigation-ios/pull/3780))
 
 ## v2.3.0
 
