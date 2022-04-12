@@ -60,6 +60,7 @@ class NavigationServiceTests: TestCase {
 
         directionsClientSpy.reset()
         delegate.reset()
+        RouteControllerDistanceForArrival = 75
     }
     
     override func tearDown() {
@@ -642,6 +643,7 @@ class NavigationServiceTests: TestCase {
     }
 
     func testMultiLegRoute() {
+        RouteControllerDistanceForArrival = 10
         let route = Fixture.route(from: "multileg-route", options: routeOptions)
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let locationManager = ReplayLocationManager(locations: trace)
@@ -669,7 +671,9 @@ class NavigationServiceTests: TestCase {
         }
         wait(for: [routeUpdated], timeout: 5)
         locationManager.onTick = { index, _ in
-            if index < 32 {
+            // By decreasing the RouteControllerDistanceForArrival, more locations will be included into the first leg
+            // when the distance to the current leg destination is larger than the threshold.
+            if index < 43 {
                 XCTAssertEqual(routeController.routeProgress.legIndex,0)
             } else {
                 XCTAssertEqual(routeController.routeProgress.legIndex, 1)
