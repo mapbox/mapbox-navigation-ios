@@ -52,6 +52,8 @@ open class TopBannerViewController: UIViewController {
      */
     public var junctionView: JunctionView = .forAutoLayout(hidden: true)
     
+    private var currentInstruction: VisualInstructionBanner?
+    
     private var spriteRepository: SpriteRepository = .init()
     
     private let instructionsBannerHeight: CGFloat = 100.0
@@ -353,6 +355,12 @@ open class TopBannerViewController: UIViewController {
         previewBannerView?.updateLabelSprite(spriteRepository)
         stepsViewController?.updateLabelSprite(spriteRepository)
     }
+    
+    private func updateVisibleInstructionViews() {
+        instructionsBannerView.updateInstructionLabel(for: currentInstruction)
+        nextBannerView.instructionLabel.update()
+        previewBannerView?.updateInstructionLabel(for: nil)
+    }
 }
 
 // MARK: - NavigationComponent Conformance
@@ -375,6 +383,7 @@ extension TopBannerViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+        currentInstruction = instruction
         lanesView.update(for: instruction)
         junctionView.update(for: instruction, service: service)
         
@@ -385,7 +394,7 @@ extension TopBannerViewController: NavigationComponent {
         }
         
         spriteRepository.updateSprite(styleURI: spriteRepository.styleURI) { [weak self] in
-            guard let self = self else { return }
+            guard let self = self, let instruction = self.currentInstruction, let routeProgress = self.routeProgress else { return }
             self.updateSpriteRepositoryForViews()
             self.instructionsBannerView.update(for: instruction)
             self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
@@ -499,6 +508,7 @@ extension TopBannerViewController: NavigationMapInteractionObserver {
         spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
             guard let self = self else { return }
             self.updateSpriteRepositoryForViews()
+            self.updateVisibleInstructionViews()
         }
     }
 }

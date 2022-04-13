@@ -235,6 +235,15 @@ open class BaseInstructionsBannerView: UIControl {
         secondaryLabel.spriteRepository = spriteRepository
     }
     
+    func updateInstructionLabel(for instruction: VisualInstructionBanner?) {
+        if let instruction = instruction {
+            update(for: instruction)
+        } else {
+            primaryLabel.update()
+            secondaryLabel.update()
+        }
+    }
+    
     // MARK: Layout
     static let padding: CGFloat = 16
     static let maneuverViewSize = CGSize(width: 38, height: 38)
