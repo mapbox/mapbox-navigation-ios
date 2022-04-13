@@ -10,26 +10,49 @@ open class PreviewViewController: UIViewController {
     
     // :nodoc:
     public enum State {
-        case initial
-        case requested
-        case previewing
+        case browsing
+        case destinationPreviewing(_ destinationOptions: DestinationOptions)
+        case routesPreviewing(_ previewOptions: PreviewOptions)
     }
     
-    var state: State = .initial {
+    var previousState: State? = nil
+    
+    var state: State = .browsing {
         didSet {
             update(state)
         }
     }
     
-    var currentRouteIndex = 0 {
-        didSet {
-            showcase()
+    var routesPreviewCameraOptions: CameraOptions {
+        let topInset: CGFloat
+        let bottomInset: CGFloat
+        let leftInset: CGFloat
+        let rightInset: CGFloat
+        let spacing: CGFloat = 10.0
+        
+        if traitCollection.verticalSizeClass == .regular {
+            topInset = 150.0
+            bottomInset = navigationView.bottomBannerContainerView.frame.height + spacing
+            leftInset = view.safeAreaInsets.left + spacing
+            rightInset = view.safeAreaInsets.right + spacing
+        } else {
+            topInset = 50.0
+            bottomInset = 50.0
+            leftInset = navigationView.bottomBannerContainerView.frame.width + spacing
+            rightInset = view.safeAreaInsets.right + spacing
         }
+        
+        let padding = UIEdgeInsets(top: topInset,
+                                   left: leftInset,
+                                   bottom: bottomInset,
+                                   right: rightInset)
+        
+        let pitch = 0.0
+        
+        return CameraOptions(padding: padding, pitch: pitch)
     }
     
-    var routeResponse: RouteResponse?
-    
-    var backButton: UIButton!
+    var backButton: BackButton!
     
     var navigationView: NavigationView!
     
@@ -37,25 +60,16 @@ open class PreviewViewController: UIViewController {
     
     var wayNameView: WayNameView!
     
-    var destinationView: DestinationView!
-    
-    var routePreviewView: RoutePreviewView!
-    
-    var finalDestinationAnnotation: PointAnnotation? = nil
+    var finalDestinationAnnotations: [PointAnnotation]? = nil
     
     var pointAnnotationManager: PointAnnotationManager?
     
     var cameraFloatingButton: CameraFloatingButton!
     
-    public weak var delegate: PreviewViewControllerDelegate?
-    
-    static let coarseLocationManager: CLLocationManager = {
-        let coarseLocationManager = CLLocationManager()
-        coarseLocationManager.desiredAccuracy = kCLLocationAccuracyThreeKilometers
-        return coarseLocationManager
-    }()
-    
     var styleManager: StyleManager!
+    
+    // :nodoc:
+    public weak var delegate: PreviewViewControllerDelegate?
     
     open override func viewDidLoad() {
         super.viewDidLoad()
@@ -73,10 +87,7 @@ open class PreviewViewController: UIViewController {
         setupGestureRecognizers()
         subscribeForNotifications()
         
-        setupDestinationView()
-        setupRoutePreviewView()
-        
-        state = .initial
+        state = .browsing
     }
     
     open override func viewWillAppear(_ animated: Bool) {
@@ -90,6 +101,8 @@ open class PreviewViewController: UIViewController {
     func setupStyleManager() {
         styleManager = StyleManager()
         styleManager.delegate = self
+        // styleManager.styles = [PreviewDayStyle()]
+        // styleManager.styles = [PreviewNightStyle()]
         styleManager.styles = [PreviewDayStyle(), PreviewNightStyle()]
     }
     
@@ -100,7 +113,7 @@ open class PreviewViewController: UIViewController {
         navigationView.floatingStackView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
                                                                    constant: -10.0).isActive = true
         
-        cameraFloatingButton = CameraFloatingButton(type: .custom)
+        cameraFloatingButton = CameraFloatingButton(type: .system)
         cameraFloatingButton.delegate = self
         
         navigationView.floatingButtons = [
@@ -166,7 +179,9 @@ open class PreviewViewController: UIViewController {
         
         // In case if routes are already shown and orientation changes - fit camera so that all
         // routes fit into available space.
-        showcase(shouldPresentRoutes: state == .previewing)
+        if case .routesPreviewing(let previewOptions) = state {
+            fitCamera(to: previewOptions.routeResponse)
+        }
     }
     
     func updateViewportDataSource(for location: CLLocation?) {
@@ -187,82 +202,90 @@ open class PreviewViewController: UIViewController {
         navigationViewportDataSource.followingMobileCamera.pitch = 40.0
     }
     
-    public func preview(_ routeResponse: RouteResponse) {
-        self.routeResponse = routeResponse
+    func addDestinationAnnotations(for coordinates: [CLLocationCoordinate2D]) {
+        let markerImage = UIImage(named: "final_destination_pin", in: .mapboxNavigation, compatibleWith: nil)!
         
-        if let lastLeg = routeResponse.routes?.first?.legs.last,
-           let destinationCoordinate = lastLeg.destination?.coordinate {
-            let identifier = NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation
-            var destinationAnnotation = PointAnnotation(id: identifier, coordinate: destinationCoordinate)
-            let markerImage = UIImage(named: "final_destination_pin", in: .mapboxNavigation, compatibleWith: nil)!
+        let destinationAnnotations: [PointAnnotation] = coordinates.enumerated().map {
+            let identifier = "\(NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation)_\($0.offset)"
+            var destinationAnnotation = PointAnnotation(id: identifier, coordinate: $0.element)
             destinationAnnotation.image = .init(image: markerImage, name: "default_marker")
             
-            // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
-            // and add it only after fully loading `MapView` style.
-            if let pointAnnotationManager = self.pointAnnotationManager {
-                pointAnnotationManager.annotations = [destinationAnnotation]
-            } else {
-                finalDestinationAnnotation = destinationAnnotation
-            }
+            return destinationAnnotation
         }
         
-        state = .requested
-        
-        showcase(shouldPresentRoutes: false)
+        // If `PointAnnotationManager` is available - add `PointAnnotation`, if not - remember it
+        // and add it only after fully loading `MapView` style.
+        if let pointAnnotationManager = self.pointAnnotationManager {
+            pointAnnotationManager.annotations = destinationAnnotations
+        } else {
+            finalDestinationAnnotations = destinationAnnotations
+        }
     }
     
-    func showcase(shouldPresentRoutes: Bool = true) {
-        if state == .initial { return }
+    // :nodoc:
+    public func preview(_ waypoints: [Waypoint]) {
+        let coordinates = waypoints.map({ $0.coordinate })
+        preview(coordinates)
+    }
+    
+    // :nodoc:
+    public func preview(_ coordinates: [CLLocationCoordinate2D]) {
+        let destinationOptions = DestinationOptions(coordinates: coordinates)
+        state = .destinationPreviewing(destinationOptions)
         
-        let topInset: CGFloat
-        let bottomInset: CGFloat
-        let leftInset: CGFloat
-        let rightInset: CGFloat
-        let spacing: CGFloat = 10.0
+        // TODO: Show intermediate waypoints differently.
+        addDestinationAnnotations(for: coordinates)
         
-        if traitCollection.verticalSizeClass == .regular {
-            topInset = 150.0
-            bottomInset = navigationView.bottomBannerContainerView.frame.height + spacing
-            leftInset = view.safeAreaInsets.left + spacing
-            rightInset = view.safeAreaInsets.right + spacing
+        let destinationPreviewViewController: DestinationableViewController
+        if let customDestinationPreviewViewController = delegate?.destinationPreviewViewController(for: self) {
+            destinationPreviewViewController = customDestinationPreviewViewController
         } else {
-            topInset = 50.0
-            bottomInset = 50.0
-            leftInset = navigationView.bottomBannerContainerView.frame.width + spacing
-            rightInset = view.safeAreaInsets.right + spacing
+            destinationPreviewViewController = DestinationPreviewViewController(destinationOptions)
+            (destinationPreviewViewController as? DestinationPreviewViewController)?.delegate = self
         }
         
-        let padding = UIEdgeInsets(top: topInset,
-                                   left: leftInset,
-                                   bottom: bottomInset,
-                                   right: rightInset)
+        embed(destinationPreviewViewController, in: navigationView.bottomBannerContainerView)
+    }
+    
+    // :nodoc:
+    public func preview(_ routeResponse: RouteResponse, routeIndex: Int = 0) {
+        let previewOptions = PreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
+        state = .routesPreviewing(previewOptions)
         
-        if var routes = routeResponse?.routes {
-            routes.insert(routes.remove(at: currentRouteIndex), at: 0)
-            
-            let cameraOptions = CameraOptions(padding: padding, pitch: 0.0)
-            if shouldPresentRoutes {
-                navigationView.navigationMapView.showcase(routes,
-                                                          routesPresentationStyle: .all(shouldFit: true, cameraOptions: cameraOptions))
-            } else {
-                navigationView.navigationMapView.fitCamera(to: routes,
-                                                           routesPresentationStyle: .all(shouldFit: true, cameraOptions: cameraOptions))
-            }
+        if let lastLeg = previewOptions.routeResponse.routes?.first?.legs.last,
+           let destinationCoordinate = lastLeg.destination?.coordinate {
+            addDestinationAnnotations(for: [destinationCoordinate])
         }
         
-        if let route = routeResponse?.routes?[currentRouteIndex] {
-            let typicalTravelTime = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime)
-            routePreviewView.timeRemainingLabel.text = typicalTravelTime
-            
-            let distance = Measurement(distance: route.distance).localized()
-            routePreviewView.distanceRemainingLabel.text = MeasurementFormatter().string(from: distance)
-            
-            if let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(route.expectedTravelTime), to: Date()) {
-                let dateFormatter = DateFormatter()
-                dateFormatter.timeStyle = .short
-                routePreviewView.arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate)
-            }
+        let routesPreviewViewController: PreviewableViewController
+        if let customRoutesPreviewViewController = delegate?.routesPreviewViewController(for: self) {
+            routesPreviewViewController = customRoutesPreviewViewController
+        } else {
+            routesPreviewViewController = RoutesPreviewViewController(previewOptions)
+            (routesPreviewViewController as? RoutesPreviewViewController)?.delegate = self
         }
+        
+        embed(routesPreviewViewController, in: navigationView.bottomBannerContainerView)
+        
+        showcase(routeResponse: routeResponse, routeIndex: routeIndex)
+    }
+    
+    func showcase(routeResponse: RouteResponse, routeIndex: Int) {
+        guard var routes = routeResponse.routes else { return }
+        
+        routes.insert(routes.remove(at: routeIndex), at: 0)
+        
+        navigationView.navigationMapView.showcase(routes,
+                                                  routesPresentationStyle: .all(shouldFit: true,
+                                                                                cameraOptions: routesPreviewCameraOptions))
+    }
+    
+    func fitCamera(to routeResponse: RouteResponse?) {
+        guard let routes = routeResponse?.routes else { return }
+        
+        navigationView.navigationMapView.fitCamera(to: routes,
+                                                   routesPresentationStyle: .all(shouldFit: true,
+                                                                                 cameraOptions: routesPreviewCameraOptions))
     }
     
     func setupOrnaments() {
@@ -273,9 +296,7 @@ open class PreviewViewController: UIViewController {
         delegate?.previewViewController(self, stateDidChangeTo: state)
         
         switch state {
-        case .initial:
-            currentRouteIndex = 0
-            routeResponse = nil
+        case .browsing:
             backButton.isHidden = true
             navigationView.bottomBannerContainerView.isHidden = true
             pointAnnotationManager?.annotations = []
@@ -284,40 +305,39 @@ open class PreviewViewController: UIViewController {
             navigationView.navigationMapView.removeWaypoints()
             navigationView.navigationMapView.removeRoutes()
             
+            // Speed limit, road name and floating buttons should be shown.
             speedLimitView.isAlwaysHidden = false
             wayNameView.isHidden = false
             
-            navigationView.floatingStackView.isHidden = false
-            
-            destinationView.isHidden = true
-            routePreviewView.isHidden = true
-            
             cameraFloatingButton.cameraState = .following
-        case .requested:
-            navigationView.navigationMapView.navigationCamera.stop()
-            
+        case .destinationPreviewing:
+            // Speed limit, road name and floating buttons should be hidden.
             speedLimitView.isAlwaysHidden = true
             wayNameView.isHidden = true
+            
+            navigationView.navigationMapView.removeWaypoints()
+            navigationView.navigationMapView.removeRoutes()
             
             navigationView.bottomBannerContainerView.isHidden = false
             backButton.isHidden = false
             
-            navigationView.navigationMapView.removeRoutes()
-            
-            navigationView.floatingStackView.isHidden = true
-            
-            destinationView.isHidden = false
-            routePreviewView.isHidden = true
-        case .previewing:
-            showcase()
-            
+            navigationView.bottomBannerContainerView.subviews.forEach {
+                $0.removeFromSuperview()
+            }
+        case .routesPreviewing:
+            // Speed limit, road name and floating buttons should be hidden.
             speedLimitView.isAlwaysHidden = true
             wayNameView.isHidden = true
             
-            navigationView.floatingStackView.isHidden = true
+            navigationView.navigationMapView.removeWaypoints()
+            navigationView.navigationMapView.removeRoutes()
             
-            destinationView.isHidden = true
-            routePreviewView.isHidden = false
+            navigationView.bottomBannerContainerView.isHidden = false
+            backButton.isHidden = false
+            
+            navigationView.bottomBannerContainerView.subviews.forEach {
+                $0.removeFromSuperview()
+            }
         }
     }
     
@@ -351,11 +371,11 @@ open class PreviewViewController: UIViewController {
             guard let self = self else { return }
             self.pointAnnotationManager = self.navigationView.navigationMapView.mapView.annotations.makePointAnnotationManager()
             
-            if let finalDestinationAnnotation = self.finalDestinationAnnotation,
+            if let finalDestinationAnnotations = self.finalDestinationAnnotations,
                let pointAnnotationManager = self.pointAnnotationManager {
-                pointAnnotationManager.annotations = [finalDestinationAnnotation]
+                pointAnnotationManager.annotations = finalDestinationAnnotations
                 
-                self.finalDestinationAnnotation = nil
+                self.finalDestinationAnnotations = nil
             }
         }
         
@@ -405,16 +425,10 @@ open class PreviewViewController: UIViewController {
     }
     
     func setupBackButton() {
-        let backButton: UIButton = .forAutoLayout()
-        backButton.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        backButton.layer.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1).cgColor
-        backButton.layer.cornerRadius = 10.0
-        backButton.layer.borderWidth = 2.0
+        let backButton = BackButton(type: .system)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
         backButton.setTitle("Back", for: .normal)
-        let titleColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)
-        backButton.setTitleColor(titleColor, for: .normal)
         backButton.clipsToBounds = true
-        backButton.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
         backButton.addTarget(self, action: #selector(didPressBackButton), for: .touchUpInside)
         
         let backImage = UIImage(named: "back", in: .mapboxNavigation, compatibleWith: nil)!
@@ -424,7 +438,6 @@ open class PreviewViewController: UIViewController {
                                                   left: 0,
                                                   bottom: 10,
                                                   right: 10)
-        backButton.layer.borderColor = #colorLiteral(red: 0.804, green: 0.816, blue: 0.816, alpha: 1).cgColor
         navigationView.addSubview(backButton)
         
         let backButtonLayoutConstraints = [
@@ -442,10 +455,13 @@ open class PreviewViewController: UIViewController {
     }
     
     @objc func didPressBackButton() {
-        if state == .previewing {
-            state = .requested
-        } else {
-            state = .initial
+        if case let .destinationPreviewing(destinationOptions) = previousState {
+            previousState = nil
+            preview(destinationOptions.waypoints)
+        } else if case .destinationPreviewing(_) = state {
+            state = .browsing
+        } else if case .routesPreviewing(_) = state {
+            state = .browsing
         }
     }
     
@@ -469,36 +485,6 @@ open class PreviewViewController: UIViewController {
         NSLayoutConstraint.activate(bottomBannerContainerViewLayoutConstraints)
     }
     
-    func setupDestinationView() {
-        destinationView = DestinationView()
-        destinationView.delegate = self
-        destinationView.translatesAutoresizingMaskIntoConstraints = false
-        navigationView.bottomBannerContainerView.addSubview(destinationView)
-        destinationView.isHidden = true
-        
-        NSLayoutConstraint.activate([
-            destinationView.leadingAnchor.constraint(equalTo: navigationView.bottomBannerContainerView.leadingAnchor),
-            destinationView.trailingAnchor.constraint(equalTo: navigationView.bottomBannerContainerView.trailingAnchor),
-            destinationView.topAnchor.constraint(equalTo: navigationView.bottomBannerContainerView.topAnchor),
-            destinationView.bottomAnchor.constraint(equalTo: navigationView.bottomBannerContainerView.bottomAnchor)
-        ])
-    }
-    
-    func setupRoutePreviewView() {
-        routePreviewView = RoutePreviewView()
-        routePreviewView.delegate = self
-        routePreviewView.translatesAutoresizingMaskIntoConstraints = false
-        navigationView.bottomBannerContainerView.addSubview(routePreviewView)
-        routePreviewView.isHidden = true
-        
-        NSLayoutConstraint.activate([
-            routePreviewView.leadingAnchor.constraint(equalTo: navigationView.bottomBannerContainerView.leadingAnchor),
-            routePreviewView.trailingAnchor.constraint(equalTo: navigationView.bottomBannerContainerView.trailingAnchor),
-            routePreviewView.topAnchor.constraint(equalTo: navigationView.bottomBannerContainerView.topAnchor),
-            routePreviewView.bottomAnchor.constraint(equalTo: navigationView.bottomBannerContainerView.bottomAnchor)
-        ])
-    }
-    
     func setupGestureRecognizers() {
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
         navigationView.addGestureRecognizer(longPressGestureRecognizer)
@@ -518,7 +504,7 @@ open class PreviewViewController: UIViewController {
         guard gesture.state == .began,
               let passiveLocationProvider = navigationView.navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider,
               let originCoordinate = passiveLocationProvider.locationManager.location?.coordinate,
-              state == .initial else { return }
+              case _ = State.browsing else { return }
         
         let destinationCoordinate = navigationView.navigationMapView.mapView.mapboxMap.coordinate(for: gesture.location(in: navigationView.navigationMapView.mapView))
         let coordinates = [
@@ -527,24 +513,6 @@ open class PreviewViewController: UIViewController {
         ]
         
         delegate?.previewViewController(self, didLongPressFor: coordinates)
-        
-        let options = ReverseGeocodeOptions(coordinate: destinationCoordinate)
-        options.focalLocation = PreviewViewController.coarseLocationManager.location
-        options.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
-        var allowedScopes: PlacemarkScope = .all
-        allowedScopes.remove(.postalCode)
-        options.allowedScopes = allowedScopes
-        options.maximumResultCount = 1
-        options.includesRoutableLocations = true
-        
-        Geocoder.shared.geocode(options, completionHandler: { [weak self] (placemarks, attribution, error) in
-            guard let self = self,
-                  let placemark = placemarks?.first else {
-                      return
-                  }
-            
-            self.destinationView.destinationLabel.text = placemark.formattedName
-        })
     }
     
     @objc func resetCameraState() {
@@ -557,37 +525,27 @@ open class PreviewViewController: UIViewController {
 
 extension PreviewViewController: NavigationMapViewDelegate {
     
-    public func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
-        // TODO: Implement waypoint handling logic.
-    }
-    
     public func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
-        guard let routeResponse = routeResponse,
-              let routeIndex = routeResponse.routes?.firstIndex(where: { $0 === route }) else { return }
-        
-        currentRouteIndex = routeIndex
-        
-        delegate?.previewViewController(self,
-                                        didSelectRouteAt: routeIndex,
-                                        from: routeResponse)
+        delegate?.previewViewController(self, didSelect: route)
     }
 }
 
-extension PreviewViewController: DestinationViewDelegate, RoutePreviewViewDelegate {
+extension PreviewViewController: DestinationPreviewViewControllerDelegate, RoutesPreviewViewControllerDelegate {
     
     func didPressPreviewButton() {
-        state = .previewing
+        previousState = state
+        delegate?.previewViewControllerWillPreviewRoutes(self)
     }
     
     func didPressStartButton() {
-        delegate?.previewViewControllerDidBeginNavigation(self)
+        delegate?.previewViewControllerWillBeginNavigation(self)
     }
 }
 
 extension PreviewViewController: CameraFloatingButtonDelegate {
     
     func cameraFloatingButton(_ cameraFloatingButton: CameraFloatingButton,
-                              didChangeTo state: CameraFloatingButton.State) {
+                              cameraStateDidChangeTo state: CameraFloatingButton.State) {
         switch state {
         case .idle:
             navigationView.navigationMapView.navigationCamera.stop()

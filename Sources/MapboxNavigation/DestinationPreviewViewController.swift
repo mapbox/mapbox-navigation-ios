@@ -1,42 +1,89 @@
 import UIKit
+import CoreLocation
+import MapboxDirections
 
-protocol DestinationViewDelegate: AnyObject {
+public struct DestinationOptions {
+    
+    public private(set) var waypoints: [Waypoint]
+    
+    public init(coordinates: [CLLocationCoordinate2D]) {
+        self.waypoints = coordinates.map({ Waypoint(coordinate: $0) })
+    }
+    
+    public init(waypoints: [Waypoint]) {
+        self.waypoints = waypoints
+    }
+}
+
+public protocol Destinationable: AnyObject {
+    
+    var destinationOptions: DestinationOptions { get }
+}
+
+public typealias DestinationableViewController = UIViewController & Destinationable
+
+protocol DestinationPreviewViewControllerDelegate: AnyObject {
     
     func didPressPreviewButton()
     
     func didPressStartButton()
 }
 
-class DestinationView: UIView {
+class DestinationPreviewViewController: DestinationableViewController {
+    
+    var bottomBannerView: BottomBannerView!
+    
+    var bottomPaddingView: BottomPaddingView!
     
     var destinationLabel: UILabel!
     
-    var previewButton: UIButton!
+    var previewButton: PreviewButton!
     
-    var startButton: UIButton!
+    var startButton: StartButton!
     
-    weak var delegate: DestinationViewDelegate?
+    weak var delegate: DestinationPreviewViewControllerDelegate?
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    var destinationOptions: DestinationOptions
+    
+    required init(_ destinationOptions: DestinationOptions) {
+        self.destinationOptions = destinationOptions
         
-        commonInit()
+        super.init(nibName: nil, bundle: nil)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        commonInit()
+    }
+    
     func commonInit() {
+        setupParentView()
         setupStartButton()
         setupPreviewButton()
         setupDestinationLabel()
         setupConstraints()
     }
     
+    func setupParentView() {
+        bottomBannerView = .forAutoLayout()
+        bottomPaddingView = .forAutoLayout()
+        
+        let parentViews: [UIView] = [
+            bottomBannerView,
+            bottomPaddingView
+        ]
+        
+        view.addSubviews(parentViews)
+    }
+    
     func setupDestinationLabel() {
         let destinationLabel: UILabel = .forAutoLayout()
-        addSubview(destinationLabel)
+        view.addSubview(destinationLabel)
         
         destinationLabel.font = UIFont.systemFont(ofSize: 27.0)
         destinationLabel.textColor = #colorLiteral(red: 0.216, green: 0.212, blue: 0.454, alpha: 1)
@@ -46,24 +93,18 @@ class DestinationView: UIView {
     }
     
     func setupPreviewButton() {
-        let previewButton: UIButton = .forAutoLayout()
-        previewButton.backgroundColor = .white
-        previewButton.layer.backgroundColor = UIColor(red: 1, green: 1, blue: 1, alpha: 1).cgColor
-        previewButton.layer.cornerRadius = 5
-        previewButton.layer.borderWidth = 2
-        previewButton.setTitleColor(UIColor(red: 0.216, green: 0.212, blue: 0.454, alpha: 1), for: .normal)
+        let previewButton = PreviewButton(type: .system)
+        previewButton.translatesAutoresizingMaskIntoConstraints = false
         previewButton.clipsToBounds = true
         
-        let previewImage = UIImage(named: "route", in: .mapboxNavigation, compatibleWith: nil)!
+        let previewImage = UIImage(named: "route", in: .mapboxNavigation, compatibleWith: nil)
         previewButton.setImage(previewImage, for: .normal)
         previewButton.imageView?.contentMode = .scaleAspectFit
-        previewButton.imageView?.tintColor = UIColor(red: 0.216, green: 0.212, blue: 0.454, alpha: 1)
         previewButton.imageEdgeInsets = UIEdgeInsets(top: 12.0,
                                                      left: 0.0,
                                                      bottom: 12.0,
                                                      right: 0.0)
-        previewButton.layer.borderColor = UIColor(red: 0.804, green: 0.816, blue: 0.816, alpha: 1).cgColor
-        addSubview(previewButton)
+        view.addSubview(previewButton)
         
         previewButton.addTarget(self, action: #selector(didPressPreviewButton), for: .touchUpInside)
         
@@ -71,38 +112,45 @@ class DestinationView: UIView {
     }
     
     func setupStartButton() {
-        let startButton = UIButton(type: .system)
+        let startButton = StartButton(type: .system)
         startButton.translatesAutoresizingMaskIntoConstraints = false
-        startButton.backgroundColor = #colorLiteral(red: 0.216, green: 0.212, blue: 0.454, alpha: 1)
-        startButton.layer.cornerRadius = 5.0
-        startButton.setTitleColor(.white, for: .normal)
         startButton.clipsToBounds = true
         startButton.addTarget(self, action: #selector(didPressStartButton), for: .touchUpInside)
         
         let startImage = UIImage(named: "start", in: .mapboxNavigation, compatibleWith: nil)!
         startButton.setImage(startImage, for: .normal)
         startButton.imageView?.contentMode = .scaleAspectFit
-        startButton.imageView?.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1)
-        startButton.tintColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1)
         startButton.imageEdgeInsets = UIEdgeInsets(top: 12.0,
                                                    left: 0.0,
                                                    bottom: 12.0,
                                                    right: 0.0)
-        addSubview(startButton)
+        view.addSubview(startButton)
         
         self.startButton = startButton
     }
     
     func setupConstraints() {
+        NSLayoutConstraint.activate([
+            bottomBannerView.topAnchor.constraint(equalTo: view.topAnchor),
+            bottomBannerView.bottomAnchor.constraint(equalTo: bottomPaddingView.topAnchor),
+            bottomBannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomBannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            bottomPaddingView.topAnchor.constraint(equalTo: view.safeBottomAnchor),
+            bottomPaddingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ])
+        
         let buttonWidth: CGFloat = 70.0
         let buttonHeight: CGFloat = 50.0
         
         let startButtonLayoutConstraints = [
             startButton.widthAnchor.constraint(equalToConstant: buttonWidth),
             startButton.heightAnchor.constraint(equalToConstant: buttonHeight),
-            startButton.trailingAnchor.constraint(equalTo: trailingAnchor,
+            startButton.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor,
                                                   constant: -10.0),
-            startButton.topAnchor.constraint(equalTo: topAnchor,
+            startButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor,
                                              constant: 20.0)
         ]
         
@@ -113,21 +161,21 @@ class DestinationView: UIView {
             previewButton.heightAnchor.constraint(equalToConstant: buttonHeight),
             previewButton.trailingAnchor.constraint(equalTo: startButton.leadingAnchor,
                                                     constant: -10.0),
-            previewButton.topAnchor.constraint(equalTo: topAnchor,
+            previewButton.topAnchor.constraint(equalTo: bottomBannerView.topAnchor,
                                                constant: 20.0)
         ]
         
         NSLayoutConstraint.activate(previewButtonLayoutConstraints)
         
         let destinationLabelLayoutConstraints = [
-            destinationLabel.leadingAnchor.constraint(equalTo: leadingAnchor,
+            destinationLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor,
                                                       constant: 10.0),
             destinationLabel.trailingAnchor.constraint(equalTo: previewButton.leadingAnchor,
                                                        constant: -10.0),
-            destinationLabel.topAnchor.constraint(equalTo: topAnchor,
+            destinationLabel.topAnchor.constraint(equalTo: bottomBannerView.topAnchor,
                                                   constant: 20.0),
-            destinationLabel.bottomAnchor.constraint(equalTo: safeBottomAnchor,
-                                                     constant: -10.0) 
+            destinationLabel.bottomAnchor.constraint(equalTo: bottomBannerView.safeBottomAnchor,
+                                                     constant: -10.0)
         ]
         
         NSLayoutConstraint.activate(destinationLabelLayoutConstraints)

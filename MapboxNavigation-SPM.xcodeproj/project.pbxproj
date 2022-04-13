@@ -17,6 +17,12 @@
 		8A092F9C25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */; };
 		8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
 		8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
+		8AA03876280516A80007BD2D /* CustomDestinationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */; };
+		8AA03878280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */; };
+		8AA0387A28066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */; };
+		8AA0387C28066E860007BD2D /* CustomRoutesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */; };
+		8AC63A9A280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */; };
+		8AC63A9C28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */; };
 		8AD220EE27C1A433000734A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220ED27C1A433000734A5 /* AppDelegate.swift */; };
 		8AD220F027C1A433000734A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220EF27C1A433000734A5 /* SceneDelegate.swift */; };
 		8AD220F727C1A435000734A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AD220F627C1A435000734A5 /* Assets.xcassets */; };
@@ -64,6 +70,12 @@
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
 		8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ViewController+FreeDrive.swift"; path = "Example/ViewController+FreeDrive.swift"; sourceTree = "<group>"; };
 		8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StyledFeature.swift; path = Example/StyledFeature.swift; sourceTree = "<group>"; };
+		8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDestinationPreviewViewController.swift; sourceTree = "<group>"; };
+		8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+PreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutesPreviewViewController.swift; sourceTree = "<group>"; };
+		8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+NavigationViewControllerDelegate.swift"; sourceTree = "<group>"; };
 		8AD220EB27C1A433000734A5 /* PreviewViewControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewViewControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8AD220ED27C1A433000734A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8AD220EF27C1A433000734A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -180,6 +192,12 @@
 			children = (
 				8AD220ED27C1A433000734A5 /* AppDelegate.swift */,
 				8AD220EF27C1A433000734A5 /* SceneDelegate.swift */,
+				8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */,
+				8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */,
+				8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */,
+				8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */,
+				8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */,
+				8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */,
 				8AD220F627C1A435000734A5 /* Assets.xcassets */,
 				8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */,
 				8AD220FB27C1A435000734A5 /* Info.plist */,
@@ -490,7 +508,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AD220EE27C1A433000734A5 /* AppDelegate.swift in Sources */,
+				8AA0387A28066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */,
+				8AA0387C28066E860007BD2D /* CustomRoutesPreviewViewController.swift in Sources */,
+				8AA03876280516A80007BD2D /* CustomDestinationPreviewViewController.swift in Sources */,
 				8AD220F027C1A433000734A5 /* SceneDelegate.swift in Sources */,
+				8AC63A9C28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */,
+				8AA03878280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */,
+				8AC63A9A280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -636,6 +660,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PreviewViewControllerExample/Info.plist;
@@ -674,6 +699,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = PreviewViewControllerExample/Info.plist;

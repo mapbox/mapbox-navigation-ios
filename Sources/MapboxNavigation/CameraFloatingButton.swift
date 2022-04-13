@@ -1,11 +1,5 @@
 import UIKit
 
-protocol CameraFloatingButtonDelegate: AnyObject {
-    
-    func cameraFloatingButton(_ cameraFloatingButton: CameraFloatingButton,
-                              didChangeTo state: CameraFloatingButton.State)
-}
-
 class CameraFloatingButton: FloatingButton {
     
     enum State {
@@ -17,7 +11,7 @@ class CameraFloatingButton: FloatingButton {
     var cameraState: State = .following {
         didSet {
             updateImage(for: cameraState)
-            delegate?.cameraFloatingButton(self, didChangeTo: cameraState)
+            delegate?.cameraFloatingButton(self, cameraStateDidChangeTo: cameraState)
         }
     }
     
@@ -50,16 +44,9 @@ class CameraFloatingButton: FloatingButton {
     
     func commonInit() {
         constrainedSize = CGSize(width: 70.0, height: 50.0)
-        setImage(UIImage(named: "recenter", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
         imageView?.contentMode = .scaleAspectFit
-        
         clipsToBounds = true
         imageEdgeInsets = UIEdgeInsets(floatLiteral: 10.0)
-        backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
-        borderColor = #colorLiteral(red: 0.804, green: 0.816, blue: 0.816, alpha: 1)
-        borderWidth = 2.0
-        cornerRadius = 10.0
-        
         cameraState = .following
         addTarget(self, action: #selector(didPress), for: .touchUpInside)
     }
