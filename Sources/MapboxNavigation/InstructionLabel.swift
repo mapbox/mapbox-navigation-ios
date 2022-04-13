@@ -22,6 +22,8 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var shieldHeight: CGFloat = 30
     var spriteRepository: SpriteRepository = .init() {
         didSet {
+            guard oldValue.styleURI != spriteRepository.styleURI ||
+                    oldValue.getSpriteImage() == nil else { return }
             updateLabelAttributedText()
         }
     }
@@ -58,8 +60,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
         super.update()
         // When style changes or traitCollection changes, clear the legacy cache for generic shields and exit shields.
         spriteRepository.legacyCache.clearMemory()
-        let previousInstruction = instruction
-        instruction = previousInstruction
+        updateLabelAttributedText()
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

@@ -53,7 +53,6 @@ open class TopBannerViewController: UIViewController {
     public var junctionView: JunctionView = .forAutoLayout(hidden: true)
     
     private var spriteRepository: SpriteRepository = .init()
-    private var currentInstruction: VisualInstructionBanner?
     
     private let instructionsBannerHeight: CGFloat = 100.0
     
@@ -376,7 +375,6 @@ extension TopBannerViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        currentInstruction = instruction
         lanesView.update(for: instruction)
         junctionView.update(for: instruction, service: service)
         
