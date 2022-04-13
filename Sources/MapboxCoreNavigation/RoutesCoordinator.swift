@@ -11,21 +11,26 @@ final class RoutesCoordinator {
         case activeNavigation(UUID)
     }
 
-    typealias SetRoutesHandler = (RouteInterface?, _ legIndex: UInt32, _ completion: @escaping (Result<RouteInfo, Error>) -> Void) -> Void
+    typealias SetMainRouteHandler = (RouteInterface?, _ legIndex: UInt32, _ completion: @escaping (Result<RouteInfo, Error>) -> Void) -> Void
+    typealias SetAlternativeRoutesHandler = ([RouteInterface], _ completion: @escaping (Result<[RouteAlternative], Error>) -> Void) -> Void
 
     private struct ActiveNavigationSession {
         let uuid: UUID
     }
 
-    private let setRoutes: SetRoutesHandler
+    private let setMainRoute: SetMainRouteHandler
+    let setAlternativeRoutes: SetAlternativeRoutesHandler
     /// The lock that protects mutable state in `RoutesCoordinator`.
     private let lock: NSLock
     private var state: State
     
-    /// Create a new coordinator that will coordinate "setRoutes" requests.
-    /// - Parameter setRoutesHandler: The handler that passes `Routes` object to underlying Navigator.
-    init(setRoutesHandler: @escaping SetRoutesHandler) {
-        self.setRoutes = setRoutesHandler
+    /// Create a new coordinator that will coordinate "setMainRoute" requests.
+    /// - Parameter setAlternativeRoutesHandler: The handler that passes `RouteInterface` object to underlying Navigator as main route.
+    /// - Parameter setAlternativeRoutesHandler: The handler that passes `RouteInterface` array to underlying Navigator as alternative routes.
+    init(setMainRouteHandler: @escaping SetMainRouteHandler,
+         setAlternativeRoutesHandler: @escaping SetAlternativeRoutesHandler) {
+        self.setMainRoute = setMainRouteHandler
+        self.setAlternativeRoutes = setAlternativeRoutesHandler
         lock = .init()
         state = .passiveNavigation
     }
@@ -46,7 +51,7 @@ final class RoutesCoordinator {
         state = .activeNavigation(uuid)
         lock.unlock()
 
-        setRoutes(route, legIndex, completion)
+        setMainRoute(route, legIndex, completion)
     }
 
     /// - Parameters:
@@ -61,7 +66,7 @@ final class RoutesCoordinator {
         state = .passiveNavigation
         lock.unlock()
         // TODO: Is it safe to set the leg index to 0 when unsetting a route?
-        setRoutes(nil, 0, completion)
+        setMainRoute(nil, 0, completion)
     }
 }
 
