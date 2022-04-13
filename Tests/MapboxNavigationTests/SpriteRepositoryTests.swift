@@ -49,14 +49,13 @@ class SpriteRepositoryTests: TestCase {
             XCTFail("Failed to generate spriteKey.")
             return
         }
-        let spriteKey = "\(styleID)-\(repository.baseURL.absoluteString)"
         
-        let dataKey = "default-3" + "-\(spriteKey)"
+        let dataKey = "default-3" + "-\(styleID)"
         XCTAssertNil(repository.infoCache.spriteInfo(forKey:dataKey))
         
         let semaphore = DispatchSemaphore(value: 0)
         var requestedData: Data?
-        repository.downloadInfo(fakeURL, spriteKey: spriteKey) { (data) in
+        repository.downloadInfo(fakeURL, spriteKey: styleID) { (data) in
             requestedData = data
             semaphore.signal()
         }
@@ -69,7 +68,7 @@ class SpriteRepositoryTests: TestCase {
             return
         }
         
-        repository.infoCache.store(data, spriteKey: spriteKey)
+        repository.infoCache.store(data, spriteKey: styleID)
         let expectedInfo = SpriteInfo(width: 156, height: 84, x: 1710, y: 1992, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
         let spriteInfo = repository.infoCache.spriteInfo(forKey: dataKey)
         XCTAssertEqual(expectedInfo, spriteInfo, "Failed to retrieve Sprite info from cache.")
@@ -84,12 +83,11 @@ class SpriteRepositoryTests: TestCase {
             XCTFail("Failed to generate spriteKey.")
             return
         }
-        let spriteKey = "\(styleID)-\(repository.baseURL.absoluteString)"
         
         let semaphore = DispatchSemaphore(value: 0)
         var sprite: UIImage?
         
-        repository.downloadSprite(fakeURL, spriteKey: spriteKey) { (image) in
+        repository.downloadSprite(fakeURL, spriteKey: styleID) { (image) in
             sprite = image
             semaphore.signal()
         }
@@ -151,8 +149,7 @@ class SpriteRepositoryTests: TestCase {
         
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: URL(string: imageBaseURL)!)
         let cacheKey = representation.legacyCacheKey
-        let spriteKey = "\(styleID)-\(repository.baseURL.absoluteString)"
-        let dataKey = "default-3" + "-\(spriteKey)"
+        let dataKey = "default-3" + "-\(styleID)"
         
         XCTAssertNil(repository.infoCache.spriteInfo(forKey:dataKey))
         XCTAssertNil(repository.getSpriteImage())
@@ -181,7 +178,7 @@ class SpriteRepositoryTests: TestCase {
         let styleURI = StyleURI.navigationNight
         
         let expectation = expectation(description: "Style updated.")
-        repository.updateRepresentationStyle(styleURI: styleURI) {
+        repository.updateStyle(styleURI: styleURI) {
             expectation.fulfill()
         }
         wait(for: [expectation], timeout: 3.0)
@@ -199,8 +196,7 @@ class SpriteRepositoryTests: TestCase {
         
         // Update representation of the repository and fully downloaded Sprite image and metadata.
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: URL(string: imageBaseURL)!)
-        var spriteKey = "\(styleID)-\(repository.baseURL.absoluteString)"
-        var dataKey = "default-3" + "-\(spriteKey)"
+        var dataKey = "default-3" + "-\(styleID)"
         
         var downloadExpectation = expectation(description: "Representation updated.")
         repository.updateRepresentation(for: representation) {
@@ -223,14 +219,13 @@ class SpriteRepositoryTests: TestCase {
         
         // Downloaded Sprite metadata without Sprite image to test the shield icon retrieval under poor network condition.
         downloadExpectation = expectation(description: "Sprite info updated.")
-        spriteKey = "\(newStyleID)-\(repository.baseURL.absoluteString)"
-        repository.downloadInfo(infoRequestURL, spriteKey: spriteKey) { (_) in
+        repository.downloadInfo(infoRequestURL, spriteKey: newStyleID) { (_) in
             downloadExpectation.fulfill()
         }
         wait(for: [downloadExpectation], timeout: 3.0)
         
         // The Sprite info should be ready for current Sprite repository without matched Sprite image.
-        dataKey = "default-3" + "-\(spriteKey)"
+        dataKey = "default-3" + "-\(newStyleID)"
         spriteInfo = repository.infoCache.spriteInfo(forKey: dataKey)
         expectedInfo = SpriteInfo(width: 156, height: 84, x: 1710, y: 1992, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
         XCTAssertEqual(spriteInfo, expectedInfo, "Failed to update the Sprite Info.")

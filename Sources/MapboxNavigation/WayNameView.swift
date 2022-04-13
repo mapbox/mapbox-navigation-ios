@@ -23,8 +23,7 @@ open class WayNameLabel: StylableLabel {
     
     // When the map style changes, update the sprite repository and the label.
     func updateStyle(styleURI: StyleURI?) {
-        guard let styleURI = styleURI else { return }
-        spriteRepository.updateRepresentationStyle(styleURI: styleURI, representation: representation) { [weak self] in
+        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
             guard let self = self else { return }
             if let roadName = self.text {
                 self.setUpWith(roadName: roadName)

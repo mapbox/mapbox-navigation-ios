@@ -699,13 +699,12 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     func updateInstruction(_ routeProgress: RouteProgress) {
-        guard let currentVisualInstruction = routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction,
-              spriteRepository.needUpdateSprite(for: currentVisualInstruction) else {
+        guard spriteRepository.getSpriteImage() == nil else {
             updateManeuvers(routeProgress)
             return
         }
         
-         spriteRepository.updateInstruction(for: currentVisualInstruction) { [weak self] in
+        spriteRepository.updateSprite(styleURI: spriteRepository.styleURI) { [weak self] in
              guard let self = self else { return }
              self.updateManeuvers(self.navigationService.routeProgress)
          }
@@ -864,11 +863,9 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
             mapboxMapStyle?.uri = styleURI
             // Update the sprite repository of wayNameView when map style changes.
             wayNameView?.label.updateStyle(styleURI: styleURI)
-            if let styleURI = styleURI {
-                spriteRepository.updateInstructionStyle(styleURI: styleURI) { [weak self] in
-                    guard let self = self else { return }
-                    self.updateManeuvers(self.navigationService.routeProgress)
-                }
+            spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
+                guard let self = self else { return }
+                self.updateManeuvers(self.navigationService.routeProgress)
             }
         }
     }

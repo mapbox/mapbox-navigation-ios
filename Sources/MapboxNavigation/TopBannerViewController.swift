@@ -380,16 +380,17 @@ extension TopBannerViewController: NavigationComponent {
         lanesView.update(for: instruction)
         junctionView.update(for: instruction, service: service)
         
-        if spriteRepository.needUpdateSprite(for: instruction) {
-            spriteRepository.updateInstruction(for: instruction) { [weak self] in
-                guard let self = self else { return }
-                self.updateSpriteRepositoryForViews()
-                self.instructionsBannerView.update(for: instruction)
-                self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
-            }
-        } else {
+        guard spriteRepository.getSpriteImage() == nil else {
             instructionsBannerView.update(for: instruction)
             nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
+            return
+        }
+        
+        spriteRepository.updateSprite(styleURI: spriteRepository.styleURI) { [weak self] in
+            guard let self = self else { return }
+            self.updateSpriteRepositoryForViews()
+            self.instructionsBannerView.update(for: instruction)
+            self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         }
     }
     
@@ -497,8 +498,7 @@ extension TopBannerViewController: NavigationMapInteractionObserver {
     }
     
     public func navigationViewController(updateTo styleURI: StyleURI?) {
-        guard let styleURI = styleURI else { return }
-        spriteRepository.updateInstructionStyle(styleURI: styleURI, instruction: currentInstruction) { [weak self] in
+        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
             guard let self = self else { return }
             self.updateSpriteRepositoryForViews()
         }
