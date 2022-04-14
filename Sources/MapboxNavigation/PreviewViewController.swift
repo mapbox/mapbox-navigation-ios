@@ -3,7 +3,6 @@ import CoreLocation
 import MapboxCoreNavigation
 import MapboxMaps
 import MapboxDirections
-import MapboxGeocoder
 
 // :nodoc:
 open class PreviewViewController: UIViewController {

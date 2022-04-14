@@ -31,6 +31,8 @@ class CarPlayManagerSpec: QuickSpec {
         
         afterEach {
             CarPlayMapViewController.unswizzleMethods()
+            carPlayManager = nil
+            delegate = nil
         }
         
         describe("Previewing routes.") {

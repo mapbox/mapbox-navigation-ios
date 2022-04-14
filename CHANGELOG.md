@@ -2,11 +2,15 @@
 
 ## v2.4.0
 
+### Pricing
+
+* ❗ Starting with version 2.4.0, we are implementing a grace period of 30-seconds for all navigation sessions started by Nav SDK. A session will be counted only after this time period has surpassed. This allows you to reduce the cost of using the SDK during development and testing of your applications, as well as in production. Grace period is especially helpful to decrease the cost of short Free Drive session that are just a transition between Active Guidance sessions, or when a session is aborted right after it was started.
+
 ### Packaging
 
 * MapboxNavigation now requires [MapboxMaps v10.4.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.4.1). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v94._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/94.0.0). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
-* MapboxCoreNavigation now requires [MapboxDirections v2.4.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0-rc.1). ([#3806](https://github.com/mapbox/mapbox-navigation-ios/pull/3806))
+* MapboxCoreNavigation now requires [MapboxDirections v2.4.0-rc.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0-rc.2). ([#3817](https://github.com/mapbox/mapbox-navigation-ios/pull/3817))
 
 ### User interface
 
@@ -29,6 +33,7 @@
 * Fixed an issue when `SimulatedLocationManager` could freeze the main thread when working with long routes. The manager now calls delegate methods from a background thread. ([#3672](https://github.com/mapbox/mapbox-navigation-ios/pull/3672))
 * Fixed an issue where initial puck position can be incorrect when `NavigationViewController` is presented. ([#3773](https://github.com/mapbox/mapbox-navigation-ios/pull/3773))
 * Fixed an issue where `UserHaloCourseView` was not correctly shown while changing `CLLocationManager.accuracyAuthorization` and `CLLocationManager.authorizationStatus`. ([#3804](https://github.com/mapbox/mapbox-navigation-ios/pull/3804))
+* Fixed an issue where camera was not centered to the current location during `NavigationMapView` initialization. ([#3826](https://github.com/mapbox/mapbox-navigation-ios/pull/3826))
 
 ### Offline routing
 
