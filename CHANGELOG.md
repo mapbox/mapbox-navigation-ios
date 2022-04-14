@@ -33,6 +33,7 @@
 * Fixed an issue when `SimulatedLocationManager` could freeze the main thread when working with long routes. The manager now calls delegate methods from a background thread. ([#3672](https://github.com/mapbox/mapbox-navigation-ios/pull/3672))
 * Fixed an issue where initial puck position can be incorrect when `NavigationViewController` is presented. ([#3773](https://github.com/mapbox/mapbox-navigation-ios/pull/3773))
 * Fixed an issue where `UserHaloCourseView` was not correctly shown while changing `CLLocationManager.accuracyAuthorization` and `CLLocationManager.authorizationStatus`. ([#3804](https://github.com/mapbox/mapbox-navigation-ios/pull/3804))
+* Fixed an issue where camera was not centered to the current location during `NavigationMapView` initialization. ([#3826](https://github.com/mapbox/mapbox-navigation-ios/pull/3826))
 
 ### Offline routing
 

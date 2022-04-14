@@ -1556,6 +1556,12 @@ open class NavigationMapView: UIView {
         setupGestureRecognizers()
         subscribeForNotifications()
         setupUserLocation()
+        
+        // To prevent the lengthy animation from the Null Island to the current location use
+        // location from the location manager and set map view's camera to it (without animation).
+        if let coordinate = locationManager.location?.coordinate {
+            setInitialCamera(coordinate)
+        }
     }
     
     deinit {
