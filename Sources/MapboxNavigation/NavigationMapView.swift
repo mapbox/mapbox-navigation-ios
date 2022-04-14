@@ -391,7 +391,6 @@ open class NavigationMapView: UIView {
                     var arrowSymbolLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.arrowSymbolLayer)
                     arrowSymbolLayer.minZoom = Double(minimumZoomLevel)
                     arrowSymbolLayer.iconImage = .constant(.name(NavigationMapView.ImageIdentifier.arrowImage))
-                    // FIXME: `iconColor` has no effect.
                     arrowSymbolLayer.iconColor = .constant(.init(maneuverArrowColor))
                     arrowSymbolLayer.iconRotationAlignment = .constant(.map)
                     arrowSymbolLayer.iconRotate = .constant(.init(shaftDirection))
@@ -401,7 +400,6 @@ open class NavigationMapView: UIView {
                     var arrowSymbolCasingLayer = SymbolLayer(id: NavigationMapView.LayerIdentifier.arrowSymbolCasingLayer)
                     arrowSymbolCasingLayer.minZoom = arrowSymbolLayer.minZoom
                     arrowSymbolCasingLayer.iconImage = arrowSymbolLayer.iconImage
-                    // FIXME: `iconColor` has no effect.
                     arrowSymbolCasingLayer.iconColor = .constant(.init(maneuverArrowStrokeColor))
                     arrowSymbolCasingLayer.iconRotationAlignment = arrowSymbolLayer.iconRotationAlignment
                     arrowSymbolCasingLayer.iconRotate = arrowSymbolLayer.iconRotate
