@@ -105,7 +105,7 @@ public class NavigationSettings {
      */
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,
-                           navigationRouterType: NavigationRouterType) {
+                           navigationRouterType: NavigationRouterType = .hybrid) {
         lock.lock(); defer {
             lock.unlock()
         }
@@ -113,8 +113,8 @@ public class NavigationSettings {
             print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `navigationRouterType`. This might result in an undefined behaviour. ")
         }
         _state = .init(directions: directions,
-                              tileStoreConfiguration: tileStoreConfiguration,
-                              navigationRouterType: navigationRouterType)
+                       tileStoreConfiguration: tileStoreConfiguration,
+                       navigationRouterType: navigationRouterType)
     }
     
     /**
