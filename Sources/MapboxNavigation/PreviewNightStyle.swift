@@ -26,6 +26,7 @@ class PreviewNightStyle: NightStyle {
         CameraFloatingButton.appearance().borderColor = #colorLiteral(red: 0.368, green: 0.368, blue: 0.368, alpha: 1)
         CameraFloatingButton.appearance().borderWidth = 2.0
         CameraFloatingButton.appearance().cornerRadius = 10.0
+        CameraFloatingButton.appearance().tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         BackButton.appearance().backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
         BackButton.appearance().borderColor = #colorLiteral(red: 0.368, green: 0.368, blue: 0.368, alpha: 1)
