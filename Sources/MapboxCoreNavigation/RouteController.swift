@@ -267,7 +267,7 @@ open class RouteController: NSObject {
                 completion?(result)
             }
         } else if parsedRoutes.isError() {
-            let reason = (parsedRoutes.error as? String) ?? ""
+            let reason = (parsedRoutes.error as String?) ?? ""
             completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
         }
     }

@@ -150,10 +150,14 @@ public class MapboxRoutingProvider: RoutingProvider {
         }
     }
     
-    private func parseResponse<ResponseType: Codable>(requestId: RequestId, userInfo: [CodingUserInfoKey : Any], result: Expected<AnyObject, AnyObject>, completion: @escaping (Result<ResponseType, DirectionsError>) -> Void) {
+    private func parseResponse<ResponseType: Codable>(
+        requestId: RequestId, userInfo: [CodingUserInfoKey : Any],
+        result: Expected<NSString, MapboxNavigationNative.RouterError>,
+        completion: @escaping (Result<ResponseType, DirectionsError>) -> Void
+    ) {
         do {
-            let json = result.value as? String
-            guard let data = json?.data(using: .utf8) else {
+            let json = result.value as String
+            guard let data = json.data(using: .utf8) else {
                 self.complete(requestId: requestId) {
                     completion(.failure(.noData))
                 }

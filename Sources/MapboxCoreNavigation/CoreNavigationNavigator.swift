@@ -36,14 +36,14 @@ class Navigator {
         .init(setRoutesHandler: { [weak self] route, legIndex, completion in
             self?.navigator.setPrimaryRouteForRoute(route, legIndex: legIndex) { [weak self] result in
                 if result.isValue() {
-                    let routeInfo = result.value as! RouteInfo
+                    let routeInfo = result.value!
                     os_log("Navigator has been updated",
                            log: Navigator.log,
                            type: .debug)
                     completion(.success(routeInfo))
                 }
                 else if result.isError() {
-                    let reason = (result.error as? String) ?? ""
+                    let reason = (result.error as String?) ?? ""
                     os_log("Failed to update navigator with reason: %{public}@",
                            log: Navigator.log,
                            type: .error,
