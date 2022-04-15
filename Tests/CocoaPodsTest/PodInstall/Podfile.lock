@@ -17,7 +17,7 @@ PODS:
   - MapboxMobileEvents (1.0.7)
   - MapboxNavigation (2.4.0):
     - MapboxCoreNavigation (= 2.4.0)
-    - MapboxMaps (< 11.0.0, >= 10.4.1)
+    - MapboxMaps (< 11.0.0, >= 10.4.3)
     - MapboxMobileEvents (~> 1.0)
     - MapboxSpeech (~> 2.0)
     - Solar-dev (~> 3.0)
@@ -58,7 +58,7 @@ SPEC CHECKSUMS:
   MapboxDirections: c3fd015787ff85b6bcfba7b12156d75fa74121b1
   MapboxMaps: d692e7a2ddce3f59eb2b881733c1a8ca18d1d2eb
   MapboxMobileEvents: f7f3e8daeb4b83688ae62a4172dce79169a97233
-  MapboxNavigation: 8034c455343d9c6502a7b6bfaf1717e4a468f8c2
+  MapboxNavigation: 9d3f1c3ac4cb3df4e471626249b18a8a9365ffe0
   MapboxNavigationNative: 145551b74e5dab196b6b11adc366d9dce529c5d3
   MapboxSpeech: e4ed02984444b6373374c72c369edaf045cc490c
   Polyline: fce41d72e1146c41c6d081f7656827226f643dff
