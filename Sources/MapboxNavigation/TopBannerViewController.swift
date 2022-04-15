@@ -119,17 +119,26 @@ open class TopBannerViewController: UIViewController {
     
     private func showSecondaryChildren(completion: CompletionHandler? = nil) {
         statusView.isHidden = !statusView.isCurrentlyVisible
-        junctionView.isHidden = !junctionView.isCurrentlyVisible
-        lanesView.isHidden = !lanesView.isCurrentlyVisible
-        lanesView.update(for: currentInstruction)
-        nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
         
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
-            guard let children = self?.informationChildren else {
-                return
+        if let tertiary = currentInstruction?.tertiaryInstruction {
+            lanesView.isHidden = !lanesView.isCurrentlyVisible
+            lanesView.update(for: currentInstruction)
+            if !tertiary.laneComponents.isEmpty {
+                nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
             }
+        }
+        
+        if let _ = currentInstruction?.quaternaryInstruction {
+            junctionView.isHidden = !junctionView.isCurrentlyVisible
+        }
+        
+        let notHiddenChildren = [instructionsBannerView] + secondaryChildren.filter {
+            $0.isHidden == false
+        }
+        
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: {
             
-            for child in children {
+            for child in notHiddenChildren {
                 child.alpha = 1.0
             }
         }, completion: { _ in
