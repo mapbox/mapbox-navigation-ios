@@ -57,6 +57,37 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool)
 
     /**
+     Called when router has detected user taking an alternative route.
+     
+     This method is called before updating router's main route.
+     
+     - parameter router: The router that has detected turning to the alternative.
+     - parameter route: The alternative route which will be taken as new main.
+     - parameter location: The user’s current location.
+     */
+    func router(_ router: Router, willTakeAlternativeRoute route: Route, at location: CLLocation?)
+    
+    /**
+     Called when router has finished switching to an alternative route
+     
+     This method is called after `router(_:willTakeAlternativeRoute:)`
+     
+     - parameter router: The router that switched to the alternative.
+     - parameter location: The user’s current location.
+     */
+    func router(_ router: Router, didTakeAlternativeRouteAt location: CLLocation?)
+    
+    /**
+     Called when router has failed to take an alternative route.
+     
+     This method is called after `router(_:willTakeAlternativeRoute:)`.
+     
+     - parameter router: The router which tried to switch to the alternative.
+     - parameter location: The user’s current location.
+     */
+    func router(_ router: Router, didFailToTakeAlternativeRouteAt location: CLLocation?)
+    
+    /**
      Called when the router fails to receive a new route.
      
      This method is called after `router(_:willRerouteFrom:)`.
@@ -202,6 +233,18 @@ public extension RouterDelegate {
     func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
         return RouteController.DefaultBehavior.shouldDisableBatteryMonitoring
+    }
+    
+    func router(_ router: Router, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+    }
+    
+    func router(_ router: Router, didTakeAlternativeRouteAt location: CLLocation?) {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
+    }
+    
+    func router(_ router: Router, didFailToTakeAlternativeRouteAt location: CLLocation?) {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .debug)
     }
 }
 

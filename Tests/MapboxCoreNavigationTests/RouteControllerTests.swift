@@ -151,6 +151,38 @@ class RouteControllerTests: TestCase {
 
         waitForExpectations(timeout: 1, handler: nil)
     }
+    
+    func testAlternativeRoutesReported() {
+        let routeOptions = RouteOptions(coordinates: [.init(latitude: 37.33243586131637,
+                                                            longitude: -122.03140541047281),
+                                                      .init(latitude: 37.33318065375225,
+                                                            longitude: -122.03148874952787)],
+                                        profileIdentifier: .automobileAvoidingTraffic)
+        routeOptions.shapeFormat = .geoJSON
+        let routeResponse = Fixture.routeResponse(from: "routeResponseWithAlternatives",
+                                                  options: routeOptions)
+        
+        let alternativesExpectation = XCTestExpectation(description: "Alternative route should be reported")
+        alternativesExpectation.assertForOverFulfill = true
+        
+        let observer = AlternativeRoutesObserver()
+        observer.onDidReportAlternatives = { newAlternatives, removedAlternatives in
+            XCTAssertTrue(removedAlternatives.isEmpty)
+            if newAlternatives.count == 1 {
+                alternativesExpectation.fulfill()
+            }
+        }
+        
+        let routeController = RouteController(alongRouteAtIndex: 0,
+                                              in: routeResponse,
+                                              options: routeOptions,
+                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              dataSource: self)
+        
+        routeController.alternativesStore?.addObserver(observer)
+        
+        wait(for: [alternativesExpectation], timeout: 2)
+    }
 }
 
 extension RouteControllerTests: RouterDataSource {
@@ -161,4 +193,19 @@ extension RouteControllerTests: RouterDataSource {
     var locationManagerType: NavigationLocationManager.Type {
         return NavigationLocationManager.self
     }
+}
+
+class AlternativeRoutesObserver: NavigatorAlternativesStoreObserver {
+    var onDidReportAlternatives: ((IndexSet, [AlternativeRoute]) -> Void)? = nil
+    var onDidFailToReportAlternatives: ((AlternativeRouteError) -> Void)? = nil
+    
+    func alternativesStore(_ store: NavigatorAlternativesStore, didReportNewAlternatives newAlternatives: IndexSet, removedAlternatives: [AlternativeRoute]) {
+        onDidReportAlternatives?(newAlternatives, removedAlternatives)
+    }
+    
+    func alternativesStore(_ store: NavigatorAlternativesStore, didFailToUpdateAlternatives error: AlternativeRouteError) {
+        onDidFailToReportAlternatives?(error)
+    }
+    
+    
 }

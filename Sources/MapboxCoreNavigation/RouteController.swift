@@ -281,6 +281,9 @@ open class RouteController: NSObject {
         
         let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
                                 .url(forCalculating: routeOptions).absoluteString
+        if let route = indexedRouteResponse.currentRoute {
+            alternativesStore?.mainRoute = route
+        }
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
                                                                request: routeRequest, routeOrigin: RouterOrigin.custom)
@@ -618,6 +621,10 @@ open class RouteController: NSObject {
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
         
+        if NavigationSettings.shared.alternativeRoutesOptions.enabled {
+            self.alternativesStore = NavigatorAlternativesStore(mainRoute: routeProgress.route)
+        }
+        
         super.init()
         
         if let customRoutingProvider = customRoutingProvider {
@@ -681,6 +688,9 @@ open class RouteController: NSObject {
     public var roadObjectMatcher: RoadObjectMatcher {
         return sharedNavigator.roadObjectMatcher
     }
+    
+    /// Provides access to detected `AlternativeRoute`s.
+    public private(set) var alternativesStore: NavigatorAlternativesStore?
 }
 
 extension RouteController: HistoryRecording { }
@@ -855,20 +865,24 @@ extension RouteController: ReroutingControllerDelegate {
                                                    response: RouteResponse,
                                                    routeIndex: Int,
                                                    options: RouteOptions) {
-        guard let location = location else { return }
-        
-        if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
-            announceImpendingReroute(at: location)
-            
-            isRerouting = true
-            updateRoute(with: IndexedRouteResponse(routeResponse: response,
-                                                   routeIndex: routeIndex),
-                        routeOptions: options,
-                        isProactive: false,
-                        completion: { [weak self] success in
-                self?.isRerouting = false
-            })
+        guard let newMainRoute = response.routes?.first else {
+            return
         }
+        delegate?.router(self,
+                         willTakeAlternativeRoute: newMainRoute,
+                         at: location)
+        updateRoute(with: IndexedRouteResponse(routeResponse: response,
+                                               routeIndex: 0),
+                    routeOptions: options,
+                    isProactive: false,
+                    completion: { [weak self] success in
+            guard let self = self else { return }
+            if success {
+                self.delegate?.router(self, didTakeAlternativeRouteAt: self.location)
+            } else {
+                self.delegate?.router(self, didFailToTakeAlternativeRouteAt: self.location)
+            }
+        })
     }
     
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) -> Bool {

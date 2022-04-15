@@ -19,6 +19,9 @@ public final class RouterDelegateSpy: RouterDelegate {
     public var onDidArriveAt: ((Waypoint) -> Bool)?
     public var onShouldPreventReroutesWhenArrivingAt: ((Waypoint) -> Bool)?
     public var onRouterShouldDisableBatteryMonitoring: (() -> Bool)?
+    public var onWillTakeAlternativeRoute: ((Route, CLLocation?) -> Void)?
+    public var onDidTakeAlternativeRoute: ((CLLocation?) -> Void)?
+    public var onDidFailToTakeAlternativeRoute: ((CLLocation?) -> Void)?
     
     public init() {}
 
@@ -93,5 +96,17 @@ public final class RouterDelegateSpy: RouterDelegate {
     public func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool {
         return onRouterShouldDisableBatteryMonitoring?() ??
             RouteController.DefaultBehavior.shouldDisableBatteryMonitoring
+    }
+    
+    public func router(_ router: Router, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
+        onWillTakeAlternativeRoute?(route, location)
+    }
+    
+    public func router(_ router: Router, didTakeAlternativeRouteAt location: CLLocation?) {
+        onDidTakeAlternativeRoute?(location)
+    }
+    
+    public func router(_ router: Router, didFailToTakeAlternativeRouteAt location: CLLocation?) {
+        onDidFailToTakeAlternativeRoute?(location)
     }
 }

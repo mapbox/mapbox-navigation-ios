@@ -117,6 +117,7 @@ class Navigator {
         rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
         
         subscribeNavigator()
+        setupAlternativesControllerIfNeeded()
     }
 
     /**
@@ -147,11 +148,25 @@ class Navigator {
         rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
         
         subscribeNavigator()
+        setupAlternativesControllerIfNeeded()
     }
     
     private weak var navigatorStatusObserver: NavigatorStatusObserver?
     private weak var navigatorFallbackVersionsObserver: NavigatorFallbackVersionsObserver?
     private weak var navigatorElectronicHorizonObserver: NavigatorElectronicHorizonObserver?
+    private weak var navigatorAlternativesObserver: NavigatorRouteAlternativesObserver?
+
+    private func setupAlternativesControllerIfNeeded() {
+        guard NavigationSettings.shared.alternativeRoutesOptions.enabled else { return }
+        
+        let controller = navigator.getRouteAlternativesController()
+        controller.enableOnEmptyAlternativesRequest(forEnable: NavigationSettings.shared.alternativeRoutesOptions.refreshWhenNoAvailableAlternatives)
+        controller.enableRequestAfterFork(forEnable: NavigationSettings.shared.alternativeRoutesOptions.refreshAfterAlternativeFork)
+        
+        let options = RouteAlternativesOptions(requestIntervalSeconds: NavigationSettings.shared.alternativeRoutesOptions.refreshInterval,
+                                               minTimeBeforeManeuverSeconds: rerouteController.initialManeuverAvoidanceRadius)
+        controller.setRouteAlternativesOptionsFor(options)
+    }
     
     private func subscribeNavigator() {
         if isSubscribedToElectronicHorizon {
@@ -165,6 +180,15 @@ class Navigator {
         let versionsObserver = NavigatorFallbackVersionsObserver()
         navigatorFallbackVersionsObserver = versionsObserver
         navigator.setFallbackVersionsObserverFor(versionsObserver)
+        
+        if NavigationSettings.shared.alternativeRoutesOptions.enabled {
+            let alternativesObserver = NavigatorRouteAlternativesObserver()
+            navigatorAlternativesObserver = alternativesObserver
+            navigator.getRouteAlternativesController().addObserver(for: alternativesObserver)
+        } else if let navigatorAlternativesObserver = navigatorAlternativesObserver {
+            navigator.getRouteAlternativesController().removeObserver(for: navigatorAlternativesObserver)
+            self.navigatorAlternativesObserver = nil
+        }
     }
     
     private func unsubscribeNavigator() {
@@ -174,6 +198,11 @@ class Navigator {
         }
         
         navigator.setFallbackVersionsObserverFor(nil)
+        
+        if let navigatorAlternativesObserver = navigatorAlternativesObserver {
+            navigator.getRouteAlternativesController().removeObserver(for: navigatorAlternativesObserver)
+            self.navigatorAlternativesObserver = nil
+        }
     }
     
     // MARK: History
@@ -354,6 +383,25 @@ class NavigatorStatusObserver: NavigatorObserver {
         NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
         
         mostRecentNavigationStatus = status
+    }
+}
+
+class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
+
+    func onRouteAlternativesChanged(for routeAlternatives: [RouteAlternative], removed: [RouteAlternative]) -> [NSNumber] {
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .alternativesListKey: routeAlternatives,
+            .removedAlternativesKey: removed,
+        ]
+        NotificationCenter.default.post(name: .navigatorDidChangeAlternativeRoutes, object: nil, userInfo: userInfo)
+        return []
+    }
+
+    public func onError(forMessage message: String) {
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .messageKey: message,
+        ]
+        NotificationCenter.default.post(name: .navigatorFailToChangeAlternativeRoutes, object: nil, userInfo: userInfo)
     }
 }
 
