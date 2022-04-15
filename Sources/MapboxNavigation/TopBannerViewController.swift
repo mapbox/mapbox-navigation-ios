@@ -112,6 +112,7 @@ open class TopBannerViewController: UIViewController {
     
     private func setupInformationStackView() {
         addInstructionsBanner()
+        nextBannerView.instructionDelegate = self
         informationStackView.addArrangedSubviews(secondaryChildren)
         for child in informationChildren {
             child.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
@@ -166,6 +167,16 @@ open class TopBannerViewController: UIViewController {
         instructionsBannerView.swipeable = true
     }
     
+    private func updateLegacyIcons() {
+        spriteRepository.legacyCache.clearMemory()
+        updateVisibleInstructionViews()
+    }
+    
+    public override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        updateLegacyIcons()
+    }
+    
     // MARK: Previewing Steps
     
     public var isDisplayingPreviewInstructions: Bool {
@@ -190,8 +201,6 @@ open class TopBannerViewController: UIViewController {
         guard let instructions = step.instructionsDisplayedAlongStep?.last else { return }
         
         let instructionsView = InstructionsBannerView(frame: instructionsBannerView.frame)
-        instructionsView.primaryLabel.spriteRepository = spriteRepository
-        instructionsView.secondaryLabel.spriteRepository = spriteRepository
         instructionsView.heightAnchor.constraint(equalToConstant: instructionsBannerHeight).isActive = true
         
         instructionsView.delegate = self
@@ -264,7 +273,6 @@ open class TopBannerViewController: UIViewController {
         }
         
         let controller = StepsViewController(routeProgress: progress)
-        controller.spriteRepository = spriteRepository
         controller.delegate = self
 
         var stepsHeightPresizingConstraint: NSLayoutConstraint? = nil
@@ -349,17 +357,12 @@ open class TopBannerViewController: UIViewController {
         }
     }
     
-    private func updateSpriteRepositoryForViews() {
-        instructionsBannerView.updateLabelSprite(spriteRepository)
-        nextBannerView.updateLabelSprite(spriteRepository)
-        previewBannerView?.updateLabelSprite(spriteRepository)
-        stepsViewController?.updateLabelSprite(spriteRepository)
-    }
-    
     private func updateVisibleInstructionViews() {
-        instructionsBannerView.updateInstructionLabel(for: currentInstruction)
+        instructionsBannerView.update(for: currentInstruction)
         nextBannerView.instructionLabel.update()
-        previewBannerView?.updateInstructionLabel(for: nil)
+        previewBannerView?.primaryLabel.update()
+        previewBannerView?.secondaryLabel.update()
+        stepsViewController?.tableView.reloadData()
     }
 }
 
@@ -395,8 +398,7 @@ extension TopBannerViewController: NavigationComponent {
         
         spriteRepository.updateSprite(styleURI: spriteRepository.styleURI) { [weak self] in
             guard let self = self, let instruction = self.currentInstruction, let routeProgress = self.routeProgress else { return }
-            self.updateSpriteRepositoryForViews()
-            self.instructionsBannerView.update(for: instruction)
+            self.updateVisibleInstructionViews()
             self.nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         }
     }
@@ -447,6 +449,17 @@ extension TopBannerViewController: NavigationComponent {
     }
 }
 
+// MARK: VisualInstructionDelegate Conformance
+extension TopBannerViewController: VisualInstructionDelegate {
+    public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        delegate?.label(label, willPresent: instruction, as: presented)
+    }
+    
+    public func label(_ label: InstructionLabel, willUpdate instruction: VisualInstruction) -> NSAttributedString? {
+        return label.attributedString(for: instruction, with: spriteRepository)
+    }
+}
+
 // MARK: InstructionsBannerViewDelegate Conformance
 extension TopBannerViewController: InstructionsBannerViewDelegate {
     public func didTapInstructionsBanner(_ sender: BaseInstructionsBannerView) {
@@ -459,10 +472,6 @@ extension TopBannerViewController: InstructionsBannerViewDelegate {
     
     public func didSwipeInstructionsBanner(_ sender: BaseInstructionsBannerView, swipeDirection direction: UISwipeGestureRecognizer.Direction) {
         delegate?.topBanner(self, didSwipeInDirection: direction)
-    }
-    
-    public func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
-        delegate?.label(label, willPresent: instruction, as: presented)
     }
 }
 
@@ -507,8 +516,7 @@ extension TopBannerViewController: NavigationMapInteractionObserver {
     public func navigationViewController(updateTo styleURI: StyleURI?) {
         spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
             guard let self = self else { return }
-            self.updateSpriteRepositoryForViews()
-            self.updateVisibleInstructionViews()
+            self.updateLegacyIcons()
         }
     }
 }

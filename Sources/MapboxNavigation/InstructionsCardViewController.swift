@@ -135,8 +135,7 @@ open class InstructionsCardViewController: UIViewController {
               }
         
         let instructionsCardContainerView = cell.subviews.compactMap({ $0 as? InstructionsCardContainerView }).first
-        // Update the spriteRepository of the instruction labels in instructionsCardContainerView.
-        instructionsCardContainerView?.updateSpriteRepository(respository: spriteRepository)
+        instructionsCardContainerView?.delegate = self
         return instructionsCardContainerView
     }
     
@@ -247,6 +246,7 @@ open class InstructionsCardViewController: UIViewController {
         if previousTraitCollection == traitCollection { return }
         
         reinstallConstraints()
+        updateLegacyIcons()
     }
     
     func snapToIndexPath(_ indexPath: IndexPath) {
@@ -304,6 +304,14 @@ open class InstructionsCardViewController: UIViewController {
         }
         
         return scrollTargetIndexPath
+    }
+    
+    private func updateLegacyIcons() {
+        spriteRepository.legacyCache.clearMemory()
+        if let currentInstruction = self.currentInstruction {
+            self.updateCurrentVisibleInstructionCard(for: currentInstruction)
+        }
+        self.reloadDataSource()
     }
     
     // MARK: Notification Observer Methods
@@ -466,6 +474,15 @@ extension InstructionsCardViewController: InstructionsCardContainerViewDelegate 
     }
 }
 
+extension InstructionsCardViewController: VisualInstructionDelegate {
+    
+    // MARK: VisualInstructionDelegate Implementation
+    
+    public func label(_ label: InstructionLabel, willUpdate instruction: VisualInstruction) -> NSAttributedString? {
+        return label.attributedString(for: instruction, with: spriteRepository)
+    }
+}
+
 extension InstructionsCardViewController: NavigationMapInteractionObserver {
     
     // MARK: NavigationMapInteractionObserver Implementation
@@ -477,10 +494,7 @@ extension InstructionsCardViewController: NavigationMapInteractionObserver {
     public func navigationViewController(updateTo styleURI: StyleURI?) {
         spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
             guard let self = self else { return }
-            if let currentInstruction = self.currentInstruction {
-                self.updateCurrentVisibleInstructionCard(for: currentInstruction)
-            }
-            self.reloadDataSource()
+            self.updateLegacyIcons()
         }
     }
 }

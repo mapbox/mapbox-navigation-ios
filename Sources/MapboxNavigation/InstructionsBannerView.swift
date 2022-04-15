@@ -230,20 +230,6 @@ open class BaseInstructionsBannerView: UIControl {
         distance = distanceRemaining > 5 ? distanceRemaining : 0
     }
     
-    func updateLabelSprite(_ spriteRepository: SpriteRepository) {
-        primaryLabel.spriteRepository = spriteRepository
-        secondaryLabel.spriteRepository = spriteRepository
-    }
-    
-    func updateInstructionLabel(for instruction: VisualInstructionBanner?) {
-        if let instruction = instruction {
-            update(for: instruction)
-        } else {
-            primaryLabel.update()
-            secondaryLabel.update()
-        }
-    }
-    
     // MARK: Layout
     static let padding: CGFloat = 16
     static let maneuverViewSize = CGSize(width: 38, height: 38)

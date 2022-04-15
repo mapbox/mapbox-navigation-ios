@@ -75,11 +75,6 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
         super.init(coder: decoder)
         commonInit()
     }
-    
-    func updateSpriteRepository(respository: SpriteRepository) {
-        instructionsCardView.updateLabelSprite(respository)
-        nextBannerView.updateLabelSprite(respository)
-    }
 
     public func updateInstruction(for step: RouteStep,
                                   distance: CLLocationDistance,
@@ -274,5 +269,9 @@ public class InstructionsCardContainerView: StylableView, InstructionsCardContai
             
             return mutable
         }
+    }
+    
+    public func label(_ label: InstructionLabel, willUpdate instruction: VisualInstruction) -> NSAttributedString? {
+        return delegate?.label(label, willUpdate: instruction)
     }
 }

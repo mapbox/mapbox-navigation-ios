@@ -20,9 +20,12 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     // displayed. The bounds of `InstructionLabel` will be used if this view is unset.
     weak var viewForAvailableBoundsCalculation: UIView?
     var shieldHeight: CGFloat = 30
-    var spriteRepository: SpriteRepository = .init()
     var imageDownloadCompletion: (() -> Void)?
-    weak var instructionDelegate: VisualInstructionDelegate?
+    weak var instructionDelegate: VisualInstructionDelegate? {
+        didSet {
+            updateLabelAttributedText()
+        }
+    }
     
     var instruction: VisualInstruction? {
         didSet {
@@ -35,6 +38,17 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             text = nil
             return
         }
+        
+        let attributed: NSAttributedString?
+        if let delegate = instructionDelegate {
+            attributed = delegate.label(self, willUpdate: instruction)
+        } else {
+            attributed = attributedString(for: instruction, with: SpriteRepository.init())
+        }
+        attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
+    }
+    
+    func attributedString(for instruction: VisualInstruction, with spriteRepository: SpriteRepository) -> NSAttributedString? {
         let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
             guard let self = self else { return }
             self.attributedText = attributedText
@@ -45,14 +59,10 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
                                              spriteRepository: spriteRepository,
                                              traitCollection: traitCollection,
                                              downloadCompletion: update)
-        
-        let attributed = presenter.attributedText()
-        attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
+        return presenter.attributedText()
     }
 
     open override func update() {
-        // When style changes or traitCollection changes, clear the legacy cache for generic shields and exit shields.
-        spriteRepository.legacyCache.clearMemory()
         updateLabelAttributedText()
         super.update()
     }

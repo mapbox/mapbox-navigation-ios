@@ -114,10 +114,6 @@ open class NextBannerView: UIView, NavigationComponent {
         }
     }
     
-    func updateLabelSprite(_ spriteRepository: SpriteRepository) {
-        instructionLabel.spriteRepository = spriteRepository
-    }
-    
     func setupLayout() {
         let heightConstraint = heightAnchor.constraint(equalToConstant: 40)
         heightConstraint.priority = UILayoutPriority(rawValue: 999)

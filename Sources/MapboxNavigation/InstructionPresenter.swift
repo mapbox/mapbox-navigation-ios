@@ -213,7 +213,7 @@ class InstructionPresenter {
         let attachment = ShieldAttachment()
         attachment.font = dataSource.font
         let shieldColor = dataSource.shieldColor(from: shield.textColor)
-        let fontSize = dataSource.font.with(multiplier: 0.5)
+        let fontSize = dataSource.font.with(multiplier: 0.4)
         attachment.image = cachedImage.withCenteredText(shield.text,
                                                         color: shieldColor,
                                                         font: fontSize)

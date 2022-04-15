@@ -3,7 +3,7 @@ import UIKit
 /**
  `StepsViewControllerDelegate` provides methods for user interactions in a `StepsViewController`.
  */
-public protocol StepsViewControllerDelegate: AnyObject {
+public protocol StepsViewControllerDelegate: InstructionsBannerViewDelegate {
     
     /**
      Called when the user selects a step in a `StepsViewController`.

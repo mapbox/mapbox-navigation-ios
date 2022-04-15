@@ -418,8 +418,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
             updateTripEstimateStyle(traitCollection.userInterfaceStyle)
-            spriteRepository.legacyCache.clearMemory()
-            updateManeuvers(navigationService.routeProgress)
+            updateLegacyIcons()
         }
     }
     
@@ -698,6 +697,11 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         navigationMapView?.showWaypoints(on: progress.route, legIndex: legIndex)
     }
     
+    func updateLegacyIcons() {
+        spriteRepository.legacyCache.clearMemory()
+        updateManeuvers(navigationService.routeProgress)
+    }
+    
     func updateInstruction(_ routeProgress: RouteProgress) {
         guard spriteRepository.getSpriteImage() == nil else {
             updateManeuvers(routeProgress)
@@ -714,9 +718,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                                             shieldHeight: CGFloat,
                                             instruction: VisualInstruction?) -> NSAttributedString? {
         let instructionLabel = InstructionLabel()
+        instructionLabel.instructionDelegate = self
         instructionLabel.availableBounds = bounds
         instructionLabel.shieldHeight = shieldHeight
-        instructionLabel.spriteRepository = spriteRepository
         
         // Temporarily add the view to the view hierarchy for UIAppearance to work its magic.
         if let carWindow = carPlayManager.carWindow  {
@@ -865,7 +869,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
             wayNameView?.label.updateStyle(styleURI: styleURI)
             spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
                 guard let self = self else { return }
-                self.updateManeuvers(self.navigationService.routeProgress)
+                self.updateLegacyIcons()
             }
         }
     }
@@ -883,6 +887,16 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
                 NSLog("Failed to load \(styleURI) with error: \(error.localizedDescription).")
             }
         }
+    }
+}
+
+// MARK: VisualInstructionDelegate Methods
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: VisualInstructionDelegate {
+    
+    public func label(_ label: InstructionLabel, willUpdate instruction: VisualInstruction) -> NSAttributedString? {
+        return label.attributedString(for: instruction, with: spriteRepository)
     }
 }
 

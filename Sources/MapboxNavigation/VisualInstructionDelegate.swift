@@ -14,12 +14,22 @@ public protocol VisualInstructionDelegate: AnyObject, UnimplementedLogging {
      - parameter label: The label that the instruction will be presented on.
      - parameter instruction: The `VisualInstruction` that will be presented.
      - parameter presented: The formatted string that is provided by the instruction presenter
-     - returns: Optionally, a customized NSAttributedString that will be presented instead
+     - returns: Optionally, a customized `NSAttributedString` that will be presented instead
      of the default, or if nil, the default behavior will be used.
      */
     func label(_ label: InstructionLabel,
                willPresent instruction: VisualInstruction,
-               as presented: NSAttributedString) -> NSAttributedString?
+               as presented: NSAttributedString?) -> NSAttributedString?
+    
+    /**
+     Called when an InstructionLabel will be update with a visual instruction.
+     
+     - parameter label: The label that the instruction will be presented on.
+     - parameter instruction: The `VisualInstruction` that will update the label.
+     - returns: Optionally, a customized `NSAttributedString` that will be presented as defualt.
+     */
+    func label(_ label: InstructionLabel,
+               willUpdate instruction: VisualInstruction) -> NSAttributedString?
 }
 
 public extension VisualInstructionDelegate {
@@ -28,7 +38,16 @@ public extension VisualInstructionDelegate {
      */
     func label(_ label: InstructionLabel,
                willPresent instruction: VisualInstruction,
-               as presented: NSAttributedString) -> NSAttributedString? {
+               as presented: NSAttributedString?) -> NSAttributedString? {
+        logUnimplemented(protocolType: VisualInstructionDelegate.self, level: .debug)
+        return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func label(_ label: InstructionLabel,
+               willUpdate instruction: VisualInstruction) -> NSAttributedString? {
         logUnimplemented(protocolType: VisualInstructionDelegate.self, level: .debug)
         return nil
     }
