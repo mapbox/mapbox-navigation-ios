@@ -553,6 +553,11 @@ class CarPlaySceneDelegate: NSObject, CPTemplateApplicationSceneDelegate {
         appDelegate.carPlayManager.templateApplicationScene(templateApplicationScene,
                                                             didConnectCarInterfaceController: interfaceController,
                                                             to: window)
+        // NOTE: When CarPlay is connected, we check if there is an active navigation in progress and start CarPlay
+        //       navigation as well, otherwise, CarPlay will be in passive navigation and stay out of sync with iOS app. 
+        if appDelegate.currentAppRootViewController?.activeNavigationViewController != nil {
+            appDelegate.currentAppRootViewController?.beginCarPlayNavigation()
+        }
     }
 
     func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene,
