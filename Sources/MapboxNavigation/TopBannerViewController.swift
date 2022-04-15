@@ -121,6 +121,7 @@ open class TopBannerViewController: UIViewController {
         statusView.isHidden = !statusView.isCurrentlyVisible
         junctionView.isHidden = !junctionView.isCurrentlyVisible
         lanesView.isHidden = !lanesView.isCurrentlyVisible
+        lanesView.update(for: currentInstruction)
         nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
         
         UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
@@ -333,7 +334,6 @@ open class TopBannerViewController: UIViewController {
             
             if !self.isDisplayingPreviewInstructions {
                 self.showSecondaryChildren(completion: complete)
-                self.lanesView.update(for: self.currentInstruction)
             } else {
                 complete()
             }
@@ -365,9 +365,12 @@ extension TopBannerViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
-        instructionsBannerView.update(for: instruction)
         currentInstruction = instruction
-        lanesView.isTopBannerDisplayingSteps = isDisplayingSteps
+        instructionsBannerView.update(for: instruction)
+        
+        if isDisplayingSteps {
+            return
+        }
         lanesView.update(for: instruction)
         nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         junctionView.update(for: instruction, service: service)

@@ -10,8 +10,6 @@ open class LanesView: UIView, NavigationComponent {
     
     public var isCurrentlyVisible: Bool = false
     
-    var isTopBannerDisplayingSteps: Bool = false
-    
     /**
      A vertical separator for the trailing side of the view.
      */
@@ -71,11 +69,9 @@ open class LanesView: UIView, NavigationComponent {
 
         stackView.addArrangedSubviews(subviews)
         
-        if !isTopBannerDisplayingSteps {
-            show(animated: animated,
-                 duration: duration) { completed in
-                completion?(completed)
-            }
+        show(animated: animated,
+            duration: duration) { completed in
+            completion?(completed)
         }
     }
     
