@@ -156,8 +156,8 @@ public class MapboxRoutingProvider: RoutingProvider {
         completion: @escaping (Result<ResponseType, DirectionsError>) -> Void
     ) {
         do {
-            let json = result.value as String
-            guard let data = json.data(using: .utf8) else {
+            let json = result.value as String?
+            guard let data = json?.data(using: .utf8) else {
                 self.complete(requestId: requestId) {
                     completion(.failure(.noData))
                 }
