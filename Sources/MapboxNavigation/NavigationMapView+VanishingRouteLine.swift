@@ -362,6 +362,9 @@ extension NavigationMapView {
                             gradientStops[currentGradientStop] = associatedFeatureColor
                             lastRecordSegment = (currentGradientStop, associatedFeatureColor)
                         }
+                        else {
+                            minimumSegment = (0.0, traversedRouteColor)
+                        }
                     }
                     
                     continue
