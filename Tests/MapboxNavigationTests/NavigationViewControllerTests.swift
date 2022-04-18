@@ -59,6 +59,14 @@ class NavigationViewControllerTests: TestCase {
     var newRoute: Route!
     var newRouteResponse: RouteResponse!
     
+    lazy var repository: SpriteRepository = {
+        let repo = SpriteRepository()
+        let config = URLSessionConfiguration.default
+        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
+        repo.sessionConfiguration = config
+        return repo
+    }()
+    
     override func setUp() {
         super.setUp()
         UNUserNotificationCenter.replaceWithMock()
@@ -67,6 +75,8 @@ class NavigationViewControllerTests: TestCase {
         initialRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
         newRoute = Fixture.route(from: "route-with-banner-instructions", options: routeOptions)
         newRouteResponse = Fixture.routeResponse(from: "route-with-banner-instructions", options: routeOptions)
+        ImageLoadingURLProtocolSpy.reset()
+        repository.resetCache()
     }
 
     private func createDependencies() -> (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController)? {
@@ -114,6 +124,17 @@ class NavigationViewControllerTests: TestCase {
 
             return (navigationViewController: navigationViewController, navigationService: navigationService, startLocation: firstLocation, poi: poi, endLocation: lastLocation, voice: fakeVoice)
         }()
+    }
+    
+    private func loadingSpriteURL(styleID: String) {
+        guard let shieldData = ShieldImage.shield.image.pngData(),
+              let spriteRequestURL = repository.spriteURL(isImage: true, styleID: styleID),
+              let metadataRequestURL = repository.spriteURL(isImage: false, styleID: styleID) else {
+                  XCTFail("Failed to form request to update SpriteRepository.")
+                  return
+              }
+        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
+        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
     }
 
     override func tearDown() {
@@ -393,6 +414,9 @@ class NavigationViewControllerTests: TestCase {
     }
     
     func testBlankBanner() {
+        let styleID = "/mapbox/navigation-day-v1"
+        loadingSpriteURL(styleID: styleID)
+        
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
@@ -405,7 +429,13 @@ class NavigationViewControllerTests: TestCase {
         
         let firstInstruction = navigationViewController.route!.legs[0].steps[0].instructionsDisplayedAlongStep!.first
         let topViewController = navigationViewController.topViewController as! TopBannerViewController
+        topViewController.spriteRepository = repository
         let instructionsBannerView = topViewController.instructionsBannerView
+        
+        expectation(description: "SpriteRepository in TopBannerViewController updated.") {
+            topViewController.spriteRepository.getSpriteImage() != nil
+        }
+        waitForExpectations(timeout: 3, handler: nil)
         
         XCTAssertNotNil(instructionsBannerView.primaryLabel.text)
         XCTAssertEqual(instructionsBannerView.primaryLabel.text, firstInstruction?.primaryInstruction.text)

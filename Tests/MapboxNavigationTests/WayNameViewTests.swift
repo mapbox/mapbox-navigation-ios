@@ -31,9 +31,9 @@ class WayNameViewTests: TestCase {
         super.tearDown()
     }
     
-    func loadingURL(baseURL: URL, styleID: String) {
-        guard let spriteRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: true, baseURL: baseURL, styleID: styleID),
-              let metadataRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) else {
+    func loadingURL(styleID: String) {
+        guard let spriteRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: true, styleID: styleID),
+              let metadataRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: false, styleID: styleID) else {
                   XCTFail("Failed to form request to update SpriteRepository.")
                   return
               }
@@ -53,7 +53,7 @@ class WayNameViewTests: TestCase {
     func testUpdateStyle() {
         let baseURL = wayNameView.label.spriteRepository.baseURL
         let styleID = "/mapbox/navigation-night-v1"
-        loadingURL(baseURL: baseURL, styleID: styleID)
+        loadingURL(styleID: styleID)
         
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: baseURL, name: "us-interstate", textColor: "white", text: "280")
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: shield)
@@ -82,7 +82,7 @@ class WayNameViewTests: TestCase {
     func testUpdateRoad() {
         let baseURL = wayNameView.label.spriteRepository.baseURL
         let styleID = "/mapbox/navigation-day-v1"
-        loadingURL(baseURL: baseURL, styleID: styleID)
+        loadingURL(styleID: styleID)
         
         var roadName = "I 280 North"
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: baseURL, name: "us-interstate", textColor: "white", text: "280")

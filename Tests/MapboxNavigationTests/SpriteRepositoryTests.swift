@@ -26,12 +26,12 @@ class SpriteRepositoryTests: TestCase {
         super.tearDown()
     }
     
-    func storeData(styleURI: StyleURI, baseURL: URL, imageBaseURL: String) {
+    func storeData(styleURI: StyleURI, imageBaseURL: String) {
         let scale = Int(VisualInstruction.Component.scale)
         
         guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
-              let spriteRequestURL = repository.spriteURL(isImage: true, baseURL: baseURL, styleID: styleID),
-              let infoRequestURL = repository.spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) else {
+              let spriteRequestURL = repository.spriteURL(isImage: true, styleID: styleID),
+              let infoRequestURL = repository.spriteURL(isImage: false, styleID: styleID) else {
                   XCTFail("Failed to form request to update SpriteRepository.")
                   return
               }
@@ -133,15 +133,15 @@ class SpriteRepositoryTests: TestCase {
         let spriteRequestURL = URL(string: baseURLstring + styleID + "/sprite@\(scale)x.png?access_token=" + accessToken)
         let infoRequestURL = URL(string: baseURLstring + styleID + "/sprite@\(scale)x?access_token=" + accessToken)
         
-        let expetecSpriteRequestURL = repository.spriteURL(isImage: true, baseURL: repository.baseURL, styleID: styleID)
-        let expectedInfoRequestURL = repository.spriteURL(isImage: false, baseURL: repository.baseURL, styleID: styleID)
+        let expetecSpriteRequestURL = repository.spriteURL(isImage: true, styleID: styleID)
+        let expectedInfoRequestURL = repository.spriteURL(isImage: false, styleID: styleID)
         XCTAssertEqual(spriteRequestURL, expetecSpriteRequestURL, "Failed to generate Sprite request URL from SpriteRepository.")
         XCTAssertEqual(infoRequestURL, expectedInfoRequestURL, "Failed to generate Sprite info request URL from SpriteRepository.")
     }
     
     func testUpdateRepresentation() {
         let imageBaseURL = "http://an.image.url/legacyShield"
-        storeData(styleURI: repository.styleURI, baseURL: repository.baseURL, imageBaseURL: imageBaseURL)
+        storeData(styleURI: repository.styleURI, imageBaseURL: imageBaseURL)
         guard let styleID = repository.styleURI.rawValue.components(separatedBy: "styles")[safe: 1] else {
             XCTFail("Failed to form request to update SpriteRepository.")
             return
@@ -188,7 +188,7 @@ class SpriteRepositoryTests: TestCase {
     
     func testPartiallySpriteUpdate() {
         let imageBaseURL = "http://an.image.url/legacyShield"
-        storeData(styleURI: repository.styleURI, baseURL: repository.baseURL, imageBaseURL: imageBaseURL)
+        storeData(styleURI: repository.styleURI, imageBaseURL: imageBaseURL)
         guard let styleID = repository.styleURI.rawValue.components(separatedBy: "styles")[safe: 1] else {
             XCTFail("Failed to form request to update SpriteRepository.")
             return
@@ -211,7 +211,7 @@ class SpriteRepositoryTests: TestCase {
         let newStyleURI = StyleURI.navigationNight
         repository.styleURI = newStyleURI
         guard let newStyleID = newStyleURI.rawValue.components(separatedBy: "styles")[safe: 1],
-              let infoRequestURL = repository.spriteURL(isImage: false, baseURL: repository.baseURL, styleID: newStyleID) else {
+              let infoRequestURL = repository.spriteURL(isImage: false, styleID: newStyleID) else {
                   XCTFail("Failed to form request to update SpriteRepository.")
                   return
         }

@@ -67,8 +67,8 @@ class SpriteRepository {
         self.styleURI = styleURI
         
         guard let styleID = styleURI.rawValue.components(separatedBy: "styles")[safe: 1],
-              let infoRequestURL = spriteURL(isImage: false, baseURL: baseURL, styleID: styleID),
-              let spriteRequestURL = spriteURL(isImage: true, baseURL: baseURL, styleID: styleID) else {
+              let infoRequestURL = spriteURL(isImage: false, styleID: styleID),
+              let spriteRequestURL = spriteURL(isImage: true, styleID: styleID) else {
                   completion()
                   return
               }
@@ -105,7 +105,7 @@ class SpriteRepository {
         }
     }
     
-    func spriteURL(isImage: Bool, baseURL: URL, styleID: String) -> URL? {
+    func spriteURL(isImage: Bool, styleID: String) -> URL? {
         guard var urlComponent = URLComponents(url: baseURL, resolvingAgainstBaseURL: false),
               let accessToken = NavigationSettings.shared.directions.credentials.accessToken else { return nil }
         

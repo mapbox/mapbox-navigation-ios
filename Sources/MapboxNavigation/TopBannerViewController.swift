@@ -54,7 +54,7 @@ open class TopBannerViewController: UIViewController {
     
     private var currentInstruction: VisualInstructionBanner?
     
-    private var spriteRepository: SpriteRepository = .init()
+    var spriteRepository: SpriteRepository = .init()
     
     private let instructionsBannerHeight: CGFloat = 100.0
     
