@@ -21,7 +21,6 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         let lightUserPuckСourseView = UserPuckCourseView(frame: frame)
         lightUserPuckСourseView.puckView.overrideUserInterfaceStyle = .light
         lightUserPuckСourseView.puckColor = puckColor
-        lightUserPuckСourseView.stalePuckColor = puckColor
         lightUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: lightUserPuckСourseView, as: .image(precision: 0.95))
         
@@ -29,7 +28,6 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         let darkUserPuckСourseView = UserPuckCourseView(frame: frame)
         darkUserPuckСourseView.puckView.overrideUserInterfaceStyle = .dark
         darkUserPuckСourseView.puckColor = puckColor
-        darkUserPuckСourseView.stalePuckColor = puckColor
         darkUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: darkUserPuckСourseView, as: .image(precision: 0.95))
     }
@@ -61,9 +59,6 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         let frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
         let userPuckСourseView = UserPuckCourseView(frame: frame)
         userPuckСourseView.puckColor = .green
-        userPuckСourseView.stalePuckColor = .red
-        userPuckСourseView.staleInterval = 1.0
-        userPuckСourseView.staleRefreshInterval = 0.1
         userPuckСourseView.setNeedsDisplay()
         
         // Right after `UserPuckCourseView` creation and when it's not yet stale its puck color
