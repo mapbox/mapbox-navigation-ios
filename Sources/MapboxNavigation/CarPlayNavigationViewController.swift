@@ -597,7 +597,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         if let speedLimitView = speedLimitView {
             speedLimitView.signStandard = routeProgress.currentLegProgress.currentStep.speedLimitSignStandard
             speedLimitView.speedLimit = routeProgress.currentLegProgress.currentSpeedLimit
-            speedLimitView.speed = routeProgress.currentLegProgress.currentSpeed(for: location)
+            speedLimitView.currentSpeed = routeProgress.currentLegProgress.currentSpeed(for: location)
         }
         
         if legIndex != currentLegIndexMapped {

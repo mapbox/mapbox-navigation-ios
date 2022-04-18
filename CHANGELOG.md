@@ -10,6 +10,8 @@
 ### Location tracking
 
 * Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
+* Added the ability to expose current speed in `SpeedLimitView`. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
+* Added `speedKey` to the user info dictionary of `Notification.Name.passiveLocationManagerDidUpdate` posted by `PassiveLocationManager` to provide the current speed for free driving. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
 
 ### User interface
 
@@ -83,8 +85,6 @@
 * MapboxNavigationNative now sends messages to the Unified Logging subsystem `com.mapbox` for easier filtering. ([#3765](https://github.com/mapbox/mapbox-navigation-ios/pull/3765))
 * `HistoryRecording` static methods are deprecated in favor of instance methods. Using these instance variants on `RouteController` or `PassiveLocationManager` ensures correct history events recording and storing. ([#3791](https://github.com/mapbox/mapbox-navigation-ios/pull/3791))
 * Fixed a bug which caused `RouteOptions.profileIdentifier` to be ignored in active navigation. This may have caused elevated network usage. ([#3796](https://github.com/mapbox/mapbox-navigation-ios/pull/3796))
-* Added the ability to expose current speed in `SpeedLimitView`. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
-* Added the `RouteLegProgress.currentSpeed(for:)` method to provide the current speed for the location along the route. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
 
 ## v2.3.0
 
