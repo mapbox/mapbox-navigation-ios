@@ -21,6 +21,7 @@
 		8AA03878280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */; };
 		8AA0387A28066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */; };
 		8AA0387C28066E860007BD2D /* CustomRoutesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */; };
+		8AB97C0E280A220100792939 /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = 8AB97C0D280A220100792939 /* MapboxGeocoder */; };
 		8AC63A9A280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */; };
 		8AC63A9C28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */; };
 		8AD220EE27C1A433000734A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220ED27C1A433000734A5 /* AppDelegate.swift */; };
@@ -138,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8AD2210627C1A772000734A5 /* MapboxNavigation in Frameworks */,
+				8AB97C0E280A220100792939 /* MapboxGeocoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -292,6 +294,7 @@
 			name = PreviewViewControllerExample;
 			packageProductDependencies = (
 				8AD2210527C1A772000734A5 /* MapboxNavigation */,
+				8AB97C0D280A220100792939 /* MapboxGeocoder */,
 			);
 			productName = PreviewViewControllerExample;
 			productReference = 8AD220EB27C1A433000734A5 /* PreviewViewControllerExample.app */;
@@ -954,6 +957,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8AB97C0D280A220100792939 /* MapboxGeocoder */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */;
+			productName = MapboxGeocoder;
+		};
 		8AD2210527C1A772000734A5 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigation;

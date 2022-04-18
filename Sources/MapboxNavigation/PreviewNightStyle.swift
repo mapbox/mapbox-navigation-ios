@@ -9,6 +9,26 @@ class PreviewNightStyle: NightStyle {
     override func apply() {
         super.apply()
         
+        let regularAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .regular),
+            UITraitCollection(horizontalSizeClass: .regular)
+        ])
+        
+        let regularAndCompactSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .regular),
+            UITraitCollection(horizontalSizeClass: .compact)
+        ])
+        
+        let compactAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .compact),
+            UITraitCollection(horizontalSizeClass: .regular)
+        ])
+        
+        let compactAndCompactSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .compact),
+            UITraitCollection(horizontalSizeClass: .compact)
+        ])
+        
         BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
         BottomPaddingView.appearance().backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
         
@@ -27,6 +47,16 @@ class PreviewNightStyle: NightStyle {
         CameraFloatingButton.appearance().borderWidth = 2.0
         CameraFloatingButton.appearance().cornerRadius = 10.0
         CameraFloatingButton.appearance().tintColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        TimeRemainingLabel.appearance(for: regularAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: regularAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: compactAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: compactAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        
+        DestinationLabel.appearance().normalTextColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        DestinationLabel.appearance().normalFont = UIFont.systemFont(ofSize: 27.0)
+        DestinationLabel.appearance().numberOfLines = 2
         
         BackButton.appearance().backgroundColor = #colorLiteral(red: 0.2, green: 0.2, blue: 0.2, alpha: 1)
         BackButton.appearance().borderColor = #colorLiteral(red: 0.368, green: 0.368, blue: 0.368, alpha: 1)

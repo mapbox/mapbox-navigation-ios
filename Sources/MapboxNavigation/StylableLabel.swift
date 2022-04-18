@@ -80,3 +80,7 @@ open class DistanceRemainingLabel: StylableLabel {
 open class ArrivalTimeLabel: StylableLabel {
     
 }
+
+open class DestinationLabel: StylableLabel {
+    
+}

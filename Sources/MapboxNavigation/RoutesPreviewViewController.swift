@@ -1,32 +1,7 @@
 import UIKit
 import MapboxDirections
-import MapKit
 
-public struct PreviewOptions {
-    
-    var routeResponse: RouteResponse
-    
-    var routeIndex: Int
-    
-    public init(routeResponse: RouteResponse, routeIndex: Int = 0) {
-        self.routeResponse = routeResponse
-        self.routeIndex = routeIndex
-    }
-}
-
-public protocol Previewable: AnyObject {
-    
-    var previewOptions: PreviewOptions { get }
-}
-
-public typealias PreviewableViewController = UIViewController & Previewable
-
-protocol RoutesPreviewViewControllerDelegate: AnyObject {
-    
-    func didPressStartButton()
-}
-
-class RoutesPreviewViewController: PreviewableViewController {
+class RoutesPreviewViewController: RoutesPreviewing {
     
     var bottomBannerView: BottomBannerView!
     
@@ -42,14 +17,14 @@ class RoutesPreviewViewController: PreviewableViewController {
     
     weak var delegate: RoutesPreviewViewControllerDelegate?
     
-    var previewOptions: PreviewOptions {
+    var routesPreviewOptions: RoutesPreviewOptions {
         didSet {
             updateRouteDetails()
         }
     }
     
-    required init(_ previewOptions: PreviewOptions) {
-        self.previewOptions = previewOptions
+    required init(_ routesPreviewOptions: RoutesPreviewOptions) {
+        self.routesPreviewOptions = routesPreviewOptions
         
         super.init(nibName: nil, bundle: nil)
     }
@@ -172,8 +147,6 @@ class RoutesPreviewViewController: PreviewableViewController {
             distanceRemainingLabel.heightAnchor.constraint(equalToConstant: 25.0),
             distanceRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor,
                                                             constant: 10.0),
-            distanceRemainingLabel.trailingAnchor.constraint(equalTo: bottomBannerView.centerXAnchor,
-                                                             constant: -2.5),
             distanceRemainingLabel.topAnchor.constraint(equalTo: timeRemainingLabel.bottomAnchor,
                                                         constant: 0.0)
         ])
@@ -182,8 +155,8 @@ class RoutesPreviewViewController: PreviewableViewController {
             arrivalTimeLabel.heightAnchor.constraint(equalToConstant: 25.0),
             arrivalTimeLabel.trailingAnchor.constraint(equalTo: startButton.leadingAnchor,
                                                        constant: -5.0),
-            arrivalTimeLabel.leadingAnchor.constraint(equalTo: bottomBannerView.centerXAnchor,
-                                                      constant: 2.5),
+            arrivalTimeLabel.leadingAnchor.constraint(equalTo: distanceRemainingLabel.trailingAnchor,
+                                                      constant: 10.0),
             arrivalTimeLabel.topAnchor.constraint(equalTo: timeRemainingLabel.bottomAnchor,
                                                   constant: 0.0)
         ])
@@ -194,20 +167,56 @@ class RoutesPreviewViewController: PreviewableViewController {
     }
     
     func updateRouteDetails() {
-        guard let route = previewOptions.routeResponse.routes?[previewOptions.routeIndex] else {
+        guard let route = routesPreviewOptions.routeResponse.routes?[routesPreviewOptions.routeIndex] else {
             return
         }
         
         let typicalTravelTime = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime)
         timeRemainingLabel.text = typicalTravelTime
         
+        let pinImage = UIImage(named: "pin", in: .mapboxNavigation, compatibleWith: nil)!
+        let styledPinImage: UIImage!
         let distance = Measurement(distance: route.distance).localized()
-        distanceRemainingLabel.text = MeasurementFormatter().string(from: distance)
+        let distanceRemainingTintColor = DistanceRemainingLabel.appearance().normalTextColor
+        if #available(iOS 13.0, *) {
+            styledPinImage = pinImage.withTintColor(distanceRemainingTintColor)
+        } else {
+            styledPinImage = pinImage.tint(distanceRemainingTintColor)
+        }
+        
+        distanceRemainingLabel.attributedText = attributedString(with: styledPinImage,
+                                                                 imageBounds: CGRect(x: 0, y: -2, width: 12.0, height: 15.0),
+                                                                 text: MeasurementFormatter().string(from: distance))
         
         if let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(route.expectedTravelTime), to: Date()) {
             let dateFormatter = DateFormatter()
             dateFormatter.timeStyle = .short
-            arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate)
+            
+            let timeImage = UIImage(named: "time", in: .mapboxNavigation, compatibleWith: nil)!
+            let styledTimeImage: UIImage!
+            let arrivalTimeImageTintColor = ArrivalTimeLabel.appearance().normalTextColor
+            if #available(iOS 13.0, *) {
+                styledTimeImage = timeImage.withTintColor(arrivalTimeImageTintColor)
+            } else {
+                styledTimeImage = timeImage.tint(arrivalTimeImageTintColor)
+            }
+            
+            arrivalTimeLabel.attributedText = attributedString(with: styledTimeImage,
+                                                               imageBounds: CGRect(x: 0, y: -2, width: 15.0, height: 15.0),
+                                                               text: dateFormatter.string(from: arrivalDate))
         }
+    }
+    
+    func attributedString(with image: UIImage, imageBounds: CGRect, text: String) -> NSAttributedString {
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = image
+        imageAttachment.bounds = imageBounds
+        let imageString = NSAttributedString(attachment: imageAttachment)
+        
+        let attributedString = NSMutableAttributedString()
+        attributedString.append(imageString)
+        attributedString.append(NSAttributedString(string: " " + text))
+        
+        return attributedString
     }
 }

@@ -2,40 +2,15 @@ import UIKit
 import CoreLocation
 import MapboxDirections
 
-public struct DestinationOptions {
-    
-    public private(set) var waypoints: [Waypoint]
-    
-    public init(coordinates: [CLLocationCoordinate2D]) {
-        self.waypoints = coordinates.map({ Waypoint(coordinate: $0) })
-    }
-    
-    public init(waypoints: [Waypoint]) {
-        self.waypoints = waypoints
-    }
-}
-
-public protocol Destinationable: AnyObject {
-    
-    var destinationOptions: DestinationOptions { get }
-}
-
-public typealias DestinationableViewController = UIViewController & Destinationable
-
-protocol DestinationPreviewViewControllerDelegate: AnyObject {
-    
-    func didPressPreviewButton()
-    
-    func didPressStartButton()
-}
-
-class DestinationPreviewViewController: DestinationableViewController {
+// :nodoc:
+public class DestinationPreviewViewController: DestinationPreviewing {
     
     var bottomBannerView: BottomBannerView!
     
     var bottomPaddingView: BottomPaddingView!
     
-    var destinationLabel: UILabel!
+    // :nodoc:
+    public var destinationLabel: DestinationLabel!
     
     var previewButton: PreviewButton!
     
@@ -43,7 +18,14 @@ class DestinationPreviewViewController: DestinationableViewController {
     
     weak var delegate: DestinationPreviewViewControllerDelegate?
     
-    var destinationOptions: DestinationOptions
+    // :nodoc:
+    public var destinationOptions: DestinationOptions {
+        didSet {
+            if let primaryText = destinationOptions.primaryText {
+                destinationLabel.attributedText = NSAttributedString(string: primaryText)
+            }
+        }
+    }
     
     required init(_ destinationOptions: DestinationOptions) {
         self.destinationOptions = destinationOptions
@@ -55,7 +37,7 @@ class DestinationPreviewViewController: DestinationableViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         commonInit()
@@ -82,12 +64,8 @@ class DestinationPreviewViewController: DestinationableViewController {
     }
     
     func setupDestinationLabel() {
-        let destinationLabel: UILabel = .forAutoLayout()
+        let destinationLabel: DestinationLabel = .forAutoLayout()
         view.addSubview(destinationLabel)
-        
-        destinationLabel.font = UIFont.systemFont(ofSize: 27.0)
-        destinationLabel.textColor = #colorLiteral(red: 0.216, green: 0.212, blue: 0.454, alpha: 1)
-        destinationLabel.numberOfLines = 2
         
         self.destinationLabel = destinationLabel
     }

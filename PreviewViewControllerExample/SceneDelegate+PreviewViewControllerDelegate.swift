@@ -3,9 +3,10 @@ import CoreLocation
 import MapboxNavigation
 import MapboxCoreNavigation
 import MapboxDirections
+import MapboxGeocoder
 
 extension SceneDelegate: PreviewViewControllerDelegate {
-
+    
     func previewViewControllerWillPreviewRoutes(_ previewViewController: PreviewViewController) {
         let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
         
@@ -23,32 +24,37 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         }
     }
     
-    func destinationPreviewViewController(for previewViewController: PreviewViewController) -> DestinationableViewController? {
-        if useCustomBannerViews {
-            let destinationOptions = DestinationOptions(coordinates: coordinates)
-            let customDestinationPreviewViewController = CustomDestinationPreviewViewController(destinationOptions)
-            customDestinationPreviewViewController.delegate = self
-            
-            return customDestinationPreviewViewController
-        }
-        
-        return nil
-    }
-    
-    func routesPreviewViewController(for previewViewController: PreviewViewController) -> PreviewableViewController? {
-        if useCustomBannerViews {
-            guard let routeResponse = routeResponse else {
-                return nil
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               bottomBannerViewControllerFor state: PreviewViewController.State) -> UIViewController? {
+        switch state {
+        case .browsing:
+            if useCustomBannerViews {
+                let customViewController = UIViewController()
+                customViewController.view.backgroundColor = .green
+                
+                return customViewController
             }
             
-            let previewOptions = PreviewOptions(routeResponse: routeResponse, routeIndex: routeIndex)
-            let customRoutesPreviewViewController = CustomRoutesPreviewViewController(previewOptions)
-            customRoutesPreviewViewController.delegate = self
+            return nil
+        case .destinationPreviewing(let destinationOptions):
+            if useCustomBannerViews {
+                let customDestinationPreviewViewController = CustomDestinationPreviewViewController(destinationOptions)
+                customDestinationPreviewViewController.delegate = self
+                
+                return customDestinationPreviewViewController
+            }
             
-            return customRoutesPreviewViewController
+            return nil
+        case .routesPreviewing(let routesPreviewOptions):
+            if useCustomBannerViews {
+                let customRoutesPreviewViewController = CustomRoutesPreviewViewController(routesPreviewOptions)
+                customRoutesPreviewViewController.delegate = self
+                
+                return customRoutesPreviewViewController
+            }
+            
+            return nil
         }
-        
-        return nil
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
@@ -73,9 +79,38 @@ extension SceneDelegate: PreviewViewControllerDelegate {
     func previewViewController(_ previewViewController: PreviewViewController,
                                didLongPressFor coordinates: [CLLocationCoordinate2D]) {
         self.coordinates = coordinates
-        if let destination = coordinates.last {
-            previewViewController.preview([destination])
+        
+        guard let destinationCoordinate = coordinates.last else {
+            return
         }
+        
+        let finalWaypoint = Waypoint(coordinate: destinationCoordinate,
+                                     coordinateAccuracy: nil,
+                                     name: "Final destination")
+        
+        previewViewController.preview([finalWaypoint])
+        
+        let locationManager = CLLocationManager()
+        let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)
+        reverseGeocodeOptions.focalLocation = locationManager.location
+        reverseGeocodeOptions.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
+        let allowedScopes: PlacemarkScope = .all
+        reverseGeocodeOptions.allowedScopes = allowedScopes
+        reverseGeocodeOptions.maximumResultCount = 1
+        reverseGeocodeOptions.includesRoutableLocations = true
+
+        Geocoder.shared.geocode(reverseGeocodeOptions, completionHandler: { (placemarks, _, error) in
+            if let error = error {
+                NSLog("Reverse geocoding failed with error: \(error.localizedDescription).")
+                return
+            }
+
+            guard let placemark = placemarks?.first else {
+                return
+            }
+
+            (previewViewController.presentedBottomBannerViewController as? DestinationPreviewViewController)?.destinationOptions.primaryText = placemark.formattedName
+        })
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,

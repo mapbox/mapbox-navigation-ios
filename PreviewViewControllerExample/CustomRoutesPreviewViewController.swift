@@ -6,16 +6,16 @@ protocol CustomRoutesPreviewViewControllerDelegate: AnyObject {
     func didPressStartNavigationButton()
 }
 
-class CustomRoutesPreviewViewController: PreviewableViewController {
+class CustomRoutesPreviewViewController: RoutesPreviewing {
     
     var startNavigationButton: UIButton!
     
-    var previewOptions: PreviewOptions
+    var routesPreviewOptions: RoutesPreviewOptions
     
     weak var delegate: CustomRoutesPreviewViewControllerDelegate?
     
-    required init(_ previewOptions: PreviewOptions) {
-        self.previewOptions = previewOptions
+    required init(_ routesPreviewOptions: RoutesPreviewOptions) {
+        self.routesPreviewOptions = routesPreviewOptions
         
         super.init(nibName: nil, bundle: nil)
     }

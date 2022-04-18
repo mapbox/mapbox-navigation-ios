@@ -9,6 +9,26 @@ class PreviewDayStyle: DayStyle {
     override func apply() {
         super.apply()
         
+        let regularAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .regular),
+            UITraitCollection(horizontalSizeClass: .regular)
+        ])
+        
+        let regularAndCompactSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .regular),
+            UITraitCollection(horizontalSizeClass: .compact)
+        ])
+        
+        let compactAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .compact),
+            UITraitCollection(horizontalSizeClass: .regular)
+        ])
+        
+        let compactAndCompactSizeClassTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(verticalSizeClass: .compact),
+            UITraitCollection(horizontalSizeClass: .compact)
+        ])
+        
         BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         BottomPaddingView.appearance().backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         
@@ -28,8 +48,15 @@ class PreviewDayStyle: DayStyle {
         CameraFloatingButton.appearance().cornerRadius = 10.0
         CameraFloatingButton.appearance().tintColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)
         
-        TimeRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 27.0)
+        TimeRemainingLabel.appearance(for: regularAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: regularAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: compactAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance(for: compactAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
         TimeRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.216, green: 0.212, blue: 0.454, alpha: 1)
+        
+        DestinationLabel.appearance().normalTextColor = #colorLiteral(red: 0.216, green: 0.212, blue: 0.454, alpha: 1)
+        DestinationLabel.appearance().normalFont = UIFont.systemFont(ofSize: 27.0)
+        DestinationLabel.appearance().numberOfLines = 2
         
         DistanceRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 15.0)
         DistanceRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)

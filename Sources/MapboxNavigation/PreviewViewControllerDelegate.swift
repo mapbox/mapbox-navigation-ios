@@ -18,7 +18,6 @@ public protocol PreviewViewControllerDelegate: AnyObject {
     func previewViewController(_ previewViewController: PreviewViewController,
                                didSelect route: Route)
     
-    func destinationPreviewViewController(for previewViewController: PreviewViewController) -> DestinationableViewController?
-    
-    func routesPreviewViewController(for previewViewController: PreviewViewController) -> PreviewableViewController?
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               bottomBannerViewControllerFor state: PreviewViewController.State) -> UIViewController?
 }
