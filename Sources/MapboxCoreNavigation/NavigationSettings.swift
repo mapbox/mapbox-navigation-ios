@@ -1,7 +1,7 @@
 import Foundation
 import MapboxDirections
 
-public typealias NavigationRouterType = MapboxRoutingProvider.Source
+public typealias RoutingProviderSource = MapboxRoutingProvider.Source
 
 /**
  Global settings that are used across the SDK for altering navigation behavior.
@@ -13,7 +13,7 @@ public typealias NavigationRouterType = MapboxRoutingProvider.Source
  To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class
  when initializing a `NavigationViewController`.
 
- To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:)` method.
+ To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)` method.
  */
 public class NavigationSettings {
     
@@ -36,12 +36,12 @@ public class NavigationSettings {
         static var `default`: State {
             .init(directions: .shared,
                   tileStoreConfiguration: .default,
-                  navigationRouterType: .hybrid)
+                  routingProviderSource: .hybrid)
         }
 
         var directions: Directions
         var tileStoreConfiguration: TileStoreConfiguration
-        var navigationRouterType: NavigationRouterType
+        var routingProviderSource: RoutingProviderSource
     }
 
     /// Protects access to `_state`.
@@ -65,7 +65,7 @@ public class NavigationSettings {
     /**
      Default `Directions` instance. By default, `Directions.shared` is used.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)` method.
      */
     public var directions: Directions {
         state.directions
@@ -74,18 +74,18 @@ public class NavigationSettings {
     /**
      Global `TileStoreConfiguration` instance.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)` method.
      */
     public var tileStoreConfiguration: TileStoreConfiguration {
         state.tileStoreConfiguration
     }
 
     /**
-     Default `navigationRouterType` used for rerouting during navigation. By default, `.hybrid` is used.
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:)` method.
+     Default `routingProviderSource` used for rerouting during navigation. By default, `.hybrid` is used.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)` method.
      */
-    public var navigationRouterType: NavigationRouterType {
-        state.navigationRouterType
+    public var routingProviderSource: RoutingProviderSource {
+        state.routingProviderSource
     }
     
     /**
@@ -101,20 +101,20 @@ public class NavigationSettings {
      fall back to the `NavigationSettings.directions` by default.
        - tileStoreConfiguration: Options for configuring how map and navigation tiles are stored on the device. See
      `TileStoreConfiguration` for more details.
-     - navigationRouterType: Configures the type of routing to be used by various SDK objects when providing route calculations.
+     - routingProviderSource: Configures the type of routing to be used by various SDK objects when providing route calculations.
      */
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,
-                           navigationRouterType: NavigationRouterType = .hybrid) {
+                           routingProviderSource: RoutingProviderSource = .hybrid) {
         lock.lock(); defer {
             lock.unlock()
         }
         if _state != nil {
-            print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `navigationRouterType`. This might result in an undefined behaviour. ")
+            print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`. This might result in an undefined behaviour. ")
         }
         _state = .init(directions: directions,
                        tileStoreConfiguration: tileStoreConfiguration,
-                       navigationRouterType: navigationRouterType)
+                       routingProviderSource: routingProviderSource)
     }
     
     /**

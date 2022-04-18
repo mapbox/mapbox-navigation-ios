@@ -8,14 +8,14 @@ import MapboxDirections
 final class TilesetDescriptorFactoryTests: TestCase {
     
     override func tearDown() {
-        NavigationSettings.shared.initialize(directions: .shared, tileStoreConfiguration: .default, navigationRouterType: .hybrid)
+        NavigationSettings.shared.initialize(directions: .shared, tileStoreConfiguration: .default, routingProviderSource: .hybrid)
         super.tearDown()
     }
     
     func testLatestDescriptorsAreFromGlobalNavigatorCacheHandle() {
         NavigationSettings.shared.initialize(directions: .mocked,
                                              tileStoreConfiguration: .custom(FileManager.default.temporaryDirectory),
-                                             navigationRouterType: .offline)
+                                             routingProviderSource: .offline)
         _ = Navigator.shared
 
         let tilesetReceived = expectation(description: "Tileset received")
