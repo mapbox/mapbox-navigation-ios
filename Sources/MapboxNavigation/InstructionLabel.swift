@@ -39,16 +39,11 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
             return
         }
         
-        let attributed: NSAttributedString?
-        if let delegate = instructionDelegate {
-            attributed = delegate.label(self, willUpdate: instruction)
-        } else {
-            attributed = attributedString(for: instruction, with: SpriteRepository.init())
-        }
+        let attributed = instructionDelegate?.label(self, willUpdate: instruction) ?? attributedString(for: instruction, with: SpriteRepository.init())
         attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
     }
     
-    func attributedString(for instruction: VisualInstruction, with spriteRepository: SpriteRepository) -> NSAttributedString? {
+    func attributedString(for instruction: VisualInstruction, with spriteRepository: SpriteRepository) -> NSAttributedString {
         let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
             guard let self = self else { return }
             self.attributedText = attributedText

@@ -19,7 +19,7 @@ public protocol VisualInstructionDelegate: AnyObject, UnimplementedLogging {
      */
     func label(_ label: InstructionLabel,
                willPresent instruction: VisualInstruction,
-               as presented: NSAttributedString?) -> NSAttributedString?
+               as presented: NSAttributedString) -> NSAttributedString?
     
     /**
      Called when an InstructionLabel will be update with a visual instruction.
@@ -38,7 +38,7 @@ public extension VisualInstructionDelegate {
      */
     func label(_ label: InstructionLabel,
                willPresent instruction: VisualInstruction,
-               as presented: NSAttributedString?) -> NSAttributedString? {
+               as presented: NSAttributedString) -> NSAttributedString? {
         logUnimplemented(protocolType: VisualInstructionDelegate.self, level: .debug)
         return nil
     }
