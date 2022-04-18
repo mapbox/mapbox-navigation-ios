@@ -385,6 +385,7 @@ extension CarPlayManager: CPApplicationDelegate {
         mapTemplate.mapDelegate = self
         
         let currentActivity: CarPlayActivity = .browsing
+        os_log("CarPlayActivity changed to browsing", log: logger, type: .debug)
         mapTemplate.userInfo = [
             CarPlayManager.currentActivityKey: currentActivity
         ]
@@ -468,9 +469,12 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         if let userInfo = template.userInfo as? Dictionary<String, Any>,
            let currentActivity = userInfo[CarPlayManager.currentActivityKey] as? CarPlayActivity {
             self.currentActivity = currentActivity
+            os_log("CarPlayActivity changed", log: logger, type: .debug)
         } else {
             self.currentActivity = nil
+            os_log("CarPlayActivity is nil", log: logger, type: .debug)
         }
+        os_log("CarPlayManagerDelegate: template will appear", log: logger, type: .debug)
     }
     
     public func templateDidAppear(_ template: CPTemplate, animated: Bool) {
@@ -483,6 +487,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.removeRoutes()
         navigationMapView.removeWaypoints()
+        os_log("CarPlayManagerDelegate: template did disappear", log: logger, type: .debug)
     }
     
     public func templateWillDisappear(_ template: CPTemplate, animated: Bool) {
@@ -494,10 +499,12 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
                 interfaceController.templates.count == 1 else { return }
         
         navigationMapView?.navigationCamera.follow()
+        os_log("CarPlayManagerDelegate: template will disappear", log: logger, type: .debug)
     }
     
     public func templateDidDisappear(_ template: CPTemplate, animated: Bool) {
         delegate?.carPlayManager(self, templateDidDisappear: template, animated: animated)
+        os_log("CarPlayManagerDelegate: template did disappear", log: logger, type: .debug)
     }
 }
 
@@ -582,7 +589,7 @@ extension CarPlayManager {
         
         switch result {
         case let .failure(error):
-            os_log("Failed to calculate routes.", log: logger, type: .debug)
+            os_log("Failed to calculate routes.", log: logger, type: .error)
             guard let delegate = delegate,
                   let alert = delegate.carPlayManager(self,
                                                       didFailToFetchRouteBetween: routeOptions.waypoints,
@@ -703,6 +710,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         mapTemplate.mapDelegate = self
         
         let currentActivity: CarPlayActivity = .navigating
+        os_log("CarPlayActivity changed to navigating", log: logger, type: .debug)
         mapTemplate.userInfo = [
             CarPlayManager.currentActivityKey: currentActivity
         ]
@@ -798,9 +806,11 @@ extension CarPlayManager: CPMapTemplateDelegate {
         if let carPlayNavigationViewController = carPlayNavigationViewController {
             currentActivity = .panningInNavigationMode
             traitCollection = carPlayNavigationViewController.traitCollection
+            os_log("CarPlayActivity changed to panning in navigation mode", log: logger, type: .debug)
         } else if let carPlayMapViewController = self.carPlayMapViewController {
             currentActivity = .panningInBrowsingMode
             traitCollection = carPlayMapViewController.traitCollection
+            os_log("CarPlayActivity changed to panning in browsing mode", log: logger, type: .debug)
         } else {
             assertionFailure("Panning interface is only supported for free-drive or active-guidance navigation.")
             return

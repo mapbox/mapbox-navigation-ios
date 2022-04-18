@@ -1,4 +1,5 @@
 import Foundation
+import os.log
 
 /**
  `CarPlaySearchController` is the main object responsible for managing the search feature on CarPlay.
@@ -14,4 +15,6 @@ public class CarPlaySearchController: NSObject {
      The `CarPlaySearchController` delegate.
      */
     public weak var delegate: CarPlaySearchControllerDelegate?
+    
+    let logger: OSLog = .init(subsystem: "com.mapbox.navigation", category: "CarPlaySearchController")
 }

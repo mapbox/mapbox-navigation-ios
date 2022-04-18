@@ -1,7 +1,9 @@
 import CarPlay
+import os.log
 
 @available(iOS 12.0, *)
 class MapTemplateProvider: NSObject {
+    private let logger: OSLog = .init(subsystem: "com.mapbox.navigation", category: "MapTemplateProvider")
     
     weak var delegate: MapTemplateProviderDelegate?
     
@@ -12,6 +14,7 @@ class MapTemplateProvider: NSObject {
         mapTemplate.mapDelegate = mapDelegate
         
         let currentActivity: CarPlayActivity = .previewing
+        os_log("CarPlayActivity changed to previewing", log: logger, type: .debug)
         
         if let leadingButtons = delegate?.mapTemplateProvider(self,
                                                               mapTemplate: mapTemplate,

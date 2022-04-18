@@ -1,6 +1,7 @@
 import Foundation
 import CarPlay
 import MapboxDirections
+import os.log
 
 @available(iOS 12.0, *)
 extension CarPlaySearchController: CPSearchTemplateDelegate {
@@ -21,6 +22,7 @@ extension CarPlaySearchController: CPSearchTemplateDelegate {
         let template = CPListTemplate(title: delegate?.recentSearchText, sections: [section])
         template.delegate = self
         delegate?.pushTemplate(template, animated: true)
+        os_log("CarPlay search template search button pressed", log: logger, type: .debug)
     }
 
     public func searchTemplateButton(searchTemplate: CPSearchTemplate,
@@ -76,6 +78,7 @@ extension CarPlaySearchController: CPListTemplateDelegate {
             let destinationWaypoint = Waypoint(location: location)
             delegate?.popTemplate(animated: false)
             delegate?.previewRoutes(to: destinationWaypoint, completionHandler: completionHandler)
+            os_log("Search item selected from list", log: logger, type: .debug)
             return
         }
     }
