@@ -347,8 +347,7 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter carPlayManager: The `CarPlayManager` object.
      - parameter navigationAlert: Banner alert, for which notification will be shown.
      - parameter mapTemplate: The map template that is visible during either preview or navigation sessions.
-     - returns: A boolean value indicating whether updated estimates should appear in the
-     notification.
+     - returns: A boolean value indicating whether alert should appear as a notification.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         shouldShowNotificationFor navigationAlert: CPNavigationAlert,
@@ -363,7 +362,8 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
      - parameter travelEstimates: Object that describes the time and distance remaining for the
      active navigation session.
      - parameter mapTemplate: The map template that is visible during either preview or navigation sessions.
-     - returns: A boolean value indicating whether alert should appear as a notification.
+     - returns: A boolean value indicating whether updated estimates should appear in the
+     notification.
      */
     func carPlayManager(_ carPlayManager: CarPlayManager,
                         shouldUpdateNotificationFor maneuver: CPManeuver,
