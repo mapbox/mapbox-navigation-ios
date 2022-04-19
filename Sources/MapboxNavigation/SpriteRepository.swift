@@ -186,8 +186,7 @@ class SpriteRepository {
             // Cache the single shield icon if it hasn't been stored.
             let shieldIcon = UIImage(cgImage: croppedCGIImage)
             spriteCache.store(shieldIcon, forKey: shieldKey, toDisk: false, completion: nil)
-            
-            return UIImage(cgImage: croppedCGIImage)
+            return shieldIcon
         }
         
         return nil

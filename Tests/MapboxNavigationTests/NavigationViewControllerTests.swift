@@ -125,17 +125,6 @@ class NavigationViewControllerTests: TestCase {
             return (navigationViewController: navigationViewController, navigationService: navigationService, startLocation: firstLocation, poi: poi, endLocation: lastLocation, voice: fakeVoice)
         }()
     }
-    
-    private func loadingSpriteURL(styleID: String) {
-        guard let shieldData = ShieldImage.shield.image.pngData(),
-              let spriteRequestURL = repository.spriteURL(isImage: true, styleID: styleID),
-              let metadataRequestURL = repository.spriteURL(isImage: false, styleID: styleID) else {
-                  XCTFail("Failed to form request to update SpriteRepository.")
-                  return
-              }
-        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
-    }
 
     override func tearDown() {
         super.tearDown()
@@ -414,8 +403,7 @@ class NavigationViewControllerTests: TestCase {
     }
     
     func testBlankBanner() {
-        let styleID = "/mapbox/navigation-day-v1"
-        loadingSpriteURL(styleID: styleID)
+        repository.storeSpriteData(styleType: .day)
         
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
