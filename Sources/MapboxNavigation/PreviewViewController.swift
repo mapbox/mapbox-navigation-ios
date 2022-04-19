@@ -62,6 +62,8 @@ open class PreviewViewController: UIViewController {
     
     public private(set) var presentedBottomBannerViewController: UIViewController?
     
+    var topBannerContainerViewTopConstraint: NSLayoutConstraint!
+    
     // :nodoc:
     public weak var delegate: PreviewViewControllerDelegate?
     
@@ -100,9 +102,19 @@ open class PreviewViewController: UIViewController {
         styleManager.styles = [PreviewDayStyle(), PreviewNightStyle()]
     }
     
+    open override func viewSafeAreaInsetsDidChange() {
+        super.viewSafeAreaInsetsDidChange()
+        
+        if topBannerContainerViewTopConstraint != nil {
+            let topInset = view.safeAreaInsets.top
+            topBannerContainerViewTopConstraint.constant = topInset
+        }
+    }
+    
     func setupFloatingButtons() {
-        navigationView.topBannerContainerView.topAnchor.constraint(equalTo: view.safeTopAnchor,
-                                                                   constant: 0.0).isActive = true
+        topBannerContainerViewTopConstraint = navigationView.topBannerContainerView.heightAnchor.constraint(equalToConstant: 0.0)
+        topBannerContainerViewTopConstraint.isActive = true
+        navigationView.topBannerContainerView.isHidden = true
         
         navigationView.floatingStackView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
                                                                    constant: -10.0).isActive = true
@@ -417,7 +429,7 @@ open class PreviewViewController: UIViewController {
         navigationView.addSubview(speedLimitView)
         
         let speedLimitViewConstraints = [
-            speedLimitView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+            speedLimitView.topAnchor.constraint(equalTo: navigationView.topBannerContainerView.bottomAnchor,
                                                 constant: 10),
             speedLimitView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                                                     constant: 10),
@@ -469,7 +481,7 @@ open class PreviewViewController: UIViewController {
             backButton.heightAnchor.constraint(equalToConstant: 50),
             backButton.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor,
                                                 constant: 10.0),
-            backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,
+            backButton.topAnchor.constraint(equalTo: navigationView.topBannerContainerView.bottomAnchor,
                                             constant: 10.0)
         ]
         
