@@ -38,9 +38,11 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     private lazy var reverseDelegate = TextReversingDelegate()
     private lazy var silentDelegate = DefaultBehaviorDelegate()
     
-    lazy var imageRepository: ImageRepository = {
-        let repo = ImageRepository.shared
-        repo.sessionConfiguration = URLSessionConfiguration.default
+    lazy var spriteRepository: SpriteRepository = {
+        let repo = SpriteRepository()
+        let config = URLSessionConfiguration.default
+        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
+        repo.sessionConfiguration = config
         return repo
     }()
 
@@ -59,29 +61,19 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     ]
     
     lazy var typicalInstruction: VisualInstructionBanner = makeVisualInstruction(primaryInstruction: [.text(text: .init(text: "Main Street", abbreviation: "Main St", abbreviationPriority: 0))], secondaryInstruction: nil)
-    
-    private func resetImageCache() {
-        let semaphore = DispatchSemaphore(value: 0)
-        imageRepository.resetImageCache {
-            semaphore.signal()
-        }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-    }
 
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-
-        imageRepository.disableDiskCache()
-        resetImageCache()
-
-        ImageDownloadOperationSpy.reset()
-        imageRepository.imageDownloader.setOperationType(ImageDownloadOperationSpy.self)
+        
+        spriteRepository.resetCache()
+        spriteRepository.storeSpriteData(styleType: .day)
+        spriteRepository.storeLegacy(image: .i280)
+        spriteRepository.storeLegacy(image: .us101)
     }
 
     override func tearDown() {
-        imageRepository.imageDownloader.setOperationType(nil)
+        ImageLoadingURLProtocolSpy.reset()
 
         super.tearDown()
     }
@@ -117,21 +109,20 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         let instruction1 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0))
         let instruction2 = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
 
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: instruction1.cacheKey!, toDisk: false)
-        imageRepository.storeImage(ShieldImage.us101.image, forKey: instruction2.cacheKey!, toDisk: false)
+        spriteRepository.legacyCache.store(ShieldImage.i280.image, forKey: instruction1.cacheKey!, toDisk: false, completion: nil)
+        spriteRepository.legacyCache.store(ShieldImage.us101.image, forKey: instruction2.cacheKey!, toDisk: false, completion: nil)
 
         let view = instructionsView()
+        view.delegate = self
         view.update(for: makeVisualInstruction(primaryInstruction: instructions, secondaryInstruction: nil))
 
         //the delimiter should NOT be present since both shields are already in the cache
         XCTAssertNil(view.primaryLabel.text!.firstIndex(of: "/"))
-
-        //explicitly reset the cache
-        resetImageCache()
     }
 
     func testDelimiterDisappearsOnlyWhenAllShieldsHaveLoaded() {
         let view = instructionsView()
+        view.delegate = self
         
         let firstExpectation = XCTestExpectation(description: "First Component Callback")
         let secondExpectation = XCTestExpectation(description: "Second Component Callback")
@@ -150,8 +141,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
 
         //simulate the downloads
         let firstDestinationComponent: VisualInstruction.Component = instructions[0]
-        simulateDownloadingShieldForComponent(firstDestinationComponent)
-
+        simulateDownloadingShieldForComponent(firstDestinationComponent, expectation: firstExpectation)
         //ensure that first callback fires
         wait(for: [firstExpectation], timeout: 1)
 
@@ -159,7 +149,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
         
         let secondDestinationComponent = instructions[2]
-        simulateDownloadingShieldForComponent(secondDestinationComponent)
+        simulateDownloadingShieldForComponent(secondDestinationComponent, expectation: secondExpectation)
 
         //ensure that second callback fires
         wait(for: [secondExpectation], timeout: 1)
@@ -188,6 +178,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     
     func testRouteShieldsAreGenericUntilTheyLoad() {
         let view = instructionsView()
+        view.delegate = self
         
         let firstExpectation = XCTestExpectation(description: "First Component Callback")
         let secondExpectation = XCTestExpectation(description: "Second Component Callback")
@@ -234,7 +225,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         
         //simulate the downloads
         let firstDestinationComponent: VisualInstruction.Component = instructions[0]
-        simulateDownloadingShieldForComponent(firstDestinationComponent)
+        simulateDownloadingShieldForComponent(firstDestinationComponent, expectation: firstExpectation)
         
         //ensure that first callback fires
         wait(for: [firstExpectation], timeout: 1)
@@ -260,7 +251,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         view.primaryLabel.imageDownloadCompletion = secondExpectation.fulfill
         
         let secondDestinationComponent = instructions[2]
-        simulateDownloadingShieldForComponent(secondDestinationComponent)
+        simulateDownloadingShieldForComponent(secondDestinationComponent, expectation: secondExpectation)
         
         //ensure that second callback fires
         wait(for: [secondExpectation], timeout: 1)
@@ -296,6 +287,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         let exitInstruction = VisualInstruction(text: nil, maneuverType: .takeOffRamp, maneuverDirection: .right, components: [exitAttribute, exitCodeAttribute, mainStreetString])
         
         let label = InstructionLabel(frame: CGRect(origin: .zero, size:CGSize(width: 375, height: 100)))
+        label.instructionDelegate = self
         
         label.availableBounds = { return label.frame }
         
@@ -303,6 +295,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         
         let presenter = InstructionPresenter(exitInstruction,
                                              dataSource: label,
+                                             spriteRepository: spriteRepository,
                                              traitCollection: traitCollection,
                                              downloadCompletion: nil)
         
@@ -312,7 +305,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
             exitCodeAttribute.cacheKey!,
             ExitView.criticalHash(side: .right, dataSource: label, traitCollection: traitCollection)
         ].joined(separator: "-")
-        XCTAssertNotNil(imageRepository.cachedImageForKey(key), "Expected cached image")
+        XCTAssertNotNil(spriteRepository.legacyCache.image(forKey:key), "Expected cached image")
         
         let spaceRange = NSMakeRange(1, 1)
         let space = attributed.attributedSubstring(from: spaceRange)
@@ -327,15 +320,24 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         XCTAssert(roadName.string == "Main Street", "Banner not populating road name correctly")
     }
 
-    private func simulateDownloadingShieldForComponent(_ component: VisualInstruction.Component) {
-        var imageURL: URL!
-        if case let VisualInstruction.Component.image(image: imageRepresentation, alternativeText: _) = component, let imageBaseURL = imageRepresentation.imageURL(format: .png) {
-            imageURL = imageBaseURL
+    private func simulateDownloadingShieldForComponent(_ component: VisualInstruction.Component, expectation: XCTestExpectation) {
+        if case let VisualInstruction.Component.image(image: representation, alternativeText: _) = component {
+            spriteRepository.updateRepresentation(for: representation) {
+                expectation.fulfill()
+                if let _ = representation.imageURL(format: .png) {
+                    XCTAssertNotNil(self.spriteRepository.legacyCache.image(forKey: representation.legacyCacheKey))
+                }
+            }
         }
-        let operation: ImageDownloadOperationSpy = ImageDownloadOperationSpy.operationForURL(imageURL)!
-        operation.fireAllCompletions(ShieldImage.i280.image, data: ShieldImage.i280.image.pngData(), error: nil)
+    }
+    
+}
 
-        XCTAssertNotNil(imageRepository.cachedImageForKey(component.cacheKey!))
+extension InstructionsBannerViewIntegrationTests: InstructionsBannerViewDelegate { }
+
+extension InstructionsBannerViewIntegrationTests: VisualInstructionDelegate {
+    func label(_ label: InstructionLabel, willPresent instruction: VisualInstruction, as presented: NSAttributedString) -> NSAttributedString? {
+        return label.attributedString(for: instruction, with: spriteRepository)
     }
 }
 
