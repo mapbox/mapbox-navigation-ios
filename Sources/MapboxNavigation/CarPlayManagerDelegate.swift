@@ -324,6 +324,51 @@ public protocol CarPlayManagerDelegate: AnyObject, UnimplementedLogging {
                         routeCasingLineLayerWithIdentifier identifier: String,
                         sourceIdentifier: String,
                         for parentViewController: UIViewController) -> LineLayer?
+    
+    // MARK: Notifications Management
+    
+    /**
+     Determines if the maneuver should be presented as a notification when the app is in the
+     background.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter maneuver: Maneuver, for which notification will be shown.
+     - parameter mapTemplate: The map template that is visible during either preview or navigation sessions.
+     - returns: A boolean value indicating whether maneuver should appear as a notification.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldShowNotificationFor maneuver: CPManeuver,
+                        in mapTemplate: CPMapTemplate) -> Bool
+    
+    /**
+     Determines if the updated distance remaining for the maneuver should be presented as a
+     notification when the app is in the background.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter navigationAlert: Banner alert, for which notification will be shown.
+     - parameter mapTemplate: The map template that is visible during either preview or navigation sessions.
+     - returns: A boolean value indicating whether alert should appear as a notification.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldShowNotificationFor navigationAlert: CPNavigationAlert,
+                        in mapTemplate: CPMapTemplate) -> Bool
+    
+    /**
+     Determines if the navigation alert should be presented as a notification when the app
+     is in the background.
+     
+     - parameter carPlayManager: The `CarPlayManager` object.
+     - parameter maneuver: Maneuver, for which notification will be shown.
+     - parameter travelEstimates: Object that describes the time and distance remaining for the
+     active navigation session.
+     - parameter mapTemplate: The map template that is visible during either preview or navigation sessions.
+     - returns: A boolean value indicating whether updated estimates should appear in the
+     notification.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldUpdateNotificationFor maneuver: CPManeuver,
+                        with travelEstimates: CPTravelEstimates,
+                        in mapTemplate: CPMapTemplate) -> Bool
 }
 
 @available(iOS 12.0, *)
@@ -533,5 +578,33 @@ public extension CarPlayManagerDelegate {
                         for parentViewController: UIViewController) -> LineLayer? {
         logUnimplemented(protocolType: CarPlayManagerDelegate.self, level: .debug)
         return nil
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldShowNotificationFor maneuver: CPManeuver,
+                        in mapTemplate: CPMapTemplate) -> Bool {
+        return false
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldShowNotificationFor navigationAlert: CPNavigationAlert,
+                        in mapTemplate: CPMapTemplate) -> Bool {
+        return false
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldUpdateNotificationFor maneuver: CPManeuver,
+                        with travelEstimates: CPTravelEstimates,
+                        in mapTemplate: CPMapTemplate) -> Bool {
+        return false
     }
 }

@@ -6,6 +6,10 @@
 
 - Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
 
+### CarPlay
+
+* Added the `CarPlayManagerDelegate.carPlayManager(_:shouldUpdateNotificationFor:with:in:)` and `CarPlayManagerDelegate.carPlayManager(_:shouldShowNotificationFor:in:)` to provide the ability to control notifications presentation while CarPlay application is in the background. ([#3828](https://github.com/mapbox/mapbox-navigation-ios/pull/3828))
+
 ## v2.4.0
 
 ### Pricing

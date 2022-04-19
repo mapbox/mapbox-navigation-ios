@@ -310,6 +310,25 @@ extension AppDelegate: CarPlayManagerDelegate {
 
         return nil
     }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldShowNotificationFor maneuver: CPManeuver,
+                        in mapTemplate: CPMapTemplate) -> Bool {
+        return true
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldShowNotificationFor navigationAlert: CPNavigationAlert,
+                        in mapTemplate: CPMapTemplate) -> Bool {
+        return true
+    }
+    
+    func carPlayManager(_ carPlayManager: CarPlayManager,
+                        shouldUpdateNotificationFor maneuver: CPManeuver,
+                        with travelEstimates: CPTravelEstimates,
+                        in mapTemplate: CPMapTemplate) -> Bool {
+        return true
+    }
 }
 
 // MARK: - CarPlaySearchControllerDelegate methods
