@@ -2,6 +2,7 @@ import XCTest
 import TestHelper
 import SnapshotTesting
 import MapboxDirections
+import MapboxMaps
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
@@ -19,11 +20,11 @@ class InstructionsBannerViewSnapshotTests: TestCase {
     override func setUp() {
         super.setUp()
         isRecording = false
-
-        prepareSpriteRepository()
+        continueAfterFailure = false
 
         NavigationSettings.shared.distanceUnit = .mile
         DayStyle().apply()
+        prepareSpriteRepository()
     }
 
     override func tearDown() {
@@ -62,7 +63,6 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
     func testMultilinePrimary() {
         let view = instructionsView()
-        view.delegate = self
         styleInstructionsView(view)
 
         view.maneuverView.isStart = true
@@ -95,6 +95,63 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
         assertImageSnapshot(matching: view, as: .image(precision: 0.95))
     }
+    
+    func testSinglelinePrimaryAndSecondaryWithShield() {
+        let i280Shield = VisualInstruction.Component.ShieldRepresentation(baseURL: spriteRepository.baseURL, name: "us-interstate", textColor: "white", text: "280")
+        let i280Representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: i280Shield)
+        
+        let primary: [VisualInstruction.Component] = [
+            .image(image: i280Representation, alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "South", abbreviation: nil, abbreviationPriority: 0)),
+        ]
+        let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
+        
+        let expectation = XCTestExpectation(description: "Download Sprite callback.")
+        spriteRepository.updateRepresentation(for: i280Representation) {
+            expectation.fulfill()
+            XCTAssertNotNil(self.spriteRepository.getSpriteImage(), "Failed to download Sprite.")
+        }
+        wait(for: [expectation], timeout: 1)
+        
+        
+        let view = instructionsView()
+        styleInstructionsView(view)
+        
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        assertImageSnapshot(matching: view, as: .image(precision: 0.95))
+    }
+    
+    func testSinglelinePrimaryAndSecondaryWithNightShield() {
+        let i280Shield = VisualInstruction.Component.ShieldRepresentation(baseURL: spriteRepository.baseURL, name: "us-interstate", textColor: "white", text: "280")
+        let i280Representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: i280Shield)
+        
+        let primary: [VisualInstruction.Component] = [
+            .image(image: i280Representation, alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "South", abbreviation: nil, abbreviationPriority: 0)),
+        ]
+        let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
+        
+        spriteRepository.storeSpriteData(styleType: .night)
+        let expectation = XCTestExpectation(description: "Download Sprite callback.")
+        spriteRepository.updateStyle(styleURI: .navigationNight) {
+            expectation.fulfill()
+            XCTAssertEqual(self.spriteRepository.styleURI, StyleURI.navigationNight, "Failed to update style.")
+            XCTAssertNotNil(self.spriteRepository.getSpriteImage(), "Failed to download Sprite.")
+        }
+        wait(for: [expectation], timeout: 1)
+        
+        let view = instructionsView()
+        styleInstructionsView(view)
+        
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        assertImageSnapshot(matching: view, as: .image(precision: 0.95))
+    }
 
     func testPrimaryShieldAndSecondary() {
         let view = instructionsView()
@@ -115,7 +172,6 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
     func testAbbreviateInstructions() {
         let view = instructionsView()
-        view.delegate = self
         styleInstructionsView(view)
 
         view.maneuverView.isStart = true
@@ -138,7 +194,6 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
     func testAbbreviateInstructionsIncludingDelimiter() {
         let view = instructionsView()
-        view.delegate = self
         styleInstructionsView(view)
 
         view.maneuverView.isStart = true
@@ -178,7 +233,6 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
     func testAdjacentShields() {
         let view = instructionsView(size: .iPhoneX)
-        view.delegate = self
         styleInstructionsView(view)
         view.maneuverView.isStart = true
         view.distance = 482
@@ -198,9 +252,13 @@ class InstructionsBannerViewSnapshotTests: TestCase {
         let view = UIView()
         view.backgroundColor = .white
         let instructionsBannerView = instructionsView()
+        instructionsBannerView.delegate = self
+        
         let nextBannerViewFrame = CGRect(x: 0, y: instructionsBannerView.frame.maxY, width: instructionsBannerView.bounds.width, height: 44)
         let nextBannerView = NextBannerView(frame: nextBannerViewFrame)
+        nextBannerView.instructionDelegate = self
         nextBannerView.translatesAutoresizingMaskIntoConstraints = true
+        
         view.addSubview(instructionsBannerView)
         view.addSubview(nextBannerView)
         view.frame = CGRect(origin: .zero, size: CGSize(width: nextBannerViewFrame.width, height: nextBannerViewFrame.maxY))
@@ -385,6 +443,7 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 extension InstructionsBannerViewSnapshotTests {
     // UIAppearance proxy do not work in unit test environment so we have to style manually
     func styleInstructionsView(_ view: InstructionsBannerView) {
+        view.delegate = self
         view.backgroundColor = .white
         view.maneuverView.backgroundColor = #colorLiteral(red: 0.5882352941, green: 0.5882352941, blue: 0.5882352941, alpha: 0.5)
         view.distanceLabel.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 0.5)
