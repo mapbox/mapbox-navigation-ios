@@ -6,6 +6,11 @@
 
 - Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
 
+### User interface
+
+* Fixed an issue where `UserPuckCourseView`’s color desaturated during turn-by-turn navigation even as the location was being updated. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
+* `UserPuckCourseView` no longer desaturates its color based on the age of the last location update. `RouteController` simulates location updates whenever Location Services is unable to receive real location updates. To ensure a steady stream of location updates outside of turn-by-turn navigation, install a `PassiveLocationManager`. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
+
 ### CarPlay
 
 * Added the `CarPlayManagerDelegate.carPlayManager(_:shouldUpdateNotificationFor:with:in:)` and `CarPlayManagerDelegate.carPlayManager(_:shouldShowNotificationFor:in:)` to provide the ability to control notifications presentation while CarPlay application is in the background. ([#3828](https://github.com/mapbox/mapbox-navigation-ios/pull/3828))
