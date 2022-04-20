@@ -234,7 +234,7 @@ open class RouteController: NSObject {
      whether the change was successful.
      */
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
-                                 starting legIndex: Int,
+                                 fromLegIndex legIndex: Int,
                                  completion: ((Result<RouteInfo, Error>) -> Void)?) {
         guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
             completion?(.failure(RouteControllerError.internalError))
@@ -372,11 +372,11 @@ open class RouteController: NSObject {
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
-        updateNavigator(with: indexedRouteResponse, starting: self.routeProgress.legIndex, completion: nil)
+        updateNavigator(with: indexedRouteResponse, fromLegIndex: self.routeProgress.legIndex, completion: nil)
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
-        updateNavigator(with: indexedRouteResponse, starting: self.routeProgress.legIndex, completion: nil)
+        updateNavigator(with: indexedRouteResponse, fromLegIndex: self.routeProgress.legIndex, completion: nil)
     }
 
     func isValidNavigationStatus(_ status: NavigationStatus) -> Bool {
@@ -567,7 +567,7 @@ open class RouteController: NSObject {
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
-        updateNavigator(with: self.indexedRouteResponse, starting: 0) { [weak self] _ in
+        updateNavigator(with: self.indexedRouteResponse, fromLegIndex: 0) { [weak self] _ in
             self?.isInitialized = true
         }
         Self.instanceLock.lock()
@@ -735,7 +735,7 @@ extension RouteController: Router {
         let routeOptions = routeOptions ?? routeProgress.routeOptions
         let routeProgress = RouteProgress(route: route, options: routeOptions)
         updateNavigator(with: indexedRouteResponse,
-                        starting: routeProgress.legIndex) { [weak self] result in
+                        fromLegIndex: routeProgress.legIndex) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success:

@@ -33,7 +33,7 @@ class Navigator {
     }
 
     private lazy var routeCoordinator: RoutesCoordinator = {
-        .init(setMainRouteHandler: { [weak self] route, legIndex, completion in
+        .init(mainRouteSetupHandler: { [weak self] route, legIndex, completion in
             self?.navigator.setPrimaryRouteForRoute(route, legIndex: legIndex) { [weak self] result in
                 if result.isValue() {
                     let routeInfo = result.value!
@@ -55,7 +55,7 @@ class Navigator {
                     completion(.failure(NavigatorError.failedToUpdateRoutes(reason: "Unexpected internal response")))
                 }
             }
-        }, setAlternativeRoutesHandler: { [weak self] routes, completion in
+        }, alternativeRoutesSetupHandler: { [weak self] routes, completion in
             self?.navigator.setAlternativeRoutesForRoutes(routes) { [weak self] result in
                 if result.isValue() {
                     let alternativeRoutes = result.value as? [RouteAlternative] ?? []
@@ -242,7 +242,7 @@ class Navigator {
     }
     
     func setAlternativeRoutes(_ routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {
-        routeCoordinator.setAlternativeRoutes(routes, completion)
+        routeCoordinator.alternativeRoutesSetupHandler(routes, completion)
     }
     
     func unsetRoutes(uuid: UUID, completion: @escaping (Result<RouteInfo, Error>) -> Void) {

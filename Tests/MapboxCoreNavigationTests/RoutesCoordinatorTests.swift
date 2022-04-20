@@ -78,16 +78,16 @@ private extension RoutesCoordinatorTests {
         var expectedRouteIndex = UInt32.max
         var expectedResult: Result<RouteInfo, RoutesCoordinatorError>!
 
-        let handler: RoutesCoordinator.SetMainRouteHandler = { routes, routeIndex, completion in
+        let handler: RoutesCoordinator.MainRouteSetupHandler = { routes, routeIndex, completion in
             XCTAssertEqual(routes?.getRouteId(), expectedRoutes?.getRouteId())
             XCTAssertEqual(routeIndex, expectedRouteIndex)
             completion(expectedResult.mapError { $0 as Error })
         }
 
-        let coordinator = RoutesCoordinator(setMainRouteHandler: { route, routeIndex, completion in
+        let coordinator = RoutesCoordinator(mainRouteSetupHandler: { route, routeIndex, completion in
             handler(route, routeIndex, completion)
         },
-                                            setAlternativeRoutesHandler: { routes, completion in
+                                            alternativeRoutesSetupHandler: { routes, completion in
             XCTAssertTrue(routes.isEmpty)
         })
 
