@@ -10,7 +10,11 @@ struct SpriteInfo: Codable, Equatable {
     var visible: Bool
 }
 
-class SpriteInfoWrapper<SpriteSpriteInfo>: NSObject {
+class SpriteInfoWrapper<SpriteSpriteInfo>: NSObject, NSDiscardableContent {
+    func beginContentAccess() -> Bool { return true }
+    func endContentAccess() { }
+    func discardContentIfPossible() {}
+    func isContentDiscarded() -> Bool { return false }
     let spriteInfo: SpriteInfo
     
     init(_ spriteInfo: SpriteInfo) {
