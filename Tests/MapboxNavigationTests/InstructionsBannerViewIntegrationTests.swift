@@ -228,7 +228,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         simulateDownloadingShieldForComponent(firstDestinationComponent, expectation: firstExpectation)
         
         //ensure that first callback fires
-        wait(for: [firstExpectation], timeout: 1)
+        wait(for: [firstExpectation], timeout: 2)
         
         //This range has to be recomputed because the string changes on download
         let secondStringRange = NSRange(location: 0, length: view.primaryLabel.attributedText!.length)
@@ -254,7 +254,7 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         simulateDownloadingShieldForComponent(secondDestinationComponent, expectation: secondExpectation)
         
         //ensure that second callback fires
-        wait(for: [secondExpectation], timeout: 1)
+        wait(for: [secondExpectation], timeout: 2)
         
         //we recompute this again because the string once again changes
         let thirdStringRange = NSRange(location: 0, length: view.primaryLabel.attributedText!.length)

@@ -193,6 +193,8 @@ class NavigationViewControllerTests: TestCase {
         service.delegate = delegate
 
         _ = navigationViewController.view
+        let topViewController = navigationViewController.topViewController as! TopBannerViewController
+        topViewController.spriteRepository = repository
         navigationViewController.viewWillAppear(false)
         navigationViewController.viewDidAppear(false)
 
