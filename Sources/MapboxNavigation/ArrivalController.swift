@@ -4,6 +4,10 @@ import MapboxCoreNavigation
 import MapboxMobileEvents
 import MapboxMaps
 
+public protocol ArrivalControllerProtocol {
+//    showEndOfRoute
+}
+
 /// A component to encapsulate `EndOfRouteViewController` presenting logic such as enabling/disabling, handling autolayout, keyboard, positioning camera, etc.
 class ArrivalController: NavigationComponentDelegate {
     
@@ -43,7 +47,7 @@ class ArrivalController: NavigationComponentDelegate {
                                 advancesToNextLeg: Bool,
                                 duration: TimeInterval = 1.0,
                                 completion: ((Bool) -> Void)? = nil,
-                                onDismiss: EndOfRouteDismissalHandler? = nil) {
+                                onDismiss: @escaping EndOfRouteDismissalHandler) {
         guard navigationViewData.router.routeProgress.isFinalLeg &&
                 advancesToNextLeg &&
                 showsEndOfRoute else {

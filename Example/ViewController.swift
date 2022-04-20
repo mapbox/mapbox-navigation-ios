@@ -622,6 +622,10 @@ class ViewController: UIViewController {
 
 extension ViewController: NavigationMapViewDelegate {
     
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSubmitFeedback feedback: EndOfRouteFeedback?) {
+        print(feedback)
+    }
+    
     func navigationMapView(_ mapView: NavigationMapView, didSelect waypoint: Waypoint) {
         guard let responseOptions = response?.options, case let .route(routeOptions) = responseOptions else { return }
         let modifiedOptions = routeOptions.without(waypoint)

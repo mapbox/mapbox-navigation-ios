@@ -237,6 +237,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      - returns: If `true`, the location is discarded and the `NavigationViewController` will not consider it. If `false`, the location will not be thrown out.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSubmitFeedback feedback: EndOfRouteFeedback?)
 }
 
 public extension NavigationViewControllerDelegate {
@@ -386,5 +388,9 @@ public extension NavigationViewControllerDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSubmitFeedback feedback: EndOfRouteFeedback?) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
 }
