@@ -6,7 +6,13 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 
 class InstructionsBannerViewSnapshotTests: TestCase {
-    let imageRepository: ImageRepository = ImageRepository.shared
+    lazy var spriteRepository: SpriteRepository = {
+        let repo = SpriteRepository()
+        let config = URLSessionConfiguration.default
+        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
+        repo.sessionConfiguration = config
+        return repo
+    }()
 
     let asyncTimeout: TimeInterval = 2.0
 
@@ -14,25 +20,26 @@ class InstructionsBannerViewSnapshotTests: TestCase {
         super.setUp()
         isRecording = false
 
-        let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
-        let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
-
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false)
-        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false)
+        prepareSpriteRepository()
 
         NavigationSettings.shared.distanceUnit = .mile
         DayStyle().apply()
     }
 
     override func tearDown() {
-        let semaphore = DispatchSemaphore(value: 0)
-        imageRepository.resetImageCache {
-            semaphore.signal()
-        }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-
+        ImageLoadingURLProtocolSpy.reset()
         super.tearDown()
+    }
+    
+    func prepareSpriteRepository() {
+        spriteRepository.resetCache()
+        spriteRepository.storeSpriteData(styleType: .day)
+        
+        let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
+        let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
+        
+        spriteRepository.legacyCache.store(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false, completion: nil)
+        spriteRepository.legacyCache.store(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false, completion: nil)
     }
 
     func testSinglelinePrimary() {
@@ -55,6 +62,7 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
     func testMultilinePrimary() {
         let view = instructionsView()
+        view.delegate = self
         styleInstructionsView(view)
 
         view.maneuverView.isStart = true
@@ -107,6 +115,7 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
     func testAbbreviateInstructions() {
         let view = instructionsView()
+        view.delegate = self
         styleInstructionsView(view)
 
         view.maneuverView.isStart = true
@@ -129,6 +138,7 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
     func testAbbreviateInstructionsIncludingDelimiter() {
         let view = instructionsView()
+        view.delegate = self
         styleInstructionsView(view)
 
         view.maneuverView.isStart = true
@@ -144,7 +154,6 @@ class InstructionsBannerViewSnapshotTests: TestCase {
             .text(text: .init(text: "20 West", abbreviation: "20 W", abbreviationPriority: 1)),
         ]
 
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: primary.first!.cacheKey!)
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
 
         assertImageSnapshot(matching: view, as: .image(precision: 0.95))
@@ -169,6 +178,7 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
     func testAdjacentShields() {
         let view = instructionsView(size: .iPhoneX)
+        view.delegate = self
         styleInstructionsView(view)
         view.maneuverView.isStart = true
         view.distance = 482
@@ -389,5 +399,11 @@ extension InstructionsBannerViewSnapshotTests {
         view.distanceLabel.unitFont = UIFont.systemFont(ofSize: 14)
         view.primaryLabel.font = UIFont.systemFont(ofSize: 30, weight: .medium)
         view.secondaryLabel.font = UIFont.systemFont(ofSize: 26, weight: .medium)
+    }
+}
+
+extension InstructionsBannerViewSnapshotTests: InstructionsBannerViewDelegate {
+    func label(_ label: InstructionLabel, willUpdate instruction: VisualInstruction) -> NSAttributedString? {
+        return label.attributedString(for: instruction, with: spriteRepository)
     }
 }
