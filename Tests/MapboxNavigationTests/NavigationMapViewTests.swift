@@ -531,6 +531,8 @@ class NavigationMapViewTests: TestCase {
         var fractionTraveled = 0.0 // not traversed at all
         var routeLineGradient = navigationMapView.routeLineRestrictionsGradient(features, fractionTraveled: fractionTraveled)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.routeRestrictedAreaColor)
+        XCTAssertEqual(routeLineGradient[0.25.nextUp], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(routeLineGradient[0.25.nextDown], navigationMapView.routeRestrictedAreaColor)
         XCTAssertEqual(routeLineGradient[featureBorderStop.nextUp], navigationMapView.traversedRouteColor)
         
         fractionTraveled = 0.25 // border between restricted and not restricted
@@ -538,7 +540,7 @@ class NavigationMapViewTests: TestCase {
         routeLineGradient = navigationMapView.routeLineRestrictionsGradient(features, fractionTraveled: fractionTraveled)
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[featureBorderStop.nextUp], navigationMapView.traversedRouteColor)
-        XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.routeRestrictedAreaColor)
+        XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
         
         fractionTraveled = 0.999999999 // almost finished
@@ -547,6 +549,37 @@ class NavigationMapViewTests: TestCase {
         XCTAssertEqual(routeLineGradient[0.0], navigationMapView.traversedRouteColor)
         XCTAssertEqual(routeLineGradient[fractionTraveled], navigationMapView.routeRestrictedAreaColor)
         XCTAssertEqual(routeLineGradient[fractionTraveledNextDown], navigationMapView.traversedRouteColor)
+    }
+
+    // If fractionTraveled is higher than first restricted region, the next region will become restricted as well.
+    func testGenerateRouteLineRestrictedGradientBug() {
+        let coordinates: [CLLocationCoordinate2D] = [
+            CLLocationCoordinate2D(latitude: 1, longitude: 0),
+            CLLocationCoordinate2D(latitude: 2, longitude: 0),
+            CLLocationCoordinate2D(latitude: 3, longitude: 0),
+            CLLocationCoordinate2D(latitude: 4, longitude: 0),
+        ]
+
+        let composeFeature = { (index: Int, isRestricted: Bool) -> Turf.Feature in
+            var feature = Feature.init(geometry: .lineString(LineString([coordinates[index],coordinates[index+1]])))
+            feature.properties = ["isRestrictedRoad": .boolean(isRestricted)]
+            return feature
+        }
+
+        let features:[Turf.Feature] = [
+            composeFeature(0, true),
+            composeFeature(1, false),
+            composeFeature(2, true),
+        ]
+
+        let featureBorderStop = 0.6666666666666667
+
+        let fractionTraveled = 0.44 // not traversed at all
+        let routeLineGradient = navigationMapView.routeLineRestrictionsGradient(features,
+                                                                                fractionTraveled: fractionTraveled)
+        XCTAssertEqual(routeLineGradient[0.44], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(routeLineGradient[0.44.nextDown], navigationMapView.traversedRouteColor)
+        XCTAssertEqual(routeLineGradient[featureBorderStop], navigationMapView.routeRestrictedAreaColor)
     }
     
     func testRoadClassesWithOverriddenCongestionLevelsRemovesDuplicates() {

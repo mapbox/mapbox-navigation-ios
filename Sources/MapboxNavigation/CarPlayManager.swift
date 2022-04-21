@@ -964,6 +964,29 @@ extension CarPlayManager: CPMapTemplateDelegate {
             mapTemplate.trailingNavigationBarButtons = [exitButton]
         }
     }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate,
+                            shouldShowNotificationFor maneuver: CPManeuver) -> Bool {
+        return delegate?.carPlayManager(self,
+                                        shouldShowNotificationFor: maneuver,
+                                        in: mapTemplate) ?? false
+    }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate,
+                            shouldShowNotificationFor navigationAlert: CPNavigationAlert) -> Bool {
+        return delegate?.carPlayManager(self,
+                                        shouldShowNotificationFor: navigationAlert,
+                                        in: mapTemplate) ?? false
+    }
+    
+    public func mapTemplate(_ mapTemplate: CPMapTemplate,
+                            shouldUpdateNotificationFor maneuver: CPManeuver,
+                            with travelEstimates: CPTravelEstimates) -> Bool {
+        return delegate?.carPlayManager(self,
+                                        shouldUpdateNotificationFor: maneuver,
+                                        with: travelEstimates,
+                                        in: mapTemplate) ?? false
+    }
 }
 
 // MARK: CarPlayNavigationViewControllerDelegate Methods
