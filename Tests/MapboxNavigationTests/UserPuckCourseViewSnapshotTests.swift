@@ -21,7 +21,6 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         let lightUserPuckСourseView = UserPuckCourseView(frame: frame)
         lightUserPuckСourseView.puckView.overrideUserInterfaceStyle = .light
         lightUserPuckСourseView.puckColor = puckColor
-        lightUserPuckСourseView.stalePuckColor = puckColor
         lightUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: lightUserPuckСourseView, as: .image(precision: 0.95))
         
@@ -29,7 +28,6 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         let darkUserPuckСourseView = UserPuckCourseView(frame: frame)
         darkUserPuckСourseView.puckView.overrideUserInterfaceStyle = .dark
         darkUserPuckСourseView.puckColor = puckColor
-        darkUserPuckСourseView.stalePuckColor = puckColor
         darkUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: darkUserPuckСourseView, as: .image(precision: 0.95))
     }
@@ -55,38 +53,6 @@ class UserPuckCourseViewSnapshotTests: TestCase {
         darkUserPuckСourseView.shadowColor = shadowColor
         darkUserPuckСourseView.setNeedsDisplay()
         assertImageSnapshot(matching: darkUserPuckСourseView, as: .image(precision: 0.95))
-    }
-    
-    func testUserPuckCourseViewStalePuckColor() {
-        let frame = CGRect(x: 0.0, y: 0.0, width: 100.0, height: 100.0)
-        let userPuckСourseView = UserPuckCourseView(frame: frame)
-        userPuckСourseView.puckColor = .green
-        userPuckСourseView.stalePuckColor = .red
-        userPuckСourseView.staleInterval = 1.0
-        userPuckСourseView.staleRefreshInterval = 0.1
-        userPuckСourseView.setNeedsDisplay()
-        
-        // Right after `UserPuckCourseView` creation and when it's not yet stale its puck color
-        // should be green.
-        assertImageSnapshot(matching: userPuckСourseView, as: .image(precision: 0.95))
-        
-        // Simulate location update to be able to move puck to the stale state.
-        NotificationCenter.default.post(name: .routeControllerProgressDidChange,
-                                        object: self,
-                                        userInfo: nil)
-        
-        let stalePuckExpectation = expectation(description: "Stale puck expectation")
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
-            userPuckСourseView.setNeedsDisplay()
-            stalePuckExpectation.fulfill()
-        }
-        
-        wait(for: [stalePuckExpectation], timeout: 10.0)
-        
-        // It is expected that puck moves to the stale state within one second and gradually changes
-        // its color to red.
-        assertImageSnapshot(matching: userPuckСourseView, as: .image(precision: 0.95))
     }
     
     func testCourseUpdatable() {
