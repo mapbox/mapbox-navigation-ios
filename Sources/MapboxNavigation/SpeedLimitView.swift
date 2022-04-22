@@ -1,4 +1,5 @@
 import UIKit
+import CoreLocation
 import MapboxDirections
 
 /**
@@ -52,11 +53,10 @@ public class SpeedLimitView: UIView {
     }
     
     /**
+     :nodoc:
      The current speed to display.
-     
-     The view displays the value of this property as is without converting it to another unit.
      */
-    public var currentSpeed: Measurement<UnitSpeed>?
+    public var currentSpeed: CLLocationSpeed?
     
     /**
      The sign standard that specifies the design that the view depicts.
