@@ -7,7 +7,7 @@ import MapboxMaps
 /// A component to encapsulate `EndOfRouteViewController` presenting logic such as enabling/disabling, handling autolayout, keyboard, positioning camera, etc.
 class ArrivalController: NavigationComponentDelegate {
     
-    typealias EndOfRouteDismissalHandler = (EndOfRouteFeedback?) -> ()
+    typealias EndOfRouteDismissalHandler = (EndOfRouteFeedback) -> ()
     
     // MARK: Properties
     
@@ -43,7 +43,7 @@ class ArrivalController: NavigationComponentDelegate {
                                 advancesToNextLeg: Bool,
                                 duration: TimeInterval = 1.0,
                                 completion: ((Bool) -> Void)? = nil,
-                                onDismiss: EndOfRouteDismissalHandler? = nil) {
+                                onDismiss: @escaping EndOfRouteDismissalHandler) {
         guard navigationViewData.router.routeProgress.isFinalLeg &&
                 advancesToNextLeg &&
                 showsEndOfRoute else {
@@ -88,7 +88,7 @@ class ArrivalController: NavigationComponentDelegate {
     
     // MARK: Private Methods
     
-    private func embedEndOfRoute(into viewController: UIViewController, onDismiss: EndOfRouteDismissalHandler? = nil) {
+    private func embedEndOfRoute(into viewController: UIViewController, onDismiss: @escaping EndOfRouteDismissalHandler) {
         let endOfRoute = endOfRouteViewController
         viewController.addChild(endOfRoute)
         navigationViewData.navigationView.endOfRouteView = endOfRoute.view
@@ -97,7 +97,7 @@ class ArrivalController: NavigationComponentDelegate {
 
         endOfRoute.dismissHandler = { [weak self] (stars, comment) in
             guard let rating = self?.rating(for: stars) else { return }
-            onDismiss?(EndOfRouteFeedback(rating: rating, comment: comment))
+            onDismiss(EndOfRouteFeedback(rating: rating, comment: comment))
         }
     }
     
