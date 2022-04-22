@@ -562,9 +562,7 @@ class NavigationCameraTests: TestCase {
     }
     
     func testRunningAnimators() {
-        let window = UIWindow()
         let navigationMapView = NavigationMapView(frame: .zero)
-        window.addSubview(navigationMapView)
         
         let navigationCameraStateTransition = NavigationCameraStateTransition(navigationMapView.mapView)
         
