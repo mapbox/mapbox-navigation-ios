@@ -54,10 +54,9 @@ private extension RoutesCoordinatorTests {
         
         let routeRequest = Directions(credentials: Fixture.credentials).url(forCalculating: routeOptions).absoluteString
         
-        let routerOrigin = RouterOrigin(rawValue: 0)!
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
                                                                request: routeRequest,
-                                                               routeOrigin: routerOrigin)
+                                                               routeOrigin: RouterOrigin.custom)
         
         guard let generatedRoute = (parsedRoutes.value as? [RouteInterface])?.first else {
             XCTFail("Failed to parse generated test Route.")
