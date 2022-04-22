@@ -455,7 +455,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         return true
     }
     
-    fileprivate func handleCancelAction(with feedback: EndOfRouteFeedback? = nil) {
+    fileprivate func handleCancelAction() {
         if delegate?.navigationViewControllerDidDismiss(self, byCanceling: true) != nil {
             // The receiver should handle dismissal of the NavigationViewController
         } else {
@@ -711,7 +711,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
 
 extension NavigationViewController: NavigationViewDelegate {
     func navigationView(_ view: NavigationView, didTapCancelButton: CancelButton) {
-        handleCancelAction(with: nil)
+        handleCancelAction()
     }
 }
 
@@ -899,7 +899,7 @@ extension NavigationViewController: NavigationServiceDelegate {
         let dismissCallback: (EndOfRouteFeedback) -> Void = { [weak self] in
             guard let self = self else { return }
             self.navigationService.endNavigation(feedback: $0)
-            self.handleCancelAction(with: $0)
+            self.handleCancelAction()
             self.delegate?.navigationViewController(self, didSubmitArrivalFeedback: $0)
         }
         arrivalController?.showEndOfRouteIfNeeded(self, advancesToNextLeg: advancesToNextLeg, onDismiss: dismissCallback)

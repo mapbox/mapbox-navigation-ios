@@ -4,10 +4,6 @@ import MapboxCoreNavigation
 import MapboxMobileEvents
 import MapboxMaps
 
-public protocol ArrivalControllerProtocol {
-//    showEndOfRoute
-}
-
 /// A component to encapsulate `EndOfRouteViewController` presenting logic such as enabling/disabling, handling autolayout, keyboard, positioning camera, etc.
 class ArrivalController: NavigationComponentDelegate {
     
