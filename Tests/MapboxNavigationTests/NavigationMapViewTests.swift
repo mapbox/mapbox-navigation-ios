@@ -20,7 +20,7 @@ class NavigationMapViewTests: TestCase {
     
     override func setUp() {
         super.setUp()
-        navigationMapView = NavigationMapView(frame: .zero)
+        navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
     }
     
     override func tearDown() {

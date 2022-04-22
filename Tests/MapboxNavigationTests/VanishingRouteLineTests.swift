@@ -7,13 +7,16 @@ import MapboxMaps
 
 class VanishingRouteLineTests: TestCase {
     var navigationMapView: NavigationMapView!
+    var window = UIWindow()
     
     override func setUp() {
         super.setUp()
         navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
+        window.addSubview(navigationMapView)
     }
     
     override func tearDown() {
+        navigationMapView.removeFromSuperview()
         navigationMapView = nil
         super.tearDown()
     }
