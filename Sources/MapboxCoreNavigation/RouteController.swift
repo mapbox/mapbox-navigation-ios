@@ -259,9 +259,8 @@ open class RouteController: NSObject {
         
         let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
         
-        guard let routeOrigin = RouterOrigin(rawValue: 0) else { return }
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
-                                                               request: routeRequest, routeOrigin: routeOrigin)
+                                                               request: routeRequest, routeOrigin: RouterOrigin.custom)
         if parsedRoutes.isValue(),
            let route = (parsedRoutes.value as? [RouteInterface])?.first {
             self.sharedNavigator.setRoutes(route, uuid: sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
