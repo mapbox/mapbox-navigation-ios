@@ -238,7 +238,13 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, shouldDiscard location: CLLocation) -> Bool
     
-    func navigationViewController(_ navigationViewController: NavigationViewController, didSubmitFeedback feedback: EndOfRouteFeedback?)
+    /**
+     Called to notify that the user submitted the end of route feedback.
+     
+     - parameter navigationViewController: The `NavigationViewController` object.
+     - parameter feedback: The `EndOfRouteFeedback` that was submitted by the user.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSubmitArrivalFeedback feedback: EndOfRouteFeedback)
 }
 
 public extension NavigationViewControllerDelegate {
@@ -389,8 +395,11 @@ public extension NavigationViewControllerDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
-    
-    func navigationViewController(_ navigationViewController: NavigationViewController, didSubmitFeedback feedback: EndOfRouteFeedback?) {
+
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didSubmitArrivalFeedback feedback: EndOfRouteFeedback) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self, level: .debug)
     }
 }
