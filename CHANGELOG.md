@@ -2,9 +2,14 @@
 
 ## v2.5.0
 
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.5.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0-rc.1). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v97._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/97.0.0). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
+
 ### Location tracking
 
-- Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
+* Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
 
 ### User interface
 
@@ -53,7 +58,6 @@
 * Fixed an issue when `SimulatedLocationManager` could freeze the main thread when working with long routes. The manager now calls delegate methods from a background thread. ([#3672](https://github.com/mapbox/mapbox-navigation-ios/pull/3672))
 * Fixed an issue where initial puck position can be incorrect when `NavigationViewController` is presented. ([#3773](https://github.com/mapbox/mapbox-navigation-ios/pull/3773))
 * Fixed an issue where `UserHaloCourseView` was not correctly shown while changing `CLLocationManager.accuracyAuthorization` and `CLLocationManager.authorizationStatus`. ([#3804](https://github.com/mapbox/mapbox-navigation-ios/pull/3804))
-* Fixed an issue where camera was not centered to the current location during `NavigationMapView` initialization. ([#3826](https://github.com/mapbox/mapbox-navigation-ios/pull/3826))
 
 ### Offline routing
 

@@ -3,7 +3,7 @@ import Foundation
 
 extension Result {
     
-    init(expected: Expected<AnyObject, AnyObject>) {
+    init<T, V>(expected: Expected<T, V>) {
         if expected.isValue(), let value = expected.value {
             guard let typedValue = value as? Success else {
                 preconditionFailure("Result value can't be constructed. Unknown expected value type.")
