@@ -1,11 +1,23 @@
 import UIKit
 
+internal class ImageMemory: NSObject, NSDiscardableContent {
+    func beginContentAccess() -> Bool { return true }
+    func endContentAccess() { }
+    func discardContentIfPossible() {}
+    func isContentDiscarded() -> Bool { return false }
+    let image: UIImage
+    
+    init(_ image: UIImage) {
+        self.image = image
+    }
+}
+
 internal class ImageCache: BimodalImageCache {
-    let memoryCache: NSCache<NSString, UIImage>
+    let memoryCache: NSCache<NSString, ImageMemory>
     let fileCache: FileCache
 
     init() {
-        memoryCache = NSCache<NSString, UIImage>()
+        memoryCache = NSCache<NSString, ImageMemory>()
         memoryCache.name = "In-Memory Image Cache"
 
         fileCache = FileCache()
@@ -64,11 +76,12 @@ internal class ImageCache: BimodalImageCache {
     }
 
     private func storeImageInMemoryCache(_ image: UIImage, forKey key: String) {
-        memoryCache.setObject(image, forKey: key as NSString, cost: image.memoryCost)
+        let imageMemory = ImageMemory(image)
+        memoryCache.setObject(imageMemory, forKey: key as NSString, cost: image.memoryCost)
     }
 
     private func imageFromMemoryCache(forKey key: String) -> UIImage? {
-        return memoryCache.object(forKey: key as NSString)
+        return memoryCache.object(forKey: key as NSString)?.image
     }
 
     private func imageFromDiskCache(forKey key: String?) -> UIImage? {

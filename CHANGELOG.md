@@ -2,18 +2,29 @@
 
 ## v2.5.0
 
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.5.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0-rc.1). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v97._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/97.0.0). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
+
 ### Location tracking
 
-- Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
+* Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
 
 ### User interface
 
 * Fixed an issue where `UserPuckCourseView`’s color desaturated during turn-by-turn navigation even as the location was being updated. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
 * `UserPuckCourseView` no longer desaturates its color based on the age of the last location update. `RouteController` simulates location updates whenever Location Services is unable to receive real location updates. To ensure a steady stream of location updates outside of turn-by-turn navigation, install a `PassiveLocationManager`. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
+* Fixed an issue where shields disappeared after the application returns to the foreground. ([#3840](https://github.com/mapbox/mapbox-navigation-ios/pull/3840))
+* Fixed an issue where `EndOfRouteCommentView` is using dark style when only light style is allowed. ([#3845](https://github.com/mapbox/mapbox-navigation-ios/pull/3845))
 
 ### CarPlay
 
 * Added the `CarPlayManagerDelegate.carPlayManager(_:shouldUpdateNotificationFor:with:in:)` and `CarPlayManagerDelegate.carPlayManager(_:shouldShowNotificationFor:in:)` to provide the ability to control notifications presentation while CarPlay application is in the background. ([#3828](https://github.com/mapbox/mapbox-navigation-ios/pull/3828))
+
+### Other changes
+
+* Added the `NavigationViewControllerDelegate.navigationViewController(_:, didSubmitArrivalFeedback:)` method which is called to notify that the user submitted the end of route feedback. Implementation of this method receives an `EndOfRouteFeedback` object with user's rating and comment. ([#3842](https://github.com/mapbox/mapbox-navigation-ios/pull/3842))
 
 ## v2.4.0
 
@@ -48,7 +59,6 @@
 * Fixed an issue when `SimulatedLocationManager` could freeze the main thread when working with long routes. The manager now calls delegate methods from a background thread. ([#3672](https://github.com/mapbox/mapbox-navigation-ios/pull/3672))
 * Fixed an issue where initial puck position can be incorrect when `NavigationViewController` is presented. ([#3773](https://github.com/mapbox/mapbox-navigation-ios/pull/3773))
 * Fixed an issue where `UserHaloCourseView` was not correctly shown while changing `CLLocationManager.accuracyAuthorization` and `CLLocationManager.authorizationStatus`. ([#3804](https://github.com/mapbox/mapbox-navigation-ios/pull/3804))
-* Fixed an issue where camera was not centered to the current location during `NavigationMapView` initialization. ([#3826](https://github.com/mapbox/mapbox-navigation-ios/pull/3826))
 
 ### Offline routing
 

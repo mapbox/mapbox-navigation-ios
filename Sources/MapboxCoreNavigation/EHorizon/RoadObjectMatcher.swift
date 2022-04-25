@@ -167,7 +167,8 @@ class InternalRoadObjectMatcherListener: RoadObjectMatcherListener {
         self.roadObjectMatcher = roadObjectMatcher
     }
     
-    public func onRoadObjectMatched(forRoadObject roadObject: Expected<AnyObject, AnyObject>) {
+    public func onRoadObjectMatched(
+        forRoadObject roadObject: Expected<MapboxNavigationNative.RoadObject, MapboxNavigationNative.RoadObjectMatcherError>) {
         guard let roadObjectMatcher = roadObjectMatcher else { return }
         
         let result = Result<MapboxNavigationNative.RoadObject,

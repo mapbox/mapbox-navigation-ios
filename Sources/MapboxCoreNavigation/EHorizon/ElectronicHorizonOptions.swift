@@ -44,7 +44,8 @@ extension MapboxNavigationNative.ElectronicHorizonOptions {
             expansion: UInt8(options.expansionLevel),
             branchLength: options.branchLength,
             doNotRecalculateInUncertainState: true,
-            minTimeDeltaBetweenUpdates: options.minimumTimeIntervalBetweenUpdates as NSNumber?
+            minTimeDeltaBetweenUpdates: options.minimumTimeIntervalBetweenUpdates as NSNumber?,
+            alertsService: nil
         )
     }
 }
