@@ -1,17 +1,17 @@
 PODS:
-  - MapboxCommon (21.2.0)
-  - MapboxCoreMaps (10.4.1):
+  - MapboxCommon (21.2.1)
+  - MapboxCoreMaps (10.4.2):
     - MapboxCommon (~> 21.2)
   - MapboxCoreNavigation (2.3.1):
-    - MapboxDirections (~> 2.3)
+    - MapboxDirections (~> 2.4)
     - MapboxMobileEvents (~> 1.0)
     - MapboxNavigationNative (~> 88.0)
-  - MapboxDirections (2.3.0):
+  - MapboxDirections (2.4.0):
     - Polyline (~> 5.0)
     - Turf (~> 2.0)
-  - MapboxMaps (10.4.0):
-    - MapboxCommon (= 21.2.0)
-    - MapboxCoreMaps (= 10.4.1)
+  - MapboxMaps (10.4.3):
+    - MapboxCommon (= 21.2.1)
+    - MapboxCoreMaps (= 10.4.2)
     - MapboxMobileEvents (= 1.0.7)
     - Turf (~> 2.0)
   - MapboxMobileEvents (1.0.7)
@@ -26,7 +26,7 @@ PODS:
   - MapboxSpeech (2.0.0)
   - Polyline (5.0.2)
   - Solar-dev (3.0.1)
-  - Turf (2.3.0)
+  - Turf (2.4.0)
 
 DEPENDENCIES:
   - MapboxCoreNavigation (from `../../../`)
@@ -52,19 +52,19 @@ EXTERNAL SOURCES:
     :path: "../../../"
 
 SPEC CHECKSUMS:
-  MapboxCommon: eb826fdc45e8b77f87aca2519986d992fd4881b7
-  MapboxCoreMaps: 13892567aa2a0e1cf8713887678f82998e2ff015
-  MapboxCoreNavigation: 3ca55ca21aa8e19e1ea755d26b1047596e2791da
-  MapboxDirections: 305d743dbee1e0b49d6100a2b946b47cec18b42c
-  MapboxMaps: a9975c068d5cb4abaf9914a406af4009f9fed897
+  MapboxCommon: e518bf4e496722343c77177943cf3c11efe3fc9e
+  MapboxCoreMaps: 227b33943eb5b257fdebc56474007e214981f43d
+  MapboxCoreNavigation: 64732cb5718d31f9302e8ec0dd96a00d14e4dcbb
+  MapboxDirections: c3fd015787ff85b6bcfba7b12156d75fa74121b1
+  MapboxMaps: d692e7a2ddce3f59eb2b881733c1a8ca18d1d2eb
   MapboxMobileEvents: f7f3e8daeb4b83688ae62a4172dce79169a97233
   MapboxNavigation: ce6fca5051bbc3f20025c883af160845534c939c
   MapboxNavigationNative: 7c588083547b121cf154402560364059aa5271e9
   MapboxSpeech: e4ed02984444b6373374c72c369edaf045cc490c
   Polyline: fce41d72e1146c41c6d081f7656827226f643dff
   Solar-dev: 4612dc9878b9fed2667d23b327f1d4e54e16e8d0
-  Turf: d8d52444483c968cf2d65b8b54640f8faf4dda03
+  Turf: 60b93cfdc62758526bc7bf1ef191a829aeb9694d
 
 PODFILE CHECKSUM: ce6227c2aeeca0d51c521648629d4f06ae38a439
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.11.3
