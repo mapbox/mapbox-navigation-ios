@@ -66,13 +66,13 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         super.setUp()
         continueAfterFailure = false
         
-        spriteRepository.resetCache()
         spriteRepository.storeSpriteData(styleType: .day)
         spriteRepository.storeLegacy(image: .i280)
         spriteRepository.storeLegacy(image: .us101)
     }
 
     override func tearDown() {
+        spriteRepository.resetCache()
         ImageLoadingURLProtocolSpy.reset()
 
         super.tearDown()

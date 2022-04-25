@@ -134,6 +134,8 @@ class NavigationViewControllerTests: TestCase {
         newRouteResponse = nil
         Navigator._recreateNavigator()
         UNUserNotificationCenter.removeMock()
+        ImageLoadingURLProtocolSpy.reset()
+        repository.resetCache()
     }
     
     func testDefaultUserInterfaceUsage() {
