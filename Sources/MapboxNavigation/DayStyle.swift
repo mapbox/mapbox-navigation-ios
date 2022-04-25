@@ -80,6 +80,9 @@ open class DayStyle: Style {
         EndOfRouteStaticLabel.appearance().normalTextColor = #colorLiteral(red: 0.217173934, green: 0.3645851612, blue: 0.489295125, alpha: 1)
         EndOfRouteTitleLabel.appearance().normalFont = .systemFont(ofSize: 36.0)
         EndOfRouteTitleLabel.appearance().normalTextColor = .black
+        EndOfRouteCommentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        EndOfRouteCommentView.appearance().normalTextColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
+        EndOfRouteCommentView.appearance().tintColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
         
         // On iOS, for Day style, regardless of currently used `UIUserInterfaceStyle`, `ExitView` and
         // `GenericRouteShield` use black color as a default one.
@@ -248,10 +251,6 @@ open class DayStyle: Style {
             UITableView.appearance(whenContainedInInstancesOf: [StepsViewController.self]).sectionHeaderTopPadding = 0.0
         }
         #endif
-        
-        EndOfRouteCommentView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        EndOfRouteCommentView.appearance().normalTextColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
-        EndOfRouteCommentView.appearance().tintColor = #colorLiteral(red: 0.1205472574, green: 0.2422055006, blue: 0.3489340544, alpha: 1)
     }
     
     @available(iOS 12.0, *)
