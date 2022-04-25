@@ -1,5 +1,9 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.1.2
+
+* MapboxCoreNavigation now requires [MapboxDirections v2.4.0](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0).
+
 ## v2.1.1
 
 ### Pricing
