@@ -39,35 +39,6 @@ import MapboxCoreNavigation
 @IBDesignable
 open class NavigationView: UIView {
     
-    enum BottomBannerContainerViewState {
-        case expanded
-        case collapsed
-    }
-    
-    var isBottomBannerContainerViewExpandable: Bool = false {
-        didSet {
-            setupBottomBannerContainerViewConstraints()
-        }
-    }
-    
-    var bottomBannerContainerViewOffset: CGFloat = 50.0
-    
-    var bottomBannerContainerViewState: BottomBannerContainerViewState = .collapsed {
-        didSet {
-            if oldValue == bottomBannerContainerViewState { return }
-            
-            if bottomBannerContainerViewState == .expanded {
-                bottomBannerContainerViewBottomConstraint.constant = 0.0
-            } else {
-                bottomBannerContainerViewBottomConstraint.constant = bottomBannerContainerViewOffset
-            }
-        }
-    }
-    
-    var bottomBannerContainerViewBottomConstraint: NSLayoutConstraint!
-    
-    var initialBottomOffset: CGFloat = 0.0
-    
     private enum Constants {
         static let endOfRouteHeight: CGFloat = 260.0
         static let buttonSpacing: CGFloat = 8.0
@@ -97,7 +68,9 @@ open class NavigationView: UIView {
     
     var tileStoreLocation: TileStoreConfiguration.Location? = .default
     private var _navigationMapView: NavigationMapView? = nil
-    lazy var navigationMapView: NavigationMapView = {
+    
+    // :nodoc:
+    public lazy var navigationMapView: NavigationMapView = {
         _navigationMapView?.frame = bounds
         let navigationMapView = _navigationMapView ?? NavigationMapView(frame: bounds, tileStoreLocation: tileStoreLocation)
         navigationMapView.isHidden = false
@@ -176,9 +149,19 @@ open class NavigationView: UIView {
     
     lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
     
-    lazy var topBannerContainerView: BannerContainerView = .forAutoLayout()
+    // :nodoc:
+    public lazy var topBannerContainerView: BannerContainerView = {
+        let topBannerContainerView = BannerContainerView(.top)
+        topBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
+        return topBannerContainerView
+    }()
     
-    lazy var bottomBannerContainerView: BannerContainerView = .forAutoLayout()
+    // :nodoc:
+    public lazy var bottomBannerContainerView: BannerContainerView = {
+        let bottomBannerContainerView = BannerContainerView(.bottom)
+        bottomBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
+        return bottomBannerContainerView
+    }()
     
     func clearStackViews() {
         let oldFloatingButtons: [UIView] = floatingStackView.subviews
@@ -202,42 +185,6 @@ open class NavigationView: UIView {
         updateDelegates() // this needs to be called because didSet's do not fire in init contexts.
     }
     
-    @objc func didPan(_ recognizer: UIPanGestureRecognizer) {
-        guard let view = recognizer.view else { return }
-        
-        if recognizer.state == .began {
-            initialBottomOffset = bottomBannerContainerViewBottomConstraint.constant
-        }
-        
-        let translation = recognizer.translation(in: view)
-        let currentOffset = initialBottomOffset + translation.y
-        
-        if currentOffset < 0.0 {
-            bottomBannerContainerViewBottomConstraint.constant = 0.0
-        } else if currentOffset > bottomBannerContainerViewOffset {
-            bottomBannerContainerViewBottomConstraint.constant = bottomBannerContainerViewOffset
-        } else {
-            bottomBannerContainerViewBottomConstraint.constant = currentOffset
-        }
-        
-        if recognizer.state == .ended {
-            let velocity = recognizer.velocity(in: view)
-            
-            if velocity.y <= 0 {
-                bottomBannerContainerViewState = .expanded
-            } else {
-                bottomBannerContainerViewState = .collapsed
-            }
-            
-            UIView.animate(withDuration: 0.2,
-                           delay: 0.0,
-                           options: [.allowUserInteraction],
-                           animations: {
-                self.layoutIfNeeded()
-            }, completion: nil)
-        }
-    }
-    
     convenience init(delegate: NavigationViewDelegate) {
         self.init(frame: .zero)
         self.delegate = delegate
@@ -248,12 +195,13 @@ open class NavigationView: UIView {
     public init(frame: CGRect, tileStoreLocation: TileStoreConfiguration.Location? = .default, navigationMapView: NavigationMapView? = nil) {
         self.tileStoreLocation = tileStoreLocation
         self._navigationMapView = navigationMapView
+        
         super.init(frame: frame)
         commonInit()
     }
     
-    public required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    public required init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
         commonInit()
     }
     
@@ -261,30 +209,6 @@ open class NavigationView: UIView {
         floatingButtons = [overviewButton, muteButton, reportButton]
         setupViews()
         setupConstraints()
-        setupBottomBannerContainerViewConstraints()
-    }
-    
-    func setupBottomBannerContainerViewConstraints() {
-        if bottomBannerContainerViewBottomConstraint != nil {
-            NSLayoutConstraint.deactivate([bottomBannerContainerViewBottomConstraint])
-        }
-        
-        bottomBannerContainerViewBottomConstraint = bottomBannerContainerView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        
-        if isBottomBannerContainerViewExpandable {
-            if bottomBannerContainerViewState == .expanded {
-                bottomBannerContainerViewBottomConstraint.constant = 0.0
-            } else {
-                bottomBannerContainerViewBottomConstraint.constant = bottomBannerContainerViewOffset
-            }
-            
-            let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan))
-            bottomBannerContainerView.addGestureRecognizer(panGestureRecognizer)
-        } else {
-            bottomBannerContainerViewBottomConstraint.constant = 0.0
-        }
-        
-        bottomBannerContainerViewBottomConstraint.isActive = true
     }
     
     func setupViews() {

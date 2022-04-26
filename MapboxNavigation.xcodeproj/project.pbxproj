@@ -245,6 +245,7 @@
 		8AB97C1A280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C19280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift */; };
 		8AB97C1C280A323E00792939 /* RoutesPreviewDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C1B280A323E00792939 /* RoutesPreviewDataSource.swift */; };
 		8AB97C1E280A364E00792939 /* PreviewViewControllerState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C1D280A364E00792939 /* PreviewViewControllerState.swift */; };
+		8AB97C20280E021800792939 /* BannerContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AB97C1F280E021800792939 /* BannerContainerView.swift */; };
 		8ABB9E75268E0140009013A5 /* NavigationCameraTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */; };
 		8ABCD6A426AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json in Resources */ = {isa = PBXBuildFile; fileRef = 8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */; };
 		8AC3965325DC66570027A035 /* NavigationCameraType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC3965225DC66570027A035 /* NavigationCameraType.swift */; };
@@ -825,6 +826,7 @@
 		8AB97C19280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesPreviewViewControllerDelegate.swift; sourceTree = "<group>"; };
 		8AB97C1B280A323E00792939 /* RoutesPreviewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutesPreviewDataSource.swift; sourceTree = "<group>"; };
 		8AB97C1D280A364E00792939 /* PreviewViewControllerState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewViewControllerState.swift; sourceTree = "<group>"; };
+		8AB97C1F280E021800792939 /* BannerContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerContainerView.swift; sourceTree = "<group>"; };
 		8ABB9E74268E0140009013A5 /* NavigationCameraTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraTests.swift; sourceTree = "<group>"; };
 		8ABCD6A326AA0D9400B121B9 /* route-for-navigation-camera-bearing-smoothing.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera-bearing-smoothing.json"; sourceTree = "<group>"; };
 		8AC3965225DC66570027A035 /* NavigationCameraType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCameraType.swift; sourceTree = "<group>"; };
@@ -1759,6 +1761,7 @@
 		8DFD94A52225AF5C00152F45 /* Banners */ = {
 			isa = PBXGroup;
 			children = (
+				8AB97C1F280E021800792939 /* BannerContainerView.swift */,
 				35F520BF1FB482A200FC9C37 /* NextBannerView.swift */,
 				8D63A7CF227A580A00520167 /* TopBannerViewController.swift */,
 				8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */,
@@ -2790,6 +2793,7 @@
 				8AD2210F27C434CD000734A5 /* TitleLabel.swift in Sources */,
 				8AA0386127F7B3DF0007BD2D /* BottomBannerViewControllerLayout.swift in Sources */,
 				8A50A3CB26EC09FB00894A8E /* FeedbackSubtypeCollectionViewCell.swift in Sources */,
+				8AB97C20280E021800792939 /* BannerContainerView.swift in Sources */,
 				8A50A3D326EC0AE100894A8E /* IdleTimerManager.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
 				8AD2211F27C43D11000734A5 /* FloatingButton.swift in Sources */,
