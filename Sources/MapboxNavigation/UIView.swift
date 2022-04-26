@@ -181,6 +181,18 @@ extension UIView {
         }
         return centerYAnchor
     }
+    
+    // MARK: Copying
+    
+    // :nodoc:
+    public func copy<T: UIView>() throws -> T? {
+//        let archivedData = try NSKeyedArchiver.archivedData(withRootObject: self,
+//                                                            requiringSecureCoding: false)
+//
+//        return try NSKeyedUnarchiver.unarchivedObject(ofClass: T.self, from: archivedData)
+
+        return NSKeyedUnarchiver.unarchiveObject(with: NSKeyedArchiver.archivedData(withRootObject: self)) as? T
+    }
 }
 
 protocol Anchorable {
