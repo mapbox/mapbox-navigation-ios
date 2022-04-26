@@ -45,19 +45,25 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     func setupNavigationCamera() {
+        // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
+        navigationMapView?.navigationCamera.follow()
+        
+        // In case if `NavigationMapView` instance was injected - do not set initial camera options.
+        if let _ = navigationOptions?.navigationMapView {
+            return
+        }
+        
         if let centerCoordinate = navigationService.routeProgress.route.shape?.coordinates.first {
             navigationMapView?.setInitialCamera(centerCoordinate)
         }
-        
-        // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
-        navigationMapView?.navigationCamera.follow()
     }
     
     var mapTileStore: TileStoreConfiguration.Location? {
         NavigationSettings.shared.tileStoreConfiguration.mapLocation
     }
-        
-    var navigationView: NavigationView {
+    
+    // :nodoc:
+    public var navigationView: NavigationView {
         return (view as! NavigationView)
     }
     
@@ -1162,31 +1168,66 @@ extension NavigationViewController: CarPlayConnectionObserver {
 
 extension NavigationViewController: NavigationMapViewDelegate {
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView, routeLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
-        delegate?.navigationViewController(self, routeLineLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.navigationViewController(self,
+                                           routeLineLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
     }
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView, routeCasingLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
-        delegate?.navigationViewController(self, routeCasingLineLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeCasingLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.navigationViewController(self,
+                                           routeCasingLineLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
     }
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView, routeRestrictedAreasLineLayerWithIdentifier identifier: String, sourceIdentifier: String) -> LineLayer? {
-        delegate?.navigationViewController(self, routeRestrictedAreasLineLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  routeRestrictedAreasLineLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> LineLayer? {
+        delegate?.navigationViewController(self,
+                                           routeRestrictedAreasLineLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
     }
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView, waypointCircleLayerWithIdentifier identifier: String, sourceIdentifier: String) -> CircleLayer? {
-        delegate?.navigationViewController(self, waypointCircleLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  waypointCircleLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> CircleLayer? {
+        delegate?.navigationViewController(self,
+                                           waypointCircleLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
     }
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView, waypointSymbolLayerWithIdentifier identifier: String, sourceIdentifier: String) -> SymbolLayer? {
-        delegate?.navigationViewController(self, waypointSymbolLayerWithIdentifier: identifier, sourceIdentifier: sourceIdentifier)
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  waypointSymbolLayerWithIdentifier identifier: String,
+                                  sourceIdentifier: String) -> SymbolLayer? {
+        delegate?.navigationViewController(self,
+                                           waypointSymbolLayerWithIdentifier: identifier,
+                                           sourceIdentifier: sourceIdentifier)
     }
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView, shapeFor waypoints: [Waypoint], legIndex: Int) -> FeatureCollection? {
-        delegate?.navigationViewController(self, shapeFor: waypoints, legIndex: legIndex)
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  shapeFor waypoints: [Waypoint],
+                                  legIndex: Int) -> FeatureCollection? {
+        delegate?.navigationViewController(self,
+                                           shapeFor: waypoints,
+                                           legIndex: legIndex)
     }
     
-    public func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
-        delegate?.navigationViewController(self, didAdd: finalDestinationAnnotation, pointAnnotationManager: pointAnnotationManager)
+    public func navigationMapView(_ navigationMapView: NavigationMapView,
+                                  didAdd finalDestinationAnnotation: PointAnnotation,
+                                  pointAnnotationManager: PointAnnotationManager) {
+        delegate?.navigationViewController(self,
+                                           didAdd: finalDestinationAnnotation,
+                                           pointAnnotationManager: pointAnnotationManager)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, didSelect route: Route) {
+        // TODO: Implement the ability to switch between routes during active navigation.
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, didSelect waypoint: Waypoint) {
+        // TODO: Implement the ability to select waypoint during active navigation.
     }
 }
