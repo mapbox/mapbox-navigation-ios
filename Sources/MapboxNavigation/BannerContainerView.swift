@@ -172,6 +172,7 @@ open class BannerContainerView: UIView {
     
     public func show(animated: Bool = true,
                      duration: TimeInterval = 0.2,
+                     animations: (() -> Void)? = nil,
                      completion: CompletionHandler? = nil) {
         guard isHidden else {
             completion?(true)
@@ -190,22 +191,23 @@ open class BannerContainerView: UIView {
         }
         
         if animated {
+            // TODO: Improve animation for devices with notch.
             switch type {
             case .top:
-                expansionConstraint.constant = -frame.height + self.topSafeAreaInset
+                expansionConstraint.constant = -frame.height //+ self.topSafeAreaInset
             case .bottom:
-                expansionConstraint.constant = frame.height - self.bottomSafeAreaInset
+                expansionConstraint.constant = frame.height //- self.bottomSafeAreaInset
             }
             
             isHidden = false
-            alpha = 0.0
             superview?.layoutIfNeeded()
             
             UIView.animate(withDuration: duration,
                            delay: 0.0,
                            options: [],
                            animations: {
-                self.alpha = 1.0
+                animations?()
+                
                 self.expansionConstraint.constant = 0.0
                 self.superview?.layoutIfNeeded()
             }) { completed in
@@ -219,6 +221,7 @@ open class BannerContainerView: UIView {
     
     public func hide(animated: Bool = true,
                      duration: TimeInterval = 0.2,
+                     animations: (() -> Void)? = nil,
                      completion: CompletionHandler? = nil) {
         guard !isHidden else {
             completion?(true)
@@ -230,6 +233,8 @@ open class BannerContainerView: UIView {
                            delay: 0.0,
                            options: [],
                            animations: {
+                animations?()
+                
                 switch self.type {
                 case .top:
                     self.expansionConstraint.constant = -self.frame.height
