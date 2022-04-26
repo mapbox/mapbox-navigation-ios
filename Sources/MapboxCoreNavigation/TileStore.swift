@@ -32,7 +32,7 @@ extension TileStore {
                             lock.lock()
 
                             if expected.isValue(),
-                               let value = expected.value as? NSNumber {
+                               let value = expected.value {
                                 result = result.map { $0 && value.boolValue }
                             } else if expected.isError() {
                                 result = nil
@@ -76,7 +76,7 @@ extension TileStore {
                                                  descriptors: [latestTilesetDescriptor],
                                                  callback: { expected in
                 if expected.isValue(),
-                   let value = expected.value as? NSNumber {
+                   let value = expected.value {
                     completion(value.boolValue)
                 } else if expected.isError() {
                     completion(nil)
