@@ -65,7 +65,7 @@ class Navigator {
                     completion(.success(alternativeRoutes))
                 }
                 else if result.isError() {
-                    let reason = (result.error as? String) ?? ""
+                    let reason = (result.error as String?) ?? ""
                     os_log("Failed to update navigator Alternative Routes with reason: %{public}@",
                            log: Navigator.log,
                            type: .error,
