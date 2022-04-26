@@ -68,7 +68,9 @@ open class NavigationView: UIView {
     
     var tileStoreLocation: TileStoreConfiguration.Location? = .default
     private var _navigationMapView: NavigationMapView? = nil
-    lazy var navigationMapView: NavigationMapView = {
+    
+    // :nodoc:
+    public lazy var navigationMapView: NavigationMapView = {
         _navigationMapView?.frame = bounds
         let navigationMapView = _navigationMapView ?? NavigationMapView(frame: bounds, tileStoreLocation: tileStoreLocation)
         navigationMapView.isHidden = false
@@ -147,9 +149,19 @@ open class NavigationView: UIView {
     
     lazy var speedLimitView: SpeedLimitView = .forAutoLayout(hidden: true)
     
-    var topBannerContainerView: BannerContainerView
+    // :nodoc:
+    public lazy var topBannerContainerView: BannerContainerView = {
+        let topBannerContainerView = BannerContainerView(.top)
+        topBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
+        return topBannerContainerView
+    }()
     
-    var bottomBannerContainerView: BannerContainerView
+    // :nodoc:
+    public lazy var bottomBannerContainerView: BannerContainerView = {
+        let bottomBannerContainerView = BannerContainerView(.bottom)
+        bottomBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
+        return bottomBannerContainerView
+    }()
     
     func clearStackViews() {
         let oldFloatingButtons: [UIView] = floatingStackView.subviews
@@ -184,23 +196,11 @@ open class NavigationView: UIView {
         self.tileStoreLocation = tileStoreLocation
         self._navigationMapView = navigationMapView
         
-        topBannerContainerView = BannerContainerView(.top)
-        topBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        bottomBannerContainerView = BannerContainerView(.bottom)
-        bottomBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
-        
         super.init(frame: frame)
         commonInit()
     }
     
     public required init?(coder decoder: NSCoder) {
-        topBannerContainerView = BannerContainerView(.top)
-        topBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
-        
-        bottomBannerContainerView = BannerContainerView(.bottom)
-        bottomBannerContainerView.translatesAutoresizingMaskIntoConstraints = false
-        
         super.init(coder: decoder)
         commonInit()
     }
