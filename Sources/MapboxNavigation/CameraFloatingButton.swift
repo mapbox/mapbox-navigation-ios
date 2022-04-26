@@ -1,6 +1,7 @@
 import UIKit
 
-class CameraFloatingButton: FloatingButton {
+// :nodoc:
+public class CameraFloatingButton: FloatingButton {
     
     enum State {
         case idle
