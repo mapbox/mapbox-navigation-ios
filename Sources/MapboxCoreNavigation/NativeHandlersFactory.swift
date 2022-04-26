@@ -57,9 +57,9 @@ class NativeHandlersFactory {
             
             let router = navigatorRouterType.map {
                 MapboxNavigationNative.RouterFactory.build(for: $0,
-                                                              cache: cacheHandle,
-                                                              config: configHandle,
-                                                              historyRecorder: historyRecorder)
+                                                           cache: cacheHandle,
+                                                           config: configHandle,
+                                                           historyRecorder: historyRecorder)
             }
             return MapboxNavigationNative.Navigator(config: configHandle,
                                                     cache: cacheHandle,
@@ -119,14 +119,14 @@ class NativeHandlersFactory {
     }()
     
     lazy var configHandle: ConfigHandle = {
-        let historyAutorecordingConfig = [
+        let defaultConfig = [
             customConfigFeaturesKey: [
                 "useInternalReroute": true
             ]
         ]
         
         var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]
-        customConfig.deepMerge(with: historyAutorecordingConfig, uniquingKeysWith: { first, _ in first })
+        customConfig.deepMerge(with: defaultConfig, uniquingKeysWith: { first, _ in first })
                 
         let customConfigJSON: String
         if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: customConfig, options: []),

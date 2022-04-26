@@ -59,7 +59,7 @@ class Navigator {
             self?.navigator.setAlternativeRoutesForRoutes(routes) { [weak self] result in
                 if result.isValue() {
                     let alternativeRoutes = result.value as? [RouteAlternative] ?? []
-                    os_log("Navigator Alternative Routes had been updated",
+                    os_log("Navigator Alternative Routes have been updated",
                            log: Navigator.log,
                            type: .debug)
                     completion(.success(alternativeRoutes))
