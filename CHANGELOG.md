@@ -2,7 +2,7 @@
 
 ## v2.3.2
 
-* MapboxCoreNavigation now requires [MapboxDirections v2.4._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0). ([#3846](https://github.com/mapbox/mapbox-navigation-ios/pull/3846))
+* Fixed MapboxCoreNavigation’s compatibility with [MapboxDirections v2.4._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.4.0). ([#3846](https://github.com/mapbox/mapbox-navigation-ios/pull/3846))
 
 ## v2.3.1
 
