@@ -171,20 +171,6 @@ open class RouteController: NSObject {
     public func stopUpdatingElectronicHorizon() {
         sharedNavigator.stopUpdatingElectronicHorizon()
     }
-
-    func changeRouteProgress(_ routeProgress: RouteProgress,
-                             completion: @escaping (Bool) -> Void) {
-        updateNavigator(with: routeProgress) { [weak self] result in
-            guard let self = self else { return }
-            switch result {
-            case .success:
-                self.routeProgress = routeProgress
-                completion(true)
-            case .failure:
-                completion(false)
-            }
-        }
-    }
     
     // MARK: Controlling and Altering the Route
     
@@ -241,34 +227,46 @@ open class RouteController: NSObject {
     }
     
     /**
-     Asynchronously updates NavNative navigator with the new `RouteProgress`.
-
-     - parameter progress: New route progress to apply to the navigator.
-     - parameter completion: A completion that will be called once the navigator is updated with a boolean indicating
+     Asynchronously updates NavNative navigator with the new `IndexedRouteResponse`.
+     - parameter indexedRouteResponse: New route response to apply to the navigator.
+     - parameter legIndex: A leg index, to start routing from.
+     - parameter completion: A completion that will be called once the navigator is updated indicating
      whether the change was successful.
      */
-    private func updateNavigator(with progress: RouteProgress,
+    private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
+                                 fromLegIndex legIndex: Int,
                                  completion: ((Result<RouteInfo, Error>) -> Void)?) {
+        guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
+            completion?(.failure(RouteControllerError.internalError))
+            return
+        }
         let encoder = JSONEncoder()
-        encoder.userInfo[.options] = progress.routeOptions
-        guard let routeData = try? encoder.encode(progress.route),
+        encoder.userInfo[.options] = routeOptions
+        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
               let routeJSONString = String(data: routeData, encoding: .utf8) else {
                   completion?(.failure(RouteControllerError.failedToSerializeRoute))
                   return
         }
         
-        let routeRequest = Directions().url(forCalculating: progress.routeOptions).absoluteString
+        let routeRequest = Directions().url(forCalculating: routeOptions).absoluteString
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
                                                                request: routeRequest, routeOrigin: RouterOrigin.custom)
         if parsedRoutes.isValue(),
-           let route = (parsedRoutes.value as? [RouteInterface])?.first {
-            self.sharedNavigator.setRoutes(route, uuid: sessionUUID, legIndex: UInt32(progress.legIndex)) { result in
+           var routes = parsedRoutes.value as? [RouteInterface],
+           routes.count > indexedRouteResponse.routeIndex {
+            self.sharedNavigator.setMainRoute(routes.remove(at: indexedRouteResponse.routeIndex),
+                                              uuid: sessionUUID,
+                                              legIndex: UInt32(legIndex)) { [weak self] result in
+                self?.sharedNavigator.setAlternativeRoutes(routes,
+                                                           completion: { _ in })
                 completion?(result)
             }
         } else if parsedRoutes.isError() {
             let reason = (parsedRoutes.error as String?) ?? ""
             completion?(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
+        } else {
+            completion?(.failure(RouteControllerError.internalError))
         }
     }
     
@@ -374,11 +372,11 @@ open class RouteController: NSObject {
     }
     
     @objc func fallbackToOffline(_ notification: Notification) {
-        updateNavigator(with: self.routeProgress, completion: nil)
+        updateNavigator(with: indexedRouteResponse, fromLegIndex: self.routeProgress.legIndex, completion: nil)
     }
     
     @objc func restoreToOnline(_ notification: Notification) {
-        updateNavigator(with: self.routeProgress, completion: nil)
+        updateNavigator(with: indexedRouteResponse, fromLegIndex: self.routeProgress.legIndex, completion: nil)
     }
 
     func isValidNavigationStatus(_ status: NavigationStatus) -> Bool {
@@ -569,7 +567,7 @@ open class RouteController: NSObject {
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
-        updateNavigator(with: routeProgress) { [weak self] _ in
+        updateNavigator(with: self.indexedRouteResponse, fromLegIndex: 0) { [weak self] _ in
             self?.isInitialized = true
         }
         Self.instanceLock.lock()
@@ -735,13 +733,19 @@ extension RouteController: Router {
         }
 
         let routeOptions = routeOptions ?? routeProgress.routeOptions
-        changeRouteProgress(RouteProgress(route: route, options: routeOptions)) { [weak self] success in
+        let routeProgress = RouteProgress(route: route, options: routeOptions)
+        updateNavigator(with: indexedRouteResponse,
+                        fromLegIndex: routeProgress.legIndex) { [weak self] result in
             guard let self = self else { return }
-            if success {
+            switch result {
+            case .success:
+                self.routeProgress = routeProgress
                 self.announce(reroute: route, at: self.location, proactive: isProactive)
                 self.indexedRouteResponse = indexedRouteResponse
+                completion?(true)
+            case .failure:
+                completion?(false)
             }
-            completion?(success)
         }
     }
 

@@ -44,6 +44,8 @@
 		2B42586D2657BF9100B487C3 /* TilesetDescriptorFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B42586B2657BF9000B487C3 /* TilesetDescriptorFactory.swift */; };
 		2B42586E2657BF9100B487C3 /* TileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B42586C2657BF9100B487C3 /* TileStore.swift */; };
 		2B5407EB24470B0A006C820B /* AVAudioSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5407EA24470B0A006C820B /* AVAudioSession.swift */; };
+		2B5A4AC12807124900170A2B /* RerouteController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5A4ABF2807124800170A2B /* RerouteController.swift */; };
+		2B5A4AC22807124900170A2B /* RerouteControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B5A4AC02807124800170A2B /* RerouteControllerDelegate.swift */; };
 		2B72EC5E241276D10003B370 /* RouteVoiceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B72EC5D241276D10003B370 /* RouteVoiceController.swift */; };
 		2B72EC602412AA800003B370 /* SystemSpeechSynthesizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B72EC5F2412AA800003B370 /* SystemSpeechSynthesizer.swift */; };
 		2B7ACA9B25E3F84700B0ACFD /* PredictiveCacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B7ACA9925E3F84600B0ACFD /* PredictiveCacheManager.swift */; };
@@ -595,6 +597,8 @@
 		2B42586B2657BF9000B487C3 /* TilesetDescriptorFactory.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TilesetDescriptorFactory.swift; sourceTree = "<group>"; };
 		2B42586C2657BF9100B487C3 /* TileStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TileStore.swift; sourceTree = "<group>"; };
 		2B5407EA24470B0A006C820B /* AVAudioSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AVAudioSession.swift; sourceTree = "<group>"; };
+		2B5A4ABF2807124800170A2B /* RerouteController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteController.swift; sourceTree = "<group>"; };
+		2B5A4AC02807124800170A2B /* RerouteControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RerouteControllerDelegate.swift; sourceTree = "<group>"; };
 		2B72EC5D241276D10003B370 /* RouteVoiceController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouteVoiceController.swift; sourceTree = "<group>"; };
 		2B72EC5F2412AA800003B370 /* SystemSpeechSynthesizer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SystemSpeechSynthesizer.swift; sourceTree = "<group>"; };
 		2B7ACA9925E3F84600B0ACFD /* PredictiveCacheManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PredictiveCacheManager.swift; sourceTree = "<group>"; };
@@ -1994,6 +1998,8 @@
 				3582A24F20EEC46B0029C5DE /* Router.swift */,
 				353E69031EF0C4E5007B2AE5 /* SimulatedLocationManager.swift */,
 				35C98730212E02B500808B82 /* RouteController.swift */,
+				2B5A4ABF2807124800170A2B /* RerouteController.swift */,
+				2B5A4AC02807124800170A2B /* RerouteControllerDelegate.swift */,
 				5A39B9272498F9890026DFD1 /* PassiveLocationManager.swift */,
 				8A3A218F25EEC00200EDA999 /* CoreNavigationNavigator.swift */,
 				E2805A5726CB994500165DB9 /* NSLock+MapboxInternal.swift */,
@@ -2916,6 +2922,7 @@
 				3A163AE3249901D000D66A0D /* FixLocation.swift in Sources */,
 				2E50E0D2264E468B009D3848 /* RoadObjectMatcherError.swift in Sources */,
 				8D2AA745211CDD4000EB7F72 /* NavigationService.swift in Sources */,
+				2B5A4AC12807124900170A2B /* RerouteController.swift in Sources */,
 				2B01E4B8274671550002A5F7 /* Directions+RoutingProvider.swift in Sources */,
 				2B7ACA9C25E3F84700B0ACFD /* PredictiveCacheOptions.swift in Sources */,
 				35A5413B1EFC052700E49846 /* RouteOptions.swift in Sources */,
@@ -2937,6 +2944,7 @@
 				2BBED93B267A3AB900F90032 /* BillingHandler.swift in Sources */,
 				2BE701352535948100F46E4E /* RestStop.swift in Sources */,
 				2B01E4B6274671550002A5F7 /* MapboxRoutingProvider.swift in Sources */,
+				2B5A4AC22807124900170A2B /* RerouteControllerDelegate.swift in Sources */,
 				8D4CF9C621349FFB009C3FEE /* NavigationServiceDelegate.swift in Sources */,
 				2BF398C3274FE99A000C9A72 /* HandlerFactory.swift in Sources */,
 				118D883626F8CA0700B2ED7B /* ActiveNavigationFeedbackType.swift in Sources */,
