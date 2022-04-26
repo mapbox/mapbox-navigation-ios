@@ -4,6 +4,7 @@ import MapboxNavigation
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxGeocoder
+import MapboxMaps
 
 extension SceneDelegate: PreviewViewControllerDelegate {
     
@@ -131,21 +132,37 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             return
         }
         
-        let navigationRouteOptions = NavigationRouteOptions(coordinates: coordinates)
-        let navigationService = MapboxNavigationService(routeResponse: routeResponse,
-                                                        routeIndex: routeIndex,
-                                                        routeOptions: navigationRouteOptions,
-                                                        routingProvider: NavigationSettings.shared.directions,
-                                                        credentials: NavigationSettings.shared.directions.credentials,
-                                                        simulating: .always)
-        
-        let navigationOptions = NavigationOptions(navigationService: navigationService)
-        let navigationViewController = NavigationViewController(for: routeResponse,
-                                                                   routeIndex: routeIndex,
-                                                                   routeOptions: navigationRouteOptions,
-                                                                   navigationOptions: navigationOptions)
-        navigationViewController.delegate = self
-        navigationViewController.modalPresentationStyle = .fullScreen
-        window?.rootViewController?.present(navigationViewController, animated: false, completion: nil)
+        self.previewViewController.navigationView.bottomBannerContainerView.hide(completion: { _ in
+            let navigationMapView = self.previewViewController.navigationView.navigationMapView
+            self.initialCameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
+            
+            let navigationRouteOptions = NavigationRouteOptions(coordinates: self.coordinates)
+            let navigationService = MapboxNavigationService(routeResponse: routeResponse,
+                                                            routeIndex: self.routeIndex,
+                                                            routeOptions: navigationRouteOptions,
+                                                            routingProvider: NavigationSettings.shared.directions,
+                                                            credentials: NavigationSettings.shared.directions.credentials,
+                                                            simulating: .always)
+            
+            // Inject `NavigationMapView` instance that is used in `PreviewViewController`.
+            let navigationOptions = NavigationOptions(navigationService: navigationService,
+                                                      navigationMapView: navigationMapView)
+            
+            let navigationViewController = NavigationViewController(for: routeResponse,
+                                                                       routeIndex: self.routeIndex,
+                                                                       routeOptions: navigationRouteOptions,
+                                                                       navigationOptions: navigationOptions)
+            navigationViewController.delegate = self
+            navigationViewController.modalPresentationStyle = .fullScreen
+            
+            // Hide top and bottom container views before animating their presentation.
+            navigationViewController.navigationView.topBannerContainerView.isHidden = true
+            navigationViewController.navigationView.bottomBannerContainerView.isHidden = true
+            
+            self.window?.rootViewController?.present(navigationViewController, animated: false, completion: {
+                navigationViewController.navigationView.topBannerContainerView.show()
+                navigationViewController.navigationView.bottomBannerContainerView.show()
+            })
+        })
     }
 }

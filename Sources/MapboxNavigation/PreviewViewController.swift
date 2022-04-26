@@ -46,7 +46,8 @@ open class PreviewViewController: UIViewController {
     
     var backButton: BackButton!
     
-    var navigationView: NavigationView!
+    // :nodoc:
+    public var navigationView: NavigationView!
     
     var speedLimitView: SpeedLimitView!
     
@@ -56,6 +57,7 @@ open class PreviewViewController: UIViewController {
     
     var pointAnnotationManager: PointAnnotationManager?
     
+    // :nodoc:
     var cameraFloatingButton: CameraFloatingButton!
     
     var styleManager: StyleManager!
@@ -71,10 +73,12 @@ open class PreviewViewController: UIViewController {
         super.viewDidLoad()
         
         setupNavigationView()
+        setupNavigationViewportDataSource()
         setupBackButton()
         setupSpeedLimitView()
         setupWayNameView()
         setupFloatingButtons()
+        setupTopBannerContainerView()
         setupBottomBannerContainerView()
         
         setupPassiveLocationManager()
@@ -112,10 +116,6 @@ open class PreviewViewController: UIViewController {
     }
     
     func setupFloatingButtons() {
-        topBannerContainerViewTopConstraint = navigationView.topBannerContainerView.heightAnchor.constraint(equalToConstant: 0.0)
-        topBannerContainerViewTopConstraint.isActive = true
-        navigationView.topBannerContainerView.isHidden = true
-        
         navigationView.floatingStackView.trailingAnchor.constraint(equalTo: view.safeTrailingAnchor,
                                                                    constant: -10.0).isActive = true
         
@@ -312,7 +312,7 @@ open class PreviewViewController: UIViewController {
                 
                 presentedBottomBannerViewController = customBottomBannerViewController
             } else {
-                navigationView.bottomBannerContainerView.isHidden = true
+                navigationView.bottomBannerContainerView.hide()
             }
         case .destinationPreviewing(let destinationOptions):
             // Speed limit, road name and floating buttons should be hidden.
@@ -322,7 +322,7 @@ open class PreviewViewController: UIViewController {
             navigationView.navigationMapView.removeWaypoints()
             navigationView.navigationMapView.removeRoutes()
             
-            navigationView.bottomBannerContainerView.isHidden = false
+            navigationView.bottomBannerContainerView.show()
             backButton.isHidden = false
             
             navigationView.bottomBannerContainerView.subviews.forEach {
@@ -383,15 +383,6 @@ open class PreviewViewController: UIViewController {
         navigationView.translatesAutoresizingMaskIntoConstraints = false
         navigationView.navigationMapView.delegate = self
         navigationView.navigationMapView.userLocationStyle = .courseView()
-        
-        let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
-                                                                        viewportDataSourceType: .passive)
-        
-        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
-        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = false
-        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
-        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
-        
         view.addSubview(navigationView)
         
         let navigationViewLayoutConstraints = [
@@ -418,7 +409,17 @@ open class PreviewViewController: UIViewController {
         self.navigationView = navigationView
     }
     
-    func setupPassiveLocationManager() {
+    public func setupNavigationViewportDataSource() {
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationView.navigationMapView.mapView,
+                                                                        viewportDataSourceType: .passive)
+        
+        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = false
+        navigationView.navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+    }
+    
+    public func setupPassiveLocationManager() {
         let passiveLocationManager = PassiveLocationManager()
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
         navigationView.navigationMapView.mapView.location.overrideLocationProvider(with: passiveLocationProvider)
@@ -499,6 +500,17 @@ open class PreviewViewController: UIViewController {
         } else if case .routesPreviewing(_) = state {
             state = .browsing
         }
+    }
+    
+    func setupTopBannerContainerView() {
+        topBannerContainerViewTopConstraint = navigationView.topBannerContainerView.topAnchor.constraint(equalTo: view.topAnchor,
+                                                                                                         constant: 0.0)
+        topBannerContainerViewTopConstraint.isActive = true
+        
+        let topBannerContainerViewHeight = view.safeAreaInsets.top
+        navigationView.topBannerContainerView.heightAnchor.constraint(equalToConstant: topBannerContainerViewHeight).isActive = true
+        navigationView.topBannerContainerView.isHidden = true
+        navigationView.topBannerContainerView.backgroundColor = .clear
     }
     
     func setupBottomBannerContainerView() {
