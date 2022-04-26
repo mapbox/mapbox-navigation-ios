@@ -212,8 +212,8 @@ extension RerouteController: RerouteControllerInterface {
                                                                                     routeRequest: url,
                                                                                     origin: .onboard)))
                 } else {
-                    callback(.init(value: RerouteError(message: "Failed to process `routeResponse`.",
-                                                                                      type: .routerError)))
+                    callback(.init(error: RerouteError(message: "Failed to process `routeResponse`.",
+                                                       type: .routerError)))
                 }
             }
         }
