@@ -141,8 +141,8 @@
         "repositoryURL": "https://github.com/apple/swift-argument-parser",
         "state": {
           "branch": null,
-          "revision": "82905286cc3f0fa8adc4674bf49437cab65a8373",
-          "version": "1.1.1"
+          "revision": "f3c9084a71ef4376f2fabbdf1d3d90a49f1fabdb",
+          "version": "1.1.2"
         }
       },
       {
@@ -159,8 +159,8 @@
         "repositoryURL": "https://github.com/mapbox/turf-swift.git",
         "state": {
           "branch": null,
-          "revision": "a7db78a2281ffe79966443ebe5687766d6c024c7",
-          "version": "2.3.0"
+          "revision": "569e0f0e96fda86e1a1dcefaefa68cfa9491ffc1",
+          "version": "2.4.0"
         }
       }
     ]
