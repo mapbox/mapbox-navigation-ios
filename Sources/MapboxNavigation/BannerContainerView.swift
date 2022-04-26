@@ -25,21 +25,41 @@ open class BannerContainerView: UIView {
     
     var expansionOffset: CGFloat = 50.0
     
+    var topSafeAreaInset: CGFloat = 0.0
+    
+    var bottomSafeAreaInset: CGFloat = 0.0
+    
+    open override func safeAreaInsetsDidChange() {
+        super.safeAreaInsetsDidChange()
+        
+        topSafeAreaInset = safeAreaInsets.top
+        bottomSafeAreaInset = safeAreaInsets.bottom
+    }
+    
     var state: State = .collapsed {
         didSet {
             if oldValue == state { return }
             
-            if state == .expanded {
-                bottomConstraint.constant = 0.0
-            } else {
-                bottomConstraint.constant = expansionOffset
+            switch type {
+            case .top:
+                if state == .expanded {
+                    expansionConstraint.constant = 0.0
+                } else {
+                    expansionConstraint.constant = -expansionOffset
+                }
+            case .bottom:
+                if state == .expanded {
+                    expansionConstraint.constant = 0.0
+                } else {
+                    expansionConstraint.constant = expansionOffset
+                }
             }
         }
     }
     
-    var bottomConstraint: NSLayoutConstraint!
+    var expansionConstraint: NSLayoutConstraint!
     
-    var initialBottomOffset: CGFloat = 0.0
+    var initialOffset: CGFloat = 0.0
     
     public init(_ type: BannerContainerView.`Type`, frame: CGRect = .zero) {
         self.type = type
@@ -56,65 +76,89 @@ open class BannerContainerView: UIView {
         
         guard let superview = superview else { return }
         
-        switch type {
-        case .top:
-            // TODO: Implement the ability to change top constraint.
-            break
-        case .bottom:
-            setupConstraints(superview)
-        }
+        setupConstraints(superview)
     }
     
     public typealias CompletionHandler = (_ completed: Bool) -> Void
     
     func setupConstraints(_ superview: UIView) {
-        if bottomConstraint != nil {
-            NSLayoutConstraint.deactivate([bottomConstraint])
+        if expansionConstraint != nil {
+            NSLayoutConstraint.deactivate([expansionConstraint])
         }
-
-        bottomConstraint = bottomAnchor.constraint(equalTo: superview.bottomAnchor)
-
+        
+        switch type {
+        case .top:
+            expansionConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
+        case .bottom:
+            expansionConstraint = bottomAnchor.constraint(equalTo: superview.bottomAnchor)
+        }
+        
         if isExpandable {
             if state == .expanded {
-                bottomConstraint.constant = 0.0
+                expansionConstraint.constant = 0.0
             } else {
-                bottomConstraint.constant = expansionOffset
+                switch type {
+                case .top:
+                    expansionConstraint.constant = -expansionOffset
+                case .bottom:
+                    expansionConstraint.constant = expansionOffset
+                }
             }
-
+            
             let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(didPan))
             addGestureRecognizer(panGestureRecognizer)
         } else {
-            bottomConstraint.constant = 0.0
+            expansionConstraint.constant = 0.0
         }
-
-        bottomConstraint.isActive = true
+        
+        expansionConstraint.isActive = true
     }
     
     @objc func didPan(_ recognizer: UIPanGestureRecognizer) {
         guard let view = recognizer.view else { return }
         
         if recognizer.state == .began {
-            initialBottomOffset = bottomConstraint.constant
+            initialOffset = expansionConstraint.constant
         }
         
         let translation = recognizer.translation(in: view)
-        let currentOffset = initialBottomOffset + translation.y
+        let currentOffset = initialOffset + translation.y
         
-        if currentOffset < 0.0 {
-            bottomConstraint.constant = 0.0
-        } else if currentOffset > expansionOffset {
-            bottomConstraint.constant = expansionOffset
-        } else {
-            bottomConstraint.constant = currentOffset
+        switch type {
+        case .top:
+            if currentOffset < -expansionOffset {
+                expansionConstraint.constant = -expansionOffset
+            } else if currentOffset > expansionOffset {
+                expansionConstraint.constant = 0.0
+            } else {
+                expansionConstraint.constant = currentOffset
+            }
+        case .bottom:
+            if currentOffset < 0.0 {
+                expansionConstraint.constant = 0.0
+            } else if currentOffset > expansionOffset {
+                expansionConstraint.constant = expansionOffset
+            } else {
+                expansionConstraint.constant = currentOffset
+            }
         }
         
         if recognizer.state == .ended {
             let velocity = recognizer.velocity(in: view)
             
-            if velocity.y <= 0 {
-                state = .expanded
-            } else {
-                state = .collapsed
+            switch type {
+            case .top:
+                if velocity.y >= 0 {
+                    state = .expanded
+                } else {
+                    state = .collapsed
+                }
+            case .bottom:
+                if velocity.y <= 0 {
+                    state = .expanded
+                } else {
+                    state = .collapsed
+                }
             }
             
             UIView.animate(withDuration: 0.2,
@@ -126,24 +170,43 @@ open class BannerContainerView: UIView {
         }
     }
     
-    func show(animated: Bool = true,
-              duration: TimeInterval = 0.5,
-              completion: CompletionHandler? = nil) {
+    public func show(animated: Bool = true,
+                     duration: TimeInterval = 0.2,
+                     completion: CompletionHandler? = nil) {
         guard isHidden else {
             completion?(true)
             return
         }
         
+        if let superview = superview, expansionConstraint == nil {
+            switch type {
+            case .top:
+                expansionConstraint = topAnchor.constraint(equalTo: superview.topAnchor)
+            case .bottom:
+                expansionConstraint = bottomAnchor.constraint(equalTo: superview.bottomAnchor)
+            }
+            
+            expansionConstraint.isActive = true
+        }
+        
         if animated {
-            bottomConstraint.constant = frame.height
+            switch type {
+            case .top:
+                expansionConstraint.constant = -frame.height + self.topSafeAreaInset
+            case .bottom:
+                expansionConstraint.constant = frame.height - self.bottomSafeAreaInset
+            }
+            
             isHidden = false
+            alpha = 0.0
             superview?.layoutIfNeeded()
             
             UIView.animate(withDuration: duration,
                            delay: 0.0,
                            options: [],
                            animations: {
-                self.bottomConstraint.constant = 0.0
+                self.alpha = 1.0
+                self.expansionConstraint.constant = 0.0
                 self.superview?.layoutIfNeeded()
             }) { completed in
                 completion?(completed)
@@ -155,7 +218,7 @@ open class BannerContainerView: UIView {
     }
     
     public func hide(animated: Bool = true,
-                     duration: TimeInterval = 0.5,
+                     duration: TimeInterval = 0.2,
                      completion: CompletionHandler? = nil) {
         guard !isHidden else {
             completion?(true)
@@ -167,7 +230,13 @@ open class BannerContainerView: UIView {
                            delay: 0.0,
                            options: [],
                            animations: {
-                self.bottomConstraint.constant = self.frame.height
+                switch self.type {
+                case .top:
+                    self.expansionConstraint.constant = -self.frame.height
+                case .bottom:
+                    self.expansionConstraint.constant = self.frame.height
+                }
+                
                 self.superview?.layoutIfNeeded()
             }) { completed in
                 self.isHidden = true
