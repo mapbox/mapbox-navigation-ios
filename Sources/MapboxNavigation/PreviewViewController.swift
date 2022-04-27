@@ -47,7 +47,9 @@ open class PreviewViewController: UIViewController {
     var backButton: BackButton!
     
     // :nodoc:
-    public var navigationView: NavigationView!
+    public var navigationView: NavigationView {
+        view as! NavigationView
+    }
     
     var speedLimitView: SpeedLimitView!
     
@@ -69,10 +71,30 @@ open class PreviewViewController: UIViewController {
     // :nodoc:
     public weak var delegate: PreviewViewControllerDelegate?
     
+    open override func loadView() {
+        let frame = parent?.view.bounds ?? UIScreen.main.bounds
+        let navigationView = NavigationView(frame: frame)
+        navigationView.navigationMapView.delegate = self
+        navigationView.navigationMapView.userLocationStyle = .courseView()
+        
+        navigationView.navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+            guard let self = self else { return }
+            self.pointAnnotationManager = self.navigationView.navigationMapView.mapView.annotations.makePointAnnotationManager()
+            
+            if let finalDestinationAnnotations = self.finalDestinationAnnotations,
+               let pointAnnotationManager = self.pointAnnotationManager {
+                pointAnnotationManager.annotations = finalDestinationAnnotations
+                
+                self.finalDestinationAnnotations = nil
+            }
+        }
+        
+        view = navigationView
+    }
+    
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupNavigationView()
         setupNavigationViewportDataSource()
         setupBackButton()
         setupSpeedLimitView()
@@ -375,38 +397,6 @@ open class PreviewViewController: UIViewController {
             presentedBottomBannerViewController = routesPreviewViewController
             embed(routesPreviewViewController, in: navigationView.bottomBannerContainerView)
         }
-    }
-    
-    func setupNavigationView() {
-        let navigationMapView = NavigationMapView(frame: view.bounds)
-        let navigationView = NavigationView(frame: navigationMapView.bounds, navigationMapView: navigationMapView)
-        navigationView.translatesAutoresizingMaskIntoConstraints = false
-        navigationView.navigationMapView.delegate = self
-        navigationView.navigationMapView.userLocationStyle = .courseView()
-        view.addSubview(navigationView)
-        
-        let navigationViewLayoutConstraints = [
-            navigationView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            navigationView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            navigationView.topAnchor.constraint(equalTo: view.topAnchor),
-            navigationView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ]
-        
-        NSLayoutConstraint.activate(navigationViewLayoutConstraints)
-        
-        navigationView.navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
-            guard let self = self else { return }
-            self.pointAnnotationManager = self.navigationView.navigationMapView.mapView.annotations.makePointAnnotationManager()
-            
-            if let finalDestinationAnnotations = self.finalDestinationAnnotations,
-               let pointAnnotationManager = self.pointAnnotationManager {
-                pointAnnotationManager.annotations = finalDestinationAnnotations
-                
-                self.finalDestinationAnnotations = nil
-            }
-        }
-        
-        self.navigationView = navigationView
     }
     
     public func setupNavigationViewportDataSource() {

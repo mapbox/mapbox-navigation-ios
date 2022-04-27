@@ -17,10 +17,7 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                 self.previewViewController.navigationView.navigationMapView.translatesAutoresizingMaskIntoConstraints = false
                 self.previewViewController.navigationView.insertSubview(injectedNavigationMapView, at: 0)
                 
-                guard let navigationView = self.previewViewController.navigationView else {
-                    preconditionFailure("NavigationView should be valid.")
-                }
-                
+                let navigationView = self.previewViewController.navigationView
                 let navigationMapView = navigationView.navigationMapView
                 
                 NSLayoutConstraint.activate([
@@ -35,6 +32,7 @@ extension SceneDelegate: NavigationViewControllerDelegate {
                         self.previewViewController.setupNavigationViewportDataSource()
                         self.previewViewController.setupPassiveLocationManager()
                         self.previewViewController.navigationView.navigationMapView.navigationCamera.stop()
+                        self.previewViewController.navigationView.navigationMapView.removeArrow()
                     })
                 }
                 

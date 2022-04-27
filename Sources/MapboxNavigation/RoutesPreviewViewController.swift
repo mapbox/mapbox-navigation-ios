@@ -176,13 +176,13 @@ class RoutesPreviewViewController: RoutesPreviewing {
         
         let pinImage = UIImage(named: "pin", in: .mapboxNavigation, compatibleWith: nil)!
         let styledPinImage: UIImage!
-        let distance = Measurement(distance: route.distance).localized()
         let distanceRemainingTintColor = DistanceRemainingLabel.appearance().normalTextColor
         if #available(iOS 13.0, *) {
             styledPinImage = pinImage.withTintColor(distanceRemainingTintColor)
         } else {
             styledPinImage = pinImage.tint(distanceRemainingTintColor)
         }
+        let distance = Measurement(distance: route.distance).localized()
         
         distanceRemainingLabel.attributedText = attributedString(with: styledPinImage,
                                                                  imageBounds: CGRect(x: 0, y: -2, width: 12.0, height: 15.0),
