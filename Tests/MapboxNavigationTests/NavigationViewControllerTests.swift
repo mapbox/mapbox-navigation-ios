@@ -75,8 +75,7 @@ class NavigationViewControllerTests: TestCase {
         initialRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
         newRoute = Fixture.route(from: "route-with-banner-instructions", options: routeOptions)
         newRouteResponse = Fixture.routeResponse(from: "route-with-banner-instructions", options: routeOptions)
-        ImageLoadingURLProtocolSpy.reset()
-        repository.resetCache()
+        repository.storeSpriteData(styleType: .day)
     }
 
     private func createDependencies() -> (navigationViewController: NavigationViewController, navigationService: NavigationService, startLocation: CLLocation, poi: [CLLocation], endLocation: CLLocation, voice: RouteVoiceController)? {
@@ -89,7 +88,9 @@ class NavigationViewControllerTests: TestCase {
                                                       locationSource: NavigationLocationManagerStub(),
                                                       simulating: .never)
             let fakeVoice: RouteVoiceController = RouteVoiceControllerStub(navigationService: fakeService)
-            let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice)
+            let topBanner = TopBannerViewController()
+            topBanner.spriteRepository = repository
+            let options = NavigationOptions(navigationService: fakeService, voiceController: fakeVoice, topBanner: topBanner)
             let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
 
             navigationViewController.delegate = self
@@ -195,8 +196,6 @@ class NavigationViewControllerTests: TestCase {
         service.delegate = delegate
 
         _ = navigationViewController.view
-        let topViewController = navigationViewController.topViewController as! TopBannerViewController
-        topViewController.spriteRepository = repository
         navigationViewController.viewWillAppear(false)
         navigationViewController.viewDidAppear(false)
 
@@ -303,7 +302,9 @@ class NavigationViewControllerTests: TestCase {
                                               routingProvider: MapboxRoutingProvider(.offline),
                                               credentials: Fixture.credentials,
                                               simulating: .never)
-        let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
+        let topBnaner = TopBannerViewController()
+        topBnaner.spriteRepository = repository
+        let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service, topBanner: topBnaner)
         let navigationViewController = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: options)
         expectation(description: "Style Loaded") {
             navigationViewController.navigationMapView?.pointAnnotationManager != nil
@@ -407,21 +408,22 @@ class NavigationViewControllerTests: TestCase {
     }
     
     func testBlankBanner() {
-        repository.storeSpriteData(styleType: .day)
-        
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
         
+        let topBanner = TopBannerViewController()
+        topBanner.spriteRepository = repository
+        let navigationOptions = NavigationOptions(topBanner: topBanner)
+        
         let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: options)
-        let navigationViewController = NavigationViewController(for: routeResponse, routeIndex: 0, routeOptions: options)
+        let navigationViewController = NavigationViewController(for: routeResponse, routeIndex: 0, routeOptions: options, navigationOptions: navigationOptions)
         
         _ = navigationViewController.view
         
         let firstInstruction = navigationViewController.route!.legs[0].steps[0].instructionsDisplayedAlongStep!.first
         let topViewController = navigationViewController.topViewController as! TopBannerViewController
-        topViewController.spriteRepository = repository
         let instructionsBannerView = topViewController.instructionsBannerView
         
         expectation(description: "SpriteRepository in TopBannerViewController updated.") {

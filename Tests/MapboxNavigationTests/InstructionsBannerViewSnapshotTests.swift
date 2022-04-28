@@ -28,12 +28,12 @@ class InstructionsBannerViewSnapshotTests: TestCase {
     }
 
     override func tearDown() {
+        spriteRepository.resetCache()
         ImageLoadingURLProtocolSpy.reset()
         super.tearDown()
     }
     
     func prepareSpriteRepository() {
-        spriteRepository.resetCache()
         spriteRepository.storeSpriteData(styleType: .day)
         
         let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))

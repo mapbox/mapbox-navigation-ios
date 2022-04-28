@@ -26,7 +26,7 @@ public protocol VisualInstructionDelegate: AnyObject, UnimplementedLogging {
      
      - parameter label: The label that the instruction will be presented on.
      - parameter instruction: The `VisualInstruction` that will update the label.
-     - returns: Optionally, a customized `NSAttributedString` that will be presented as defualt.
+     - returns: Optionally, a customized `NSAttributedString` that will be presented as default.
      */
     func label(_ label: InstructionLabel,
                willUpdate instruction: VisualInstruction) -> NSAttributedString?

@@ -314,7 +314,7 @@ class InstructionPresenter {
     }
     
     private func completeShieldDownload() {
-        self.onShieldDownload?(self.attributedText())
+        onShieldDownload?(attributedText())
     }
     
     private func takeSnapshot(on view: UIView) -> UIImage? {

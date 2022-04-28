@@ -187,7 +187,6 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         let secondGeneric = XCTestExpectation(description: "First Run - Second Instruction Generic")
         let secondRunHasAttachments = XCTestExpectation(description: "Second Run - Ensuring attachments exist")
         let firstNowLoaded = XCTestExpectation(description: "Second Run - First Should now be loaded")
-        let secondStillGeneric = XCTestExpectation(description: "Second Run - Second should still be generic ")
         let thirdRunHasAttachments = XCTestExpectation(description: "Third Run - Ensuring attachments exist")
         let firstStillLoaded = XCTestExpectation(description: "Third Run - First should still be loaded")
         let secondNowLoaded = XCTestExpectation(description: "Third Run - Second should now be loaded")
@@ -236,12 +235,10 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         //check that the first component is now loaded
         view.primaryLabel.attributedText!.enumerateAttribute(.attachment, in: secondStringRange,
                                                              options: [], using: { (value, range, stop) in
-            guard let attachment = value else { return }
+            guard let attachment = value, range == firstAttachmentRange else { return }
             secondRunHasAttachments.fulfill()
             
-            if attachment is GenericShieldAttachment, range == secondAttachmentRange {
-                return secondStillGeneric.fulfill()
-            } else if attachment is ShieldAttachment, range == firstAttachmentRange {
+            if attachment is ShieldAttachment {
                 return firstNowLoaded.fulfill()
             }
             XCTFail("Second Run: Unexpected attachment encountered at:" + String(describing: range) + " value: " + String(describing: value))
@@ -274,9 +271,8 @@ class InstructionsBannerViewIntegrationTests: TestCase {
         })
         
         //make sure everything happened as expected
-        let expectations = [firstRunHasAttachments, firstGeneric, secondGeneric,
-                            secondRunHasAttachments, firstNowLoaded, secondStillGeneric,
-                            thirdRunHasAttachments, firstStillLoaded, secondNowLoaded]
+        let expectations = [firstRunHasAttachments, firstGeneric, secondGeneric, secondRunHasAttachments,
+                            firstNowLoaded, thirdRunHasAttachments, firstStillLoaded, secondNowLoaded]
         wait(for: expectations, timeout: 0)
     }
     
