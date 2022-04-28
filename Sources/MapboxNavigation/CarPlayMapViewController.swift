@@ -302,7 +302,8 @@ open class CarPlayMapViewController: UIViewController {
             wayNameView.containerView.isHidden = true
         }
         
-        if let location = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {            
+        if let location = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {
+            speedLimitView.currentSpeed = location.speed
             // Update user puck to the most recent location.
             navigationMapView.moveUserLocation(to: location, animated: true)
         }
