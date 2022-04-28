@@ -217,13 +217,13 @@ open class PassiveLocationManager: NSObject {
         case .some(_):
             break
         }
-        
-        if let speedKmph = status.speedLimit?.speedKmph as? Double {
+
+        if let speed = status.speedLimit?.speedKmph as? Double {
             switch status.speedLimit?.localeUnit {
             case .milesPerHour:
-                speedLimit = Measurement(value: speedKmph, unit: .kilometersPerHour).converted(to: .milesPerHour)
+                speedLimit = Measurement(value: speed, unit: .kilometersPerHour).converted(to: .milesPerHour)
             case .kilometresPerHour:
-                speedLimit = Measurement(value: speedKmph, unit: .kilometersPerHour)
+                speedLimit = Measurement(value: speed, unit: .kilometersPerHour)
             case .none:
                 speedLimit = nil
             case .some(_):
@@ -236,8 +236,7 @@ open class PassiveLocationManager: NSObject {
             .rawLocationKey: rawLocation,
             .matchesKey: matches,
             .roadNameKey: status.roadName,
-            .routeShieldRepresentationKey: status.routeShieldRepresentation,
-            .speedKey: max(lastLocation.speed, 0.0)
+            .routeShieldRepresentationKey: status.routeShieldRepresentation
         ]
         if let speedLimit = speedLimit {
             userInfo[.speedLimitKey] = speedLimit

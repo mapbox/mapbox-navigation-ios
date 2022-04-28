@@ -44,6 +44,7 @@ extension ViewController {
         }
         
         if let location = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.locationKey] as? CLLocation {
+            speedLimitView.currentSpeed = location.speed
             trackStyledFeature.lineString.coordinates.append(contentsOf: [location.coordinate])
             
             // Update user puck to the most recent location.
@@ -56,7 +57,6 @@ extension ViewController {
         
         speedLimitView.signStandard = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.signStandardKey] as? SignStandard
         speedLimitView.speedLimit = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedLimitKey] as? Measurement<UnitSpeed>
-        speedLimitView.currentSpeed = notification.userInfo?[PassiveLocationManager.NotificationUserInfoKey.speedKey] as? CLLocationSpeed
         
         updateFreeDriveStyledFeatures()
     }
