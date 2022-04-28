@@ -1864,7 +1864,8 @@ open class NavigationMapView: UIView {
     
     func fitCamera(to routes: [Route],
                    routesPresentationStyle: RoutesPresentationStyle = .all(),
-                   animated: Bool = false) {
+                   animated: Bool = false,
+                   duration: TimeInterval = 1.0) {
         let geometry: Geometry
         let customCameraOptions: MapboxMaps.CameraOptions?
         
@@ -1883,7 +1884,7 @@ open class NavigationMapView: UIView {
                                                             padding: customCameraOptions?.padding ?? edgeInsets,
                                                             bearing: bearing,
                                                             pitch: customCameraOptions?.pitch) {
-            mapView?.camera.ease(to: cameraOptions, duration: animated ? 1.0 : 0.0)
+            mapView?.camera.ease(to: cameraOptions, duration: animated ? duration : 0.0)
         }
     }
     
