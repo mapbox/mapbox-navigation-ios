@@ -38,7 +38,7 @@ final class LeaksTests: TestCase {
             let service = MapboxNavigationService(routeResponse: response,
                                                   routeIndex: 0,
                                                   routeOptions: self.initialOptions,
-                                                  routingProvider: MapboxRoutingProvider(.offline),
+                                                  customRoutingProvider: MapboxRoutingProvider(.offline),
                                                   credentials: Fixture.credentials,
                                                   eventsManagerType: NavigationEventsManagerSpy.self)
             let navOptions = NavigationOptions(navigationService: service, voiceController:

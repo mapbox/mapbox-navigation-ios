@@ -149,7 +149,7 @@ class SpeechSynthesizersControllerTests: TestCase {
         let dummyService = MapboxNavigationService(routeResponse: routeResponse,
                                                    routeIndex: 0,
                                                    routeOptions: routeOptions,
-                                                   routingProvider: MapboxRoutingProvider(.offline),
+                                                   customRoutingProvider: MapboxRoutingProvider(.offline),
                                                    credentials: Fixture.credentials,
                                                    simulating: .always)
         let routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
@@ -168,7 +168,7 @@ class SpeechSynthesizersControllerTests: TestCase {
         let dummyService = MapboxNavigationService(routeResponse: routeResponse,
                                                    routeIndex: 0,
                                                    routeOptions: routeOptions,
-                                                   routingProvider: MapboxRoutingProvider(.offline),
+                                                   customRoutingProvider: MapboxRoutingProvider(.offline),
                                                    credentials: Fixture.credentials,
                                                    simulating: .always)
         let routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,

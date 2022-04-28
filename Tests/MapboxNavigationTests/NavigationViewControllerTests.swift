@@ -74,7 +74,7 @@ class NavigationViewControllerTests: TestCase {
             let fakeService = MapboxNavigationService(routeResponse: initialRouteResponse,
                                                       routeIndex: 0,
                                                       routeOptions: routeOptions,
-                                                      routingProvider: MapboxRoutingProvider(.offline),
+                                                      customRoutingProvider: MapboxRoutingProvider(.offline),
                                                       credentials: Fixture.credentials,
                                                       locationSource: NavigationLocationManagerStub(),
                                                       simulating: .never)
@@ -286,7 +286,7 @@ class NavigationViewControllerTests: TestCase {
         let service = MapboxNavigationService(routeResponse: initialRouteResponse,
                                               routeIndex: 0,
                                               routeOptions: routeOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                               credentials: Fixture.credentials,
                                               simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
@@ -337,7 +337,7 @@ class NavigationViewControllerTests: TestCase {
         let service = MapboxNavigationService(routeResponse: initialRouteResponse,
                                               routeIndex: 0,
                                               routeOptions: routeOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                               credentials: Fixture.credentials,
                                               simulating: .never)
         let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)

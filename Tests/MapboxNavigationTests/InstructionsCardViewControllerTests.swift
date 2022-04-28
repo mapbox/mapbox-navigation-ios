@@ -49,7 +49,7 @@ class InstructionsCardViewControllerTests: TestCase {
             let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
                                                             routeIndex: 0,
                                                             routeOptions: navigationRouteOptions,
-                                                            routingProvider: MapboxRoutingProvider(.offline),
+                                                            customRoutingProvider: MapboxRoutingProvider(.offline),
                                                             credentials: Fixture.credentials,
                                                             simulating: .never)
             let routeProgress = RouteProgress(route: route, options: navigationRouteOptions)

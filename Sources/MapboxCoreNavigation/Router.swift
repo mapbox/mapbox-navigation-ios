@@ -80,17 +80,37 @@ public protocol Router: CLLocationManagerDelegate {
      - parameter routingProvider: `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
     init(alongRouteAtIndex routeIndex: Int,
          in routeResponse: RouteResponse,
          options: RouteOptions,
-         routingProvider: RoutingProvider?,
+         routingProvider: RoutingProvider,
+         dataSource source: RouterDataSource)
+    
+    /**
+     Intializes a new `RouteController`.
+     
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     - parameter source: The data source for the RouteController.
+     */
+    init(alongRouteAtIndex routeIndex: Int,
+         in routeResponse: RouteResponse,
+         options: RouteOptions,
+         customRoutingProvider: RoutingProvider?,
          dataSource source: RouterDataSource)
     
     /**
      `RoutingProvider`, used to create a route during refreshing or rerouting.
      */
-    var routingProvider: RoutingProvider? { get }
+    @available(*, deprecated, renamed: "customRoutingProvider")
+    var routingProvider: RoutingProvider { get }
     
+    /**
+     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     */
+    var customRoutingProvider: RoutingProvider? { get }
     /**
      Details about the user’s progress along the current route, leg, and step.
      */

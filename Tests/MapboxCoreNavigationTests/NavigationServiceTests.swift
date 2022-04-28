@@ -27,7 +27,7 @@ class NavigationServiceTests: TestCase {
         let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
-                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,
                                                         locationSource: locationSource,
                                                         eventsManagerType: NavigationEventsManagerSpy.self,
@@ -411,7 +411,7 @@ class NavigationServiceTests: TestCase {
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
 
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, routingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
+        let service = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }
@@ -420,7 +420,7 @@ class NavigationServiceTests: TestCase {
         let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
-                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,
                                                         eventsManagerType: NavigationEventsManagerSpy.self,
                                                         simulating: .always)
@@ -633,7 +633,7 @@ class NavigationServiceTests: TestCase {
     }
 
     func testCountdownTimerDefaultAndUpdate() {
-        let subject = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, routingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials)
+        let subject = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials)
 
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(2500), "Default countdown interval should be 2500 milliseconds.")
 
@@ -712,7 +712,7 @@ class NavigationServiceTests: TestCase {
         let service = MapboxNavigationService(routeResponse: routeResponse,
                                               routeIndex: 0,
                                               routeOptions: options,
-                                              routingProvider: MapboxRoutingProvider(.online),
+                                              customRoutingProvider: MapboxRoutingProvider(.online),
                                               credentials: Fixture.credentials,
                                               locationSource: locationManager)
         service.delegate = delegate

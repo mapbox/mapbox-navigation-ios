@@ -20,20 +20,21 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     /**
      A reference to a MapboxDirections service. Used for rerouting.
      */
-    @available(*, deprecated, message: "Use `routingProvider` instead. If route controller was not initialized using `Directions` object - this property is unused and ignored.")
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. If route controller was not initialized using `Directions` object - this property is unused and ignored.")
     public lazy var directions: Directions = routingProvider as? Directions ?? Directions.shared
     
     /**
-     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
-     
-     If set to `nil` - default Mapbox implementation will be used.
+     `RoutingProvider`, used to create a route during refreshing or rerouting.
      */
-    public var routingProvider: RoutingProvider?
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. This property will be equal to `customRoutingProvider` if that is provided or a `MapboxRoutingProvider` instance otherwise.")
+    public lazy var routingProvider: RoutingProvider = customRoutingProvider ?? MapboxRoutingProvider(NavigationSettings.shared.routingProviderSource)
+    /**
+     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     */
+    public var customRoutingProvider: RoutingProvider? = nil
 
-    private lazy var defaultRoutingProvider: RoutingProvider = MapboxRoutingProvider(NavigationSettings.shared.routingProviderSource)
-    
     var resolvedRoutingProvider:  RoutingProvider {
-        routingProvider ?? defaultRoutingProvider
+        customRoutingProvider ?? routingProvider
     }
     
     public var route: Route {
@@ -224,12 +225,26 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                   dataSource: source)
     }
     
+    required public convenience init(alongRouteAtIndex routeIndex: Int,
+                                     in routeResponse: RouteResponse,
+                                     options: RouteOptions,
+                                     routingProvider: RoutingProvider = Directions.shared,
+                                     dataSource source: RouterDataSource) {
+        self.init(alongRouteAtIndex:routeIndex,
+                  in: routeResponse,
+                  options: options,
+                  routingProvider: routingProvider,
+                  dataSource: source)
+    }
+    
     required public init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
                          options: RouteOptions,
-                         routingProvider: RoutingProvider? = Directions.shared,
+                         customRoutingProvider: RoutingProvider?,
                          dataSource source: RouterDataSource) {
-        self.routingProvider = routingProvider
+        if let customRoutingProvider = customRoutingProvider {
+            self.customRoutingProvider = customRoutingProvider
+        }
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source

@@ -56,21 +56,27 @@ open class RouteController: NSObject {
     /**
      A reference to a MapboxDirections service. Used for rerouting.
      */
-    @available(*, deprecated, message: "Use `routingProvider` instead. If route controller was not initialized using `Directions` object - this property is unused and ignored.")
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. If route controller was not initialized using `Directions` object - this property is unused and ignored.")
     public lazy var directions: Directions = routingProvider as? Directions ?? Directions.shared
+    
+    /**
+     `RoutingProvider`, used to create a route during refreshing or rerouting.
+     */
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. This property will be equal to `customRoutingProvider` if that is provided or a `MapboxRoutingProvider` instance otherwise.")
+    public lazy var routingProvider: RoutingProvider = customRoutingProvider ?? defaultRoutingProvider
     
     /**
      Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      
      If set to `nil` - default Mapbox implementation will be used.
      */
-    public var routingProvider: RoutingProvider?
+    public var customRoutingProvider: RoutingProvider? = nil
     
     // TODO: remove when NN implements RouteRefreshing and Continuos Alternatives
     private lazy var defaultRoutingProvider: RoutingProvider = MapboxRoutingProvider(NavigationSettings.shared.routingProviderSource)
-    
+
     var resolvedRoutingProvider:  RoutingProvider {
-        routingProvider ?? defaultRoutingProvider
+        customRoutingProvider ?? defaultRoutingProvider
     }
     
     public var route: Route {
@@ -566,10 +572,22 @@ open class RouteController: NSObject {
                   dataSource: source)
     }
     
+    required public convenience init(alongRouteAtIndex routeIndex: Int,
+                                     in routeResponse: RouteResponse,
+                                     options: RouteOptions,
+                                     routingProvider: RoutingProvider,
+                                     dataSource source: RouterDataSource) {
+        self.init(alongRouteAtIndex:routeIndex,
+                  in: routeResponse,
+                  options: options,
+                  customRoutingProvider: routingProvider,
+                  dataSource: source)
+    }
+    
     required public init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
                          options: RouteOptions,
-                         routingProvider: RoutingProvider?,
+                         customRoutingProvider: RoutingProvider? = nil,
                          dataSource source: RouterDataSource) {
         Self.instanceLock.lock()
         let twoInstances = Self.instance != nil
@@ -580,7 +598,6 @@ open class RouteController: NSObject {
 
         Navigator.datasetProfileIdentifier = options.profileIdentifier
         
-        self.routingProvider = routingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source
@@ -588,7 +605,12 @@ open class RouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         super.init()
-        rerouteController.customRoutingProvider = self.routingProvider
+        
+        if let customRoutingProvider = customRoutingProvider {
+            self.customRoutingProvider = customRoutingProvider
+            self.rerouteController.customRoutingProvider = customRoutingProvider
+        }
+        
         BillingHandler.shared.beginBillingSession(for: .activeGuidance, uuid: sessionUUID)
 
         subscribeNotifications()
@@ -707,7 +729,7 @@ extension RouteController: Router {
     }
     
     public func reroute(from location: CLLocation, along progress: RouteProgress) {
-        guard routingProvider != nil else {
+        guard customRoutingProvider != nil else {
             rerouteController.forceReroute()
             return
         }

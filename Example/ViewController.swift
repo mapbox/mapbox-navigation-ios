@@ -601,7 +601,7 @@ class ViewController: UIViewController {
         return MapboxNavigationService(routeResponse: response,
                                        routeIndex: routeIndex,
                                        routeOptions: options,
-                                       routingProvider: nil,
+                                       customRoutingProvider: nil,
                                        credentials: NavigationSettings.shared.directions.credentials,
                                        simulating: mode)
     }
