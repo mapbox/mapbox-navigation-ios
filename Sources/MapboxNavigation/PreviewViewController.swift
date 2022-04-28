@@ -59,7 +59,6 @@ open class PreviewViewController: UIViewController {
     
     var pointAnnotationManager: PointAnnotationManager?
     
-    // :nodoc:
     var cameraFloatingButton: CameraFloatingButton!
     
     var styleManager: StyleManager!
@@ -74,6 +73,7 @@ open class PreviewViewController: UIViewController {
     open override func loadView() {
         let frame = parent?.view.bounds ?? UIScreen.main.bounds
         let navigationView = NavigationView(frame: frame)
+        navigationView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         navigationView.navigationMapView.delegate = self
         navigationView.navigationMapView.userLocationStyle = .courseView()
         
@@ -297,12 +297,16 @@ open class PreviewViewController: UIViewController {
                                                                                 cameraOptions: routesPreviewCameraOptions))
     }
     
-    func fitCamera(to routeResponse: RouteResponse?) {
+    // :nodoc:
+    public func fitCamera(to routeResponse: RouteResponse?) {
         guard let routes = routeResponse?.routes else { return }
         
+        navigationView.navigationMapView.navigationCamera.stop()
         navigationView.navigationMapView.fitCamera(to: routes,
                                                    routesPresentationStyle: .all(shouldFit: true,
-                                                                                 cameraOptions: routesPreviewCameraOptions))
+                                                                                 cameraOptions: routesPreviewCameraOptions),
+                                                   animated: true,
+                                                   duration: 1.0)
     }
     
     func setupOrnaments() {
