@@ -20,7 +20,7 @@ open class PreviewViewController: UIViewController {
         let bottomInset: CGFloat
         let leftInset: CGFloat
         let rightInset: CGFloat
-        let spacing: CGFloat = 10.0
+        let spacing: CGFloat = 50.0
         
         if traitCollection.verticalSizeClass == .regular {
             topInset = 150.0
@@ -95,7 +95,6 @@ open class PreviewViewController: UIViewController {
     open override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupNavigationViewportDataSource()
         setupBackButton()
         setupSpeedLimitView()
         setupWayNameView()
@@ -103,6 +102,7 @@ open class PreviewViewController: UIViewController {
         setupTopBannerContainerView()
         setupBottomBannerContainerView()
         
+        setupNavigationViewportDataSource()
         setupPassiveLocationManager()
         setupStyleManager()
         setupOrnaments()
@@ -512,6 +512,7 @@ open class PreviewViewController: UIViewController {
             .layerMaxXMinYCorner
         ]
         
+        navigationView.bottomBannerContainerView.isHidden = true
         navigationView.bottomBannerContainerView.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         
         let bottomBannerContainerViewHeight = 120.0 + view.safeAreaInsets.bottom
