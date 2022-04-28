@@ -190,6 +190,8 @@ open class BannerContainerView: UIView {
             expansionConstraint.isActive = true
         }
         
+        layoutIfNeeded()
+        
         if animated {
             // TODO: Improve animation for devices with notch.
             switch type {
