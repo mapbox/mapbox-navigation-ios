@@ -58,7 +58,7 @@ open class LanesView: UIView, NavigationComponent {
                 return nil
             }
         }
-
+        
         guard !subviews.isEmpty && subviews.contains(where: { !$0.isValid }) else {
             hide(animated: animated,
                  duration: duration) { completed in
@@ -66,11 +66,10 @@ open class LanesView: UIView, NavigationComponent {
             }
             return
         }
-
-        stackView.addArrangedSubviews(subviews)
         
+        stackView.addArrangedSubviews(subviews)
         show(animated: animated,
-            duration: duration) { completed in
+             duration: duration) { completed in
             completion?(completed)
         }
     }
