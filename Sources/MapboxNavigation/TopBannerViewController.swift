@@ -376,13 +376,12 @@ extension TopBannerViewController: NavigationComponent {
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
         currentInstruction = instruction
         instructionsBannerView.update(for: instruction)
-        
-        if isDisplayingSteps {
-            return
-        }
-        lanesView.update(for: instruction)
         nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         junctionView.update(for: instruction, service: service)
+        
+        if !isDisplayingSteps {
+            lanesView.update(for: instruction)
+        }
     }
     
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
