@@ -24,7 +24,7 @@
 
 ### Routing
 
-* Integrated MaboxNavigtionNative rerouting mechanism. `Router.routingProvider` has now became optional and is used as customization for reroutng mechanism. Default `nil` value corresponds to SDK's default rerouting mechanism to be used. If you don't want custom reroute requests, update your `NavigationService` and `Router` instances instantiation to use the default `nil` value. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
+* Integrated MaboxNavigtionNative rerouting mechanism. `Router.routingProvider` is replaced with optional `customRoutingProvider` which is used as customization for reroutng mechanism. Default `nil` value corresponds to SDK's default rerouting mechanism to be used. If you don't want custom reroute requests, update your `NavigationService` and `Router` instances instantiation to use the default `nil` value. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
 * Exposed configurations for rerouting aspects like controlling usage of online vs. offline data for route building using desired `RoutingProviderSource` in `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)` method, and `Router.initialManeuverAvoidanceRadius` to configure radius before first dangerous maneuver. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
 
 ### Other changes
