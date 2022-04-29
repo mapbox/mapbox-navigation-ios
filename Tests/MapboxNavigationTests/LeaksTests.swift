@@ -21,7 +21,11 @@ final class LeaksTests: TestCase {
     }
 
     func testRouteVoiceController() {
-        let dummySvc = MapboxNavigationService(routeResponse: response, routeIndex: 0, routeOptions: initialOptions)
+        let dummySvc = MapboxNavigationService(routeResponse: response,
+                                               routeIndex: 0,
+                                               routeOptions: initialOptions,
+                                               customRoutingProvider: nil,
+                                               credentials: Fixture.credentials)
 
         let leakTester = LeakTest {
             let routeVoiceController = RouteVoiceController(navigationService: dummySvc,

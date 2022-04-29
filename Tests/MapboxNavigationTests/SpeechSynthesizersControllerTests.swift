@@ -130,7 +130,11 @@ class SpeechSynthesizersControllerTests: TestCase {
         deinitExpectation.expectedFulfillmentCount = 2
         (synthesizers[0] as! FailingSpeechSynthesizerMock).deinitExpectation = deinitExpectation
         (synthesizers[1] as! FailingSpeechSynthesizerMock).deinitExpectation = deinitExpectation
-        let dummyService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: routeOptions)
+        let dummyService = MapboxNavigationService(routeResponse: routeResponse,
+                                                   routeIndex: 0,
+                                                   routeOptions: routeOptions,
+                                                   customRoutingProvider: nil,
+                                                   credentials: Fixture.credentials)
         
         var routeController: RouteVoiceController? = RouteVoiceController(navigationService: dummyService,
                                                                           speechSynthesizer: MultiplexedSpeechSynthesizer(synthesizers))

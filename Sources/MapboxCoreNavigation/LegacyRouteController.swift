@@ -212,7 +212,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return false
     }
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:options:routingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:options:customRoutingProvider:dataSource:)")
     public convenience init(alongRouteAtIndex routeIndex: Int,
                             in routeResponse: RouteResponse,
                             options: RouteOptions,
@@ -225,6 +225,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                   dataSource: source)
     }
     
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:options:customRoutingProvider:dataSource:)")
     required public convenience init(alongRouteAtIndex routeIndex: Int,
                                      in routeResponse: RouteResponse,
                                      options: RouteOptions,
@@ -242,9 +243,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                          options: RouteOptions,
                          customRoutingProvider: RoutingProvider?,
                          dataSource source: RouterDataSource) {
-        if let customRoutingProvider = customRoutingProvider {
-            self.customRoutingProvider = customRoutingProvider
-        }
+        self.customRoutingProvider = customRoutingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source

@@ -63,7 +63,7 @@ open class RouteController: NSObject {
      `RoutingProvider`, used to create a route during refreshing or rerouting.
      */
     @available(*, deprecated, message: "Use `customRoutingProvider` instead. This property will be equal to `customRoutingProvider` if that is provided or a `MapboxRoutingProvider` instance otherwise.")
-    public lazy var routingProvider: RoutingProvider = customRoutingProvider ?? defaultRoutingProvider
+    public lazy var routingProvider: RoutingProvider = resolvedRoutingProvider
     
     /**
      Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
@@ -75,7 +75,7 @@ open class RouteController: NSObject {
     // TODO: remove when NN implements RouteRefreshing and Continuos Alternatives
     private lazy var defaultRoutingProvider: RoutingProvider = MapboxRoutingProvider(NavigationSettings.shared.routingProviderSource)
 
-    var resolvedRoutingProvider:  RoutingProvider {
+    var resolvedRoutingProvider: RoutingProvider {
         customRoutingProvider ?? defaultRoutingProvider
     }
     
@@ -543,7 +543,7 @@ open class RouteController: NSObject {
         NotificationCenter.default.post(name: .didArriveAtWaypoint, object: self, userInfo: info)
     }
     
-    private func announcReroutingError(with error: Error) {
+    private func announceReroutingError(with error: Error) {
         delegate?.router(self, didFailToRerouteWith: error)
         NotificationCenter.default.post(name: .routeControllerDidFailToReroute, object: self, userInfo: [
             NotificationUserInfoKey.routingErrorKey: error,
@@ -563,7 +563,7 @@ open class RouteController: NSObject {
     
     // MARK: Handling Lifecycle
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:routingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
     public convenience init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
         self.init(alongRouteAtIndex: routeIndex,
                   in: routeResponse,
@@ -572,6 +572,7 @@ open class RouteController: NSObject {
                   dataSource: source)
     }
     
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
     required public convenience init(alongRouteAtIndex routeIndex: Int,
                                      in routeResponse: RouteResponse,
                                      options: RouteOptions,
@@ -756,7 +757,7 @@ extension RouteController: Router {
                     self?.isRerouting = false
                 }
             case let .failure(error):
-                self.announcReroutingError(with: error)
+                self.announceReroutingError(with: error)
                 self.isRerouting = false
             }
         }
@@ -864,7 +865,7 @@ extension RouteController: ReroutingControllerDelegate {
     }
     
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError) {
-        announcReroutingError(with: error)
+        announceReroutingError(with: error)
         self.isRerouting = false
     }
 }

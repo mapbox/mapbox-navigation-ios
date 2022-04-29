@@ -423,7 +423,11 @@ class NavigationViewControllerTests: TestCase {
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
 
-        let navService = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions)
+        let navService = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                                 routeIndex: 0,
+                                                 routeOptions: routeOptions,
+                                                 customRoutingProvider: nil,
+                                                 credentials: Fixture.credentials)
         let navOptions = NavigationOptions(navigationService: navService, topBanner: top, bottomBanner: bottom)
 
         let subject = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navOptions)
@@ -444,7 +448,11 @@ class NavigationViewControllerTests: TestCase {
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
 
-        let navService = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions)
+        let navService = MapboxNavigationService(routeResponse: initialRouteResponse,
+                                                 routeIndex: 0,
+                                                 routeOptions: routeOptions,
+                                                 customRoutingProvider: nil,
+                                                 credentials: Fixture.credentials)
         let navOptions = NavigationOptions(navigationService: navService, navigationMapView: injected)
 
         let subject = NavigationViewController(for: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, navigationOptions: navOptions)
@@ -462,7 +470,9 @@ class NavigationViewControllerTests: TestCase {
         
         let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
                                                         routeIndex: 0,
-                                                        routeOptions: navigationRouteOptions)
+                                                        routeOptions: navigationRouteOptions,
+                                                        customRoutingProvider: nil,
+                                                        credentials: Fixture.credentials)
         
         let navigationOptions = NavigationOptions(navigationService: navigationService)
         

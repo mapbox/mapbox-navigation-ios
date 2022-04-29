@@ -5,7 +5,7 @@ import MapboxDirections
 /**
  Adapter for `MapboxNavigationNative.RerouteControllerInterface` usage inside `Navigator`.
  
- This class handles correct setup for custom or default`RerouteControllerInterface`, monitoring native reroute events and configuring the process.
+ This class handles correct setup for custom or default `RerouteControllerInterface`, monitoring native reroute events and configuring the process.
  */
 class RerouteController {
     
@@ -33,7 +33,7 @@ class RerouteController {
     var customRoutingProvider: RoutingProvider? = nil {
         didSet {
             self.navigator?.setRerouteControllerForController(
-                customRoutingProvider.map { _ in self } ?? defaultRerouteController
+                customRoutingProvider != nil ? self : defaultRerouteController
             )
         }
     }
@@ -58,7 +58,7 @@ class RerouteController {
     private let rerouteDetector: RerouteDetectorInterface
     
     private var reroutingRequest: NavigationProviderRequest?
-    private var recentRouteResponse: (response: RouteResponse, options: RouteOptions)?
+    private var latestRouteResponse: (response: RouteResponse, options: RouteOptions)?
     private var isCancelled = false
     
     private weak var navigator: MapboxNavigationNative.Navigator?
@@ -91,7 +91,7 @@ extension RerouteController: RerouteObserver {
 
     func onRerouteDetected(forRouteRequest routeRequest: String) {
         isCancelled = false
-        recentRouteResponse = nil
+        latestRouteResponse = nil
         guard reroutesProactively else { return }
         delegate?.rerouteControllerDidDetectReroute(self)
     }
@@ -104,11 +104,12 @@ extension RerouteController: RerouteObserver {
             return
         }
         
-        if let recentRouteResponse = recentRouteResponse,
-           decodedRequest.routeOptions == recentRouteResponse.options {
+        if let latestRouteResponse = latestRouteResponse,
+           decodedRequest.routeOptions == latestRouteResponse.options {
             delegate?.rerouteControllerDidRecieveReroute(self,
-                                                         response: recentRouteResponse.response,
-                                                         options: recentRouteResponse.options)
+                                                         response: latestRouteResponse.response,
+                                                         options: latestRouteResponse.options)
+            self.latestRouteResponse = nil
         } else {
             guard let decodedResponse = Self.decode(routeResponse: routeResponse,
                                                     routeOptions: decodedRequest.routeOptions,
@@ -124,14 +125,14 @@ extension RerouteController: RerouteObserver {
     }
 
     func onRerouteCancelled() {
-        recentRouteResponse = nil
+        latestRouteResponse = nil
         guard reroutesProactively else { return }
         
         delegate?.rerouteControllerDidCancelReroute(self)
     }
 
     func onRerouteFailed(forError error: RerouteError) {
-        recentRouteResponse = nil
+        latestRouteResponse = nil
         guard reroutesProactively else { return }
         
         delegate?.rerouteControllerDidFailToReroute(self,
@@ -207,10 +208,10 @@ extension RerouteController: RerouteControllerInterface {
                                                    type: .routerError)))
             case .success(let routeResponse):
                 if let responseString = routeResponse.identifier {
-                    self.recentRouteResponse = (routeResponse, routeOptions)
+                    self.latestRouteResponse = (routeResponse, routeOptions)
                     callback(.init(value: RerouteInfo(routeResponse: responseString,
-                                                                                    routeRequest: url,
-                                                                                    origin: .onboard)))
+                                                      routeRequest: url,
+                                                      origin: .onboard)))
                 } else {
                     callback(.init(error: RerouteError(message: "Failed to process `routeResponse`.",
                                                        type: .routerError)))

@@ -356,7 +356,7 @@ class NavigationServiceTests: TestCase {
             CLLocationCoordinate2D(latitude: 37.777016, longitude: -122.468832),
         ])
         let routeResponse = Fixture.routeResponse(from: "straight-line", options: options)
-        let navigationService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: options)
+        let navigationService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: options, customRoutingProvider: nil, credentials: Fixture.credentials)
         let router = navigationService.router
         let firstCoordinate = router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
@@ -613,7 +613,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, routingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
+            let routeController = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -625,7 +625,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            _ = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, routingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
+            _ = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
             subject = fakeDataSource
         }
 

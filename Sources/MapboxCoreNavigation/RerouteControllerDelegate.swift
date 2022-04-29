@@ -22,7 +22,7 @@ public enum ReroutingError: Error {
     /// Reroute was cancelled by user.
     case cancelled
 
-    init( _ nativeError: RerouteError) {
+    init(_ nativeError: RerouteError) {
         switch (nativeError.type) {
         case .routerError:
             self = .routeError

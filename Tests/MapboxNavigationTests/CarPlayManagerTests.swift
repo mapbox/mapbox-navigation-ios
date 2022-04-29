@@ -19,7 +19,7 @@ class CarPlayManagerTests: TestCase {
         super.setUp()
         
         eventsManagerSpy = NavigationEventsManagerSpy()
-        carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline),
+        carPlayManager = CarPlayManager(customRoutingProvider: MapboxRoutingProvider(.offline),
                                         eventsManager: eventsManagerSpy,
                                         carPlayNavigationViewControllerClass: CarPlayNavigationViewControllerTestable.self)
         carPlaySearchController = CarPlaySearchController()
@@ -256,7 +256,7 @@ class CarPlayManagerTests: TestCase {
         let routeOptions = RouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 0, longitude: 0)
         ])
-        let carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
+        let carPlayManager = CarPlayManager(customRoutingProvider: MapboxRoutingProvider(.offline))
         carPlayManager.delegate = carPlayManagerDelegateMock
         let testError = DirectionsError.requestTooLarge
         carPlayManager.didCalculate(.failure(testError),
@@ -277,7 +277,7 @@ class CarPlayManagerTests: TestCase {
         
         let styles = [CustomStyle()]
         let carPlayManagerWithModifiedStyles = CarPlayManager(styles: styles,
-                                                              routingProvider: MapboxRoutingProvider(.offline))
+                                                              customRoutingProvider: MapboxRoutingProvider(.offline))
         XCTAssertEqual(carPlayManagerWithModifiedStyles.styles,
                        styles,
                        "CarPlayManager should persist the initial styles given to it.")
