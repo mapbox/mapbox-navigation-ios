@@ -65,7 +65,7 @@ open class PreviewViewController: UIViewController {
     
     public private(set) var presentedBottomBannerViewController: UIViewController?
     
-    var topBannerContainerViewTopConstraint: NSLayoutConstraint!
+    var topBannerContainerViewHeightConstraint: NSLayoutConstraint!
     
     // :nodoc:
     public weak var delegate: PreviewViewControllerDelegate?
@@ -131,9 +131,9 @@ open class PreviewViewController: UIViewController {
     open override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
-        if topBannerContainerViewTopConstraint != nil {
-            let topInset = view.safeAreaInsets.top
-            topBannerContainerViewTopConstraint.constant = topInset
+        if topBannerContainerViewHeightConstraint != nil {
+            let heightInset = view.safeAreaInsets.top
+            topBannerContainerViewHeightConstraint.constant = heightInset
         }
     }
     
@@ -499,13 +499,10 @@ open class PreviewViewController: UIViewController {
     }
     
     func setupTopBannerContainerView() {
-        topBannerContainerViewTopConstraint = navigationView.topBannerContainerView.topAnchor.constraint(equalTo: view.topAnchor,
-                                                                                                         constant: 0.0)
-        topBannerContainerViewTopConstraint.isActive = true
-        
         let topBannerContainerViewHeight = view.safeAreaInsets.top
-        navigationView.topBannerContainerView.heightAnchor.constraint(equalToConstant: topBannerContainerViewHeight).isActive = true
-        navigationView.topBannerContainerView.isHidden = true
+        topBannerContainerViewHeightConstraint = navigationView.topBannerContainerView.heightAnchor.constraint(equalToConstant: topBannerContainerViewHeight)
+        topBannerContainerViewHeightConstraint.isActive = true
+        navigationView.topBannerContainerView.isHidden = false
         navigationView.topBannerContainerView.backgroundColor = .clear
     }
     
