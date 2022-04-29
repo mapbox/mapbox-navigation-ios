@@ -123,7 +123,8 @@ public class MapboxRoutingProvider: RoutingProvider {
                                             credentials: settings.directions.credentials,
                                             tilesVersion: Navigator.tilesVersion,
                                             historyDirectoryURL: Navigator.historyDirectoryURL,
-                                            datasetProfileIdentifier: datasetProfileIdentifier ?? Navigator.datasetProfileIdentifier)
+                                            datasetProfileIdentifier: datasetProfileIdentifier ?? Navigator.datasetProfileIdentifier,
+                                            navigatorRouterType: source.nativeSource)
         return RouterFactory.build(for: source.nativeSource,
                                       cache: factory.cacheHandle,
                                       config: factory.configHandle,

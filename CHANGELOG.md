@@ -10,6 +10,7 @@
 ### Location tracking
 
 * Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
+* Added the ability to expose current speed in `SpeedLimitView`. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
 
 ### User interface
 

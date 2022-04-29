@@ -21,6 +21,7 @@ class NativeHandlersFactory {
     let targetVersion: String?
     let configFactoryType: ConfigFactory.Type
     let datasetProfileIdentifier: ProfileIdentifier
+    let navigatorRouterType: MapboxNavigationNative.RouterType?
     
     init(tileStorePath: String,
          credentials: Credentials,
@@ -28,7 +29,8 @@ class NativeHandlersFactory {
          historyDirectoryURL: URL? = nil,
          targetVersion: String? = nil,
          configFactoryType: ConfigFactory.Type = ConfigFactory.self,
-         datasetProfileIdentifier: ProfileIdentifier = ProfileIdentifier.automobile) {
+         datasetProfileIdentifier: ProfileIdentifier = ProfileIdentifier.automobile,
+         navigatorRouterType: MapboxNavigationNative.RouterType? = nil) {
         self.tileStorePath = tileStorePath
         self.credentials = credentials
         self.tilesVersion = tilesVersion
@@ -36,6 +38,7 @@ class NativeHandlersFactory {
         self.targetVersion = targetVersion
         self.configFactoryType = configFactoryType
         self.datasetProfileIdentifier = datasetProfileIdentifier
+        self.navigatorRouterType = navigatorRouterType
     }
     
     // MARK: - Native Handlers
@@ -52,10 +55,16 @@ class NativeHandlersFactory {
         onMainQueueSync { // Make sure that Navigator pick ups Main Thread RunLoop.
             LogConfiguration.getInstance().setFilterLevelFor(LoggingLevel.info)
             
+            let router = navigatorRouterType.map {
+                MapboxNavigationNative.RouterFactory.build(for: $0,
+                                                           cache: cacheHandle,
+                                                           config: configHandle,
+                                                           historyRecorder: historyRecorder)
+            }
             return MapboxNavigationNative.Navigator(config: configHandle,
                                                     cache: cacheHandle,
                                                     historyRecorder: historyRecorder,
-                                                    router: nil)
+                                                    router: router)
         }
     }()
     
@@ -99,8 +108,26 @@ class NativeHandlersFactory {
                     endpointConfig: endpointConfig)
     }()
     
+    lazy var navigatorConfig: NavigatorConfig = {
+        return NavigatorConfig(voiceInstructionThreshold: nil,
+                               electronicHorizonOptions: nil,
+                               polling: nil,
+                               incidentsOptions: nil,
+                               noSignalSimulationEnabled: nil,
+                               avoidManeuverSeconds: NSNumber(value: RerouteController.DefaultManeuverAvoidanceRadius),
+                               useSensors: false)
+    }()
+    
     lazy var configHandle: ConfigHandle = {
-        let customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]        
+        let defaultConfig = [
+            customConfigFeaturesKey: [
+                "useInternalReroute": true
+            ]
+        ]
+        
+        var customConfig = UserDefaults.standard.dictionary(forKey: customConfigKey) ?? [:]
+        customConfig.deepMerge(with: defaultConfig, uniquingKeysWith: { first, _ in first })
+                
         let customConfigJSON: String
         if let jsonDataConfig = try? JSONSerialization.data(withJSONObject: customConfig, options: []),
            let encodedConfig = String(data: jsonDataConfig, encoding: .utf8) {
@@ -109,14 +136,6 @@ class NativeHandlersFactory {
             assertionFailure("Custom config can not be serialized")
             customConfigJSON = ""
         }
-        
-        let navigatorConfig = NavigatorConfig(voiceInstructionThreshold: nil,
-                                              electronicHorizonOptions: nil,
-                                              polling: nil,
-                                              incidentsOptions: nil,
-                                              noSignalSimulationEnabled: nil,
-                                              avoidManeuverSeconds: nil,
-                                              useSensors: nil)
         
         return configFactoryType.build(for: settingsProfile,
                                        config: navigatorConfig,

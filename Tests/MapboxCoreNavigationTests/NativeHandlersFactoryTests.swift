@@ -31,7 +31,11 @@ class NativeHandlersFactoryTests: TestCase {
     }
     
     func testDefaultCustomConfig() {
-        let expectedCustomConfig: [String: Any] = [:]
+        let expectedCustomConfig = [
+            "features": [
+                "useInternalReroute": true
+            ]
+        ]
         _ = handlersFactory.configHandle
         let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
         XCTAssertTrue(config == expectedCustomConfig)
@@ -45,7 +49,8 @@ class NativeHandlersFactoryTests: TestCase {
         ], forKey: customConfigKey)
         let expectedCustomConfig = [
             "features": [
-                "custom_feature_key": "custom_feature_value"
+                "custom_feature_key": "custom_feature_value",
+                "useInternalReroute": true
             ]
         ]
         _ = handlersFactory.configHandle
@@ -61,7 +66,8 @@ class NativeHandlersFactoryTests: TestCase {
         ], forKey: customConfigKey)
         let expectedCustomConfig = [
             "features": [
-                "historyAutorecording": false
+                "historyAutorecording": false,
+                "useInternalReroute": true
             ]
         ]
         _ = handlersFactory.configHandle

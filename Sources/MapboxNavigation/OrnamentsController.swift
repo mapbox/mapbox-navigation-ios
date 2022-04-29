@@ -238,5 +238,6 @@ class OrnamentsController: NavigationComponent, NavigationComponentDelegate {
     func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
         navigationView.speedLimitView.signStandard = progress.currentLegProgress.currentStep.speedLimitSignStandard
         navigationView.speedLimitView.speedLimit = progress.currentLegProgress.currentSpeedLimit
+        navigationView.speedLimitView.currentSpeed = location.speed
     }
 }

@@ -27,7 +27,7 @@ open class TestCase: XCTestCase {
     open override func tearDown() {
         super.tearDown()
         // Reset navigator
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
+        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default, routingProviderSource: .hybrid)
     }
 
     /// Prepares tests for execution. Should be called once before any test runs.
@@ -35,7 +35,7 @@ open class TestCase: XCTestCase {
         guard !isInitializationCompleted else { return }
         isInitializationCompleted = true
 
-        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default)
+        NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: .default, routingProviderSource: .hybrid)
         Credentials.injectSharedToken(.mockedAccessToken)
         #if canImport(MapboxMaps)
         ResourceOptionsManager.default.resourceOptions.accessToken = .mockedAccessToken
