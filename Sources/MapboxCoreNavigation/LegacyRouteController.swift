@@ -241,7 +241,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     required public init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
                          options: RouteOptions,
-                         customRoutingProvider: RoutingProvider?,
+                         customRoutingProvider: RoutingProvider? = nil,
                          dataSource source: RouterDataSource) {
         self.customRoutingProvider = customRoutingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)

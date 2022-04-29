@@ -8,7 +8,7 @@ import MapboxDirections
  This class handles correct setup for custom or default `RerouteControllerInterface`, monitoring native reroute events and configuring the process.
  */
 class RerouteController {
-    
+
     // MARK: Configuration
     
     static let DefaultManeuverAvoidanceRadius: TimeInterval = 8.0

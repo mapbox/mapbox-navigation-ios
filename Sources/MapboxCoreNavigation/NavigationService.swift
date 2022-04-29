@@ -361,7 +361,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
     required public init(routeResponse: RouteResponse,
                          routeIndex: Int,
                          routeOptions: RouteOptions,
-                         customRoutingProvider: RoutingProvider?,
+                         customRoutingProvider: RoutingProvider? = nil,
                          credentials: Credentials,
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
