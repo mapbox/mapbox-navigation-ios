@@ -90,28 +90,6 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                      name: "Final destination")
         
         previewViewController.preview([finalWaypoint])
-        
-        let locationManager = CLLocationManager()
-        let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)
-        reverseGeocodeOptions.focalLocation = locationManager.location
-        reverseGeocodeOptions.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
-        let allowedScopes: PlacemarkScope = .all
-        reverseGeocodeOptions.allowedScopes = allowedScopes
-        reverseGeocodeOptions.maximumResultCount = 1
-        reverseGeocodeOptions.includesRoutableLocations = true
-
-        Geocoder.shared.geocode(reverseGeocodeOptions, completionHandler: { (placemarks, _, error) in
-            if let error = error {
-                NSLog("Reverse geocoding failed with error: \(error.localizedDescription).")
-                return
-            }
-
-            guard let placemark = placemarks?.first else {
-                return
-            }
-
-            (previewViewController.presentedBottomBannerViewController as? DestinationPreviewViewController)?.destinationOptions.primaryText = placemark.formattedName
-        })
     }
     
     func previewViewController(_ previewViewController: PreviewViewController,
@@ -164,5 +142,37 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                 navigationViewController.navigationView.bottomBannerContainerView.show()
             })
         })
+    }
+    
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willPresent destinationText: NSAttributedString) -> NSAttributedString? {
+        guard let destinationPreviewViewController = previewViewController.presentedBottomBannerViewController as? DestinationPreviewViewController,
+              let destinationCoordinate = destinationPreviewViewController.destinationOptions.waypoints.last?.coordinate else {
+                  return nil
+              }
+        
+        let locationManager = CLLocationManager()
+        let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)
+        reverseGeocodeOptions.focalLocation = locationManager.location
+        reverseGeocodeOptions.locale = Locale.autoupdatingCurrent.languageCode == "en" ? nil : .autoupdatingCurrent
+        let allowedScopes: PlacemarkScope = .all
+        reverseGeocodeOptions.allowedScopes = allowedScopes
+        reverseGeocodeOptions.maximumResultCount = 1
+        reverseGeocodeOptions.includesRoutableLocations = true
+        
+        Geocoder.shared.geocode(reverseGeocodeOptions, completionHandler: { (placemarks, _, error) in
+            if let error = error {
+                NSLog("Reverse geocoding failed with error: \(error.localizedDescription).")
+                return
+            }
+            
+            guard let placemark = placemarks?.first else {
+                return
+            }
+            
+            destinationPreviewViewController.destinationOptions.primaryText = placemark.formattedName
+        })
+        
+        return NSAttributedString(string: "")
     }
 }

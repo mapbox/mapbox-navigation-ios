@@ -5,7 +5,7 @@ public struct DestinationOptions {
     
     public var primaryText: String?
     
-    public var secondaryText: String?
+    var secondaryText: String?
     
     public private(set) var waypoints: [Waypoint]
     

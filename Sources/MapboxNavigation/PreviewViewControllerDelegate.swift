@@ -20,4 +20,7 @@ public protocol PreviewViewControllerDelegate: AnyObject {
     
     func previewViewController(_ previewViewController: PreviewViewController,
                                bottomBannerViewControllerFor state: PreviewViewController.State) -> UIViewController?
+    
+    func previewViewController(_ previewViewController: PreviewViewController,
+                               willPresent destinationText: NSAttributedString) -> NSAttributedString?
 }

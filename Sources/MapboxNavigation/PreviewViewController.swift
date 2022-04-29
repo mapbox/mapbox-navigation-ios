@@ -261,7 +261,9 @@ open class PreviewViewController: UIViewController {
         addDestinationAnnotations(for: coordinates)
         
         if let primaryText = destinationOptions.primaryText {
-            (presentedBottomBannerViewController as? DestinationPreviewViewController)?.destinationLabel.text = primaryText
+            let primaryAttributedString = NSAttributedString(string: primaryText)
+            (presentedBottomBannerViewController as? DestinationPreviewViewController)?.destinationLabel.attributedText =
+            delegate?.previewViewController(self, willPresent: primaryAttributedString) ?? primaryAttributedString
         }
     }
     
