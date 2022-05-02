@@ -399,7 +399,6 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         setupStyleManager()
         
         observeNotifications(navigationService)
-        updateManeuvers(navigationService.routeProgress)
         navigationService.start()
         carPlayManager.delegate?.carPlayManager(carPlayManager, didBeginNavigationWith: navigationService)
         currentLegIndexMapped = navigationService.router.routeProgress.legIndex
