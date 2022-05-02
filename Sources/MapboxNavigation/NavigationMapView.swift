@@ -130,17 +130,7 @@ open class NavigationMapView: UIView {
     
     var currentLineGradientStops = [Double: UIColor]()
     var currentRestrictedAreasStops = [Double: UIColor]()
-    var routeLineTracksTraversal: Bool = false {
-        didSet {
-            if routeLineTracksTraversal, let route = self.routes?.first {
-                initPrimaryRoutePoints(route: route)
-                setUpLineGradientStops(along: route)
-            } else {
-                removeLineGradientStops()
-            }
-            updateRestrictedAreasGradientStops(along: self.routes?.first)
-        }
-    }
+    var routeLineTracksTraversal: Bool = false
     
     var showsRoute: Bool {
         get {
@@ -160,6 +150,41 @@ open class NavigationMapView: UIView {
             
             return true
         }
+    }
+    
+    /**
+     When called during active navigation, the part of the route that has been traversed will be
+     rendered with full transparency, to give the illusion of a
+     disappearing route. To customize the color that appears on the
+     traversed section of a route, override the `traversedRouteColor` property
+     for the `NavigationMapView.appearance()`.
+     
+     To update the route line during active navigation, add observers for `routeControllerDidRefreshRoute`,
+     `routeControllerDidReroute` and `routeControllerProgressDidChange` from `NotificationCenter`.
+     And also call `updateRouteLine(routeProgress:coordinate:redraw:)` to update the route line.
+     */
+    public func turnOnRouteLineTracksTraversal() {
+        routeLineTracksTraversal = true
+        updateRouteLineWithRouteLineTracksTraversal()
+    }
+    
+    /**
+     When called during active navigation, the whole route will be shown without traversed
+     part disappearing effect.
+     */
+    public func turnOffRouteLineTracksTraversal() {
+        routeLineTracksTraversal = false
+        updateRouteLineWithRouteLineTracksTraversal()
+    }
+    
+    func updateRouteLineWithRouteLineTracksTraversal() {
+        if routeLineTracksTraversal, let route = self.routes?.first {
+            initPrimaryRoutePoints(route: route)
+            setUpLineGradientStops(along: route)
+        } else {
+            removeLineGradientStops()
+        }
+        updateRestrictedAreasGradientStops(along: self.routes?.first)
     }
     
     /**

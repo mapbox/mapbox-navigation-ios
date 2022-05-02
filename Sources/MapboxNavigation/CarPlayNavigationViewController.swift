@@ -62,7 +62,11 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     public var routeLineTracksTraversal: Bool = false {
         didSet {
-            navigationMapView?.routeLineTracksTraversal = routeLineTracksTraversal
+            if routeLineTracksTraversal {
+                navigationMapView?.turnOnRouteLineTracksTraversal()
+            } else {
+                navigationMapView?.turnOffRouteLineTracksTraversal()
+            }
         }
     }
     
@@ -687,18 +691,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         if legIndex != currentLegIndexMapped {
             navigationMapView?.showWaypoints(on: routeProgress.route, legIndex: legIndex)
-            navigationMapView?.show([routeProgress.route], legIndex: legIndex)
             currentLegIndexMapped = legIndex
         }
         
-        if routeLineTracksTraversal {
-            if routeProgress.routeIsComplete {
-                navigationMapView?.removeRoutes()
-            }
-            navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-            navigationMapView?.travelAlongRouteLine(to: location.coordinate)
-        }
-
+        navigationMapView?.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate, redraw: true)
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
@@ -730,7 +726,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     @objc func refresh(_ notification: NSNotification) {
-        navigationMapView?.updateRouteLine(routeProgress: navigationService.routeProgress, coordinate: navigationService.router.location?.coordinate)
+        navigationMapView?.updateRouteLine(routeProgress: navigationService.routeProgress,
+                                           coordinate: navigationService.router.location?.coordinate,
+                                           redraw: true)
     }
     
     @objc func simulationStateDidChange(_ notification: NSNotification) {
@@ -782,7 +780,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         let nextStep = progress.currentLegProgress.stepIndex + 1
         
         navigationMapView?.addArrow(route: progress.route, legIndex: legIndex, stepIndex: nextStep)
-        navigationMapView?.updateRouteLine(routeProgress: progress, coordinate: navigationService.router.location?.coordinate)
+        navigationMapView?.updateRouteLine(routeProgress: progress,
+                                           coordinate: navigationService.router.location?.coordinate,
+                                           redraw: true)
         navigationMapView?.showWaypoints(on: progress.route, legIndex: legIndex)
     }
     

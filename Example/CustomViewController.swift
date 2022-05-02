@@ -66,6 +66,7 @@ class CustomViewController: UIViewController {
         
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
+            self?.navigationMapView.turnOnRouteLineTracksTraversal()
             self?.navigationMapView.show([route])
         })
         
@@ -102,12 +103,14 @@ class CustomViewController: UIViewController {
     func resumeNotifications() {
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(refresh(_:)), name: .routeControllerDidRefreshRoute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(updateInstructionsBanner(notification:)), name: .routeControllerDidPassVisualInstructionPoint, object: navigationService.router)
     }
 
     func suspendNotifications() {
         NotificationCenter.default.removeObserver(self, name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidReroute, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .routeControllerDidRefreshRoute, object: nil)
         NotificationCenter.default.removeObserver(self, name: .routeControllerDidPassVisualInstructionPoint, object: nil)
     }
 
@@ -131,6 +134,7 @@ class CustomViewController: UIViewController {
         
         // Update `UserCourseView` to be placed on the most recent location.
         navigationMapView.moveUserLocation(to: location, animated: true)
+        navigationMapView.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate)
     }
     
     @objc func updateInstructionsBanner(notification: NSNotification) {
@@ -145,8 +149,16 @@ class CustomViewController: UIViewController {
     // Fired when the user is no longer on the route.
     // Update the route on the map.
     @objc func rerouted(_ notification: NSNotification) {
-        self.navigationMapView.removeWaypoints()
-        self.navigationMapView.show([navigationService.route])
+        navigationMapView.removeWaypoints()
+        navigationMapView.updateRouteLine(routeProgress: navigationService.routeProgress,
+                                          coordinate: navigationService.router.location?.coordinate,
+                                          redraw: true)
+    }
+    
+    @objc func refresh(_ notification: NSNotification) {
+        navigationMapView.updateRouteLine(routeProgress: navigationService.routeProgress,
+                                          coordinate: navigationService.router.location?.coordinate,
+                                          redraw: true)
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {

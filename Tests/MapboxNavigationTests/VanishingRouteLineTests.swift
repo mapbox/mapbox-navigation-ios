@@ -154,7 +154,7 @@ class VanishingRouteLineTests: TestCase {
         let route = routeProgress.route
         
         let coordinate = route.shape!.coordinates[1]
-        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.turnOnRouteLineTracksTraversal()
         navigationMapView.show([route])
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         navigationMapView.updateFractionTraveled(coordinate: coordinate)
@@ -200,7 +200,7 @@ class VanishingRouteLineTests: TestCase {
         let coordinate = route.shape!.coordinates[1]
         
         navigationMapView.routes = [route]
-        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.turnOnRouteLineTracksTraversal()
         navigationMapView.show([route], legIndex: 0)
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
 
@@ -225,7 +225,7 @@ class VanishingRouteLineTests: TestCase {
         let coordinate = route.shape!.coordinates[1]
         
         navigationMapView.routes = [route]
-        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.turnOnRouteLineTracksTraversal()
         navigationMapView.show([route], legIndex: 0)
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         setUpCameraZoom(at: 16.0)
@@ -239,7 +239,7 @@ class VanishingRouteLineTests: TestCase {
         do {
             // During the active navigation, when disabling `routeLineTracksTraversal`, the new route line will be generated,
             // and the `fractionTraveled` will be 0.0.
-            navigationMapView.routeLineTracksTraversal = false
+            navigationMapView.turnOffRouteLineTracksTraversal()
             guard let nonTrackingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
                 XCTFail("Route line layer should be added.")
                 return
@@ -250,7 +250,7 @@ class VanishingRouteLineTests: TestCase {
             
             // During the active navigation, when enabling `routeLineTracksTraversal`, the new line gradient stops of current route will be generated.
             // The `fractionTraveled` and the route line are expected to be updated after a new `routeProgress` and location update comes in
-            navigationMapView.routeLineTracksTraversal = true
+            navigationMapView.turnOnRouteLineTracksTraversal()
             navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             navigationMapView.travelAlongRouteLine(to: coordinate)
             guard let trackingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
@@ -270,7 +270,7 @@ class VanishingRouteLineTests: TestCase {
         // When different congestion levels have same color, the line gradient stops are expected to combine these congestion level.
         navigationMapView.trafficModerateColor = navigationMapView.trafficUnknownColor
         navigationMapView.routes = [route]
-        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.turnOnRouteLineTracksTraversal()
         navigationMapView.show([route], legIndex: 0)
         
         let expectedGradientStops = [0.0 : navigationMapView.trafficUnknownColor]
@@ -288,7 +288,7 @@ class VanishingRouteLineTests: TestCase {
         setUpCameraZoom(at: 16.0)
         
         navigationMapView.routes = [route]
-        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.turnOnRouteLineTracksTraversal()
         navigationMapView.show([route], legIndex: 0)
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         navigationMapView.travelAlongRouteLine(to: coordinate)
@@ -324,7 +324,7 @@ class VanishingRouteLineTests: TestCase {
             // During active navigation with `crossfadesCongestionSegments` enabled but `routeLineTracksTraversal` disabled,
             // the route line should be re-generated directly.
             expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625797, [rgba, 0.0, 0.0, 255.0, 1.0], 0.9425498181625799, [rgba, 255.0, 0.0, 0.0, 1.0]]"
-            navigationMapView.routeLineTracksTraversal = false
+            navigationMapView.turnOffRouteLineTracksTraversal()
             navigationMapView.crossfadesCongestionSegments = false
             
             guard let trackingRouteLineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
@@ -387,7 +387,7 @@ class VanishingRouteLineTests: TestCase {
         let coordinate = CLLocationCoordinate2D(latitude: 37.7577627, longitude: -122.4727051)
         
         navigationMapView.routes = [route]
-        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.turnOnRouteLineTracksTraversal()
         navigationMapView.show([route], legIndex: 0)
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
         setUpCameraZoom(at: 16.0)
@@ -409,7 +409,7 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.traversedRouteColor = UIColor.clear
         setUpCameraZoom(at: 16.0)
         
-        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.turnOnRouteLineTracksTraversal()
         navigationMapView.show([route], legIndex: 0)
         navigationMapView.addArrow(route: route, legIndex: 0, stepIndex: 2)
         navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)

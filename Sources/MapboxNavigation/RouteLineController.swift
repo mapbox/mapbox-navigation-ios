@@ -38,7 +38,9 @@ extension NavigationMapView {
             guard navigationViewData.containerViewController.isViewLoaded else { return }
             
             guard !navigationMapView.showsRoute else { return }
-            navigationMapView.updateRouteLine(routeProgress: router.routeProgress, coordinate: router.location?.coordinate)
+            navigationMapView.updateRouteLine(routeProgress: router.routeProgress,
+                                              coordinate: router.location?.coordinate,
+                                              redraw: true)
             navigationMapView.showWaypoints(on: router.route, legIndex: router.routeProgress.legIndex)
             
             let currentLegProgress = router.routeProgress.currentLegProgress
@@ -69,7 +71,9 @@ extension NavigationMapView {
             navigationMapView.removeWaypoints()
             
             navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
-            navigationMapView.updateRouteLine(routeProgress: router.routeProgress, coordinate: location?.coordinate)
+            navigationMapView.updateRouteLine(routeProgress: router.routeProgress,
+                                              coordinate: location?.coordinate,
+                                              redraw: true)
             navigationMapView.showWaypoints(on: route)
             
             if annotatesSpokenInstructions {
@@ -85,8 +89,6 @@ extension NavigationMapView {
             navigationMapView.updatePreferredFrameRate(for: progress)
             if currentLegIndexMapped != legIndex {
                 navigationMapView.showWaypoints(on: route, legIndex: legIndex)
-                navigationMapView.show([route], legIndex: legIndex)
-                
                 currentLegIndexMapped = legIndex
             }
             
@@ -99,14 +101,7 @@ extension NavigationMapView {
                 navigationMapView.showVoiceInstructionsOnMap(route: route)
             }
             
-            if routeLineTracksTraversal {
-                if progress.routeIsComplete && (navigationMapView.routes != nil) {
-                    navigationMapView.removeRoutes()
-                    navigationMapView.removeContinuousAlternativesRoutes()
-                }
-                navigationMapView.updateUpcomingRoutePointIndex(routeProgress: progress)
-                navigationMapView.travelAlongRouteLine(to: location.coordinate)
-            }
+            navigationMapView.updateRouteLine(routeProgress: progress, coordinate: location.coordinate)
         }
         
         private func updateMapOverlays(for routeProgress: RouteProgress) {
@@ -133,10 +128,11 @@ extension NavigationMapView {
                 navigationMapView.routeLineTracksTraversal
             }
             set {
-                navigationMapView.routeLineTracksTraversal = newValue
                 if newValue {
+                    navigationMapView.turnOnRouteLineTracksTraversal()
                     navigationMapView.mapView.location.addLocationConsumer(newConsumer: self)
                 } else {
+                    navigationMapView.turnOffRouteLineTracksTraversal()
                     navigationMapView.mapView.location.removeLocationConsumer(consumer: self)
                 }
             }
@@ -149,7 +145,9 @@ extension NavigationMapView {
         }
         
         func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
-            navigationMapView.updateRouteLine(routeProgress: routeProgress, coordinate: router.location?.coordinate)
+            navigationMapView.updateRouteLine(routeProgress: routeProgress,
+                                              coordinate: router.location?.coordinate,
+                                              redraw: true)
         }
     }
 }
