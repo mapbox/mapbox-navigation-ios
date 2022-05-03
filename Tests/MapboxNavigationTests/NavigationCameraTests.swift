@@ -157,6 +157,9 @@ extension LocationProviderMock: LocationProviderDelegate {
 
 class NavigationCameraTests: TestCase {
     
+    let testCoordinates = [CLLocationCoordinate2D(latitude: 0, longitude: 0),
+                           CLLocationCoordinate2D(latitude: 0, longitude: 0)]
+    
     override func setUp() {
         super.setUp()
     }
@@ -368,7 +371,7 @@ class NavigationCameraTests: TestCase {
         }
         
         let routeProgress = RouteProgress(route: route,
-                                          options: NavigationRouteOptions(coordinates: []))
+                                          options: NavigationRouteOptions(coordinates: testCoordinates))
         
         // Since second `stepIndex` is right after sharp maneuver default navigation camera behavior
         // will change `CameraOptions.pitch` to `FollowingCameraOptions.defaultPitch`.
@@ -484,7 +487,7 @@ class NavigationCameraTests: TestCase {
         }
         
         let routeProgress = RouteProgress(route: route,
-                                          options: NavigationRouteOptions(coordinates: []))
+                                          options: NavigationRouteOptions(coordinates: testCoordinates))
         
         // Change `stepIndex` to simulate `CameraOptions` change. Since update to all `CameraOptions`
         // parameters is not allowed, this change will have no effect.
@@ -535,7 +538,7 @@ class NavigationCameraTests: TestCase {
         }
         
         let routeProgress = RouteProgress(route: route,
-                                          options: NavigationRouteOptions(coordinates: []))
+                                          options: NavigationRouteOptions(coordinates: testCoordinates))
         
         let expectation = self.expectation(forNotification: .routeControllerProgressDidChange,
                                            object: self) { _ in

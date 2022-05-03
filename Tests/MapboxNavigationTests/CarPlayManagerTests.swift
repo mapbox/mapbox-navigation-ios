@@ -254,6 +254,7 @@ class CarPlayManagerTests: TestCase {
         
         let carPlayManagerDelegateMock = CarPlayManagerDelegateMock()
         let routeOptions = RouteOptions(coordinates: [
+            CLLocationCoordinate2D(latitude: 0, longitude: 0),
             CLLocationCoordinate2D(latitude: 0, longitude: 0)
         ])
         let carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
