@@ -25,6 +25,12 @@ open class BannerContainerView: UIView {
     
     var expansionOffset: CGFloat = 50.0
     
+    var cornerRadius: CGFloat = 0.0 {
+        didSet {
+            layer.cornerRadius = cornerRadius
+        }
+    }
+    
     var topSafeAreaInset: CGFloat = 0.0
     
     var bottomSafeAreaInset: CGFloat = 0.0
@@ -65,6 +71,8 @@ open class BannerContainerView: UIView {
         self.type = type
         
         super.init(frame: frame)
+        
+        clipsToBounds = true
     }
     
     public required init?(coder: NSCoder) {

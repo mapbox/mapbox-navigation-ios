@@ -511,8 +511,7 @@ import MapboxDirections
     
     func setupBottomBannerContainerView() {
         // Round top left and top right corners of the bottom container view.
-        navigationView.bottomBannerContainerView.clipsToBounds = true
-        navigationView.bottomBannerContainerView.layer.cornerRadius = 10.0
+        navigationView.bottomBannerContainerView.cornerRadius = 10.0
         navigationView.bottomBannerContainerView.layer.maskedCorners = [
             .layerMinXMinYCorner,
             .layerMaxXMinYCorner

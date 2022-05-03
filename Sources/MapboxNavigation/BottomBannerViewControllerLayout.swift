@@ -2,29 +2,10 @@ import UIKit
 
 extension BottomBannerViewController {
     
-    func setupRootViews() {
+    func setupBottomBanner() {
         let children = [bottomBannerView, bottomPaddingView]
         view.addSubviews(children)
-        setupRootViewConstraints()
-    }
-    
-    func setupRootViewConstraints() {
-        let constraints = [
-            bottomBannerView.topAnchor.constraint(equalTo: view.topAnchor),
-            bottomBannerView.bottomAnchor.constraint(equalTo: bottomPaddingView.topAnchor),
-            bottomBannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomBannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            
-            bottomPaddingView.topAnchor.constraint(equalTo: view.safeBottomAnchor),
-            bottomPaddingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            bottomPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            bottomPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-        ]
         
-        NSLayoutConstraint.activate(constraints)
-    }
-    
-    func setupBottomBanner() {
         let timeRemainingLabel: TimeRemainingLabel = .forAutoLayout()
         timeRemainingLabel.font = .systemFont(ofSize: 28, weight: .medium)
         bottomBannerView.addSubview(timeRemainingLabel)
@@ -42,6 +23,9 @@ extension BottomBannerViewController {
         let cancelButton = CancelButton(type: .custom)
         cancelButton.translatesAutoresizingMaskIntoConstraints = false
         cancelButton.setImage(UIImage(named: "close", in: .mapboxNavigation, compatibleWith: nil), for: .normal)
+        cancelButton.addTarget(self,
+                               action: #selector(BottomBannerViewController.cancel(_:)),
+                               for: .touchUpInside)
         bottomBannerView.addSubview(cancelButton)
         self.cancelButton = cancelButton
         
@@ -57,7 +41,24 @@ extension BottomBannerViewController {
         bottomBannerView.addSubview(trailingSeparatorView)
         self.trailingSeparatorView = trailingSeparatorView
         
+        setupRootViewConstraints()
         setupConstraints()
+    }
+    
+    func setupRootViewConstraints() {
+        let constraints = [
+            bottomBannerView.topAnchor.constraint(equalTo: view.topAnchor),
+            bottomBannerView.bottomAnchor.constraint(equalTo: bottomPaddingView.topAnchor),
+            bottomBannerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomBannerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            
+            bottomPaddingView.topAnchor.constraint(equalTo: view.safeBottomAnchor),
+            bottomPaddingView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomPaddingView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomPaddingView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        ]
+        
+        NSLayoutConstraint.activate(constraints)
     }
     
     fileprivate func setupConstraints() {

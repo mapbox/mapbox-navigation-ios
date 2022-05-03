@@ -4,7 +4,8 @@ import MapboxCoreNavigation
 import MapboxDirections
 
 /**
- A user interface element designed to display the estimated arrival time, distance, and time remaining, as well as give the user a control the cancel the navigation session.
+ A user interface element designed to display the estimated arrival time, distance, and time remaining,
+ as well as give the user a control the cancel the navigation session.
  */
 @IBDesignable
 open class BottomBannerViewController: UIViewController, NavigationComponent {
@@ -105,10 +106,10 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     /**
      Initializes a `BottomBannerViewController` that provides ETA, Distance to arrival, and Time to arrival.
      
-     - parameter aDecoder: Ignored.
+     - parameter decoder: Ignored.
      */
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+    required public init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
         commonInit()
     }
     
@@ -123,19 +124,8 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        setupRootViews()
+        
         setupBottomBanner()
-        cancelButton.addTarget(self, action: #selector(BottomBannerViewController.cancel(_:)), for: .touchUpInside)
-    }
-    
-    private func resumeNotifications() {
-        NotificationCenter.default.addObserver(self, selector: #selector(removeTimer), name: UIApplication.didEnterBackgroundNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(resetETATimer), name: UIApplication.willEnterForegroundNotification, object: nil)
-    }
-    
-    private func suspendNotifications() {
-        NotificationCenter.default.removeObserver(self, name: UIApplication.willEnterForegroundNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIApplication.didEnterBackgroundNotification, object: nil)
     }
     
     func commonInit() {
@@ -157,11 +147,17 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     
     // MARK: NavigationComponent support
     
-    public func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+    public func navigationService(_ service: NavigationService,
+                                  didRerouteAlong route: Route,
+                                  at location: CLLocation?,
+                                  proactive: Bool) {
         refreshETA()
     }
     
-    public func navigationService(_ service: NavigationService, didUpdate progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
+    public func navigationService(_ service: NavigationService,
+                                  didUpdate progress: RouteProgress,
+                                  with location: CLLocation,
+                                  rawLocation: CLLocation) {
         resetETATimer()
         updateETA(routeProgress: progress)
         previousProgress = progress
@@ -186,7 +182,12 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     }
     
     func updateETA(routeProgress: RouteProgress) {
-        guard let arrivalDate = NSCalendar.current.date(byAdding: .second, value: Int(routeProgress.durationRemaining), to: Date()) else { return }
+        guard let arrivalDate = NSCalendar.current.date(byAdding: .second,
+                                                        value: Int(routeProgress.durationRemaining),
+                                                        to: Date()) else {
+            return
+        }
+        
         arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate)
 
         if routeProgress.durationRemaining < 5 {
@@ -196,9 +197,14 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
         }
 
         dateComponentsFormatter.unitsStyle = routeProgress.durationRemaining < 3600 ? .short : .abbreviated
-
-        if let hardcodedTime = dateComponentsFormatter.string(from: 61), routeProgress.durationRemaining < 60 {
-            timeRemainingLabel.text = String.localizedStringWithFormat(NSLocalizedString("LESS_THAN", bundle: .mapboxNavigation, value: "<%@", comment: "Format string for a short distance or time less than a minimum threshold; 1 = duration remaining"), hardcodedTime)
+        
+        if let hardcodedTime = dateComponentsFormatter.string(from: 61),
+           routeProgress.durationRemaining < 60 {
+            let timeText = NSLocalizedString("LESS_THAN",
+                                             bundle: .mapboxNavigation,
+                                             value: "<%@",
+                                             comment: "Format string for a short distance or time less than a minimum threshold; 1 = duration remaining")
+            timeRemainingLabel.text = String.localizedStringWithFormat(timeText, hardcodedTime)
         } else {
             timeRemainingLabel.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
         }
