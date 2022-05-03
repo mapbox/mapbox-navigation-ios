@@ -26,6 +26,7 @@ class InstructionsCardSnapshotTests: TestCase {
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
         let subject = InstructionsCardViewController(nibName: nil, bundle: nil)
+        subject.spriteRepository = SpriteRepositoryStub()
         
         host.view.addSubview(container)
         constrain(container, to: host.view)
@@ -47,6 +48,7 @@ class InstructionsCardSnapshotTests: TestCase {
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
         let subject = InstructionsCardViewController(nibName: nil, bundle: nil)
+        subject.spriteRepository = SpriteRepositoryStub()
         
         host.view.addSubview(container)
         constrain(container, to: host.view)
@@ -70,6 +72,7 @@ class InstructionsCardSnapshotTests: TestCase {
         let host = UIViewController(nibName: nil, bundle: nil)
         let container = UIView.forAutoLayout()
         let subject = InstructionsCardViewController(nibName: nil, bundle: nil)
+        subject.spriteRepository = SpriteRepositoryStub()
         
         host.view.addSubview(container)
         constrain(container, to: host.view)

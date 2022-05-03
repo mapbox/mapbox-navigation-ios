@@ -6,25 +6,49 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 
 class SpriteRepositoryTests: TestCase {
-    lazy var repository: SpriteRepository = {
-        let repo = SpriteRepository()
-        let config = URLSessionConfiguration.default
-        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
-        repo.sessionConfiguration = config
-        return repo
-    }()
+    var repository: SpriteRepository!
     
     override func setUp() {
         super.setUp()
         self.continueAfterFailure = false
-
-        ImageLoadingURLProtocolSpy.reset()
-        repository.resetCache()
+        generateSpriteRepo()
     }
 
     override func tearDown() {
         super.tearDown()
+        repository = nil
+        ImageLoadingURLProtocolSpy.reset()
     }
+    
+    func generateSpriteRepo() {
+        repository = SpriteRepository()
+        let config = URLSessionConfiguration.default
+        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
+        repository.sessionConfiguration = config
+    }
+    
+    func storeSpriteData(styleType: StyleType) {
+         let styleID = (styleType == .day) ? "/mapbox/navigation-day-v1" : "/mapbox/navigation-night-v1"
+         let shieldImage = (styleType == .day) ? ShieldImage.shieldDay : ShieldImage.shieldNight
+         guard let shieldData = shieldImage.image.pngData(),
+               let spriteRequestURL = repository.spriteURL(isImage: true, styleID: styleID),
+               let metadataRequestURL = repository.spriteURL(isImage: false, styleID: styleID) else {
+                   XCTFail("Failed to update SpriteRepository.")
+                   return
+               }
+         ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
+         ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
+     }
+
+     func storeLegacy(image: ShieldImage) {
+         let scale = Int(VisualInstruction.Component.scale)
+         guard let legacyShieldData = image.image.pngData(),
+               let imageBaseURL = URL(string: image.baseURL.absoluteString + "@\(scale)x.png") else {
+             XCTFail("No data or URL found for legacy image.")
+             return
+         }
+         ImageLoadingURLProtocolSpy.registerData(legacyShieldData, forURL: imageBaseURL)
+     }
     
     func testDownLoadingSpriteInfo() {
         let fakeURL = URL(string: "http://an.image.url/spriteInfo.json")!
@@ -85,7 +109,7 @@ class SpriteRepositoryTests: TestCase {
     }
     
     func testDownLoadingLegacyShield() {
-        repository.storeLegacy(image: .i280)
+        storeLegacy(image: .i280)
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL)
         let semaphore = DispatchSemaphore(value: 0)
         var legacyShield: UIImage?
@@ -121,8 +145,8 @@ class SpriteRepositoryTests: TestCase {
     }
     
     func testUpdateRepresentation() {
-        repository.storeSpriteData(styleType: .day)
-        repository.storeLegacy(image: .i280)
+        storeSpriteData(styleType: .day)
+        storeLegacy(image: .i280)
         guard let styleID = repository.styleURI.rawValue.components(separatedBy: "styles")[safe: 1] else {
             XCTFail("Failed to form request to update SpriteRepository.")
             return
@@ -173,8 +197,8 @@ class SpriteRepositoryTests: TestCase {
     }
     
     func testPartiallySpriteUpdate() {
-        repository.storeSpriteData(styleType: .day)
-        repository.storeLegacy(image: .i280)
+        storeSpriteData(styleType: .day)
+        storeLegacy(image: .i280)
         guard let styleID = repository.styleURI.rawValue.components(separatedBy: "styles")[safe: 1] else {
             XCTFail("Failed to form request to update SpriteRepository.")
             return
@@ -219,27 +243,34 @@ class SpriteRepositoryTests: TestCase {
 
 }
 
-extension SpriteRepository {
-    func storeSpriteData(styleType: StyleType) {
-        let styleID = (styleType == .day) ? "/mapbox/navigation-day-v1" : "/mapbox/navigation-night-v1"
-        let shieldImage = (styleType == .day) ? ShieldImage.shieldDay : ShieldImage.shieldNight
-        guard let shieldData = shieldImage.image.pngData(),
-              let spriteRequestURL = spriteURL(isImage: true, styleID: styleID),
-              let metadataRequestURL = spriteURL(isImage: false, styleID: styleID) else {
-                  XCTFail("Failed to update SpriteRepository.")
-                  return
-              }
-        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
+class SpriteRepositoryStub: SpriteRepository {
+    override func getShieldIcon(shield: VisualInstruction.Component.ShieldRepresentation?) -> UIImage? {
+        return shield?.text == "280" ? ShieldImage.i280.image : ShieldImage.us101.image
     }
-    
-    func storeLegacy(image: ShieldImage) {
-        let scale = Int(VisualInstruction.Component.scale)
-        guard let legacyShieldData = image.image.pngData(),
-              let imageBaseURL = URL(string: image.baseURL.absoluteString + "@\(scale)x.png") else {
-            XCTFail("No data or URL found for legacy image.")
-            return
-        }
-        ImageLoadingURLProtocolSpy.registerData(legacyShieldData, forURL: imageBaseURL)
+
+    override func getLegacyShield(with cacheKey: String?) -> UIImage? {
+        return ShieldImage.i280.image
+    }
+
+    override func getSpriteImage() -> UIImage? {
+        return (styleURI == .navigationNight) ? ShieldImage.shieldNight.image : ShieldImage.shieldDay.image
+    }
+
+    override func updateStyle(styleURI: StyleURI?, completion: @escaping CompletionHandler) {
+        self.styleURI = styleURI ?? self.styleURI
+        completion()
+    }
+
+    override func updateInstruction(for instruction: VisualInstructionBanner, completion: @escaping CompletionHandler) {
+        completion()
+    }
+
+    override func updateRepresentation(for representation: VisualInstruction.Component.ImageRepresentation? = nil, completion: @escaping CompletionHandler) {
+        completion()
+    }
+
+    override func updateSprite(styleURI: StyleURI, completion: @escaping CompletionHandler) {
+        self.styleURI = styleURI
+        completion()
     }
 }

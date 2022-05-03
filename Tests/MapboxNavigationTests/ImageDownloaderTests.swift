@@ -16,9 +16,6 @@ class ImageDownloaderTests: TestCase {
     override func setUp() {
         super.setUp()
         self.continueAfterFailure = false
-
-        ImageLoadingURLProtocolSpy.reset()
-
         let imageData = ShieldImage.i280.image.pngData()!
         ImageLoadingURLProtocolSpy.registerData(imageData, forURL: imageURL)
 
@@ -29,6 +26,7 @@ class ImageDownloaderTests: TestCase {
         downloader = nil
 
         super.tearDown()
+        ImageLoadingURLProtocolSpy.reset()
     }
 
     func testDownloadingAnImage() {

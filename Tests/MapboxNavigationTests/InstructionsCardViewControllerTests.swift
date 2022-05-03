@@ -25,6 +25,7 @@ class InstructionsCardViewControllerTests: TestCase {
             let hostViewController = UIViewController(nibName: nil, bundle: nil)
             let containerView = UIView.forAutoLayout()
             let instructionsCardViewController = InstructionsCardViewController(nibName: nil, bundle: nil)
+            instructionsCardViewController.spriteRepository = SpriteRepositoryStub()
             let instructionsCardCollectionDelegateMock = InstructionsCardCollectionDelegateMock()
             instructionsCardViewController.cardCollectionDelegate = instructionsCardCollectionDelegateMock
             

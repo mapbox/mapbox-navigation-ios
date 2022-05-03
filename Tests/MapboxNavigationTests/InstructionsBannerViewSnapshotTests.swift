@@ -7,13 +7,7 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 
 class InstructionsBannerViewSnapshotTests: TestCase {
-    lazy var spriteRepository: SpriteRepository = {
-        let repo = SpriteRepository()
-        let config = URLSessionConfiguration.default
-        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
-        repo.sessionConfiguration = config
-        return repo
-    }()
+    var spriteRepository: SpriteRepository!
 
     let asyncTimeout: TimeInterval = 2.0
 
@@ -24,17 +18,37 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
         NavigationSettings.shared.distanceUnit = .mile
         DayStyle().apply()
+        generateSpriteRepository()
         prepareSpriteRepository()
     }
 
     override func tearDown() {
-        spriteRepository.resetCache()
-        ImageLoadingURLProtocolSpy.reset()
         super.tearDown()
+        spriteRepository = nil
+        ImageLoadingURLProtocolSpy.reset()
+    }
+    
+    func generateSpriteRepository() {
+        spriteRepository = SpriteRepository()
+        let config = URLSessionConfiguration.default
+        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
+        spriteRepository.sessionConfiguration = config
     }
     
     func prepareSpriteRepository() {
-        spriteRepository.storeSpriteData(styleType: .day)
+        var styleID = "/mapbox/navigation-day-v1"
+        spriteRepository.infoCache.store(Fixture.JSONFromFileNamed(name: "sprite-info"), spriteKey: styleID)
+        spriteRepository.spriteCache.store(ShieldImage.shieldDay.image, forKey: styleID, toDisk: false, completion: nil)
+
+        styleID = "/mapbox/navigation-night-v1"
+        guard let shieldData = ShieldImage.shieldNight.image.pngData(),
+              let spriteRequestURL = spriteRepository.spriteURL(isImage: true, styleID: styleID),
+              let metadataRequestURL = spriteRepository.spriteURL(isImage: false, styleID: styleID) else {
+                  XCTFail("Failed to update SpriteRepository.")
+                  return
+              }
+        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
+        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
         
         let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
         let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
@@ -134,7 +148,6 @@ class InstructionsBannerViewSnapshotTests: TestCase {
         ]
         let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
         
-        spriteRepository.storeSpriteData(styleType: .night)
         let expectation = XCTestExpectation(description: "Download Sprite callback.")
         spriteRepository.updateStyle(styleURI: .navigationNight) {
             expectation.fulfill()

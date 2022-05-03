@@ -37,14 +37,7 @@ func makeVisualInstruction(_ maneuverType: ManeuverType = .arrive,
 class InstructionsBannerViewIntegrationTests: TestCase {
     private lazy var reverseDelegate = TextReversingDelegate()
     private lazy var silentDelegate = DefaultBehaviorDelegate()
-    
-    lazy var spriteRepository: SpriteRepository = {
-        let repo = SpriteRepository()
-        let config = URLSessionConfiguration.default
-        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
-        repo.sessionConfiguration = config
-        return repo
-    }()
+    var spriteRepository: SpriteRepository!
 
     lazy var instructions: [VisualInstruction.Component] = {
         let components: [VisualInstruction.Component] =  [
@@ -65,17 +58,46 @@ class InstructionsBannerViewIntegrationTests: TestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-        
-        spriteRepository.storeSpriteData(styleType: .day)
-        spriteRepository.storeLegacy(image: .i280)
-        spriteRepository.storeLegacy(image: .us101)
+        generateSpriteRepository()
+        prepareSpriteData()
     }
 
     override func tearDown() {
-        spriteRepository.resetCache()
-        ImageLoadingURLProtocolSpy.reset()
-
         super.tearDown()
+        spriteRepository = nil
+        ImageLoadingURLProtocolSpy.reset()
+    }
+    
+    func generateSpriteRepository() {
+        spriteRepository = SpriteRepository()
+        let config = URLSessionConfiguration.default
+        config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
+        spriteRepository.sessionConfiguration = config
+    }
+    
+    func prepareSpriteData() {
+        let styleID = "/mapbox/navigation-day-v1"
+        guard let shieldData = ShieldImage.shieldDay.image.pngData(),
+              let spriteRequestURL = spriteRepository.spriteURL(isImage: true, styleID: styleID),
+              let metadataRequestURL = spriteRepository.spriteURL(isImage: false, styleID: styleID) else {
+                  XCTFail("Failed to update SpriteRepository.")
+                  return
+              }
+        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
+        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
+
+        storeLegacy(image: .i280)
+        storeLegacy(image: .us101)
+    }
+
+    func storeLegacy(image: ShieldImage) {
+        let scale = Int(VisualInstruction.Component.scale)
+        guard let legacyShieldData = image.image.pngData(),
+              let imageBaseURL = URL(string: image.baseURL.absoluteString + "@\(scale)x.png") else {
+            XCTFail("No data or URL found for legacy image.")
+            return
+        }
+        ImageLoadingURLProtocolSpy.registerData(legacyShieldData, forURL: imageBaseURL)
     }
     
     func testCustomVisualInstructionDelegate() {

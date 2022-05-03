@@ -23,6 +23,7 @@ class StepsViewControllerTests: TestCase {
             let routeController = RouteController(alongRouteAtIndex: 0, in: response, options: Constants.options, routingProvider: MapboxRoutingProvider(.offline), dataSource: dataSource)
 
             let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
+            stepsViewController.delegate = self
 
             let firstCoord = routeController.routeProgress.nearbyShape.coordinates.first!
             let firstLocation = CLLocation(coordinate: firstCoord, altitude: 5, horizontalAccuracy: 10, verticalAccuracy: 5, course: 20, speed: 4, timestamp: Date())
@@ -69,6 +70,17 @@ class StepsViewControllerTests: TestCase {
                 }
             }
         }
+    }
+}
+
+extension StepsViewControllerTests: StepsViewControllerDelegate {
+    func stepsViewController(_ viewController: StepsViewController, didSelect legIndex: Int, stepIndex: Int, cell: StepTableViewCell) { }
+    func didDismissStepsViewController(_ viewController: StepsViewController) { }
+}
+
+extension StepsViewControllerTests: VisualInstructionDelegate {
+    public func label(_ label: InstructionLabel, willUpdate instruction: VisualInstruction) -> NSAttributedString? {
+        return label.attributedString(for: instruction, with: SpriteRepositoryStub())
     }
 }
 

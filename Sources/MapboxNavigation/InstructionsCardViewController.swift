@@ -55,7 +55,7 @@ open class InstructionsCardViewController: UIViewController {
     
     public private(set) var isInPreview = false
     
-    private var spriteRepository: SpriteRepository = .init()
+    var spriteRepository: SpriteRepository = .init()
     
     /**
      The InstructionsCardCollection delegate.

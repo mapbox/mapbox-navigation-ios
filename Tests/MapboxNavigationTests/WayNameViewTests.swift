@@ -20,20 +20,38 @@ class WayNameViewTests: TestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-
-        ImageLoadingURLProtocolSpy.reset()
-        wayNameView.label.spriteRepository.resetCache()
-        wayNameView.label.representation = nil
     }
 
     override func tearDown() {
         super.tearDown()
+        ImageLoadingURLProtocolSpy.reset()
+        wayNameView.label.spriteRepository.resetCache()
+        wayNameView.label.representation = nil
+    }
+    
+    func loadingURL(styleID: String) {
+        guard let spriteRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: true, styleID: styleID),
+              let metadataRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: false, styleID: styleID) else {
+                  XCTFail("Failed to form request to update SpriteRepository.")
+                  return
+        }
+
+        let scale = Int(VisualInstruction.Component.scale)
+        guard let shieldData = ShieldImage.shieldDay.image.pngData(),
+              let scaleShieldImageURL = URL(string: ShieldImage.i280.baseURL.absoluteString + "@\(scale)x.png") else {
+                  XCTFail("No data or URL found for shield image.")
+                  return
+              }
+
+        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
+        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
+        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: scaleShieldImageURL)
     }
     
     func testUpdateStyle() {
         let baseURL = wayNameView.label.spriteRepository.baseURL
-        wayNameView.label.spriteRepository.storeSpriteData(styleType: .night)
-        wayNameView.label.spriteRepository.storeLegacy(image: .i280)
+        let styleID = "/mapbox/navigation-night-v1"
+        loadingURL(styleID: styleID)
         
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: baseURL, name: "us-interstate", textColor: "white", text: "280")
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: shield)
@@ -61,8 +79,8 @@ class WayNameViewTests: TestCase {
     
     func testUpdateRoad() {
         let baseURL = wayNameView.label.spriteRepository.baseURL
-        wayNameView.label.spriteRepository.storeSpriteData(styleType: .day)
-        wayNameView.label.spriteRepository.storeLegacy(image: .i280)
+        let styleID = "/mapbox/navigation-day-v1"
+        loadingURL(styleID: styleID)
         
         var roadName = "I 280 North"
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: baseURL, name: "us-interstate", textColor: "white", text: "280")

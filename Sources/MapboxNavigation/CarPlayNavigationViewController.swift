@@ -87,7 +87,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     var carInterfaceController: CPInterfaceController
     
     private var isTraversingTunnel = false
-    private var spriteRepository: SpriteRepository = .init()
+    var spriteRepository: SpriteRepository = .init()
     
     private var safeTrailingSpeedLimitViewConstraint: NSLayoutConstraint!
     private var trailingSpeedLimitViewConstraint: NSLayoutConstraint!

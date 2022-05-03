@@ -52,6 +52,10 @@ class CarPlayNavigationViewControllerTests: TestCase {
                                                                               mapTemplate: mapTemplateMock,
                                                                               interfaceController: interfaceController,
                                                                               manager: carPlayManager)
+        _ = carPlayNavigationViewController.view
+        carPlayNavigationViewController.spriteRepository = SpriteRepositoryStub()
+        carPlayNavigationViewController.wayNameView.label.spriteRepository = SpriteRepositoryStub()
+        
         let trip = CPTrip(origin: MKMapItem(),
                           destination: MKMapItem(),
                           routeChoices: [])
