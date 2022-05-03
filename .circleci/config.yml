@@ -402,7 +402,10 @@ jobs:
           steps:
             - run:
                 name: Send code coverage
-                command: bash <(curl -s https://codecov.io/bash)
+                command: |
+                  curl -Os https://uploader.codecov.io/latest/macos/codecov
+                  chmod +x codecov
+                  ./codecov
       - notify-build-finished
 
   build-example:
