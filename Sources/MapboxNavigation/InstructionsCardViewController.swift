@@ -90,7 +90,8 @@ open class InstructionsCardViewController: UIViewController {
     lazy var junctionView: JunctionView = {
         let view: JunctionView = .forAutoLayout()
         view.isHidden = true
-        view.applyDefaultCornerRadiusShadow(cornerRadius: 4, shadowOpacity: 0.4)
+        view.layer.cornerRadius = Style.defaultCornerRadius
+        
         return view
     }()
     

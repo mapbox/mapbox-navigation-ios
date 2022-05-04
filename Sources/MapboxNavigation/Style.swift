@@ -9,6 +9,14 @@ import MapboxMaps
 @objc(MBStyle)
 open class Style: NSObject {
     
+    class var defaultBorderWidth: CGFloat {
+        2.0
+    }
+    
+    class var defaultCornerRadius: CGFloat {
+        10.0
+    }
+    
     // MARK: - General styling properties
     
     /**

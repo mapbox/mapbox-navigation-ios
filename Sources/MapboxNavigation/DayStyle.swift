@@ -22,7 +22,7 @@ open class DayStyle: Style {
         if let color = UIApplication.shared.delegate?.window??.tintColor {
             tintColor = color
         } else {
-            tintColor = .defaultTint
+            tintColor = .defaultTintColor
         }
         
         let regularAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
@@ -122,6 +122,8 @@ open class DayStyle: Style {
         
         FloatingButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         FloatingButton.appearance().tintColor = tintColor
+        FloatingButton.appearance().borderColor = .defaultBorderColor
+        FloatingButton.appearance().borderWidth = Style.defaultBorderWidth
         InstructionsBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).customBackgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).highlightedBackgroundColor = #colorLiteral(red: 0.26, green: 0.39, blue: 0.98, alpha: 1.0)
@@ -279,7 +281,7 @@ open class DayStyle: Style {
         // directly.
         switch traitCollection.userInterfaceStyle {
         case .dark:
-            let defaultColor = UIColor.white
+            let defaultColor = UIColor.defaultBackgroundColor
             
             let carPlayDarkTraitCollection = UITraitCollection(traitsFrom: [
                 carPlayTraitCollection,

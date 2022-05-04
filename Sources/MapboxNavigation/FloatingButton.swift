@@ -9,7 +9,7 @@ open class FloatingButton: Button {
     /**
      The default size of a floating button.
      */
-    public static let buttonSize = CGSize(width: 50, height: 50)
+    public static let buttonSize = CGSize(width: 70, height: 50)
     
     // Don't fight with the stack view (superview) when it tries to hide buttons.
     static let sizeConstraintPriority = UILayoutPriority(999.0)
@@ -38,6 +38,26 @@ open class FloatingButton: Button {
         }
     }
     
+    public required init?(coder decoder: NSCoder) {
+        super.init(coder: decoder)
+        
+        commonInit()
+    }
+    
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        
+        commonInit()
+    }
+    
+    private func commonInit() {
+        layer.cornerRadius = Style.defaultCornerRadius
+        tintColor = .defaultTintColor
+        borderColor = .defaultBorderColor
+        borderWidth = Style.defaultBorderWidth
+        backgroundColor = .defaultBackgroundColor
+    }
+    
     /**
      Return a `FloatingButton` with given images and size.
      
@@ -45,17 +65,28 @@ open class FloatingButton: Button {
      - parameter selectedImage: The `UIImage` of this button when selected.
      - parameter type: `UIButton` type. Defaults to `.custom`.
      - parameter size: The size of this button, or `FloatingButton.buttonSize` if this argument is not specified.
+     - parameter cornerRadius: Corner radius of the button.
      */
     public class func rounded<T: FloatingButton>(image: UIImage? = nil,
                                                  selectedImage: UIImage? = nil,
                                                  type: UIButton.ButtonType = .custom,
-                                                 size: CGSize = FloatingButton.buttonSize) -> T {
+                                                 size: CGSize = FloatingButton.buttonSize,
+                                                 cornerRadius: CGFloat = 10.0) -> T {
         let button = T.init(type: type)
         button.translatesAutoresizingMaskIntoConstraints = false
         button.constrainedSize = size
-        button.setImage(image, for: .normal)
-        if let selected = selectedImage { button.setImage(selected, for: .selected) }
-        button.applyDefaultCornerRadiusShadow(cornerRadius: size.width / 2)
+        
+        if let image = image {
+            button.setImage(image, for: .normal)
+        }
+        
+        if let selectedImage = selectedImage {
+            button.setImage(selectedImage, for: .selected)
+        }
+        
+        button.layer.cornerRadius = cornerRadius
+        button.imageView?.contentMode = .scaleAspectFit
+        
         return button
     }
 }
