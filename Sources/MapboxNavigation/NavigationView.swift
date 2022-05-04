@@ -66,22 +66,45 @@ open class NavigationView: UIView {
         navigationMapView.delegate = delegate
     }
     
-    var tileStoreLocation: TileStoreConfiguration.Location? = .default
-    private var _navigationMapView: NavigationMapView? = nil
+    //    var tileStoreLocation: TileStoreConfiguration.Location? = .default
+    
+    //    private var _navigationMapView: NavigationMapView? = nil
+    //    public lazy var navigationMapView: NavigationMapView = {
+    //        _navigationMapView?.frame = bounds
+    //        let navigationMapView = _navigationMapView ?? NavigationMapView(frame: bounds, tileStoreLocation: tileStoreLocation)
+    //        navigationMapView.isHidden = false
+    //        navigationMapView.translatesAutoresizingMaskIntoConstraints = false
+    //
+    //        navigationMapView.delegate = delegate
+    //        navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+    //                                                                                             viewportDataSourceType: .active)
+    //
+    //        return navigationMapView
+    //    }()
     
     // :nodoc:
-    public lazy var navigationMapView: NavigationMapView = {
-        _navigationMapView?.frame = bounds
-        let navigationMapView = _navigationMapView ?? NavigationMapView(frame: bounds, tileStoreLocation: tileStoreLocation)
-        navigationMapView.isHidden = false
-        navigationMapView.translatesAutoresizingMaskIntoConstraints = false
-        
-        navigationMapView.delegate = delegate
-        navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
-                                                                                             viewportDataSourceType: .active)
-        
-        return navigationMapView
-    }()
+    public var navigationMapView: NavigationMapView {
+        didSet {
+            oldValue.removeFromSuperview()
+            insertSubview(navigationMapView, at: 0)
+            
+            navigationMapView.isHidden = false
+            navigationMapView.translatesAutoresizingMaskIntoConstraints = false
+            
+            navigationMapView.delegate = delegate
+            navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                                                 viewportDataSourceType: .active)
+            
+            navigationMapView.navigationCamera.follow()
+            
+            NSLayoutConstraint.activate([
+                navigationMapView.leadingAnchor.constraint(equalTo: leadingAnchor),
+                navigationMapView.trailingAnchor.constraint(equalTo: trailingAnchor),
+                navigationMapView.topAnchor.constraint(equalTo: topAnchor),
+                navigationMapView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            ])
+        }
+    }
     
     // MARK: End of Route UI
     
@@ -198,14 +221,16 @@ open class NavigationView: UIView {
     
     // TODO: Refine public APIs, which are exposed by `NavigationView`.
     public init(frame: CGRect, tileStoreLocation: TileStoreConfiguration.Location? = .default, navigationMapView: NavigationMapView? = nil) {
-        self.tileStoreLocation = tileStoreLocation
-        self._navigationMapView = navigationMapView
+        //        self.tileStoreLocation = tileStoreLocation
+        //        _navigationMapView = navigationMapView
+        self.navigationMapView = navigationMapView ?? NavigationMapView(frame: frame, tileStoreLocation: tileStoreLocation)
         
         super.init(frame: frame)
         commonInit()
     }
     
     public required init?(coder decoder: NSCoder) {
+        navigationMapView = NavigationMapView(frame: .zero)
         super.init(coder: decoder)
         commonInit()
     }

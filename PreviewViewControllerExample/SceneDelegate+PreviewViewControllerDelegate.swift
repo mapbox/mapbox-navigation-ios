@@ -4,7 +4,6 @@ import CoreLocation
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxGeocoder
-import MapboxMaps
 
 extension SceneDelegate: PreviewViewControllerDelegate {
     
@@ -111,9 +110,6 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         }
         
         self.previewViewController.navigationView.bottomBannerContainerView.hide(completion: { _ in
-            let navigationMapView = self.previewViewController.navigationView.navigationMapView
-            self.initialCameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
-            
             let navigationRouteOptions = NavigationRouteOptions(coordinates: self.coordinates)
             let navigationService = MapboxNavigationService(routeResponse: routeResponse,
                                                             routeIndex: self.routeIndex,
@@ -122,9 +118,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                                             credentials: NavigationSettings.shared.directions.credentials,
                                                             simulating: .always)
             
-            // Inject `NavigationMapView` instance that is used in `PreviewViewController`.
-            let navigationOptions = NavigationOptions(navigationService: navigationService,
-                                                      navigationMapView: navigationMapView)
+            let navigationOptions = NavigationOptions(navigationService: navigationService)
             
             let navigationViewController = NavigationViewController(for: routeResponse,
                                                                        routeIndex: self.routeIndex,
@@ -132,15 +126,9 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                                                        navigationOptions: navigationOptions)
             navigationViewController.delegate = self
             navigationViewController.modalPresentationStyle = .fullScreen
+            navigationViewController.transitioningDelegate = self
             
-            // Hide top and bottom container views before animating their presentation.
-            navigationViewController.navigationView.topBannerContainerView.isHidden = true
-            navigationViewController.navigationView.bottomBannerContainerView.isHidden = true
-            
-            self.window?.rootViewController?.present(navigationViewController, animated: false, completion: {
-                navigationViewController.navigationView.topBannerContainerView.show()
-                navigationViewController.navigationView.bottomBannerContainerView.show()
-            })
+            self.previewViewController.present(navigationViewController, animated: true)
         })
     }
     

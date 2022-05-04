@@ -17,6 +17,9 @@
 		8A092F9C25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */; };
 		8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
 		8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
+		8A12E84128232C570071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E84028232C560071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */; };
+		8A12E84428232C8F0071AF00 /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E84328232C8F0071AF00 /* PresentationAnimator.swift */; };
+		8A12E84628232CA30071AF00 /* DismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E84528232CA30071AF00 /* DismissalAnimator.swift */; };
 		8AA03876280516A80007BD2D /* CustomDestinationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */; };
 		8AA03878280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */; };
 		8AA0387A28066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */; };
@@ -71,6 +74,9 @@
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
 		8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ViewController+FreeDrive.swift"; path = "Example/ViewController+FreeDrive.swift"; sourceTree = "<group>"; };
 		8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StyledFeature.swift; path = Example/StyledFeature.swift; sourceTree = "<group>"; };
+		8A12E84028232C560071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+UIViewControllerTransitioningDelegate.swift"; sourceTree = "<group>"; };
+		8A12E84328232C8F0071AF00 /* PresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
+		8A12E84528232CA30071AF00 /* DismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissalAnimator.swift; sourceTree = "<group>"; };
 		8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDestinationPreviewViewController.swift; sourceTree = "<group>"; };
 		8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+PreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
 		8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
@@ -189,6 +195,16 @@
 			name = Example;
 			sourceTree = "<group>";
 		};
+		8A12E84228232C810071AF00 /* Transitions */ = {
+			isa = PBXGroup;
+			children = (
+				8A12E84028232C560071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */,
+				8A12E84528232CA30071AF00 /* DismissalAnimator.swift */,
+				8A12E84328232C8F0071AF00 /* PresentationAnimator.swift */,
+			);
+			path = Transitions;
+			sourceTree = "<group>";
+		};
 		8AD220EC27C1A433000734A5 /* PreviewViewControllerExample */ = {
 			isa = PBXGroup;
 			children = (
@@ -200,6 +216,7 @@
 				8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */,
 				8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */,
 				8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */,
+				8A12E84228232C810071AF00 /* Transitions */,
 				8AD220F627C1A435000734A5 /* Assets.xcassets */,
 				8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */,
 				8AD220FB27C1A435000734A5 /* Info.plist */,
@@ -512,11 +529,14 @@
 			files = (
 				8AD220EE27C1A433000734A5 /* AppDelegate.swift in Sources */,
 				8AA0387A28066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */,
+				8A12E84428232C8F0071AF00 /* PresentationAnimator.swift in Sources */,
+				8A12E84128232C570071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */,
 				8AA0387C28066E860007BD2D /* CustomRoutesPreviewViewController.swift in Sources */,
 				8AA03876280516A80007BD2D /* CustomDestinationPreviewViewController.swift in Sources */,
 				8AD220F027C1A433000734A5 /* SceneDelegate.swift in Sources */,
 				8AC63A9C28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */,
 				8AA03878280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */,
+				8A12E84628232CA30071AF00 /* DismissalAnimator.swift in Sources */,
 				8AC63A9A280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
