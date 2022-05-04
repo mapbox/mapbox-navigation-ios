@@ -39,7 +39,7 @@ open class PreviewViewController: UIViewController {
                                    bottom: bottomInset,
                                    right: rightInset)
         
-        let pitch = 0.0
+        let pitch: CGFloat = 0.0
         
         return CameraOptions(padding: padding, pitch: pitch)
     }
