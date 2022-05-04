@@ -18,9 +18,9 @@ public protocol NavigationMapInteractionObserver: AnyObject {
     func navigationViewController(didCenterOn location: CLLocation)
     
     /**
-     Called when the NavigationMapView updates on style.
+     Called when the NavigationMapView will update on style.
      */
-    func navigationViewController(updateTo styleURI: StyleURI?)
+    func navigationViewController(willUpdateTo styleURI: StyleURI?)
 }
 
 /**

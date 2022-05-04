@@ -113,10 +113,12 @@ extension VisualInstruction {
     public func carPlayManeuverLabelAttributedText<T: InstructionLabel>(bounds: @escaping () -> (CGRect),
                                                                         shieldHeight: CGFloat,
                                                                         window: UIWindow?,
-                                                                        instructionLabelType: T.Type? = nil) -> NSAttributedString? {
+                                                                        instructionLabelType: T.Type? = nil,
+                                                                        delegate: VisualInstructionDelegate? = nil) -> NSAttributedString? {
         let instructionLabel = T.init() 
         instructionLabel.availableBounds = bounds
         instructionLabel.shieldHeight = shieldHeight
+        instructionLabel.instructionDelegate = delegate
         
         // Temporarily add the view to the view hierarchy for UIAppearance to work its magic.
         if let carWindow = window {

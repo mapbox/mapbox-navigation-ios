@@ -513,7 +513,7 @@ extension TopBannerViewController: NavigationMapInteractionObserver {
         stopPreviewing()
     }
     
-    public func navigationViewController(updateTo styleURI: StyleURI?) {
+    public func navigationViewController(willUpdateTo styleURI: StyleURI?) {
         spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
             guard let self = self else { return }
             self.updateLegacyIcons()

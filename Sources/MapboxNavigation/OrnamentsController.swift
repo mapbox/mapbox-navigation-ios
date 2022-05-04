@@ -239,7 +239,7 @@ extension OrnamentsController: NavigationMapInteractionObserver {
      
      - parameter styleURI: The `StyleURI` that the map is presenting.
      */
-    func navigationViewController(updateTo styleURI: StyleURI?) {
+    func navigationViewController(willUpdateTo styleURI: StyleURI?) {
         navigationView.wayNameView.label.updateStyle(styleURI: styleURI)
     }
 }

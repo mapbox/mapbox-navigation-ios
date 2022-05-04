@@ -27,6 +27,8 @@
 ### Other changes
 
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:, didSubmitArrivalFeedback:)` method which is called to notify that the user submitted the end of route feedback. Implementation of this method receives an `EndOfRouteFeedback` object with user's rating and comment. ([#3842](https://github.com/mapbox/mapbox-navigation-ios/pull/3842))
+* The `StepsViewControllerDelegate` protocol now conforms to the `InstructionsBannerViewDelegate` protocol. ([#3819](https://github.com/mapbox/mapbox-navigation-ios/pull/3819))
+* Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:instructionLabelType:)` method to `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:instructionLabelType:delegate:)`. ([#3819](https://github.com/mapbox/mapbox-navigation-ios/pull/3819))
 
 ## v2.4.0
 

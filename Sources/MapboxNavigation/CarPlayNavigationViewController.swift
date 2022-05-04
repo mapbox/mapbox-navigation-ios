@@ -713,25 +713,6 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
          }
     }
     
-    func carPlayManeuverLabelAttributedText(bounds: @escaping () -> (CGRect),
-                                            shieldHeight: CGFloat,
-                                            instruction: VisualInstruction?) -> NSAttributedString? {
-        let instructionLabel = InstructionLabel()
-        instructionLabel.instructionDelegate = self
-        instructionLabel.availableBounds = bounds
-        instructionLabel.shieldHeight = shieldHeight
-        
-        // Temporarily add the view to the view hierarchy for UIAppearance to work its magic.
-        if let carWindow = carPlayManager.carWindow  {
-            carWindow.addSubview(instructionLabel)
-            instructionLabel.instruction = instruction
-            instructionLabel.removeFromSuperview()
-        } else {
-            instructionLabel.instruction = instruction
-        }
-        return instructionLabel.attributedText
-    }
-    
     func updateManeuvers(_ routeProgress: RouteProgress) {
         guard let visualInstruction = routeProgress.currentLegProgress.currentStepProgress.currentVisualInstruction else { return }
         let step = navigationService.routeProgress.currentLegProgress.currentStep
@@ -764,11 +745,19 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             imageRendererFormat.scale = window.screen.scale
         }
         
-        if let attributedPrimary = carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, instruction: visualInstruction.primaryInstruction) {
+        if let attributedPrimary = visualInstruction.primaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds,
+                                                                                                           shieldHeight: shieldHeight,
+                                                                                                           window: carPlayManager.carWindow,
+                                                                                                           instructionLabelType: PrimaryLabel.self,
+                                                                                                           delegate: self) {
             
             let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
             
-            if let attributedSecondary = carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, instruction: visualInstruction.secondaryInstruction) {
+            if let attributedSecondary = visualInstruction.secondaryInstruction?.carPlayManeuverLabelAttributedText(bounds: bounds,
+                                                                                                                    shieldHeight: shieldHeight,
+                                                                                                                    window: carPlayManager.carWindow,
+                                                                                                                    instructionLabelType: SecondaryLabel.self,
+                                                                                                                    delegate: self) {
                 instruction.append(NSAttributedString(string: "\n"))
                 instruction.append(attributedSecondary)
             }
@@ -798,7 +787,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                 if let text = tertiaryInstruction.text {
                     tertiaryManeuver.instructionVariants = [text]
                 }
-                if let attributedTertiary = carPlayManeuverLabelAttributedText(bounds: bounds, shieldHeight: shieldHeight, instruction: tertiaryInstruction) {
+                if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds,
+                                                                                                   shieldHeight: shieldHeight,
+                                                                                                   window: carPlayManager.carWindow,
+                                                                                                   delegate: self) {
                     let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
                     attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
                     tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]

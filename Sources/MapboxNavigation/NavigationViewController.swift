@@ -991,7 +991,7 @@ extension NavigationViewController: StyleManagerDelegate {
         if navigationMapView?.mapView.mapboxMap.style.uri?.rawValue != style.mapStyleURL.absoluteString {
             let styleURI = StyleURI(url: style.mapStyleURL)
             navigationMapView?.mapView.mapboxMap.style.uri = styleURI
-            navigationComponents.compactMap({ $0 as? NavigationMapInteractionObserver }).forEach { $0.navigationViewController(updateTo: styleURI) }
+            navigationComponents.compactMap({ $0 as? NavigationMapInteractionObserver }).forEach { $0.navigationViewController(willUpdateTo: styleURI) }
         }
         
         currentStatusBarStyle = style.statusBarStyle ?? .default
