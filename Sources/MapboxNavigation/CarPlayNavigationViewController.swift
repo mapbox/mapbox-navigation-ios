@@ -476,8 +476,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden
         
         navigationMapView.navigationCamera.follow()
-        
-        view.addSubview(navigationMapView)
+
+        view.insertSubview(navigationMapView, at: 0)
         navigationMapView.pinInSuperview()
         
         self.navigationMapView = navigationMapView
