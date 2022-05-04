@@ -96,8 +96,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         guard let routeResponse = routeResponse,
               let routes = routeResponse.routes,
               let routeIndex = routes.firstIndex(where: { $0 === route }) else {
-                  return
-              }
+            return
+        }
         
         self.routeIndex = routeIndex
         
@@ -121,9 +121,9 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             let navigationOptions = NavigationOptions(navigationService: navigationService)
             
             let navigationViewController = NavigationViewController(for: routeResponse,
-                                                                       routeIndex: self.routeIndex,
-                                                                       routeOptions: navigationRouteOptions,
-                                                                       navigationOptions: navigationOptions)
+                                                                    routeIndex: self.routeIndex,
+                                                                    routeOptions: navigationRouteOptions,
+                                                                    navigationOptions: navigationOptions)
             navigationViewController.delegate = self
             navigationViewController.modalPresentationStyle = .fullScreen
             navigationViewController.transitioningDelegate = self
@@ -136,8 +136,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                willPresent destinationText: NSAttributedString) -> NSAttributedString? {
         guard let destinationPreviewViewController = previewViewController.presentedBottomBannerViewController as? DestinationPreviewViewController,
               let destinationCoordinate = destinationPreviewViewController.destinationOptions.waypoints.last?.coordinate else {
-                  return nil
-              }
+            return nil
+        }
         
         let locationManager = CLLocationManager()
         let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)
