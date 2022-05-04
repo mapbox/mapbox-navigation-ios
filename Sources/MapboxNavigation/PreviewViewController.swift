@@ -216,10 +216,10 @@ open class PreviewViewController: UIViewController {
         guard let location = location,
               let navigationViewportDataSource = navigationView.navigationMapView.navigationCamera.viewportDataSource as? NavigationViewportDataSource else { return }
         
-        let topInset = UIScreen.main.bounds.height - view.safeAreaInsets.bottom - 150.0
-        let bottomInset = 149.0 + view.safeAreaInsets.bottom
-        let leftInset = 50.0
-        let rightInset = 50.0
+        let topInset: CGFloat = UIScreen.main.bounds.height - view.safeAreaInsets.bottom - 150.0
+        let bottomInset: CGFloat = 149.0 + view.safeAreaInsets.bottom
+        let leftInset: CGFloat = 50.0
+        let rightInset: CGFloat = 50.0
         
         navigationViewportDataSource.followingMobileCamera.padding = UIEdgeInsets(top: topInset,
                                                                                   left: leftInset,
