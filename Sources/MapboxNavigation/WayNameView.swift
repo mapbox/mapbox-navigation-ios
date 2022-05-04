@@ -9,7 +9,7 @@ import MapboxDirections
  */
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {
-    var spriteRepository = SpriteRepository()
+    var spriteRepository: SpriteRepository = .shared
     var representation: VisualInstruction.Component.ImageRepresentation?
     
     @objc dynamic public var roadShieldBlackColor: UIColor = .roadShieldBlackColor
@@ -23,8 +23,7 @@ open class WayNameLabel: StylableLabel {
     
     // When the map style changes, update the sprite repository and the label.
     func updateStyle(styleURI: StyleURI?) {
-        guard let styleURI = styleURI else { return }
-        spriteRepository.updateStyle(styleURI: styleURI, representation: representation) { [weak self] in
+        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
             guard let self = self else { return }
             if let roadName = self.text {
                 self.setUpWith(roadName: roadName)
@@ -35,7 +34,7 @@ open class WayNameLabel: StylableLabel {
     func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
         // When the imageRepresentation of road shield changes, update the sprite repository and the label.
         if representation != self.representation {
-            spriteRepository.updateRepresentation(representation: representation) { [weak self] in
+            spriteRepository.updateRepresentation(for: representation) { [weak self] in
                 guard let self = self else { return }
                 self.representation = representation
                 self.setUpWith(roadName: roadName)
