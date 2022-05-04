@@ -158,11 +158,11 @@ public class CarPlayManager: NSObject {
      Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
      
      - parameter styles: The styles to display in the CarPlay interface. If this argument is omitted, `DayStyle` and `NightStyle` are displayed by default.
-     - parameter customRoutingProvider: The object that customizes routes calculation when the user interacts with the CarPlay interface.
+     - parameter customRoutingProvider: The object that customizes routes calculation when the user interacts with the CarPlay interface. `nil` value corresponds to default behavior.
      - parameter eventsManager: The events manager to use during turn-by-turn navigation while connected to CarPlay. If this argument is `nil` or omitted, a standard `NavigationEventsManager` object is used by default.
      */
     public convenience init(styles: [Style]? = nil,
-                            customRoutingProvider: RoutingProvider?,
+                            customRoutingProvider: RoutingProvider? = nil,
                             eventsManager: NavigationEventsManager? = nil) {
         self.init(styles: styles,
                   customRoutingProvider: customRoutingProvider,
