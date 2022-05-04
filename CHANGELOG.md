@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.4.1
+
+### User interface
+
+* Fixed an issue that caused CarPlay map to hide way-name, speed-limit and compass views. 
+
 ## v2.4.0
 
 ### Pricing
