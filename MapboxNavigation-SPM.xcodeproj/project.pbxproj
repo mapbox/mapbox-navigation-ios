@@ -205,18 +205,26 @@
 			path = Transitions;
 			sourceTree = "<group>";
 		};
+		8A12E847282338460071AF00 /* Custom Banners */ = {
+			isa = PBXGroup;
+			children = (
+				8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */,
+				8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */,
+			);
+			path = "Custom Banners";
+			sourceTree = "<group>";
+		};
 		8AD220EC27C1A433000734A5 /* PreviewViewControllerExample */ = {
 			isa = PBXGroup;
 			children = (
 				8AD220ED27C1A433000734A5 /* AppDelegate.swift */,
 				8AD220EF27C1A433000734A5 /* SceneDelegate.swift */,
 				8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */,
-				8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */,
 				8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */,
-				8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */,
 				8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */,
 				8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */,
 				8A12E84228232C810071AF00 /* Transitions */,
+				8A12E847282338460071AF00 /* Custom Banners */,
 				8AD220F627C1A435000734A5 /* Assets.xcassets */,
 				8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */,
 				8AD220FB27C1A435000734A5 /* Info.plist */,
