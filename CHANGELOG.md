@@ -2,9 +2,7 @@
 
 ## v2.4.1
 
-### User interface
-
-* Fixed an issue that caused CarPlay map to hide way-name, speed-limit and compass views. 
+* Fixed an issue where the current road name, speed limit, and compass were missing from the map in CarPlay’s navigating activity. ([#3858](https://github.com/mapbox/mapbox-navigation-ios/pull/3858))
 
 ## v2.4.0
 
