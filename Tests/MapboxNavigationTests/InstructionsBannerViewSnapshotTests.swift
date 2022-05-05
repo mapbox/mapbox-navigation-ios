@@ -6,7 +6,7 @@ import MapboxDirections
 @testable import MapboxCoreNavigation
 
 class InstructionsBannerViewSnapshotTests: TestCase {
-    let imageRepository: ImageRepository = ImageRepository.shared
+    let spriteRepository: SpriteRepository = SpriteRepository.shared
 
     let asyncTimeout: TimeInterval = 2.0
 
@@ -17,22 +17,15 @@ class InstructionsBannerViewSnapshotTests: TestCase {
         let i280Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.i280.baseURL), alternativeText: .init(text: "I-280", abbreviation: nil, abbreviationPriority: 0))
         let us101Instruction = VisualInstruction.Component.image(image: .init(imageBaseURL: ShieldImage.us101.baseURL), alternativeText: .init(text: "US 101", abbreviation: nil, abbreviationPriority: 0))
 
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false)
-        imageRepository.storeImage(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false)
-
+        spriteRepository.legacyCache.store(ShieldImage.i280.image, forKey: i280Instruction.cacheKey!, toDisk: false, completion: nil)
+        spriteRepository.legacyCache.store(ShieldImage.us101.image, forKey: us101Instruction.cacheKey!, toDisk: false, completion: nil)
         NavigationSettings.shared.distanceUnit = .mile
         DayStyle().apply()
     }
 
     override func tearDown() {
-        let semaphore = DispatchSemaphore(value: 0)
-        imageRepository.resetImageCache {
-            semaphore.signal()
-        }
-        let semaphoreResult = semaphore.wait(timeout: XCTestCase.NavigationTests.timeout)
-        XCTAssert(semaphoreResult == .success, "Semaphore timed out")
-
         super.tearDown()
+        spriteRepository.resetCache()
     }
 
     func testSinglelinePrimary() {
@@ -144,7 +137,7 @@ class InstructionsBannerViewSnapshotTests: TestCase {
             .text(text: .init(text: "20 West", abbreviation: "20 W", abbreviationPriority: 1)),
         ]
 
-        imageRepository.storeImage(ShieldImage.i280.image, forKey: primary.first!.cacheKey!)
+        spriteRepository.legacyCache.store(ShieldImage.i280.image, forKey: primary.first!.cacheKey!, toDisk: false, completion: nil)
         view.update(for: makeVisualInstruction(.continue, .straightAhead, primaryInstruction: primary, secondaryInstruction: nil))
 
         assertImageSnapshot(matching: view, as: .image(precision: 0.95))
