@@ -80,6 +80,52 @@ class InstructionsBannerViewSnapshotTests: TestCase {
 
         assertImageSnapshot(matching: view, as: .image(precision: 0.95))
     }
+    
+    func testSinglelinePrimaryAndSecondaryWithShield() {
+        spriteRepository.spriteCache.store(ShieldImage.shieldDay.image, forKey: spriteRepository.styleID!, toDisk: false, completion: nil)
+        spriteRepository.infoCache.store(Fixture.JSONFromFileNamed(name: "sprite-info"), spriteKey: spriteRepository.styleID!)
+        
+        let view = instructionsView()
+        styleInstructionsView(view)
+        
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let i280Shield = VisualInstruction.Component.ShieldRepresentation(baseURL: spriteRepository.baseURL, name: "us-interstate", textColor: "white", text: "280")
+        let i280Representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: i280Shield)
+        
+        let primary: [VisualInstruction.Component] = [
+            .image(image: i280Representation, alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "South", abbreviation: nil, abbreviationPriority: 0)),
+        ]
+        let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
+
+        view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        assertImageSnapshot(matching: view, as: .image(precision: 0.95))
+    }
+    
+    func testSinglelinePrimaryAndSecondaryWithNightShield() {
+        spriteRepository.spriteCache.store(ShieldImage.shieldNight.image, forKey: spriteRepository.styleID!, toDisk: false, completion: nil)
+        spriteRepository.infoCache.store(Fixture.JSONFromFileNamed(name: "sprite-info"), spriteKey: spriteRepository.styleID!)
+        
+        let view = instructionsView()
+        styleInstructionsView(view)
+        
+        view.maneuverView.isStart = true
+        view.distance = 482
+        
+        let i280Shield = VisualInstruction.Component.ShieldRepresentation(baseURL: spriteRepository.baseURL, name: "us-interstate", textColor: "white", text: "280")
+        let i280Representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: i280Shield)
+        
+        let primary: [VisualInstruction.Component] = [
+            .image(image: i280Representation, alternativeText: .init(text: "I 280", abbreviation: nil, abbreviationPriority: 0)),
+            .text(text: .init(text: "South", abbreviation: nil, abbreviationPriority: 0)),
+        ]
+        let secondary = [VisualInstruction.Component.text(text: .init(text: "US 45 / Chicago", abbreviation: nil, abbreviationPriority: 0))]
+
+        view.update(for: makeVisualInstruction(.turn, .right, primaryInstruction: primary, secondaryInstruction: secondary))
+        assertImageSnapshot(matching: view, as: .image(precision: 0.95))
+    }
 
     func testPrimaryShieldAndSecondary() {
         let view = instructionsView()
