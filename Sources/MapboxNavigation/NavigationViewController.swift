@@ -582,6 +582,16 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         
         arrivalController?.destination = route?.legs.last?.destination
         ornamentsController?.reportButton.isHidden = !showsReportFeedback
+        
+        // Round top left and top right corners of the bottom container view.
+        navigationView.bottomBannerContainerView.cornerRadius = 10.0
+        navigationView.bottomBannerContainerView.layer.maskedCorners = [
+            .layerMinXMinYCorner,
+            .layerMaxXMinYCorner
+        ]
+        
+        navigationView.bottomBannerContainerView.isExpandable = true
+        navigationView.bottomBannerContainerView.expansionOffset = 50.0
     }
     
     func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {

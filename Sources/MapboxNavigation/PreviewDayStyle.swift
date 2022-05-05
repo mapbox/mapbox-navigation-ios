@@ -58,10 +58,10 @@ class PreviewDayStyle: DayStyle {
         DestinationLabel.appearance().normalFont = UIFont.systemFont(ofSize: 27.0)
         DestinationLabel.appearance().numberOfLines = 2
         
-        DistanceRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 15.0)
+        DistanceRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium)
         DistanceRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)
         
-        ArrivalTimeLabel.appearance().normalFont = UIFont.systemFont(ofSize: 15.0)
+        ArrivalTimeLabel.appearance().normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium)
         ArrivalTimeLabel.appearance().normalTextColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)
         
         BackButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)

@@ -134,7 +134,7 @@ import MapboxDirections
         ])
         
         NSLayoutConstraint.activate([
-            timeRemainingLabel.heightAnchor.constraint(equalToConstant: 35.0),
+            timeRemainingLabel.heightAnchor.constraint(equalToConstant: 30.0),
             timeRemainingLabel.leadingAnchor.constraint(equalTo: bottomBannerView.leadingAnchor,
                                                         constant: 10.0),
             timeRemainingLabel.trailingAnchor.constraint(equalTo: bottomBannerView.trailingAnchor,

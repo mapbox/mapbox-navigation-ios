@@ -25,32 +25,7 @@ open class DayStyle: Style {
             tintColor = .defaultTintColor
         }
         
-        let regularAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
-            UITraitCollection(verticalSizeClass: .regular),
-            UITraitCollection(horizontalSizeClass: .regular)
-        ])
-        
-        let regularAndCompactSizeClassTraitCollection = UITraitCollection(traitsFrom: [
-            UITraitCollection(verticalSizeClass: .regular),
-            UITraitCollection(horizontalSizeClass: .compact)
-        ])
-        
-        let compactAndRegularSizeClassTraitCollection = UITraitCollection(traitsFrom: [
-            UITraitCollection(verticalSizeClass: .compact),
-            UITraitCollection(horizontalSizeClass: .regular)
-        ])
-        
-        let compactAndCompactSizeClassTraitCollection = UITraitCollection(traitsFrom: [
-            UITraitCollection(verticalSizeClass: .compact),
-            UITraitCollection(horizontalSizeClass: .compact)
-        ])
-        
-        ArrivalTimeLabel.appearance().normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
-        ArrivalTimeLabel.appearance().normalTextColor = .defaultPrimaryText
-        BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        BottomPaddingView.appearance().backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
         Button.appearance().textColor = .defaultPrimaryText
-        CancelButton.appearance().tintColor = .defaultPrimaryText
         
         CarPlayCompassView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.6022227113)
         CarPlayCompassView.appearance().cornerRadius = 4
@@ -72,8 +47,6 @@ open class DayStyle: Style {
         DistanceLabel.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).valueTextColorHighlighted = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         DistanceLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).unitTextColor = #colorLiteral(red: 0.6274509804, green: 0.6274509804, blue: 0.6274509804, alpha: 1)
         DistanceLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).valueTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
-        DistanceRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
-        DistanceRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.431372549, green: 0.431372549, blue: 0.431372549, alpha: 1)
         EndOfRouteButton.appearance().textColor = .darkGray
         EndOfRouteButton.appearance().textFont = .systemFont(ofSize: 15)
         EndOfRouteContentView.appearance().backgroundColor = .white
@@ -199,7 +172,6 @@ open class DayStyle: Style {
         SecondaryLabel.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).textColorHighlighted = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         SecondaryLabel.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).normalFont = UIFont.boldSystemFont(ofSize: 18.0).adjustedFont
         SecondaryLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.2156862745, green: 0.2156862745, blue: 0.2156862745, alpha: 1)
-        SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
         SeparatorView.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
         SpeedLimitView.appearance().signBackColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         SpeedLimitView.appearance().textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
@@ -212,24 +184,46 @@ open class DayStyle: Style {
         StepsBackgroundView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         StylableLabel.appearance(whenContainedInInstancesOf: [CarPlayCompassView.self]).normalFont = UIFont.systemFont(ofSize: 12, weight: .medium).adjustedFont
         StylableLabel.appearance(whenContainedInInstancesOf: [CarPlayCompassView.self]).normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
-        TimeRemainingLabel.appearance(for: regularAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
-        TimeRemainingLabel.appearance(for: regularAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
-        TimeRemainingLabel.appearance(for: compactAndRegularSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
-        TimeRemainingLabel.appearance(for: compactAndCompactSizeClassTraitCollection).normalFont = UIFont.systemFont(ofSize: 18, weight: .medium).adjustedFont
-        TimeRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 28, weight: .medium).adjustedFont
-        TimeRemainingLabel.appearance().normalTextColor = .defaultPrimaryText
+        
+        // `BottomBannerViewController` components styling.
+        BottomBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        BottomPaddingView.appearance().backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        
+        CancelButton.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+        CancelButton.appearance().borderColor = #colorLiteral(red: 0.804, green: 0.816, blue: 0.816, alpha: 1)
+        CancelButton.appearance().borderWidth = 2.0
+        CancelButton.appearance().cornerRadius = 5.0
+        CancelButton.appearance().tintColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)
+        
+        TimeRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 27.0, weight: .medium).adjustedFont
+        TimeRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.216, green: 0.212, blue: 0.454, alpha: 1)
         TimeRemainingLabel.appearance().trafficHeavyColor = #colorLiteral(red:0.91, green:0.20, blue:0.25, alpha:1.0)
         TimeRemainingLabel.appearance().trafficLowColor = #colorLiteral(red: 0.4666666687, green: 0.7647058964, blue: 0.2666666806, alpha: 1)
         TimeRemainingLabel.appearance().trafficModerateColor = #colorLiteral(red:0.95, green:0.65, blue:0.31, alpha:1.0)
         TimeRemainingLabel.appearance().trafficSevereColor = #colorLiteral(red: 0.7705719471, green: 0.1753477752, blue: 0.1177056804, alpha: 1)
-        TimeRemainingLabel.appearance().trafficUnknownColor = .defaultPrimaryText
+        TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.216, green: 0.212, blue: 0.454, alpha: 1)
+        
+        DistanceRemainingLabel.appearance().normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium)
+        DistanceRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)
+        
+        ArrivalTimeLabel.appearance().normalFont = UIFont.systemFont(ofSize: 15.0, weight: .medium)
+        ArrivalTimeLabel.appearance().normalTextColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)
+        
+        SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0.909, green: 0.911, blue: 0.911, alpha: 1)
+        
         TopBannerView.appearance().backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         UserPuckCourseView.appearance().puckColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 1)
         UserHaloCourseView.appearance().haloColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.5)
         UserHaloCourseView.appearance().haloRingColor = #colorLiteral(red: 0.149, green: 0.239, blue: 0.341, alpha: 0.3)
         UserHaloCourseView.appearance().haloRadius = 100.0
-        WayNameLabel.appearance().normalFont = UIFont.systemFont(ofSize:20, weight: .medium).adjustedFont
-        WayNameLabel.appearance().normalTextColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
+        
+        WayNameView.appearance().backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        WayNameView.appearance().borderColor = #colorLiteral(red: 0.804, green: 0.816, blue: 0.816, alpha: 1)
+        WayNameView.appearance().borderWidth = 2.0
+        
+        WayNameLabel.appearance().textAlignment = .center
+        WayNameLabel.appearance().normalFont = UIFont.systemFont(ofSize: 18.0, weight: .regular).adjustedFont
+        WayNameLabel.appearance().normalTextColor = #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1)
         WayNameLabel.appearance().roadShieldBlackColor = .roadShieldBlackColor
         WayNameLabel.appearance().roadShieldBlueColor = .roadShieldBlueColor
         WayNameLabel.appearance().roadShieldGreenColor = .roadShieldGreenColor
@@ -238,9 +232,7 @@ open class DayStyle: Style {
         WayNameLabel.appearance().roadShieldYellowColor = .roadShieldYellowColor
         WayNameLabel.appearance().roadShieldOrangeColor = .roadShieldOrangeColor
         WayNameLabel.appearance().roadShieldDefaultColor = .roadShieldDefaultColor
-        WayNameView.appearance().backgroundColor = UIColor.defaultRouteLayer.withAlphaComponent(0.85)
-        WayNameView.appearance().borderColor = UIColor.defaultRouteCasing.withAlphaComponent(0.8)
-        WayNameView.appearance().borderWidth = 1.0
+        
         StepsTableHeaderView.appearance().tintColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
         StepsTableHeaderView.appearance().normalTextColor = #colorLiteral(red: 0.09803921569, green: 0.09803921569, blue: 0.09803921569, alpha: 1)
         UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .white

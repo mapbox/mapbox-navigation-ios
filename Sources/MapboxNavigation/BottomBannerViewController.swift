@@ -79,10 +79,9 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
      */
     open var horizontalDividerView: SeparatorView!
     
-    /**
-     A vertical separator for the trailing side of the view.
-     */
-    var trailingSeparatorView: SeparatorView!
+    var grabberView: GrabberView!
+    
+    var destinationLabel: DestinationLabel!
     
     // MARK: Setup and Initialization
     
@@ -182,20 +181,26 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
     }
     
     func updateETA(routeProgress: RouteProgress) {
-        guard let arrivalDate = NSCalendar.current.date(byAdding: .second,
-                                                        value: Int(routeProgress.durationRemaining),
-                                                        to: Date()) else {
-            return
+        if let arrivalDate = NSCalendar.current.date(byAdding: .second,
+                                                     value: Int(routeProgress.durationRemaining),
+                                                     to: Date()) {
+            let dateFormatter = DateFormatter()
+            dateFormatter.timeStyle = .short
+            
+            let timeImage = UIImage(named: "time", in: .mapboxNavigation, compatibleWith: nil)!
+            let styledTimeImage: UIImage!
+            let arrivalTimeImageTintColor = ArrivalTimeLabel.appearance().normalTextColor
+            if #available(iOS 13.0, *) {
+                styledTimeImage = timeImage.withTintColor(arrivalTimeImageTintColor)
+            } else {
+                styledTimeImage = timeImage.tint(arrivalTimeImageTintColor)
+            }
+            
+            arrivalTimeLabel.attributedText = attributedString(with: styledTimeImage,
+                                                               imageBounds: CGRect(x: 0, y: -2, width: 15.0, height: 15.0),
+                                                               text: dateFormatter.string(from: arrivalDate))
         }
         
-        arrivalTimeLabel.text = dateFormatter.string(from: arrivalDate)
-
-        if routeProgress.durationRemaining < 5 {
-            distanceRemainingLabel.text = nil
-        } else {
-            distanceRemainingLabel.text = distanceFormatter.string(from: routeProgress.distanceRemaining)
-        }
-
         dateComponentsFormatter.unitsStyle = routeProgress.durationRemaining < 3600 ? .short : .abbreviated
         
         if let hardcodedTime = dateComponentsFormatter.string(from: 61),
@@ -209,7 +214,44 @@ open class BottomBannerViewController: UIViewController, NavigationComponent {
             timeRemainingLabel.text = dateComponentsFormatter.string(from: routeProgress.durationRemaining)
         }
         
+        let pinImage = UIImage(named: "pin", in: .mapboxNavigation, compatibleWith: nil)!
+        let styledPinImage: UIImage!
+        let distanceRemainingTintColor = DistanceRemainingLabel.appearance().normalTextColor
+        if #available(iOS 13.0, *) {
+            styledPinImage = pinImage.withTintColor(distanceRemainingTintColor)
+        } else {
+            styledPinImage = pinImage.tint(distanceRemainingTintColor)
+        }
+        
+        if routeProgress.durationRemaining < 5 {
+            distanceRemainingLabel.attributedText = nil
+        } else {
+            let distance = Measurement(distance: routeProgress.distanceRemaining).localized()
+            distanceRemainingLabel.attributedText = attributedString(with: styledPinImage,
+                                                                     imageBounds: CGRect(x: 0, y: -2, width: 12.0, height: 15.0),
+                                                                     text: distanceFormatter.string(from: distance))
+        }
+        
         guard let congestionForRemainingLeg = routeProgress.averageCongestionLevelRemainingOnLeg else { return }
         congestionLevel = congestionForRemainingLeg
+        
+        destinationLabel.attributedText = NSAttributedString(string: routeProgress.currentLeg.name)
     }
+    
+    func attributedString(with image: UIImage, imageBounds: CGRect, text: String) -> NSAttributedString {
+        let imageAttachment = NSTextAttachment()
+        imageAttachment.image = image
+        imageAttachment.bounds = imageBounds
+        let imageString = NSAttributedString(attachment: imageAttachment)
+        
+        let attributedString = NSMutableAttributedString()
+        attributedString.append(imageString)
+        attributedString.append(NSAttributedString(string: " " + text))
+        
+        return attributedString
+    }
+}
+
+class GrabberView: StylableView {
+    
 }

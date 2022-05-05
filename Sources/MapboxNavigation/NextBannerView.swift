@@ -71,13 +71,11 @@ open class NextBannerView: UIView, NavigationComponent {
             return CGRect(x: 0, y: 0, width: availableWidth, height: self.instructionLabel.font.lineHeight)
         }
         
-        let bottomSeparatorView = SeparatorView()
-        bottomSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        let bottomSeparatorView: SeparatorView = .forAutoLayout()
         addSubview(bottomSeparatorView)
         self.bottomSeparatorView = bottomSeparatorView
         
-        let trailingSeparatorView = SeparatorView()
-        trailingSeparatorView.translatesAutoresizingMaskIntoConstraints = false
+        let trailingSeparatorView: SeparatorView = .forAutoLayout()
         addSubview(trailingSeparatorView)
         self.trailingSeparatorView = trailingSeparatorView
         
