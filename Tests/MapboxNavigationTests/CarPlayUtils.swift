@@ -89,7 +89,7 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
         let navigationService = MapboxNavigationService(routeResponse: routeResponse,
                                                         routeIndex: routeIndex,
                                                         routeOptions: routeOptions,
-                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,
                                                         locationSource: NavigationLocationManager(),
                                                         eventsManagerType: NavigationEventsManagerSpy.self,

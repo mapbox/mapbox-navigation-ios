@@ -42,7 +42,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              simulating: .never)
         let now = Date()
@@ -87,7 +87,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              simulating: .never)
         
@@ -137,7 +137,7 @@ class MapboxCoreNavigationTests: TestCase {
         let navigationService = MapboxNavigationService(routeResponse: response,
                                                         routeIndex: 0,
                                                         routeOptions: routeOptions,
-                                                        routingProvider: MapboxRoutingProvider(.offline),
+                                                        customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,
                                                         locationSource: locationManager,
                                                         simulating: .never)
@@ -194,7 +194,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
@@ -246,7 +246,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
@@ -287,7 +287,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: routeResponse,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
@@ -337,7 +337,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingProvider: MapboxRoutingProvider(.offline),
+                                             customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager)
         navigation.router.refreshesRoute = false
@@ -459,7 +459,7 @@ class MapboxCoreNavigationTests: TestCase {
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
-                                             routingProvider: MapboxRoutingProvider(.online),
+                                             customRoutingProvider: MapboxRoutingProvider(.online),
                                              credentials: Fixture.credentials,
                                              simulating: .never)
         

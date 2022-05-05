@@ -84,7 +84,7 @@ extension AppDelegate: CarPlayManagerDelegate {
         return MapboxNavigationService(routeResponse: routeResponse,
                                        routeIndex: routeIndex,
                                        routeOptions: routeOptions,
-                                       routingProvider: MapboxRoutingProvider(.hybrid),
+                                       customRoutingProvider: nil,
                                        credentials: NavigationSettings.shared.directions.credentials,
                                        simulating: desiredSimulationMode)
     }

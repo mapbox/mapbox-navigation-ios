@@ -20,7 +20,7 @@ class StepsViewControllerTests: TestCase {
         dependencies = {
             let dataSource = RouteControllerDataSourceFake()
 
-            let routeController = RouteController(alongRouteAtIndex: 0, in: response, options: Constants.options, routingProvider: MapboxRoutingProvider(.offline), dataSource: dataSource)
+            let routeController = RouteController(alongRouteAtIndex: 0, in: response, options: Constants.options, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: dataSource)
 
             let stepsViewController = StepsViewController(routeProgress: routeController.routeProgress)
 

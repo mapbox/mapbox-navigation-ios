@@ -35,7 +35,7 @@ class NavigationEventsManagerTests: TestCase {
         let locationManager = NavigationLocationManager()
         let service = MapboxNavigationService(routeResponse: firstRouteResponse, routeIndex: 0,
                                               routeOptions: firstRouteOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                               credentials: Fixture.credentials,
                                               locationSource: locationManager,
                                               eventsManagerType: NavigationEventsManagerSpy.self,
@@ -92,7 +92,7 @@ class NavigationEventsManagerTests: TestCase {
         let dataSource = MapboxNavigationService(routeResponse: routeResponse,
                                                  routeIndex: 0,
                                                  routeOptions: routeOptions,
-                                                 routingProvider: MapboxRoutingProvider(.offline),
+                                                 customRoutingProvider: MapboxRoutingProvider(.offline),
                                                  credentials: Fixture.credentials,
                                                  simulating: .onPoorGPS)
         let sessionState = SessionState(currentRoute: route, originalRoute: route, routeIdentifier: routeResponse.identifier)

@@ -25,6 +25,11 @@
 
 * Added the `CarPlayManagerDelegate.carPlayManager(_:shouldUpdateNotificationFor:with:in:)` and `CarPlayManagerDelegate.carPlayManager(_:shouldShowNotificationFor:in:)` to provide the ability to control notifications presentation while CarPlay application is in the background. ([#3828](https://github.com/mapbox/mapbox-navigation-ios/pull/3828))
 
+### Routing
+
+* Integrated MaboxNavigtionNative rerouting mechanism. `Router.routingProvider` is replaced with optional `customRoutingProvider` which is used as customization for reroutng mechanism. Default `nil` value corresponds to SDK's default rerouting mechanism to be used. If you don't want custom reroute requests, update your `NavigationService` and `Router` instances instantiation to use the default `nil` value. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
+* Exposed configurations for rerouting aspects like controlling usage of online vs. offline data for route building using desired `RoutingProviderSource` in `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)` method, and `Router.initialManeuverAvoidanceRadius` to configure radius before first dangerous maneuver. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
+
 ### Other changes
 
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:, didSubmitArrivalFeedback:)` method which is called to notify that the user submitted the end of route feedback. Implementation of this method receives an `EndOfRouteFeedback` object with user's rating and comment. ([#3842](https://github.com/mapbox/mapbox-navigation-ios/pull/3842))
