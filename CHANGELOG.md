@@ -15,7 +15,6 @@
 
 ### User interface
 
-* Fixed an issue that caused CarPlay map to hide way-name, speed-limit and compass views. ([#3858](https://github.com/mapbox/mapbox-navigation-ios/pull/3858))
 * Fixed an issue where `UserPuckCourseView`’s color desaturated during turn-by-turn navigation even as the location was being updated. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
 * `UserPuckCourseView` no longer desaturates its color based on the age of the last location update. `RouteController` simulates location updates whenever Location Services is unable to receive real location updates. To ensure a steady stream of location updates outside of turn-by-turn navigation, install a `PassiveLocationManager`. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
 * Fixed an issue where shields disappeared after the application returns to the foreground. ([#3840](https://github.com/mapbox/mapbox-navigation-ios/pull/3840))
@@ -33,6 +32,10 @@
 ### Other changes
 
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:, didSubmitArrivalFeedback:)` method which is called to notify that the user submitted the end of route feedback. Implementation of this method receives an `EndOfRouteFeedback` object with user's rating and comment. ([#3842](https://github.com/mapbox/mapbox-navigation-ios/pull/3842))
+
+## v2.4.1
+
+* Fixed an issue where the current road name, speed limit, and compass were missing from the map in CarPlay’s navigating activity. ([#3858](https://github.com/mapbox/mapbox-navigation-ios/pull/3858))
 
 ## v2.4.0
 
