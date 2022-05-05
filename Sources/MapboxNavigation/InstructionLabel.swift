@@ -51,8 +51,8 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     }
 
     open override func update() {
-        super.update()
         updateLabelAttributedText()
+        super.update()
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
