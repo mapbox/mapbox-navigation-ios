@@ -56,10 +56,10 @@ open class TopBannerViewController: UIViewController {
     private let instructionsBannerHeight: CGFloat = 100.0
     
     private var informationChildren: [UIView] {
-        return [instructionsBannerView] + secondaryChildren
+        return [instructionsBannerView] + secondaryChildren + [lanesView]
     }
     private var secondaryChildren: [UIView] {
-        return [lanesView, nextBannerView, statusView, junctionView]
+        return [nextBannerView, statusView, junctionView]
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -109,7 +109,8 @@ open class TopBannerViewController: UIViewController {
     
     private func setupInformationStackView() {
         addInstructionsBanner()
-        informationStackView.addArrangedSubviews(secondaryChildren)
+        let subviews = [lanesView] + secondaryChildren
+        informationStackView.addArrangedSubviews(subviews)
         for child in informationChildren {
             child.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
             child.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
@@ -146,11 +147,12 @@ open class TopBannerViewController: UIViewController {
         })
     }
     
-    private func hideSecondaryChildren(completion: CompletionHandler? = nil) {
+    private func hideSecondaryChildren(excluding secondaryView: UIView? = nil, completion: CompletionHandler? = nil) {
         UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: { [weak self] in
-            guard let children = self?.secondaryChildren else {
+            guard var children = self?.secondaryChildren else {
                 return
             }
+            children.removeAll(where: { $0 == secondaryView })
             
             for child in children {
                 child.alpha = 0.0
@@ -283,7 +285,8 @@ open class TopBannerViewController: UIViewController {
             var constraints = pinningConstraints + hideConstraints + self.stepsContainerConstraints
             
             if let bannerHostHeight = self.view.superview?.superview?.frame.height {
-                let inset = self.instructionsBannerHeight + self.view.safeArea.top
+                let lanesViewHeight: CGFloat = 40
+                let inset = self.instructionsBannerHeight + lanesViewHeight + self.view.safeArea.top
                 stepsHeightPresizingConstraint = (child.view.heightAnchor.constraint(equalToConstant: bannerHostHeight - inset))
                 constraints.append(stepsHeightPresizingConstraint!)
             }
@@ -313,7 +316,7 @@ open class TopBannerViewController: UIViewController {
             UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded, completion: finally)
         }
         
-        hideSecondaryChildren(completion: stepsInAnimation)
+        hideSecondaryChildren(excluding: lanesView, completion: stepsInAnimation)
     }
     
     public func dismissStepsTable(completion: CompletionHandler? = nil) {
@@ -378,10 +381,7 @@ extension TopBannerViewController: NavigationComponent {
         instructionsBannerView.update(for: instruction)
         nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         junctionView.update(for: instruction, service: service)
-        
-        if !isDisplayingSteps {
-            lanesView.update(for: instruction)
-        }
+        lanesView.update(for: instruction)
     }
     
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {
