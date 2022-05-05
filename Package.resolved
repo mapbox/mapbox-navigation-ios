@@ -69,8 +69,8 @@
         "repositoryURL": "https://github.com/mapbox/mapbox-navigation-native-ios.git",
         "state": {
           "branch": null,
-          "revision": "b648000b9f5d10df5c4401cd4732c30f122af4b9",
-          "version": "97.0.0"
+          "revision": "ae163719fa0e2e0e01b8270ca3980253ac7ae2bb",
+          "version": "98.0.0"
         }
       },
       {
