@@ -5,12 +5,13 @@
 ### Packaging
 
 * MapboxNavigation now requires [MapboxMaps v10.5.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0-rc.1). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v97._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/97.0.0). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v98._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/98.0.0). ([#3862](https://github.com/mapbox/mapbox-navigation-ios/pull/3862))
 
 ### Location tracking
 
 * Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
 * Added the ability to expose current speed in `SpeedLimitView`. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
+* Fixed an issue where the user location was sometimes snapped to a parallel street just before it and the actual street merge. ([#3862](https://github.com/mapbox/mapbox-navigation-ios/pull/3862))
 
 ### User interface
 
