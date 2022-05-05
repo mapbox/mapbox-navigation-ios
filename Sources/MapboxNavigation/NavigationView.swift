@@ -74,12 +74,7 @@ open class NavigationView: UIView {
             
             navigationMapView.isHidden = false
             navigationMapView.translatesAutoresizingMaskIntoConstraints = false
-            
             navigationMapView.delegate = delegate
-            navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
-                                                                                                 viewportDataSourceType: .active)
-            
-            navigationMapView.navigationCamera.follow()
             
             NSLayoutConstraint.activate([
                 navigationMapView.leadingAnchor.constraint(equalTo: leadingAnchor),

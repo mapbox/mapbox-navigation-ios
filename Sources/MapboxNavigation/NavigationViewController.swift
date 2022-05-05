@@ -46,7 +46,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     
     func setupNavigationCamera() {
         // By default `NavigationCamera` in active guidance navigation should be set to `NavigationCameraState.following` state.
-        navigationMapView?.navigationCamera.follow()
+        if let navigationMapView = navigationMapView {
+            navigationMapView.navigationCamera.viewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                                                 viewportDataSourceType: .active)
+            navigationMapView.navigationCamera.follow()
+        }
         
         // In case if `NavigationMapView` instance was injected - do not set initial camera options.
         if let _ = navigationOptions?.navigationMapView {
