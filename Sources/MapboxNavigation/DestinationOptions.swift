@@ -1,8 +1,10 @@
 import CoreLocation
 import MapboxDirections
 
-public struct DestinationOptions {
+// :nodoc:
+@_spi(Experimental) public struct DestinationOptions {
     
+    // :nodoc:
     public var primaryText: String?
     
     var secondaryText: String?

@@ -1,4 +1,4 @@
-import MapboxNavigation
+@_spi(Experimental) import MapboxNavigation
 import UIKit
 
 extension SceneDelegate: NavigationViewControllerDelegate {

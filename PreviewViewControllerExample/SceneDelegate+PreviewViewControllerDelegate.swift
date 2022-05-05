@@ -1,6 +1,6 @@
 import UIKit
 import CoreLocation
-import MapboxNavigation
+@_spi(Experimental) import MapboxNavigation
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxGeocoder

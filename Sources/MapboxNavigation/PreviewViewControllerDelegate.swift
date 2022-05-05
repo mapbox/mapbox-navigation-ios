@@ -3,7 +3,7 @@ import CoreLocation
 import MapboxDirections
 
 // :nodoc:
-public protocol PreviewViewControllerDelegate: AnyObject {
+@_spi(Experimental) public protocol PreviewViewControllerDelegate: AnyObject {
     
     func previewViewControllerWillPreviewRoutes(_ previewViewController: PreviewViewController)
     

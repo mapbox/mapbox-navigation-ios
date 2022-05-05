@@ -1,6 +1,6 @@
 import MapboxDirections
 
-public struct RoutesPreviewOptions {
+@_spi(Experimental) public struct RoutesPreviewOptions {
     
     var routeResponse: RouteResponse
     

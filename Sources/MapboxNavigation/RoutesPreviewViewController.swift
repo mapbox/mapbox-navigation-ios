@@ -1,7 +1,7 @@
 import UIKit
 import MapboxDirections
 
-class RoutesPreviewViewController: RoutesPreviewing {
+@_spi(Experimental) public class RoutesPreviewViewController: RoutesPreviewing {
     
     var bottomBannerView: BottomBannerView!
     
@@ -17,7 +17,7 @@ class RoutesPreviewViewController: RoutesPreviewing {
     
     weak var delegate: RoutesPreviewViewControllerDelegate?
     
-    var routesPreviewOptions: RoutesPreviewOptions {
+    public var routesPreviewOptions: RoutesPreviewOptions {
         didSet {
             updateRouteDetails()
         }
@@ -33,7 +33,7 @@ class RoutesPreviewViewController: RoutesPreviewing {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
+    public override func viewDidLoad() {
         super.viewDidLoad()
         
         commonInit()

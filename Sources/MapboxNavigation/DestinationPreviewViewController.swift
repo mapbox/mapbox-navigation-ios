@@ -3,14 +3,13 @@ import CoreLocation
 import MapboxDirections
 
 // :nodoc:
-public class DestinationPreviewViewController: DestinationPreviewing {
+@_spi(Experimental) public class DestinationPreviewViewController: DestinationPreviewing {
     
     var bottomBannerView: BottomBannerView!
     
     var bottomPaddingView: BottomPaddingView!
     
-    // :nodoc:
-    public var destinationLabel: DestinationLabel!
+    var destinationLabel: DestinationLabel!
     
     var previewButton: PreviewButton!
     

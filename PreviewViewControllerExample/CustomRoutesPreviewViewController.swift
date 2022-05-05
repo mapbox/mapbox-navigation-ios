@@ -1,5 +1,5 @@
 import UIKit
-import MapboxNavigation
+@_spi(Experimental) import MapboxNavigation
 
 protocol CustomRoutesPreviewViewControllerDelegate: AnyObject {
     

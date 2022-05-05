@@ -1,8 +1,8 @@
 import UIKit
 
-public typealias RoutesPreviewing = UIViewController & RoutesPreviewDataSource
+@_spi(Experimental) public typealias RoutesPreviewing = UIViewController & RoutesPreviewDataSource
 
-public protocol RoutesPreviewDataSource: AnyObject {
+@_spi(Experimental) public protocol RoutesPreviewDataSource: AnyObject {
     
     var routesPreviewOptions: RoutesPreviewOptions { get }
 }

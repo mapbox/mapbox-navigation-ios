@@ -1,6 +1,7 @@
 import Foundation
 import MapboxCoreNavigation
 import MapboxDirections
+@_spi(Experimental) import MapboxNavigation
 
 extension SceneDelegate: CustomDestinationPreviewViewControllerDelegate {
     

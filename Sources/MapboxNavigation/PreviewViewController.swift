@@ -5,7 +5,7 @@ import MapboxMaps
 import MapboxDirections
 
 // :nodoc:
-open class PreviewViewController: UIViewController {
+@_spi(Experimental) open class PreviewViewController: UIViewController {
     
     var previousState: State? = nil
     
@@ -63,6 +63,7 @@ open class PreviewViewController: UIViewController {
     
     var styleManager: StyleManager!
     
+    // :nodoc:
     public private(set) var presentedBottomBannerViewController: UIViewController?
     
     var topBannerContainerViewHeightConstraint: NSLayoutConstraint!
@@ -299,8 +300,7 @@ open class PreviewViewController: UIViewController {
                                                                                 cameraOptions: routesPreviewCameraOptions))
     }
     
-    // :nodoc:
-    public func fitCamera(to routeResponse: RouteResponse?) {
+    func fitCamera(to routeResponse: RouteResponse?) {
         guard let routes = routeResponse?.routes else { return }
         
         navigationView.navigationMapView.navigationCamera.stop()
@@ -405,6 +405,7 @@ open class PreviewViewController: UIViewController {
         }
     }
     
+    // :nodoc:
     public func setupNavigationViewportDataSource() {
         let navigationViewportDataSource = NavigationViewportDataSource(navigationView.navigationMapView.mapView,
                                                                         viewportDataSourceType: .passive)
@@ -415,6 +416,7 @@ open class PreviewViewController: UIViewController {
         navigationView.navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
     }
     
+    // :nodoc:
     public func setupPassiveLocationManager() {
         let passiveLocationManager = PassiveLocationManager()
         let passiveLocationProvider = PassiveLocationProvider(locationManager: passiveLocationManager)
