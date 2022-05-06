@@ -57,11 +57,17 @@ private extension RoutesCoordinatorTests {
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
                                                                request: routeRequest,
                                                                routeOrigin: RouterOrigin.custom)
-        
-        guard let generatedRoute = (parsedRoutes.value as? [RouteInterface])?.first else {
-            XCTFail("Failed to parse generated test Route.")
-            return nil
+        var generatedRoute: RouteInterface? = nil
+        if parsedRoutes.isValue(),
+           let validGeneratedRoute = (parsedRoutes.value as? [RouteInterface])?.first {
+            generatedRoute = validGeneratedRoute
+        } else if parsedRoutes.isError(),
+                  let errorReason = parsedRoutes.error as String? {
+            XCTFail("Failed to parse generated test route with error: \(errorReason).")
+        } else {
+            XCTFail("Failed to parse generated test route.")
         }
+        
         return generatedRoute
     }
 
