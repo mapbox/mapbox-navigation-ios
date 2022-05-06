@@ -118,7 +118,7 @@ open class TopBannerViewController: UIViewController {
     }
     
     
-    private func showSecondaryChildren(completion: CompletionHandler? = nil) {
+    private func showSecondaryChildren(including secondaryView: UIView? = nil, completion: CompletionHandler? = nil) {
         statusView.isHidden = !statusView.isCurrentlyVisible
         
         if let tertiary = currentInstruction?.tertiaryInstruction {
@@ -133,8 +133,12 @@ open class TopBannerViewController: UIViewController {
             junctionView.isHidden = !junctionView.isCurrentlyVisible
         }
         
-        let notHiddenChildren = [instructionsBannerView] + secondaryChildren.filter {
+        var notHiddenChildren = [instructionsBannerView] + secondaryChildren.filter {
             $0.isHidden == false
+        }
+        
+        if let secondaryView = secondaryView {
+            notHiddenChildren += [secondaryView]
         }
         
         UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: {
@@ -147,12 +151,15 @@ open class TopBannerViewController: UIViewController {
         })
     }
     
-    private func hideSecondaryChildren(excluding secondaryView: UIView? = nil, completion: CompletionHandler? = nil) {
+    private func hideSecondaryChildren(including secondaryView: UIView? = nil, completion: CompletionHandler? = nil) {
         UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: { [weak self] in
             guard var children = self?.secondaryChildren else {
                 return
             }
-            children.removeAll(where: { $0 == secondaryView })
+            
+            if let secondaryView = secondaryView {
+                children += [secondaryView]
+            }
             
             for child in children {
                 child.alpha = 0.0
@@ -210,7 +217,7 @@ open class TopBannerViewController: UIViewController {
         instructionsView.update(for: instructions)
         previewBannerView = instructionsView
         
-        hideSecondaryChildren(completion: completion)
+        hideSecondaryChildren(including: lanesView, completion: completion)
     }
     
     public func stopPreviewing(showingSecondaryChildren: Bool = true) {
@@ -227,7 +234,7 @@ open class TopBannerViewController: UIViewController {
         previewBannerView = nil
         
         if showingSecondaryChildren {
-            showSecondaryChildren()
+            showSecondaryChildren(including: lanesView)
         }
     }
     
@@ -316,7 +323,7 @@ open class TopBannerViewController: UIViewController {
             UIView.animate(withDuration: 0.35, delay: 0.0, options: [.curveEaseOut], animations: parent.view.layoutIfNeeded, completion: finally)
         }
         
-        hideSecondaryChildren(excluding: lanesView, completion: stepsInAnimation)
+        hideSecondaryChildren(completion: stepsInAnimation)
     }
     
     public func dismissStepsTable(completion: CompletionHandler? = nil) {
