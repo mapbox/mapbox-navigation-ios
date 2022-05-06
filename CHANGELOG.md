@@ -32,6 +32,7 @@
 ### Other changes
 
 * Added the `NavigationViewControllerDelegate.navigationViewController(_:, didSubmitArrivalFeedback:)` method which is called to notify that the user submitted the end of route feedback. Implementation of this method receives an `EndOfRouteFeedback` object with user's rating and comment. ([#3842](https://github.com/mapbox/mapbox-navigation-ios/pull/3842))
+* Fixed an issue where value of `datasetProfileIdentifier` argument was ignored in `PassiveLocationManager` constructor. ([#3867](https://github.com/mapbox/mapbox-navigation-ios/pull/3867))
 
 ## v2.4.1
 
