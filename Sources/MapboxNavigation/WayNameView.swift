@@ -47,18 +47,14 @@ open class WayNameLabel: StylableLabel {
     // If there's no valid shield image, display the road name only.
     private func setUpWith(roadName: String) {
         if let shield = representation?.shield {
-            // For `us-state` shield, use the legacy shield first, then fall back to use the generic shield icon.
-            // For non `us-state` shield, use the generic shield icon first, then fall back to use the legacy shield.
-            if shield.name == "us-state",
-               setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) {
-                return
-            } else if setAttributedText(roadName: roadName, shield: shield) {
-                return
-            }
+            // For US state road, use the legacy shield first, then fall back to use the generic shield icon.
+            // The shield name for US state road is `circle-white` in Streets source v8 style.
+            // For non US state road, use the generic shield icon first, then fall back to use the legacy shield.
+            if shield.name == "circle-white",
+               setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) { return }
+            if setAttributedText(roadName: roadName, shield: shield) { return }
         }
-        if setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) {
-            return
-        }
+        if setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) { return }
         
         text = roadName
     }
