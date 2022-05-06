@@ -15,8 +15,10 @@ extension ShieldImage {
                                   baseURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/i-280")!)
     static let us101 = ShieldImage(image: Fixture.image(named: "us-101"),
                                    baseURL: URL(string: "https://s3.amazonaws.com/mapbox/shields/v3/us-101")!)
-    static let shield = ShieldImage(image: Fixture.image(named: "shield-280"),
-                                  baseURL: URL(string: "https://api.mapbox.com/styles/v1")!)
+    static let shieldDay = ShieldImage(image: Fixture.image(named: "shieldDay"),
+                                       baseURL: URL(string: "https://api.mapbox.com/styles/v1")!)
+    static let shieldNight = ShieldImage(image: Fixture.image(named: "shieldNight"),
+                                         baseURL: URL(string: "https://api.mapbox.com/styles/v1")!)
 }
 
 var routeOptions: NavigationRouteOptions {

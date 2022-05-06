@@ -145,6 +145,7 @@ public class ExitView: StylableView {
      This generates the cache key needed to hold the `ExitView`'s `imageRepresentation` in the `ImageCache` caching engine.
      */
     static func criticalHash(side: ExitSide,
+                             styleID: String?,
                              dataSource: DataSource,
                              traitCollection: UITraitCollection) -> String {
         var appearance = ExitView.appearance()
@@ -163,6 +164,7 @@ public class ExitView: StylableView {
         
         var criticalProperties: [AnyHashable?] = [
             side,
+            styleID,
             dataSource.font.pointSize,
             appearance.backgroundColor,
             appearance.foregroundColor,

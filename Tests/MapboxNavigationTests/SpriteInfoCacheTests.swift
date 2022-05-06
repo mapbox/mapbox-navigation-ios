@@ -5,7 +5,7 @@ import TestHelper
 class SpriteInfoCacheTests: TestCase {
     let cache: SpriteInfoCache = SpriteInfoCache()
     let spriteKey = "SpriteKey"
-    var dataKey = "default-3"
+    var dataKey = "us-interstate-3"
 
     override func setUp() {
         super.setUp()
@@ -26,7 +26,7 @@ class SpriteInfoCacheTests: TestCase {
         let spriteInfo = cache.spriteInfo(forKey: dataKey)
         XCTAssertNotNil(spriteInfo)
         
-        let expectedInfo = SpriteInfo(width: 156, height: 84, x: 1710, y: 1992, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
+        let expectedInfo = SpriteInfo(width: 156, height: 132, x: 0, y: 0, pixelRatio: 2, placeholder: [0,8,52,20], visible: true)
         XCTAssertEqual(expectedInfo, spriteInfo, "Failed to retrieve Sprite info from cache.")
         
     }

@@ -13,7 +13,7 @@ class WayNameViewTests: TestCase {
         
         let config = URLSessionConfiguration.default
         config.protocolClasses = [ImageLoadingURLProtocolSpy.self]
-        view.label.spriteRepository = SpriteRepositoryStub.init()
+        view.label.spriteRepository = SpriteRepository()
         view.label.spriteRepository.sessionConfiguration = config
         return view
     }()
@@ -21,39 +21,33 @@ class WayNameViewTests: TestCase {
     override func setUp() {
         super.setUp()
         continueAfterFailure = false
-
-        ImageLoadingURLProtocolSpy.reset()
-        wayNameView.label.spriteRepository.resetCache()
-        wayNameView.label.representation = nil
     }
 
     override func tearDown() {
         super.tearDown()
+        ImageLoadingURLProtocolSpy.reset()
+        wayNameView.label.spriteRepository.resetCache()
+        wayNameView.label.representation = nil
     }
     
-    func loadingURL(baseURL: URL, styleID: String) {
-        guard let spriteRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: true, baseURL: baseURL, styleID: styleID),
-              let metadataRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: false, baseURL: baseURL, styleID: styleID) else {
-                  XCTFail("Failed to form request to update SpriteRepository.")
-                  return
-              }
-        
+    func storeData(style: StyleType) {
         let scale = Int(VisualInstruction.Component.scale)
-        guard let shieldData = ShieldImage.shield.image.pngData(),
-              let scaleShieldImageURL = URL(string: ShieldImage.i280.baseURL.absoluteString + "@\(scale)x.png") else {
-                  XCTFail("No data or URL found for shield image.")
+        let styleID = (style == .day) ? "/mapbox/navigation-day-v1" : "/mapbox/navigation-night-v1"
+        let spriteImage = (style == .day) ? ShieldImage.shieldDay.image : ShieldImage.shieldNight.image
+        guard let spriteRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: true, styleID: styleID),
+              let infoRequestURL = wayNameView.label.spriteRepository.spriteURL(isImage: false, styleID: styleID),
+              let legacyRequestURL = URL(string: ShieldImage.i280.baseURL.absoluteString + "@\(scale)x.png") else {
+                  XCTFail("Failed to form request URL.")
                   return
               }
-        
-        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: spriteRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: metadataRequestURL)
-        ImageLoadingURLProtocolSpy.registerData(shieldData, forURL: scaleShieldImageURL)
+        ImageLoadingURLProtocolSpy.registerData(spriteImage.pngData()!, forURL: spriteRequestURL)
+        ImageLoadingURLProtocolSpy.registerData(Fixture.JSONFromFileNamed(name: "sprite-info"), forURL: infoRequestURL)
+        ImageLoadingURLProtocolSpy.registerData(ShieldImage.i280.image.pngData()!, forURL: legacyRequestURL)
     }
     
     func testUpdateStyle() {
         let baseURL = wayNameView.label.spriteRepository.baseURL
-        let styleID = "/mapbox/navigation-night-v1"
-        loadingURL(baseURL: baseURL, styleID: styleID)
+        storeData(style: .night)
         
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: baseURL, name: "us-interstate", textColor: "white", text: "280")
         let representation = VisualInstruction.Component.ImageRepresentation(imageBaseURL: ShieldImage.i280.baseURL, shield: shield)
@@ -81,8 +75,7 @@ class WayNameViewTests: TestCase {
     
     func testUpdateRoad() {
         let baseURL = wayNameView.label.spriteRepository.baseURL
-        let styleID = "/mapbox/navigation-day-v1"
-        loadingURL(baseURL: baseURL, styleID: styleID)
+        storeData(style: .day)
         
         var roadName = "I 280 North"
         let shield = VisualInstruction.Component.ShieldRepresentation(baseURL: baseURL, name: "us-interstate", textColor: "white", text: "280")
@@ -110,11 +103,5 @@ class WayNameViewTests: TestCase {
         waitForExpectations(timeout: 3, handler: nil)
     
         XCTAssertEqual(wayNameView.label.text, roadName, "Failed to set up the WayNameView label with road name text only.")
-    }
-}
-
-class SpriteRepositoryStub: SpriteRepository {    
-    override func getShieldIcon(shield: VisualInstruction.Component.ShieldRepresentation) -> UIImage? {
-        return shield.text == "280" ? ShieldImage.shield.image : nil
     }
 }
