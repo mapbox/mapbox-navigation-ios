@@ -20,6 +20,7 @@
 * Fixed an issue where shields disappeared after the application returns to the foreground. ([#3840](https://github.com/mapbox/mapbox-navigation-ios/pull/3840))
 * Fixed an issue where `EndOfRouteCommentView` is using dark style when only light style is allowed. ([#3845](https://github.com/mapbox/mapbox-navigation-ios/pull/3845))
 * Fixed an issue where exit views and generic shields in top banner don't get updated when style changes in active navigation. ([#3864](https://github.com/mapbox/mapbox-navigation-ios/pull/3864))
+* Fixed an issue where the current road name label used a generic white circle instead of the correct shield to represent a state route in the United States. ([#3870](https://github.com/mapbox/mapbox-navigation-ios/pull/3870))
 
 ### CarPlay
 
