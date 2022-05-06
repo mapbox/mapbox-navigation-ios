@@ -176,16 +176,24 @@ class InstructionPresenter {
                           dataSource: DataSource,
                           onImageDownload: @escaping CompletionHandler) -> NSAttributedString? {
         if let shield = representation.shield {
-            if shield.name == "us-state",
-               let legacyAttributedString = legacyAttributedString(for: representation, in: repository, dataSource: dataSource) {
-                return legacyAttributedString
-            } else if let shieldAttributedString = shieldAttributedString(for: representation, in: repository, dataSource: dataSource) {
+            // For US state road, use the legacy shield first, then fall back to use the generic shield icon.
+            // The shield name for US state road is `circle-white` in Streets source v8 style.
+            // For non US state road, use the generic shield icon first, then fall back to use the legacy shield.
+            if shield.name == "circle-white" {
+                if let legacyIcon = repository.legacyCache.image(forKey: representation.legacyCacheKey) {
+                    return legacyAttributedString(for: legacyIcon, dataSource: dataSource)
+                } else if representation.imageBaseURL != nil {
+                    spriteRepository.updateRepresentation(for: representation, completion: onImageDownload)
+                    return nil
+                }
+            }
+            if let shieldAttributedString = shieldAttributedString(for: representation, in: repository, dataSource: dataSource) {
                 return shieldAttributedString
             }
         }
 
-        if let legacyAttributedString = legacyAttributedString(for: representation, in: repository, dataSource: dataSource) {
-            return legacyAttributedString
+        if let legacyIcon = repository.legacyCache.image(forKey: representation.legacyCacheKey) {
+            return legacyAttributedString(for: legacyIcon, dataSource: dataSource)
         }
 
         // Return nothing in the meantime, triggering downstream behavior (generic shield or text).
@@ -193,14 +201,11 @@ class InstructionPresenter {
         return nil
     }
     
-    private func legacyAttributedString(for representation: VisualInstruction.Component.ImageRepresentation,
-                                        in repository: SpriteRepository,
-                                        dataSource: DataSource) -> NSAttributedString? {
-        guard let cachedImage = repository.legacyCache.image(forKey: representation.legacyCacheKey)  else { return nil }
-
+    private func legacyAttributedString(for legacyIcon: UIImage,
+                                        dataSource: DataSource) -> NSAttributedString {
         let attachment = ShieldAttachment()
         attachment.font = dataSource.font
-        attachment.image = cachedImage
+        attachment.image = legacyIcon
         return NSAttributedString(attachment: attachment)
     }
 
