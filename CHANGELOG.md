@@ -5,6 +5,7 @@
 ### Packaging
 
 * MapboxNavigation now requires [MapboxMaps v10.5.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0-rc.1). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
+* MapboxCoreNavigation now requires [MapboxDirections v2.5.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.5.0-beta.1). ([#3871](https://github.com/mapbox/mapbox-navigation-ios/pull/3871))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v98._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/98.0.0). ([#3862](https://github.com/mapbox/mapbox-navigation-ios/pull/3862))
 
 ### Location tracking
