@@ -206,7 +206,7 @@ class MapboxCoreNavigationTests: TestCase {
         }
         
         navigation.start()        
-        waitForExpectations(timeout: waitForInterval) { (error) in
+        waitForExpectations(timeout: waitForInterval + 2) { (error) in
             XCTAssertNil(error)
         }
         navigation.stop()
