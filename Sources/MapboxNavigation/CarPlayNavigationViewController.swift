@@ -390,6 +390,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        suspendNotifications()
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -803,7 +807,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                                               value: "Continue",
                                               comment: "Title on continue button in CarPlay")
         
-        let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
+        let continueAlert = CPAlertAction(title: continueTitle, style: .default) { [weak self] _ in
+            guard let self = self else { return }
             self.carInterfaceController.dismissTemplate(animated: true)
             self.updateRouteOnMap()
         }
