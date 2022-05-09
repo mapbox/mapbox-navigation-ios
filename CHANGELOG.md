@@ -42,6 +42,10 @@
    * Replaced the `Router.routingProvider` property with `Router.customRoutingProvider`.
 * Renamed the `NavigationSettings.initialize(directions:tileStoreConfiguration:)` method to  `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)`. This method allows you to control whether the rerouting uses the network or offline routing data. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754), [#3824](https://github.com/mapbox/mapbox-navigation-ios/pull/3824))
 
+### CarPlay
+
+* Fixed an issue where an active navigation using CarPlay application with route that contains multiple legs would cause a memory leak. ([#3877](https://github.com/mapbox/mapbox-navigation-ios/pull/3877))
+
 ## v2.4.1
 
 * Fixed an issue where the current road name, speed limit, and compass were missing from the map in CarPlay’s navigating activity. ([#3858](https://github.com/mapbox/mapbox-navigation-ios/pull/3858))
