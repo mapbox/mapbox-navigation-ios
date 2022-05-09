@@ -82,7 +82,7 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      Called when the user arrives at a waypoint.
 
      Return false to continue checking if reroute is needed. By default, the user will not be rerouted when arriving at a waypoint.
-
+     
      - parameter navigationViewController: The navigation view controller that has detected the need to calculate a new route.
      - parameter waypoint: The waypoint that the controller has arrived at.
      - returns: True to prevent reroutes.

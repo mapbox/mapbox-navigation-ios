@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 
   s.name = "MapboxCoreNavigation"
-  s.version = '2.5.0-beta.2'
+  s.version = '2.5.0-beta.3'
   s.summary = "Core components for turn-by-turn navigation on iOS."
 
   s.description  = <<-DESC
@@ -40,8 +40,8 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.module_name = "MapboxCoreNavigation"
 
-  s.dependency "MapboxNavigationNative", "~> 97.0"
-  s.dependency "MapboxDirections", "~> 2.4"
+  s.dependency "MapboxNavigationNative", "~> 98.0"
+  s.dependency "MapboxDirections-pre", "2.5.0-beta.1"
   s.dependency "MapboxMobileEvents", "~> 1.0"
 
   s.swift_version = "5.0"

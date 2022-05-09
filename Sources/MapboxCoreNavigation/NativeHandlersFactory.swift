@@ -21,7 +21,7 @@ class NativeHandlersFactory {
     let targetVersion: String?
     let configFactoryType: ConfigFactory.Type
     let datasetProfileIdentifier: ProfileIdentifier
-    let navigatorRouterType: MapboxNavigationNative.RouterType?
+    let routingProviderSource: MapboxNavigationNative.RouterType?
     
     init(tileStorePath: String,
          credentials: Credentials,
@@ -30,7 +30,7 @@ class NativeHandlersFactory {
          targetVersion: String? = nil,
          configFactoryType: ConfigFactory.Type = ConfigFactory.self,
          datasetProfileIdentifier: ProfileIdentifier = ProfileIdentifier.automobile,
-         navigatorRouterType: MapboxNavigationNative.RouterType? = nil) {
+         routingProviderSource: MapboxNavigationNative.RouterType? = nil) {
         self.tileStorePath = tileStorePath
         self.credentials = credentials
         self.tilesVersion = tilesVersion
@@ -38,7 +38,7 @@ class NativeHandlersFactory {
         self.targetVersion = targetVersion
         self.configFactoryType = configFactoryType
         self.datasetProfileIdentifier = datasetProfileIdentifier
-        self.navigatorRouterType = navigatorRouterType
+        self.routingProviderSource = routingProviderSource
     }
     
     // MARK: - Native Handlers
@@ -55,7 +55,7 @@ class NativeHandlersFactory {
         onMainQueueSync { // Make sure that Navigator pick ups Main Thread RunLoop.
             LogConfiguration.getInstance().setFilterLevelFor(LoggingLevel.info)
             
-            let router = navigatorRouterType.map {
+            let router = routingProviderSource.map {
                 MapboxNavigationNative.RouterFactory.build(for: $0,
                                                            cache: cacheHandle,
                                                            config: configHandle,

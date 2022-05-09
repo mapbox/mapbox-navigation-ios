@@ -38,7 +38,9 @@ class CarPlayNavigationViewControllerTests: TestCase {
         
         let navigationService = MapboxNavigationService(routeResponse: routeResponse,
                                                         routeIndex: 0,
-                                                        routeOptions: navigationRouteOptions)
+                                                        routeOptions: navigationRouteOptions,
+                                                        customRoutingProvider: nil,
+                                                        credentials: Fixture.credentials)
         
         let mapTemplateMock = MapTemplateMock()
         let navigationSession = CPNavigationSessionFake(maneuvers: [CPManeuver()])
@@ -46,7 +48,7 @@ class CarPlayNavigationViewControllerTests: TestCase {
         
         let interfaceController = FakeCPInterfaceController(context: #function)
         
-        let carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
+        let carPlayManager = CarPlayManager(customRoutingProvider: MapboxRoutingProvider(.offline))
         
         let carPlayNavigationViewController = CarPlayNavigationViewController(navigationService: navigationService,
                                                                               mapTemplate: mapTemplateMock,

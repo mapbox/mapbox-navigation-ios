@@ -5,28 +5,50 @@
 ### Packaging
 
 * MapboxNavigation now requires [MapboxMaps v10.5.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0-rc.1). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v97._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/97.0.0). ([#3834](https://github.com/mapbox/mapbox-navigation-ios/pull/3834))
-
-### Location tracking
-
-* Fixed an issue where restricted-access roads would sometimes be incorrectly drawn. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
-* Added the ability to expose current speed in `SpeedLimitView`. ([#3795](https://github.com/mapbox/mapbox-navigation-ios/pull/3795))
+* MapboxCoreNavigation now requires [MapboxDirections v2.5.0-beta.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.5.0-beta.1). ([#3871](https://github.com/mapbox/mapbox-navigation-ios/pull/3871))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v98._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/98.0.0). ([#3862](https://github.com/mapbox/mapbox-navigation-ios/pull/3862))
 
 ### User interface
 
-* Fixed an issue that caused CarPlay map to hide way-name, speed-limit and compass views. ([#3858](https://github.com/mapbox/mapbox-navigation-ios/pull/3858))
-* Fixed an issue where `UserPuckCourseView`’s color desaturated during turn-by-turn navigation even as the location was being updated. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
-* `UserPuckCourseView` no longer desaturates its color based on the age of the last location update. `RouteController` simulates location updates whenever Location Services is unable to receive real location updates. To ensure a steady stream of location updates outside of turn-by-turn navigation, install a `PassiveLocationManager`. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
+* Added the `CarPlayManagerDelegate.carPlayManager(_:shouldUpdateNotificationFor:with:in:)` and `CarPlayManagerDelegate.carPlayManager(_:shouldShowNotificationFor:in:)` methods for controlling the display of user notifications while the application is in the background in CarPlay. ([#3828](https://github.com/mapbox/mapbox-navigation-ios/pull/3828))
 * Fixed an issue where shields disappeared after the application returns to the foreground. ([#3840](https://github.com/mapbox/mapbox-navigation-ios/pull/3840))
+* The top banner now shows shields that are more consistent with the map and current road name label. ([#3864](https://github.com/mapbox/mapbox-navigation-ios/pull/3864))
+* Fixed an issue where exit views and generic shields in the top banner got outdated when the style changed during turn-by-turn navigation. ([#3864](https://github.com/mapbox/mapbox-navigation-ios/pull/3864))
+* Fixed an issue where the current road name label used a generic white circle instead of the correct shield to represent a state route in the United States. ([#3870](https://github.com/mapbox/mapbox-navigation-ios/pull/3870))
+* Lane guidance remains visible while the step table is visible. ([#3805](https://github.com/mapbox/mapbox-navigation-ios/pull/3805))
+* Removed a transparent gap that appeared between the top banner and step table if the user completed a maneuver while the step table was visible. ([#3805](https://github.com/mapbox/mapbox-navigation-ios/pull/3805))
+* Fixed an issue where a gray dashed line, which normally indicates a restricted-access road, appeared at the beginning of the route line even if there was no restriction. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
+
+### User feedback
+
+* Added the `NavigationViewControllerDelegate.navigationViewController(_:didSubmitArrivalFeedback:)` method, which is called when the user submits a rating or comment at the end of a trip. ([#3842](https://github.com/mapbox/mapbox-navigation-ios/pull/3842))
 * Fixed an issue where `EndOfRouteCommentView` is using dark style when only light style is allowed. ([#3845](https://github.com/mapbox/mapbox-navigation-ios/pull/3845))
+
+### Location tracking
+
+* Added the `Router.initialManeuverAvoidanceRadius` property for adjusting the likelihood that the user will be rerouted onto a cross street very close to the current location. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
+* `UserPuckCourseView` no longer desaturates its color based on the age of the last location update. `RouteController` simulates location updates whenever Location Services is unable to receive real location updates. To ensure a steady stream of location updates outside of turn-by-turn navigation, install a `PassiveLocationManager`. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
+* Fixed an issue where `UserPuckCourseView`’s color desaturated during turn-by-turn navigation even as the location was being updated. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
+* Fixed an issue where the `PassiveLocationManager(directions:systemLocationManager:eventsManagerType:userInfo:datasetProfileIdentifier:)` initializer’s `datasetProfileIdentifier` argument was ignored. ([#3867](https://github.com/mapbox/mapbox-navigation-ios/pull/3867))
+* Fixed an issue where the user location was sometimes snapped to a parallel street just before it merges with the actual street. ([#3862](https://github.com/mapbox/mapbox-navigation-ios/pull/3862))
+
+### Routing
+
+* Renamed `routingProvider` to `customRoutingProvider` within the `NavigationService` class and `Router` protocol. You can continue to implement a `RoutingProvider` to customize how the router calculates a new route when rerouting, but the default value is now `nil` when using the built-in rerouting behavior. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754))
+   * Renamed the `NavigationService(routeResponse:routeIndex:routeOptions:routingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)` initializer to `NavigationService(routeResponse:routeIndex:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)`.
+   * Renamed the `NavigationService(routeResponse:routeIndex:routeOptions:routingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)` initializer to `NavigationService(routeResponse:routeIndex:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)`.
+   * Replaced the `NavigationService.routingProvider` property with `NavigationService.customRoutingProvider`.
+   * Renamed the `Router(alongRouteAtIndex:in:options:routingProvider:dataSource:)` initializer to `Router(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)`
+   * Replaced the `Router.routingProvider` property with `Router.customRoutingProvider`.
+* Renamed the `NavigationSettings.initialize(directions:tileStoreConfiguration:)` method to  `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)`. This method allows you to control whether the rerouting uses the network or offline routing data. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754), [#3824](https://github.com/mapbox/mapbox-navigation-ios/pull/3824))
 
 ### CarPlay
 
-* Added the `CarPlayManagerDelegate.carPlayManager(_:shouldUpdateNotificationFor:with:in:)` and `CarPlayManagerDelegate.carPlayManager(_:shouldShowNotificationFor:in:)` to provide the ability to control notifications presentation while CarPlay application is in the background. ([#3828](https://github.com/mapbox/mapbox-navigation-ios/pull/3828))
+* Fixed an issue where an active navigation using CarPlay application with route that contains multiple legs would cause a memory leak. ([#3877](https://github.com/mapbox/mapbox-navigation-ios/pull/3877))
 
-### Other changes
+## v2.4.1
 
-* Added the `NavigationViewControllerDelegate.navigationViewController(_:, didSubmitArrivalFeedback:)` method which is called to notify that the user submitted the end of route feedback. Implementation of this method receives an `EndOfRouteFeedback` object with user's rating and comment. ([#3842](https://github.com/mapbox/mapbox-navigation-ios/pull/3842))
+* Fixed an issue where the current road name, speed limit, and compass were missing from the map in CarPlay’s navigating activity. ([#3858](https://github.com/mapbox/mapbox-navigation-ios/pull/3858))
 
 ## v2.4.0
 

@@ -57,7 +57,7 @@ open class PassiveLocationManager: NSObject {
     
     private var _eventsManager: NavigationEventsManager?
     
-    private let sharedNavigator = Navigator.shared
+    private let sharedNavigator: Navigator
     
     /**
      The underlying navigator that performs map matching.
@@ -268,6 +268,8 @@ open class PassiveLocationManager: NSObject {
         if let datasetProfileIdentifier = datasetProfileIdentifier {
             Navigator.datasetProfileIdentifier = datasetProfileIdentifier
         }
+
+        self.sharedNavigator = Navigator.shared
         
         self.directions = directions
         

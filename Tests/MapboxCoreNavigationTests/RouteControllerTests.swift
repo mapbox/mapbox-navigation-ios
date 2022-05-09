@@ -29,7 +29,7 @@ class RouteControllerTests: TestCase {
         let locationManager = ReplayLocationManager(locations: locations)
         replayManager = locationManager
         let equivalentRouteOptions = NavigationRouteOptions(navigationMatchOptions: options)
-        let routeController = RouteController(alongRouteAtIndex: 0, in: routeResponse, options: equivalentRouteOptions, routingProvider: MapboxRoutingProvider(.offline), dataSource: self)
+        let routeController = RouteController(alongRouteAtIndex: 0, in: routeResponse, options: equivalentRouteOptions, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: self)
         locationManager.delegate = routeController
         let routerDelegateSpy = RouterDelegateSpy()
         routeController.delegate = routerDelegateSpy
@@ -83,7 +83,7 @@ class RouteControllerTests: TestCase {
         let routeController = RouteController(alongRouteAtIndex: 0,
                                               in: routeResponse,
                                               options: navigationRouteOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
 
         let routerDelegateSpy = RouterDelegateSpy()

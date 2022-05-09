@@ -4,6 +4,14 @@ import MapboxDirections
 
 /// :nodoc:
 open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
+    @objc dynamic var roadShieldBlackColor: UIColor = .roadShieldBlackColor
+    @objc dynamic var roadShieldBlueColor: UIColor = .roadShieldBlueColor
+    @objc dynamic var roadShieldGreenColor: UIColor = .roadShieldGreenColor
+    @objc dynamic var roadShieldRedColor: UIColor = .roadShieldRedColor
+    @objc dynamic var roadShieldWhiteColor: UIColor = .roadShieldWhiteColor
+    @objc dynamic var roadShieldYellowColor: UIColor = .roadShieldYellowColor
+    @objc dynamic var roadShieldOrangeColor: UIColor = .roadShieldOrangeColor
+    @objc dynamic var roadShieldDefaultColor: UIColor = .roadShieldDefaultColor
     
     typealias AvailableBoundsHandler = () -> (CGRect)
     var availableBounds: AvailableBoundsHandler!
@@ -12,48 +20,66 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     // displayed. The bounds of `InstructionLabel` will be used if this view is unset.
     weak var viewForAvailableBoundsCalculation: UIView?
     var shieldHeight: CGFloat = 30
-    var imageRepository: ImageRepository = .shared
     var imageDownloadCompletion: (() -> Void)?
     weak var instructionDelegate: VisualInstructionDelegate?
     
     var instruction: VisualInstruction? {
         didSet {
-            guard let instruction = instruction else {
-                text = nil
-                instructionPresenter = nil
-                return
-            }
-            let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
-                guard let self = self else { return }
-                self.attributedText = attributedText
-                self.imageDownloadCompletion?()
-            }
-            
-            let presenter = InstructionPresenter(instruction,
-                                                 dataSource: self,
-                                                 imageRepository: imageRepository,
-                                                 traitCollection: traitCollection,
-                                                 downloadCompletion: update)
-            
-            let attributed = presenter.attributedText()
-            attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
-            instructionPresenter = presenter
+            updateLabelAttributedText()
         }
+    }
+    
+    private func updateLabelAttributedText() {
+        guard let instruction = instruction else {
+            text = nil
+            return
+        }
+        
+        let update: InstructionPresenter.ShieldDownloadCompletion = { [weak self] (attributedText) in
+            guard let self = self else { return }
+            self.attributedText = attributedText
+            self.imageDownloadCompletion?()
+        }
+        
+        let presenter = InstructionPresenter(instruction,
+                                             dataSource: self,
+                                             traitCollection: traitCollection,
+                                             downloadCompletion: update)
+        
+        let attributed = presenter.attributedText()
+        attributedText = instructionDelegate?.label(self, willPresent: instruction, as: attributed) ?? attributed
     }
 
     open override func update() {
-        let previousInstruction = instruction
-        instruction = previousInstruction
+        updateLabelAttributedText()
         super.update()
     }
     
     open override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         update()
-        imageRepository.resetImageCache(nil)
     }
     
-    private var instructionPresenter: InstructionPresenter?
+    func shieldColor(from textColor: String) -> UIColor {
+        switch textColor {
+        case "black":
+            return roadShieldBlackColor
+        case "blue":
+            return roadShieldBlueColor
+        case "green":
+            return roadShieldGreenColor
+        case "red":
+            return roadShieldRedColor
+        case "white":
+            return roadShieldWhiteColor
+        case "yellow":
+            return roadShieldYellowColor
+        case "orange":
+            return roadShieldOrangeColor
+        default:
+            return roadShieldDefaultColor
+        }
+    }
 }
 
 /// :nodoc:

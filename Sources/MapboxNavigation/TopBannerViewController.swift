@@ -19,6 +19,8 @@ open class TopBannerViewController: UIViewController {
     
     var routeProgress: RouteProgress?
     
+    var currentInstruction: VisualInstructionBanner?
+    
     lazy var informationStackBottomPinConstraint: NSLayoutConstraint = view.bottomAnchor.constraint(equalTo: informationStackView.bottomAnchor)
     
     lazy var informationStackView = UIStackView(orientation: .vertical, autoLayout: true)
@@ -54,10 +56,10 @@ open class TopBannerViewController: UIViewController {
     private let instructionsBannerHeight: CGFloat = 100.0
     
     private var informationChildren: [UIView] {
-        return [instructionsBannerView] + secondaryChildren
+        return [instructionsBannerView] + secondaryChildren + [lanesView]
     }
     private var secondaryChildren: [UIView] {
-        return [lanesView, nextBannerView, statusView, junctionView]
+        return [nextBannerView, statusView, junctionView]
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -107,7 +109,8 @@ open class TopBannerViewController: UIViewController {
     
     private func setupInformationStackView() {
         addInstructionsBanner()
-        informationStackView.addArrangedSubviews(secondaryChildren)
+        let subviews = [lanesView] + secondaryChildren
+        informationStackView.addArrangedSubviews(subviews)
         for child in informationChildren {
             child.leadingAnchor.constraint(equalTo: informationStackView.leadingAnchor).isActive = true
             child.trailingAnchor.constraint(equalTo: informationStackView.trailingAnchor).isActive = true
@@ -115,18 +118,32 @@ open class TopBannerViewController: UIViewController {
     }
     
     
-    private func showSecondaryChildren(completion: CompletionHandler? = nil) {
+    private func showSecondaryChildren(including secondaryView: UIView? = nil, completion: CompletionHandler? = nil) {
         statusView.isHidden = !statusView.isCurrentlyVisible
-        junctionView.isHidden = !junctionView.isCurrentlyVisible
-        lanesView.isHidden = !lanesView.isCurrentlyVisible
-        nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
         
-        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: { [weak self] in
-            guard let children = self?.informationChildren else {
-                return
+        if let tertiary = currentInstruction?.tertiaryInstruction {
+            lanesView.isHidden = !lanesView.isCurrentlyVisible
+            lanesView.update(for: currentInstruction)
+            if !tertiary.laneComponents.isEmpty {
+                nextBannerView.isHidden = !nextBannerView.isCurrentlyVisible
             }
+        }
+        
+        if let _ = currentInstruction?.quaternaryInstruction {
+            junctionView.isHidden = !junctionView.isCurrentlyVisible
+        }
+        
+        var notHiddenChildren = [instructionsBannerView] + secondaryChildren.filter {
+            $0.isHidden == false
+        }
+        
+        if let secondaryView = secondaryView {
+            notHiddenChildren += [secondaryView]
+        }
+        
+        UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseOut], animations: {
             
-            for child in children {
+            for child in notHiddenChildren {
                 child.alpha = 1.0
             }
         }, completion: { _ in
@@ -134,10 +151,14 @@ open class TopBannerViewController: UIViewController {
         })
     }
     
-    private func hideSecondaryChildren(completion: CompletionHandler? = nil) {
+    private func hideSecondaryChildren(including secondaryView: UIView? = nil, completion: CompletionHandler? = nil) {
         UIView.animate(withDuration: 0.20, delay: 0.0, options: [.curveEaseIn], animations: { [weak self] in
-            guard let children = self?.secondaryChildren else {
+            guard var children = self?.secondaryChildren else {
                 return
+            }
+            
+            if let secondaryView = secondaryView {
+                children += [secondaryView]
             }
             
             for child in children {
@@ -196,7 +217,7 @@ open class TopBannerViewController: UIViewController {
         instructionsView.update(for: instructions)
         previewBannerView = instructionsView
         
-        hideSecondaryChildren(completion: completion)
+        hideSecondaryChildren(including: lanesView, completion: completion)
     }
     
     public func stopPreviewing(showingSecondaryChildren: Bool = true) {
@@ -213,7 +234,7 @@ open class TopBannerViewController: UIViewController {
         previewBannerView = nil
         
         if showingSecondaryChildren {
-            showSecondaryChildren()
+            showSecondaryChildren(including: lanesView)
         }
     }
     
@@ -271,7 +292,8 @@ open class TopBannerViewController: UIViewController {
             var constraints = pinningConstraints + hideConstraints + self.stepsContainerConstraints
             
             if let bannerHostHeight = self.view.superview?.superview?.frame.height {
-                let inset = self.instructionsBannerHeight + self.view.safeArea.top
+                let lanesViewHeight: CGFloat = 40
+                let inset = self.instructionsBannerHeight + lanesViewHeight + self.view.safeArea.top
                 stepsHeightPresizingConstraint = (child.view.heightAnchor.constraint(equalToConstant: bannerHostHeight - inset))
                 constraints.append(stepsHeightPresizingConstraint!)
             }
@@ -362,10 +384,11 @@ extension TopBannerViewController: NavigationComponent {
     }
     
     public func navigationService(_ service: NavigationService, didPassVisualInstructionPoint instruction: VisualInstructionBanner, routeProgress: RouteProgress) {
+        currentInstruction = instruction
         instructionsBannerView.update(for: instruction)
-        lanesView.update(for: instruction)
         nextBannerView.navigationService(service, didPassVisualInstructionPoint: instruction, routeProgress: routeProgress)
         junctionView.update(for: instruction, service: service)
+        lanesView.update(for: instruction)
     }
     
     public func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation) {

@@ -65,9 +65,23 @@ public class CarPlayManager: NSObject {
     public lazy var directions: Directions = self.routingProvider as? Directions ?? NavigationSettings.shared.directions
     
     /**
-     `RoutingProvider`, used to create route.
+     `RoutingProvider`, used to create a route during refreshing or rerouting.
      */
-    public var routingProvider: RoutingProvider
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. This property will be equal to `customRoutingProvider` if that is provided or a `MapboxRoutingProvider` instance otherwise.")
+    public lazy var routingProvider: RoutingProvider = resolvedRoutingProvider
+    
+    /**
+     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     
+     If set to `nil` - default Mapbox implementation will be used.
+     */
+    public var customRoutingProvider: RoutingProvider? = nil
+    
+    private lazy var defaultRoutingProvider: RoutingProvider = MapboxRoutingProvider(NavigationSettings.shared.routingProviderSource)
+
+    var resolvedRoutingProvider: RoutingProvider {
+        customRoutingProvider ?? defaultRoutingProvider
+    }
     
     /**
      Returns current `CarPlayActivity`, which is based on currently present `CPTemplate`. In case if
@@ -113,12 +127,12 @@ public class CarPlayManager: NSObject {
      - parameter directions: The object that calculates routes when the user interacts with the CarPlay interface. If this argument is `nil` or omitted, the shared `Directions` object is used by default.
      - parameter eventsManager: The events manager to use during turn-by-turn navigation while connected to CarPlay. If this argument is `nil` or omitted, a standard `NavigationEventsManager` object is used by default.
      */
-    @available(*, deprecated, renamed: "init(styles:routingProvider:eventsManager:carPlayNavigationViewControllerClass:)")
+    @available(*, deprecated, renamed: "init(styles:customRoutingProvider:eventsManager:carPlayNavigationViewControllerClass:)")
     public convenience init(styles: [Style]? = nil,
                             directions: Directions? = nil,
                             eventsManager: NavigationEventsManager? = nil) {
         self.init(styles: styles,
-                  routingProvider: directions ?? NavigationSettings.shared.directions,
+                  customRoutingProvider: directions ?? NavigationSettings.shared.directions,
                   eventsManager: eventsManager,
                   carPlayNavigationViewControllerClass: nil)
     }
@@ -130,21 +144,38 @@ public class CarPlayManager: NSObject {
      - parameter routingProvider: The object that calculates routes when the user interacts with the CarPlay interface.
      - parameter eventsManager: The events manager to use during turn-by-turn navigation while connected to CarPlay. If this argument is `nil` or omitted, a standard `NavigationEventsManager` object is used by default.
      */
+    @available(*, deprecated, renamed: "init(styles:customRoutingProvider:eventsManager:)")
     public convenience init(styles: [Style]? = nil,
                             routingProvider: RoutingProvider,
                             eventsManager: NavigationEventsManager? = nil) {
         self.init(styles: styles,
-                  routingProvider: routingProvider,
+                  customRoutingProvider: routingProvider,
+                  eventsManager: eventsManager,
+                  carPlayNavigationViewControllerClass: nil)
+    }
+    
+    /**
+     Initializes a new CarPlay manager that manages a connection to the CarPlay interface.
+     
+     - parameter styles: The styles to display in the CarPlay interface. If this argument is omitted, `DayStyle` and `NightStyle` are displayed by default.
+     - parameter customRoutingProvider: The object that customizes routes calculation when the user interacts with the CarPlay interface. `nil` value corresponds to default behavior.
+     - parameter eventsManager: The events manager to use during turn-by-turn navigation while connected to CarPlay. If this argument is `nil` or omitted, a standard `NavigationEventsManager` object is used by default.
+     */
+    public convenience init(styles: [Style]? = nil,
+                            customRoutingProvider: RoutingProvider? = nil,
+                            eventsManager: NavigationEventsManager? = nil) {
+        self.init(styles: styles,
+                  customRoutingProvider: customRoutingProvider,
                   eventsManager: eventsManager,
                   carPlayNavigationViewControllerClass: nil)
     }
     
     init(styles: [Style]? = nil,
-         routingProvider: RoutingProvider,
+         customRoutingProvider: RoutingProvider?,
          eventsManager: NavigationEventsManager? = nil,
          carPlayNavigationViewControllerClass: CarPlayNavigationViewController.Type? = nil) {
         self.styles = styles ?? [DayStyle(), NightStyle()]
-        self.routingProvider = routingProvider
+        self.customRoutingProvider = customRoutingProvider
         self.eventsManager = eventsManager ?? .init(activeNavigationDataSource: nil,
                                                     accessToken: NavigationSettings.shared.directions.credentials.accessToken)
         self.mapTemplateProvider = MapTemplateProvider()
@@ -580,7 +611,7 @@ extension CarPlayManager {
     }
     
     func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
-        routingProvider.calculateRoutes(options: options, completionHandler: completionHandler)
+        resolvedRoutingProvider.calculateRoutes(options: options, completionHandler: completionHandler)
     }
     
     func didCalculate(_ result: Result<RouteResponse, DirectionsError>,
@@ -664,7 +695,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         MapboxNavigationService(routeResponse: routeResponse.response,
                                 routeIndex: routeResponse.routeIndex,
                                 routeOptions: routeOptions,
-                                routingProvider: NavigationSettings.shared.directions,
+                                customRoutingProvider: customRoutingProvider,
                                 credentials: NavigationSettings.shared.directions.credentials,
                                 simulating: desiredSimulationMode)
         

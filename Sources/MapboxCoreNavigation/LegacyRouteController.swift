@@ -20,14 +20,23 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     /**
      A reference to a MapboxDirections service. Used for rerouting.
      */
-    @available(*, deprecated, message: "Use `routingProvider` instead. If route controller was not initialized using `Directions` object - this property is unused and ignored.")
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. If route controller was not initialized using `Directions` object - this property is unused and ignored.")
     public lazy var directions: Directions = routingProvider as? Directions ?? Directions.shared
     
     /**
-     Routing provider used to create the route.
+     `RoutingProvider`, used to create a route during refreshing or rerouting.
      */
-    public var routingProvider: RoutingProvider
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. This property will be equal to `customRoutingProvider` if that is provided or a `MapboxRoutingProvider` instance otherwise.")
+    public lazy var routingProvider: RoutingProvider = customRoutingProvider ?? MapboxRoutingProvider(NavigationSettings.shared.routingProviderSource)
+    /**
+     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     */
+    public var customRoutingProvider: RoutingProvider? = nil
 
+    var resolvedRoutingProvider:  RoutingProvider {
+        customRoutingProvider ?? routingProvider
+    }
+    
     public var route: Route {
         routeProgress.route
     }
@@ -99,6 +108,8 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     var isRerouting = false
     
     var lastRerouteLocation: CLLocation?
+    
+    public var initialManeuverAvoidanceRadius: TimeInterval = RerouteController.DefaultManeuverAvoidanceRadius
     
     public var refreshesRoute: Bool = true
     
@@ -201,7 +212,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         return false
     }
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:options:routingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:options:customRoutingProvider:dataSource:)")
     public convenience init(alongRouteAtIndex routeIndex: Int,
                             in routeResponse: RouteResponse,
                             options: RouteOptions,
@@ -214,12 +225,25 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                   dataSource: source)
     }
     
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:routeIndex:in:options:customRoutingProvider:dataSource:)")
+    required public convenience init(alongRouteAtIndex routeIndex: Int,
+                                     in routeResponse: RouteResponse,
+                                     options: RouteOptions,
+                                     routingProvider: RoutingProvider = Directions.shared,
+                                     dataSource source: RouterDataSource) {
+        self.init(alongRouteAtIndex:routeIndex,
+                  in: routeResponse,
+                  options: options,
+                  routingProvider: routingProvider,
+                  dataSource: source)
+    }
+    
     required public init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
                          options: RouteOptions,
-                         routingProvider: RoutingProvider = Directions.shared,
+                         customRoutingProvider: RoutingProvider? = nil,
                          dataSource source: RouterDataSource) {
-        self.routingProvider = routingProvider
+        self.customRoutingProvider = customRoutingProvider
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source

@@ -21,13 +21,19 @@ public protocol NavigationService: CLLocationManagerDelegate, RouterDataSource, 
     /**
      A reference to a MapboxDirections service. Used for rerouting.
      */
-    @available(*, deprecated, message: "Use `routingProvider` instead. If navigation service was not initialized using `Directions` object - this property is unused and ignored.")
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. If navigation service was not initialized using `Directions` object - this property is unused and ignored.")
     var directions: Directions { get }
     
     /**
-     `RoutingProvider`, used to create route.
+     `RoutingProvider`, used to create a route during refreshing or rerouting.
      */
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. Nullable value now corresponds to SDK default behavior.")
     var routingProvider: RoutingProvider { get }
+    
+    /**
+     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     */
+    var customRoutingProvider: RoutingProvider? { get }
     
     /**
      Credentials data, used to authorize server requests.
@@ -286,7 +292,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
      */
-    @available(*, deprecated, renamed: "init(routeResponse:routeIndex:routeOptions:routingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
+    @available(*, deprecated, renamed: "init(routeResponse:routeIndex:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
     public convenience init(routeResponse: RouteResponse,
                             routeIndex: Int,
                             routeOptions: RouteOptions,
@@ -298,38 +304,54 @@ public class MapboxNavigationService: NSObject, NavigationService {
         self.init(routeResponse: routeResponse,
                   routeIndex: routeIndex,
                   routeOptions: routeOptions,
-                  routingProvider: directions ?? Directions.shared,
+                  customRoutingProvider: directions ?? Directions.shared,
                   credentials: directions?.credentials ?? NavigationSettings.shared.directions.credentials,
                   locationSource: locationSource,
                   eventsManagerType: eventsManagerType,
                   simulating: simulationMode,
                   routerType: routerType)
     }
-    
-    /**
-     Intializes a new `NavigationService`. Useful convienence initalizer for OBJ-C users, for when you just want to set up a service without customizing anything.
-     
-     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
-     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
-     - parameter routeOptions: The route options used to get the route.
-     */
-    convenience init(routeResponse: RouteResponse, routeIndex: Int, routeOptions options: RouteOptions) {
-        self.init(routeResponse: routeResponse,
-                  routeIndex: routeIndex,
-                  routeOptions: options,
-                  routingProvider: NavigationSettings.shared.directions,
-                  credentials: NavigationSettings.shared.directions.credentials,
-                  locationSource: nil,
-                  eventsManagerType: nil)
-    }
-    
+        
     /**
      Intializes a new `NavigationService`.
      
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeOptions: The route options used to get the route.
-     - parameter routingProvider: `RoutingProvider`, used to create route.
+     - parameter routingProvider: `RoutingProvider`, used to create a route during refreshing or rerouting.
+     - parameter credentials: Credentials to authorize additional data requests throughout the route.
+     - parameter locationSource: An optional override for the default `NaviationLocationManager`.
+     - parameter eventsManagerType: An optional events manager type to use while tracking the route.
+     - parameter simulationMode: The simulation mode desired.
+     - parameter routerType: An optional router type to use for traversing the route.
+     */
+    @available(*, deprecated, renamed: "init(routeResponse:routeIndex:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
+    public convenience init(routeResponse: RouteResponse,
+                            routeIndex: Int,
+                            routeOptions: RouteOptions,
+                            routingProvider: RoutingProvider,
+                            credentials: Credentials,
+                            locationSource: NavigationLocationManager? = nil,
+                            eventsManagerType: NavigationEventsManager.Type? = nil,
+                            simulating simulationMode: SimulationMode? = nil,
+                            routerType: Router.Type? = nil) {
+        self.init(routeResponse: routeResponse,
+                  routeIndex: routeIndex,
+                  routeOptions: routeOptions,
+                  customRoutingProvider: routingProvider,
+                  credentials: credentials,
+                  locationSource: locationSource,
+                  eventsManagerType: eventsManagerType,
+                  simulating: simulationMode,
+                  routerType: routerType)
+    }
+    /**
+     Intializes a new `NavigationService`.
+     
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter credentials: Credentials to authorize additional data requests throughout the route.
      - parameter locationSource: An optional override for the default `NaviationLocationManager`.
      - parameter eventsManagerType: An optional events manager type to use while tracking the route.
@@ -339,14 +361,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
     required public init(routeResponse: RouteResponse,
                          routeIndex: Int,
                          routeOptions: RouteOptions,
-                         routingProvider: RoutingProvider,
+                         customRoutingProvider: RoutingProvider? = nil,
                          credentials: Credentials,
                          locationSource: NavigationLocationManager? = nil,
                          eventsManagerType: NavigationEventsManager.Type? = nil,
                          simulating simulationMode: SimulationMode? = nil,
                          routerType: Router.Type? = nil) {
         nativeLocationSource = locationSource ?? NavigationLocationManager()
-        self.routingProvider = routingProvider
         self.credentials = credentials
         self.simulationMode = simulationMode ?? .inTunnels
         super.init()
@@ -363,7 +384,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         _router = routerType.init(alongRouteAtIndex: routeIndex,
                                   in: routeResponse,
                                   options: routeOptions,
-                                  routingProvider: routingProvider,
+                                  customRoutingProvider: customRoutingProvider,
                                   dataSource: self)
         NavigationSettings.shared.distanceUnit = .init(routeOptions.distanceMeasurementSystem)
 
@@ -432,9 +453,21 @@ public class MapboxNavigationService: NSObject, NavigationService {
     public lazy var directions: Directions = self.routingProvider as? Directions ?? NavigationSettings.shared.directions
     
     /**
-     `RoutingProvider`, used to create route.
+     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
      */
-    public var routingProvider: RoutingProvider
+    @available(*, deprecated, message: "Use `customRoutingProvider` instead. This property will be equal to `customRoutingProvider` if that is provided or a `MapboxRoutingProvider` instance otherwise.")
+    public var routingProvider: RoutingProvider {
+        router.routingProvider
+    }
+    
+    /**
+     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     
+     If set to `nil` - default Mapbox implementation will be used.
+     */
+    public var customRoutingProvider: RoutingProvider? {
+        router.customRoutingProvider
+    }
     
     /**
      Credentials data, used to authorize server requests.

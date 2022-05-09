@@ -23,7 +23,7 @@ class CarPlayManagerSpec: QuickSpec {
             BillingHandler.__replaceSharedInstance(with: mockedHandler)
             
             CarPlayMapViewController.swizzleMethods()
-            carPlayManager = CarPlayManager(routingProvider: MapboxRoutingProvider(.offline))
+            carPlayManager = CarPlayManager(customRoutingProvider: MapboxRoutingProvider(.offline))
             delegate = TestCarPlayManagerDelegate()
             carPlayManager.delegate = delegate
             

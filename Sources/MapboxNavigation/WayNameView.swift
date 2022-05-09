@@ -9,7 +9,7 @@ import MapboxDirections
  */
 @objc(MBWayNameLabel)
 open class WayNameLabel: StylableLabel {
-    var spriteRepository = SpriteRepository()
+    var spriteRepository: SpriteRepository = .shared
     var representation: VisualInstruction.Component.ImageRepresentation?
     
     @objc dynamic public var roadShieldBlackColor: UIColor = .roadShieldBlackColor
@@ -23,8 +23,7 @@ open class WayNameLabel: StylableLabel {
     
     // When the map style changes, update the sprite repository and the label.
     func updateStyle(styleURI: StyleURI?) {
-        guard let styleURI = styleURI else { return }
-        spriteRepository.updateStyle(styleURI: styleURI, representation: representation) { [weak self] in
+        spriteRepository.updateStyle(styleURI: styleURI) { [weak self] in
             guard let self = self else { return }
             if let roadName = self.text {
                 self.setUpWith(roadName: roadName)
@@ -35,7 +34,7 @@ open class WayNameLabel: StylableLabel {
     func updateRoad(roadName: String, representation: VisualInstruction.Component.ImageRepresentation? = nil) {
         // When the imageRepresentation of road shield changes, update the sprite repository and the label.
         if representation != self.representation {
-            spriteRepository.updateRepresentation(representation: representation) { [weak self] in
+            spriteRepository.updateRepresentation(for: representation) { [weak self] in
                 guard let self = self else { return }
                 self.representation = representation
                 self.setUpWith(roadName: roadName)
@@ -48,18 +47,14 @@ open class WayNameLabel: StylableLabel {
     // If there's no valid shield image, display the road name only.
     private func setUpWith(roadName: String) {
         if let shield = representation?.shield {
-            // For `us-state` shield, use the legacy shield first, then fall back to use the generic shield icon.
-            // For non `us-state` shield, use the generic shield icon first, then fall back to use the legacy shield.
-            if shield.name == "us-state",
-               setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) {
-                return
-            } else if setAttributedText(roadName: roadName, shield: shield) {
-                return
-            }
+            // For US state road, use the legacy shield first, then fall back to use the generic shield icon.
+            // The shield name for US state road is `circle-white` in Streets source v8 style.
+            // For non US state road, use the generic shield icon first, then fall back to use the legacy shield.
+            if shield.name == "circle-white",
+               setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) { return }
+            if setAttributedText(roadName: roadName, shield: shield) { return }
         }
-        if setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) {
-            return
-        }
+        if setAttributedText(roadName: roadName, cacheKey: representation?.legacyCacheKey) { return }
         
         text = roadName
     }

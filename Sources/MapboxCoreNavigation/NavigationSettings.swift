@@ -1,6 +1,7 @@
 import Foundation
 import MapboxDirections
 
+/// Defines source of routing engine (online or offline) to be used for requests.
 public typealias RoutingProviderSource = MapboxRoutingProvider.Source
 
 /**
@@ -101,7 +102,7 @@ public class NavigationSettings {
      fall back to the `NavigationSettings.directions` by default.
        - tileStoreConfiguration: Options for configuring how map and navigation tiles are stored on the device. See
      `TileStoreConfiguration` for more details.
-     - routingProviderSource: Configures the type of routing to be used by various SDK objects when providing route calculations.
+     - routingProviderSource: Configures the type of routing to be used by various SDK objects when providing route calculations. Use this value to configure usage of onlive vs. offline data for routing.
      */
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,

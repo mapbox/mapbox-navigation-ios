@@ -122,7 +122,7 @@ class Navigator {
                                             tilesVersion: Self.tilesVersion,
                                             historyDirectoryURL: Self.historyDirectoryURL,
                                             datasetProfileIdentifier: Self.datasetProfileIdentifier,
-                                            navigatorRouterType: NavigationSettings.shared.routingProviderSource.nativeSource)
+                                            routingProviderSource: NavigationSettings.shared.routingProviderSource.nativeSource)
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
@@ -151,7 +151,7 @@ class Navigator {
                                             historyDirectoryURL: Self.historyDirectoryURL,
                                             targetVersion: version.map { _ in Self.tilesVersion },
                                             datasetProfileIdentifier: Self.datasetProfileIdentifier,
-                                            navigatorRouterType: NavigationSettings.shared.routingProviderSource.nativeSource)
+                                            routingProviderSource: NavigationSettings.shared.routingProviderSource.nativeSource)
         tileStore = factory.tileStore
         historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle

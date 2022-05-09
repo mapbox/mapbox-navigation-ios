@@ -246,6 +246,14 @@ open class DayStyle: Style {
         FeedbackStyleView.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .white
         FeedbackCollectionView.appearance().backgroundColor = .white
         FeedbackCollectionView.appearance().cellColor = .black
+        InstructionLabel.appearance().roadShieldBlackColor = .roadShieldBlackColor
+        InstructionLabel.appearance().roadShieldBlueColor = .roadShieldBlueColor
+        InstructionLabel.appearance().roadShieldGreenColor = .roadShieldGreenColor
+        InstructionLabel.appearance().roadShieldRedColor = .roadShieldRedColor
+        InstructionLabel.appearance().roadShieldWhiteColor = .roadShieldWhiteColor
+        InstructionLabel.appearance().roadShieldYellowColor = .roadShieldYellowColor
+        InstructionLabel.appearance().roadShieldOrangeColor = .roadShieldOrangeColor
+        InstructionLabel.appearance().roadShieldDefaultColor = .roadShieldDefaultColor
         
         #if swift(>=5.5)
         if #available(iOS 15.0, *) {

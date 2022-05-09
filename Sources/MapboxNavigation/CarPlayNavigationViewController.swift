@@ -390,6 +390,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         fatalError("init(coder:) has not been implemented")
     }
     
+    deinit {
+        suspendNotifications()
+    }
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -398,7 +402,6 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         setupStyleManager()
         
         observeNotifications(navigationService)
-        updateManeuvers(navigationService.routeProgress)
         navigationService.start()
         carPlayManager.delegate?.carPlayManager(carPlayManager, didBeginNavigationWith: navigationService)
         currentLegIndexMapped = navigationService.router.routeProgress.legIndex
@@ -804,7 +807,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                                               value: "Continue",
                                               comment: "Title on continue button in CarPlay")
         
-        let continueAlert = CPAlertAction(title: continueTitle, style: .default) { (action) in
+        let continueAlert = CPAlertAction(title: continueTitle, style: .default) { [weak self] _ in
+            guard let self = self else { return }
             self.carInterfaceController.dismissTemplate(animated: true)
             self.updateRouteOnMap()
         }
@@ -838,6 +842,7 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
             mapboxMapStyle?.uri = styleURI
             // Update the sprite repository of wayNameView when map style changes.
             wayNameView?.label.updateStyle(styleURI: styleURI)
+            updateManeuvers(navigationService.routeProgress)
         }
     }
     

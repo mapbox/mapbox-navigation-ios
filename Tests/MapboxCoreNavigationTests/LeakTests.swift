@@ -9,7 +9,7 @@ final class LeakTests: TestCase {
             MapboxNavigationService(routeResponse: response,
                                     routeIndex: 0,
                                     routeOptions: routeOptions,
-                                    routingProvider: MapboxRoutingProvider(.offline),
+                                    customRoutingProvider: MapboxRoutingProvider(.offline),
                                     credentials: .mocked)
         }
         XCTAssertFalse(leakTester.isLeaking())

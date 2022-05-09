@@ -77,15 +77,40 @@ public protocol Router: CLLocationManagerDelegate {
      
      - parameter routeIndex: The index of the route within the original `RouteResponse` object.
      - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
-     - parameter routingProvider: `RoutingProvider`, used to create route.
+     - parameter routingProvider: `RoutingProvider`, used to create a route during refreshing or rerouting.
      - parameter source: The data source for the RouteController.
      */
+    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
     init(alongRouteAtIndex routeIndex: Int,
          in routeResponse: RouteResponse,
          options: RouteOptions,
          routingProvider: RoutingProvider,
          dataSource source: RouterDataSource)
     
+    /**
+     Intializes a new `RouteController`.
+     
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     - parameter source: The data source for the RouteController.
+     */
+    init(alongRouteAtIndex routeIndex: Int,
+         in routeResponse: RouteResponse,
+         options: RouteOptions,
+         customRoutingProvider: RoutingProvider?,
+         dataSource source: RouterDataSource)
+    
+    /**
+     `RoutingProvider`, used to create a route during refreshing or rerouting.
+     */
+    @available(*, deprecated, renamed: "customRoutingProvider")
+    var routingProvider: RoutingProvider { get }
+    
+    /**
+     Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     */
+    var customRoutingProvider: RoutingProvider? { get }
     /**
      Details about the user’s progress along the current route, leg, and step.
      */
@@ -108,6 +133,13 @@ public protocol Router: CLLocationManagerDelegate {
      */
     func userIsOnRoute(_ location: CLLocation) -> Bool
     func reroute(from: CLLocation, along: RouteProgress)
+    
+    /**
+     A radius around the current user position in which the API will avoid returning any significant maneuvers when rerouting.
+     
+     Provided `TimeInterval` value will be converted to meters using current speed. Default value is `8 seconds`.
+     */
+    var initialManeuverAvoidanceRadius: TimeInterval { get set }
     
     /**
      The idealized user location. Snapped to the route line, if applicable, otherwise raw or nil.
@@ -182,7 +214,7 @@ protocol InternalRouter: AnyObject {
     
     var isRefreshing: Bool { get set }
     
-    var routingProvider: RoutingProvider { get }
+    var resolvedRoutingProvider: RoutingProvider { get }
     
     var routeProgress: RouteProgress { get }
     
@@ -228,8 +260,8 @@ extension InternalRouter where Self: Router {
             return
         }
         isRefreshing = true
-        routingProvider.refreshRoute(indexedRouteResponse: indexedRouteResponse,
-                                     fromLegAtIndex: UInt32(legIndex)) { [weak self] session, result in
+        resolvedRoutingProvider.refreshRoute(indexedRouteResponse: indexedRouteResponse,
+                                             fromLegAtIndex: UInt32(legIndex)) { [weak self] session, result in
             defer {
                 self?.isRefreshing = false
                 self?.lastRouteRefresh = nil
@@ -336,10 +368,14 @@ extension InternalRouter where Self: Router {
         routeTask?.cancel()
         let options = progress.reroutingOptions(from: origin)
         
+        if isRerouting {
+            options.initialManeuverAvoidanceRadius = initialManeuverAvoidanceRadius * origin.speed
+        }
+        
         lastRerouteLocation = origin
         
-        routeTask = routingProvider.calculateRoutes(options: options) { [weak self] (session, result) in
-            guard let self = self else { return }            
+        routeTask = resolvedRoutingProvider.calculateRoutes(options: options) { [weak self] (session, result) in
+            guard let self = self else { return }
             defer { self.routeTask = nil }
             switch result {
             case .failure(let error):
