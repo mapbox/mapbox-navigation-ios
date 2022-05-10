@@ -51,7 +51,6 @@ private extension RoutesCoordinatorTests {
                   XCTFail("Failed to encode generated test Route.")
                   return nil
         }
-        print("!!! routeJSONString: \(routeJSONString)")
         let routeRequest = Directions(credentials: Fixture.credentials).url(forCalculating: routeOptions).absoluteString
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
