@@ -17,6 +17,8 @@ protocol ReroutingControllerDelegate: AnyObject {
 public enum ReroutingError: Error {
     /// Could not correctly process the reroute.
     case routeError
+    /// Could not compose correct request for rerouting.
+    case wrongRequest
     /// Cause of reroute error is unknown.
     case unknown
     /// Reroute was cancelled by user.
