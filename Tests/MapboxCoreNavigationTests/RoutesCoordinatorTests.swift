@@ -46,12 +46,12 @@ private extension RoutesCoordinatorTests {
         }
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
-        guard let routeData = try? encoder.encode(route.route),
+        guard let routeData = try? encoder.encode(route.response),
               let routeJSONString = String(data: routeData, encoding: .utf8) else {
                   XCTFail("Failed to encode generated test Route.")
                   return nil
         }
-        
+        print("!!! routeJSONString: \(routeJSONString)")
         let routeRequest = Directions(credentials: Fixture.credentials).url(forCalculating: routeOptions).absoluteString
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
