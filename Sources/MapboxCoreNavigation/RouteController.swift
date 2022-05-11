@@ -158,6 +158,7 @@ open class RouteController: NSObject {
      `RouteLeg` was changed or not.
      */
     public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
+        guard !hasFinishedRouting else { return }
         updateRouteLeg(to: routeProgress.legIndex + 1) { result in
             completionHandler?(result)
         }
@@ -235,6 +236,7 @@ open class RouteController: NSObject {
     var previousArrivalWaypoint: MapboxDirections.Waypoint?
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard !hasFinishedRouting else { return }
         guard let location = locations.last else { return }
         
         guard !(delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation) else {
@@ -251,6 +253,7 @@ open class RouteController: NSObject {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        guard !hasFinishedRouting else { return }
         heading = newHeading
     }
     
@@ -332,6 +335,15 @@ open class RouteController: NSObject {
         update(to: status)
     }
 
+    private var hasFinishedRouting = false
+    public func finishRouting() {
+        hasFinishedRouting = true
+        removeRoutes(completion: nil)
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+        unsubscribeNotifications()
+        routeTask?.cancel()
+    }
+    
     private func update(to status: NavigationStatus) {
         guard let rawLocation = rawLocation,
               isValidNavigationStatus(status)
@@ -729,6 +741,7 @@ extension RouteController: Router {
     }
     
     public func reroute(from location: CLLocation, along progress: RouteProgress) {
+        guard !hasFinishedRouting else { return }
         guard customRoutingProvider != nil else {
             rerouteController.forceReroute()
             return
@@ -765,6 +778,7 @@ extension RouteController: Router {
     public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                             routeOptions: RouteOptions?,
                             completion: ((Bool) -> Void)?) {
+        guard !hasFinishedRouting else { return }
         updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, isProactive: false, completion: completion)
     }
 

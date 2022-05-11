@@ -141,6 +141,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                             routeOptions: RouteOptions?,
                             completion: ((Bool) -> Void)?) {
+        guard !hasFinishedRouting else { return }
         updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, isProactive: false, completion: completion)
     }
 
@@ -160,6 +161,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     
     public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
+        guard !hasFinishedRouting else { return }
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
         BillingHandler.shared.beginNewBillingSessionIfRunning(with: sessionUUID)
@@ -347,13 +349,21 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         userSnapToStepDistanceFromManeuver = shape.distance(from: coordinate)
     }
     
+    private var hasFinishedRouting = false
+    public func finishRouting() {
+        hasFinishedRouting = true
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+    }
+    
     // MARK: Handling LocationManager Output
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        guard !hasFinishedRouting else { return }
         heading = newHeading
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard !hasFinishedRouting else { return }
         let filteredLocations = locations.filter {
             return $0.isQualified
         }
@@ -457,6 +467,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     }
 
     public func reroute(from location: CLLocation, along progress: RouteProgress) {
+        guard !hasFinishedRouting else { return }
         if let lastRerouteLocation = lastRerouteLocation {
             guard location.distance(from: lastRerouteLocation) >= RouteControllerMaximumDistanceBeforeRecalculating else {
                 return
