@@ -33,6 +33,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     override func tearDown() {
+        Navigator.shared.rerouteController.reroutesProactively = true
         super.tearDown()
         navigation = nil
         UserDefaults.resetStandardUserDefaults()
@@ -84,6 +85,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testDepart() {
+        Navigator.shared.rerouteController.reroutesProactively = false
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
@@ -122,6 +124,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testNewStep() {
+        Navigator.shared.rerouteController.reroutesProactively = false
         let steps = route.legs[0].steps
         // Create list of coordinates, which includes all coordinates in the first step and
         // first coordinate in the second step.
@@ -178,6 +181,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testJumpAheadToLastStep() {
+        Navigator.shared.rerouteController.reroutesProactively = false
         let coordinates = route.legs[0].steps.map { $0.shape!.coordinates }.flatMap { $0 }
         
         let now = Date()
@@ -330,6 +334,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testOrderOfExecution() {
+        Navigator.shared.rerouteController.reroutesProactively = false
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
