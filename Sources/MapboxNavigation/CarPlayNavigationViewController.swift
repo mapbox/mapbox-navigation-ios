@@ -150,10 +150,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     func updateMapTemplateStyle() {
         var currentUserInterfaceStyle = traitCollection.userInterfaceStyle
-        // `Style` that is currently used on CarPlay. Regardless of the user interface
-        // style that was set in CarPlay settings style that is currently used in `StyleManager` will have
-        // precedence. Precedence of the style over trait collection is required for custom cases
-        // (e.g. when user is driving through the tunnel).
+        // Regardless of the user interface style that was set in CarPlay settings style that is
+        // currently used in `StyleManager` will have precedence. Precedence of the style over
+        // trait collection is required for custom cases (e.g. when user is driving through the tunnel).
         if usesNightStyleWhileInTunnel,
            isTraversingTunnel,
            let styleType = styleManager?.currentStyleType {
