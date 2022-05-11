@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## main
+
+### Routing
+
+* Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components.([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
+
 ## v2.5.0
 
 ### Packaging
