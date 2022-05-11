@@ -482,4 +482,67 @@ class MapboxCoreNavigationTests: TestCase {
             XCTAssertNil(error)
         }
     }
+    
+    func testNoUpdatesAfterFinishingRouting() {
+        navigation = MapboxNavigationService(routeResponse: response,
+                                             routeIndex: 0,
+                                             routeOptions: routeOptions,
+                                             customRoutingProvider: MapboxRoutingProvider(.offline),
+                                             credentials: Fixture.credentials,
+                                             simulating: .never)
+        
+        // Coordinates from first step
+        let coordinates = route.legs[0].steps[0].shape!.coordinates
+        let now = Date()
+        let locations = coordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + $0.offset)
+        }
+        
+        var hasFinishedRouting = false
+        expectation(forNotification: .routeControllerProgressDidChange, object: navigation.router) { _ in
+            return hasFinishedRouting
+        }.isInverted = true
+        expectation(forNotification: .routeControllerWillReroute, object: navigation.router) { _ in
+            return hasFinishedRouting
+        }.isInverted = true
+        expectation(forNotification: .routeControllerDidReroute, object: navigation.router) { _ in
+            return hasFinishedRouting
+        }.isInverted = true
+        
+        let routerDelegateSpy = RouterDelegateSpy()
+        navigation.router.delegate = routerDelegateSpy
+        
+        routerDelegateSpy.onShouldDiscard = { _ in
+            if hasFinishedRouting {
+                XCTFail("Location updates should not be tracked.")
+            }
+            return false
+        }
+        
+        navigation.start()
+        
+        for location in locations {
+            navigation.locationManager(navigation.locationManager, didUpdateLocations: [location])
+            
+            if !hasFinishedRouting {
+                navigation.router.finishRouting()
+                hasFinishedRouting = true
+                
+                navigation.updateRoute(with: IndexedRouteResponse(routeResponse: response,
+                                                                  routeIndex: 0),
+                                       routeOptions: nil,
+                                       completion: nil)
+            }
+        }
+        
+        waitForExpectations(timeout: waitForInterval) { (error) in
+            XCTAssertNil(error)
+        }
+    }
 }
