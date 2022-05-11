@@ -35,6 +35,11 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     public var wayNameView: WayNameView!
     
     /**
+     Session configuration that is used to track `CPContentStyle` related changes.
+     */
+    var sessionConfiguration: CPSessionConfiguration!
+    
+    /**
      The interface styles available for display.
      
      These are the styles available to the view controller’s internal `StyleManager` object. In CarPlay, `Style` objects primarily affect the appearance of the map, not guidance-related overlay views.
@@ -141,15 +146,31 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     /**
-     Updates `CPMapTemplate.tripEstimateStyle` based on provided `UIUserInterfaceStyle` value.
-     
-     - parameter userInterfaceStyle: `UIUserInterfaceStyle`, which is currently used on CarPlay.
+     Updates `CPMapTemplate.tripEstimateStyle` and `CPMapTemplate.guidanceBackgroundColor`.
      */
-    func updateTripEstimateStyle(_ userInterfaceStyle: UIUserInterfaceStyle) {
-        switch traitCollection.userInterfaceStyle {
+    func updateMapTemplateStyle() {
+        var currentUserInterfaceStyle = traitCollection.userInterfaceStyle
+        // `Style` that is currently used on CarPlay. Regardless of the user interface
+        // style that was set in CarPlay settings style that is currently used in `StyleManager` will have
+        // precedence. Precedence of the style over trait collection is required for custom cases
+        // (e.g. when user is driving through the tunnel).
+        if usesNightStyleWhileInTunnel,
+           isTraversingTunnel,
+           let styleType = styleManager?.currentStyleType {
+            switch styleType {
+            case .day:
+                currentUserInterfaceStyle = .light
+            case .night:
+                currentUserInterfaceStyle = .dark
+            }
+        }
+        
+        switch currentUserInterfaceStyle {
         case .dark:
+            mapTemplate.guidanceBackgroundColor = .black
             mapTemplate.tripEstimateStyle = .dark
         default:
+            mapTemplate.guidanceBackgroundColor = .white
             mapTemplate.tripEstimateStyle = .light
         }
     }
@@ -384,6 +405,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         super.init(nibName: nil, bundle: nil)
         carFeedbackTemplate = createFeedbackUI()
+        
+        sessionConfiguration = CPSessionConfiguration(delegate: self)
     }
     
     public required init?(coder decoder: NSCoder) {
@@ -406,8 +429,14 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         carPlayManager.delegate?.carPlayManager(carPlayManager, didBeginNavigationWith: navigationService)
         currentLegIndexMapped = navigationService.router.routeProgress.legIndex
         navigationMapView?.simulatesLocation = navigationService.locationManager.simulatesLocation
+    }
+    
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         
-        updateTripEstimateStyle(traitCollection.userInterfaceStyle)
+        if #available(iOS 13.0, *) {
+            applyStyleIfNeeded(sessionConfiguration.contentStyle)
+        }
     }
     
     public override func viewWillDisappear(_ animated: Bool) {
@@ -419,7 +448,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         super.traitCollectionDidChange(previousTraitCollection)
         
         if previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
-            updateTripEstimateStyle(traitCollection.userInterfaceStyle)
+            updateMapTemplateStyle()
             updateManeuvers(navigationService.routeProgress)
         }
     }
@@ -430,6 +459,15 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         // Trigger update of view constraints to correctly position views like `SpeedLimitView` and
         // `CarPlayCompassView`.
         view.setNeedsUpdateConstraints()
+    }
+    
+    @available(iOS 13.0, *)
+    func applyStyleIfNeeded(_ contentStyle: CPContentStyle) {
+        if contentStyle.contains(.dark) {
+            styleManager?.applyStyle(type: .night)
+        } else if contentStyle.contains(.light) {
+            styleManager?.applyStyle(type: .day)
+        }
     }
     
     public override func updateViewConstraints() {
@@ -626,7 +664,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         if !isTraversingTunnel, inTunnel {
             isTraversingTunnel = true
             
-            if usesNightStyleWhileInTunnel {
+            if usesNightStyleWhileInTunnel,
+               styleManager?.currentStyle?.styleType != .night {
                 styleManager?.applyStyle(type: .night)
             }
         }
@@ -635,6 +674,10 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         if isTraversingTunnel, !inTunnel {
             isTraversingTunnel = false
             styleManager?.timeOfDayChanged()
+            
+            if #available(iOS 13.0, *) {
+                applyStyleIfNeeded(sessionConfiguration.contentStyle)
+            }
         }
     }
     
@@ -731,9 +774,21 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             imageRendererFormat.scale = window.screen.scale
         }
         
+        // Regardless of the user interface style that was set in CarPlay settings, whenever user
+        // is driving through the tunnel - switch to dark user interface style.
+        var traitCollection: UITraitCollection? = nil
+        if usesNightStyleWhileInTunnel,
+           isTraversingTunnel {
+            traitCollection = UITraitCollection.init(traitsFrom: [
+                UITraitCollection(userInterfaceIdiom: .carPlay),
+                UITraitCollection(userInterfaceStyle: .dark)
+            ])
+        }
+        
         if let attributedPrimary = visualInstruction.primaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                            shieldHeight: shieldHeight,
                                                                                                            window: carPlayManager.carWindow,
+                                                                                                           customTraitCollection: traitCollection,
                                                                                                            instructionLabelType: PrimaryLabel.self) {
             
             let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
@@ -741,6 +796,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             if let attributedSecondary = visualInstruction.secondaryInstruction?.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                                     shieldHeight: shieldHeight,
                                                                                                                     window: carPlayManager.carWindow,
+                                                                                                                    customTraitCollection: traitCollection,
                                                                                                                     instructionLabelType: SecondaryLabel.self) {
                 instruction.append(NSAttributedString(string: "\n"))
                 instruction.append(attributedSecondary)
@@ -773,7 +829,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                 }
                 if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                    shieldHeight: shieldHeight,
-                                                                                                   window: carPlayManager.carWindow) {
+                                                                                                   window: carPlayManager.carWindow,
+                                                                                                   customTraitCollection: traitCollection) {
                     let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
                     attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
                     tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
@@ -842,8 +899,10 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
             mapboxMapStyle?.uri = styleURI
             // Update the sprite repository of wayNameView when map style changes.
             wayNameView?.label.updateStyle(styleURI: styleURI)
-            updateManeuvers(navigationService.routeProgress)
         }
+        
+        updateMapTemplateStyle()
+        updateManeuvers(navigationService.routeProgress)
     }
     
     public func styleManagerDidRefreshAppearance(_ styleManager: StyleManager) {
@@ -909,4 +968,13 @@ extension CarPlayNavigationViewController: NavigationMapViewDelegate {
     }
 }
 
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: CPSessionConfigurationDelegate {
+    
+    @available(iOS 13.0, *)
+    public func sessionConfiguration(_ sessionConfiguration: CPSessionConfiguration,
+                                     contentStyleChanged contentStyle: CPContentStyle) {
+        applyStyleIfNeeded(contentStyle)
+    }
+}
 #endif
