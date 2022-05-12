@@ -19,6 +19,8 @@ public enum ReroutingError: Error {
     case routeError
     /// Could not compose correct request for rerouting.
     case wrongRequest
+    /// Cause of reroute error is unknown.
+    case unknown
     /// Reroute was cancelled by user.
     case cancelled
 
@@ -26,8 +28,8 @@ public enum ReroutingError: Error {
         switch (nativeError.type) {
         case .routerError:
             self = .routeError
-        case .wrongRequest:
-            self = .wrongRequest
+        case .unknown:
+            self = .unknown
         case .cancelled:
             self = .cancelled
         @unknown default:
