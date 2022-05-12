@@ -46,22 +46,27 @@ private extension RoutesCoordinatorTests {
         }
         let encoder = JSONEncoder()
         encoder.userInfo[.options] = routeOptions
-        guard let routeData = try? encoder.encode(route.route),
+        guard let routeData = try? encoder.encode(route.response),
               let routeJSONString = String(data: routeData, encoding: .utf8) else {
                   XCTFail("Failed to encode generated test Route.")
                   return nil
         }
-        
         let routeRequest = Directions(credentials: Fixture.credentials).url(forCalculating: routeOptions).absoluteString
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
                                                                request: routeRequest,
                                                                routeOrigin: RouterOrigin.custom)
-        
-        guard let generatedRoute = (parsedRoutes.value as? [RouteInterface])?.first else {
-            XCTFail("Failed to parse generated test Route.")
-            return nil
+        var generatedRoute: RouteInterface? = nil
+        if parsedRoutes.isValue(),
+           let validGeneratedRoute = (parsedRoutes.value as? [RouteInterface])?.first {
+            generatedRoute = validGeneratedRoute
+        } else if parsedRoutes.isError(),
+                  let errorReason = parsedRoutes.error as String? {
+            XCTFail("Failed to parse generated test route with error: \(errorReason).")
+        } else {
+            XCTFail("Failed to parse generated test route.")
         }
+        
         return generatedRoute
     }
 
