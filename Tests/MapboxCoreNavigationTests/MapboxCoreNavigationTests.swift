@@ -85,13 +85,13 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testDepart() {
-        Navigator.shared.rerouteController.reroutesProactively = false
         navigation = MapboxNavigationService(routeResponse: response,
                                              routeIndex: 0,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              simulating: .never)
+        Navigator.shared.rerouteController.reroutesProactively = false
         
         // Coordinates from first step
         let coordinates = route.legs[0].steps[0].shape!.coordinates
@@ -124,7 +124,6 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testNewStep() {
-        Navigator.shared.rerouteController.reroutesProactively = false
         let steps = route.legs[0].steps
         // Create list of coordinates, which includes all coordinates in the first step and
         // first coordinate in the second step.
@@ -144,6 +143,7 @@ class MapboxCoreNavigationTests: TestCase {
                                                         credentials: Fixture.credentials,
                                                         locationSource: locationManager,
                                                         simulating: .never)
+        Navigator.shared.rerouteController.reroutesProactively = false
         
         var receivedSpokenInstructions: [String] = []
         
@@ -181,7 +181,6 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testJumpAheadToLastStep() {
-        Navigator.shared.rerouteController.reroutesProactively = false
         let coordinates = route.legs[0].steps.map { $0.shape!.coordinates }.flatMap { $0 }
         
         let now = Date()
@@ -202,6 +201,7 @@ class MapboxCoreNavigationTests: TestCase {
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
+        Navigator.shared.rerouteController.reroutesProactively = false
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
                     object: navigation.router) { (notification) -> Bool in
@@ -334,7 +334,6 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testOrderOfExecution() {
-        Navigator.shared.rerouteController.reroutesProactively = false
         let trace = Fixture.generateTrace(for: route).shiftedToPresent().qualified()
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
@@ -345,6 +344,7 @@ class MapboxCoreNavigationTests: TestCase {
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager)
+        Navigator.shared.rerouteController.reroutesProactively = false
         navigation.router.refreshesRoute = false
         
         struct InstructionPoint {
