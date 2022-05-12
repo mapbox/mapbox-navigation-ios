@@ -41,15 +41,15 @@
    * Renamed the `Router(alongRouteAtIndex:in:options:routingProvider:dataSource:)` initializer to `Router(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)`
    * Replaced the `Router.routingProvider` property with `Router.customRoutingProvider`.
 * Renamed the `NavigationSettings.initialize(directions:tileStoreConfiguration:)` method to  `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)`. This method allows you to control whether the rerouting uses the network or offline routing data. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754), [#3824](https://github.com/mapbox/mapbox-navigation-ios/pull/3824))
-* Fixed an issue where a failure to calculate a route offline could result in a successful result being passed to a `Directions.RouteCompletionHandler`. (mapbox/mapbox-navigation-native#5537)
-
-### Other Changes
-* During turn-by-turn navigation, incidents along the route are now refreshed periodically along with traffic congestion. (mapbox/api-valhalla#1023, mapbox/mapbox-navigation-native#5728)
-* When the user passes a named toll collection point, the `TollCollection` object obtained through the `Notification.Name.electronicHorizonDidPassRoadObject` notification now has the `TollCollection.name` property set. (mapbox/mapbox-navigation-native#5675, mapbox/mapbox-navigation-native#5721)
+* Fixed an issue where a failure to calculate a route offline could result in a successful result being passed to a `Directions.RouteCompletionHandler`.
 
 ### CarPlay
 
 * Fixed an issue where an active navigation using CarPlay application with route that contains multiple legs would cause a memory leak. ([#3877](https://github.com/mapbox/mapbox-navigation-ios/pull/3877))
+
+### Other Changes
+* During turn-by-turn navigation, incidents along the route are now refreshed periodically along with traffic congestion.
+* When the user passes a named toll collection point, the `TollCollection` object obtained through the `Notification.Name.electronicHorizonDidPassRoadObject` notification now has the `TollCollection.name` property set.
 
 ## v2.4.1
 
