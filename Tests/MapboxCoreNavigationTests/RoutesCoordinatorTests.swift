@@ -81,19 +81,17 @@ private extension RoutesCoordinatorTests {
     func runTestCases(_ testCases: [RoutesCoordinatorTestCase]) {
         var expectedRoutes: RouteInterface? = generateRoutes()
         var expectedRouteIndex = UInt32.max
-        var expectedResult: Result<RouteInfo, RoutesCoordinatorError>!
+        var expectedResult: Result<RouteInfo?, RoutesCoordinatorError>!
 
-        let handler: RoutesCoordinator.MainRouteSetupHandler = { routes, routeIndex, completion in
+        let handler: RoutesCoordinator.RoutesSetupHandler = { routes, routeIndex, alternativeRoutes, completion in
             XCTAssertEqual(routes?.getRouteId(), expectedRoutes?.getRouteId())
             XCTAssertEqual(routeIndex, expectedRouteIndex)
+            XCTAssertTrue(alternativeRoutes.isEmpty)
             completion(expectedResult.mapError { $0 as Error })
         }
 
-        let coordinator = RoutesCoordinator(mainRouteSetupHandler: { route, routeIndex, completion in
-            handler(route, routeIndex, completion)
-        },
-                                            alternativeRoutesSetupHandler: { routes, completion in
-            XCTAssertTrue(routes.isEmpty)
+        let coordinator = RoutesCoordinator(routesSetupHandler: { route, routeIndex, alternativeRoutes, completion in
+            handler(route, routeIndex, alternativeRoutes, completion)
         })
 
         for testCase in testCases {
@@ -103,7 +101,7 @@ private extension RoutesCoordinatorTests {
                     .map { .init(alerts: []) }
                 expectedRoutes = routes
                 expectedRouteIndex = testCase.routeIndex
-                coordinator.beginActiveNavigation(with: routes, uuid: testCase.uuid, legIndex: testCase.routeIndex) { result in
+                coordinator.beginActiveNavigation(with: routes, uuid: testCase.uuid, legIndex: testCase.routeIndex, alternativeRoutes: []) { result in
                     switch (result, expectedResult) {
                     case (.success(let routeInfo), .success(let expectedRouteInfo)):
                         XCTAssertEqual(routeInfo, expectedRouteInfo)

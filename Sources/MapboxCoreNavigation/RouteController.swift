@@ -263,7 +263,7 @@ open class RouteController: NSObject {
      */
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
-                                 completion: ((Result<RouteInfo, Error>) -> Void)?) {
+                                 completion: ((Result<RouteInfo?, Error>) -> Void)?) {
         guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
             completion?(.failure(RouteControllerError.internalError))
             return
@@ -283,11 +283,10 @@ open class RouteController: NSObject {
         if parsedRoutes.isValue(),
            var routes = parsedRoutes.value as? [RouteInterface],
            routes.count > indexedRouteResponse.routeIndex {
-            self.sharedNavigator.setMainRoute(routes.remove(at: indexedRouteResponse.routeIndex),
-                                              uuid: sessionUUID,
-                                              legIndex: UInt32(legIndex)) { [weak self] result in
-                self?.sharedNavigator.setAlternativeRoutes(routes,
-                                                           completion: { _ in })
+            self.sharedNavigator.setRoutes(routes.remove(at: indexedRouteResponse.routeIndex),
+                                           uuid: sessionUUID,
+                                           legIndex: UInt32(legIndex),
+                                           alternativeRoutes: routes) { result in
                 completion?(result)
             }
         } else if parsedRoutes.isError() {

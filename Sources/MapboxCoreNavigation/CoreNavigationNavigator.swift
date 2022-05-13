@@ -33,40 +33,24 @@ class Navigator {
     }
 
     private lazy var routeCoordinator: RoutesCoordinator = {
-        .init(mainRouteSetupHandler: { [weak self] route, legIndex, completion in
-            self?.navigator.setPrimaryRouteForRoute(route, legIndex: legIndex) { [weak self] result in
+        .init(routesSetupHandler: { [weak self] route, legIndex, alternativeRoutes, completion in
+            var routesParams: SetRoutesParams? = nil
+            if let route = route {
+                routesParams = SetRoutesParams(primaryRoute: route,
+                                               legIndex: legIndex,
+                                               alternativeRoutes: alternativeRoutes)
+            }
+            
+            self?.navigator.setRoutesFor(routesParams) { [weak self] result in
                 if result.isValue() {
-                    let routeInfo = result.value!
                     os_log("Navigator has been updated",
                            log: Navigator.log,
                            type: .debug)
-                    completion(.success(routeInfo))
+                    completion(.success(route?.getRouteInfo()))
                 }
                 else if result.isError() {
                     let reason = (result.error as String?) ?? ""
                     os_log("Failed to update navigator with reason: %{public}@",
-                           log: Navigator.log,
-                           type: .error,
-                           reason)
-                    completion(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
-                }
-                else {
-                    assertionFailure("Invalid Expected value: \(result)")
-                    completion(.failure(NavigatorError.failedToUpdateRoutes(reason: "Unexpected internal response")))
-                }
-            }
-        }, alternativeRoutesSetupHandler: { [weak self] routes, completion in
-            self?.navigator.setAlternativeRoutesForRoutes(routes) { [weak self] result in
-                if result.isValue() {
-                    let alternativeRoutes = result.value as? [RouteAlternative] ?? []
-                    os_log("Navigator Alternative Routes have been updated",
-                           log: Navigator.log,
-                           type: .debug)
-                    completion(.success(alternativeRoutes))
-                }
-                else if result.isError() {
-                    let reason = (result.error as String?) ?? ""
-                    os_log("Failed to update navigator Alternative Routes with reason: %{public}@",
                            log: Navigator.log,
                            type: .error,
                            reason)
@@ -237,15 +221,11 @@ class Navigator {
 
     // MARK: - Navigator Updates
 
-    func setMainRoute(_ route: RouteInterface, uuid: UUID, legIndex: UInt32, completion: @escaping (Result<RouteInfo, Error>) -> Void) {
-        routeCoordinator.beginActiveNavigation(with: route, uuid: uuid, legIndex: legIndex, completion: completion)
+    func setRoutes(_ route: RouteInterface, uuid: UUID, legIndex: UInt32, alternativeRoutes: [RouteInterface], completion: @escaping (Result<RouteInfo?, Error>) -> Void) {
+        routeCoordinator.beginActiveNavigation(with: route, uuid: uuid, legIndex: legIndex, alternativeRoutes: alternativeRoutes, completion: completion)
     }
     
-    func setAlternativeRoutes(_ routes: [RouteInterface], completion: @escaping (Result<[RouteAlternative], Error>) -> Void) {
-        routeCoordinator.alternativeRoutesSetupHandler(routes, completion)
-    }
-    
-    func unsetRoutes(uuid: UUID, completion: @escaping (Result<RouteInfo, Error>) -> Void) {
+    func unsetRoutes(uuid: UUID, completion: @escaping (Result<RouteInfo?, Error>) -> Void) {
         routeCoordinator.endActiveNavigation(with: uuid, completion: completion)
     }
 
