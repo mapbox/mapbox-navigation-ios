@@ -33,6 +33,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     override func tearDown() {
+        Navigator.shared.rerouteController.reroutesProactively = true
         super.tearDown()
         navigation = nil
         UserDefaults.resetStandardUserDefaults()
@@ -90,6 +91,7 @@ class MapboxCoreNavigationTests: TestCase {
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              simulating: .never)
+        Navigator.shared.rerouteController.reroutesProactively = false
         
         // Coordinates from first step
         let coordinates = route.legs[0].steps[0].shape!.coordinates
@@ -141,6 +143,7 @@ class MapboxCoreNavigationTests: TestCase {
                                                         credentials: Fixture.credentials,
                                                         locationSource: locationManager,
                                                         simulating: .never)
+        Navigator.shared.rerouteController.reroutesProactively = false
         
         var receivedSpokenInstructions: [String] = []
         
@@ -198,6 +201,7 @@ class MapboxCoreNavigationTests: TestCase {
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager,
                                              simulating: .never)
+        Navigator.shared.rerouteController.reroutesProactively = false
         
         expectation(forNotification: .routeControllerDidPassSpokenInstructionPoint,
                     object: navigation.router) { (notification) -> Bool in
@@ -340,6 +344,7 @@ class MapboxCoreNavigationTests: TestCase {
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
                                              locationSource: locationManager)
+        Navigator.shared.rerouteController.reroutesProactively = false
         navigation.router.refreshesRoute = false
         
         struct InstructionPoint {
