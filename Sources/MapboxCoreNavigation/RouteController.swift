@@ -337,6 +337,7 @@ open class RouteController: NSObject {
 
     private var hasFinishedRouting = false
     public func finishRouting() {
+        guard !hasFinishedRouting else { return }
         hasFinishedRouting = true
         removeRoutes(completion: nil)
         BillingHandler.shared.stopBillingSession(with: sessionUUID)
@@ -635,10 +636,7 @@ open class RouteController: NSObject {
     }
     
     deinit {
-        removeRoutes(completion: nil)
-        BillingHandler.shared.stopBillingSession(with: sessionUUID)
-        unsubscribeNotifications()
-        routeTask?.cancel()
+        finishRouting()
         rerouteController.resetToDefaultSettings()
         Self.instanceLock.lock()
         Self.instance = nil
