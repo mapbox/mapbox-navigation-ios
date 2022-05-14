@@ -199,6 +199,12 @@ public protocol Router: CLLocationManagerDelegate {
     func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                      routeOptions: RouteOptions?,
                      completion: ((Bool) -> Void)?)
+    
+    /// Forcefully stop navigation process without ability to continue it.
+    ///
+    /// Use this method to indicate that you no longer need navigation experience for current session/UI.
+    /// After finishing, `Router` will not be able to update route, route leg, issue a reroute or do any other update, related to route traversing.
+    func finishRouting()
 }
 
 protocol InternalRouter: AnyObject {
