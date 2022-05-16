@@ -56,6 +56,13 @@ open class NavigationMapView: UIView {
             }
         }
     }
+
+    /**
+     The tolerance value used for configuring the underlying map source of route line, maneuver arrow and restricted areas.
+
+     Higher means simpler geometries and faster performance.
+     */
+    public var tolerance: Double = RouteSourcesTolerance
     
     /**
      Controls whether to show fading gradient color on route lines between two different congestion
@@ -328,6 +335,7 @@ open class NavigationMapView: UIView {
                 
                 var arrowSource = GeoJSONSource()
                 arrowSource.data = .feature(Feature(geometry: .lineString(shaftPolyline)))
+                arrowSource.tolerance = tolerance
                 var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSource) {
                     let geoJSON = Feature(geometry: .lineString(shaftPolyline))
@@ -353,6 +361,7 @@ open class NavigationMapView: UIView {
                 
                 var arrowStrokeSource = GeoJSONSource()
                 arrowStrokeSource.data = .feature(Feature(geometry: .lineString(shaftPolyline)))
+                arrowStrokeSource.tolerance = tolerance
                 var arrowStrokeLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource) {
                     let geoJSON = Feature(geometry: .lineString(shaftPolyline))
@@ -375,6 +384,7 @@ open class NavigationMapView: UIView {
                 let point = Point(shaftStrokeCoordinates.last!)
                 var arrowSymbolSource = GeoJSONSource()
                 arrowSymbolSource.data = .feature(Feature(geometry: .point(point)))
+                arrowSymbolSource.tolerance = tolerance
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource) {
                     let geoJSON = Feature.init(geometry: Geometry.point(point))
                     try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource,
@@ -515,6 +525,7 @@ open class NavigationMapView: UIView {
                 var restrictedAreaGeoJSON = GeoJSONSource()
                 restrictedAreaGeoJSON.data = .geometry(.lineString(shape))
                 restrictedAreaGeoJSON.lineMetrics = true
+                restrictedAreaGeoJSON.tolerance = tolerance
                 
                 try mapView.mapboxMap.style.addSource(restrictedAreaGeoJSON, id: sourceIdentifier)
             }
@@ -579,7 +590,7 @@ open class NavigationMapView: UIView {
         
         let geoJSONSource = self.geoJSONSource(shape)
         let sourceIdentifier = route.identifier(.source(isMainRoute: isMainRoute, isSourceCasing: true))
-        
+
         do {
             if mapView.mapboxMap.style.sourceExists(withId: sourceIdentifier) {
                 try mapView.mapboxMap.style.updateGeoJSONSource(withId: sourceIdentifier,
@@ -720,6 +731,7 @@ open class NavigationMapView: UIView {
         var geoJSONSource = GeoJSONSource()
         geoJSONSource.data = .geometry(.lineString(shape))
         geoJSONSource.lineMetrics = true
+        geoJSONSource.tolerance = tolerance
         
         return geoJSONSource
     }

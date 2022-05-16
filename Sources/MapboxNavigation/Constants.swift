@@ -110,3 +110,8 @@ public typealias CarPlayUserInfo = [String: Any?]
  to a color defined in `InstructionsCardContainerView.highlightedBackgroundColor`.
  */
 let InstructionCardHighlightDistance: CLLocationDistance = 152.4 // 500 ft
+
+/**
+ Default tolerance value used for configuring the underlying map source of route line, maneuver arrow and restricted areas.
+ */
+let RouteSourcesTolerance: Double = 0.375
