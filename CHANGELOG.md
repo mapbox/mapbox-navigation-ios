@@ -2,6 +2,10 @@
 
 ## main
 
+### User interface
+
+* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
+
 ### Routing
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components.([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
