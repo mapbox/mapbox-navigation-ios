@@ -35,8 +35,6 @@
 		DA303CA021B76B5C00F921DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DA303C9D21B76B5C00F921DC /* LaunchScreen.storyboard */; };
 		DA303CA421B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
 		DA303CA521B76CB000F921DC /* Localizable.stringsdict in Resources */ = {isa = PBXBuildFile; fileRef = DA303CA221B76CB000F921DC /* Localizable.stringsdict */; };
-		DA493E282833FED5006D09AB /* NavigationMapView+RoadAnnotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA493E272833FED4006D09AB /* NavigationMapView+RoadAnnotations.swift */; };
-		DA493E292833FED5006D09AB /* NavigationMapView+RoadAnnotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA493E272833FED4006D09AB /* NavigationMapView+RoadAnnotations.swift */; };
 		DA8805002316EAED00B54D87 /* ViewController+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+InstructionsCard.swift */; };
 		DAF5BE4A26A1FD1200DD3F2B /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = DAF5BE4926A1FD1200DD3F2B /* MapboxGeocoder */; };
 		E27A2204265674E400AA935F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E27A2202265674E400AA935F /* Localizable.strings */; };
@@ -83,7 +81,6 @@
 		DA3327391F50C6DA00C5EE88 /* sl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = sl; path = sl.lproj/Main.strings; sourceTree = "<group>"; };
 		DA33273D1F50C7CA00C5EE88 /* uk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Main.strings; sourceTree = "<group>"; };
 		DA3525712011435E0048DDFC /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/Main.strings; sourceTree = "<group>"; };
-		DA493E272833FED4006D09AB /* NavigationMapView+RoadAnnotations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "NavigationMapView+RoadAnnotations.swift"; path = "Example/NavigationMapView+RoadAnnotations.swift"; sourceTree = "<group>"; };
 		DA545ABA1FA993DF0090908E /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
 		DA545ABE1FA9A1370090908E /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = nl.lproj/Main.strings; sourceTree = "<group>"; };
 		DA5AD03C1FEBA03700FC7D7B /* bg */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = bg; path = bg.lproj/Main.strings; sourceTree = "<group>"; };
@@ -155,7 +152,6 @@
 				C51FC31620F689F800400CE7 /* CustomStyles.swift */,
 				C5D9800C1EFA8BA9006DBF2E /* CustomViewController.swift */,
 				8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */,
-				DA493E272833FED4006D09AB /* NavigationMapView+RoadAnnotations.swift */,
 			);
 			name = Example;
 			sourceTree = "<group>";
@@ -392,7 +388,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DA493E282833FED5006D09AB /* NavigationMapView+RoadAnnotations.swift in Sources */,
 				358D14681E5E3B7700ADE590 /* ViewController.swift in Sources */,
 				C5D9800D1EFA8BA9006DBF2E /* CustomViewController.swift in Sources */,
 				AED6285622CBE4CE00058A51 /* ViewController+InstructionsCard.swift in Sources */,
@@ -410,7 +405,6 @@
 			files = (
 				C53F2EE420EBC95600D9798F /* ViewController.swift in Sources */,
 				C53F2EE520EBC95600D9798F /* CustomViewController.swift in Sources */,
-				DA493E292833FED5006D09AB /* NavigationMapView+RoadAnnotations.swift in Sources */,
 				C5DE4B6220F6B6B3007AFBE6 /* CustomStyles.swift in Sources */,
 				8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */,
 				DA8805002316EAED00B54D87 /* ViewController+InstructionsCard.swift in Sources */,
