@@ -85,7 +85,7 @@ extension NavigationMapView {
         if currentStepProgress.distanceTraveled <= 0 {
             allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].dropLast().count
         } else if let startIndex = lineString.indexedCoordinateFromStart(distance: currentStepProgress.distanceTraveled)?.index,
-                  startIndex < lineString.coordinates.endIndex - 1 {
+                  lineString.coordinates.indices.contains(startIndex) {
             allRemainingPoints += lineString.coordinates.suffix(from: startIndex + 1).dropLast().count
         }
         
@@ -154,7 +154,7 @@ extension NavigationMapView {
     func updateFractionTraveled(coordinate: CLLocationCoordinate2D) {
         guard let granularDistances = routeLineGranularDistances,
               let index = routeRemainingDistancesIndex,
-              index < granularDistances.distanceArray.endIndex else { return }
+              granularDistances.distanceArray.indices.contains(index) else { return }
         let traveledIndex = granularDistances.distanceArray[index]
         let upcomingPoint = traveledIndex.point
         
