@@ -129,11 +129,10 @@ extension NavigationMapView {
                 navigationMapView.routeLineTracksTraversal
             }
             set {
+                navigationMapView.routeLineTracksTraversal = newValue
                 if newValue {
-                    navigationMapView.turnOnRouteLineTracksTraversal()
                     navigationMapView.mapView.location.addLocationConsumer(newConsumer: self)
                 } else {
-                    navigationMapView.turnOffRouteLineTracksTraversal()
                     navigationMapView.mapView.location.removeLocationConsumer(consumer: self)
                 }
             }

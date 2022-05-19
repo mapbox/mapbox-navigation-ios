@@ -62,7 +62,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     public var routeLineTracksTraversal: Bool = false {
         didSet {
-            routeLineTracksTraversal ? navigationMapView?.turnOnRouteLineTracksTraversal() : navigationMapView?.turnOffRouteLineTracksTraversal()
+            navigationMapView?.routeLineTracksTraversal = routeLineTracksTraversal
         }
     }
     

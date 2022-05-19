@@ -68,7 +68,7 @@ class CustomViewController: UIViewController {
         
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
-            self?.navigationMapView.turnOnRouteLineTracksTraversal()
+            self?.navigationMapView.routeLineTracksTraversal = true
             self?.navigationMapView.show([route], legIndex: 0)
         })
         

@@ -76,7 +76,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             navigationMapView?.routeLineTracksTraversal ?? false
         }
         set {
-            newValue ? navigationMapView?.turnOnRouteLineTracksTraversal() : navigationMapView?.turnOffRouteLineTracksTraversal()
+            navigationMapView?.routeLineTracksTraversal = newValue
             routeOverlayController?.routeLineTracksTraversal = newValue
         }
     }

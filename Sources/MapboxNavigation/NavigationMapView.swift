@@ -85,6 +85,30 @@ open class NavigationMapView: UIView {
     }
     
     /**
+     Controls whether the main route style layer and its casing disappears
+     as the user location puck travels over it. Defaults to `false`.
+     
+     Used in standalone `NavigationMapView` during navigation. If using `NavigationViewController` and `CarPlayNavigationViewController`
+     for active navigation, update `NavigationViewController.routeLineTracksTraversal` and `CarPlayNavigationViewController.routeLineTracksTraversal` instead.
+     
+     If `true`, the part of the route that has been traversed will be
+     rendered with full transparency, to give the illusion of a
+     disappearing route. To customize the color that appears on the
+     traversed section of a route, override the `traversedRouteColor` property
+     for the `NavigationMapView.appearance()`. If `false`, the whole route will be shown without traversed
+     part disappearing effect.
+     
+     To update the route line during active navigation, add observers for `routeControllerDidRefreshRoute`,
+     `routeControllerDidReroute` and `routeControllerProgressDidChange` from `NotificationCenter`.
+     And also call `updateRouteLine(routeProgress:coordinate:redraw:)` to update the route line.
+     */
+    public var routeLineTracksTraversal: Bool = false {
+        didSet {
+            updateRouteLineWithRouteLineTracksTraversal()
+        }
+    }
+    
+    /**
      Location manager that is used to track accuracy and status authorization changes.
      */
     let locationManager = CLLocationManager()
@@ -130,7 +154,6 @@ open class NavigationMapView: UIView {
     
     var currentLineGradientStops = [Double: UIColor]()
     var currentRestrictedAreasStops = [Double: UIColor]()
-    var routeLineTracksTraversal: Bool = false
     
     var showsRoute: Bool {
         get {
@@ -150,31 +173,6 @@ open class NavigationMapView: UIView {
             
             return true
         }
-    }
-    
-    /**
-     When called during active navigation, the part of the route that has been traversed will be
-     rendered with full transparency, to give the illusion of a
-     disappearing route. To customize the color that appears on the
-     traversed section of a route, override the `traversedRouteColor` property
-     for the `NavigationMapView.appearance()`.
-     
-     To update the route line during active navigation, add observers for `routeControllerDidRefreshRoute`,
-     `routeControllerDidReroute` and `routeControllerProgressDidChange` from `NotificationCenter`.
-     And also call `updateRouteLine(routeProgress:coordinate:redraw:)` to update the route line.
-     */
-    public func turnOnRouteLineTracksTraversal() {
-        routeLineTracksTraversal = true
-        updateRouteLineWithRouteLineTracksTraversal()
-    }
-    
-    /**
-     When called during active navigation, the whole route will be shown without traversed
-     part disappearing effect.
-     */
-    public func turnOffRouteLineTracksTraversal() {
-        routeLineTracksTraversal = false
-        updateRouteLineWithRouteLineTracksTraversal()
     }
     
     func updateRouteLineWithRouteLineTracksTraversal() {
