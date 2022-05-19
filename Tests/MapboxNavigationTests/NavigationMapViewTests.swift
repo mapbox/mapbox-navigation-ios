@@ -672,4 +672,114 @@ class NavigationMapViewTests: TestCase {
                        NavigationMapView.AnnotationIdentifier.finalDestinationAnnotation,
                        "Point annotation identifiers should be equal.")
     }
+    
+    func testRouteLineLayerPosition() {
+        
+        let navigationMapView = NavigationMapView(frame: UIScreen.main.bounds)
+        
+        let styleJSONObject: [String: Any] = [
+            "version": 8,
+            "center": [
+                -122.385563, 37.763330
+            ],
+            "zoom": 15,
+            "sources": [
+                "composite": [
+                    "url": "mapbox://mapbox.mapbox-streets-v8,mapbox.mapbox-terrain-v2",
+                    "type": "vector"
+                ],
+                "custom": [
+                    "url": "http://api.example.com/tilejson.json",
+                    "type": "raster"
+                ]
+            ],
+            "layers": []
+        ]
+        
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+        
+        let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
+        mapLoadingErrorExpectation.assertForOverFulfill = false
+        
+        navigationMapView.mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
+            mapLoadingErrorExpectation.fulfill()
+        })
+        
+        navigationMapView.mapView.mapboxMap.loadStyleJSON(styleJSON)
+        
+        wait(for: [mapLoadingErrorExpectation], timeout: 1.0)
+        
+        let mainRouteIdentifier = route.identifier(.route(isMainRoute: true))
+        let mainRouteCasingIdentifier = route.identifier(.routeCasing(isMainRoute: true))
+        
+        navigationMapView.show([route])
+        
+        // Style doesn't contain any layers besides main route layer and its casing. In case if
+        // layer position wasn't provided main route line casing layer should be placed below the
+        // main route line layer.
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers[safe: 0]?.id,
+                       mainRouteCasingIdentifier,
+                       "Route line casing layer identifiers should be equal.")
+        
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers[safe: 1]?.id,
+                       mainRouteIdentifier,
+                       "Route line layer identifiers should be equal.")
+        
+        navigationMapView.removeRoutes()
+        
+        // After removing all routes there should be no layers in style.
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers.count,
+                       0,
+                       "Unexpected number of layer identifiers in style.")
+        
+        var source = GeoJSONSource()
+        source.data = .geometry(.point(.init(.init(latitude: 0.0, longitude: 0.0))))
+        
+        let sourceIdentifier = "test_source"
+        try? navigationMapView.mapView.mapboxMap.style.addSource(source, id: sourceIdentifier)
+        
+        let layerIdentifier = "test_dentifier"
+        var layer = LineLayer(id: layerIdentifier)
+        layer.source = sourceIdentifier
+        try? navigationMapView.mapView.mapboxMap.style.addLayer(layer)
+        
+        navigationMapView.show([route], layerPosition: .above(layerIdentifier))
+        
+        // In case if layer position was provided to be placed above specific layer,
+        // main route line casing layer should be placed above that specific layer followed by the
+        // main route line layer.
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers[safe: 0]?.id,
+                       layerIdentifier,
+                       "Custom line layer identifiers should be equal.")
+        
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers[safe: 1]?.id,
+                       mainRouteCasingIdentifier,
+                       "Route line casing layer identifiers should be equal.")
+        
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers[safe: 2]?.id,
+                       mainRouteIdentifier,
+                       "Route line layer identifiers should be equal.")
+        
+        navigationMapView.removeRoutes()
+        
+        navigationMapView.show([route], layerPosition: .below(layerIdentifier))
+        
+        // In case if layer position was provided to be placed below specific layer,
+        // main route line casing layer should be placed below that specific layer followed by the
+        // main route line layer.
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers[safe: 0]?.id,
+                       mainRouteCasingIdentifier,
+                       "Route line casing layer identifiers should be equal.")
+        
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers[safe: 1]?.id,
+                       mainRouteIdentifier,
+                       "Route line layer identifiers should be equal.")
+        
+        XCTAssertEqual(navigationMapView.mapView.mapboxMap.style.allLayerIdentifiers[safe: 2]?.id,
+                       layerIdentifier,
+                       "Custom line layer identifiers should be equal.")
+        
+        navigationMapView.removeRoutes()
+    }
 }
