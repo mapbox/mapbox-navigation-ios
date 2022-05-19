@@ -55,7 +55,7 @@ extension NavigationMapView {
      should be set to `true`. When `RouteController` did update the `RouteProgress`, the value should be set to `false`.
      */
     public func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?, redraw: Bool = false) {
-        if redraw || routeProgress.legIndex != currentLegIndex {
+        if redraw {
             show([routeProgress.route], legIndex: routeProgress.legIndex)
         }
         

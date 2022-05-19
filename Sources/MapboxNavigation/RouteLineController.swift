@@ -89,6 +89,7 @@ extension NavigationMapView {
             navigationMapView.updatePreferredFrameRate(for: progress)
             if currentLegIndexMapped != legIndex {
                 navigationMapView.showWaypoints(on: route, legIndex: legIndex)
+                navigationMapView.show([route], legIndex: legIndex)
                 currentLegIndexMapped = legIndex
             }
             

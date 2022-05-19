@@ -62,11 +62,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     public var routeLineTracksTraversal: Bool = false {
         didSet {
-            if routeLineTracksTraversal {
-                navigationMapView?.turnOnRouteLineTracksTraversal()
-            } else {
-                navigationMapView?.turnOffRouteLineTracksTraversal()
-            }
+            routeLineTracksTraversal ? navigationMapView?.turnOnRouteLineTracksTraversal() : navigationMapView?.turnOffRouteLineTracksTraversal()
         }
     }
     
@@ -691,6 +687,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         if legIndex != currentLegIndexMapped {
             navigationMapView?.showWaypoints(on: routeProgress.route, legIndex: legIndex)
+            navigationMapView?.show([routeProgress.route], legIndex: legIndex)
             currentLegIndexMapped = legIndex
         }
         

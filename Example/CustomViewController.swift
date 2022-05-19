@@ -15,6 +15,8 @@ class CustomViewController: UIViewController {
     var navigationService: NavigationService!
     
     var simulateLocation = false
+    
+    var currentLegIndex: Int = 0
 
     var indexedUserRouteResponse: IndexedRouteResponse?
         
@@ -67,7 +69,7 @@ class CustomViewController: UIViewController {
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
             self?.navigationMapView.turnOnRouteLineTracksTraversal()
-            self?.navigationMapView.show([route])
+            self?.navigationMapView.show([route], legIndex: 0)
         })
         
         // By default `NavigationViewportDataSource` tracks location changes from `PassiveLocationManager`, to consume
@@ -126,6 +128,12 @@ class CustomViewController: UIViewController {
             navigationMapView.addArrow(route: routeProgress.route, legIndex: routeProgress.legIndex, stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
         } else {
             navigationMapView.removeArrow()
+        }
+        
+        if routeProgress.legIndex != currentLegIndex {
+            navigationMapView.showWaypoints(on: routeProgress.route, legIndex: routeProgress.legIndex)
+            navigationMapView.show([routeProgress.route], legIndex: routeProgress.legIndex)
+            currentLegIndex = routeProgress.legIndex
         }
         
         // Update the top banner with progress updates
