@@ -100,7 +100,7 @@ open class NavigationMapView: UIView {
      
      To update the route line during active navigation, add observers for `routeControllerDidRefreshRoute`,
      `routeControllerDidReroute` and `routeControllerProgressDidChange` from `NotificationCenter`.
-     And also call `updateRouteLine(routeProgress:coordinate:redraw:)` to update the route line.
+     And also call `NavigationMapView.updateRouteLine(routeProgress:coordinate:redraw:)` to update the main route line.
      */
     public var routeLineTracksTraversal: Bool = false {
         didSet {
