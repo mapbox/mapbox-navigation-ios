@@ -6,6 +6,10 @@
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components.([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
 
+### Map
+
+* Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
+
 ## v2.5.0
 
 ### Packaging
@@ -57,6 +61,7 @@
 * Added the `CarPlayManagerDelegate.carPlayManager(_:shouldUpdateNotificationFor:with:in:)` and `CarPlayManagerDelegate.carPlayManager(_:shouldShowNotificationFor:in:)` to provide the ability to control notifications presentation while CarPlay application is in the background. ([#3828](https://github.com/mapbox/mapbox-navigation-ios/pull/3828))
 
 ### Other Changes
+
 * During turn-by-turn navigation, incidents along the route are now refreshed periodically along with traffic congestion.
 * When the user passes a named toll collection point, the `TollCollection` object obtained through the `Notification.Name.electronicHorizonDidPassRoadObject` notification now has the `TollCollection.name` property set.
 
