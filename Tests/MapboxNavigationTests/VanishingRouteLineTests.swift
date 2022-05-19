@@ -64,6 +64,30 @@ class VanishingRouteLineTests: TestCase {
         return routeProgress
     }
     
+    func getEmptyRoute() -> Route {
+        let route = getRoute()
+        let routeLeg = route.legs.first!
+        let emptySteps = routeLeg.steps.map { (routeStep: RouteStep) -> RouteStep in
+            routeStep.shape?.coordinates = []
+            return routeStep
+        }
+        let emptyLeg = RouteLeg(steps: emptySteps,
+                                name: routeLeg.name,
+                                distance: routeLeg.distance,
+                                expectedTravelTime: routeLeg.expectedTravelTime,
+                                profileIdentifier: routeLeg.profileIdentifier)
+        let emptyRoute = Route(legs: [emptyLeg], shape: route.shape, distance: route.distance, expectedTravelTime: route.expectedTravelTime)
+        return emptyRoute
+    }
+    
+    func getUnstartedRouteProgress(route: Route) -> RouteProgress {
+        let routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
+        routeProgress.currentLegProgress = RouteLegProgress(leg: route.legs[0], stepIndex: 0, spokenInstructionIndex: 0)
+        routeProgress.currentLegProgress.currentStepProgress = RouteStepProgress(step: route.legs[0].steps[0], spokenInstructionIndex: 0)
+        routeProgress.currentLegProgress.currentStepProgress.distanceTraveled = 0.0
+        return routeProgress
+    }
+    
     func lineGradientToString(lineGradient: Value<StyleColor>?) -> String {
         guard let halfStringFromLineGradient = lineGradient.debugDescription.components(separatedBy: "(").last,
               let stringFromLineGradient = halfStringFromLineGradient.components(separatedBy: ")").first else {
@@ -140,6 +164,35 @@ class VanishingRouteLineTests: TestCase {
         // the upcoming route point index update and a location update.
         let expectedFractionTraveled = 0.3240769449298392
         XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: 0.0000000001)
+    }
+    
+    func testEmptyRouteWithValidRouteProgress() {
+        let routeProgress = getRouteProgress()
+        let route = getEmptyRoute()
+        
+        let coordinate = CLLocationCoordinate2DMake(-122.5237429, 37.975393)
+        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.show([route])
+        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        navigationMapView.updateFractionTraveled(coordinate: coordinate)
+        
+        // Route without coordinates inside its steps would lead to invalid routeRemainingDistancesIndex.
+        XCTAssertEqual(navigationMapView.routeRemainingDistancesIndex, -1)
+        XCTAssertEqual(navigationMapView.fractionTraveled, 0.0, accuracy: 0)
+    }
+    
+    func testUnstartedRouteProgressWithValidRoute() {
+        let route = getRoute()
+        let routeProgress = getUnstartedRouteProgress(route: route)
+        
+        let coordinate = CLLocationCoordinate2DMake(-122.5237429, 37.975393)
+        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.show([route])
+        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        navigationMapView.updateFractionTraveled(coordinate: coordinate)
+        
+        XCTAssert(navigationMapView.routeRemainingDistancesIndex! >= 0, "Non-empty route should have valid routeRemainingDistancesIndex.")
+        XCTAssertEqual(navigationMapView.fractionTraveled, 0.0, accuracy: 0)
     }
     
     func disabled_UpdateRouteLineWithDifferentDistance() {
