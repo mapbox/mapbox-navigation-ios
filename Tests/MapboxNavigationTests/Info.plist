@@ -15,12 +15,12 @@
 	<key>CFBundlePackageType</key>
 	<string>BNDL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.5.0</string>
+	<string>2.6.0</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Location Usage Description</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Location Usage Description</string>
 	<key>CFBundleVersion</key>
-	<string>103</string>
+	<string>105</string>
 </dict>
 </plist>

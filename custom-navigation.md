@@ -25,21 +25,21 @@ To install the MapboxCoreNavigation framework in an application using [Swift Pac
      login mapbox
      password PRIVATE_MAPBOX_API_TOKEN
    ```
-   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope.
 
 1. In Xcode, go to File ‣ Swift Packages ‣ Add Package Dependency.
 
 1. Enter `https://github.com/mapbox/mapbox-navigation-ios.git` as the package repository and click Next.
 
-1. Set Rules to Version, Up to Next Major, and enter `2.3.0` as the minimum version requirement. Click Next.
+1. Set Rules to Version, Up to Next Major, and enter `2.4.0` as the minimum version requirement. Click Next.
 
 To install the MapboxCoreNavigation framework in another package rather than an application, run `swift package init` to create a Package.swift, then add the following dependency:
 
 ```swift
 // Latest stable release
-.package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "2.3.0")
+.package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", from: "2.4.0")
 // Latest prerelease
-.package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.5.0-rc.1"))
+.package(name: "MapboxCoreNavigation", url: "https://github.com/mapbox/mapbox-navigation-ios.git", .exact("2.6.0-alpha.1"))
 ```
 
 ### Using CocoaPods
@@ -48,18 +48,18 @@ To install Mapbox Core Navigation using [CocoaPods](https://cocoapods.org/):
 
 1. Go to your [Mapbox account dashboard](https://account.mapbox.com/) and create an access token that has the `DOWNLOADS:READ` scope. **PLEASE NOTE: This is not the same as your production Mapbox API token. Make sure to keep it private and do not insert it into any Info.plist file.** Create a file named `.netrc` in your home directory if it doesn’t already exist, then add the following lines to the end of the file:
    ```
-   machine api.mapbox.com 
+   machine api.mapbox.com
      login mapbox
      password PRIVATE_MAPBOX_API_TOKEN
    ```
-   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope.
 
 1. Create a [Podfile](https://guides.cocoapods.org/syntax/podfile.html) with the following specification:
    ```ruby
    # Latest stable release
    pod 'MapboxCoreNavigation', '~> 2.4'
    # Latest prerelease
-   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.5.0-rc.1'
+   pod 'MapboxCoreNavigation', :git => 'https://github.com/mapbox/mapbox-navigation-ios.git', :tag => 'v2.6.0-alpha.1'
    ```
 
 1. Run `pod repo update && pod install` and open the resulting Xcode workspace.
@@ -74,7 +74,7 @@ To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Cartha
      login mapbox
      password PRIVATE_MAPBOX_API_TOKEN
    ```
-   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope.
 
 1. _(Optional)_ Clear your Carthage caches:
    ```bash
@@ -86,7 +86,7 @@ To install Mapbox Navigation using [Carthage](https://github.com/Carthage/Cartha
    # Latest stable release
    github "mapbox/mapbox-navigation-ios" ~> 2.4
    # Latest prerelease
-   github "mapbox/mapbox-navigation-ios" "v2.5.0-rc.1"
+   github "mapbox/mapbox-navigation-ios" "v2.6.0-alpha.1"
    ```
 
 1. Run `carthage bootstrap --platform iOS --use-xcframeworks --cache-builds --use-netrc`.
@@ -103,10 +103,10 @@ To install the MapboxCoreNavigation framework using [Swift Package Manager](http
      login mapbox
      password PRIVATE_MAPBOX_API_TOKEN
    ```
-   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope. 
+   where _PRIVATE_MAPBOX_API_TOKEN_ is your Mapbox API token with the `DOWNLOADS:READ` scope.
 
 1. In Xcode, go to File ‣ Swift Packages ‣ Add Package Dependency.
 
 1. Enter `https://github.com/mapbox/mapbox-navigation-ios.git` as the package repository and click Next.
 
-1. Set Rules to Version, Up to Next Major, and enter `2.3.0` as the minimum version requirement. Click Next.
+1. Set Rules to Version, Up to Next Major, and enter `2.4.0` as the minimum version requirement. Click Next.
