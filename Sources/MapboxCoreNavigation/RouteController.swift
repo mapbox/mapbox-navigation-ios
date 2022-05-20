@@ -276,7 +276,8 @@ open class RouteController: NSObject {
                   return
         }
         
-        let routeRequest = Directions().url(forCalculating: routeOptions).absoluteString
+        let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
+                                .url(forCalculating: routeOptions).absoluteString
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
                                                                request: routeRequest, routeOrigin: RouterOrigin.custom)
