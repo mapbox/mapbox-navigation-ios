@@ -32,6 +32,7 @@
 * Fixed an issue where `UserPuckCourseView`’s color desaturated during turn-by-turn navigation even as the location was being updated. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
 * Fixed an issue where the `PassiveLocationManager(directions:systemLocationManager:eventsManagerType:userInfo:datasetProfileIdentifier:)` initializer’s `datasetProfileIdentifier` argument was ignored. ([#3867](https://github.com/mapbox/mapbox-navigation-ios/pull/3867))
 * Fixed an issue where the user location was sometimes snapped to a parallel street just before it merges with the actual street. ([#3862](https://github.com/mapbox/mapbox-navigation-ios/pull/3862))
+* Fix the possible crash after rerouting when `routeLineTracksTraversal` enabled. ([#3896](https://github.com/mapbox/mapbox-navigation-ios/pull/3896))
 
 ### Routing
 
