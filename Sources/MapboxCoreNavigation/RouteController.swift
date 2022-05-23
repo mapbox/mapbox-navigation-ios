@@ -859,15 +859,16 @@ extension RouteController: ReroutingControllerDelegate {
         }
     }
     
-    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) {
-        guard let location = location else { return }
+    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) -> Bool {
+        guard let location = location else { return false }
         
         if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
             announceImpendingReroute(at: location)
             
             isRerouting = true
+            return true
         } else {
-            rerouteController.cancel()
+            return false
         }
     }
     
