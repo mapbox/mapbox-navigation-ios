@@ -839,25 +839,24 @@ extension RouteController: Router {
 extension RouteController: InternalRouter { }
 
 extension RouteController: ReroutingControllerDelegate {
-    func rerouteControllerWantsSwitchToAlternative(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions) {
-        guard let newMainRoute = response.routes?.first else {
-            return
+    func rerouteControllerWantsSwitchToAlternative(_ rerouteController: RerouteController,
+                                                   response: RouteResponse,
+                                                   routeIndex: Int,
+                                                   options: RouteOptions) {
+        guard let location = location else { return }
+        
+        if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+            announceImpendingReroute(at: location)
+            
+            isRerouting = true
+            updateRoute(with: IndexedRouteResponse(routeResponse: response,
+                                                   routeIndex: routeIndex),
+                        routeOptions: options,
+                        isProactive: false,
+                        completion: { [weak self] success in
+                self?.isRerouting = false
+            })
         }
-        delegate?.router(self,
-                         willTakeAlternativeRoute: newMainRoute,
-                         at: location)
-        updateRoute(with: IndexedRouteResponse(routeResponse: response,
-                                               routeIndex: 0),
-                    routeOptions: options,
-                    isProactive: false,
-                    completion: { [weak self] success in
-            guard let self = self else { return }
-            if success {
-                self.delegate?.router(self, didTakeAlternativeRouteAt: self.location)
-            } else {
-                self.delegate?.router(self, didFailToTakeAlternativeRouteAt: self.location)
-            }
-        })
     }
     
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) {

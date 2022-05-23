@@ -93,6 +93,7 @@ extension RerouteController: RerouteObserver {
         
         delegate?.rerouteControllerWantsSwitchToAlternative(self,
                                                             response: decoded.routeResponse,
+                                                            routeIndex: Int(route.getRouteIndex()),
                                                             options: decoded.routeOptions)
     }
 

@@ -6,6 +6,7 @@ import MapboxNavigationNative
 protocol ReroutingControllerDelegate: AnyObject {
     func rerouteControllerWantsSwitchToAlternative(_ rerouteController: RerouteController,
                                                    response: RouteResponse,
+                                                   routeIndex: Int,
                                                    options: RouteOptions)
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController)
     func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions)
