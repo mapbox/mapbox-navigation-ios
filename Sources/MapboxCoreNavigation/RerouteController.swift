@@ -86,7 +86,14 @@ class RerouteController {
 
 extension RerouteController: RerouteObserver {
     func onSwitchToAlternative(forRoute route: RouteInterface) {
-        // TODO: fill with Native Alternative routes integration
+        guard let decoded = Self.decode(routeRequest: route.getRequestUri(),
+                                        routeResponse: route.getResponseJson()) else {
+            return
+        }
+        
+        delegate?.rerouteControllerWantsSwitchToAlternative(self,
+                                                            response: decoded.routeResponse,
+                                                            options: decoded.routeOptions)
     }
 
     func onRerouteDetected(forRouteRequest routeRequest: String) {

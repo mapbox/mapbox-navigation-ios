@@ -41,6 +41,37 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation)
     
     /**
+     Called when navigation service has detected user taking an alternative route.
+     
+     This method is called before updating main route.
+     
+     - parameter service: The navigation service that has detected turning to the alternative.
+     - parameter route: The alternative route which will be taken as new main.
+     - parameter location: The user’s current location.
+     */
+    func navigationService(_ service: NavigationService, willTakeAlternativeRoute route: Route, at location: CLLocation?)
+    
+    /**
+     Called when navigation service has finished switching to an alternative route
+     
+     This method is called after `navigationService(_:willTakeAlternativeRoute:)`
+     
+     - parameter service: The navigation service that switched to the alternative.
+     - parameter location: The user’s current location.
+     */
+    func navigationService(_ service: NavigationService, didTakeAlternativeRouteAt location: CLLocation?)
+    
+    /**
+     Called when navigation service has failed to take an alternative route.
+     
+     This method is called after `navigationService(_:willTakeAlternativeRoute:)`.
+     
+     - parameter service: The navigation service which tried to switch to the alternative.
+     - parameter location: The user’s current location.
+     */
+    func navigationService(_ service: NavigationService, didFailToTakeAlternativeRouteAt location: CLLocation?)
+    
+    /**
      Called when a location has been identified as unqualified to navigate on.
      
      See `CLLocation.isQualified` for more information about what qualifies a location.
@@ -249,6 +280,27 @@ public extension NavigationServiceDelegate {
      */
     func navigationService(_ service: NavigationService, didFailToRerouteWith error: Error) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, didTakeAlternativeRouteAt location: CLLocation?) {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, didFailToTakeAlternativeRouteAt location: CLLocation?) {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
     }
     
     /**
