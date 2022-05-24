@@ -8,7 +8,7 @@ protocol ReroutingControllerDelegate: AnyObject {
                                                    response: RouteResponse,
                                                    routeIndex: Int,
                                                    options: RouteOptions)
-    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController)
+    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) -> Bool
     func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions)
     func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController)
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError)
