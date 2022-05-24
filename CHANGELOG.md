@@ -29,6 +29,7 @@
 * Removed a transparent gap that appeared between the top banner and step table if the user completed a maneuver while the step table was visible. ([#3805](https://github.com/mapbox/mapbox-navigation-ios/pull/3805))
 * Fixed an issue where a gray dashed line, which normally indicates a restricted-access road, appeared at the beginning of the route line even if there was no restriction. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
 * Lanes guidance views will now be shown even when all lanes a valid for the current route. ([#3903](https://github.com/mapbox/mapbox-navigation-ios/pull/3903))
+* Fixed the crash of nonstop road shield updates when no valid road information contained in guidance instruction. ([#3911](https://github.com/mapbox/mapbox-navigation-ios/pull/3911))
 
 ### User feedback
 
