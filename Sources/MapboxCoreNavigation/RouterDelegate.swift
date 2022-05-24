@@ -57,9 +57,24 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
     func router(_ router: Router, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool)
 
     /**
-     Called when router has detected user taking an alternative route.
+     Returns whether the router should be allowed to take an alternative route.
+     
+     If implemented, this method is called when router detects that user went off the main route and there is an alternative route which user might be following. If this method returns `true` - router will switch to this alternative as a new main route.
+     
+     This method is called before `router(_:willTakeAlternativeRoute:)`
+     
+     - parameter router: The router that has detected turning to the alternative.
+     - parameter route: The alternative route which will be taken as new main.
+     - parameter location: The user’s current location.
+     */
+    func router(_ router: Router, shouldTakeAlternativeRoute route: Route, at location: CLLocation?) -> Bool
+    
+    /**
+     Called immediately before switching to the alternative route
      
      This method is called before updating router's main route.
+     
+     This method is called after `router(_:shouldTakeAlternativeRoute:)` and before `router(_:didTakeAlternativeRouteAt:)`
      
      - parameter router: The router that has detected turning to the alternative.
      - parameter route: The alternative route which will be taken as new main.
@@ -233,6 +248,11 @@ public extension RouterDelegate {
     func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool {
         logUnimplemented(protocolType: RouterDelegate.self, level: .info)
         return RouteController.DefaultBehavior.shouldDisableBatteryMonitoring
+    }
+    
+    func router(_ router: Router, shouldTakeAlternativeRoute route: Route, at location: CLLocation?) -> Bool {
+        logUnimplemented(protocolType: RouterDelegate.self, level: .info)
+        return RouteController.DefaultBehavior.shouldTakeAlternativeRoute
     }
     
     func router(_ router: Router, willTakeAlternativeRoute route: Route, at location: CLLocation?) {

@@ -961,6 +961,10 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
+    public func navigationService(_ service: NavigationService, shouldTakeAlternativeRoute route: Route, at location: CLLocation?) -> Bool {
+        delegate?.navigationViewController(self, shouldTakeAlternativeRoute: route, at: location) ?? RouteController.DefaultBehavior.shouldTakeAlternativeRoute
+    }
+    
     public func navigationService(_ service: NavigationService, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
         delegate?.navigationViewController(self, willTakeAlternativeRoute: route, at: location)
     }

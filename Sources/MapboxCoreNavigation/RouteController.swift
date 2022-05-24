@@ -28,6 +28,7 @@ open class RouteController: NSObject {
         public static let didArriveAtWaypoint: Bool = true
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
+        public static let shouldTakeAlternativeRoute: Bool = true
     }
 
     public static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "RouteController")
@@ -865,24 +866,29 @@ extension RouteController: ReroutingControllerDelegate {
                                                    response: RouteResponse,
                                                    routeIndex: Int,
                                                    options: RouteOptions) {
-        guard let newMainRoute = response.routes?.first else {
+        let newRouteResponse = IndexedRouteResponse(routeResponse: response,
+                                                    routeIndex: routeIndex)
+                                                    
+        guard let newMainRoute = newRouteResponse.currentRoute else {
             return
         }
-        delegate?.router(self,
-                         willTakeAlternativeRoute: newMainRoute,
-                         at: location)
-        updateRoute(with: IndexedRouteResponse(routeResponse: response,
-                                               routeIndex: 0),
-                    routeOptions: options,
-                    isProactive: false,
-                    completion: { [weak self] success in
-            guard let self = self else { return }
-            if success {
-                self.delegate?.router(self, didTakeAlternativeRouteAt: self.location)
-            } else {
-                self.delegate?.router(self, didFailToTakeAlternativeRouteAt: self.location)
-            }
-        })
+              
+        if delegate?.router(self, shouldTakeAlternativeRoute: newMainRoute, at: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+            delegate?.router(self,
+                             willTakeAlternativeRoute: newMainRoute,
+                             at: location)
+            updateRoute(with: newRouteResponse,
+                        routeOptions: options,
+                        isProactive: false,
+                        completion: { [weak self] success in
+                guard let self = self else { return }
+                if success {
+                    self.delegate?.router(self, didTakeAlternativeRouteAt: self.location)
+                } else {
+                    self.delegate?.router(self, didFailToTakeAlternativeRouteAt: self.location)
+                }
+            })
+        }
     }
     
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) -> Bool {

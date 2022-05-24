@@ -41,9 +41,24 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation)
     
     /**
-     Called when navigation service has detected user taking an alternative route.
+     Returns whether the navigation service should be allowed to take an alternative route.
      
-     This method is called before updating main route.
+     If implemented, this method is called when navigation service detects that user went off the main route and there is an alternative route which user might be following. If this method returns `true` - navigation service will switch to this alternative as a new main route.
+     
+     This method is called before `navigationService(_:willTakeAlternativeRoute:)`
+     
+     - parameter service: The navigation service that has detected turning to the alternative.
+     - parameter route: The alternative route which will be taken as new main.
+     - parameter location: The user’s current location.
+     */
+    func navigationService(_ service: NavigationService, shouldTakeAlternativeRoute route: Route, at location: CLLocation?) -> Bool
+    
+    /**
+     Called immediately before switching to the alternative route
+     
+     This method is called before updating navigation service's main route.
+     
+     This method is called after `navigationService(_:shouldTakeAlternativeRoute:)` and before `navigationService(_:didTakeAlternativeRouteAt:)`
      
      - parameter service: The navigation service that has detected turning to the alternative.
      - parameter route: The alternative route which will be taken as new main.
@@ -273,6 +288,14 @@ public extension NavigationServiceDelegate {
      */
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, shouldTakeAlternativeRoute route: Route, at location: CLLocation?) -> Bool {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
+        return MapboxNavigationService.Default.shouldTakeAlternativeRoute
     }
     
     /**
