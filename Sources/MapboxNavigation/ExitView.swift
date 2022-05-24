@@ -164,7 +164,6 @@ public class ExitView: StylableView {
         
         var criticalProperties: [AnyHashable?] = [
             side,
-            styleID,
             dataSource.font.pointSize,
             appearance.backgroundColor,
             appearance.foregroundColor,
@@ -176,6 +175,10 @@ public class ExitView: StylableView {
         
         if #available(iOS 12.0, *) {
             criticalProperties.append(traitCollection.userInterfaceStyle.rawValue)
+        }
+        
+        if let styleID = styleID {
+            criticalProperties.append(styleID)
         }
         
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0)}))
