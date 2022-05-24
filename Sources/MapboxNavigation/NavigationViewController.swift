@@ -691,7 +691,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     public private(set) var styleManager: StyleManager!
     
     func setupStyleManager(_ navigationOptions: NavigationOptions?) {
-        styleManager = StyleManager()
+        styleManager = StyleManager(UITraitCollection(userInterfaceIdiom: .phone))
         styleManager.delegate = self
         styleManager.styles = navigationOptions?.styles ?? [DayStyle(), NightStyle()]
         
