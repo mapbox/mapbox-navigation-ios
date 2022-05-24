@@ -4,11 +4,15 @@
 
 ### Routing
 
-* Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components.([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
+* Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
 
 ### Map
 
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
+
+### CarPlay
+
+* Fixed an issue where `StyleManager` appearance update on CarPlay would cause appearance update on iOS as well. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
 
 ## v2.5.0
 
