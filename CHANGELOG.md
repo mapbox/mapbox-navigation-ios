@@ -12,7 +12,8 @@
 
 ### CarPlay
 
-* Fixed an issue where `StyleManager` appearance update on CarPlay would cause appearance update on iOS as well. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
+* Fixed an issue where shields would become invisible when users drive through the tunnel. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
+* Added the ability to change map style depending on the option that was set in `Always show dark maps`. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 
 ## v2.5.0
 
