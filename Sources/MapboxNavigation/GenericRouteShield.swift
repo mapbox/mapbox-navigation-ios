@@ -110,7 +110,6 @@ public class GenericRouteShield: StylableView {
         }
         
         var criticalProperties: [AnyHashable?] = [
-            styleID,
             dataSource.font.pointSize,
             appearance.backgroundColor,
             appearance.foregroundColor,
@@ -122,6 +121,10 @@ public class GenericRouteShield: StylableView {
         
         if #available(iOS 12.0, *) {
             criticalProperties.append(traitCollection.userInterfaceStyle.rawValue)
+        }
+        
+        if let styleID = styleID {
+            criticalProperties.append(styleID)
         }
         
         return String(describing: criticalProperties.reduce(0, { $0 ^ ($1?.hashValue ?? 0) }))
