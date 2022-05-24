@@ -485,6 +485,10 @@
 		E2DAFABA27BCF3C200BA12BD /* RoutesCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2DAFAB927BCF3C200BA12BD /* RoutesCoordinator.swift */; };
 		E2F08C70269DB17C002EFDC5 /* AccessToken.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2F08C6F269DB17C002EFDC5 /* AccessToken.swift */; };
 		F46FF187260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */; };
+		F43EE329261F98DC0039D56F /* NavigationMapView+RoadAnnotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43EE328261F98DC0039D56F /* NavigationMapView+RoadAnnotations.swift */; };
+		F43EE32A261F98DC0039D56F /* NavigationMapView+RoadAnnotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F43EE328261F98DC0039D56F /* NavigationMapView+RoadAnnotations.swift */; };
+		F488A0BE26261C4600A4CC8C /* NavigationMapView+IntersectionAnnotations.swift in Sources */ = {isa = PBXBuildFile; fileRef = F488A0BD26261C4600A4CC8C /* NavigationMapView+IntersectionAnnotations.swift */; };
+		F488A0C826261D8100A4CC8C /* ElectronicHorizon.swift in Sources */ = {isa = PBXBuildFile; fileRef = F488A0C726261D8100A4CC8C /* ElectronicHorizon.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1139,6 +1143,9 @@
 		E2DAFAB927BCF3C200BA12BD /* RoutesCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoutesCoordinator.swift; sourceTree = "<group>"; };
 		E2F08C6F269DB17C002EFDC5 /* AccessToken.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessToken.swift; sourceTree = "<group>"; };
 		F46FF186260277F7007CC0E0 /* DateComponentsFormatter+NavigationAdditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DateComponentsFormatter+NavigationAdditions.swift"; sourceTree = "<group>"; };
+		F43EE328261F98DC0039D56F /* NavigationMapView+RoadAnnotations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+RoadAnnotations.swift"; sourceTree = "<group>"; };
+		F488A0BD26261C4600A4CC8C /* NavigationMapView+IntersectionAnnotations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationMapView+IntersectionAnnotations.swift"; sourceTree = "<group>"; };
+		F488A0C726261D8100A4CC8C /* ElectronicHorizon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ElectronicHorizon.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1868,6 +1875,8 @@
 				8A11FEEF27A3514C00285B6F /* CPRouteChoice.swift */,
 				8AD220AA27C091EE000734A5 /* Solar.swift */,
 				8AD220AE27C09544000734A5 /* Date.swift */,
+				F488A0BD26261C4600A4CC8C /* NavigationMapView+IntersectionAnnotations.swift */,
+				F488A0C726261D8100A4CC8C /* ElectronicHorizon.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -2712,6 +2721,7 @@
 				8AD2210F27C434CD000734A5 /* TitleLabel.swift in Sources */,
 				8A50A3CB26EC09FB00894A8E /* FeedbackSubtypeCollectionViewCell.swift in Sources */,
 				8A50A3D326EC0AE100894A8E /* IdleTimerManager.swift in Sources */,
+				F488A0C826261D8100A4CC8C /* ElectronicHorizon.swift in Sources */,
 				8D5DFFF1207C04840093765A /* NSAttributedString.swift in Sources */,
 				8AD2211F27C43D11000734A5 /* FloatingButton.swift in Sources */,
 				8A2081CB25E07CED00F9B8A6 /* NavigationMapViewIdentifiers.swift in Sources */,
@@ -2745,6 +2755,7 @@
 				2EBF20AE25D6F89000DB7BF2 /* Utils.swift in Sources */,
 				160D8279205996DA00D278D6 /* DataCache.swift in Sources */,
 				351BEBF21E5BCC63006FE110 /* Style.swift in Sources */,
+				F488A0BE26261C4600A4CC8C /* NavigationMapView+IntersectionAnnotations.swift in Sources */,
 				43FB386923A202420064481E /* Route.swift in Sources */,
 				3EA937B1F4DF73EB004BA6BE /* InstructionPresenter.swift in Sources */,
 				5A1C075824BDEB44000A6330 /* PassiveLocationProvider.swift in Sources */,

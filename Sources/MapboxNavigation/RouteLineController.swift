@@ -83,6 +83,11 @@ extension NavigationMapView {
             let stepIndex = progress.currentLegProgress.stepIndex
             
             navigationMapView.updatePreferredFrameRate(for: progress)
+            do {
+                try navigationMapView.updateAnnotations(for: progress)
+            } catch {
+                print(error)
+            }
             if currentLegIndexMapped != legIndex {
                 navigationMapView.showWaypoints(on: route, legIndex: legIndex)
                 navigationMapView.show([route], legIndex: legIndex)

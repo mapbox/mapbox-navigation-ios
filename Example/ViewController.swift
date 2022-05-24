@@ -573,6 +573,7 @@ class ViewController: UIViewController {
                                            completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
         activeNavigationViewController = navigationViewController
+        activeNavigationViewController?.showIntersectionAnnotations = true
         
         present(navigationViewController, animated: true) {
             completion?()
@@ -591,6 +592,7 @@ class ViewController: UIViewController {
     
     func dismissActiveNavigationViewController() {
         activeNavigationViewController?.dismiss(animated: true) {
+            self.activeNavigationViewController?.showIntersectionAnnotations = false
             self.activeNavigationViewController = nil
         }
     }
