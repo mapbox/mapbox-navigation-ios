@@ -220,6 +220,7 @@ open class NavigationMapView: UIView {
      route.
      - parameter layerPosition: Position of the first route layer. Remaining routes and their casings
      are always displayed below the first and all other subsequent route layers. Defaults to `nil`.
+     If layer position is set to `nil`, the route layer appears below the bottommost symbol layer.
      - parameter legIndex: The zero-based index of the currently active leg along the active route.
      The active leg is highlighted more prominently than inactive legs.
      */
