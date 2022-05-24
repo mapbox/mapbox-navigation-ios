@@ -86,14 +86,22 @@ class RerouteController {
 
 extension RerouteController: RerouteObserver {
     func onSwitchToAlternative(forRoute route: RouteInterface) {
-        // TODO: fill with Native Alternative routes integration
+        guard let decoded = Self.decode(routeRequest: route.getRequestUri(),
+                                        routeResponse: route.getResponseJson()) else {
+            return
+        }
+        
+        delegate?.rerouteControllerWantsSwitchToAlternative(self,
+                                                            response: decoded.routeResponse,
+                                                            routeIndex: Int(route.getRouteIndex()),
+                                                            options: decoded.routeOptions)
     }
 
-    func onRerouteDetected(forRouteRequest routeRequest: String) {
+    func onRerouteDetected(forRouteRequest routeRequest: String) -> Bool {
         isCancelled = false
         latestRouteResponse = nil
-        guard reroutesProactively else { return }
-        delegate?.rerouteControllerDidDetectReroute(self)
+        guard reroutesProactively, let delegate = delegate else { return true }
+        return delegate.rerouteControllerDidDetectReroute(self)
     }
 
     func onRerouteReceived(forRouteResponse routeResponse: String, routeRequest: String, origin: RouterOrigin) {

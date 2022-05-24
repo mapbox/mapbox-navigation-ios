@@ -851,15 +851,36 @@ extension RouteController: Router {
 extension RouteController: InternalRouter { }
 
 extension RouteController: ReroutingControllerDelegate {
-    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) {
+    func rerouteControllerWantsSwitchToAlternative(_ rerouteController: RerouteController,
+                                                   response: RouteResponse,
+                                                   routeIndex: Int,
+                                                   options: RouteOptions) {
         guard let location = location else { return }
         
         if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
             announceImpendingReroute(at: location)
             
             isRerouting = true
+            updateRoute(with: IndexedRouteResponse(routeResponse: response,
+                                                   routeIndex: routeIndex),
+                        routeOptions: options,
+                        isProactive: false,
+                        completion: { [weak self] success in
+                self?.isRerouting = false
+            })
+        }
+    }
+    
+    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) -> Bool {
+        guard let location = location else { return false }
+        
+        if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+            announceImpendingReroute(at: location)
+            
+            isRerouting = true
+            return true
         } else {
-            rerouteController.cancel()
+            return false
         }
     }
     
