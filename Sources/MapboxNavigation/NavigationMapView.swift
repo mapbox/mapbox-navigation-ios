@@ -60,9 +60,10 @@ open class NavigationMapView: UIView {
     /**
      The tolerance value used for configuring the underlying map source of route line, maneuver arrow and restricted areas.
 
-     Higher means simpler geometries and faster performance.
+     Controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification and faster performance.
+     Changing the property will affect only newly added sources.
      */
-    public var tolerance: Double = RouteSourcesTolerance
+    public var overlaySimplificationTolerance: Double = 0.375
     
     /**
      Controls whether to show fading gradient color on route lines between two different congestion
@@ -335,7 +336,7 @@ open class NavigationMapView: UIView {
                 
                 var arrowSource = GeoJSONSource()
                 arrowSource.data = .feature(Feature(geometry: .lineString(shaftPolyline)))
-                arrowSource.tolerance = tolerance
+                arrowSource.tolerance = overlaySimplificationTolerance
                 var arrowLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowLayer)
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSource) {
                     let geoJSON = Feature(geometry: .lineString(shaftPolyline))
@@ -361,7 +362,7 @@ open class NavigationMapView: UIView {
                 
                 var arrowStrokeSource = GeoJSONSource()
                 arrowStrokeSource.data = .feature(Feature(geometry: .lineString(shaftPolyline)))
-                arrowStrokeSource.tolerance = tolerance
+                arrowStrokeSource.tolerance = overlaySimplificationTolerance
                 var arrowStrokeLayer = LineLayer(id: NavigationMapView.LayerIdentifier.arrowStrokeLayer)
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowStrokeSource) {
                     let geoJSON = Feature(geometry: .lineString(shaftPolyline))
@@ -384,7 +385,7 @@ open class NavigationMapView: UIView {
                 let point = Point(shaftStrokeCoordinates.last!)
                 var arrowSymbolSource = GeoJSONSource()
                 arrowSymbolSource.data = .feature(Feature(geometry: .point(point)))
-                arrowSymbolSource.tolerance = tolerance
+                arrowSymbolSource.tolerance = overlaySimplificationTolerance
                 if mapView.mapboxMap.style.sourceExists(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource) {
                     let geoJSON = Feature.init(geometry: Geometry.point(point))
                     try mapView.mapboxMap.style.updateGeoJSONSource(withId: NavigationMapView.SourceIdentifier.arrowSymbolSource,
@@ -525,7 +526,7 @@ open class NavigationMapView: UIView {
                 var restrictedAreaGeoJSON = GeoJSONSource()
                 restrictedAreaGeoJSON.data = .geometry(.lineString(shape))
                 restrictedAreaGeoJSON.lineMetrics = true
-                restrictedAreaGeoJSON.tolerance = tolerance
+                restrictedAreaGeoJSON.tolerance = overlaySimplificationTolerance
                 
                 try mapView.mapboxMap.style.addSource(restrictedAreaGeoJSON, id: sourceIdentifier)
             }
@@ -731,8 +732,7 @@ open class NavigationMapView: UIView {
         var geoJSONSource = GeoJSONSource()
         geoJSONSource.data = .geometry(.lineString(shape))
         geoJSONSource.lineMetrics = true
-        geoJSONSource.tolerance = tolerance
-        
+        geoJSONSource.tolerance = overlaySimplificationTolerance
         return geoJSONSource
     }
     

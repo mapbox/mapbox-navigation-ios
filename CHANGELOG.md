@@ -4,7 +4,7 @@
 
 ### User interface
 
-* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
+* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
 
 ### Routing
 
