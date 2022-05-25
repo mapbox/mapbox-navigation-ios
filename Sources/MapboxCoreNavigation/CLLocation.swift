@@ -5,6 +5,7 @@ import Turf
 
 extension CLLocation {
     convenience init(_ location: FixLocation) {
+        let timestamp = Date(timeIntervalSince1970: TimeInterval(location.monotonicTimestampNanoseconds) / 1e9)
         if #available(iOS 13.4, *) {
             self.init(coordinate: location.coordinate,
                       altitude: location.altitude?.doubleValue ?? 0,
@@ -14,7 +15,7 @@ extension CLLocation {
                       courseAccuracy: location.bearingAccuracy?.doubleValue ?? -1,
                       speed: location.speed?.doubleValue ?? -1,
                       speedAccuracy: location.speedAccuracy?.doubleValue ?? -1,
-                      timestamp: location.time)
+                      timestamp: timestamp)
         } else {
             self.init(coordinate: location.coordinate,
                       altitude: location.altitude?.doubleValue ?? 0,
@@ -22,7 +23,7 @@ extension CLLocation {
                       verticalAccuracy: location.verticalAccuracy?.doubleValue ?? -1,
                       course: location.bearing?.doubleValue ?? -1,
                       speed: location.speed?.doubleValue ?? -1,
-                      timestamp: location.time)
+                      timestamp: timestamp)
         }
     }
     
