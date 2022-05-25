@@ -28,7 +28,6 @@ open class RouteController: NSObject {
         public static let didArriveAtWaypoint: Bool = true
         public static let shouldPreventReroutesWhenArrivingAtWaypoint: Bool = true
         public static let shouldDisableBatteryMonitoring: Bool = true
-        public static let shouldTakeAlternativeRoute: Bool = true
     }
 
     public static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "RouteController")
@@ -873,22 +872,20 @@ extension RouteController: ReroutingControllerDelegate {
             return
         }
               
-        if delegate?.router(self, shouldTakeAlternativeRoute: newMainRoute, at: location) ?? DefaultBehavior.shouldRerouteFromLocation {
-            delegate?.router(self,
-                             willTakeAlternativeRoute: newMainRoute,
-                             at: location)
-            updateRoute(with: newRouteResponse,
-                        routeOptions: options,
-                        isProactive: false,
-                        completion: { [weak self] success in
-                guard let self = self else { return }
-                if success {
-                    self.delegate?.router(self, didTakeAlternativeRouteAt: self.location)
-                } else {
-                    self.delegate?.router(self, didFailToTakeAlternativeRouteAt: self.location)
-                }
-            })
-        }
+        delegate?.router(self,
+                         willTakeAlternativeRoute: newMainRoute,
+                         at: location)
+        updateRoute(with: newRouteResponse,
+                    routeOptions: options,
+                    isProactive: false,
+                    completion: { [weak self] success in
+            guard let self = self else { return }
+            if success {
+                self.delegate?.router(self, didTakeAlternativeRouteAt: self.location)
+            } else {
+                self.delegate?.router(self, didFailToTakeAlternativeRouteAt: self.location)
+            }
+        })
     }
     
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) -> Bool {

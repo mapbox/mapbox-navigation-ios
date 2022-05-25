@@ -114,24 +114,9 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
     
     /**
-     Returns whether the navigation view controller should be allowed to take an alternative route.
+     Called when navigation view controller has detected user taking an alternative route.
      
-     If implemented, this method is called when navigation view controller detects that user went off the main route and there is an alternative route which user might be following. If this method returns `true` - navigation view controller will switch to this alternative as a new main route.
-     
-     This method is called before `navigationViewController(_:willTakeAlternativeRoute:)`
-     
-     - parameter navigationViewController: The navigation view controller that has detected turning to the alternative.
-     - parameter route: The alternative route which will be taken as new main.
-     - parameter location: The user’s current location.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldTakeAlternativeRoute route: Route, at location: CLLocation?) -> Bool
-    
-    /**
-     Called immediately before switching to the alternative route
-     
-     This method is called before updating navigation view controller's main route.
-     
-     This method is called after `navigationViewController(_:shouldTakeAlternativeRoute:)` and before `navigationViewController(_:didTakeAlternativeRouteAt:)`
+     This method is called before updating main route.
      
      - parameter navigationViewController: The navigation view controller that has detected turning to the alternative.
      - parameter route: The alternative route which will be taken as new main.
@@ -348,14 +333,6 @@ public extension NavigationViewControllerDelegate {
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-    }
-    
-    /**
-     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
-     */
-    func navigationViewController(_ navigationViewController: NavigationViewController, shouldTakeAlternativeRoute route: Route, at location: CLLocation?) -> Bool {
-        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
-        return RouteController.DefaultBehavior.shouldTakeAlternativeRoute
     }
     
     /**
