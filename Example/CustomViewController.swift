@@ -68,6 +68,8 @@ class CustomViewController: UIViewController {
         
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
+            // By setting the `NavigationMapView.routeLineTracksTraversal` to `true`, it would allow the main route shown with
+            // traversed part disappearing effect in a standalone `NavigationMapView` during active navigation.
             self?.navigationMapView.routeLineTracksTraversal = true
             self?.navigationMapView.show([route], legIndex: 0)
         })
@@ -103,6 +105,8 @@ class CustomViewController: UIViewController {
     }
 
     func resumeNotifications() {
+        // Add observers for the route refresh, rerouting and route progress update events to update the main route line
+        // when `NavigationMapView.routeLineTracksTraversal` set to `true`.
         NotificationCenter.default.addObserver(self, selector: #selector(progressDidChange(_ :)), name: .routeControllerProgressDidChange, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(rerouted(_:)), name: .routeControllerDidReroute, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(refresh(_:)), name: .routeControllerDidRefreshRoute, object: nil)
@@ -142,6 +146,10 @@ class CustomViewController: UIViewController {
         
         // Update `UserCourseView` to be placed on the most recent location.
         navigationMapView.moveUserLocation(to: location, animated: true)
+        
+        // Update the main route line during active navigation when `NavigationMapView.routeLineTracksTraversal` set to `true`
+        // and route progress change, by calling `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)`
+        // without redrawing the main route.
         navigationMapView.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate)
     }
     
@@ -158,12 +166,19 @@ class CustomViewController: UIViewController {
     // Update the route on the map.
     @objc func rerouted(_ notification: NSNotification) {
         navigationMapView.removeWaypoints()
+        
+        // Update the main route line during active navigation when `NavigationMapView.routeLineTracksTraversal` set to `true`
+        // and rerouting happens, by calling `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)`
+        // with `shouldRedraw` as `true`.
         navigationMapView.updateRouteLine(routeProgress: navigationService.routeProgress,
                                           coordinate: navigationService.router.location?.coordinate,
                                           shouldRedraw: true)
     }
     
     @objc func refresh(_ notification: NSNotification) {
+        // Update the main route line during active navigation when `NavigationMapView.routeLineTracksTraversal` set to `true`
+        // and route refresh happens, by calling `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)`
+        // with `shouldRedraw` as `true`.
         navigationMapView.updateRouteLine(routeProgress: navigationService.routeProgress,
                                           coordinate: navigationService.router.location?.coordinate,
                                           shouldRedraw: true)
