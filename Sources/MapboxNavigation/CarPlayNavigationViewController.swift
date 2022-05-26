@@ -787,7 +787,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         if let attributedPrimary = visualInstruction.primaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                            shieldHeight: shieldHeight,
                                                                                                            window: carPlayManager.carWindow,
-                                                                                                           customTraitCollection: traitCollection,
+                                                                                                           traitCollection: traitCollection,
                                                                                                            instructionLabelType: PrimaryLabel.self) {
             
             let instruction = NSMutableAttributedString(attributedString: attributedPrimary)
@@ -795,7 +795,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             if let attributedSecondary = visualInstruction.secondaryInstruction?.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                                     shieldHeight: shieldHeight,
                                                                                                                     window: carPlayManager.carWindow,
-                                                                                                                    customTraitCollection: traitCollection,
+                                                                                                                    traitCollection: traitCollection,
                                                                                                                     instructionLabelType: SecondaryLabel.self) {
                 instruction.append(NSAttributedString(string: "\n"))
                 instruction.append(attributedSecondary)
@@ -829,7 +829,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                 if let attributedTertiary = tertiaryInstruction.carPlayManeuverLabelAttributedText(bounds: bounds,
                                                                                                    shieldHeight: shieldHeight,
                                                                                                    window: carPlayManager.carWindow,
-                                                                                                   customTraitCollection: traitCollection) {
+                                                                                                   traitCollection: traitCollection) {
                     let attributedTertiary = NSMutableAttributedString(attributedString: attributedTertiary)
                     attributedTertiary.canonicalizeAttachments(maximumImageSize: maximumImageSize, imageRendererFormat: imageRendererFormat)
                     tertiaryManeuver.attributedInstructionVariants = [attributedTertiary]
