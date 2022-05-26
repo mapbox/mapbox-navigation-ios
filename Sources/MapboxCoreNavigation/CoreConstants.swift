@@ -528,7 +528,7 @@ extension Notification.Name {
     
     internal static let navigatorDidChangeAlternativeRoutes: Notification.Name = .init(rawValue: "NavigatorDidChangeAlternativeRoutes")
 
-    internal static let navigatorFailToChangeAlternativeRoutes: Notification.Name = .init(rawValue: "NavigatorFailToChangeAlternativeRoutes")
+    internal static let navigatorDidFailToChangeAlternativeRoutes: Notification.Name = .init(rawValue: "NavigatorDidFailToChangeAlternativeRoutes")
 }
 
 extension Navigator {

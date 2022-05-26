@@ -139,6 +139,8 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
      
      This method is called after `navigationViewController(_:willTakeAlternativeRoute:)`.
      
+     This call would indicate that something went wrong during setting new main route.
+     
      - parameter navigationViewController: The navigation view controller which tried to switch to the alternative.
      - parameter location: The user’s current location.
      */

@@ -282,7 +282,7 @@ open class RouteController: NSObject {
         let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
                                 .url(forCalculating: routeOptions).absoluteString
         if let route = indexedRouteResponse.currentRoute {
-            alternativesStore?.mainRoute = route
+            alternativeRoutesCenter?.mainRoute = route
         }
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
@@ -622,7 +622,7 @@ open class RouteController: NSObject {
         UIDevice.current.isBatteryMonitoringEnabled = true
         
         if NavigationSettings.shared.alternativeRoutesOptions.enabled {
-            self.alternativesStore = NavigatorAlternativesStore(mainRoute: routeProgress.route)
+            self.alternativeRoutesCenter = AlternativeRoutesCenter(mainRoute: routeProgress.route)
         }
         
         super.init()
@@ -690,7 +690,7 @@ open class RouteController: NSObject {
     }
     
     /// Provides access to detected `AlternativeRoute`s.
-    public private(set) var alternativesStore: NavigatorAlternativesStore?
+    public private(set) var alternativeRoutesCenter: AlternativeRoutesCenter?
 }
 
 extension RouteController: HistoryRecording { }

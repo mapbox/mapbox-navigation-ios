@@ -66,6 +66,8 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
      
      This method is called after `navigationService(_:willTakeAlternativeRoute:)`.
      
+     This call would indicate that something went wrong during setting new main route.
+     
      - parameter service: The navigation service which tried to switch to the alternative.
      - parameter location: The user’s current location.
      */

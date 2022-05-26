@@ -209,7 +209,7 @@ public protocol Router: CLLocationManagerDelegate {
     /**
      Provides notifications and access to `AlternativeRoute`s found during navigation.
      */
-    var alternativesStore: NavigatorAlternativesStore? { get }
+    var alternativeRoutesCenter: AlternativeRoutesCenter? { get }
 }
 
 protocol InternalRouter: AnyObject {

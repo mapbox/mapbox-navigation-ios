@@ -6,13 +6,21 @@ import Turf
 /**
  Representation of an alternative route with relation to the original.
  
- This object contains main and alternative routes which are sharing same origin and destination points, but differ at some point.
+ This struct contains main and alternative routes which are sharing same origin and destination points, but differ at some point.
  */
-public class AlternativeRoute: Identifiable {
+public struct AlternativeRoute: Identifiable {
     /// Alternative route identificator type
     public typealias ID = UInt32
-    /// Breif stats of a route for travelling
-    public typealias Stats = (distance: LocationDistance, duration: TimeInterval)
+    /// Breif statistics of a route for travelling
+    public struct RouteInfo {
+        let distance: LocationDistance
+        let duration: TimeInterval
+        
+        fileprivate init(distance: LocationDistance, duration: TimeInterval) {
+            self.distance = distance
+            self.duration = duration
+        }
+    }
 
     /// Alternative route identificator.
     ///
@@ -25,9 +33,9 @@ public class AlternativeRoute: Identifiable {
     /// Intersection on the alternative route, where it splits from the main route.
     public let alternativeRouteIntersection: Intersection
     /// Alternative route statistics, counting from the split point.
-    public let statsFromFork: Stats
+    public let infoFromDeviationPoint: RouteInfo
     /// Alternative route statistics, counting from it's origin.
-    public let statsFromOrigin: Stats
+    public let infoFromOrigin: RouteInfo
 
     init?(mainRoute: Route, alternativeRoute nativeRouteAlternative: RouteAlternative) {
         self.id = nativeRouteAlternative.id
@@ -55,10 +63,10 @@ public class AlternativeRoute: Identifiable {
         }
         self.alternativeRouteIntersection = alternativeIntersection
 
-        self.statsFromFork = (nativeRouteAlternative.infoFromFork.distance,
-                              nativeRouteAlternative.infoFromFork.duration)
-        self.statsFromOrigin = (nativeRouteAlternative.infoFromStart.distance,
-                                nativeRouteAlternative.infoFromStart.duration)
+        self.infoFromDeviationPoint = .init(distance: nativeRouteAlternative.infoFromFork.distance,
+                                            duration: nativeRouteAlternative.infoFromFork.duration)
+        self.infoFromOrigin = .init(distance: nativeRouteAlternative.infoFromStart.distance,
+                                    duration: nativeRouteAlternative.infoFromStart.duration)
     }
 }
 

@@ -82,6 +82,8 @@ public protocol RouterDelegate: AnyObject, UnimplementedLogging {
      
      This method is called after `router(_:willTakeAlternativeRoute:)`.
      
+     This call would indicate that something went wrong during setting new main route.
+     
      - parameter router: The router which tried to switch to the alternative.
      - parameter location: The user’s current location.
      */

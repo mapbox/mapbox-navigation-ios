@@ -56,7 +56,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
      
      - important: Always `nil` for `LegacyRouteController`.
      */
-    public private(set) var alternativesStore: NavigatorAlternativesStore? = nil
+    public private(set) var alternativeRoutesCenter: AlternativeRoutesCenter? = nil
     
     public weak var delegate: RouterDelegate?
     

@@ -157,13 +157,15 @@ class Navigator {
     private weak var navigatorAlternativesObserver: NavigatorRouteAlternativesObserver?
 
     private func setupAlternativesControllerIfNeeded() {
-        guard NavigationSettings.shared.alternativeRoutesOptions.enabled else { return }
+        let alternativeOptions = NavigationSettings.shared.alternativeRoutesOptions
+        
+        guard alternativeOptions.enabled else { return }
         
         let controller = navigator.getRouteAlternativesController()
-        controller.enableOnEmptyAlternativesRequest(forEnable: NavigationSettings.shared.alternativeRoutesOptions.refreshWhenNoAvailableAlternatives)
-        controller.enableRequestAfterFork(forEnable: NavigationSettings.shared.alternativeRoutesOptions.refreshAfterAlternativeFork)
+        controller.enableOnEmptyAlternativesRequest(forEnable: alternativeOptions.refreshWhenNoAvailableAlternatives)
+        controller.enableRequestAfterFork(forEnable: alternativeOptions.refreshAfterPassingDeviation)
         
-        let options = RouteAlternativesOptions(requestIntervalSeconds: NavigationSettings.shared.alternativeRoutesOptions.refreshInterval,
+        let options = RouteAlternativesOptions(requestIntervalSeconds: alternativeOptions.refreshInterval,
                                                minTimeBeforeManeuverSeconds: rerouteController.initialManeuverAvoidanceRadius)
         controller.setRouteAlternativesOptionsFor(options)
     }
@@ -394,14 +396,14 @@ class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
             .removedAlternativesKey: removed,
         ]
         NotificationCenter.default.post(name: .navigatorDidChangeAlternativeRoutes, object: nil, userInfo: userInfo)
-        return []
+        return [] //notify NN that we didn't discard any of the route alternatives
     }
 
     public func onError(forMessage message: String) {
         let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
             .messageKey: message,
         ]
-        NotificationCenter.default.post(name: .navigatorFailToChangeAlternativeRoutes, object: nil, userInfo: userInfo)
+        NotificationCenter.default.post(name: .navigatorDidFailToChangeAlternativeRoutes, object: nil, userInfo: userInfo)
     }
 }
 

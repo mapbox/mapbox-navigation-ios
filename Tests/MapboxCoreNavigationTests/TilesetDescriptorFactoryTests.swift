@@ -15,7 +15,8 @@ final class TilesetDescriptorFactoryTests: TestCase {
     func testLatestDescriptorsAreFromGlobalNavigatorCacheHandle() {
         NavigationSettings.shared.initialize(directions: .mocked,
                                              tileStoreConfiguration: .custom(FileManager.default.temporaryDirectory),
-                                             routingProviderSource: .offline, alternativeRoutesOptions: .init())
+                                             routingProviderSource: .offline,
+                                             alternativeRoutesOptions: .init())
         _ = Navigator.shared
 
         let tilesetReceived = expectation(description: "Tileset received")

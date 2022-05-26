@@ -179,7 +179,7 @@ class RouteControllerTests: TestCase {
                                               routingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
         
-        routeController.alternativesStore?.addObserver(observer)
+        routeController.alternativeRoutesCenter?.addObserver(observer)
         
         wait(for: [alternativesExpectation], timeout: 2)
     }
@@ -195,17 +195,15 @@ extension RouteControllerTests: RouterDataSource {
     }
 }
 
-class AlternativeRoutesObserver: NavigatorAlternativesStoreObserver {
+class AlternativeRoutesObserver: NavigatorAlternativesStoreDelegate {
     var onDidReportAlternatives: ((IndexSet, [AlternativeRoute]) -> Void)? = nil
     var onDidFailToReportAlternatives: ((AlternativeRouteError) -> Void)? = nil
     
-    func alternativesStore(_ store: NavigatorAlternativesStore, didReportNewAlternatives newAlternatives: IndexSet, removedAlternatives: [AlternativeRoute]) {
+    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didReportNewAlternatives newAlternatives: IndexSet, removedAlternatives: [AlternativeRoute]) {
         onDidReportAlternatives?(newAlternatives, removedAlternatives)
     }
     
-    func alternativesStore(_ store: NavigatorAlternativesStore, didFailToUpdateAlternatives error: AlternativeRouteError) {
+    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didFailToUpdateAlternatives error: AlternativeRouteError) {
         onDidFailToReportAlternatives?(error)
     }
-    
-    
 }
