@@ -218,10 +218,15 @@ open class NavigationMapView: UIView {
      are currently deselected or inactive. The order of routes in this array may differ from the
      order in the original `RouteResponse`, for example in response to a user selecting a preferred
      route.
+     - parameter layerPosition: Position of the first route layer. Remaining routes and their casings
+     are always displayed below the first and all other subsequent route layers. Defaults to `nil`.
+     If layer position is set to `nil`, the route layer appears below the bottommost symbol layer.
      - parameter legIndex: The zero-based index of the currently active leg along the active route.
      The active leg is highlighted more prominently than inactive legs.
      */
-    public func show(_ routes: [Route], legIndex: Int? = nil) {
+    public func show(_ routes: [Route],
+                     layerPosition: MapboxMaps.LayerPosition? = nil,
+                     legIndex: Int? = nil) {
         removeRoutes()
         
         self.routes = routes
@@ -239,10 +244,23 @@ open class NavigationMapView: UIView {
             }
             
             if showsRestrictedAreasOnRoute {
-                parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
+                parentLayerIdentifier = addRouteRestrictedAreaLayer(route,
+                                                                    below: parentLayerIdentifier)
             }
-            parentLayerIdentifier = addRouteLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0, legIndex: legIndex)
-            parentLayerIdentifier = addRouteCasingLayer(route, below: parentLayerIdentifier, isMainRoute: index == 0)
+            
+            // Use custom layer position for the main route layer. All other alternative route layers
+            // will be placed below it.
+            let customLayerPosition = index == 0 ? layerPosition : nil
+            
+            parentLayerIdentifier = addRouteLayer(route,
+                                                  customLayerPosition: customLayerPosition,
+                                                  below: parentLayerIdentifier,
+                                                  isMainRoute: index == 0,
+                                                  legIndex: legIndex)
+            
+            parentLayerIdentifier = addRouteCasingLayer(route,
+                                                        below: parentLayerIdentifier,
+                                                        isMainRoute: index == 0)
         }
     }
     
@@ -571,6 +589,7 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addRouteLayer(_ route: Route,
+                                          customLayerPosition: MapboxMaps.LayerPosition? = nil,
                                           below parentLayerIndentifier: String? = nil,
                                           isMainRoute: Bool = true,
                                           legIndex: Int? = nil) -> String? {
@@ -640,13 +659,20 @@ open class NavigationMapView: UIView {
             do {
                 var layerPosition: MapboxMaps.LayerPosition? = nil
                 
-                if isMainRoute {
-                    if let aboveLayerIdentifier = mapView.mainRouteLineParentLayerIdentifier {
-                        layerPosition = .above(aboveLayerIdentifier)
-                    }
+                // In case if custom layer position was set - use it, otherwise in case if the route
+                // is the main one place it above `MapView.mainRouteLineParentLayerIdentifier`. All
+                // other alternative routes will be placed below it.
+                if let customLayerPosition = customLayerPosition {
+                    layerPosition = customLayerPosition
                 } else {
-                    if let belowLayerIdentifier = parentLayerIndentifier {
-                        layerPosition = .below(belowLayerIdentifier)
+                    if isMainRoute {
+                        if let aboveLayerIdentifier = mapView.mainRouteLineParentLayerIdentifier {
+                            layerPosition = .above(aboveLayerIdentifier)
+                        }
+                    } else {
+                        if let belowLayerIdentifier = parentLayerIndentifier {
+                            layerPosition = .below(belowLayerIdentifier)
+                        }
                     }
                 }
                 

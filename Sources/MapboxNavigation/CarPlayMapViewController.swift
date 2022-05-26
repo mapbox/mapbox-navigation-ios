@@ -48,6 +48,11 @@ open class CarPlayMapViewController: UIViewController {
     public var wayNameView: WayNameView!
     
     /**
+     Session configuration that is used to track `CPContentStyle` related changes.
+     */
+    var sessionConfiguration: CPSessionConfiguration!
+    
+    /**
      The interface styles available to `styleManager` for display.
      */
     var styles: [Style] {
@@ -186,6 +191,8 @@ open class CarPlayMapViewController: UIViewController {
         self.styles = styles
         
         super.init(nibName: nil, bundle: nil)
+        
+        sessionConfiguration = CPSessionConfiguration(delegate: self)
     }
     
     /**
@@ -228,7 +235,7 @@ open class CarPlayMapViewController: UIViewController {
     }
     
     func setupStyleManager() {
-        styleManager = StyleManager()
+        styleManager = StyleManager(traitCollection: UITraitCollection(userInterfaceIdiom: .carPlay))
         styleManager?.delegate = self
         styleManager?.styles = styles
     }
@@ -325,6 +332,23 @@ open class CarPlayMapViewController: UIViewController {
         navigationMapView.navigationCamera.follow()
     }
     
+    open override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        if #available(iOS 13.0, *) {
+            applyStyleIfNeeded(sessionConfiguration.contentStyle)
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    func applyStyleIfNeeded(_ contentStyle: CPContentStyle) {
+        if contentStyle.contains(.dark) {
+            styleManager?.applyStyle(type: .night)
+        } else if contentStyle.contains(.light) {
+            styleManager?.applyStyle(type: .day)
+        }
+    }
+    
     public override func viewSafeAreaInsetsDidChange() {
         super.viewSafeAreaInsetsDidChange()
         
@@ -419,6 +443,16 @@ extension CarPlayMapViewController: NavigationMapViewDelegate {
         delegate?.carPlayMapViewController(self,
                                            routeCasingLineLayerWithIdentifier: identifier,
                                            sourceIdentifier: sourceIdentifier)
+    }
+}
+
+@available(iOS 12.0, *)
+extension CarPlayMapViewController: CPSessionConfigurationDelegate {
+    
+    @available(iOS 13.0, *)
+    public func sessionConfiguration(_ sessionConfiguration: CPSessionConfiguration,
+                                     contentStyleChanged contentStyle: CPContentStyle) {
+        applyStyleIfNeeded(contentStyle)
     }
 }
 #endif

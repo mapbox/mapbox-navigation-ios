@@ -158,6 +158,7 @@ open class RouteController: NSObject {
      `RouteLeg` was changed or not.
      */
     public func advanceLegIndex(completionHandler: AdvanceLegCompletionHandler? = nil) {
+        guard !hasFinishedRouting else { return }
         updateRouteLeg(to: routeProgress.legIndex + 1) { result in
             completionHandler?(result)
         }
@@ -235,6 +236,7 @@ open class RouteController: NSObject {
     var previousArrivalWaypoint: MapboxDirections.Waypoint?
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard !hasFinishedRouting else { return }
         guard let location = locations.last else { return }
         
         guard !(delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation) else {
@@ -251,6 +253,7 @@ open class RouteController: NSObject {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        guard !hasFinishedRouting else { return }
         heading = newHeading
     }
     
@@ -263,7 +266,7 @@ open class RouteController: NSObject {
      */
     private func updateNavigator(with indexedRouteResponse: IndexedRouteResponse,
                                  fromLegIndex legIndex: Int,
-                                 completion: ((Result<RouteInfo, Error>) -> Void)?) {
+                                 completion: ((Result<RouteInfo?, Error>) -> Void)?) {
         guard case .route(let routeOptions) = indexedRouteResponse.routeResponse.options else {
             completion?(.failure(RouteControllerError.internalError))
             return
@@ -276,18 +279,18 @@ open class RouteController: NSObject {
                   return
         }
         
-        let routeRequest = Directions().url(forCalculating: routeOptions).absoluteString
+        let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
+                                .url(forCalculating: routeOptions).absoluteString
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
                                                                request: routeRequest, routeOrigin: RouterOrigin.custom)
         if parsedRoutes.isValue(),
            var routes = parsedRoutes.value as? [RouteInterface],
            routes.count > indexedRouteResponse.routeIndex {
-            self.sharedNavigator.setMainRoute(routes.remove(at: indexedRouteResponse.routeIndex),
-                                              uuid: sessionUUID,
-                                              legIndex: UInt32(legIndex)) { [weak self] result in
-                self?.sharedNavigator.setAlternativeRoutes(routes,
-                                                           completion: { _ in })
+            self.sharedNavigator.setRoutes(routes.remove(at: indexedRouteResponse.routeIndex),
+                                           uuid: sessionUUID,
+                                           legIndex: UInt32(legIndex),
+                                           alternativeRoutes: routes) { result in
                 completion?(result)
             }
         } else if parsedRoutes.isError() {
@@ -333,6 +336,16 @@ open class RouteController: NSObject {
         update(to: status)
     }
 
+    private var hasFinishedRouting = false
+    public func finishRouting() {
+        guard !hasFinishedRouting else { return }
+        hasFinishedRouting = true
+        removeRoutes(completion: nil)
+        BillingHandler.shared.stopBillingSession(with: sessionUUID)
+        unsubscribeNotifications()
+        routeTask?.cancel()
+    }
+    
     private func update(to status: NavigationStatus) {
         guard let rawLocation = rawLocation,
               isValidNavigationStatus(status)
@@ -624,10 +637,7 @@ open class RouteController: NSObject {
     }
     
     deinit {
-        removeRoutes(completion: nil)
-        BillingHandler.shared.stopBillingSession(with: sessionUUID)
-        unsubscribeNotifications()
-        routeTask?.cancel()
+        finishRouting()
         rerouteController.resetToDefaultSettings()
         Self.instanceLock.lock()
         Self.instance = nil
@@ -730,6 +740,7 @@ extension RouteController: Router {
     }
     
     public func reroute(from location: CLLocation, along progress: RouteProgress) {
+        guard !hasFinishedRouting else { return }
         guard customRoutingProvider != nil else {
             rerouteController.forceReroute()
             return
@@ -766,6 +777,7 @@ extension RouteController: Router {
     public func updateRoute(with indexedRouteResponse: IndexedRouteResponse,
                             routeOptions: RouteOptions?,
                             completion: ((Bool) -> Void)?) {
+        guard !hasFinishedRouting else { return }
         updateRoute(with: indexedRouteResponse, routeOptions: routeOptions, isProactive: false, completion: completion)
     }
 
@@ -839,15 +851,36 @@ extension RouteController: Router {
 extension RouteController: InternalRouter { }
 
 extension RouteController: ReroutingControllerDelegate {
-    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) {
+    func rerouteControllerWantsSwitchToAlternative(_ rerouteController: RerouteController,
+                                                   response: RouteResponse,
+                                                   routeIndex: Int,
+                                                   options: RouteOptions) {
         guard let location = location else { return }
         
         if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
             announceImpendingReroute(at: location)
             
             isRerouting = true
+            updateRoute(with: IndexedRouteResponse(routeResponse: response,
+                                                   routeIndex: routeIndex),
+                        routeOptions: options,
+                        isProactive: false,
+                        completion: { [weak self] success in
+                self?.isRerouting = false
+            })
+        }
+    }
+    
+    func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) -> Bool {
+        guard let location = location else { return false }
+        
+        if delegate?.router(self, shouldRerouteFrom: location) ?? DefaultBehavior.shouldRerouteFromLocation {
+            announceImpendingReroute(at: location)
+            
+            isRerouting = true
+            return true
         } else {
-            rerouteController.cancel()
+            return false
         }
     }
     

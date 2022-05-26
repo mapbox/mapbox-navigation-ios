@@ -104,6 +104,9 @@ extension VisualInstruction {
      - parameter bounds: A closure that calculates the available bounds for the maneuver text.
      - parameter shieldHeight: The height of the shield.
      - parameter window: A `UIWindow` that holds the `UIAppearance` styling properties, preferably the CarPlay window.
+     - parameter traitCollection: Custom `UITraitCollection` that is used to control color of
+     the shield icons depending on various custom situations when actual trait collection is different
+     (e.g. when driving through the tunnel).
      - parameter instructionLabelType: Type, which is inherited from `InstructionLabel` and will be
      used for showing a visual instruction.
      
@@ -113,8 +116,10 @@ extension VisualInstruction {
     public func carPlayManeuverLabelAttributedText<T: InstructionLabel>(bounds: @escaping () -> (CGRect),
                                                                         shieldHeight: CGFloat,
                                                                         window: UIWindow?,
+                                                                        traitCollection: UITraitCollection? = nil,
                                                                         instructionLabelType: T.Type? = nil) -> NSAttributedString? {
-        let instructionLabel = T.init() 
+        let instructionLabel = T.init()
+        instructionLabel.customTraitCollection = traitCollection
         instructionLabel.availableBounds = bounds
         instructionLabel.shieldHeight = shieldHeight
         
