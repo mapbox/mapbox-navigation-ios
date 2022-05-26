@@ -54,8 +54,8 @@ extension NavigationMapView {
      - parameter redraw: A `Bool` value to decide whether the route is new. When style changes, `RouteController` did refresh route or reroute, the value
      should be set to `true`. When `RouteController` did update the `RouteProgress`, the value should be set to `false`.
      */
-    public func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?, redraw: Bool = false) {
-        if redraw {
+    public func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?, shouldRedraw: Bool = false) {
+        if shouldRedraw {
             show([routeProgress.route], legIndex: routeProgress.legIndex)
         }
         
@@ -67,7 +67,7 @@ extension NavigationMapView {
         }
         
         updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-        if redraw {
+        if shouldRedraw {
             offRouteDistanceCheckEnabled = false
             travelAlongRouteLine(to: coordinate)
             offRouteDistanceCheckEnabled = true

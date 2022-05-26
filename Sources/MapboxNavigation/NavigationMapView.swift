@@ -85,8 +85,7 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Controls whether the main route style layer and its casing disappears
-     as the user location puck travels over it. Defaults to `false`.
+     Controls whether the main route style layer and its casing disappears as the user location puck travels over it. Defaults to `false`.
      
      Used in standalone `NavigationMapView` during navigation. If using `NavigationViewController` and `CarPlayNavigationViewController`
      for active navigation, update `NavigationViewController.routeLineTracksTraversal` and `CarPlayNavigationViewController.routeLineTracksTraversal` instead.
@@ -98,9 +97,12 @@ open class NavigationMapView: UIView {
      for the `NavigationMapView.appearance()`. If `false`, the whole route will be shown without traversed
      part disappearing effect.
      
-     To update the route line during active navigation, add observers for `routeControllerDidRefreshRoute`,
-     `routeControllerDidReroute` and `routeControllerProgressDidChange` from `NotificationCenter`.
-     And also call `NavigationMapView.updateRouteLine(routeProgress:coordinate:redraw:)` to update the main route line.
+     To update the route line during active navigation when `RouteProgree` changes, add observer for `Notification.Name.routeControllerProgressDidChange` and
+     call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)` with `shouldRedraw` as `false`.
+     
+     To update the route line during active navigation when route refresh or rerouting happens, add observers for `Notification.Name.routeControllerDidRefreshRoute` and
+     `Notification.Name.routeControllerDidReroute`. And call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)`
+     with `shouldRedraw` as `true`.
      */
     public var routeLineTracksTraversal: Bool = false {
         didSet {

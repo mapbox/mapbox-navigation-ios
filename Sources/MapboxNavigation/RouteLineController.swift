@@ -40,7 +40,7 @@ extension NavigationMapView {
             guard !navigationMapView.showsRoute else { return }
             navigationMapView.updateRouteLine(routeProgress: router.routeProgress,
                                               coordinate: router.location?.coordinate,
-                                              redraw: true)
+                                              shouldRedraw: true)
             navigationMapView.showWaypoints(on: router.route, legIndex: router.routeProgress.legIndex)
             
             let currentLegProgress = router.routeProgress.currentLegProgress
@@ -73,7 +73,7 @@ extension NavigationMapView {
             navigationMapView.addArrow(route: route, legIndex: legIndex, stepIndex: stepIndex + 1)
             navigationMapView.updateRouteLine(routeProgress: router.routeProgress,
                                               coordinate: location?.coordinate,
-                                              redraw: true)
+                                              shouldRedraw: true)
             navigationMapView.showWaypoints(on: route)
             
             if annotatesSpokenInstructions {
@@ -147,7 +147,7 @@ extension NavigationMapView {
         func navigationService(_ service: NavigationService, didRefresh routeProgress: RouteProgress) {
             navigationMapView.updateRouteLine(routeProgress: routeProgress,
                                               coordinate: router.location?.coordinate,
-                                              redraw: true)
+                                              shouldRedraw: true)
         }
     }
 }

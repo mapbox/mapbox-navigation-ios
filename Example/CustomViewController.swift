@@ -160,13 +160,13 @@ class CustomViewController: UIViewController {
         navigationMapView.removeWaypoints()
         navigationMapView.updateRouteLine(routeProgress: navigationService.routeProgress,
                                           coordinate: navigationService.router.location?.coordinate,
-                                          redraw: true)
+                                          shouldRedraw: true)
     }
     
     @objc func refresh(_ notification: NSNotification) {
         navigationMapView.updateRouteLine(routeProgress: navigationService.routeProgress,
                                           coordinate: navigationService.router.location?.coordinate,
-                                          redraw: true)
+                                          shouldRedraw: true)
     }
 
     @IBAction func cancelButtonPressed(_ sender: Any) {
