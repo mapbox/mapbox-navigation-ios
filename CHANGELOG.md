@@ -4,11 +4,17 @@
 
 ### Routing
 
-* Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components.([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
+* Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
 
 ### Map
 
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
+
+### CarPlay
+
+* Fixed an issue where route shields disappeared when the user enters a tunnel. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
+* The map automatically chooses the night style when "Always Show Dark Maps" is enabled in the Appearance section of Settings. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
+* Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 
 ## v2.5.0
 

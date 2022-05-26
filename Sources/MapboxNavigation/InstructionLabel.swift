@@ -22,6 +22,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
     var shieldHeight: CGFloat = 30
     var imageDownloadCompletion: (() -> Void)?
     weak var instructionDelegate: VisualInstructionDelegate?
+    var customTraitCollection: UITraitCollection?
     
     var instruction: VisualInstruction? {
         didSet {
@@ -43,7 +44,7 @@ open class InstructionLabel: StylableLabel, InstructionPresenterDataSource {
         
         let presenter = InstructionPresenter(instruction,
                                              dataSource: self,
-                                             traitCollection: traitCollection,
+                                             traitCollection: customTraitCollection ?? traitCollection,
                                              downloadCompletion: update)
         
         let attributed = presenter.attributedText()
