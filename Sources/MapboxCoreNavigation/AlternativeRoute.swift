@@ -13,8 +13,10 @@ public struct AlternativeRoute: Identifiable {
     public typealias ID = UInt32
     /// Breif statistics of a route for travelling
     public struct RouteInfo {
-        let distance: LocationDistance
-        let duration: TimeInterval
+        /// Expected travel distance
+        public let distance: LocationDistance
+        /// Expected travel duration
+        public let duration: TimeInterval
         
         fileprivate init(distance: LocationDistance, duration: TimeInterval) {
             self.distance = distance
