@@ -6,7 +6,6 @@ import UIKit
 public class ReportButton: Button {
     
     static let defaultInsets: UIEdgeInsets = 10.0
-    static let defaultCornerRadius: CGFloat = 4.0
     
     public required init?(coder decoder: NSCoder) {
         super.init(coder: decoder)
@@ -22,6 +21,6 @@ public class ReportButton: Button {
     
     private func commonInit() {
         contentEdgeInsets = ReportButton.defaultInsets
-        applyDefaultCornerRadiusShadow(cornerRadius: ReportButton.defaultCornerRadius)
+        layer.cornerRadius = Style.defaultCornerRadius
     }
 }

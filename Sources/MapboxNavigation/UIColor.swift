@@ -3,9 +3,11 @@ import MapboxMaps
 
 extension UIColor {
 
-    class var defaultTint: UIColor { #colorLiteral(red: 0.1843137255, green: 0.4784313725, blue: 0.7764705882, alpha: 1) }
+    class var defaultTintColor: UIColor { #colorLiteral(red: 0.237, green: 0.242, blue: 0.242, alpha: 1) }
     class var defaultTintStroke: UIColor { #colorLiteral(red: 0.1843137255, green: 0.4784313725, blue: 0.7764705882, alpha: 1) }
     class var defaultPrimaryText: UIColor { #colorLiteral(red: 0.176, green: 0.176, blue: 0.176, alpha: 1) }
+    class var defaultBorderColor: UIColor { #colorLiteral(red: 0.804, green: 0.816, blue: 0.816, alpha: 1) }
+    class var defaultBackgroundColor: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
     
     class var defaultRouteCasing: UIColor { .defaultTintStroke }
     class var defaultRouteLayer: UIColor { #colorLiteral(red: 0.337254902, green: 0.6588235294, blue: 0.9843137255, alpha: 1) }

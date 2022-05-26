@@ -121,9 +121,14 @@ open class NavigationView: UIView {
         return stackView
     }()
     
-    lazy var overviewButton = FloatingButton.rounded(image: Images.overview)
-    lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp, selectedImage: Images.volumeOff)
-    lazy var reportButton = FloatingButton.rounded(image: Images.feedback)
+    lazy var overviewButton = FloatingButton.rounded(image: Images.overview,
+                                                     type: .system)
+    
+    lazy var muteButton = FloatingButton.rounded(image: Images.volumeUp,
+                                                 selectedImage: Images.volumeOff)
+    
+    lazy var reportButton = FloatingButton.rounded(image: Images.feedback,
+                                                   type: .system)
     
     var floatingButtonsPosition: MapOrnamentPosition = .topTrailing {
         didSet {
