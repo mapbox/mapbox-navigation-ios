@@ -2,6 +2,7 @@ import UIKit
 import CoreLocation
 import Solar
 import MapboxCoreNavigation
+import CarPlay
 
 /**
  A manager that handles `Style` objects. The manager listens for significant time changes
@@ -58,7 +59,23 @@ open class StyleManager {
         }
     }
     
+    /**
+     Trait collection that contains user interface idiom value, so that `StyleManager` can
+     update style whenever it changes only for that specific user interface idiom (e.g. when changing
+     style on CarPlay, style on iOS should remain unchanged).
+     */
+    var traitCollection: UITraitCollection!
+    
     public init() {
+        commonInit()
+    }
+    
+    init(traitCollection: UITraitCollection = UITraitCollection(userInterfaceIdiom: .phone)) {
+        self.traitCollection = traitCollection
+        commonInit()
+    }
+    
+    func commonInit() {
         resumeNotifications()
         resetTimeOfDayTimer()
     }
@@ -193,18 +210,40 @@ open class StyleManager {
         forceRefreshAppearance()
     }
     
-    // Workaround to refresh appearance by removing all views and then adding them again.
-    // UITextEffectsWindow will be created when system keyboard is shown and cannot be safely removed.
     func forceRefreshAppearance() {
-        for window in UIApplication.shared.windows {
-            if !window.isKind(of: NSClassFromString("UITextEffectsWindow") ?? NSString.classForCoder()) {
-                for view in window.subviews {
-                    view.removeFromSuperview()
-                    window.addSubview(view)
+        // Use trait collection to detect what window should be updated.
+        if #available(iOS 13.0, *) {
+            UIApplication.shared.connectedScenes.forEach {
+                if let windowScene = $0 as? UIWindowScene,
+                   traitCollection?.userInterfaceIdiom == .phone {
+                    refreshAppearance(for: windowScene.windows)
+                } else if let templateApplicationScene = $0 as? CPTemplateApplicationScene,
+                          traitCollection?.userInterfaceIdiom == .carPlay {
+                    let window = templateApplicationScene.carWindow
+                    refreshAppearance(for: [window])
                 }
             }
+        } else {
+            refreshAppearance(for: UIApplication.shared.windows)
         }
         
         delegate?.styleManagerDidRefreshAppearance(self)
+    }
+    
+    /**
+     Workaround to refresh appearance by removing all views and then adding them again.
+     UITextEffectsWindow will be created when system keyboard is shown and cannot be safely removed.
+     */
+    func refreshAppearance(for windows: [UIWindow]) {
+        for window in windows {
+            if window.isKind(of: NSClassFromString("UITextEffectsWindow") ?? NSString.classForCoder()) {
+                continue
+            }
+            
+            for view in window.subviews {
+                view.removeFromSuperview()
+                window.addSubview(view)
+            }
+        }
     }
 }
