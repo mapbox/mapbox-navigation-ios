@@ -64,13 +64,13 @@ open class StyleManager {
      update style whenever it changes only for that specific user interface idiom (e.g. when changing
      style on CarPlay, style on iOS should remain unchanged).
      */
-    var traitCollection: UITraitCollection?
+    var traitCollection: UITraitCollection!
     
     public init() {
         commonInit()
     }
     
-    init(_ traitCollection: UITraitCollection) {
+    init(traitCollection: UITraitCollection = UITraitCollection(userInterfaceIdiom: .phone)) {
         self.traitCollection = traitCollection
         commonInit()
     }
@@ -230,9 +230,11 @@ open class StyleManager {
         delegate?.styleManagerDidRefreshAppearance(self)
     }
     
+    /**
+     Workaround to refresh appearance by removing all views and then adding them again.
+     UITextEffectsWindow will be created when system keyboard is shown and cannot be safely removed.
+     */
     func refreshAppearance(for windows: [UIWindow]) {
-        // Workaround to refresh appearance by removing all views and then adding them again.
-        // UITextEffectsWindow will be created when system keyboard is shown and cannot be safely removed.
         for window in windows {
             if window.isKind(of: NSClassFromString("UITextEffectsWindow") ?? NSString.classForCoder()) {
                 continue

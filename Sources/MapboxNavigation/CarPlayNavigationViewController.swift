@@ -140,7 +140,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     func setupStyleManager() {
-        styleManager = StyleManager(UITraitCollection(userInterfaceIdiom: .carPlay))
+        styleManager = StyleManager(traitCollection: UITraitCollection(userInterfaceIdiom: .carPlay))
         styleManager?.delegate = self
         styleManager?.styles = self.styles
     }

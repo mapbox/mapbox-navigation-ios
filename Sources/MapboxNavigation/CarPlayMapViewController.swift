@@ -235,7 +235,7 @@ open class CarPlayMapViewController: UIViewController {
     }
     
     func setupStyleManager() {
-        styleManager = StyleManager(UITraitCollection(userInterfaceIdiom: .carPlay))
+        styleManager = StyleManager(traitCollection: UITraitCollection(userInterfaceIdiom: .carPlay))
         styleManager?.delegate = self
         styleManager?.styles = styles
     }
