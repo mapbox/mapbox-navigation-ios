@@ -15,7 +15,7 @@
 * Fixed an issue where route shields disappeared when the user enters a tunnel. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * The map automatically chooses the night style when "Always Show Dark Maps" is enabled in the Appearance section of Settings. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
-* Fixed an issue where `StyleManager` appearance update on CarPlay would cause appearance update on iOS as well. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
+* Fixed an issue where a `StyleManager` for CarPlay would update the appearance on both CarPlay and the iOS device simultaneously. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
 
 ## v2.5.0
 
