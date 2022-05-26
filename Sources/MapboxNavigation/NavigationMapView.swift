@@ -799,6 +799,16 @@ open class NavigationMapView: UIView {
     func setupUserLocation() {
         if !locationManager.isAuthorized() { return }
         
+        // Since Mapbox Maps will not provide location data in case if `LocationOptions.puckType` is
+        // set to nil, we have to draw empty and transparent `UIImage` instead of puck. This is used
+        // in case when user wants to stop showing location puck or draw a custom one.
+        let clearImage = UIColor.clear.image(CGSize(size: 1.0))
+        let emptyPuckConfiguration = Puck2DConfiguration(topImage: clearImage,
+                                                         bearingImage: clearImage,
+                                                         shadowImage: clearImage,
+                                                         scale: nil,
+                                                         showsAccuracyRing: false)
+        
         // In case if location puck style is changed (e.g. when setting
         // `NavigationMapView.reducedAccuracyActivatedMode` to `true` or when setting
         // default `PuckType.puck2D()`) previously set `UserCourseView` will be removed.
@@ -814,7 +824,7 @@ open class NavigationMapView: UIView {
         } else {
             switch userLocationStyle {
             case .courseView(let courseView):
-                mapView.location.options.puckType = nil
+                mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
                 
                 courseView.tag = NavigationMapView.userCourseViewTag
                 mapView.addSubview(courseView)
