@@ -2,6 +2,11 @@
 
 ## v2.6.0
 
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.6.0-beta.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-beta.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v103.0.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/103.0.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+
 ### User interface
 
 * Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
