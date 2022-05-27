@@ -76,6 +76,7 @@ open class StyleManager {
     }
     
     func commonInit() {
+        traitCollection = UITraitCollection(userInterfaceIdiom: .phone)
         resumeNotifications()
         resetTimeOfDayTimer()
     }
@@ -136,6 +137,9 @@ open class StyleManager {
         
         for style in styles {
             if style.styleType == styleType {
+                // Before applying actual style set trait collection that is used in `StyleManager`
+                // so that style knows what platform should be updated (either iOS or CarPlay).
+                style.traitCollection = traitCollection
                 style.apply()
                 currentStyleType = styleType
                 currentStyle = style
@@ -218,7 +222,7 @@ open class StyleManager {
                    windowScene.traitCollection.userInterfaceIdiom == .phone {
                     refreshAppearance(for: windowScene.windows)
                 } else if let templateApplicationScene = $0 as? CPTemplateApplicationScene,
-                          traitCollection?.userInterfaceIdiom == .carPlay {
+                          traitCollection.userInterfaceIdiom == .carPlay {
                     let window = templateApplicationScene.carWindow
                     refreshAppearance(for: [window])
                 }

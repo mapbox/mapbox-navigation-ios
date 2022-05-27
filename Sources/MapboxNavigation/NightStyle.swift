@@ -20,12 +20,50 @@ open class NightStyle: DayStyle {
         
         let backgroundColor = #colorLiteral(red: 0.1493228376, green: 0.2374534607, blue: 0.333029449, alpha: 1)
         
+        switch traitCollection.userInterfaceIdiom {
+        case .phone:
+            let phoneTraitCollection = UITraitCollection(userInterfaceIdiom: .phone)
+            
+            LaneView.appearance(for: phoneTraitCollection).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            LaneView.appearance(for: phoneTraitCollection).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
+            LaneView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [LanesView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            LaneView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [LanesView.self]).secondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
+            LanesView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
+            
+            StepsBackgroundView.appearance().backgroundColor = backgroundColor
+            StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+            StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+            UITableView.appearance(whenContainedInInstancesOf: [StepsViewController.self]).backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
+            
+            UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
+            UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).textColor = .white
+            
+            FeedbackStyleView.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
+            FeedbackCollectionView.appearance().backgroundColor = .black
+            FeedbackCollectionView.appearance().cellColor = .white
+        case .carPlay:
+            let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+            
+            // `CarPlayCompassView` appearance styling. `CarPlayCompassView` is only used on CarPlay
+            // and is not shared across other platforms.
+            CarPlayCompassView.appearance().backgroundColor = backgroundColor
+            
+            // `StylableLabel` is used in `CarPlayCompassView` to show compass direction.
+            StylableLabel.appearance(whenContainedInInstancesOf: [CarPlayCompassView.self]).normalTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+            
+            LaneView.appearance(for: carPlayTraitCollection).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            LaneView.appearance(for: carPlayTraitCollection).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
+            LaneView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [LanesView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+            LaneView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [LanesView.self]).secondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
+            LanesView.appearance(for: carPlayTraitCollection).backgroundColor = backgroundColor
+        default:
+            break
+        }
+        
         ArrivalTimeLabel.appearance().normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         BottomBannerView.appearance().backgroundColor = backgroundColor
         Button.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         CancelButton.appearance().tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-        
-        CarPlayCompassView.appearance().backgroundColor = backgroundColor
         
         DismissButton.appearance().backgroundColor = backgroundColor
         DismissButton.appearance().textColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
@@ -35,8 +73,7 @@ open class NightStyle: DayStyle {
         DistanceLabel.appearance(whenContainedInInstancesOf: [StepInstructionsView.self]).valueTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         DistanceLabel.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).unitTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         DistanceLabel.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).valueTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-
-
+        
         DistanceRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
         EndOfRouteButton.appearance().textColor = .white
         EndOfRouteCommentView.appearance().backgroundColor = #colorLiteral(red: 0.1875049942, green: 0.2981707989, blue: 0.4181857639, alpha: 1)
@@ -60,11 +97,7 @@ open class NightStyle: DayStyle {
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).customBackgroundColor = backgroundColor
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).separatorColor = #colorLiteral(red: 0.3764705882, green: 0.4901960784, blue: 0.6117647059, alpha: 0.796599912)
         InstructionsCardContainerView.appearance(whenContainedInInstancesOf: [InstructionsCardCell.self]).highlightedSeparatorColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        LaneView.appearance().primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        LaneView.appearance().secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
-        LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-        LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
-        LanesView.appearance().backgroundColor = backgroundColor
+        
         ManeuverView.appearance().backgroundColor = .clear
         ManeuverView.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         ManeuverView.appearance(whenContainedInInstancesOf: [InstructionsBannerView.self]).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
@@ -98,11 +131,6 @@ open class NightStyle: DayStyle {
         SeparatorView.appearance().backgroundColor = #colorLiteral(red: 0.3764705882, green: 0.4901960784, blue: 0.6117647059, alpha: 0.796599912)
         SeparatorView.appearance(whenContainedInInstancesOf: [InstructionsCardView.self]).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         SpeedLimitView.appearance().signBackColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-        StepInstructionsView.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
-        StepTableViewCell.appearance().backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
-        UITableView.appearance(whenContainedInInstancesOf: [StepsViewController.self]).backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
-        StepsBackgroundView.appearance().backgroundColor = backgroundColor
-        StylableLabel.appearance(whenContainedInInstancesOf: [CarPlayCompassView.self]).normalTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         TimeRemainingLabel.appearance().normalTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         TimeRemainingLabel.appearance().trafficUnknownColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
         TopBannerView.appearance().backgroundColor = backgroundColor
