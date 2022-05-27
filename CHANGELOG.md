@@ -21,8 +21,8 @@
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.5.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0). ([#3869](https://github.com/mapbox/mapbox-navigation-ios/pull/3869))
-* MapboxCoreNavigation now requires [MapboxDirections v2.5.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.5.0-rc.1). ([#3901](https://github.com/mapbox/mapbox-navigation-ios/pull/3901))
+* MapboxNavigation now requires [MapboxMaps v10.5._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0). ([#3869](https://github.com/mapbox/mapbox-navigation-ios/pull/3869))
+* MapboxCoreNavigation now requires [MapboxDirections v2.5._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.5.0). ([#3920](https://github.com/mapbox/mapbox-navigation-ios/pull/3920))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v101._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/101.0.0). ([#3908](https://github.com/mapbox/mapbox-navigation-ios/pull/3908))
 
 ### User interface
@@ -35,7 +35,7 @@
 * Lane guidance remains visible while the step table is visible. ([#3805](https://github.com/mapbox/mapbox-navigation-ios/pull/3805))
 * Removed a transparent gap that appeared between the top banner and step table if the user completed a maneuver while the step table was visible. ([#3805](https://github.com/mapbox/mapbox-navigation-ios/pull/3805))
 * Fixed an issue where a gray dashed line, which normally indicates a restricted-access road, appeared at the beginning of the route line even if there was no restriction. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
-* Lanes guidance views will now be shown even when all lanes a valid for the current route. ([#3903](https://github.com/mapbox/mapbox-navigation-ios/pull/3903))
+* Lane guidance views will now be shown even when all lanes a valid for the current route. ([#3903](https://github.com/mapbox/mapbox-navigation-ios/pull/3903))
 * Fixed the crash of nonstop road shield updates when no valid road information contained in guidance instruction. ([#3911](https://github.com/mapbox/mapbox-navigation-ios/pull/3911))
 
 ### User feedback
@@ -50,7 +50,7 @@
 * Fixed an issue where `UserPuckCourseView`’s color desaturated during turn-by-turn navigation even as the location was being updated. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
 * Fixed an issue where the `PassiveLocationManager(directions:systemLocationManager:eventsManagerType:userInfo:datasetProfileIdentifier:)` initializer’s `datasetProfileIdentifier` argument was ignored. ([#3867](https://github.com/mapbox/mapbox-navigation-ios/pull/3867))
 * Fixed an issue where the user location was sometimes snapped to a parallel street just before it merges with the actual street. ([#3862](https://github.com/mapbox/mapbox-navigation-ios/pull/3862))
-* Fix the possible crash after rerouting when `routeLineTracksTraversal` enabled. ([#3896](https://github.com/mapbox/mapbox-navigation-ios/pull/3896))
+* Fixed the possible crash after rerouting when `routeLineTracksTraversal` enabled. ([#3896](https://github.com/mapbox/mapbox-navigation-ios/pull/3896))
 
 ### Routing
 
