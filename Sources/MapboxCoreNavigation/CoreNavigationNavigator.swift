@@ -157,15 +157,25 @@ class Navigator {
     private weak var navigatorAlternativesObserver: NavigatorRouteAlternativesObserver?
 
     private func setupAlternativesControllerIfNeeded() {
-        let alternativeOptions = NavigationSettings.shared.alternativeRoutesOptions
+        let alternativeOptions = NavigationSettings.shared.alternativeRouteDetectionOptions
         
-        guard alternativeOptions.enabled else { return }
-        
+        guard case let .detect(strategy) = alternativeOptions else { return }
+
+        var refreshOnEmpty = false
+        var refreshInterval: TimeInterval = 180
+        switch strategy.refreshWhenNoAvailableAlternatives {
+        case .noPeriodicRefresh:
+            refreshOnEmpty = false
+        case .refreshPeriodically(let interval):
+            refreshOnEmpty = true
+            refreshInterval = interval
+        }
+
         let controller = navigator.getRouteAlternativesController()
-        controller.enableOnEmptyAlternativesRequest(forEnable: alternativeOptions.refreshWhenNoAvailableAlternatives)
-        controller.enableRequestAfterFork(forEnable: alternativeOptions.refreshAfterPassingDeviation)
+        controller.enableOnEmptyAlternativesRequest(forEnable: refreshOnEmpty)
+        controller.enableRequestAfterFork(forEnable: strategy.refreshAfterPassingDeviation)
         
-        let options = RouteAlternativesOptions(requestIntervalSeconds: alternativeOptions.refreshInterval,
+        let options = RouteAlternativesOptions(requestIntervalSeconds: refreshInterval,
                                                minTimeBeforeManeuverSeconds: rerouteController.initialManeuverAvoidanceRadius)
         controller.setRouteAlternativesOptionsFor(options)
     }
@@ -183,7 +193,7 @@ class Navigator {
         navigatorFallbackVersionsObserver = versionsObserver
         navigator.setFallbackVersionsObserverFor(versionsObserver)
         
-        if NavigationSettings.shared.alternativeRoutesOptions.enabled {
+        if case .detect(_) = NavigationSettings.shared.alternativeRouteDetectionOptions {
             let alternativesObserver = NavigatorRouteAlternativesObserver()
             navigatorAlternativesObserver = alternativesObserver
             navigator.getRouteAlternativesController().addObserver(for: alternativesObserver)

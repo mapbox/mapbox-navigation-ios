@@ -38,7 +38,7 @@ public class NavigationSettings {
             .init(directions: .shared,
                   tileStoreConfiguration: .default,
                   routingProviderSource: .hybrid,
-                  alternativeRouteDetectionOptions: .init())
+                  alternativeRouteDetectionOptions: .default)
         }
 
         var directions: Directions
@@ -96,7 +96,7 @@ public class NavigationSettings {
      
      You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionOptions:)` method.
      */
-    public var alternativeRoutesOptions: AlternativeRouteDetectionOptions {
+    public var alternativeRouteDetectionOptions: AlternativeRouteDetectionOptions {
         state.alternativeRouteDetectionOptions
     }
     
@@ -119,7 +119,7 @@ public class NavigationSettings {
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,
                            routingProviderSource: RoutingProviderSource = .hybrid,
-                           alternativeRoutesOptions: AlternativeRouteDetectionOptions = .init()) {
+                           alternativeRouteDetectionOptions: AlternativeRouteDetectionOptions = .default) {
         lock.lock(); defer {
             lock.unlock()
         }
@@ -129,7 +129,7 @@ public class NavigationSettings {
         _state = .init(directions: directions,
                        tileStoreConfiguration: tileStoreConfiguration,
                        routingProviderSource: routingProviderSource,
-                       alternativeRouteDetectionOptions: alternativeRoutesOptions)
+                       alternativeRouteDetectionOptions: alternativeRouteDetectionOptions)
     }
     
     /**

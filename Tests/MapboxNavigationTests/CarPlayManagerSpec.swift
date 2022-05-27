@@ -19,7 +19,7 @@ class CarPlayManagerSpec: QuickSpec {
             NavigationSettings.shared.initialize(directions: .mocked,
                                                  tileStoreConfiguration: .default,
                                                  routingProviderSource: .offline,
-                                                 alternativeRoutesOptions: .init())
+                                                 alternativeRouteDetectionOptions: .default)
             let mockedHandler = BillingHandler.__createMockedHandler(with: BillingServiceMock())
             BillingHandler.__replaceSharedInstance(with: mockedHandler)
             

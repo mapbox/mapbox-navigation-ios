@@ -8,7 +8,7 @@ import MapboxDirections
 final class TilesetDescriptorFactoryTests: TestCase {
     
     override func tearDown() {
-        NavigationSettings.shared.initialize(directions: .shared, tileStoreConfiguration: .default, routingProviderSource: .hybrid, alternativeRoutesOptions: .init())
+        NavigationSettings.shared.initialize(directions: .shared, tileStoreConfiguration: .default, routingProviderSource: .hybrid, alternativeRouteDetectionOptions: .default)
         super.tearDown()
     }
     
@@ -16,7 +16,7 @@ final class TilesetDescriptorFactoryTests: TestCase {
         NavigationSettings.shared.initialize(directions: .mocked,
                                              tileStoreConfiguration: .custom(FileManager.default.temporaryDirectory),
                                              routingProviderSource: .offline,
-                                             alternativeRoutesOptions: .init())
+                                             alternativeRouteDetectionOptions: .default)
         _ = Navigator.shared
 
         let tilesetReceived = expectation(description: "Tileset received")

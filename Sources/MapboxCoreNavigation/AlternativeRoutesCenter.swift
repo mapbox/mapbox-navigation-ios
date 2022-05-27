@@ -5,7 +5,7 @@ import MapboxNavigationNative
 /**
  `AlternativeRoutesCenter` observer to track alternative routes updates.
  */
-public protocol NavigatorAlternativesStoreDelegate: AnyObject {
+public protocol AlternativeRoutesObserving: AnyObject {
     /**
      Called when center has detected a change in alternative routes list.
      
@@ -29,7 +29,7 @@ public protocol NavigatorAlternativesStoreDelegate: AnyObject {
  */
 public class AlternativeRoutesCenter {
     
-    var observers: [NavigatorAlternativesStoreDelegate] = []
+    var observers: [AlternativeRoutesObserving] = []
     /// Array of known `AlternativeRoute`s.
     public private(set) var alternatives: [AlternativeRoute] = []
     /// The original route, relative to which all others are 'alternative'.
@@ -108,7 +108,7 @@ public class AlternativeRoutesCenter {
     /// Subscribes an observer for alternative routes updates.
     ///
     /// New observer will be instantly updated with existing `AlternativeRoute`s if any.
-    public func addObserver(_ observer: NavigatorAlternativesStoreDelegate) {
+    public func addObserver(_ observer: AlternativeRoutesObserving) {
         if !observers.contains(where: { $0 === observer }) {
             observers.append(observer)
             
@@ -121,7 +121,7 @@ public class AlternativeRoutesCenter {
     }
     
     /// Unsubscribes an observer from alternative routes updates.
-    public func removeObserver(_ observer: NavigatorAlternativesStoreDelegate) {
+    public func removeObserver(_ observer: AlternativeRoutesObserving) {
         if let index = observers.firstIndex(where: { $0 === observer }) {
             observers.remove(at: index)
         }

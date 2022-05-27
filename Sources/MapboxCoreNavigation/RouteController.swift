@@ -620,8 +620,8 @@ open class RouteController: NSObject {
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
-        
-        if NavigationSettings.shared.alternativeRoutesOptions.enabled {
+
+        if case .detect(_) = NavigationSettings.shared.alternativeRouteDetectionOptions {
             self.alternativeRoutesCenter = AlternativeRoutesCenter(mainRoute: routeProgress.route)
         }
         

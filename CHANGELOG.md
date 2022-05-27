@@ -14,6 +14,7 @@
 ### Routing
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
+* Added reporting `AlternativeRoutes` during navigation sessions. Subscribe to `AlternativeRoutesCenter` to receive updates on actual alternative routes list. To configure alternative routes detection, setup `NavigationSettings.alternativeRouteDetectionOptions` before starting navigation. ([#3833](https://github.com/mapbox/mapbox-navigation-ios/pull/3833))
 * Added reporting `AlternativeRoutes` during navigation sessions. Subscribe to `AlternativeRoutesCenter` to receive updates on actual alternative routes list. To configure alternative routes detection, setup `NavigationSettings.AlternativeRouteDetectionOptions` before starting navigation. ([#3833](https://github.com/mapbox/mapbox-navigation-ios/pull/3833))
 * Added reporting `AlternativeRoutes` during navigation sessions. Subscribe to `NavigatorAlternativesStore` to receive updates on actual alternative routes list. To configure alternative routes detection, setup `NavigationSettings.alternativeRoutesOptions` before starting navigation. ([#3833](https://github.com/mapbox/mapbox-navigation-ios/pull/3833))
 * Implemented refreshing `RouteLeg.incidents` during a route refreshing. ([#3931](https://github.com/mapbox/mapbox-navigation-ios/pull/3931))

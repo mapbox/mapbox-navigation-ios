@@ -176,7 +176,7 @@ class RouteControllerTests: TestCase {
         let routeController = RouteController(alongRouteAtIndex: 0,
                                               in: routeResponse,
                                               options: routeOptions,
-                                              routingProvider: MapboxRoutingProvider(.offline),
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
         
         routeController.alternativeRoutesCenter?.addObserver(observer)
@@ -195,7 +195,7 @@ extension RouteControllerTests: RouterDataSource {
     }
 }
 
-class AlternativeRoutesObserver: NavigatorAlternativesStoreDelegate {
+class AlternativeRoutesObserver: AlternativeRoutesObserving {
     var onDidReportAlternatives: ((IndexSet, [AlternativeRoute]) -> Void)? = nil
     var onDidFailToReportAlternatives: ((AlternativeRouteError) -> Void)? = nil
     

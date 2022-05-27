@@ -9,9 +9,9 @@ import Turf
  This struct contains main and alternative routes which are sharing same origin and destination points, but differ at some point.
  */
 public struct AlternativeRoute: Identifiable {
-    /// Alternative route identificator type
+    /// Alternative route identifier type
     public typealias ID = UInt32
-    /// Breif statistics of a route for travelling
+    /// Brief statistics of a route for traveling
     public struct RouteInfo {
         /// Expected travel distance
         public let distance: LocationDistance
