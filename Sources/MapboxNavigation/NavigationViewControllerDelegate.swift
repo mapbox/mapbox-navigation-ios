@@ -114,6 +114,23 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
     
     /**
+     Called when navigation view controller has detected a change in alternative routes list.
+     
+     - parameter navigationViewController: The navigation view controller reporting an update.
+     - parameter updatedAlternatives: Array of actual alternative routes.
+     - parameter removedAlternatives: Array of alternative routes which are no longer actual.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute])
+    
+    /**
+     Called when navigation view controller has failed to  change alternative routes list.
+     
+     - parameter navigationViewController: The navigation view controller reporting an update.
+     - parameter error: An error occured.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didFailToUpdateAlternatives error: AlternativeRouteError)
+    
+    /**
      Called when navigation view controller has detected user taking an alternative route.
      
      This method is called before updating main route.
@@ -334,6 +351,20 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didFailToUpdateAlternatives error: AlternativeRouteError) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     

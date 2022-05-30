@@ -18,7 +18,7 @@ public struct AlternativeRoute: Identifiable {
         /// Expected travel duration
         public let duration: TimeInterval
         
-        fileprivate init(distance: LocationDistance, duration: TimeInterval) {
+        public init(distance: LocationDistance, duration: TimeInterval) {
             self.distance = distance
             self.duration = duration
         }
@@ -70,19 +70,43 @@ public struct AlternativeRoute: Identifiable {
         self.infoFromOrigin = .init(distance: nativeRouteAlternative.infoFromStart.distance,
                                     duration: nativeRouteAlternative.infoFromStart.duration)
     }
+    
+    /**
+     :nodoc:
+     Creates new `AlternativeRoute` instance.
+     
+     For test purposes only. SDK does not support custom `AlternativeRoute`s.
+     */
+    public init(id: ID,
+                indexedRouteResponse: IndexedRouteResponse,
+                mainRouteIntersection: Intersection,
+                alternativeRouteIntersection: Intersection,
+                infoFromDeviationPoint: RouteInfo,
+                infoFromOrigin: RouteInfo) {
+        self.id = id
+        self.indexedRouteResponse = indexedRouteResponse
+        self.mainRouteIntersection = mainRouteIntersection
+        self.alternativeRouteIntersection = alternativeRouteIntersection
+        self.infoFromDeviationPoint = infoFromDeviationPoint
+        self.infoFromOrigin = infoFromOrigin
+    }
 }
 
 extension Route {
     fileprivate func findIntersection(on legIndex: Int, by segmentIndex: Int) -> Intersection? {
-        if legs.count > legIndex {
-            let leg = legs[legIndex]
-            if let stepindex = leg.segmentRangesByStep.firstIndex(where: { $0.contains(segmentIndex) }) {
-                if let intersectionIndex = leg.steps[stepindex].segmentIndicesByIntersection?.firstIndex(where: { $0 == segmentIndex }) {
-                    return leg.steps[stepindex].intersections?[intersectionIndex]
-                }
-            }
+        guard legs.count > legIndex else {
+            return nil
         }
-
-        return nil
+        
+        let leg = legs[legIndex]
+        guard let stepindex = leg.segmentRangesByStep.firstIndex(where: { $0.contains(segmentIndex) }) else {
+            return nil
+        }
+        
+        guard let intersectionIndex = leg.steps[stepindex].segmentIndicesByIntersection?.firstIndex(where: { $0 == segmentIndex }) else {
+            return nil
+        }
+        
+        return leg.steps[stepindex].intersections?[intersectionIndex]
     }
 }

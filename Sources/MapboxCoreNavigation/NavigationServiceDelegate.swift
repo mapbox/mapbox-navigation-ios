@@ -41,6 +41,23 @@ public protocol NavigationServiceDelegate: AnyObject, UnimplementedLogging {
     func navigationService(_ service: NavigationService, willRerouteFrom location: CLLocation)
     
     /**
+     Called when navigation service has detected a change in alternative routes list.
+     
+     - parameter service: The navigation service reporting an update.
+     - parameter updatedAlternatives: Array of actual alternative routes.
+     - parameter removedAlternatives: Array of alternative routes which are no longer actual.
+     */
+    func navigationService(_ service: NavigationService, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute])
+    
+    /**
+     Called when navigation service has failed to  change alternative routes list.
+     
+     - parameter service: The navigation service reporting an update.
+     - parameter error: An error occured.
+     */
+    func navigationService(_ service: NavigationService, didFailToUpdateAlternatives error: AlternativeRouteError)
+    
+    /**
      Called when navigation service has detected user taking an alternative route.
      
      This method is called before updating main route.
@@ -274,6 +291,20 @@ public extension NavigationServiceDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationService(_ service: NavigationService, didRerouteAlong route: Route, at location: CLLocation?, proactive: Bool) {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
+        logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationService(_ service: NavigationService, didFailToUpdateAlternatives error: AlternativeRouteError) {
         logUnimplemented(protocolType: NavigationServiceDelegate.self, level: .info)
     }
     

@@ -627,6 +627,8 @@ open class RouteController: NSObject {
         
         super.init()
         
+        self.alternativeRoutesCenter?.delegate = self
+        
         if let customRoutingProvider = customRoutingProvider {
             self.customRoutingProvider = customRoutingProvider
             self.rerouteController.customRoutingProvider = customRoutingProvider
@@ -690,7 +692,7 @@ open class RouteController: NSObject {
     }
     
     /// Provides access to detected `AlternativeRoute`s.
-    public private(set) var alternativeRoutesCenter: AlternativeRoutesCenter?
+    private var alternativeRoutesCenter: AlternativeRoutesCenter?
 }
 
 extension RouteController: HistoryRecording { }
@@ -872,6 +874,13 @@ extension RouteController: ReroutingControllerDelegate {
             return
         }
               
+        var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+        userInfo[.locationKey] = location
+        userInfo[.routeKey] = newMainRoute
+        NotificationCenter.default.post(name: .routeControllerWillTakeAlternativeRoute,
+                                        object: self,
+                                        userInfo: userInfo)
+        
         delegate?.router(self,
                          willTakeAlternativeRoute: newMainRoute,
                          at: location)
@@ -880,9 +889,17 @@ extension RouteController: ReroutingControllerDelegate {
                     isProactive: false,
                     completion: { [weak self] success in
             guard let self = self else { return }
+            var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+            userInfo[.locationKey] = self.location
             if success {
+                NotificationCenter.default.post(name: .routeControllerDidTakeAlternativeRoute,
+                                                object: self,
+                                                userInfo: userInfo)
                 self.delegate?.router(self, didTakeAlternativeRouteAt: self.location)
             } else {
+                NotificationCenter.default.post(name: .routeControllerDidFailToTakeAlternativeRoute,
+                                                object: self,
+                                                userInfo: userInfo)
                 self.delegate?.router(self, didFailToTakeAlternativeRouteAt: self.location)
             }
         })
@@ -917,6 +934,32 @@ extension RouteController: ReroutingControllerDelegate {
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError) {
         announceReroutingError(with: error)
         self.isRerouting = false
+    }
+}
+
+extension RouteController: AlternativeRoutesCenterDelegate {
+    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didReportNewAlternatives updatedIndices: IndexSet, removedAlternatives: [AlternativeRoute]) {
+        let updatedAlternatives = updatedIndices.compactMap { alternativeRoutesCenter?.alternatives[$0] }
+        
+        var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+        userInfo[.updatedAlternativesKey] = updatedAlternatives
+        userInfo[.removedAlternativesKey] = removedAlternatives
+        
+        NotificationCenter.default.post(name: .routeControllerDidUpdateAlternatives,
+                                        object: self,
+                                        userInfo: userInfo)
+        delegate?.router(self,
+                         didUpdateAlternatives: updatedAlternatives,
+                         removedAlternatives: removedAlternatives)
+    }
+    
+    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didFailToUpdateAlternatives error: AlternativeRouteError) {
+        var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+        userInfo[.alternativesErrorKey] = error
+        NotificationCenter.default.post(name: .routeControllerDidFailToUpdateAlternatives,
+                                        object: self,
+                                        userInfo: userInfo)
+        delegate?.router(self, didFailToUpdateAlternatives: error)
     }
 }
 

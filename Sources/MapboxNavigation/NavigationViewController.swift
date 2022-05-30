@@ -961,6 +961,14 @@ extension NavigationViewController: NavigationServiceDelegate {
         }
     }
     
+    public func navigationService(_ service: NavigationService, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
+        delegate?.navigationViewController(self, didUpdateAlternatives: updatedAlternatives, removedAlternatives: removedAlternatives)
+    }
+    
+    public func navigationService(_ service: NavigationService, didFailToUpdateAlternatives error: AlternativeRouteError) {
+        delegate?.navigationViewController(self, didFailToUpdateAlternatives: error)
+    }
+    
     public func navigationService(_ service: NavigationService, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
         delegate?.navigationViewController(self, willTakeAlternativeRoute: route, at: location)
     }

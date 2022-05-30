@@ -5,7 +5,7 @@ import MapboxNavigationNative
 /**
  `AlternativeRoutesCenter` observer to track alternative routes updates.
  */
-public protocol AlternativeRoutesObserving: AnyObject {
+protocol AlternativeRoutesCenterDelegate: AnyObject {
     /**
      Called when center has detected a change in alternative routes list.
      
@@ -27,13 +27,13 @@ public protocol AlternativeRoutesObserving: AnyObject {
 /**
  Provides notifications and access to `AlternativeRoute`s found during navigation.
  */
-public class AlternativeRoutesCenter {
+class AlternativeRoutesCenter {
     
-    var observers: [AlternativeRoutesObserving] = []
+    weak var delegate: AlternativeRoutesCenterDelegate?
     /// Array of known `AlternativeRoute`s.
-    public private(set) var alternatives: [AlternativeRoute] = []
+    private(set) var alternatives: [AlternativeRoute] = []
     /// The original route, relative to which all others are 'alternative'.
-    public internal(set) var mainRoute: Route
+    var mainRoute: Route
     
     init(mainRoute: Route) {
         self.mainRoute = mainRoute
@@ -85,11 +85,9 @@ public class AlternativeRoutesCenter {
         let newIndices = IndexSet(integersIn: lastIndex..<updatedAlternatives.endIndex)
         
         alternatives = updatedAlternatives
-        observers.forEach {
-            $0.alternativeRoutesCenter(self,
-                                       didReportNewAlternatives: newIndices,
-                                       removedAlternatives: removedRoutes)
-        }
+        delegate?.alternativeRoutesCenter(self,
+                                          didReportNewAlternatives: newIndices,
+                                          removedAlternatives: removedRoutes)
     }
     
     @objc private func navigatorDidFailToChangeAlternativeRoutes(_ notification: NSNotification) {
@@ -99,32 +97,8 @@ public class AlternativeRoutesCenter {
         }
         
         let error = AlternativeRouteError.failedToUpdateAlternativeRoutes(reason: message)
-        observers.forEach {
-            $0.alternativeRoutesCenter(self,
-                                       didFailToUpdateAlternatives: error)
-        }
-    }
-    
-    /// Subscribes an observer for alternative routes updates.
-    ///
-    /// New observer will be instantly updated with existing `AlternativeRoute`s if any.
-    public func addObserver(_ observer: AlternativeRoutesObserving) {
-        if !observers.contains(where: { $0 === observer }) {
-            observers.append(observer)
-            
-            if !alternatives.isEmpty {
-                observer.alternativeRoutesCenter(self,
-                                                 didReportNewAlternatives: IndexSet(alternatives.indices),
-                                                 removedAlternatives: [])
-            }
-        }
-    }
-    
-    /// Unsubscribes an observer from alternative routes updates.
-    public func removeObserver(_ observer: AlternativeRoutesObserving) {
-        if let index = observers.firstIndex(where: { $0 === observer }) {
-            observers.remove(at: index)
-        }
+        delegate?.alternativeRoutesCenter(self,
+                                          didFailToUpdateAlternatives: error)
     }
 }
 

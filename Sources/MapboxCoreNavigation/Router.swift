@@ -205,11 +205,6 @@ public protocol Router: CLLocationManagerDelegate {
     /// Use this method to indicate that you no longer need navigation experience for current session/UI.
     /// After finishing, `Router` will not be able to update route, route leg, issue a reroute or do any other update, related to route traversing.
     func finishRouting()
-
-    /**
-     Provides notifications and access to `AlternativeRoute`s found during navigation.
-     */
-    var alternativeRoutesCenter: AlternativeRoutesCenter? { get }
 }
 
 protocol InternalRouter: AnyObject {

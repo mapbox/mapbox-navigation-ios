@@ -195,6 +195,41 @@ public extension Notification.Name {
     static let routeControllerDidFailToReroute: Notification.Name = .init(rawValue: "RouteControllerDidFailToReroute")
     
     /**
+     Posted when `RouteController` has detected a change in alternative routes list.
+     
+     The user info dictionary contains `RouteController.NotificationUserInfoKey.locationKey` and `RouteController.NotificationUserInfoKey.removedAlternativesKey` keys.
+     */
+    static let routeControllerDidUpdateAlternatives: Notification.Name = .init(rawValue: "routeControllerDidUpdateAlternatives")
+    
+    /**
+     Posted when `RouteController` has failed to  change alternative routes list.
+     
+     The user info dictionary contains `RouteController.NotificationUserInfoKey.alternativesErrorKey`.
+     */
+    static let routeControllerDidFailToUpdateAlternatives: Notification.Name = .init(rawValue: "RouteControllerDidFailToUpdateAlternatives")
+    
+    /**
+     Posted when `RouteController` has detected user taking an alternative route and before updated the main route.
+     
+     The user info dictionary contains `RouteController.NotificationUserInfoKey.updatedAlternativesKey` and `RouteController.NotificationUserInfoKey.routeKey` keys.
+     */
+    static let routeControllerWillTakeAlternativeRoute: Notification.Name = .init(rawValue: "RouteControllerWillTakeAlternativeRoute")
+    
+    /**
+     Posted when `RouteController` has finished switching to an alternative route.
+     
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.locationKey`.
+     */
+    static let routeControllerDidTakeAlternativeRoute: Notification.Name = .init(rawValue: "RouteControllerDidTakeAlternativeRoute")
+    
+    /**
+     Posted when `RouteController` has failed to take an alternative and update the main route.
+     
+     The user info dictionary contains the key `RouteController.NotificationUserInfoKey.locationKey`.
+     */
+    static let routeControllerDidFailToTakeAlternativeRoute: Notification.Name = .init(rawValue: "RouteControllerDidFailToTakeAlternativeRoute")
+    
+    /**
      Posted when `RouteController` detects that the user has passed an ideal point for saying an instruction aloud.
      
      The user info dictionary contains the keys `RouteController.NotificationUserInfoKey.routeProgressKey` and `RouteController.NotificationUserInfoKey.spokenInstructionKey`.
@@ -267,7 +302,7 @@ extension RouteController {
         public static let routeProgressKey: NotificationUserInfoKey = .init(rawValue: "progress")
         
         /**
-         A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange`, `Notification.Name.routeControllerWillReroute`, or `Notification.Name.routeControllerDidReroute` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
+         A key in the user info dictionary of a `Notification.Name.routeControllerProgressDidChange`, `Notification.Name.routeControllerWillReroute`, `Notification.Name.routeControllerDidReroute`, `Notification.Name.routeControllerWillTakeAlternativeRoute`, `Notification.Name.routeControllerDidTakeAlternativeRoute`, or `Notification.Name.routeControllerDidFailToTakeAlternativeRoute` notification. The corresponding value is a `CLLocation` object representing the current idealized user location.
          */
         public static let locationKey: NotificationUserInfoKey = .init(rawValue: "location")
         
@@ -324,6 +359,27 @@ extension RouteController {
          A key in the user info dictionary of a `Notification.Name.routeControllerDidPassSpokenInstructionPoint` notification. The corresponding value is an `SpokenInstruction` object representing the current visual instruction.
          */
         public static let spokenInstructionKey: NotificationUserInfoKey = .init(rawValue: "spokenInstruction")
+        
+        // MARK: Alternative Routes
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerWillTakeAlternativeRoute` notification. The corresponding value is a `Route` object representing the route being mentioned.
+         */
+        public static let routeKey: NotificationUserInfoKey = .init(rawValue: "route")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidUpdateAlternatives` notification. The corresponding value is an `AlternativeRoute` array representing the actual alternatives list.
+         */
+        public static let updatedAlternativesKey: NotificationUserInfoKey = .init(rawValue: "updatedAlternatives")
+        
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidUpdateAlternatives` notification. The corresponding value is an `AlternativeRoute` array representing the alternatives which are no longer valid.
+         */
+        public static let removedAlternativesKey: NotificationUserInfoKey = .init(rawValue: "removedAlternatives")
+        /**
+         A key in the user info dictionary of a `Notification.Name.routeControllerDidFailToUpdateAlternatives` notification. The corresponding value is a `AlternativeRouteError` object representing the error ocurred during alternatives list update.
+         */
+        public static let alternativesErrorKey: NotificationUserInfoKey = .init(rawValue: "alternativesError")
     }
 }
 

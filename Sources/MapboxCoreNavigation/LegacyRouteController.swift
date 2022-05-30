@@ -51,13 +51,6 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     // MARK: Tracking the Progress
     
-    /**
-     Provides notifications and access to `AlternativeRoute`s found during navigation.
-     
-     - important: Always `nil` for `LegacyRouteController`.
-     */
-    public private(set) var alternativeRoutesCenter: AlternativeRoutesCenter? = nil
-    
     public weak var delegate: RouterDelegate?
     
     public internal(set) var routeProgress: RouteProgress {

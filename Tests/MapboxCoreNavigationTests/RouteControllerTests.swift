@@ -165,8 +165,9 @@ class RouteControllerTests: TestCase {
         let alternativesExpectation = XCTestExpectation(description: "Alternative route should be reported")
         alternativesExpectation.assertForOverFulfill = true
         
-        let observer = AlternativeRoutesObserver()
-        observer.onDidReportAlternatives = { newAlternatives, removedAlternatives in
+        let routerDelegateSpy = RouterDelegateSpy()
+        
+        routerDelegateSpy.onDidUpdateAlternativeRoutes = { newAlternatives, removedAlternatives in
             XCTAssertTrue(removedAlternatives.isEmpty)
             if newAlternatives.count == 1 {
                 alternativesExpectation.fulfill()
@@ -179,7 +180,7 @@ class RouteControllerTests: TestCase {
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: self)
         
-        routeController.alternativeRoutesCenter?.addObserver(observer)
+        routeController.delegate = routerDelegateSpy
         
         wait(for: [alternativesExpectation], timeout: 2)
     }
@@ -192,18 +193,5 @@ extension RouteControllerTests: RouterDataSource {
     
     var locationManagerType: NavigationLocationManager.Type {
         return NavigationLocationManager.self
-    }
-}
-
-class AlternativeRoutesObserver: AlternativeRoutesObserving {
-    var onDidReportAlternatives: ((IndexSet, [AlternativeRoute]) -> Void)? = nil
-    var onDidFailToReportAlternatives: ((AlternativeRouteError) -> Void)? = nil
-    
-    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didReportNewAlternatives newAlternatives: IndexSet, removedAlternatives: [AlternativeRoute]) {
-        onDidReportAlternatives?(newAlternatives, removedAlternatives)
-    }
-    
-    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didFailToUpdateAlternatives error: AlternativeRouteError) {
-        onDidFailToReportAlternatives?(error)
     }
 }
