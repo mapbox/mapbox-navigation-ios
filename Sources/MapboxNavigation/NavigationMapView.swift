@@ -1164,7 +1164,7 @@ open class NavigationMapView: UIView {
                                                                    waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
                     // Use custom layer position for the waypoint layer.
-                    if (layerPosition != nil) {
+                    if let layerPosition = layerPosition {
                         try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: layerPosition)
                     } else if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
                         try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer))

@@ -13,6 +13,7 @@
 ### Map
 
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
+* Added the `layerPosition` parameter to the `NavigationMapView.showWaypoints(on:layerPosition:legIndex:)` method for controlling the position of the waypoint layer while presenting waypoints. ([#3926](https://github.com/mapbox/mapbox-navigation-ios/pull/3926))
 
 ### CarPlay
 
