@@ -1125,9 +1125,13 @@ open class NavigationMapView: UIView {
      Adds the route waypoints to the map given the current leg index. Previous waypoints for completed legs will be omitted.
      
      - parameter route: `Route`, on which a certain `Waypoint` will be shown.
+     - parameter layerPosition: Position of the waypoint layer. Defaults to `nil`.
+     If layer position is set to `nil`, the waypoint layer appears below the bottommost symbol layer.
      - parameter legIndex: Index, which determines for which `RouteLeg` `Waypoint` will be shown.
      */
-    public func showWaypoints(on route: Route, legIndex: Int = 0) {
+    public func showWaypoints(on route: Route,
+                              layerPosition: MapboxMaps.LayerPosition? = nil,
+                              legIndex: Int = 0) {
         let waypoints: [Waypoint] = Array(route.legs.dropLast().compactMap({ $0.destination }))
         
         var features = [Turf.Feature]()
@@ -1159,8 +1163,10 @@ open class NavigationMapView: UIView {
                     let circlesLayer = delegate?.navigationMapView(self,
                                                                    waypointCircleLayerWithIdentifier: waypointCircleLayerIdentifier,
                                                                    sourceIdentifier: waypointSourceIdentifier) ?? defaultWaypointCircleLayer()
-                    
-                    if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
+                    // Use custom layer position for the waypoint layer.
+                    if (layerPosition != nil) {
+                        try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: layerPosition)
+                    } else if mapView.mapboxMap.style.layerExists(withId: NavigationMapView.LayerIdentifier.arrowSymbolLayer) {
                         try mapView.mapboxMap.style.addPersistentLayer(circlesLayer, layerPosition: .above(NavigationMapView.LayerIdentifier.arrowSymbolLayer))
                     } else {
                         let layerIdentifier = route.identifier(.route(isMainRoute: true))
