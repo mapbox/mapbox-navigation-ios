@@ -260,10 +260,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
         
         eventsManager.sendRouteRetrievalEvent()
         router.delegate = self
+        
+        if let routeController = router as? RouteController {
+            routeController.navigator.resume()
+        }
     }
     
     public func stop() {
-        
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
         
@@ -273,6 +276,11 @@ public class MapboxNavigationService: NSObject, NavigationService {
         
         poorGPSTimer.disarm()
         router.delegate = nil
+        
+        // Navigator should also be paused to prevent further location updates.
+        if let routeController = router as? RouteController {
+            routeController.navigator.pause()
+        }
     }
     
     public func endNavigation(feedback: EndOfRouteFeedback? = nil) {

@@ -33,7 +33,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
      */
     public var customRoutingProvider: RoutingProvider? = nil
 
-    var resolvedRoutingProvider:  RoutingProvider {
+    var resolvedRoutingProvider: RoutingProvider {
         customRoutingProvider ?? routingProvider
     }
     
@@ -364,59 +364,63 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard !hasFinishedRouting else { return }
-        let filteredLocations = locations.filter {
-            return $0.isQualified
-        }
-
-        if !filteredLocations.isEmpty, hasFoundOneQualifiedLocation == false {
-            hasFoundOneQualifiedLocation = true
-        }
-
-        let currentStepProgress = routeProgress.currentLegProgress.currentStepProgress
         
-        var potentialLocation: CLLocation?
-
-        // `filteredLocations` contains qualified locations
-        if let lastFiltered = filteredLocations.last {
-            potentialLocation = lastFiltered
-        // `filteredLocations` does not contain good locations and we have found at least one good location previously.
-        } else if hasFoundOneQualifiedLocation {
-            if let lastLocation = locations.last, delegate?.router(self, shouldDiscard: lastLocation) ?? RouteController.DefaultBehavior.shouldDiscardLocation {
-                // Allow the user puck to advance. A stationary puck is not great.
-                self.rawLocation = lastLocation
-                
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self else { return }
+            let filteredLocations = locations.filter {
+                return $0.isQualified
+            }
+            
+            if !filteredLocations.isEmpty, self.hasFoundOneQualifiedLocation == false {
+                self.hasFoundOneQualifiedLocation = true
+            }
+            
+            let currentStepProgress = self.routeProgress.currentLegProgress.currentStepProgress
+            
+            var potentialLocation: CLLocation?
+            
+            // `filteredLocations` contains qualified locations
+            if let lastFiltered = filteredLocations.last {
+                potentialLocation = lastFiltered
+                // `filteredLocations` does not contain good locations and we have found at least one good location previously.
+            } else if self.hasFoundOneQualifiedLocation {
+                if let lastLocation = locations.last, self.delegate?.router(self, shouldDiscard: lastLocation) ?? RouteController.DefaultBehavior.shouldDiscardLocation {
+                    // Allow the user puck to advance. A stationary puck is not great.
+                    self.rawLocation = lastLocation
+                    
+                    return
+                }
+                // This case handles the first location.
+                // This location is not a good location, but we need the rest of the UI to update and at least show something.
+            } else if let lastLocation = locations.last {
+                potentialLocation = lastLocation
+            }
+            
+            guard let location = potentialLocation else {
                 return
             }
-        // This case handles the first location.
-        // This location is not a good location, but we need the rest of the UI to update and at least show something.
-        } else if let lastLocation = locations.last {
-            potentialLocation = lastLocation
+            
+            self.rawLocation = location
+            
+            self.updateIntersectionIndex(for: currentStepProgress)
+            // Notify observers if the step’s remaining distance has changed.
+            
+            self.update(progress: self.routeProgress, with: self.location!, rawLocation: location)
+            self.updateDistanceToIntersection(from: location)
+            self.updateRouteStepProgress(for: location)
+            self.updateRouteLegProgress(for: location)
+            self.updateVisualInstructionProgress()
+            
+            if !self.userIsOnRoute(location) && self.delegate?.router(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
+                self.reroute(from: location, along: self.routeProgress)
+                return
+            }
+            
+            self.updateSpokenInstructionProgress()
+            
+            // Check for faster route proactively (if reroutesProactively is enabled)
+            self.refreshAndCheckForFasterRoute(from: location, routeProgress: self.routeProgress)
         }
-
-        guard let location = potentialLocation else {
-            return
-        }
-
-        self.rawLocation = location
-
-        updateIntersectionIndex(for: currentStepProgress)
-        // Notify observers if the step’s remaining distance has changed.
-
-        update(progress: routeProgress, with: self.location!, rawLocation: location)
-        updateDistanceToIntersection(from: location)
-        updateRouteStepProgress(for: location)
-        updateRouteLegProgress(for: location)
-        updateVisualInstructionProgress()
-
-        if !userIsOnRoute(location) && delegate?.router(self, shouldRerouteFrom: location) ?? RouteController.DefaultBehavior.shouldRerouteFromLocation {
-            reroute(from: location, along: routeProgress)
-            return
-        }
-
-        updateSpokenInstructionProgress()
-        
-        // Check for faster route proactively (if reroutesProactively is enabled)
-        refreshAndCheckForFasterRoute(from: location, routeProgress: routeProgress)
     }
     
     private func update(progress: RouteProgress, with location: CLLocation, rawLocation: CLLocation) {
