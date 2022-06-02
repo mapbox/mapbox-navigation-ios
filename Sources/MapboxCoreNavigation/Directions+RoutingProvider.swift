@@ -46,6 +46,7 @@ extension Directions: RoutingProvider {
                                         do {
                                             let routeResponse = try indexedRouteResponse.routeResponse.copy(with: routeOptions)
                                             routeResponse.routes?[indexedRouteResponse.routeIndex].refreshLegAttributes(from: routeRefreshResponse.route)
+                                            routeResponse.routes?[indexedRouteResponse.routeIndex].refreshLegIncidents(from: routeRefreshResponse.route)
                                             DispatchQueue.main.async {
                                                 completionHandler(session, .success(routeResponse))
                                             }
