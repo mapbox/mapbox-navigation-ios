@@ -9,6 +9,7 @@
 ### Routing
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
+* Implemented refreshing `RouteLeg.incidents` during a route refreshing. ([#3931](https://github.com/mapbox/mapbox-navigation-ios/pull/3931))
 
 ### Map
 
