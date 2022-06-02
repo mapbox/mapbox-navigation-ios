@@ -8,14 +8,17 @@
 
 ### Location tracking
 
-* MapboxNavigation now requires [MapboxMaps v10.6.0-beta.2](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-beta.2). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
-* MapboxCoreNavigation now requires [MapboxNavigationNative v104.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/104.0.0). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* MapboxNavigation now requires [MapboxMaps v10.6.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-rc.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v105.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/105.0.0). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * Fixed an issue where `RouteController` sometimes took too long to detect that the user went off the route after making a turn or taking an off-ramp. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 
 ### Routing
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
 * Implemented refreshing `RouteLeg.incidents` during a route refreshing. ([#3931](https://github.com/mapbox/mapbox-navigation-ios/pull/3931))
+* The `HistoryRecording.stopRecordingHistory(writingFileWith:)` method can be called safely from the main thread. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* Snapped locations are spaced more evenly when the application is connected to an external GPS or CarPlay device capable of high-frequency location updates and the user rounds a corner. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* Fixed an issue where the user’s location would be snapped to the nearest road while the user moved around in a parking garage where the [parking aisles](https://wiki.openstreetmap.org/wiki/Tag:service%3Dparking_aisle) have not been mapped in detail. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 
 ### Map
 
