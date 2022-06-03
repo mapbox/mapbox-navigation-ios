@@ -2,9 +2,14 @@
 
 ## v2.5.1
 
+### Packaging
+
 * MapboxCoreNavigation now requires [MapboxNavigationNative v101.0.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/101.0.1). ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
-* Fixed multiple switching between alternative routes on reroute.
-* Fixed memory heap corruption crash.
+
+### Other changes
+
+* Fixed multiple switching between alternative routes on reroute. ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
+* Fixed memory heap corruption crash. ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
 * Fixed an issue where `SimulatedLocationManager` would jump back to the beginning of the simulated route whenever `RouteController` reroutes the user onto a different route. ([#3929](https://github.com/mapbox/mapbox-navigation-ios/pull/3929))
 
 ## v2.5.0
