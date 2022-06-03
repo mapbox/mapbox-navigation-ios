@@ -1,5 +1,11 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## v2.5.1
+
+### Other changes
+
+* Fixed an issue where `SimulatedLocationManager` would jump back to the beginning of the simulated route whenever `RouteController` reroutes the user onto a different route. ([#3929](https://github.com/mapbox/mapbox-navigation-ios/pull/3929))
+
 ## v2.5.0
 
 ### Packaging
