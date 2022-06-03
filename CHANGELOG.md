@@ -7,10 +7,6 @@
 * MapboxNavigation now requires [MapboxMaps v10.6.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-rc.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v105.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/105.0.0). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 
-### User interface
-
-* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
-
 ### Routing
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
@@ -30,6 +26,7 @@
 
 ### Map
 
+* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
 * Fixed an issue where camera kept receiving updates even after stopping `MapboxNavigationService`. ([#3928](https://github.com/mapbox/mapbox-navigation-ios/pull/3928))
 * Added `NavigationViewController.showsContinuousAlternatives` and `CarPlayNavigationViewController.showsContinuousAlternatives` flags to toggle displaying alternative route's lines during navigation session. Use `NavigationMapView.show(continuousAlternatives:)` and `NavigationMapView.removeContinuousAlternativesRoutes()` methods for fine control over displayed routes. ([#3850](https://github.com/mapbox/mapbox-navigation-ios/pull/3850))
