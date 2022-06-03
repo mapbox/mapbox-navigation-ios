@@ -211,7 +211,14 @@ open class SimulatedLocationManager: NavigationLocationManager {
             return
         }
 
-        self.currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled)
+        if let location = self.location,
+           let shape = router.route.shape,
+           let closestCoordinate = shape.closestCoordinate(to: location.coordinate) {
+            currentDistance = closestCoordinate.distance
+        } else {
+            currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled)
+        }
+        
         routeProgress = router.routeProgress
         route = router.routeProgress.route
     }
