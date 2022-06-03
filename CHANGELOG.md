@@ -22,6 +22,18 @@
 * Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Fixed an issue where a `StyleManager` for CarPlay would update the appearance on both CarPlay and the iOS device simultaneously. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
 
+## v2.5.1
+
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v101.0.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/101.0.1). ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
+
+### Other changes
+
+* Fixed multiple switching between alternative routes on reroute. ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
+* Fixed memory heap corruption crash. ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
+* Fixed an issue where `SimulatedLocationManager` would jump back to the beginning of the simulated route whenever `RouteController` reroutes the user onto a different route. ([#3929](https://github.com/mapbox/mapbox-navigation-ios/pull/3929))
+
 ## v2.5.0
 
 ### Packaging
