@@ -2,9 +2,14 @@
 
 ## v2.6.0
 
+### User interface
+
+* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
+
 ### Routing
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
+* Implemented refreshing `RouteLeg.incidents` during a route refreshing. ([#3931](https://github.com/mapbox/mapbox-navigation-ios/pull/3931))
 
 ### Map
 
@@ -17,12 +22,24 @@
 * Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Fixed an issue where a `StyleManager` for CarPlay would update the appearance on both CarPlay and the iOS device simultaneously. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
 
+## v2.5.1
+
+### Packaging
+
+* MapboxCoreNavigation now requires [MapboxNavigationNative v101.0.1](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/101.0.1). ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
+
+### Other changes
+
+* Fixed multiple switching between alternative routes on reroute. ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
+* Fixed memory heap corruption crash. ([#3935](https://github.com/mapbox/mapbox-navigation-ios/pull/3935))
+* Fixed an issue where `SimulatedLocationManager` would jump back to the beginning of the simulated route whenever `RouteController` reroutes the user onto a different route. ([#3929](https://github.com/mapbox/mapbox-navigation-ios/pull/3929))
+
 ## v2.5.0
 
 ### Packaging
 
-* MapboxNavigation now requires [MapboxMaps v10.5.0](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0). ([#3869](https://github.com/mapbox/mapbox-navigation-ios/pull/3869))
-* MapboxCoreNavigation now requires [MapboxDirections v2.5.0-rc.1](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.5.0-rc.1). ([#3901](https://github.com/mapbox/mapbox-navigation-ios/pull/3901))
+* MapboxNavigation now requires [MapboxMaps v10.5._x_](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.5.0). ([#3869](https://github.com/mapbox/mapbox-navigation-ios/pull/3869))
+* MapboxCoreNavigation now requires [MapboxDirections v2.5._x_](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.5.0). ([#3920](https://github.com/mapbox/mapbox-navigation-ios/pull/3920))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v101._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/101.0.0). ([#3908](https://github.com/mapbox/mapbox-navigation-ios/pull/3908))
 
 ### User interface
@@ -35,7 +52,7 @@
 * Lane guidance remains visible while the step table is visible. ([#3805](https://github.com/mapbox/mapbox-navigation-ios/pull/3805))
 * Removed a transparent gap that appeared between the top banner and step table if the user completed a maneuver while the step table was visible. ([#3805](https://github.com/mapbox/mapbox-navigation-ios/pull/3805))
 * Fixed an issue where a gray dashed line, which normally indicates a restricted-access road, appeared at the beginning of the route line even if there was no restriction. ([#3811](https://github.com/mapbox/mapbox-navigation-ios/pull/3811))
-* Lanes guidance views will now be shown even when all lanes a valid for the current route. ([#3903](https://github.com/mapbox/mapbox-navigation-ios/pull/3903))
+* Lane guidance views will now be shown even when all lanes a valid for the current route. ([#3903](https://github.com/mapbox/mapbox-navigation-ios/pull/3903))
 * Fixed the crash of nonstop road shield updates when no valid road information contained in guidance instruction. ([#3911](https://github.com/mapbox/mapbox-navigation-ios/pull/3911))
 
 ### User feedback
@@ -50,7 +67,7 @@
 * Fixed an issue where `UserPuckCourseView`’s color desaturated during turn-by-turn navigation even as the location was being updated. ([#3836](https://github.com/mapbox/mapbox-navigation-ios/pull/3836))
 * Fixed an issue where the `PassiveLocationManager(directions:systemLocationManager:eventsManagerType:userInfo:datasetProfileIdentifier:)` initializer’s `datasetProfileIdentifier` argument was ignored. ([#3867](https://github.com/mapbox/mapbox-navigation-ios/pull/3867))
 * Fixed an issue where the user location was sometimes snapped to a parallel street just before it merges with the actual street. ([#3862](https://github.com/mapbox/mapbox-navigation-ios/pull/3862))
-* Fix the possible crash after rerouting when `routeLineTracksTraversal` enabled. ([#3896](https://github.com/mapbox/mapbox-navigation-ios/pull/3896))
+* Fixed the possible crash after rerouting when `routeLineTracksTraversal` enabled. ([#3896](https://github.com/mapbox/mapbox-navigation-ios/pull/3896))
 
 ### Routing
 
@@ -68,7 +85,7 @@
 * Fixed an issue where an active navigation using CarPlay application with route that contains multiple legs would cause a memory leak. ([#3877](https://github.com/mapbox/mapbox-navigation-ios/pull/3877))
 * Added the `CarPlayManagerDelegate.carPlayManager(_:shouldUpdateNotificationFor:with:in:)` and `CarPlayManagerDelegate.carPlayManager(_:shouldShowNotificationFor:in:)` to provide the ability to control notifications presentation while CarPlay application is in the background. ([#3828](https://github.com/mapbox/mapbox-navigation-ios/pull/3828))
 
-### Other Changes
+### Other changes
 
 * During turn-by-turn navigation, incidents along the route are now refreshed periodically along with traffic congestion.
 * When the user passes a named toll collection point, the `TollCollection` object obtained through the `Notification.Name.electronicHorizonDidPassRoadObject` notification now has the `TollCollection.name` property set.
