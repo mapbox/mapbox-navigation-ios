@@ -35,8 +35,7 @@ open class RouteController: NSObject {
     private static weak var instance: RouteController?
     private static let instanceLock: NSLock = .init()
 
-
-    private let sessionUUID: UUID = .init()
+    let sessionUUID: UUID = .init()
     private var isInitialized: Bool = false
     
     // MARK: Configuring Route-Related Data

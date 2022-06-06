@@ -262,7 +262,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         router.delegate = self
         
         if let routeController = router as? RouteController {
-            routeController.navigator.resume()
+            BillingHandler.shared.resumeBillingSession(with: routeController.sessionUUID)
         }
     }
     
@@ -279,7 +279,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         
         // Navigator should also be paused to prevent further location updates.
         if let routeController = router as? RouteController {
-            routeController.navigator.pause()
+            BillingHandler.shared.pauseBillingSession(with: routeController.sessionUUID)
         }
     }
     
