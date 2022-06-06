@@ -19,6 +19,7 @@
 * Snapped locations are spaced more evenly when the application is connected to an external GPS or CarPlay device capable of high-frequency location updates and the user rounds a corner. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * Fixed an issue where the user’s location would be snapped to the nearest road while the user moved around in a parking garage where the [parking aisles](https://wiki.openstreetmap.org/wiki/Tag:service%3Dparking_aisle) have not been mapped in detail. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * Fixed an issue where `RouteController` sometimes took too long to detect that the user went off the route after making a turn or taking an off-ramp. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* When proactive reroute happens, new departure voice instruction will not be pronounced anymore. ([#3937](https://github.com/mapbox/mapbox-navigation-ios/pull/3937))
 
 ### Map
 
