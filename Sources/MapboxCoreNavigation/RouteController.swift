@@ -938,16 +938,16 @@ extension RouteController: ReroutingControllerDelegate {
 }
 
 extension RouteController: AlternativeRoutesCenterDelegate {
-    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didReportNewAlternatives updatedIndices: IndexSet, removedAlternatives: [AlternativeRoute]) {        
+    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
         var userInfo = [RouteController.NotificationUserInfoKey: Any]()
-        userInfo[.updatedAlternativesKey] = center.alternatives
+        userInfo[.updatedAlternativesKey] = updatedAlternatives
         userInfo[.removedAlternativesKey] = removedAlternatives
         
         NotificationCenter.default.post(name: .routeControllerDidUpdateAlternatives,
                                         object: self,
                                         userInfo: userInfo)
         delegate?.router(self,
-                         didUpdateAlternatives: center.alternatives,
+                         didUpdateAlternatives: updatedAlternatives,
                          removedAlternatives: removedAlternatives)
     }
     

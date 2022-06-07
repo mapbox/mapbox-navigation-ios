@@ -10,10 +10,10 @@ protocol AlternativeRoutesCenterDelegate: AnyObject {
      Called when center has detected a change in alternative routes list.
      
      - parameter center: `AlternativeRoutesCenter` reporting an update
-     - parameter didReportNewAlternatives: Indicies within `AlternativeRoutesCenter.alternatives` array where new alternative routes are appended.
+     - parameter didUpdateAlternatives: Updated alternative routes array.
      - parameter removedAlternatives: Array of alternative routes which are no longer actual.
      */
-    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didReportNewAlternatives: IndexSet, removedAlternatives: [AlternativeRoute])
+    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didUpdateAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute])
     
     /**
      Called when center has failed to  change alternative routes list.
@@ -60,33 +60,16 @@ class AlternativeRoutesCenter {
         }
         
         let removedIds = Set(removed.map(\.id))
-        var removedRoutes: [AlternativeRoute] = []
-        
-        var updatedAlternatives = alternatives
-        
-        updatedAlternatives.removeAll {
-            let willBeRemoved = removedIds.contains($0.id)
-            if willBeRemoved {
-                removedRoutes.append($0)
-            }
-            return willBeRemoved
+        let removedRoutes = alternatives.filter {
+            removedIds.contains($0.id)
         }
         
-        let existingIds = Set(updatedAlternatives.map(\.id))
-        let newAlternatives = routeAlternatives.filter {
-            !existingIds.contains($0.id)
-        }
-        
-        let lastIndex = updatedAlternatives.endIndex
-        updatedAlternatives.append(contentsOf: newAlternatives.compactMap {
+        alternatives = routeAlternatives.compactMap {
             AlternativeRoute(mainRoute: mainRoute,
                              alternativeRoute: $0)
-        })
-        let newIndices = IndexSet(integersIn: lastIndex..<updatedAlternatives.endIndex)
-        
-        alternatives = updatedAlternatives
+        }
         delegate?.alternativeRoutesCenter(self,
-                                          didReportNewAlternatives: newIndices,
+                                          didUpdateAlternatives: alternatives,
                                           removedAlternatives: removedRoutes)
     }
     
