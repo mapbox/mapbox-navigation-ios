@@ -3,6 +3,7 @@ import MapboxDirections
 import Turf
 import MapboxMobileEvents
 import os.log
+import Nimble
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -787,6 +788,62 @@ class NavigationServiceTests: TestCase {
     func waitForNavNativeCallbacks(timeout: TimeInterval = 0.2) {
         let waitExpectation = expectation(description: "Waiting for the NatNative callback")
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
+    }
+    
+    func testNavigationServiceStartStopFinish() {
+        dependencies = createDependencies()
+        
+        let navigationService = dependencies.navigationService
+        
+        guard let routeController = navigationService.router as? RouteController else {
+            XCTFail("RouteController should be valid.")
+            return
+        }
+        
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .running)
+        
+        navigationService.stop()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .paused)
+        
+        navigationService.start()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .running)
+        
+        routeController.finishRouting()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .stopped)
+        
+        waitForNavNativeCallbacks(timeout: 0.1)
+    }
+    
+    func testNavigationServiceStartStopFinishSeveralTimes() {
+        dependencies = createDependencies()
+        
+        let navigationService = dependencies.navigationService
+        
+        guard let routeController = navigationService.router as? RouteController else {
+            XCTFail("RouteController should be valid.")
+            return
+        }
+        
+        navigationService.start()
+        navigationService.start()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .running)
+        
+        navigationService.stop()
+        navigationService.stop()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .paused)
+        
+        routeController.finishRouting()
+        routeController.finishRouting()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .stopped)
+        
+#if arch(x86_64) && DEBUG
+        // It should not be possible to start navigation session which was already finished.
+        expect {
+            navigationService.start()
+        }.to(throwAssertion())
+#endif
+        
+        waitForNavNativeCallbacks(timeout: 0.1)
     }
 }
 
