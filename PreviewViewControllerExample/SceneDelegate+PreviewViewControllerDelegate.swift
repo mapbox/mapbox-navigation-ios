@@ -4,7 +4,6 @@ import CoreLocation
 import MapboxCoreNavigation
 import MapboxDirections
 import MapboxGeocoder
-import MapboxMaps
 
 extension SceneDelegate: PreviewViewControllerDelegate {
     
@@ -97,8 +96,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         guard let routeResponse = routeResponse,
               let routes = routeResponse.routes,
               let routeIndex = routes.firstIndex(where: { $0 === route }) else {
-                  return
-              }
+            return
+        }
         
         self.routeIndex = routeIndex
         
@@ -111,9 +110,6 @@ extension SceneDelegate: PreviewViewControllerDelegate {
         }
         
         self.previewViewController.navigationView.bottomBannerContainerView.hide(completion: { _ in
-            let navigationMapView = self.previewViewController.navigationView.navigationMapView
-            self.initialCameraOptions = CameraOptions(cameraState: navigationMapView.mapView.cameraState)
-            
             let navigationRouteOptions = NavigationRouteOptions(coordinates: self.coordinates)
             let navigationService = MapboxNavigationService(routeResponse: routeResponse,
                                                             routeIndex: self.routeIndex,
@@ -122,25 +118,17 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                                             credentials: NavigationSettings.shared.directions.credentials,
                                                             simulating: .always)
             
-            // Inject `NavigationMapView` instance that is used in `PreviewViewController`.
-            let navigationOptions = NavigationOptions(navigationService: navigationService,
-                                                      navigationMapView: navigationMapView)
+            let navigationOptions = NavigationOptions(navigationService: navigationService)
             
             let navigationViewController = NavigationViewController(for: routeResponse,
-                                                                       routeIndex: self.routeIndex,
-                                                                       routeOptions: navigationRouteOptions,
-                                                                       navigationOptions: navigationOptions)
+                                                                    routeIndex: self.routeIndex,
+                                                                    routeOptions: navigationRouteOptions,
+                                                                    navigationOptions: navigationOptions)
             navigationViewController.delegate = self
             navigationViewController.modalPresentationStyle = .fullScreen
+            navigationViewController.transitioningDelegate = self
             
-            // Hide top and bottom container views before animating their presentation.
-            navigationViewController.navigationView.topBannerContainerView.isHidden = true
-            navigationViewController.navigationView.bottomBannerContainerView.isHidden = true
-            
-            self.window?.rootViewController?.present(navigationViewController, animated: false, completion: {
-                navigationViewController.navigationView.topBannerContainerView.show()
-                navigationViewController.navigationView.bottomBannerContainerView.show()
-            })
+            self.previewViewController.present(navigationViewController, animated: true)
         })
     }
     
@@ -148,8 +136,8 @@ extension SceneDelegate: PreviewViewControllerDelegate {
                                willPresent destinationText: NSAttributedString) -> NSAttributedString? {
         guard let destinationPreviewViewController = previewViewController.presentedBottomBannerViewController as? DestinationPreviewViewController,
               let destinationCoordinate = destinationPreviewViewController.destinationOptions.waypoints.last?.coordinate else {
-                  return nil
-              }
+            return nil
+        }
         
         let locationManager = CLLocationManager()
         let reverseGeocodeOptions = ReverseGeocodeOptions(coordinate: destinationCoordinate)

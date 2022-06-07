@@ -300,7 +300,8 @@ import MapboxDirections
                                                                                 cameraOptions: routesPreviewCameraOptions))
     }
     
-    func fitCamera(to routeResponse: RouteResponse?) {
+    // :nodoc:
+    public func fitCamera(to routeResponse: RouteResponse?) {
         guard let routes = routeResponse?.routes else { return }
         
         navigationView.navigationMapView.navigationCamera.stop()
