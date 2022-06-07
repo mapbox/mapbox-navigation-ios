@@ -790,7 +790,7 @@ class NavigationServiceTests: TestCase {
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
     }
     
-    func testNavigationServiceStartStopFinish() {
+    func disabled_testNavigationServiceStartStopFinish() {
         dependencies = createDependencies()
         
         let navigationService = dependencies.navigationService
@@ -815,7 +815,7 @@ class NavigationServiceTests: TestCase {
     }
     
 #if arch(x86_64) && DEBUG
-    func testNavigationServiceStartStopFinishSeveralTimes() {
+    func disabled_testNavigationServiceStartStopFinishSeveralTimes() {
         dependencies = createDependencies()
         
         let navigationService = dependencies.navigationService
