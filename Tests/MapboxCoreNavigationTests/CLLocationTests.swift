@@ -17,7 +17,7 @@ class CLLocationTests: TestCase {
         let bearingAccuracy: CLLocationAccuracy = 35
         
         let fixLocation = FixLocation(coordinate: coordinate,
-                                      monotonicTimestampNanoseconds: 0, // use time instead; see also `Navigator.status(at:)`
+                                      monotonicTimestampNanoseconds: Int64(timestamp.nanosecondsSince1970),
                                       time: timestamp,
                                       speed: speed as NSNumber,
                                       bearing: bearing as NSNumber,
@@ -35,7 +35,9 @@ class CLLocationTests: TestCase {
         XCTAssertEqual(location.coordinate.latitude, coordinate.latitude)
         XCTAssertEqual(location.coordinate.longitude, coordinate.longitude)
         XCTAssertEqual(location.coordinate, fixLocation.coordinate)
-        XCTAssertEqual(location.timestamp, fixLocation.time)
+        XCTAssertEqual(location.timestamp.timeIntervalSince1970, fixLocation.time.timeIntervalSince1970,
+                       accuracy: 1e-6)
+        XCTAssertEqual(Int64(location.timestamp.nanosecondsSince1970), fixLocation.monotonicTimestampNanoseconds)
         XCTAssertEqual(location.speed, fixLocation.speed?.doubleValue)
         XCTAssertEqual(location.altitude, fixLocation.altitude?.doubleValue)
         XCTAssertEqual(location.horizontalAccuracy, fixLocation.accuracyHorizontal?.doubleValue)
