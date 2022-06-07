@@ -211,7 +211,7 @@ public extension Notification.Name {
     /**
      Posted when `RouteController` has detected user taking an alternative route and before updated the main route.
      
-     The user info dictionary contains `RouteController.NotificationUserInfoKey.updatedAlternativesKey` and `RouteController.NotificationUserInfoKey.routeKey` keys.
+     The user info dictionary contains `RouteController.NotificationUserInfoKey.locationKey` and `RouteController.NotificationUserInfoKey.routeKey` keys.
      */
     static let routeControllerWillTakeAlternativeRoute: Notification.Name = .init(rawValue: "RouteControllerWillTakeAlternativeRoute")
     
