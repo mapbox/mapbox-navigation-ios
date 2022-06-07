@@ -808,7 +808,7 @@ extension RouteController: Router {
                 self.routeProgress = routeProgress
                 self.announce(reroute: route, at: self.location, proactive: isProactive)
                 self.indexedRouteResponse = indexedRouteResponse
-                self.didProactiveReroute = true
+                self.didProactiveReroute = isProactive
                 completion?(true)
             case .failure:
                 completion?(false)
