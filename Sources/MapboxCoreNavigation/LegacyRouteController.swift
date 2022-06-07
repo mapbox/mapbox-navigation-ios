@@ -358,12 +358,15 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     // MARK: Handling LocationManager Output
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        guard !hasFinishedRouting else { return }
+        guard !hasFinishedRouting,
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
+        
         heading = newHeading
     }
 
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard !hasFinishedRouting else { return }
+        guard !hasFinishedRouting,
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
         
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }

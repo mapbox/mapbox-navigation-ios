@@ -237,12 +237,10 @@ open class RouteController: NSObject {
     var previousArrivalWaypoint: MapboxDirections.Waypoint?
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard !hasFinishedRouting else { return }
-        guard let location = locations.last else { return }
-        
-        guard !(delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation) else {
-            return
-        }
+        guard !hasFinishedRouting,
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running,
+              let location = locations.last,
+              !(delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation) else { return }
         
         rawLocation = location
         
@@ -254,7 +252,9 @@ open class RouteController: NSObject {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        guard !hasFinishedRouting else { return }
+        guard !hasFinishedRouting,
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
+        
         heading = newHeading
     }
     
