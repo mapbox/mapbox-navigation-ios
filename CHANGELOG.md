@@ -2,6 +2,11 @@
 
 ## v2.6.0
 
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.6.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-rc.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v105.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/105.0.0). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+
 ### User interface
 
 * Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
@@ -9,7 +14,12 @@
 ### Routing
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
+* Added reporting `AlternativeRoute` during navigation sessions. Subscribe to `RouterDelegate.router(_:didUpdateAlternatives:removedAlternatives:)` or `Notification.Name.routeControllerDidUpdateAlternatives` notification to receive updates on actual alternative routes list. Switching to the alternative route could be monitored by observing `RouterDelegate.router(_:willTakeAlternativeRoute:at:)` and `RouterDelegate.router(_:didTakeAlternativeRouteAt:)` methods or `Notification.Name.routeControllerWillTakeAlternativeRoute` and `Notification.Name.routeControllerDidTakeAlternativeRoute` notifications. To configure alternative routes detection, setup `NavigationSettings.AlternativeRouteDetectionStrategy` before starting navigation. ([#3833](https://github.com/mapbox/mapbox-navigation-ios/pull/3833))
 * Implemented refreshing `RouteLeg.incidents` during a route refreshing. ([#3931](https://github.com/mapbox/mapbox-navigation-ios/pull/3931))
+* The `HistoryRecording.stopRecordingHistory(writingFileWith:)` method can be called safely from the main thread. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* Snapped locations are spaced more evenly when the application is connected to an external GPS or CarPlay device capable of high-frequency location updates and the user rounds a corner. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* Fixed an issue where the user’s location would be snapped to the nearest road while the user moved around in a parking garage where the [parking aisles](https://wiki.openstreetmap.org/wiki/Tag:service%3Dparking_aisle) have not been mapped in detail. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* Fixed an issue where `RouteController` sometimes took too long to detect that the user went off the route after making a turn or taking an off-ramp. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 
 ### Map
 

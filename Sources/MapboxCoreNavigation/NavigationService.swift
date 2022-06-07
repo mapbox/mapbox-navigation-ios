@@ -649,6 +649,26 @@ extension MapboxNavigationService: RouterDelegate {
     public func routerShouldDisableBatteryMonitoring(_ router: Router) -> Bool {
         return delegate?.navigationServiceShouldDisableBatteryMonitoring(self) ?? Default.shouldDisableBatteryMonitoring
     }
+    
+    public func router(_ router: Router, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
+        delegate?.navigationService(self, didUpdateAlternatives: updatedAlternatives, removedAlternatives: removedAlternatives)
+    }
+    
+    public func router(_ router: Router, didFailToUpdateAlternatives error: AlternativeRouteError) {
+        delegate?.navigationService(self, didFailToUpdateAlternatives: error)
+    }
+    
+    public func router(_ router: Router, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
+        delegate?.navigationService(self, willTakeAlternativeRoute: route, at: location)
+    }
+    
+    public func router(_ router: Router, didTakeAlternativeRouteAt location: CLLocation?) {
+        delegate?.navigationService(self, didTakeAlternativeRouteAt: location)
+    }
+    
+    public func router(_ router: Router, didFailToTakeAlternativeRouteAt location: CLLocation?) {
+        delegate?.navigationService(self, didFailToTakeAlternativeRouteAt: location)
+    }
 }
 
 extension MapboxNavigationService {

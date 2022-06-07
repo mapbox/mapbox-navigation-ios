@@ -980,6 +980,26 @@ extension NavigationViewController: NavigationServiceDelegate {
                                    priority: 1))
         }
     }
+    
+    public func navigationService(_ service: NavigationService, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
+        delegate?.navigationViewController(self, didUpdateAlternatives: updatedAlternatives, removedAlternatives: removedAlternatives)
+    }
+    
+    public func navigationService(_ service: NavigationService, didFailToUpdateAlternatives error: AlternativeRouteError) {
+        delegate?.navigationViewController(self, didFailToUpdateAlternatives: error)
+    }
+    
+    public func navigationService(_ service: NavigationService, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
+        delegate?.navigationViewController(self, willTakeAlternativeRoute: route, at: location)
+    }
+    
+    public func navigationService(_ service: NavigationService, didTakeAlternativeRouteAt location: CLLocation?) {
+        delegate?.navigationViewController(self, didTakeAlternativeRouteAt: location)
+    }
+    
+    public func navigationService(_ service: NavigationService, didFailToTakeAlternativeRouteAt location: CLLocation?) {
+        delegate?.navigationViewController(self, didFailToTakeAlternativeRouteAt: location)
+    }
 }
 
 // MARK: StyleManagerDelegate
