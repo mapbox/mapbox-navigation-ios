@@ -621,7 +621,7 @@ open class RouteController: NSObject {
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
 
-        if case .detect(_) = NavigationSettings.shared.alternativeRouteDetectionOptions {
+        if NavigationSettings.shared.alternativeRouteDetectionStrategy != nil {
             self.alternativeRoutesCenter = AlternativeRoutesCenter(mainRoute: routeProgress.route)
         }
         
@@ -938,18 +938,16 @@ extension RouteController: ReroutingControllerDelegate {
 }
 
 extension RouteController: AlternativeRoutesCenterDelegate {
-    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didReportNewAlternatives updatedIndices: IndexSet, removedAlternatives: [AlternativeRoute]) {
-        let updatedAlternatives = updatedIndices.compactMap { alternativeRoutesCenter?.alternatives[$0] }
-        
+    func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didReportNewAlternatives updatedIndices: IndexSet, removedAlternatives: [AlternativeRoute]) {        
         var userInfo = [RouteController.NotificationUserInfoKey: Any]()
-        userInfo[.updatedAlternativesKey] = updatedAlternatives
+        userInfo[.updatedAlternativesKey] = center.alternatives
         userInfo[.removedAlternativesKey] = removedAlternatives
         
         NotificationCenter.default.post(name: .routeControllerDidUpdateAlternatives,
                                         object: self,
                                         userInfo: userInfo)
         delegate?.router(self,
-                         didUpdateAlternatives: updatedAlternatives,
+                         didUpdateAlternatives: center.alternatives,
                          removedAlternatives: removedAlternatives)
     }
     

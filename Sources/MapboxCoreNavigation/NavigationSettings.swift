@@ -14,7 +14,7 @@ public typealias RoutingProviderSource = MapboxRoutingProvider.Source
  To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class
  when initializing a `NavigationViewController`.
 
- To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionOptions:)` method.
+ To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:)` method.
  */
 public class NavigationSettings {
     
@@ -38,13 +38,13 @@ public class NavigationSettings {
             .init(directions: .shared,
                   tileStoreConfiguration: .default,
                   routingProviderSource: .hybrid,
-                  alternativeRouteDetectionOptions: .default)
+                  alternativeRouteDetectionStrategy: .init())
         }
 
         var directions: Directions
         var tileStoreConfiguration: TileStoreConfiguration
         var routingProviderSource: RoutingProviderSource
-        var alternativeRouteDetectionOptions: AlternativeRouteDetectionOptions
+        var alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy?
     }
 
     /// Protects access to `_state`.
@@ -68,7 +68,7 @@ public class NavigationSettings {
     /**
      Default `Directions` instance. By default, `Directions.shared` is used.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionOptions:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:)` method.
      */
     public var directions: Directions {
         state.directions
@@ -77,7 +77,7 @@ public class NavigationSettings {
     /**
      Global `TileStoreConfiguration` instance.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionOptions:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:)` method.
      */
     public var tileStoreConfiguration: TileStoreConfiguration {
         state.tileStoreConfiguration
@@ -85,7 +85,7 @@ public class NavigationSettings {
 
     /**
      Default `routingProviderSource` used for rerouting during navigation. By default, `.hybrid` is used.
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionOptions:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:)` method.
      */
     public var routingProviderSource: RoutingProviderSource {
         state.routingProviderSource
@@ -94,10 +94,12 @@ public class NavigationSettings {
     /**
      Configuration on how `AlternativeRoute`s will be detected during navigation process.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionOptions:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:)` method.
+     
+     If set to `nil`, the detection is turned off.
      */
-    public var alternativeRouteDetectionOptions: AlternativeRouteDetectionOptions {
-        state.alternativeRouteDetectionOptions
+    public var alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? {
+        state.alternativeRouteDetectionStrategy
     }
     
     /**
@@ -114,22 +116,22 @@ public class NavigationSettings {
        - tileStoreConfiguration: Options for configuring how map and navigation tiles are stored on the device. See
      `TileStoreConfiguration` for more details.
        - routingProviderSource: Configures the type of routing to be used by various SDK objects when providing route calculations. Use this value to configure usage of onlive vs. offline data for routing.
-       - alternativeRouteDetectionOptions: Configures how `AlternativeRoute`s will be detected during navigation process.
+       - alternativeRouteDetectionStrategy: Configures how `AlternativeRoute`s will be detected during navigation process.
      */
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,
                            routingProviderSource: RoutingProviderSource = .hybrid,
-                           alternativeRouteDetectionOptions: AlternativeRouteDetectionOptions = .default) {
+                           alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? = .init()) {
         lock.lock(); defer {
             lock.unlock()
         }
         if _state != nil {
-            print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionOptions:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionOptions`. This might result in an undefined behaviour. ")
+            print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`. This might result in an undefined behaviour. ")
         }
         _state = .init(directions: directions,
                        tileStoreConfiguration: tileStoreConfiguration,
                        routingProviderSource: routingProviderSource,
-                       alternativeRouteDetectionOptions: alternativeRouteDetectionOptions)
+                       alternativeRouteDetectionStrategy: alternativeRouteDetectionStrategy)
     }
     
     /**

@@ -157,23 +157,21 @@ class Navigator {
     private weak var navigatorAlternativesObserver: NavigatorRouteAlternativesObserver?
 
     private func setupAlternativesControllerIfNeeded() {
-        let alternativeOptions = NavigationSettings.shared.alternativeRouteDetectionOptions
+        guard let strategy = NavigationSettings.shared.alternativeRouteDetectionStrategy else { return }
         
-        guard case let .detect(strategy) = alternativeOptions else { return }
-
         var refreshOnEmpty = false
         var refreshInterval: TimeInterval = 180
-        switch strategy.refreshWhenNoAvailableAlternatives {
+        switch strategy.refreshesWhenNoAvailableAlternatives {
         case .noPeriodicRefresh:
             refreshOnEmpty = false
-        case .refreshPeriodically(let interval):
+        case .refreshesPeriodically(let interval):
             refreshOnEmpty = true
             refreshInterval = interval
         }
 
         let controller = navigator.getRouteAlternativesController()
         controller.enableOnEmptyAlternativesRequest(forEnable: refreshOnEmpty)
-        controller.enableRequestAfterFork(forEnable: strategy.refreshAfterPassingDeviation)
+        controller.enableRequestAfterFork(forEnable: strategy.refreshesAfterPassingDeviation)
         
         let options = RouteAlternativesOptions(requestIntervalSeconds: refreshInterval,
                                                minTimeBeforeManeuverSeconds: rerouteController.initialManeuverAvoidanceRadius)
@@ -193,7 +191,7 @@ class Navigator {
         navigatorFallbackVersionsObserver = versionsObserver
         navigator.setFallbackVersionsObserverFor(versionsObserver)
         
-        if case .detect(_) = NavigationSettings.shared.alternativeRouteDetectionOptions {
+        if NavigationSettings.shared.alternativeRouteDetectionStrategy != nil {
             let alternativesObserver = NavigatorRouteAlternativesObserver()
             navigatorAlternativesObserver = alternativesObserver
             navigator.getRouteAlternativesController().addObserver(for: alternativesObserver)
