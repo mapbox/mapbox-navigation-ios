@@ -151,6 +151,75 @@ class RouteControllerTests: TestCase {
 
         waitForExpectations(timeout: 1, handler: nil)
     }
+    
+    func testAlternativeRoutesReported() {
+        let routeOptions = RouteOptions(coordinates: [.init(latitude: 37.33243586131637,
+                                                            longitude: -122.03140541047281),
+                                                      .init(latitude: 37.33318065375225,
+                                                            longitude: -122.03148874952787)],
+                                        profileIdentifier: .automobileAvoidingTraffic)
+        routeOptions.shapeFormat = .geoJSON
+        let routeResponse = Fixture.routeResponse(from: "routeResponseWithAlternatives",
+                                                  options: routeOptions)
+        
+        let alternativesExpectation = XCTestExpectation(description: "Alternative route should be reported")
+        alternativesExpectation.assertForOverFulfill = true
+        
+        let routerDelegateSpy = RouterDelegateSpy()
+        
+        routerDelegateSpy.onDidUpdateAlternativeRoutes = { newAlternatives, removedAlternatives in
+            XCTAssertTrue(removedAlternatives.isEmpty)
+            if newAlternatives.count == 1 {
+                alternativesExpectation.fulfill()
+            }
+        }
+        
+        let routeController = RouteController(alongRouteAtIndex: 0,
+                                              in: routeResponse,
+                                              options: routeOptions,
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
+                                              dataSource: self)
+        
+        routeController.delegate = routerDelegateSpy
+        
+        wait(for: [alternativesExpectation], timeout: 2)
+    }
+    
+    func testAlternativeRoutesNotReported() {
+        NavigationSettings.shared.initialize(directions: .mocked,
+                                             tileStoreConfiguration: .default,
+                                             routingProviderSource: .hybrid,
+                                             alternativeRouteDetectionStrategy: nil)
+        
+        let routeOptions = RouteOptions(coordinates: [.init(latitude: 37.33243586131637,
+                                                            longitude: -122.03140541047281),
+                                                      .init(latitude: 37.33318065375225,
+                                                            longitude: -122.03148874952787)],
+                                        profileIdentifier: .automobileAvoidingTraffic)
+        routeOptions.shapeFormat = .geoJSON
+        let routeResponse = Fixture.routeResponse(from: "routeResponseWithAlternatives",
+                                                  options: routeOptions)
+        
+        let alternativesExpectation = XCTestExpectation(description: "Alternative route should not be reported")
+        alternativesExpectation.assertForOverFulfill = true
+        alternativesExpectation.isInverted = true
+        
+        let routerDelegateSpy = RouterDelegateSpy()
+        
+        routerDelegateSpy.onDidUpdateAlternativeRoutes = { newAlternatives, removedAlternatives in
+            alternativesExpectation.fulfill()
+        }
+        
+        let routeController = RouteController(alongRouteAtIndex: 0,
+                                              in: routeResponse,
+                                              options: routeOptions,
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
+                                              dataSource: self)
+        
+        routeController.delegate = routerDelegateSpy
+        
+        wait(for: [alternativesExpectation], timeout: 2)
+    }
 }
 
 extension RouteControllerTests: RouterDataSource {

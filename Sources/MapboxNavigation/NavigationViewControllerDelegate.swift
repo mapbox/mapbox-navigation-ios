@@ -114,6 +114,56 @@ public protocol NavigationViewControllerDelegate: VisualInstructionDelegate {
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route)
     
     /**
+     Called when navigation view controller has detected a change in alternative routes list.
+     
+     - parameter navigationViewController: The navigation view controller reporting an update.
+     - parameter updatedAlternatives: Array of actual alternative routes.
+     - parameter removedAlternatives: Array of alternative routes which are no longer actual.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute])
+    
+    /**
+     Called when navigation view controller has failed to  change alternative routes list.
+     
+     - parameter navigationViewController: The navigation view controller reporting an update.
+     - parameter error: An error occured.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didFailToUpdateAlternatives error: AlternativeRouteError)
+    
+    /**
+     Called when navigation view controller has detected user taking an alternative route.
+     
+     This method is called before updating main route.
+     
+     - parameter navigationViewController: The navigation view controller that has detected turning to the alternative.
+     - parameter route: The alternative route which will be taken as new main.
+     - parameter location: The user’s current location.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, willTakeAlternativeRoute route: Route, at location: CLLocation?)
+    
+    /**
+     Called when navigation view controller has finished switching to an alternative route
+     
+     This method is called after `navigationViewController(_:willTakeAlternativeRoute:)`
+     
+     - parameter navigationViewController: The navigation view controller that switched to the alternative.
+     - parameter location: The user’s current location.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didTakeAlternativeRouteAt location: CLLocation?)
+    
+    /**
+     Called when navigation view controller has failed to take an alternative route.
+     
+     This method is called after `navigationViewController(_:willTakeAlternativeRoute:)`.
+     
+     This call would indicate that something went wrong during setting new main route.
+     
+     - parameter navigationViewController: The navigation view controller which tried to switch to the alternative.
+     - parameter location: The user’s current location.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didFailToTakeAlternativeRouteAt location: CLLocation?)
+    
+    /**
      Called when the navigation view controller fails to receive a new route.
      
      This method is called after `navigationViewController(_:willRerouteFrom:)` and simultaneously with the `Notification.Name.routeControllerDidFailToReroute` notification being posted.
@@ -301,6 +351,41 @@ public extension NavigationViewControllerDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationViewController(_ navigationViewController: NavigationViewController, didRerouteAlong route: Route) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didFailToUpdateAlternatives error: AlternativeRouteError) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, willTakeAlternativeRoute route: Route, at location: CLLocation?) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didTakeAlternativeRouteAt location: CLLocation?) {
+        logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationViewController(_ navigationViewController: NavigationViewController, didFailToTakeAlternativeRouteAt location: CLLocation?) {
         logUnimplemented(protocolType: NavigationViewControllerDelegate.self,  level: .debug)
     }
     

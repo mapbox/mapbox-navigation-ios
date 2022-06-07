@@ -117,6 +117,7 @@ class Navigator {
         rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
         
         subscribeNavigator()
+        setupAlternativesControllerIfNeeded()
     }
 
     /**
@@ -147,11 +148,35 @@ class Navigator {
         rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
         
         subscribeNavigator()
+        setupAlternativesControllerIfNeeded()
     }
     
     private weak var navigatorStatusObserver: NavigatorStatusObserver?
     private weak var navigatorFallbackVersionsObserver: NavigatorFallbackVersionsObserver?
     private weak var navigatorElectronicHorizonObserver: NavigatorElectronicHorizonObserver?
+    private weak var navigatorAlternativesObserver: NavigatorRouteAlternativesObserver?
+
+    private func setupAlternativesControllerIfNeeded() {
+        guard let strategy = NavigationSettings.shared.alternativeRouteDetectionStrategy else { return }
+        
+        var refreshOnEmpty = false
+        var refreshInterval: TimeInterval = 180
+        switch strategy.refreshesWhenNoAvailableAlternatives {
+        case .noPeriodicRefresh:
+            refreshOnEmpty = false
+        case .refreshesPeriodically(let interval):
+            refreshOnEmpty = true
+            refreshInterval = interval
+        }
+
+        let controller = navigator.getRouteAlternativesController()
+        controller.enableOnEmptyAlternativesRequest(forEnable: refreshOnEmpty)
+        controller.enableRequestAfterFork(forEnable: strategy.refreshesAfterPassingDeviation)
+        
+        let options = RouteAlternativesOptions(requestIntervalSeconds: refreshInterval,
+                                               minTimeBeforeManeuverSeconds: rerouteController.initialManeuverAvoidanceRadius)
+        controller.setRouteAlternativesOptionsFor(options)
+    }
     
     private func subscribeNavigator() {
         if isSubscribedToElectronicHorizon {
@@ -165,6 +190,15 @@ class Navigator {
         let versionsObserver = NavigatorFallbackVersionsObserver()
         navigatorFallbackVersionsObserver = versionsObserver
         navigator.setFallbackVersionsObserverFor(versionsObserver)
+        
+        if NavigationSettings.shared.alternativeRouteDetectionStrategy != nil {
+            let alternativesObserver = NavigatorRouteAlternativesObserver()
+            navigatorAlternativesObserver = alternativesObserver
+            navigator.getRouteAlternativesController().addObserver(for: alternativesObserver)
+        } else if let navigatorAlternativesObserver = navigatorAlternativesObserver {
+            navigator.getRouteAlternativesController().removeObserver(for: navigatorAlternativesObserver)
+            self.navigatorAlternativesObserver = nil
+        }
     }
     
     private func unsubscribeNavigator() {
@@ -174,6 +208,11 @@ class Navigator {
         }
         
         navigator.setFallbackVersionsObserverFor(nil)
+        
+        if let navigatorAlternativesObserver = navigatorAlternativesObserver {
+            navigator.getRouteAlternativesController().removeObserver(for: navigatorAlternativesObserver)
+            self.navigatorAlternativesObserver = nil
+        }
     }
     
     // MARK: History
@@ -354,6 +393,25 @@ class NavigatorStatusObserver: NavigatorObserver {
         NotificationCenter.default.post(name: .navigationStatusDidChange, object: nil, userInfo: userInfo)
         
         mostRecentNavigationStatus = status
+    }
+}
+
+class NavigatorRouteAlternativesObserver: RouteAlternativesObserver {
+
+    func onRouteAlternativesChanged(for routeAlternatives: [RouteAlternative], removed: [RouteAlternative]) -> [NSNumber] {
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .alternativesListKey: routeAlternatives,
+            .removedAlternativesKey: removed,
+        ]
+        NotificationCenter.default.post(name: .navigatorDidChangeAlternativeRoutes, object: nil, userInfo: userInfo)
+        return [] //notify NN that we didn't discard any of the route alternatives
+    }
+
+    public func onError(forMessage message: String) {
+        let userInfo: [Navigator.NotificationUserInfoKey: Any] = [
+            .messageKey: message,
+        ]
+        NotificationCenter.default.post(name: .navigatorDidFailToChangeAlternativeRoutes, object: nil, userInfo: userInfo)
     }
 }
 
