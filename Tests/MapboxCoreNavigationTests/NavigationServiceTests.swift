@@ -790,7 +790,7 @@ class NavigationServiceTests: TestCase {
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
     }
     
-    func disabled_testNavigationServiceStartStopFinish() {
+    func testNavigationServiceStartStopFinish() {
         dependencies = createDependencies()
         
         let navigationService = dependencies.navigationService
@@ -814,8 +814,7 @@ class NavigationServiceTests: TestCase {
         waitForNavNativeCallbacks(timeout: 0.1)
     }
     
-#if arch(x86_64) && DEBUG
-    func disabled_testNavigationServiceStartStopFinishSeveralTimes() {
+    func testNavigationServiceStartStopFinishSeveralTimes() {
         dependencies = createDependencies()
         
         let navigationService = dependencies.navigationService
@@ -837,14 +836,8 @@ class NavigationServiceTests: TestCase {
         routeController.finishRouting()
         XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .stopped)
         
-        // It should not be possible to start navigation session which was already finished.
-        expect {
-            navigationService.start()
-        }.to(throwAssertion())
-        
         waitForNavNativeCallbacks(timeout: 0.1)
     }
-#endif
 }
 
 class EmptyNavigationServiceDelegate: NavigationServiceDelegate {}
