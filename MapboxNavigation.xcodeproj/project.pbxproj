@@ -179,6 +179,7 @@
 		8A0DA5F726A23FF800E7D360 /* route-for-navigation-camera.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */; };
 		8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0E0A51257AD9C300C2E924 /* NightStyle.swift */; };
 		8A11FEF027A3514C00285B6F /* CPRouteChoice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A11FEEF27A3514C00285B6F /* CPRouteChoice.swift */; };
+		8A12E864282484B20071AF00 /* BannerContainerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E863282484B20071AF00 /* BannerContainerViewDelegate.swift */; };
 		8A17635B25CC89D800737520 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A17635A25CC89D800737520 /* Expression.swift */; };
 		8A1856752631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A1856742631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift */; };
 		8A18568726320B5900F8AE38 /* FollowingCameraOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */; };
@@ -766,6 +767,7 @@
 		8A0DA5F626A23FF800E7D360 /* route-for-navigation-camera.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "route-for-navigation-camera.json"; sourceTree = "<group>"; };
 		8A0E0A51257AD9C300C2E924 /* NightStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NightStyle.swift; sourceTree = "<group>"; };
 		8A11FEEF27A3514C00285B6F /* CPRouteChoice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CPRouteChoice.swift; sourceTree = "<group>"; };
+		8A12E863282484B20071AF00 /* BannerContainerViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BannerContainerViewDelegate.swift; sourceTree = "<group>"; };
 		8A17635A25CC89D800737520 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
 		8A1856742631FC5300F8AE38 /* NavigationViewportDataSourceOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationViewportDataSourceOptions.swift; sourceTree = "<group>"; };
 		8A18568626320B5900F8AE38 /* FollowingCameraOptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FollowingCameraOptions.swift; sourceTree = "<group>"; };
@@ -1774,6 +1776,7 @@
 			isa = PBXGroup;
 			children = (
 				8AB97C1F280E021800792939 /* BannerContainerView.swift */,
+				8A12E863282484B20071AF00 /* BannerContainerViewDelegate.swift */,
 				35F520BF1FB482A200FC9C37 /* NextBannerView.swift */,
 				8D63A7CF227A580A00520167 /* TopBannerViewController.swift */,
 				8A04DFBB275EBC1B00D87959 /* TopBannerViewControllerDelegate.swift */,
@@ -2776,6 +2779,7 @@
 				8A0E0A52257AD9C300C2E924 /* NightStyle.swift in Sources */,
 				8A50A3C526EC09FB00894A8E /* FeedbackViewControllerType.swift in Sources */,
 				8AD220B127C097F3000734A5 /* HighlightedButton.swift in Sources */,
+				8A12E864282484B20071AF00 /* BannerContainerViewDelegate.swift in Sources */,
 				35ECAF2D2092275100DC3BC3 /* UIImage.swift in Sources */,
 				8AB97C1A280A31C600792939 /* RoutesPreviewViewControllerDelegate.swift in Sources */,
 				AE87207E22CF97B900D7DAB7 /* InstructionsCardCollectionDelegate.swift in Sources */,
