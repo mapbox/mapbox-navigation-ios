@@ -4,6 +4,7 @@ import UIKit
 @objc(MBBannerContainerView)
 open class BannerContainerView: UIView {
     
+    // :nodoc:
     public enum `Type` {
         case top
         case bottom
@@ -11,7 +12,8 @@ open class BannerContainerView: UIView {
     
     var type: BannerContainerView.`Type`
     
-    enum State {
+    // :nodoc:
+    public enum State {
         case expanded
         case collapsed
     }
@@ -42,8 +44,11 @@ open class BannerContainerView: UIView {
         bottomSafeAreaInset = safeAreaInsets.bottom
     }
     
-    var state: State = .collapsed {
+    // :nodoc:
+    public private(set) var state: State = .collapsed {
         didSet {
+            delegate?.bannerContainerView(self, stateWillChangeTo: state)
+            
             if oldValue == state { return }
             
             switch type {
@@ -60,6 +65,8 @@ open class BannerContainerView: UIView {
                     expansionConstraint.constant = expansionOffset
                 }
             }
+            
+            delegate?.bannerContainerView(self, stateDidChangeTo: state)
         }
     }
     
@@ -67,12 +74,23 @@ open class BannerContainerView: UIView {
     
     var initialOffset: CGFloat = 0.0
     
+    weak var delegate: BannerContainerViewDelegate? {
+        didSet {
+            // TODO: Improve process of notifying users about state changes.
+            delegate?.bannerContainerView(self, stateDidChangeTo: state)
+        }
+    }
+    
+    // :nodoc:
     public init(_ type: BannerContainerView.`Type`, frame: CGRect = .zero) {
         self.type = type
         
         super.init(frame: frame)
         
         clipsToBounds = true
+        defer {
+            state = .collapsed
+        }
     }
     
     public required init?(coder: NSCoder) {
@@ -87,6 +105,7 @@ open class BannerContainerView: UIView {
         setupConstraints(superview)
     }
     
+    // :nodoc:
     public typealias CompletionHandler = (_ completed: Bool) -> Void
     
     func setupConstraints(_ superview: UIView) {
@@ -156,13 +175,13 @@ open class BannerContainerView: UIView {
             
             switch type {
             case .top:
-                if velocity.y >= 0 {
+                if velocity.y >= 0.0 {
                     state = .expanded
                 } else {
                     state = .collapsed
                 }
             case .bottom:
-                if velocity.y <= 0 {
+                if velocity.y <= 0.0 {
                     state = .expanded
                 } else {
                     state = .collapsed
@@ -176,8 +195,15 @@ open class BannerContainerView: UIView {
                 self.superview?.layoutIfNeeded()
             }, completion: nil)
         }
+        
+        let currentExpansionOffset = expansionConstraint.constant
+        let maximumExpansionOffset = expansionOffset
+        let expansionFranction = 1 - currentExpansionOffset / maximumExpansionOffset
+        
+        delegate?.bannerContainerView(self, didExpandTo: expansionFranction)
     }
     
+    // :nodoc:
     public func show(animated: Bool = true,
                      duration: TimeInterval = 0.2,
                      animations: (() -> Void)? = nil,
@@ -218,7 +244,12 @@ open class BannerContainerView: UIView {
                            animations: {
                 animations?()
                 
-                self.expansionConstraint.constant = 0.0
+                if self.isExpandable {
+                    self.expansionConstraint.constant = self.expansionOffset
+                } else {
+                    self.expansionConstraint.constant = 0.0
+                }
+                
                 self.superview?.layoutIfNeeded()
             }) { completed in
                 completion?(completed)
@@ -229,6 +260,7 @@ open class BannerContainerView: UIView {
         }
     }
     
+    // :nodoc:
     public func hide(animated: Bool = true,
                      duration: TimeInterval = 0.2,
                      animations: (() -> Void)? = nil,
