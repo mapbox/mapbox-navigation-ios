@@ -2,8 +2,6 @@ import XCTest
 import MapboxDirections
 import Turf
 import MapboxMobileEvents
-import os.log
-import Nimble
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
