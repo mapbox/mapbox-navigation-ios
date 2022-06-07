@@ -814,6 +814,7 @@ class NavigationServiceTests: TestCase {
         waitForNavNativeCallbacks(timeout: 0.1)
     }
     
+#if arch(x86_64) && DEBUG
     func testNavigationServiceStartStopFinishSeveralTimes() {
         dependencies = createDependencies()
         
@@ -836,15 +837,14 @@ class NavigationServiceTests: TestCase {
         routeController.finishRouting()
         XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .stopped)
         
-#if arch(x86_64) && DEBUG
         // It should not be possible to start navigation session which was already finished.
         expect {
             navigationService.start()
         }.to(throwAssertion())
-#endif
         
         waitForNavNativeCallbacks(timeout: 0.1)
     }
+#endif
 }
 
 class EmptyNavigationServiceDelegate: NavigationServiceDelegate {}
