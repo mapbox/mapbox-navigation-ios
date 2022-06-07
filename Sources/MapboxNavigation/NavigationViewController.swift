@@ -591,7 +591,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         ]
         
         navigationView.bottomBannerContainerView.isExpandable = true
-        navigationView.bottomBannerContainerView.expansionOffset = 50.0
+        navigationView.bottomBannerContainerView.delegate = self
     }
     
     func addTopBanner(_ navigationOptions: NavigationOptions?) -> ContainerViewController {
@@ -1255,5 +1255,39 @@ extension NavigationViewController: NavigationMapViewDelegate {
     
     public func navigationMapView(_ navigationMapView: NavigationMapView, didSelect waypoint: Waypoint) {
         // TODO: Implement the ability to select waypoint during active navigation.
+    }
+}
+
+extension NavigationViewController: BannerContainerViewDelegate {
+    
+    public func bannerContainerView(_ bannerContainerView: BannerContainerView,
+                                    stateWillChangeTo state: BannerContainerView.State) {
+        
+    }
+    
+    public func bannerContainerView(_ bannerContainerView: BannerContainerView,
+                                    stateDidChangeTo state: BannerContainerView.State) {
+        guard let bottomBannerViewController = bottomViewController as? BottomBannerViewController else {
+            return
+        }
+        
+        switch state {
+        case .expanded:
+            bottomBannerViewController.horizontalDividerView.alpha = 1.0
+            bottomBannerViewController.destinationLabel.alpha = 1.0
+        case .collapsed:
+            bottomBannerViewController.horizontalDividerView.alpha = 0.0
+            bottomBannerViewController.destinationLabel.alpha = 0.0
+        }
+    }
+    
+    public func bannerContainerView(_ bannerContainerView: BannerContainerView,
+                                    didExpandTo fraction: CGFloat) {
+        guard let bottomBannerViewController = bottomViewController as? BottomBannerViewController else {
+            return
+        }
+        
+        bottomBannerViewController.horizontalDividerView.alpha = fraction
+        bottomBannerViewController.destinationLabel.alpha = fraction
     }
 }
