@@ -230,6 +230,12 @@ public class MapboxNavigationService: NSObject, NavigationService {
     
     // MARK: Starting and Stopping Navigation
     
+    /**
+     Starts navigation service.
+     
+     Whenever navigation service starts billing session is resumed. For more info regarding billing,
+     read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+     */
     public func start() {
         // Feed the first location to the router if router doesn't have a location yet. See #1790, #3237 for reference.
         if router.location == nil {
@@ -260,10 +266,22 @@ public class MapboxNavigationService: NSObject, NavigationService {
         
         eventsManager.sendRouteRetrievalEvent()
         router.delegate = self
+        
+        // In case if billing session is already running - do nothing.
+        if let routeController = router as? RouteController,
+           BillingHandler.shared.sessionState(uuid: routeController.sessionUUID) != .running {
+            BillingHandler.shared.resumeBillingSession(with: routeController.sessionUUID)
+        }
     }
     
+    /**
+     Stops navigation service. Navigation service can be resumed by calling `start()` after calling
+     `stop()`.
+     
+     Whenever navigation service stops billing session is paused. For more info regarding billing,
+     read the [Pricing Guide](https://docs.mapbox.com/ios/beta/navigation/guides/pricing/).
+     */
     public func stop() {
-        
         nativeLocationSource.stopUpdatingHeading()
         nativeLocationSource.stopUpdatingLocation()
         
@@ -273,6 +291,13 @@ public class MapboxNavigationService: NSObject, NavigationService {
         
         poorGPSTimer.disarm()
         router.delegate = nil
+        
+        // Navigator should also be paused to prevent further location updates. In case if billing
+        // session is not running anymore - do nothing.
+        if let routeController = router as? RouteController,
+           BillingHandler.shared.sessionState(uuid: routeController.sessionUUID) == .running {
+            BillingHandler.shared.pauseBillingSession(with: routeController.sessionUUID)
+        }
     }
     
     public func endNavigation(feedback: EndOfRouteFeedback? = nil) {
