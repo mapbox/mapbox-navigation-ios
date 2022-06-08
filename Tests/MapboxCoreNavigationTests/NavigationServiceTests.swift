@@ -2,7 +2,6 @@ import XCTest
 import MapboxDirections
 import Turf
 import MapboxMobileEvents
-import os.log
 @testable import TestHelper
 @testable import MapboxCoreNavigation
 
@@ -787,6 +786,102 @@ class NavigationServiceTests: TestCase {
     func waitForNavNativeCallbacks(timeout: TimeInterval = 0.2) {
         let waitExpectation = expectation(description: "Waiting for the NatNative callback")
         _ = XCTWaiter.wait(for: [waitExpectation], timeout: timeout)
+    }
+    
+    func testNavigationServiceStartStopFinish() {
+        dependencies = createDependencies()
+        
+        let navigationService = dependencies.navigationService
+        
+        guard let routeController = navigationService.router as? RouteController else {
+            XCTFail("RouteController should be valid.")
+            return
+        }
+        
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .running)
+        
+        navigationService.stop()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .paused)
+        
+        navigationService.start()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .running)
+        
+        routeController.finishRouting()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .stopped)
+        
+        waitForNavNativeCallbacks()
+    }
+    
+    func testNavigationServiceStartStopFinishSeveralTimes() {
+        dependencies = createDependencies()
+        
+        let navigationService = dependencies.navigationService
+        
+        guard let routeController = navigationService.router as? RouteController else {
+            XCTFail("RouteController should be valid.")
+            return
+        }
+        
+        navigationService.start()
+        navigationService.start()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .running)
+        
+        navigationService.stop()
+        navigationService.stop()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .paused)
+        
+        routeController.finishRouting()
+        routeController.finishRouting()
+        XCTAssertEqual(BillingHandler.shared.sessionState(uuid: routeController.sessionUUID), .stopped)
+        
+        waitForNavNativeCallbacks()
+    }
+    
+    func testNavigationServiceStopShouldStopLocationUpdates() {
+        let navigationService = MapboxNavigationService(routeResponse: response,
+                                                        routeIndex: 0,
+                                                        routeOptions: routeOptions,
+                                                        customRoutingProvider: MapboxRoutingProvider(.offline),
+                                                        credentials: Fixture.credentials,
+                                                        simulating: .never)
+        
+        guard let routeShape = route.legs[0].steps[0].shape else {
+            XCTFail("Invalid route shape.")
+            return
+        }
+        
+        let routeCoordinates = routeShape.coordinates
+        let now = Date()
+        let routeLocations = routeCoordinates.enumerated().map {
+            CLLocation(coordinate: $0.element,
+                       altitude: -1,
+                       horizontalAccuracy: 10,
+                       verticalAccuracy: -1,
+                       course: -1,
+                       speed: 10,
+                       timestamp: now + $0.offset)
+        }
+        
+        navigationService.start()
+        
+        var lastRawLocation: CLLocation?
+        
+        // There are 9 locations in the first step. Iterate over them and stop navigation service
+        // after reaching 4th location. Since billing session is paused (and navigator as well),
+        // it is expected that last raw location doesn't change after stopping.
+        routeLocations.enumerated().forEach {
+            if $0.offset == 4 {
+                navigationService.stop()
+            }
+            navigationService.locationManager(navigationService.locationManager, didUpdateLocations: [$0.element])
+            
+            lastRawLocation = navigationService.router.rawLocation
+        }
+        
+        let expectedLastRawLocation = routeLocations[3]
+        XCTAssertEqual(lastRawLocation, expectedLastRawLocation, "Unexpected last raw location.")
+        
+        waitForNavNativeCallbacks()
     }
 }
 
