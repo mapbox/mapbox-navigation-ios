@@ -15,6 +15,7 @@
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
 * Added reporting `AlternativeRoute` during navigation sessions. Subscribe to `RouterDelegate.router(_:didUpdateAlternatives:removedAlternatives:)` or `Notification.Name.routeControllerDidUpdateAlternatives` notification to receive updates on actual alternative routes list. Switching to the alternative route could be monitored by observing `RouterDelegate.router(_:willTakeAlternativeRoute:at:)` and `RouterDelegate.router(_:didTakeAlternativeRouteAt:)` methods or `Notification.Name.routeControllerWillTakeAlternativeRoute` and `Notification.Name.routeControllerDidTakeAlternativeRoute` notifications. To configure alternative routes detection, setup `NavigationSettings.AlternativeRouteDetectionStrategy` before starting navigation. ([#3833](https://github.com/mapbox/mapbox-navigation-ios/pull/3833))
+* Added `NavigationMapView` ability to switch main route with a continous alternative one by tapping on it during navigation session. ([#3850](https://github.com/mapbox/mapbox-navigation-ios/pull/3850))
 * Implemented refreshing `RouteLeg.incidents` during a route refreshing. ([#3931](https://github.com/mapbox/mapbox-navigation-ios/pull/3931))
 * The `HistoryRecording.stopRecordingHistory(writingFileWith:)` method can be called safely from the main thread. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * Snapped locations are spaced more evenly when the application is connected to an external GPS or CarPlay device capable of high-frequency location updates and the user rounds a corner. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
@@ -31,6 +32,7 @@
 
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
 * Fixed an issue where camera kept receiving updates even after stopping `MapboxNavigationService`. ([#3928](https://github.com/mapbox/mapbox-navigation-ios/pull/3928))
+* Added `NavigationMapView.showsContinuousAlternatives` flag to toggle displaying alternative route's lines during navigation session. Use `NavigationMapView.show(continuousAlternatives:)` and `NavigationMapView.removeContinuousAlternativesRoutes()` methods for fine control over displayed routes. ([#3850](https://github.com/mapbox/mapbox-navigation-ios/pull/3850))
 
 ### CarPlay
 

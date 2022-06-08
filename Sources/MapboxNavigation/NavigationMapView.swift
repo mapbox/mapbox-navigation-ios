@@ -142,6 +142,20 @@ open class NavigationMapView: UIView {
         }
     }
     
+    /**
+     Toggles displaying alternative routes when in active navigation session.
+     
+     If enabled, view will draw actual alternative route lines on the map.
+     Default value is `true`.
+     */
+    public var showsContinuousAlternatives: Bool = true {
+        didSet {
+            if showsContinuousAlternatives != oldValue {
+                applyRoutesDisplay()
+            }
+        }
+    }
+    
     var showsRoute: Bool {
         get {
             guard let mainRouteLayerIdentifier = routes?.first?.identifier(.route(isMainRoute: true)),
@@ -195,6 +209,7 @@ open class NavigationMapView: UIView {
         removeArrow()
         removeRoutes()
         removeWaypoints()
+        removeContinuousAlternativesRoutes()
         
         switch routesPresentationStyle {
         case .single:
@@ -240,35 +255,62 @@ open class NavigationMapView: UIView {
         self.routes = routes
         currentLegIndex = legIndex
         
+        applyRoutesDisplay(layerPosition: layerPosition)
+    }
+    
+    func applyRoutesDisplay(layerPosition: MapboxMaps.LayerPosition? = nil) {
         var parentLayerIdentifier: String? = nil
-        for (index, route) in routes.enumerated() {
-            if index == 0 {
-                updateRestrictedAreasGradientStops(along: route)
-                
-                if routeLineTracksTraversal {
-                    initPrimaryRoutePoints(route: route)
-                    setUpLineGradientStops(along: route)
+        if let routes = routes {
+            for (index, route) in routes.enumerated() {
+                if index == 0 {
+                    updateRestrictedAreasGradientStops(along: route)
+                    
+                    if routeLineTracksTraversal {
+                        initPrimaryRoutePoints(route: route)
+                        setUpLineGradientStops(along: route)
+                    }
+                    
+                    if showsRestrictedAreasOnRoute {
+                        parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
+                    }
                 }
+
+                // Use custom layer position for the main route layer. All other alternative route layers
+                // will be placed below it.
+                let customLayerPosition = index == 0 ? layerPosition : nil
+
+                parentLayerIdentifier = addRouteLayer(route,
+                                                      customLayerPosition: customLayerPosition,
+                                                      fractionTraveled: fractionTraveled,
+                                                      below: parentLayerIdentifier,
+                                                      isMainRoute: index == 0,
+                                                      legIndex: currentLegIndex)
+                parentLayerIdentifier = addRouteCasingLayer(route,
+                                                            fractionTraveled: fractionTraveled,
+                                                            below: parentLayerIdentifier,
+                                                            isMainRoute: index == 0)
             }
-            
-            if showsRestrictedAreasOnRoute {
-                parentLayerIdentifier = addRouteRestrictedAreaLayer(route,
-                                                                    below: parentLayerIdentifier)
+
+            if showsContinuousAlternatives {
+                continuousAlternatives?.forEach { routeAlternative in
+                    guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
+                        return
+                    }
+                    
+                    let offSet = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
+                    parentLayerIdentifier = addRouteLayer(route,
+                                                          fractionTraveled: offSet,
+                                                          below: parentLayerIdentifier,
+                                                          isMainRoute: false,
+                                                          legIndex: nil)
+                    parentLayerIdentifier = addRouteCasingLayer(route,
+                                                                fractionTraveled: offSet,
+                                                                below: parentLayerIdentifier,
+                                                                isMainRoute: false)
+                }
+            } else {
+                removeContinuousAlternativesRoutesLayers()
             }
-            
-            // Use custom layer position for the main route layer. All other alternative route layers
-            // will be placed below it.
-            let customLayerPosition = index == 0 ? layerPosition : nil
-            
-            parentLayerIdentifier = addRouteLayer(route,
-                                                  customLayerPosition: customLayerPosition,
-                                                  below: parentLayerIdentifier,
-                                                  isMainRoute: index == 0,
-                                                  legIndex: legIndex)
-            
-            parentLayerIdentifier = addRouteCasingLayer(route,
-                                                        below: parentLayerIdentifier,
-                                                        isMainRoute: index == 0)
         }
     }
     
@@ -295,6 +337,22 @@ open class NavigationMapView: UIView {
         routes = nil
         removeLineGradientStops()
         updateRestrictedAreasGradientStops(along: nil)
+    }
+    
+    func removeAlternativeRoutes() {
+        var sourceIdentifiers = Set<String>()
+        var layerIdentifiers = Set<String>()
+        routes?.dropFirst().forEach {
+            sourceIdentifiers.insert($0.identifier(.source(isMainRoute: false, isSourceCasing: true)))
+            sourceIdentifiers.insert($0.identifier(.source(isMainRoute: false, isSourceCasing: false)))
+            sourceIdentifiers.insert($0.identifier(.restrictedRouteAreaSource))
+            layerIdentifiers.insert($0.identifier(.route(isMainRoute: false)))
+            layerIdentifiers.insert($0.identifier(.routeCasing(isMainRoute: false)))
+            layerIdentifiers.insert($0.identifier(.restrictedRouteAreaRoute))
+        }
+        
+        mapView.mapboxMap.style.removeLayers(layerIdentifiers)
+        mapView.mapboxMap.style.removeSources(sourceIdentifiers)
     }
     
     func removeRestrictedRouteArea() {
@@ -602,6 +660,7 @@ open class NavigationMapView: UIView {
     
     @discardableResult func addRouteLayer(_ route: Route,
                                           customLayerPosition: MapboxMaps.LayerPosition? = nil,
+                                          fractionTraveled: Double,
                                           below parentLayerIndentifier: String? = nil,
                                           isMainRoute: Bool = true,
                                           legIndex: Int? = nil) -> String? {
@@ -662,7 +721,14 @@ open class NavigationMapView: UIView {
                                                                                                   lineBaseColor: alternativeTrafficUnknownColor,
                                                                                                   isSoft: crossfadesCongestionSegments)))
                 } else {
-                    lineLayer?.lineColor = .constant(.init(routeAlternateColor))
+                    if routeLineTracksTraversal {
+                        let gradientStops = alternativeRouteLineGradient(fractionTraveled, baseColor: routeAlternateColor)
+                        lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                                                                                                      lineBaseColor: routeAlternateColor,
+                                                                                                      isSoft: false)))
+                    } else {
+                        lineLayer?.lineColor = .constant(.init(routeAlternateColor))
+                    }
                 }
             }
         }
@@ -698,6 +764,7 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addRouteCasingLayer(_ route: Route,
+                                                fractionTraveled: Double,
                                                 below parentLayerIndentifier: String? = nil,
                                                 isMainRoute: Bool = true) -> String? {
         guard let defaultShape = route.shape else { return nil }
@@ -735,7 +802,14 @@ open class NavigationMapView: UIView {
                                                                 fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
                 lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
-                lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))
+                if routeLineTracksTraversal {
+                    let gradientStops = alternativeRouteLineGradient(fractionTraveled, baseColor: routeAlternateCasingColor)
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                                                                                                  lineBaseColor: routeAlternateCasingColor,
+                                                                                                  isSoft: false)))
+                } else {
+                    lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))
+                }
             }
         }
         
@@ -1153,7 +1227,9 @@ open class NavigationMapView: UIView {
         let shape = delegate?.navigationMapView(self, shapeFor: waypoints, legIndex: legIndex) ?? FeatureCollection(features: features)
         
         if route.legs.count > 1 {
+            removeAlternativeRoutes()
             routes = [route]
+            updateRouteDurations(along: routes)
             
             do {
                 let waypointSourceIdentifier = NavigationMapView.SourceIdentifier.waypointSource
@@ -1449,6 +1525,7 @@ open class NavigationMapView: UIView {
     // MARK: Map Rendering and Observing
     
     var routes: [Route]?
+    var continuousAlternatives: [AlternativeRoute]?
     var routePoints: RoutePoints?
     var routeLineGranularDistances: RouteLineGranularDistances?
     var routeRemainingDistancesIndex: Int?
@@ -1753,8 +1830,11 @@ open class NavigationMapView: UIView {
         if let selected = waypointTest?.first {
             delegate?.navigationMapView(self, didSelect: selected)
             return
-        } else if let routes = self.routes(closeTo: tapPoint) {
-            guard let selectedRoute = routes.first else { return }
+        } else if let routes = self.routes(closeTo: tapPoint),
+                  let selectedRoute = routes.first {
+            delegate?.navigationMapView(self, didSelect: selectedRoute)
+        } else if let alternativeRoutes = self.continuousAlternativeRoutes(closeTo: tapPoint),
+                  let selectedRoute = alternativeRoutes.first {
             delegate?.navigationMapView(self, didSelect: selectedRoute)
         }
     }

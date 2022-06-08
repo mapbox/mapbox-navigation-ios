@@ -525,6 +525,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         if let coordinate = navigationService.routeProgress.route.shape?.coordinates.first {
             navigationMapView.setInitialCamera(coordinate)
         }
+        
+        // TODO: remove when implement alternatives selection on CarPlay
+        navigationMapView.showsContinuousAlternatives = false
     }
     
     // MARK: Notifications Observer Methods
@@ -559,6 +562,11 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                                                selector: #selector(didUpdateRoadNameFromStatus),
                                                name: .currentRoadNameDidChange,
                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(continuousAlternativesDidChange),
+                                               name: .routeControllerDidUpdateAlternatives,
+                                               object: service.router)
     }
     
     func suspendNotifications() {
@@ -585,6 +593,19 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         NotificationCenter.default.removeObserver(self,
                                                   name: .currentRoadNameDidChange,
                                                   object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .routeControllerDidUpdateAlternatives,
+                                                  object: nil)
+    }
+    
+    @objc func continuousAlternativesDidChange(_ notification: NSNotification) {
+        guard let updatedAlternatives = notification.userInfo?[RouteController.NotificationUserInfoKey.updatedAlternativesKey] as? [AlternativeRoute] else {
+            assertionFailure("Updated alternatives should be available.")
+            return
+        }
+        
+        navigationMapView?.show(continuousAlternatives: updatedAlternatives)
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {

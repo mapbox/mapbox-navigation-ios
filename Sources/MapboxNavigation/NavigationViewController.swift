@@ -962,10 +962,12 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     public func navigationService(_ service: NavigationService, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
+        navigationMapView?.onUpdateAlternatives(updatedAlternatives, removedAlternatives: removedAlternatives)
         delegate?.navigationViewController(self, didUpdateAlternatives: updatedAlternatives, removedAlternatives: removedAlternatives)
     }
     
     public func navigationService(_ service: NavigationService, didFailToUpdateAlternatives error: AlternativeRouteError) {
+        navigationMapView?.onFailToUpdateAlternatives(error)
         delegate?.navigationViewController(self, didFailToUpdateAlternatives: error)
     }
     
@@ -1200,5 +1202,11 @@ extension NavigationViewController: NavigationMapViewDelegate {
     
     public func navigationMapView(_ navigationMapView: NavigationMapView, didAdd finalDestinationAnnotation: PointAnnotation, pointAnnotationManager: PointAnnotationManager) {
         delegate?.navigationViewController(self, didAdd: finalDestinationAnnotation, pointAnnotationManager: pointAnnotationManager)
+    }
+    
+    public func navigationMapView(_ navigationMapView: NavigationMapView, didSelect continuousAlternative: AlternativeRoute) {
+        router.updateRoute(with: continuousAlternative.indexedRouteResponse,
+                           routeOptions: nil,
+                           completion: nil)
     }
 }
