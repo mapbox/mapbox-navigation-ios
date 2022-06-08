@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 import MapboxDirections
 import MapboxCoreNavigation
+import Turf
 
 extension NavigationMapView {
     /**
@@ -62,35 +63,33 @@ extension NavigationMapView {
      will be returned.
      */
     public func continuousAlternativeRoutes(closeTo point: CGPoint) -> [AlternativeRoute]? {
-        // Filter routes with at least 2 coordinates.
-        let routes = continuousAlternatives?.enumerated().compactMap { (item: EnumeratedSequence<[AlternativeRoute]>.Element) -> (Route, Int)? in
+        // Filter routes with at least 2 coordinates and within tap distance.
+        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
+        let routes = continuousAlternatives?.enumerated().compactMap { (item: EnumeratedSequence<[AlternativeRoute]>.Element) -> (Route, Int, LocationDistance)? in
             guard let route = item.element.indexedRouteResponse.currentRoute else {
                 return nil
             }
-            return (route, item.offset)
+            guard let closestCoordinate = route.shape?.closestCoordinate(to: tapCoordinate)?.coordinate else {
+                return nil
+            }
+            
+            let closestPoint = mapView.mapboxMap.point(for: closestCoordinate)
+            guard closestPoint.distance(to: point) < tapGestureDistanceThreshold else {
+                return nil
+            }
+            
+            return (route, item.offset, closestCoordinate.distance(to: tapCoordinate))
         }
         guard let routes = routes?.filter({ $0.0.shape?.coordinates.count ?? 0 > 1 }) else { return nil }
         
         // Sort routes by closest distance to tap gesture.
-        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
-        let closest = routes.sorted { (lhs: (Route, Int), rhs: (Route, Int)) -> Bool in
-            // Existence has been assured through use of filter.
-            let leftLine = lhs.0.shape!
-            let rightLine = rhs.0.shape!
-            let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.coordinate.distance(to: tapCoordinate)
-            let rightDistance = rightLine.closestCoordinate(to: tapCoordinate)!.coordinate.distance(to: tapCoordinate)
+        let closest = routes.sorted { (lhs: (Route, Int, LocationDistance), rhs: (Route, Int, LocationDistance)) -> Bool in
+            let leftDistance = lhs.2
+            let rightDistance = rhs.2
             
             return leftDistance < rightDistance
         }
         
-        // Filter closest coordinates by which ones are under threshold.
-        let candidates = closest.filter {
-            let closestCoordinate = $0.0.shape!.closestCoordinate(to: tapCoordinate)!.coordinate
-            let closestPoint = mapView.mapboxMap.point(for: closestCoordinate)
-            
-            return closestPoint.distance(to: point) < tapGestureDistanceThreshold
-        }
-        
-        return candidates.compactMap { continuousAlternatives?[$0.1] }
+        return closest.compactMap { continuousAlternatives?[$0.1] }
     }
 }

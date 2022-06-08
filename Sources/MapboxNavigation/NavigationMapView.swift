@@ -246,53 +246,53 @@ open class NavigationMapView: UIView {
     
     func applyRoutesDisplay(layerPosition: MapboxMaps.LayerPosition? = nil) {
         var parentLayerIdentifier: String? = nil
-        if let routes = routes {
-            for (index, route) in routes.enumerated() {
-                if index == 0 {
-                    updateRestrictedAreasGradientStops(along: route)
-                    
-                    if routeLineTracksTraversal {
-                        initPrimaryRoutePoints(route: route)
-                        setUpLineGradientStops(along: route)
-                    }
-                    
-                    if showsRestrictedAreasOnRoute {
-                        parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
-                    }
-                }
-
-                // Use custom layer position for the main route layer. All other alternative route layers
-                // will be placed below it.
-                let customLayerPosition = index == 0 ? layerPosition : nil
-
-                parentLayerIdentifier = addRouteLayer(route,
-                                                      customLayerPosition: customLayerPosition,
-                                                      fractionTraveled: fractionTraveled,
-                                                      below: parentLayerIdentifier,
-                                                      isMainRoute: index == 0,
-                                                      legIndex: currentLegIndex)
-                parentLayerIdentifier = addRouteCasingLayer(route,
-                                                            fractionTraveled: fractionTraveled,
-                                                            below: parentLayerIdentifier,
-                                                            isMainRoute: index == 0)
-            }
-
-            continuousAlternatives?.forEach { routeAlternative in
-                guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
-                    return
+        guard let routes = routes else { return }
+        
+        for (index, route) in routes.enumerated() {
+            if index == 0 {
+                updateRestrictedAreasGradientStops(along: route)
+                
+                if routeLineTracksTraversal {
+                    initPrimaryRoutePoints(route: route)
+                    setUpLineGradientStops(along: route)
                 }
                 
-                let offSet = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
-                parentLayerIdentifier = addRouteLayer(route,
-                                                      fractionTraveled: offSet,
-                                                      below: parentLayerIdentifier,
-                                                      isMainRoute: false,
-                                                      legIndex: nil)
-                parentLayerIdentifier = addRouteCasingLayer(route,
-                                                            fractionTraveled: offSet,
-                                                            below: parentLayerIdentifier,
-                                                            isMainRoute: false)
+                if showsRestrictedAreasOnRoute {
+                    parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
+                }
             }
+            
+            // Use custom layer position for the main route layer. All other alternative route layers
+            // will be placed below it.
+            let customLayerPosition = index == 0 ? layerPosition : nil
+            
+            parentLayerIdentifier = addRouteLayer(route,
+                                                  customLayerPosition: customLayerPosition,
+                                                  fractionTraveled: fractionTraveled,
+                                                  below: parentLayerIdentifier,
+                                                  isMainRoute: index == 0,
+                                                  legIndex: currentLegIndex)
+            parentLayerIdentifier = addRouteCasingLayer(route,
+                                                        fractionTraveled: fractionTraveled,
+                                                        below: parentLayerIdentifier,
+                                                        isMainRoute: index == 0)
+        }
+        
+        continuousAlternatives?.forEach { routeAlternative in
+            guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
+                return
+            }
+            
+            let offSet = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
+            parentLayerIdentifier = addRouteLayer(route,
+                                                  fractionTraveled: offSet,
+                                                  below: parentLayerIdentifier,
+                                                  isMainRoute: false,
+                                                  legIndex: nil)
+            parentLayerIdentifier = addRouteCasingLayer(route,
+                                                        fractionTraveled: offSet,
+                                                        below: parentLayerIdentifier,
+                                                        isMainRoute: false)
         }
     }
     
