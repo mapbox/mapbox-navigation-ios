@@ -817,7 +817,7 @@ open class NavigationMapView: UIView {
         }
         
         if let reducedAccuracyUserHaloCourseView = reducedAccuracyUserHaloCourseView {
-            mapView.location.options.puckType = nil
+            mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
             
             reducedAccuracyUserHaloCourseView.tag = NavigationMapView.userCourseViewTag
             mapView.addSubview(reducedAccuracyUserHaloCourseView)
@@ -833,7 +833,7 @@ open class NavigationMapView: UIView {
             case .puck3D(configuration: let configuration):
                 mapView.location.options.puckType = .puck3D(configuration)
             case .none:
-                mapView.location.options.puckType = nil
+                mapView.location.options.puckType = .puck2D(emptyPuckConfiguration)
             }
             mapView.location.options.puckBearingSource = .course
         }
@@ -1662,20 +1662,41 @@ open class NavigationMapView: UIView {
         storeLocationProviderBeforeSimulation()
         
         mapView.mapboxMap.onEvery(.renderFrameFinished) { [weak self] _ in
-            guard let self = self,
-                  let location = self.mostRecentUserCourseViewLocation else { return }
+            guard let self = self else { return }
             
-            switch self.userLocationStyle {
-            case .courseView:
-                self.moveUserLocation(to: location)
-                if self.routeLineTracksTraversal {
-                    self.travelAlongRouteLine(to: location.coordinate)
+            if let location = self.mostRecentUserCourseViewLocation {
+                switch self.userLocationStyle {
+                case .courseView:
+                    self.moveUserLocation(to: location)
+                    if self.routeLineTracksTraversal {
+                        self.travelAlongRouteLine(to: location.coordinate)
+                    }
+                default:
+                    if self.simulatesLocation,
+                       let locationProvider = self.mapView.location.locationProvider as? NavigationLocationProvider {
+                        locationProvider.didUpdateLocations(locations: [location])
+                    }
                 }
-            default:
-                if self.simulatesLocation,
-                   let locationProvider = self.mapView.location.locationProvider as? NavigationLocationProvider {
-                    locationProvider.didUpdateLocations(locations: [location])
-                }
+            }
+            
+            let locationIndicatorLayerIdentifier = "puck"
+            if let locationIndicatorLayer = try? self.mapView.mapboxMap.style.layer(withId: locationIndicatorLayerIdentifier) as? LocationIndicatorLayer {
+                try? self.mapView.mapboxMap.style.updateLayer(withId: locationIndicatorLayerIdentifier,
+                                                              type: LocationIndicatorLayer.self,
+                                                              update: { [weak self] oldLocationIndicatorLayer in
+                    guard let self = self else { return }
+                    
+                    // In case if reduced accuracy mode is active - hide puck layer, that is drawn by the Maps SDK.
+                    if let _ = self.reducedAccuracyUserHaloCourseView {
+                        if locationIndicatorLayer.visibility == nil || locationIndicatorLayer.visibility == .constant(.visible) {
+                            oldLocationIndicatorLayer.visibility = .constant(.none)
+                        }
+                    } else {
+                        if locationIndicatorLayer.visibility == .constant(.none) {
+                            oldLocationIndicatorLayer.visibility = .constant(.visible)
+                        }
+                    }
+                })
             }
         }
         
