@@ -194,6 +194,8 @@ open class RouteController: NSObject {
         sharedNavigator.rerouteController
     }
     
+    var didProactiveReroute: Bool = false
+    
     public var reroutesProactively: Bool = true
     
     var lastProactiveRerouteDate: Date?
@@ -459,7 +461,10 @@ open class RouteController: NSObject {
         // Announce voice instruction if it was updated and we are not going to reroute
         if didUpdate && !willReRoute,
             let spokenInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
-            announcePassage(of: spokenInstruction, routeProgress: routeProgress)
+            if !didProactiveReroute {
+                announcePassage(of: spokenInstruction, routeProgress: routeProgress)
+            }
+            didProactiveReroute = false
         }
     }
     
@@ -815,6 +820,7 @@ extension RouteController: Router {
                 self.routeProgress = routeProgress
                 self.announce(reroute: route, at: self.location, proactive: isProactive)
                 self.indexedRouteResponse = indexedRouteResponse
+                self.didProactiveReroute = isProactive
                 completion?(true)
             case .failure:
                 completion?(false)
