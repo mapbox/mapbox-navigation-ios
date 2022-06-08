@@ -142,20 +142,6 @@ open class NavigationMapView: UIView {
         }
     }
     
-    /**
-     Toggles displaying alternative routes when in active navigation session.
-     
-     If enabled, view will draw actual alternative route lines on the map.
-     Default value is `true`.
-     */
-    public var showsContinuousAlternatives: Bool = true {
-        didSet {
-            if showsContinuousAlternatives != oldValue {
-                applyRoutesDisplay()
-            }
-        }
-    }
-    
     var showsRoute: Bool {
         get {
             guard let mainRouteLayerIdentifier = routes?.first?.identifier(.route(isMainRoute: true)),
@@ -291,25 +277,21 @@ open class NavigationMapView: UIView {
                                                             isMainRoute: index == 0)
             }
 
-            if showsContinuousAlternatives {
-                continuousAlternatives?.forEach { routeAlternative in
-                    guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
-                        return
-                    }
-                    
-                    let offSet = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
-                    parentLayerIdentifier = addRouteLayer(route,
-                                                          fractionTraveled: offSet,
-                                                          below: parentLayerIdentifier,
-                                                          isMainRoute: false,
-                                                          legIndex: nil)
-                    parentLayerIdentifier = addRouteCasingLayer(route,
-                                                                fractionTraveled: offSet,
-                                                                below: parentLayerIdentifier,
-                                                                isMainRoute: false)
+            continuousAlternatives?.forEach { routeAlternative in
+                guard let route = routeAlternative.indexedRouteResponse.currentRoute else {
+                    return
                 }
-            } else {
-                removeContinuousAlternativesRoutesLayers()
+                
+                let offSet = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
+                parentLayerIdentifier = addRouteLayer(route,
+                                                      fractionTraveled: offSet,
+                                                      below: parentLayerIdentifier,
+                                                      isMainRoute: false,
+                                                      legIndex: nil)
+                parentLayerIdentifier = addRouteCasingLayer(route,
+                                                            fractionTraveled: offSet,
+                                                            below: parentLayerIdentifier,
+                                                            isMainRoute: false)
             }
         }
     }

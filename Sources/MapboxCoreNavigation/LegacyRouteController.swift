@@ -121,6 +121,12 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
     
     var routeTask: NavigationProviderRequest?
     
+    /**
+     `LegacyRouteController` does not support continuous alternatives.
+     
+     This array will always be empty.
+     */
+    public private(set) var continuousAlternatives: [AlternativeRoute] = []
     
     // MARK: Navigating
     

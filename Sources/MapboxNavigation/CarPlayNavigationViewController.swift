@@ -67,6 +67,28 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     /**
+     Toggles displaying alternative routes.
+     
+     If enabled, view will draw actual alternative route lines on the map.
+     Default value is `true`.
+     */
+    public var showsContinuousAlternatives: Bool = true {
+        didSet {
+            updateContinuousAlternatives()
+        }
+    }
+    
+    /**
+     `AlternativeRoute`s user might take during this trip to reach the destination using another road.
+     
+     Array contents are updated automatically duting the trip. Alternative routes may be slower or longer then the main route.
+     To get updates, subscribe to `Notification.Name.routeControllerDidUpdateAlternatives` notification.
+     */
+    public var continuousAlternatives: [AlternativeRoute] {
+        navigationService.router.continuousAlternatives
+    }
+    
+    /**
      Controls whether night style will be used whenever traversing through a tunnel. Defaults to `true`.
      */
     public var usesNightStyleWhileInTunnel: Bool = true
@@ -526,8 +548,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             navigationMapView.setInitialCamera(coordinate)
         }
         
-        // TODO: remove when implement alternatives selection on CarPlay
-        navigationMapView.showsContinuousAlternatives = false
+        updateContinuousAlternatives()
     }
     
     // MARK: Notifications Observer Methods
@@ -600,12 +621,15 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     @objc func continuousAlternativesDidChange(_ notification: NSNotification) {
-        guard let updatedAlternatives = notification.userInfo?[RouteController.NotificationUserInfoKey.updatedAlternativesKey] as? [AlternativeRoute] else {
-            assertionFailure("Updated alternatives should be available.")
-            return
+        updateContinuousAlternatives()
+    }
+    
+    func updateContinuousAlternatives() {
+        if showsContinuousAlternatives {
+            navigationMapView?.show(continuousAlternatives: continuousAlternatives)
+        } else {
+            navigationMapView?.removeContinuousAlternativesRoutes()
         }
-        
-        navigationMapView?.show(continuousAlternatives: updatedAlternatives)
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {
