@@ -81,6 +81,28 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
     }
     
+    /**
+     Toggles displaying alternative routes.
+     
+     If enabled, view will draw actual alternative route lines on the map.
+     Default value is `true`.
+     */
+    public var showsContinuousAlternatives: Bool = true {
+        didSet {
+            updateContinuousAlternatives()
+        }
+    }
+    
+    /**
+     `AlternativeRoute`s user might take during this trip to reach the destination using another road.
+     
+     Array contents are updated automatically duting the trip. Alternative routes may be slower or longer then the main route.
+     To get updates, subscribe to `NavigationViewControllerDelegate.navigationViewController(_:didUpdateAlternatives:removedAlternatives:)` or `Notification.Name.routeControllerDidUpdateAlternatives` notification.
+     */
+    public var continuousAlternatives: [AlternativeRoute] {
+        navigationService.router.continuousAlternatives
+    }
+    
     // MARK: Configuring Spoken Instructions
     
     /**
@@ -962,12 +984,20 @@ extension NavigationViewController: NavigationServiceDelegate {
     }
     
     public func navigationService(_ service: NavigationService, didUpdateAlternatives updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
-        navigationMapView?.onUpdateAlternatives(updatedAlternatives, removedAlternatives: removedAlternatives)
+        updateContinuousAlternatives()
+
         delegate?.navigationViewController(self, didUpdateAlternatives: updatedAlternatives, removedAlternatives: removedAlternatives)
     }
     
+    func updateContinuousAlternatives() {
+        if showsContinuousAlternatives {
+            navigationMapView?.show(continuousAlternatives: continuousAlternatives)
+        } else {
+            navigationMapView?.removeContinuousAlternativesRoutes()
+        }
+    }
+    
     public func navigationService(_ service: NavigationService, didFailToUpdateAlternatives error: AlternativeRouteError) {
-        navigationMapView?.onFailToUpdateAlternatives(error)
         delegate?.navigationViewController(self, didFailToUpdateAlternatives: error)
     }
     

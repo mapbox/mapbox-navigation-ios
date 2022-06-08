@@ -4,14 +4,6 @@ import MapboxDirections
 import MapboxCoreNavigation
 
 extension NavigationMapView {
-    func onUpdateAlternatives(_ updatedAlternatives: [AlternativeRoute], removedAlternatives: [AlternativeRoute]) {
-        show(continuousAlternatives:updatedAlternatives)
-    }
-
-    func onFailToUpdateAlternatives(_ error: AlternativeRouteError) {
-        show([])
-    }
-    
     /**
      Visualizes the given alternative routes, removing any existing from the map.
      
@@ -28,7 +20,7 @@ extension NavigationMapView {
         self.continuousAlternatives = continuousAlternatives
         
         guard let routes = self.routes,
-              !routes.isEmpty && showsContinuousAlternatives else { return }
+              !routes.isEmpty else { return }
         
         applyRoutesDisplay()
     }
@@ -81,10 +73,10 @@ extension NavigationMapView {
         
         // Sort routes by closest distance to tap gesture.
         let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
-        let closest = routes.sorted { (left, right) -> Bool in
+        let closest = routes.sorted { (lhs: (Route, Int), rhs: (Route, Int)) -> Bool in
             // Existence has been assured through use of filter.
-            let leftLine = left.0.shape!
-            let rightLine = right.0.shape!
+            let leftLine = lhs.0.shape!
+            let rightLine = rhs.0.shape!
             let leftDistance = leftLine.closestCoordinate(to: tapCoordinate)!.coordinate.distance(to: tapCoordinate)
             let rightDistance = rightLine.closestCoordinate(to: tapCoordinate)!.coordinate.distance(to: tapCoordinate)
             
