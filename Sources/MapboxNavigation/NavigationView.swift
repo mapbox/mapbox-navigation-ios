@@ -213,6 +213,7 @@ open class NavigationView: UIView {
     }
     
     func commonInit() {
+        DayStyle().apply()
         floatingButtons = [overviewButton, muteButton, reportButton]
         setupViews()
         setupConstraints()
