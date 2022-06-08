@@ -35,8 +35,7 @@ open class RouteController: NSObject {
     private static weak var instance: RouteController?
     private static let instanceLock: NSLock = .init()
 
-
-    private let sessionUUID: UUID = .init()
+    let sessionUUID: UUID = .init()
     private var isInitialized: Bool = false
     
     // MARK: Configuring Route-Related Data
@@ -194,6 +193,8 @@ open class RouteController: NSObject {
         sharedNavigator.rerouteController
     }
     
+    var didProactiveReroute: Bool = false
+    
     public var reroutesProactively: Bool = true
     
     var lastProactiveRerouteDate: Date?
@@ -236,12 +237,10 @@ open class RouteController: NSObject {
     var previousArrivalWaypoint: MapboxDirections.Waypoint?
     
     public func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard !hasFinishedRouting else { return }
-        guard let location = locations.last else { return }
-        
-        guard !(delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation) else {
-            return
-        }
+        guard !hasFinishedRouting,
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running,
+              let location = locations.last,
+              !(delegate?.router(self, shouldDiscard: location) ?? DefaultBehavior.shouldDiscardLocation) else { return }
         
         rawLocation = location
         
@@ -253,7 +252,9 @@ open class RouteController: NSObject {
     }
     
     public func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
-        guard !hasFinishedRouting else { return }
+        guard !hasFinishedRouting,
+              BillingHandler.shared.sessionState(uuid: sessionUUID) == .running else { return }
+        
         heading = newHeading
     }
     
@@ -459,7 +460,10 @@ open class RouteController: NSObject {
         // Announce voice instruction if it was updated and we are not going to reroute
         if didUpdate && !willReRoute,
             let spokenInstruction = routeProgress.currentLegProgress.currentStepProgress.currentSpokenInstruction {
-            announcePassage(of: spokenInstruction, routeProgress: routeProgress)
+            if !didProactiveReroute {
+                announcePassage(of: spokenInstruction, routeProgress: routeProgress)
+            }
+            didProactiveReroute = false
         }
     }
     
@@ -815,6 +819,7 @@ extension RouteController: Router {
                 self.routeProgress = routeProgress
                 self.announce(reroute: route, at: self.location, proactive: isProactive)
                 self.indexedRouteResponse = indexedRouteResponse
+                self.didProactiveReroute = isProactive
                 completion?(true)
             case .failure:
                 completion?(false)
