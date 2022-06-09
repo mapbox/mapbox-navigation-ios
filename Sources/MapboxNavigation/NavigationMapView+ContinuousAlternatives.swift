@@ -63,33 +63,34 @@ extension NavigationMapView {
      will be returned.
      */
     public func continuousAlternativeRoutes(closeTo point: CGPoint) -> [AlternativeRoute]? {
-        // Filter routes with at least 2 coordinates and within tap distance.
-        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
-        let routes = continuousAlternatives?.enumerated().compactMap { (item: EnumeratedSequence<[AlternativeRoute]>.Element) -> (Route, Int, LocationDistance)? in
-            guard let route = item.element.indexedRouteResponse.currentRoute else {
-                return nil
-            }
-            guard let closestCoordinate = route.shape?.closestCoordinate(to: tapCoordinate)?.coordinate else {
-                return nil
-            }
-            
-            let closestPoint = mapView.mapboxMap.point(for: closestCoordinate)
-            guard closestPoint.distance(to: point) < tapGestureDistanceThreshold else {
-                return nil
-            }
-            
-            return (route, item.offset, closestCoordinate.distance(to: tapCoordinate))
-        }
-        guard let routes = routes?.filter({ $0.0.shape?.coordinates.count ?? 0 > 1 }) else { return nil }
-        
-        // Sort routes by closest distance to tap gesture.
-        let closest = routes.sorted { (lhs: (Route, Int, LocationDistance), rhs: (Route, Int, LocationDistance)) -> Bool in
-            let leftDistance = lhs.2
-            let rightDistance = rhs.2
-            
-            return leftDistance < rightDistance
-        }
-        
-        return closest.compactMap { continuousAlternatives?[$0.1] }
+        nil
+//        // Filter routes with at least 2 coordinates and within tap distance.
+//        let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
+//        let routes = continuousAlternatives?.enumerated().compactMap { (item: EnumeratedSequence<[AlternativeRoute]>.Element) -> (Route, Int, LocationDistance)? in
+//            guard let route = item.element.indexedRouteResponse.currentRoute else {
+//                return nil
+//            }
+//            guard let closestCoordinate = route.shape?.closestCoordinate(to: tapCoordinate)?.coordinate else {
+//                return nil
+//            }
+//
+//            let closestPoint = mapView.mapboxMap.point(for: closestCoordinate)
+//            guard closestPoint.distance(to: point) < tapGestureDistanceThreshold else {
+//                return nil
+//            }
+//
+//            return (route, item.offset, closestCoordinate.distance(to: tapCoordinate))
+//        }
+//        guard let routes = routes?.filter({ $0.0.shape?.coordinates.count ?? 0 > 1 }) else { return nil }
+//
+//        // Sort routes by closest distance to tap gesture.
+//        let closest = routes.sorted { (lhs: (Route, Int, LocationDistance), rhs: (Route, Int, LocationDistance)) -> Bool in
+//            let leftDistance = lhs.2
+//            let rightDistance = rhs.2
+//
+//            return leftDistance < rightDistance
+//        }
+//
+//        return closest.compactMap { continuousAlternatives?[$0.1] }
     }
 }
