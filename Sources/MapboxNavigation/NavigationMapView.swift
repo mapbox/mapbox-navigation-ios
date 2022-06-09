@@ -283,14 +283,14 @@ open class NavigationMapView: UIView {
                 return
             }
             
-            let offSet = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
+            let offset = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
             parentLayerIdentifier = addRouteLayer(route,
-                                                  fractionTraveled: offSet,
+                                                  fractionTraveled: offset,
                                                   below: parentLayerIdentifier,
                                                   isMainRoute: false,
                                                   legIndex: nil)
             parentLayerIdentifier = addRouteCasingLayer(route,
-                                                        fractionTraveled: offSet,
+                                                        fractionTraveled: offset,
                                                         below: parentLayerIdentifier,
                                                         isMainRoute: false)
         }

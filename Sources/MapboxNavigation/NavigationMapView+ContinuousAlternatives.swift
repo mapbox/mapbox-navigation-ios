@@ -63,10 +63,21 @@ extension NavigationMapView {
      will be returned.
      */
     public func continuousAlternativeRoutes(closeTo point: CGPoint) -> [AlternativeRoute]? {
+        guard let continuousAlternatives = continuousAlternatives,
+              !continuousAlternatives.isEmpty else {
+            return nil
+        }
+        
+        // Workaround for XCode 12.5 compilation bug
+        typealias RouteWithMetadata = (route: Route, index: Int, distance: LocationDistance)
+        
         // Filter routes with at least 2 coordinates and within tap distance.
         let tapCoordinate = mapView.mapboxMap.coordinate(for: point)
-        let routes = continuousAlternatives?.enumerated().compactMap { (item: EnumeratedSequence<[AlternativeRoute]>.Element) -> (Route, Int, LocationDistance)? in
+        let routes = continuousAlternatives.enumerated().compactMap { (item: EnumeratedSequence<[AlternativeRoute]>.Element) -> RouteWithMetadata? in
             guard let route = item.element.indexedRouteResponse.currentRoute else {
+                return nil
+            }
+            guard route.shape?.coordinates.count ?? 0 > 1 else {
                 return nil
             }
             guard let closestCoordinate = route.shape?.closestCoordinate(to: tapCoordinate)?.coordinate else {
@@ -78,18 +89,18 @@ extension NavigationMapView {
                 return nil
             }
             
-            return (route, item.offset, closestCoordinate.distance(to: tapCoordinate))
+            return RouteWithMetadata(route: route,
+                                     index: item.offset,
+                                     distance: closestCoordinate.distance(to: tapCoordinate))
         }
-        guard let routes = routes?.filter({ $0.0.shape?.coordinates.count ?? 0 > 1 }) else { return nil }
         
         // Sort routes by closest distance to tap gesture.
-        let closest = routes.sorted { (lhs: (Route, Int, LocationDistance), rhs: (Route, Int, LocationDistance)) -> Bool in
-            let leftDistance = lhs.2
-            let rightDistance = rhs.2
-            
-            return leftDistance < rightDistance
+        let closest = routes.sorted { (lhs: RouteWithMetadata, rhs: RouteWithMetadata) -> Bool in
+            return lhs.distance < rhs.distance
         }
         
-        return closest.compactMap { continuousAlternatives?[$0.1] }
+        return closest.map { (item: RouteWithMetadata) -> AlternativeRoute in
+            continuousAlternatives[item.index]
+        }
     }
 }

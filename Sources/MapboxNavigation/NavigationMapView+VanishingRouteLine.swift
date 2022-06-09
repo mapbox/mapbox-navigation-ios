@@ -175,9 +175,9 @@ extension NavigationMapView {
          Calculate the percentage of the route traveled.
          */
         if granularDistances.distance >= remainingDistance {
-            let offSet = (1.0 - remainingDistance / granularDistances.distance)
-            if offSet >= 0 {
-                fractionTraveled = offSet
+            let offset = (1.0 - remainingDistance / granularDistances.distance)
+            if offset >= 0 {
+                fractionTraveled = offset
             }
         }
     }
