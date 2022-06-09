@@ -58,6 +58,7 @@ extension NavigationMapView {
         
         if routeProgress.routeIsComplete {
             removeRoutes()
+            removeContinuousAlternativesRoutes()
         } else {
             updateUpcomingRoutePointIndex(routeProgress: routeProgress)
             offRouteDistanceCheckEnabled = false
@@ -463,6 +464,16 @@ extension NavigationMapView {
         })
         
         return routeLineFeaturesGradient(congestionFeatures, lineSettings: lineSettings)
+    }
+    
+    func alternativeRouteLineGradient(_ fractionTraveled: Double, baseColor: UIColor) -> [Double: UIColor] {
+        var gradient = [0.0: .defaultTraversedRouteColor,
+                        1.0: baseColor]
+        if fractionTraveled != 0.0 && fractionTraveled != 1.0 {
+            gradient[fractionTraveled] = baseColor
+        }
+        
+        return gradient
     }
     
     /**

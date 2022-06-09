@@ -222,6 +222,8 @@ open class RouteController: NSObject {
     
     var routeTask: NavigationProviderRequest?
     
+    public private(set) var continuousAlternatives: [AlternativeRoute] = []
+    
     // MARK: Navigating
     
     private lazy var sharedNavigator: Navigator = {
@@ -947,6 +949,8 @@ extension RouteController: AlternativeRoutesCenterDelegate {
         var userInfo = [RouteController.NotificationUserInfoKey: Any]()
         userInfo[.updatedAlternativesKey] = updatedAlternatives
         userInfo[.removedAlternativesKey] = removedAlternatives
+        
+        continuousAlternatives = updatedAlternatives
         
         NotificationCenter.default.post(name: .routeControllerDidUpdateAlternatives,
                                         object: self,
