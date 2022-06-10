@@ -205,6 +205,12 @@ public protocol Router: CLLocationManagerDelegate {
     /// Use this method to indicate that you no longer need navigation experience for current session/UI.
     /// After finishing, `Router` will not be able to update route, route leg, issue a reroute or do any other update, related to route traversing.
     func finishRouting()
+    
+    /// `AlternativeRoute`s user might take during this trip to reach the destination using another road.
+    ///
+    /// Array contents are updated automatically duting the trip. Alternative routes may be slower or longer then the main route.
+    /// To get updates, subscribe to `RouterDelegate.router(_:didUpdateAlternatives:removedAlternatives:)` or `Notification.Name.routeControllerDidUpdateAlternatives` notification.
+    var continuousAlternatives: [AlternativeRoute] { get }
 }
 
 protocol InternalRouter: AnyObject {

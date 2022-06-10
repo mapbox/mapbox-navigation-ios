@@ -6,15 +6,13 @@
 
 * MapboxNavigation now requires [MapboxMaps v10.6.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-rc.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v105.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/105.0.0). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
-
-### User interface
-
-* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
+* MapboxCoreNavigation now requires [MapboxDirections v2.6.0-beta.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.6.0-beta.2). ([#3941](https://github.com/mapbox/mapbox-navigation-ios/pull/3941))
 
 ### Routing
 
 * Added `Router.finishRouting()` method to finish routing session without dismissing related UI and logic components. ([#3880](https://github.com/mapbox/mapbox-navigation-ios/pull/3880))
 * Added reporting `AlternativeRoute` during navigation sessions. Subscribe to `RouterDelegate.router(_:didUpdateAlternatives:removedAlternatives:)` or `Notification.Name.routeControllerDidUpdateAlternatives` notification to receive updates on actual alternative routes list. Switching to the alternative route could be monitored by observing `RouterDelegate.router(_:willTakeAlternativeRoute:at:)` and `RouterDelegate.router(_:didTakeAlternativeRouteAt:)` methods or `Notification.Name.routeControllerWillTakeAlternativeRoute` and `Notification.Name.routeControllerDidTakeAlternativeRoute` notifications. To configure alternative routes detection, setup `NavigationSettings.AlternativeRouteDetectionStrategy` before starting navigation. ([#3833](https://github.com/mapbox/mapbox-navigation-ios/pull/3833))
+* During turn-by-turn navigation, the map view displays any alternative routes that are currently available. Tapping an alternative route switches to it, just like in a standalone `NavigationMapView`. ([#3850](https://github.com/mapbox/mapbox-navigation-ios/pull/3850))
 * Implemented refreshing `RouteLeg.incidents` during a route refreshing. ([#3931](https://github.com/mapbox/mapbox-navigation-ios/pull/3931))
 * The `HistoryRecording.stopRecordingHistory(writingFileWith:)` method can be called safely from the main thread. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * Snapped locations are spaced more evenly when the application is connected to an external GPS or CarPlay device capable of high-frequency location updates and the user rounds a corner. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
@@ -29,8 +27,10 @@
 
 ### Map
 
+* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
 * Fixed an issue where camera kept receiving updates even after stopping `MapboxNavigationService`. ([#3928](https://github.com/mapbox/mapbox-navigation-ios/pull/3928))
+* Added `NavigationViewController.showsContinuousAlternatives` and `CarPlayNavigationViewController.showsContinuousAlternatives` flags to toggle displaying alternative route's lines during navigation session. Use `NavigationMapView.show(continuousAlternatives:)` and `NavigationMapView.removeContinuousAlternativesRoutes()` methods for fine control over displayed routes. ([#3850](https://github.com/mapbox/mapbox-navigation-ios/pull/3850))
 
 ### CarPlay
 
@@ -38,6 +38,10 @@
 * The map automatically chooses the night style when "Always Show Dark Maps" is enabled in the Appearance section of Settings. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Fixed an issue where a `StyleManager` for CarPlay would update the appearance on both CarPlay and the iOS device simultaneously. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
+
+### Other changes
+
+* Reduced peak memory usage.
 
 ## v2.5.1
 
