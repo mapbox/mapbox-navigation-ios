@@ -6,10 +6,7 @@
 
 * MapboxNavigation now requires [MapboxMaps v10.6.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-rc.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v105.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/105.0.0). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
-
-### User interface
-
-* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
+* MapboxCoreNavigation now requires [MapboxDirections v2.6.0-beta.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.6.0-beta.2). ([#3941](https://github.com/mapbox/mapbox-navigation-ios/pull/3941))
 
 ### Routing
 
@@ -29,6 +26,7 @@
 
 ### Map
 
+* Added `NavigationMapView.tolerance` property to configure the tolerance of map sources for route line, maneuver arrow, and restricted areas. The property controls the level of simplification by specifying the maximum allowed distance between the original line point and the simplified point. A higher tolerance value results in higher simplification. ([#3891](https://github.com/mapbox/mapbox-navigation-ios/pull/3891))
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
 * Fixed an issue where camera kept receiving updates even after stopping `MapboxNavigationService`. ([#3928](https://github.com/mapbox/mapbox-navigation-ios/pull/3928))
 
@@ -38,6 +36,10 @@
 * The map automatically chooses the night style when "Always Show Dark Maps" is enabled in the Appearance section of Settings. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Fixed an issue where a `StyleManager` for CarPlay would update the appearance on both CarPlay and the iOS device simultaneously. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
+
+### Other changes
+
+* Reduced peak memory usage.
 
 ## v2.5.1
 
