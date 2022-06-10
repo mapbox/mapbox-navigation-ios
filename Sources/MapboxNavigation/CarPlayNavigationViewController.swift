@@ -67,6 +67,28 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     /**
+     Toggles displaying alternative routes.
+     
+     If enabled, view will draw actual alternative route lines on the map.
+     Default value is `true`.
+     */
+    public var showsContinuousAlternatives: Bool = true {
+        didSet {
+            updateContinuousAlternatives()
+        }
+    }
+    
+    /**
+     `AlternativeRoute`s user might take during this trip to reach the destination using another road.
+     
+     Array contents are updated automatically duting the trip. Alternative routes may be slower or longer then the main route.
+     To get updates, subscribe to `Notification.Name.routeControllerDidUpdateAlternatives` notification.
+     */
+    public var continuousAlternatives: [AlternativeRoute] {
+        navigationService.router.continuousAlternatives
+    }
+    
+    /**
      Controls whether night style will be used whenever traversing through a tunnel. Defaults to `true`.
      */
     public var usesNightStyleWhileInTunnel: Bool = true
@@ -525,6 +547,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         if let coordinate = navigationService.routeProgress.route.shape?.coordinates.first {
             navigationMapView.setInitialCamera(coordinate)
         }
+        
+        updateContinuousAlternatives()
     }
     
     // MARK: Notifications Observer Methods
@@ -559,6 +583,11 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
                                                selector: #selector(didUpdateRoadNameFromStatus),
                                                name: .currentRoadNameDidChange,
                                                object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(continuousAlternativesDidChange),
+                                               name: .routeControllerDidUpdateAlternatives,
+                                               object: service.router)
     }
     
     func suspendNotifications() {
@@ -585,6 +614,22 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         NotificationCenter.default.removeObserver(self,
                                                   name: .currentRoadNameDidChange,
                                                   object: nil)
+        
+        NotificationCenter.default.removeObserver(self,
+                                                  name: .routeControllerDidUpdateAlternatives,
+                                                  object: nil)
+    }
+    
+    @objc func continuousAlternativesDidChange(_ notification: NSNotification) {
+        updateContinuousAlternatives()
+    }
+    
+    func updateContinuousAlternatives() {
+        if showsContinuousAlternatives {
+            navigationMapView?.show(continuousAlternatives: continuousAlternatives)
+        } else {
+            navigationMapView?.removeContinuousAlternativesRoutes()
+        }
     }
     
     @objc func visualInstructionDidChange(_ notification: NSNotification) {

@@ -492,6 +492,7 @@ extension CarPlayManager: CPInterfaceControllerDelegate {
         
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.removeRoutes()
+        navigationMapView.removeContinuousAlternativesRoutes()
         navigationMapView.removeWaypoints()
     }
     
@@ -726,6 +727,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.removeRoutes()
+        navigationMapView.removeContinuousAlternativesRoutes()
         navigationMapView.removeWaypoints()
     }
 
@@ -775,6 +777,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
         }
         let navigationMapView = carPlayMapViewController.navigationMapView
         navigationMapView.removeRoutes()
+        navigationMapView.removeContinuousAlternativesRoutes()
         navigationMapView.removeWaypoints()
         if let passiveLocationProvider = navigationMapView.mapView.location.locationProvider as? PassiveLocationProvider {
             passiveLocationProvider.locationManager.resumeTripSession()

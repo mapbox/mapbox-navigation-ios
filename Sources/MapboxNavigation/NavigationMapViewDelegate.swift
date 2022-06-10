@@ -126,6 +126,16 @@ public protocol NavigationMapViewDelegate: AnyObject, UnimplementedLogging {
     func navigationMapView(_ navigationMapView: NavigationMapView, didSelect route: Route)
     
     /**
+     Tells the receiver that the user has selected a continuous alternative route by interacting with the map view.
+     
+     Continuous alternatives are all non-primary routes, reported during the navigation session.
+     
+     - parameter navigationMapView: The `NavigationMapView`.
+     - parameter continuousAlternative: The route that was selected.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect continuousAlternative: AlternativeRoute)
+    
+    /**
      Tells the receiver that a waypoint was selected.
      
      - parameter navigationMapView: The `NavigationMapView`.
@@ -220,6 +230,13 @@ public extension NavigationMapViewDelegate {
      `UnimplementedLogging` prints a warning to standard output the first time this method is called.
      */
     func navigationMapView(_ navigationMapView: NavigationMapView, didSelect route: Route) {
+        logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
+    }
+    
+    /**
+     `UnimplementedLogging` prints a warning to standard output the first time this method is called.
+     */
+    func navigationMapView(_ navigationMapView: NavigationMapView, didSelect continuousAlternative: AlternativeRoute) {
         logUnimplemented(protocolType: NavigationMapViewDelegate.self, level: .debug)
     }
     
