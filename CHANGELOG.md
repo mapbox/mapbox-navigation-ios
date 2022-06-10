@@ -6,6 +6,7 @@
 
 * MapboxNavigation now requires [MapboxMaps v10.6.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-rc.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v105.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/105.0.0). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
+* MapboxCoreNavigation now requires [MapboxDirections v2.6.0-beta.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.6.0-beta.2). ([#3941](https://github.com/mapbox/mapbox-navigation-ios/pull/3941))
 
 ### Routing
 
