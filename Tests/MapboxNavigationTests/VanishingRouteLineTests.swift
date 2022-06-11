@@ -96,16 +96,15 @@ class VanishingRouteLineTests: TestCase {
         return stringFromLineGradient
     }
     
-    // TODO: Find out why camera set up failed.
     func setUpCameraZoom(at zoomeLevel: CGFloat) {
         let cameraState = navigationMapView.mapView.cameraState
-        let cameraOption = CameraOptions(center: cameraState.center, padding: cameraState.padding, zoom: zoomeLevel, bearing: cameraState.bearing, pitch: cameraState.pitch)
-        navigationMapView.mapView.camera.ease(to: cameraOption, duration: 0.1, curve: .linear)
-        
-        expectation(description: "Zoom set up") {
-            self.navigationMapView.mapView.cameraState.zoom == zoomeLevel
-        }
-        waitForExpectations(timeout: 2, handler: nil)
+        let cameraOptions = CameraOptions(center: cameraState.center,
+                                          padding: cameraState.padding,
+                                          zoom: zoomeLevel,
+                                          bearing: cameraState.bearing,
+                                          pitch: cameraState.pitch)
+        navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
+        XCTAssertEqual(navigationMapView.mapView.cameraState.zoom, zoomeLevel, "Zoom levels should be equal.")
     }
     
     func testParseRoutePoints() {
