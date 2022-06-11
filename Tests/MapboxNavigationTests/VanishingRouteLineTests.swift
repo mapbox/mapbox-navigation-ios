@@ -275,7 +275,6 @@ class VanishingRouteLineTests: TestCase {
         
         let expectedGradientStops = [0.0 : navigationMapView.trafficUnknownColor]
         XCTAssertEqual(expectedGradientStops, navigationMapView.currentLineGradientStops, "Failed to combine the same color of congestion segment.")
-        
     }
     
     func testSwitchCrossfadesCongestionSegments() {
