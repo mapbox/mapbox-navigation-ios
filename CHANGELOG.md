@@ -40,6 +40,7 @@
 ### Other changes
 
 * Reduced peak memory usage.
+* Fixed an issue when rerouting to the route which does not originate on current user location, route line and camera jumped to route origin. ([#3943](https://github.com/mapbox/mapbox-navigation-ios/pull/3943))
 
 ## v2.5.1
 

@@ -816,6 +816,9 @@ extension RouteController: Router {
             guard let self = self else { return }
             switch result {
             case .success:
+                if let location = self.location {
+                    routeProgress.updateDistanceTraveled(with: location)
+                }
                 self.routeProgress = routeProgress
                 self.announce(reroute: route, at: self.location, proactive: isProactive)
                 self.indexedRouteResponse = indexedRouteResponse
