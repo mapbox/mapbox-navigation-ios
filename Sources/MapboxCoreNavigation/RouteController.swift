@@ -287,7 +287,8 @@ open class RouteController: NSObject {
         }
         
         let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
-                                                               request: routeRequest, routeOrigin: RouterOrigin.custom)
+                                                               request: routeRequest,
+                                                               routeOrigin: indexedRouteResponse.responseOrigin)
         if parsedRoutes.isValue(),
            var routes = parsedRoutes.value as? [RouteInterface],
            routes.count > indexedRouteResponse.routeIndex {
@@ -875,10 +876,11 @@ extension RouteController: ReroutingControllerDelegate {
     func rerouteControllerWantsSwitchToAlternative(_ rerouteController: RerouteController,
                                                    response: RouteResponse,
                                                    routeIndex: Int,
-                                                   options: RouteOptions) {
-        let newRouteResponse = IndexedRouteResponse(routeResponse: response,
+                                                   options: RouteOptions,
+                                                   routeOrigin: RouterOrigin) {
+        var newRouteResponse = IndexedRouteResponse(routeResponse: response,
                                                     routeIndex: routeIndex)
-                                                    
+        newRouteResponse.responseOrigin = routeOrigin
         guard let newMainRoute = newRouteResponse.currentRoute else {
             return
         }
@@ -927,9 +929,11 @@ extension RouteController: ReroutingControllerDelegate {
         }
     }
     
-    func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions) {
-        updateRoute(with: IndexedRouteResponse(routeResponse: response,
-                                               routeIndex: 0),
+    func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions, routeOrigin: RouterOrigin) {
+        var indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
+                                                        routeIndex: 0)
+        indexedRouteResponse.responseOrigin = routeOrigin
+        updateRoute(with: indexedRouteResponse,
                     routeOptions: options,
                     isProactive: false) { [weak self] _ in
             self?.isRerouting = false

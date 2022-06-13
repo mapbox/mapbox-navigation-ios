@@ -1,6 +1,7 @@
 import Foundation
 import CoreLocation
 import MapboxDirections
+import MapboxNavigationNative
 
 /**
  A router data source, also known as a location manager, supplies location data to a `Router` instance. For example, a `MapboxNavigationService` supplies location data to a `RouteController` or `LegacyRouteController`.
@@ -46,6 +47,13 @@ public struct IndexedRouteResponse {
         self.routeResponse = routeResponse
         self.routeIndex = routeIndex
     }
+    
+    /**
+     Describes the origin of current route response.
+     
+     Used by `Navigator` for better understanding current state and various features functioning.
+     */
+    internal var responseOrigin: RouterOrigin = .custom
 }
 
 /**

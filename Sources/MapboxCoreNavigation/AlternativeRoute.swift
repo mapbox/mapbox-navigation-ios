@@ -29,7 +29,7 @@ public struct AlternativeRoute: Identifiable {
     /// It is unique withing the same navigation session.
     public let id: ID
     /// Original (main) route data
-    public let indexedRouteResponse: IndexedRouteResponse
+    public private(set) var indexedRouteResponse: IndexedRouteResponse
     /// Intersection on the main route, where alternative route branches.
     public let mainRouteIntersection: Intersection
     /// Intersection on the alternative route, where it splits from the main route.
@@ -48,7 +48,8 @@ public struct AlternativeRoute: Identifiable {
 
         self.indexedRouteResponse = .init(routeResponse: decoded.routeResponse,
                                           routeIndex: Int(nativeRouteAlternative.route.getRouteIndex()))
-
+        self.indexedRouteResponse.responseOrigin = nativeRouteAlternative.route.getRouterOrigin()
+        
         var legIndex = Int(nativeRouteAlternative.mainRouteFork.legIndex)
         var segmentIndex = Int(nativeRouteAlternative.mainRouteFork.segmentIndex)
 
