@@ -465,7 +465,7 @@ class NavigationCameraTests: TestCase {
         // Since zoomUpdatesAllowed is disabled it is expected that `CameraOptions.zoom`, which was
         // returned from the `ViewportDataSourceDelegateMock` will be the median value of the zoom range.
         let zoomRange = navigationViewportDataSource.options.followingCameraOptions.zoomRange
-        let expectedZoom: CGFloat = (zoomRange.lowerBound + zoomRange.upperBound) / 2
+        let expectedZoom = CGFloat((zoomRange.lowerBound + zoomRange.upperBound) / 2)
         navigationViewportDataSource.followingMobileCamera.zoom = expectedZoom
         
         let expectedBearing = 22.2

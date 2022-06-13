@@ -178,7 +178,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 followingCarPlayCamera.zoom = zoom
             } else {
                 let zoomRange = options.followingCameraOptions.zoomRange
-                let zoom = (zoomRange.lowerBound + zoomRange.upperBound) / 2
+                let zoom = CGFloat((zoomRange.lowerBound + zoomRange.upperBound) / 2)
                 followingMobileCamera.zoom = zoom
                 followingCarPlayCamera.zoom = zoom
             }
@@ -285,7 +285,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 followingCarPlayCamera.zoom = followingCarPlayCameraZoom
             } else {
                 let zoomRange = options.followingCameraOptions.zoomRange
-                let zoom = (zoomRange.lowerBound + zoomRange.upperBound) / 2
+                let zoom = CGFloat((zoomRange.lowerBound + zoomRange.upperBound) / 2)
                 followingMobileCamera.zoom = zoom
                 followingCarPlayCamera.zoom = zoom
             }
