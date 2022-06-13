@@ -176,6 +176,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 
                 followingMobileCamera.zoom = zoom
                 followingCarPlayCamera.zoom = zoom
+            } else {
+                let zoomRange = options.followingCameraOptions.zoomRange
+                let zoom = (zoomRange.lowerBound + zoomRange.upperBound) / 2
+                followingMobileCamera.zoom = zoom
+                followingCarPlayCamera.zoom = zoom
             }
             
             if followingCameraOptions.bearingUpdatesAllowed {
@@ -278,6 +283,11 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                       maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
                                                       minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
                 followingCarPlayCamera.zoom = followingCarPlayCameraZoom
+            } else {
+                let zoomRange = options.followingCameraOptions.zoomRange
+                let zoom = (zoomRange.lowerBound + zoomRange.upperBound) / 2
+                followingMobileCamera.zoom = zoom
+                followingCarPlayCamera.zoom = zoom
             }
             
             if options.followingCameraOptions.bearingUpdatesAllowed {
