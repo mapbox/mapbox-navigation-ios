@@ -162,12 +162,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let followingCameraOptions = options.followingCameraOptions
         
         if let location = rawLocation ?? passiveLocation {
-            if followingCameraOptions.centerUpdatesAllowed {
+            if followingCameraOptions.centerUpdatesAllowed || followingMobileCamera.center == nil {
                 followingMobileCamera.center = location.coordinate
                 followingCarPlayCamera.center = location.coordinate
             }
             
-            if followingCameraOptions.zoomUpdatesAllowed {
+            if followingCameraOptions.zoomUpdatesAllowed || followingMobileCamera.zoom == nil {
                 let altitude = 4000.0
                 let zoom = CGFloat(ZoomLevelForAltitude(altitude,
                                                         mapView.cameraState.pitch,
@@ -176,14 +176,9 @@ public class NavigationViewportDataSource: ViewportDataSource {
                 
                 followingMobileCamera.zoom = zoom
                 followingCarPlayCamera.zoom = zoom
-            } else {
-                let zoomRange = options.followingCameraOptions.zoomRange
-                let zoom = CGFloat((zoomRange.lowerBound + zoomRange.upperBound) / 2)
-                followingMobileCamera.zoom = zoom
-                followingCarPlayCamera.zoom = zoom
             }
             
-            if followingCameraOptions.bearingUpdatesAllowed {
+            if followingCameraOptions.bearingUpdatesAllowed || followingMobileCamera.bearing == nil {
                 followingMobileCamera.bearing = 0.0
                 followingCarPlayCamera.bearing = 0.0
             }
@@ -191,12 +186,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
             followingMobileCamera.anchor = mapView.center
             followingCarPlayCamera.anchor = mapView.center
             
-            if followingCameraOptions.pitchUpdatesAllowed {
+            if followingCameraOptions.pitchUpdatesAllowed || followingMobileCamera.pitch == nil {
                 followingMobileCamera.pitch = 0.0
                 followingCarPlayCamera.pitch = 0.0
             }
             
-            if followingCameraOptions.paddingUpdatesAllowed {
+            if followingCameraOptions.paddingUpdatesAllowed || followingMobileCamera.padding == nil {
                 followingMobileCamera.padding = .zero
                 followingCarPlayCamera.padding = .zero
             }
@@ -237,7 +232,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             let coordinatesForManeuverFraming = compoundManeuvers.reduce([], +)
             let coordinatesToManeuver = routeProgress.currentLegProgress.currentStep.shape?.coordinates.sliced(from: location.coordinate) ?? []
             
-            if options.followingCameraOptions.centerUpdatesAllowed {
+            if options.followingCameraOptions.centerUpdatesAllowed || followingMobileCamera.center == nil {
                 var center = location.coordinate
                 if let boundingBox = BoundingBox(from: coordinatesToManeuver + coordinatesForManeuverFraming) {
                     let coordinates = [
@@ -259,7 +254,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             let lookaheadDistance = self.lookaheadDistance(routeProgress)
             
-            if options.followingCameraOptions.zoomUpdatesAllowed {
+            if options.followingCameraOptions.zoomUpdatesAllowed || followingMobileCamera.zoom == nil {
                 let defaultZoomLevel = 12.0
                 
                 let coordinatesForIntersections = coordinatesToManeuver.sliced(from: nil,
@@ -283,14 +278,9 @@ public class NavigationViewportDataSource: ViewportDataSource {
                                                       maxZoomLevel: followingCameraOptions.zoomRange.upperBound,
                                                       minZoomLevel: followingCameraOptions.zoomRange.lowerBound)
                 followingCarPlayCamera.zoom = followingCarPlayCameraZoom
-            } else {
-                let zoomRange = options.followingCameraOptions.zoomRange
-                let zoom = CGFloat((zoomRange.lowerBound + zoomRange.upperBound) / 2)
-                followingMobileCamera.zoom = zoom
-                followingCarPlayCamera.zoom = zoom
             }
             
-            if options.followingCameraOptions.bearingUpdatesAllowed {
+            if options.followingCameraOptions.bearingUpdatesAllowed || followingMobileCamera.bearing == nil {
                 var bearing = location.course
                 let lookaheadDistance = self.lookaheadDistance(routeProgress)
                 let distance = fmax(lookaheadDistance, geometryFramingAfterManeuver.enabled
@@ -329,12 +319,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
             
             followingCarPlayCamera.anchor = followingCarPlayCameraAnchor
             
-            if options.followingCameraOptions.pitchUpdatesAllowed {
+            if options.followingCameraOptions.pitchUpdatesAllowed || followingMobileCamera.pitch == nil {
                 followingMobileCamera.pitch = CGFloat(pitch)
                 followingCarPlayCamera.pitch = CGFloat(pitch)
             }
             
-            if options.followingCameraOptions.paddingUpdatesAllowed {
+            if options.followingCameraOptions.paddingUpdatesAllowed || followingMobileCamera.padding == nil {
                 followingMobileCamera.padding = UIEdgeInsets(top: followingMobileCameraAnchor.y,
                                                              left: viewportPadding.left,
                                                              bottom: UIScreen.main.bounds.height - followingMobileCameraAnchor.y + 1.0,
@@ -366,12 +356,12 @@ public class NavigationViewportDataSource: ViewportDataSource {
         let carPlayCameraPadding = mapView.safeArea + UIEdgeInsets.centerEdgeInsets
         let overviewCameraOptions = options.overviewCameraOptions
         
-        if overviewCameraOptions.pitchUpdatesAllowed {
+        if overviewCameraOptions.pitchUpdatesAllowed || overviewMobileCamera.pitch == nil {
             overviewMobileCamera.pitch = 0.0
             overviewCarPlayCamera.pitch = 0.0
         }
         
-        if overviewCameraOptions.centerUpdatesAllowed {
+        if overviewCameraOptions.centerUpdatesAllowed || overviewMobileCamera.center == nil {
             if let boundingBox = BoundingBox(from: remainingCoordinatesOnRoute) {
                 let center = [
                     boundingBox.southWest,
@@ -383,7 +373,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             }
         }
         
-        if overviewCameraOptions.zoomUpdatesAllowed {
+        if overviewCameraOptions.zoomUpdatesAllowed || overviewMobileCamera.zoom == nil {
             overviewMobileCamera.zoom = zoom(remainingCoordinatesOnRoute,
                                              edgeInsets: viewportPadding,
                                              maxZoomLevel: overviewCameraOptions.maximumZoomLevel)
@@ -399,7 +389,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
         overviewCarPlayCamera.anchor = anchor(bounds: mapView.bounds,
                                               edgeInsets: carPlayCameraPadding)
         
-        if overviewCameraOptions.bearingUpdatesAllowed {
+        if overviewCameraOptions.bearingUpdatesAllowed || overviewMobileCamera.bearing == nil {
             // In case if `NavigationCamera` is already in `NavigationCameraState.overview` value
             // of bearing will be also ignored.
             let bearing = 0.0
@@ -420,7 +410,7 @@ public class NavigationViewportDataSource: ViewportDataSource {
             overviewCarPlayCamera.bearing = bearing
         }
         
-        if overviewCameraOptions.paddingUpdatesAllowed {
+        if overviewCameraOptions.paddingUpdatesAllowed || overviewMobileCamera.padding == nil {
             overviewMobileCamera.padding = viewportPadding
             overviewCarPlayCamera.padding = carPlayCameraPadding
         }

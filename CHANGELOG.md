@@ -24,7 +24,7 @@
 
 ### Location tracking
 
-* Fixed an issue where following camera stops updating when `FollowingCameraOptions.zoomUpdatesAllowed` disabled. ([#3946](https://github.com/mapbox/mapbox-navigation-ios/pull/3946))
+* Fixed an issue where camera stops updating when `centerUpdatesAllowed`, `zoomUpdatesAllowed`, `bearingUpdatesAllowed`, `pitchUpdatesAllowed` or `paddingUpdatesAllowed` disabled in `OverviewCameraOptions` and `FollowingCameraOptions`. ([#3946](https://github.com/mapbox/mapbox-navigation-ios/pull/3946))
 
 ### Pricing
 
