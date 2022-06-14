@@ -29,7 +29,7 @@ public struct AlternativeRoute: Identifiable {
     /// It is unique withing the same navigation session.
     public let id: ID
     /// Original (main) route data
-    public private(set) var indexedRouteResponse: IndexedRouteResponse
+    public let indexedRouteResponse: IndexedRouteResponse
     /// Intersection on the main route, where alternative route branches.
     public let mainRouteIntersection: Intersection
     /// Intersection on the alternative route, where it splits from the main route.
