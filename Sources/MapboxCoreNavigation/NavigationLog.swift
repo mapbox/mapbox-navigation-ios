@@ -42,7 +42,6 @@ public struct NavigationLogCategory: RawRepresentable {
 
     public static let billing: Self = .init(rawValue: "billing")
     public static let navigation: Self = .init(rawValue: "navigation")
-    public static let navigationUI: Self = .init(rawValue: "navigation-ui")
     public static let settings: Self = .init(rawValue: "settings")
     public static let unimplementedMethods: Self = .init(rawValue: "unimplemented-methods")
 
