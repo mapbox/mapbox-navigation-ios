@@ -54,7 +54,7 @@ public struct IndexedRouteResponse {
      
      Used by `Navigator` for better understanding current state and various features functioning.
      */
-    internal var responseOrigin: RouterOrigin
+    internal let responseOrigin: RouterOrigin
     
     init(routeResponse: RouteResponse,
          routeIndex: Int,
