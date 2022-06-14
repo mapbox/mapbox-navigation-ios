@@ -891,7 +891,8 @@ extension NavigationViewController: NavigationServiceDelegate {
                 let iconAttachment = try UNNotificationAttachment(identifier: "maneuver", url: temporaryURL, options: [UNNotificationAttachmentOptionsTypeHintKey: kUTTypePNG])
                 content.attachments = [iconAttachment]
             } catch {
-                NSLog("Failed to create UNNotificationAttachment with error: \(error.localizedDescription).")
+                Log.error("Failed to create UNNotificationAttachment with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
         
@@ -1061,7 +1062,8 @@ extension NavigationViewController: StyleManagerDelegate {
                 // In case if buildings layer present - update its background color.
                 self?.navigationMapView?.updateBuildingsLayerIfPresent()
             case .failure(let error):
-                NSLog("Failed to load \(styleURI) with error: \(error.localizedDescription).")
+                Log.error("Failed to load \(styleURI) with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
     }
