@@ -1,0 +1,203 @@
+{
+    "routeIdentifier": "ckbbkppbo0s797ao0ingd4gol",
+    "voiceLocale": "en-US",
+    "legs": [
+        {
+            "source": {
+                "allowsArrivingOnOppositeSide": true,
+                "coordinateAccuracy": -1,
+                "separatesLegs": true,
+                "location": [
+                    -122.39907599999999,
+                    37.776817999999999
+                ],
+                "name": "5th Street"
+            },
+            "destination": {
+                "allowsArrivingOnOppositeSide": true,
+                "coordinateAccuracy": -1,
+                "separatesLegs": true,
+                "location": [
+                    -122.39981400000001,
+                    37.777406999999997
+                ],
+                "name": "5th Street"
+            },
+            "profileIdentifier": "mapbox\\/driving-traffic",
+            "steps": [
+                {
+                    "name": "5th Street",
+                    "driving_side": "right",
+                    "speedLimitUnit": "mph",
+                    "intersections": [
+                        {
+                            "entry": [
+                                true
+                            ],
+                            "out": 0,
+                            "location": [
+                                -122.39907599999999,
+                                37.776817999999999
+                            ],
+                            "bearings": [
+                                315
+                            ]
+                        },
+                        {
+                            "entry": [
+                                true,
+                                false,
+                                true
+                            ],
+                            "in": 1,
+                            "out": 2,
+                            "location": [
+                                -122.399767,
+                                37.777369
+                            ],
+                            "bearings": [
+                                45,
+                                135,
+                                315
+                            ]
+                        }
+                    ],
+                    "mode": "driving",
+                    "geometry": "czu`gAfusmhF{Ut[wEnGyC~DkA|A",
+                    "speedLimitSign": "mutcd",
+                    "voiceInstructions": [
+                        {
+                            "announcement": "Head northwest on 5th Street, then you have arrived at your destination",
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">Head northwest on <say-as interpret-as=\"address\">5th</say-as> Street, then you have arrived at your destination</prosody></amazon:effect></speak>",
+                            "distanceAlongGeometry": 92.200000000000003
+                        },
+                        {
+                            "announcement": "You have arrived at your destination",
+                            "ssmlAnnouncement": "<speak><amazon:effect name=\"drc\"><prosody rate=\"1.08\">You have arrived at your destination</prosody></amazon:effect></speak>",
+                            "distanceAlongGeometry": 18.699999999999999
+                        }
+                    ],
+                    "distance": 92.200000000000003,
+                    "bannerInstructions": [
+                        {
+                            "primary": {
+                                "components": [
+                                    {
+                                        "type": "text",
+                                        "text": "You will arrive"
+                                    }
+                                ],
+                                "type": "arrive",
+                                "modifier": "straight",
+                                "text": "You will arrive"
+                            },
+                            "drivingSide": "right",
+                            "distanceAlongGeometry": 92.200000000000003
+                        },
+                        {
+                            "primary": {
+                                "components": [
+                                    {
+                                        "type": "text",
+                                        "text": "You have arrived"
+                                    }
+                                ],
+                                "type": "arrive",
+                                "modifier": "straight",
+                                "text": "You have arrived"
+                            },
+                            "drivingSide": "right",
+                            "distanceAlongGeometry": 18.699999999999999
+                        }
+                    ],
+                    "duration": 24.699999999999999,
+                    "maneuver": {
+                        "bearing_after": 315,
+                        "bearing_before": 0,
+                        "type": "depart",
+                        "location": [
+                            -122.39907599999999,
+                            37.776817999999999
+                        ],
+                        "instruction": "Head northwest on 5th Street"
+                    }
+                },
+                {
+                    "name": "5th Street",
+                    "driving_side": "right",
+                    "speedLimitUnit": "mph",
+                    "intersections": [
+                        {
+                            "entry": [
+                                true
+                            ],
+                            "in": 0,
+                            "location": [
+                                -122.39981400000001,
+                                37.777406999999997
+                            ],
+                            "bearings": [
+                                136
+                            ]
+                        }
+                    ],
+                    "mode": "driving",
+                    "geometry": "}~v`gAjcumhF",
+                    "speedLimitSign": "mutcd",
+                    "voiceInstructions": [
+                        
+                    ],
+                    "distance": 0,
+                    "bannerInstructions": [
+                        
+                    ],
+                    "duration": 0,
+                    "maneuver": {
+                        "bearing_after": 0,
+                        "bearing_before": 316,
+                        "type": "arrive",
+                        "location": [
+                            -122.39981400000001,
+                            37.777406999999997
+                        ],
+                        "instruction": "You have arrived at your destination"
+                    }
+                }
+            ],
+            "distance": 92.200000000000003,
+            "summary": "5th Street",
+            "annotation": {
+                "congestion": [
+                    "heavy",
+                    "low",
+                    "low",
+                    "moderate"
+                ],
+                "duration": [
+                    20.699999999999999,
+                    2,
+                    1.1000000000000001,
+                    0.90000000000000002
+                ],
+                "maxspeed": [
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    },
+                    {
+                        "unknown": true
+                    }
+                ]
+            },
+            "duration": 24.699999999999999
+        }
+    ],
+    "geometry": "czu`gAfusmhF{Ut[wEnGyC~DkA|A",
+    "distance": 92.200000000000003,
+    "duration": 24.699999999999999
+}

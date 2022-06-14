@@ -3,27 +3,15 @@ import CoreLocation
 extension NavigationMapView: CLLocationManagerDelegate {
     
     public func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
-        updateUserLocation(manager)
-    }
-    
-    func updateUserLocation(_ manager: CLLocationManager) {
-        if #available(iOS 14.0, *) {
-            // `UserHaloCourseView` will be applied in two cases:
-            // 1. When user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`.
-            // 2. When user disables `Precise Location` property in the settings of current application.
-            let shouldApply = reducedAccuracyActivatedMode || manager.accuracyAuthorization == .reducedAccuracy
-            applyReducedAccuracyMode(shouldApply: shouldApply)
-        }
+        // In case if location changes are not allowed - do not update authorization status and
+        // accuracy authorization. Used for testing.
+        if !_locationChangesAllowed { return }
         
-        if locationManager.isAuthorized() {
-            setupUserLocation()
+        if #available(iOS 14.0, *) {
+            authorizationStatus = manager.authorizationStatus
+            accuracyAuthorization = manager.accuracyAuthorization
         } else {
-            mapView.location.options.puckType = nil
-            reducedAccuracyUserHaloCourseView = nil
-            
-            if let currentCourseView = mapView.viewWithTag(NavigationMapView.userCourseViewTag) {
-                currentCourseView.removeFromSuperview()
-            }
+            authorizationStatus = CLLocationManager.authorizationStatus()
         }
     }
 }

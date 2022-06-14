@@ -588,31 +588,6 @@ class NavigationMapViewTests: TestCase {
         
         XCTAssertEqual(navigationMapView.roadClassesWithOverriddenCongestionLevels?.count, 3)
     }
-
-    // Disabled. TODO: Find out why buildings aren't highlighted
-    func disabled_testHighlightBuildings() {
-        let featureQueryExpectation = XCTestExpectation(description: "Wait for building to be highlighted.")
-
-        let navigationMapView = NavigationMapView(frame: CGRect(origin: .zero, size: .iPhone6Plus))
-        let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.79060960181454, longitude: -122.39564506250244),
-                                          zoom: 17.0,
-                                          bearing: 0.0,
-                                          pitch: 0.0)
-        navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
-        let buildingHighlightCoordinates: [CLLocationCoordinate2D] = [
-            CLLocationCoordinate2D(latitude: 37.79066471218174, longitude: -122.39581404166825),
-            CLLocationCoordinate2D(latitude: 37.78999490647732, longitude: -122.39485917526815)
-        ]
-        navigationMapView.highlightBuildings(at: buildingHighlightCoordinates, in3D: true, completion: { (result) -> Void in
-            if result == true  {
-                featureQueryExpectation.fulfill()
-            } else {
-                XCTFail("Building highlighted failed.")
-            }
-        })
-        
-        wait(for: [featureQueryExpectation], timeout: 5.0)
-    }
     
     func testFinalDestinationAnnotationIsPresent() {
         
