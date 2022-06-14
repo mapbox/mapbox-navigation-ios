@@ -87,7 +87,7 @@ open class NavigationMapView: UIView {
     /**
      Controls whether the main route style layer and its casing disappears as the user location puck travels over it. Defaults to `false`.
      
-     Used in standalone `NavigationMapView` during navigation. If using `NavigationViewController` and `CarPlayNavigationViewController`
+     Used in standalone `NavigationMapView` during active navigation. If using `NavigationViewController` and `CarPlayNavigationViewController`
      for active navigation, update `NavigationViewController.routeLineTracksTraversal` and `CarPlayNavigationViewController.routeLineTracksTraversal` instead.
      
      If `true`, the part of the route that has been traversed will be
@@ -97,7 +97,7 @@ open class NavigationMapView: UIView {
      for the `NavigationMapView.appearance()`. If `false`, the whole route will be shown without traversed
      part disappearing effect.
      
-     To update the route line during active navigation when `RouteProgree` changes, add observer for `Notification.Name.routeControllerProgressDidChange` and
+     To update the route line during active navigation when `RouteProgress` changes, add observer for `Notification.Name.routeControllerProgressDidChange` and
      call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)` with `shouldRedraw` as `false`.
      
      To update the route line during active navigation when route refresh or rerouting happens, add observers for `Notification.Name.routeControllerDidRefreshRoute` and
@@ -178,13 +178,13 @@ open class NavigationMapView: UIView {
     }
     
     func updateRouteLineWithRouteLineTracksTraversal() {
-        if routeLineTracksTraversal, let route = self.routes?.first {
+        if routeLineTracksTraversal, let route = routes?.first {
             initPrimaryRoutePoints(route: route)
             setUpLineGradientStops(along: route)
         } else {
             removeLineGradientStops()
         }
-        updateRestrictedAreasGradientStops(along: self.routes?.first)
+        updateRestrictedAreasGradientStops(along: routes?.first)
     }
     
     /**
