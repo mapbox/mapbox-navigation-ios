@@ -325,7 +325,7 @@ open class RouteController: NSObject {
                 /** NOTE:
                  `navigator.changeRouteLeg(forRoute:leg:)` will return true if the leg actually changed.
                  */
-                BillingHandler.shared.beginNewBillingSessionIfRunning(with: self.sessionUUID)
+                BillingHandler.shared.beginNewBillingSessionIfExists(with: self.sessionUUID)
             } else {
                 result = .failure(RouteControllerError.failedToChangeRouteLeg)
             }

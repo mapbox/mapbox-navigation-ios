@@ -170,7 +170,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
         guard !hasFinishedRouting else { return }
         precondition(!routeProgress.isFinalLeg, "Can not increment leg index beyond final leg.")
         routeProgress.legIndex += 1
-        BillingHandler.shared.beginNewBillingSessionIfRunning(with: sessionUUID)
+        BillingHandler.shared.beginNewBillingSessionIfExists(with: sessionUUID)
         completionHandler?(.success(routeProgress))
     }
 
