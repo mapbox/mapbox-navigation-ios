@@ -878,9 +878,9 @@ extension RouteController: ReroutingControllerDelegate {
                                                    routeIndex: Int,
                                                    options: RouteOptions,
                                                    routeOrigin: RouterOrigin) {
-        var newRouteResponse = IndexedRouteResponse(routeResponse: response,
-                                                    routeIndex: routeIndex)
-        newRouteResponse.responseOrigin = routeOrigin
+        let newRouteResponse = IndexedRouteResponse(routeResponse: response,
+                                                    routeIndex: routeIndex,
+                                                    responseOrigin: routeOrigin)
         guard let newMainRoute = newRouteResponse.currentRoute else {
             return
         }
@@ -930,9 +930,9 @@ extension RouteController: ReroutingControllerDelegate {
     }
     
     func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions, routeOrigin: RouterOrigin) {
-        var indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
-                                                        routeIndex: 0)
-        indexedRouteResponse.responseOrigin = routeOrigin
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: response,
+                                                        routeIndex: 0,
+                                                        responseOrigin: routeOrigin)
         updateRoute(with: indexedRouteResponse,
                     routeOptions: options,
                     isProactive: false) { [weak self] _ in

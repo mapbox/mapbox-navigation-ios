@@ -44,8 +44,9 @@ public struct IndexedRouteResponse {
      - parameter routeIndex: Selected route index in an array.
      */
     public init(routeResponse: RouteResponse, routeIndex: Int) {
-        self.routeResponse = routeResponse
-        self.routeIndex = routeIndex
+        self.init(routeResponse: routeResponse,
+                  routeIndex: routeIndex,
+                  responseOrigin: .custom)
     }
     
     /**
@@ -53,7 +54,15 @@ public struct IndexedRouteResponse {
      
      Used by `Navigator` for better understanding current state and various features functioning.
      */
-    internal var responseOrigin: RouterOrigin = .custom
+    internal var responseOrigin: RouterOrigin
+    
+    init(routeResponse: RouteResponse,
+         routeIndex: Int,
+         responseOrigin: RouterOrigin) {
+        self.routeResponse = routeResponse
+        self.routeIndex = routeIndex
+        self.responseOrigin = responseOrigin
+    }
 }
 
 /**

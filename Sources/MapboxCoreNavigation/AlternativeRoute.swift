@@ -47,8 +47,8 @@ public struct AlternativeRoute: Identifiable {
         }
 
         self.indexedRouteResponse = .init(routeResponse: decoded.routeResponse,
-                                          routeIndex: Int(nativeRouteAlternative.route.getRouteIndex()))
-        self.indexedRouteResponse.responseOrigin = nativeRouteAlternative.route.getRouterOrigin()
+                                          routeIndex: Int(nativeRouteAlternative.route.getRouteIndex()),
+                                          responseOrigin: nativeRouteAlternative.route.getRouterOrigin())
         
         var legIndex = Int(nativeRouteAlternative.mainRouteFork.legIndex)
         var segmentIndex = Int(nativeRouteAlternative.mainRouteFork.segmentIndex)
