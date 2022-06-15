@@ -85,6 +85,32 @@ open class NavigationMapView: UIView {
     }
     
     /**
+     Controls whether the main route style layer and its casing disappears as the user location puck travels over it. Defaults to `false`.
+     
+     Used in standalone `NavigationMapView` during active navigation. If using `NavigationViewController` and `CarPlayNavigationViewController`
+     for active navigation, update `NavigationViewController.routeLineTracksTraversal` and `CarPlayNavigationViewController.routeLineTracksTraversal` instead.
+     
+     If `true`, the part of the route that has been traversed will be
+     rendered with full transparency, to give the illusion of a
+     disappearing route. To customize the color that appears on the
+     traversed section of a route, override the `traversedRouteColor` property
+     for the `NavigationMapView.appearance()`. If `false`, the whole route will be shown without traversed
+     part disappearing effect.
+     
+     To update the route line during active navigation when `RouteProgress` changes, add observer for `Notification.Name.routeControllerProgressDidChange` and
+     call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)` with `shouldRedraw` as `false`.
+     
+     To update the route line during active navigation when route refresh or rerouting happens, add observers for `Notification.Name.routeControllerDidRefreshRoute` and
+     `Notification.Name.routeControllerDidReroute`. And call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)`
+     with `shouldRedraw` as `true`.
+     */
+    public var routeLineTracksTraversal: Bool = false {
+        didSet {
+            updateRouteLineWithRouteLineTracksTraversal()
+        }
+    }
+    
+    /**
      Location manager that is used to track accuracy and status authorization changes.
      */
     let locationManager = CLLocationManager()
@@ -130,17 +156,6 @@ open class NavigationMapView: UIView {
     
     var currentLineGradientStops = [Double: UIColor]()
     var currentRestrictedAreasStops = [Double: UIColor]()
-    var routeLineTracksTraversal: Bool = false {
-        didSet {
-            if routeLineTracksTraversal, let route = self.routes?.first {
-                initPrimaryRoutePoints(route: route)
-                setUpLineGradientStops(along: route)
-            } else {
-                removeLineGradientStops()
-            }
-            updateRestrictedAreasGradientStops(along: self.routes?.first)
-        }
-    }
     
     var showsRoute: Bool {
         get {
@@ -160,6 +175,16 @@ open class NavigationMapView: UIView {
             
             return true
         }
+    }
+    
+    func updateRouteLineWithRouteLineTracksTraversal() {
+        if routeLineTracksTraversal, let route = routes?.first {
+            initPrimaryRoutePoints(route: route)
+            setUpLineGradientStops(along: route)
+        } else {
+            removeLineGradientStops()
+        }
+        updateRestrictedAreasGradientStops(along: routes?.first)
     }
     
     /**
@@ -844,6 +869,38 @@ open class NavigationMapView: UIView {
     
     // MARK: User Tracking Features
     
+    var _locationChangesAllowed = true
+    
+    var authorizationStatus: CLAuthorizationStatus = .notDetermined {
+        didSet {
+            if isAuthorized() {
+                setupUserLocation()
+            } else {
+                mapView.location.options.puckType = nil
+                reducedAccuracyUserHaloCourseView = nil
+                
+                if let currentCourseView = mapView.viewWithTag(NavigationMapView.userCourseViewTag) {
+                    currentCourseView.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
+    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy {
+        didSet {
+            // `UserHaloCourseView` will be applied in two cases:
+            // 1. When user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`.
+            // 2. When user disables `Precise Location` property in the settings of current application.
+            let shouldApply = reducedAccuracyActivatedMode || accuracyAuthorization == .reducedAccuracy
+            applyReducedAccuracyMode(shouldApply: shouldApply)
+        }
+    }
+    
+    var allowedAuthorizationStatuses: [CLAuthorizationStatus] = [
+        .authorizedAlways,
+        .authorizedWhenInUse
+    ]
+    
     /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
      
@@ -861,7 +918,7 @@ open class NavigationMapView: UIView {
     var mostRecentUserCourseViewLocation: CLLocation?
     
     func setupUserLocation() {
-        if !locationManager.isAuthorized() { return }
+        if !isAuthorized() { return }
         
         // Since Mapbox Maps will not provide location data in case if `LocationOptions.puckType` is
         // set to nil, we have to draw empty and transparent `UIImage` instead of puck. This is used
@@ -892,6 +949,10 @@ open class NavigationMapView: UIView {
                 
                 courseView.tag = NavigationMapView.userCourseViewTag
                 mapView.addSubview(courseView)
+                
+                if let location = mostRecentUserCourseViewLocation {
+                    moveUserLocation(to: location)
+                }
             case .puck2D(configuration: let configuration):
                 mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
             case .puck3D(configuration: let configuration):
@@ -921,17 +982,14 @@ open class NavigationMapView: UIView {
     
     func applyReducedAccuracyMode(shouldApply: Bool) {
         if shouldApply {
+            let userHaloCourseViewFrame = CGRect(origin: .zero, size: 75.0)
+            reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: userHaloCourseViewFrame)
+            
             // In case if the most recent user location is available use it while adding
             // `UserHaloCourseView` on a map.
-            let userHaloCourseViewOrigin: CGPoint
-            if let mostRecentUserCourseViewLocation = mostRecentUserCourseViewLocation {
-                userHaloCourseViewOrigin = mapView.mapboxMap.point(for: mostRecentUserCourseViewLocation.coordinate)
-            } else {
-                userHaloCourseViewOrigin = .zero
+            if let location = mostRecentUserCourseViewLocation {
+                moveUserLocation(to: location)
             }
-            
-            let userHaloCourseViewFrame = CGRect(origin: userHaloCourseViewOrigin, size: 75.0)
-            reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: userHaloCourseViewFrame)
         } else {
             reducedAccuracyUserHaloCourseView = nil
         }
@@ -1221,7 +1279,6 @@ open class NavigationMapView: UIView {
         if route.legs.count > 1 {
             removeAlternativeRoutes()
             routes = [route]
-            updateRouteDurations(along: routes)
             
             do {
                 let waypointSourceIdentifier = NavigationMapView.SourceIdentifier.waypointSource

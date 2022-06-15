@@ -103,6 +103,7 @@
    * Replaced the `Router.routingProvider` property with `Router.customRoutingProvider`.
 * Renamed the `NavigationSettings.initialize(directions:tileStoreConfiguration:)` method to  `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)`. This method allows you to control whether the rerouting uses the network or offline routing data. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754), [#3824](https://github.com/mapbox/mapbox-navigation-ios/pull/3824))
 * Fixed an issue where a failure to calculate a route offline could result in a successful result being passed to a `Directions.RouteCompletionHandler`.
+* Added the public property of `NavigationMapView.routeLineTracksTraversal` when standalone `NavigationMapView` is used for active navigation. When it's set to `true`, call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)` to update the route line, part of the route line disappears behind the user puck as the user travels along the main route. ([#3855](https://github.com/mapbox/mapbox-navigation-ios/pull/3855))
 
 ### CarPlay
 

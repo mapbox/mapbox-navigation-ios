@@ -691,14 +691,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             currentLegIndexMapped = legIndex
         }
         
-        if routeLineTracksTraversal {
-            if routeProgress.routeIsComplete {
-                navigationMapView?.removeRoutes()
-            }
-            navigationMapView?.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-            navigationMapView?.travelAlongRouteLine(to: location.coordinate)
-        }
-
+        navigationMapView?.updateRouteLine(routeProgress: routeProgress, coordinate: location.coordinate)
     }
     
     private func checkTunnelState(at location: CLLocation, along progress: RouteProgress) {
@@ -730,7 +723,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     }
     
     @objc func refresh(_ notification: NSNotification) {
-        navigationMapView?.updateRouteLine(routeProgress: navigationService.routeProgress, coordinate: navigationService.router.location?.coordinate)
+        navigationMapView?.updateRouteLine(routeProgress: navigationService.routeProgress,
+                                           coordinate: navigationService.router.location?.coordinate,
+                                           shouldRedraw: true)
     }
     
     @objc func simulationStateDidChange(_ notification: NSNotification) {
@@ -782,7 +777,9 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         let nextStep = progress.currentLegProgress.stepIndex + 1
         
         navigationMapView?.addArrow(route: progress.route, legIndex: legIndex, stepIndex: nextStep)
-        navigationMapView?.updateRouteLine(routeProgress: progress, coordinate: navigationService.router.location?.coordinate)
+        navigationMapView?.updateRouteLine(routeProgress: progress,
+                                           coordinate: navigationService.router.location?.coordinate,
+                                           shouldRedraw: true)
         navigationMapView?.showWaypoints(on: progress.route, legIndex: legIndex)
     }
     

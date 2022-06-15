@@ -218,7 +218,7 @@ step-library:
       run:
         name: Prepare .mapbox file
         command: |
-          echo "foo" > ~/.mapbox
+          echo "${MAPBOX_ACCESS_TOKEN}" > ~/.mapbox
 
   - &prepare-netrc-file
       run:
@@ -456,6 +456,34 @@ jobs:
       - notify-build-finished:
           notify_success: << parameters.notify_success >>
 
+  spm-test-host-job:
+    parameters:
+      xcode:
+        type: string
+        default: "13.3.1"
+      device:
+        type: string
+      iOS:
+        type: string
+        default: "15.4"
+      notify_success:
+        type: boolean
+        default: false
+    macos:
+      xcode: << parameters.xcode >>
+    resource_class: macos.x86.metal.gen1
+    environment:
+      HOMEBREW_NO_AUTO_UPDATE: 1
+    steps:
+      - checkout
+      - *prepare-mapbox-file
+      - *prepare-netrc-file
+      - *add-github-to-known-hosts
+      - run:
+          name: Build test host application and execute tests
+          command: xcodebuild -project MapboxNavigation-SPM.xcodeproj -scheme MapboxNavigationTestHost -sdk iphonesimulator -configuration Release -destination "platform=iOS Simulator,OS=<< parameters.iOS >>,name=<< parameters.device >>" clean build test -enableCodeCoverage YES ENABLE_TESTABILITY=YES
+      - notify-build-finished
+
   get-api-log-job:
     parameters:
       xcode:
@@ -672,70 +700,78 @@ workflows:
           requires:
             - "Get old API logs"
             - "Get new API logs"
-  main-workflow:
+  test-host-workflow:
     jobs:
-      - build-job:
-          name: "Xcode_13.2.1_iOS_15.2_Debug"
-          xcode: "13.2.1"
-          iOS: "15.2"
-          device: "iPhone 13 Pro Max"
+      - spm-test-host-job:
+          name: "swift test; Xcode 13.4.1; iOS 15.5"
+          xcode: "13.4.1"
+          iOS: "15.5"
+          device: "iPhone 13"
           context: Slack Orb
-      - build-job:
-          name: "Xcode_13.2.1_iOS_15.2_SPM_Debug"
-          xcode: "13.2.1"
-          iOS: "15.2"
-          device: "iPhone 13 Pro Max"
-          spm: true
-          codecoverage: false
-          context: Slack Orb
-      - build-job:
-          name: "Xcode_13.2.1_iOS_15.2_Release"
-          xcode: "13.2.1"
-          iOS: "15.2"
-          device: "iPhone 13 Pro Max"
-          context: Slack Orb
-          configuration: "Release"
-      - build-job:
-          name: "Xcode_13.2.1_iOS_15.2_SPM_Release"
-          xcode: "13.2.1"
-          iOS: "15.2"
-          device: "iPhone 13 Pro Max"
-          spm: true
-          codecoverage: false
-          context: Slack Orb
-          configuration: "Release"
-      - pod-job:
-          name: "Xcode_13.2.1_iOS_15.2_CP_install"
-          update: false
-          xcode: "13.2.1"
-          iOS: "15.2"
-          archive: true
-          context: Slack Orb
-      - pod-job:
-          name: "Xcode_13.2.1_iOS_15.2_CP_update"
-          update: true
-          xcode: "13.2.1"
-          iOS: "15.2"
-          lint: true
-          context: Slack Orb
-      - build-example:
-          name: "Build Example"
-          context: Slack Orb
-      - spm-test-job:
-          name: "swift test; Xcode 12.5; iOS 14.5"
-          xcode: "12.5.0"
-          iOS: "14.5"
-          device: "iPhone 12 Pro Max"
-          context: Slack Orb
-      - spm-core-integration-test-job:
-          name: "Xcode 13; iOS 15.0; SPM Core test"
-      - generate-docs-job:
-          name: Generate / Publish Documentation
-          context: Slack Orb
-          filters:
-            tags:
-              only: /^v\d+\.\d+\.\d+(-.+)?$/
-      - ios-trigger-metrics:
-          filters:
-            branches:
-              only: main
+  main-workflow:
+      jobs:
+        - build-job:
+            name: "Xcode_13.2.1_iOS_15.2_Debug"
+            xcode: "13.2.1"
+            iOS: "15.2"
+            device: "iPhone 13 Pro Max"
+            context: Slack Orb
+        - build-job:
+            name: "Xcode_13.2.1_iOS_15.2_SPM_Debug"
+            xcode: "13.2.1"
+            iOS: "15.2"
+            device: "iPhone 13 Pro Max"
+            spm: true
+            codecoverage: false
+            context: Slack Orb
+        - build-job:
+            name: "Xcode_13.2.1_iOS_15.2_Release"
+            xcode: "13.2.1"
+            iOS: "15.2"
+            device: "iPhone 13 Pro Max"
+            context: Slack Orb
+            configuration: "Release"
+        - build-job:
+            name: "Xcode_13.2.1_iOS_15.2_SPM_Release"
+            xcode: "13.2.1"
+            iOS: "15.2"
+            device: "iPhone 13 Pro Max"
+            spm: true
+            codecoverage: false
+            context: Slack Orb
+            configuration: "Release"
+        - pod-job:
+            name: "Xcode_13.2.1_iOS_15.2_CP_install"
+            update: false
+            xcode: "13.2.1"
+            iOS: "15.2"
+            archive: true
+            context: Slack Orb
+        - pod-job:
+            name: "Xcode_13.2.1_iOS_15.2_CP_update"
+            update: true
+            xcode: "13.2.1"
+            iOS: "15.2"
+            lint: true
+            context: Slack Orb
+        - build-example:
+            name: "Build Example"
+            context: Slack Orb
+        - spm-test-job:
+            name: "swift test; Xcode 12.5; iOS 14.5"
+            xcode: "12.5.0"
+            iOS: "14.5"
+            device: "iPhone 12 Pro Max"
+            context: Slack Orb
+        - spm-core-integration-test-job:
+            name: "Xcode 13; iOS 15.0; SPM Core test"
+        - generate-docs-job:
+            name: Generate / Publish Documentation
+            context: Slack Orb
+            filters:
+              tags:
+                only: /^v\d+\.\d+\.\d+(-.+)?$/
+        - ios-trigger-metrics:
+            filters:
+              branches:
+                only: main

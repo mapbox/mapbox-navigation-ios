@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "358D14621E5E3B7700ADE590"
-               BuildableName = "Example.app"
-               BlueprintName = "Example"
+               BlueprintIdentifier = "8AC81F56284832E000662395"
+               BuildableName = "MapboxNavigationTestHost.app"
+               BlueprintName = "MapboxNavigationTestHost"
                ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -26,36 +26,16 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "NO"
-      language = "en">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
-            ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
+      shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
          <TestableReference
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MapboxNavigationTests"
-               BuildableName = "MapboxNavigationTests"
+               BlueprintIdentifier = "8AC81F6E284832F400662395"
+               BuildableName = "MapboxNavigationTests.xctest"
                BlueprintName = "MapboxNavigationTests"
-               ReferencedContainer = "container:">
-            </BuildableReference>
-         </TestableReference>
-         <TestableReference
-            skipped = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "MapboxCoreNavigationTests"
-               BuildableName = "MapboxCoreNavigationTests"
-               BlueprintName = "MapboxCoreNavigationTests"
-               ReferencedContainer = "container:">
+               ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -74,9 +54,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
+            BlueprintIdentifier = "8AC81F56284832E000662395"
+            BuildableName = "MapboxNavigationTestHost.app"
+            BlueprintName = "MapboxNavigationTestHost"
             ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -91,9 +71,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "358D14621E5E3B7700ADE590"
-            BuildableName = "Example.app"
-            BlueprintName = "Example"
+            BlueprintIdentifier = "8AC81F56284832E000662395"
+            BuildableName = "MapboxNavigationTestHost.app"
+            BlueprintName = "MapboxNavigationTestHost"
             ReferencedContainer = "container:MapboxNavigation-SPM.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

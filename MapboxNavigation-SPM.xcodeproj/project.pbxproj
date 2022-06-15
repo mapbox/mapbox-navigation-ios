@@ -17,28 +17,38 @@
 		8A092F9C25DEE81900CA7CF5 /* ViewController+FreeDrive.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */; };
 		8A0D5DB625DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
 		8A0D5DB725DF2A86006F0919 /* StyledFeature.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */; };
-		8A12E84128232C570071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E84028232C560071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */; };
-		8A12E84428232C8F0071AF00 /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E84328232C8F0071AF00 /* PresentationAnimator.swift */; };
-		8A12E84628232CA30071AF00 /* DismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E84528232CA30071AF00 /* DismissalAnimator.swift */; };
-		8A12E84F282343970071AF00 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E84E282343970071AF00 /* AppDelegate.swift */; };
-		8A12E851282343970071AF00 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E850282343970071AF00 /* SceneDelegate.swift */; };
-		8A12E853282343970071AF00 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A12E852282343970071AF00 /* ViewController.swift */; };
-		8A12E856282343970071AF00 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A12E854282343970071AF00 /* Main.storyboard */; };
-		8A12E858282343990071AF00 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A12E857282343990071AF00 /* Assets.xcassets */; };
-		8A12E85B282343990071AF00 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A12E859282343990071AF00 /* LaunchScreen.storyboard */; };
-		8A12E861282344750071AF00 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 8A12E860282344750071AF00 /* MapboxNavigation */; };
-		8AA03876280516A80007BD2D /* CustomDestinationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */; };
-		8AA03878280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */; };
-		8AA0387A28066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */; };
-		8AA0387C28066E860007BD2D /* CustomRoutesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */; };
-		8AB97C0E280A220100792939 /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = 8AB97C0D280A220100792939 /* MapboxGeocoder */; };
-		8AC63A9A280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */; };
-		8AC63A9C28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */; };
-		8AD220EE27C1A433000734A5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220ED27C1A433000734A5 /* AppDelegate.swift */; };
-		8AD220F027C1A433000734A5 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AD220EF27C1A433000734A5 /* SceneDelegate.swift */; };
-		8AD220F727C1A435000734A5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AD220F627C1A435000734A5 /* Assets.xcassets */; };
-		8AD220FA27C1A435000734A5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */; };
-		8AD2210627C1A772000734A5 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 8AD2210527C1A772000734A5 /* MapboxNavigation */; };
+		8A506B7C285A53A0008A6082 /* SnapshotTesting in Frameworks */ = {isa = PBXBuildFile; productRef = 8A506B7B285A53A0008A6082 /* SnapshotTesting */; };
+		8A506B97285A7AE8008A6082 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506B96285A7AE8008A6082 /* AppDelegate.swift */; };
+		8A506B99285A7AE8008A6082 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506B98285A7AE8008A6082 /* SceneDelegate.swift */; };
+		8A506BA0285A7AE9008A6082 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8A506B9F285A7AE9008A6082 /* Assets.xcassets */; };
+		8A506BA3285A7AE9008A6082 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8A506BA1285A7AE9008A6082 /* LaunchScreen.storyboard */; };
+		8A506BB3285A7E50008A6082 /* CustomRoutesPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BA9285A7E50008A6082 /* CustomRoutesPreviewViewController.swift */; };
+		8A506BB4285A7E50008A6082 /* CustomDestinationPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BAA285A7E50008A6082 /* CustomDestinationPreviewViewController.swift */; };
+		8A506BB5285A7E50008A6082 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BAB285A7E50008A6082 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */; };
+		8A506BB6285A7E50008A6082 /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BAC285A7E50008A6082 /* SceneDelegate+PreviewViewControllerDelegate.swift */; };
+		8A506BB7285A7E50008A6082 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BAE285A7E50008A6082 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */; };
+		8A506BB8285A7E50008A6082 /* DismissalAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BAF285A7E50008A6082 /* DismissalAnimator.swift */; };
+		8A506BB9285A7E50008A6082 /* PresentationAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BB0285A7E50008A6082 /* PresentationAnimator.swift */; };
+		8A506BBA285A7E50008A6082 /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BB1285A7E50008A6082 /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */; };
+		8A506BBB285A7E50008A6082 /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A506BB2285A7E50008A6082 /* SceneDelegate+NavigationViewControllerDelegate.swift */; };
+		8A506BBD285A7E7B008A6082 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 8A506BBC285A7E7B008A6082 /* MapboxNavigation */; };
+		8A506BBF285A7E9E008A6082 /* MapboxGeocoder in Frameworks */ = {isa = PBXBuildFile; productRef = 8A506BBE285A7E9E008A6082 /* MapboxGeocoder */; };
+		8A8EDF1C284ABE55009DE805 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A8EDF1B284ABE55009DE805 /* route.json */; };
+		8AC81F5A284832E000662395 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F59284832E000662395 /* AppDelegate.swift */; };
+		8AC81F5C284832E000662395 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F5B284832E000662395 /* SceneDelegate.swift */; };
+		8AC81F5E284832E000662395 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F5D284832E000662395 /* ViewController.swift */; };
+		8AC81F61284832E000662395 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC81F5F284832E000662395 /* Main.storyboard */; };
+		8AC81F63284832E200662395 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8AC81F62284832E200662395 /* Assets.xcassets */; };
+		8AC81F66284832E200662395 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8AC81F64284832E200662395 /* LaunchScreen.storyboard */; };
+		8AC81F72284832F400662395 /* MapboxNavigationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AC81F71284832F400662395 /* MapboxNavigationTests.swift */; };
+		8AC81F79284833D100662395 /* MapboxNavigation in Frameworks */ = {isa = PBXBuildFile; productRef = 8AC81F78284833D100662395 /* MapboxNavigation */; };
+		8AE170B32853EBF800257E2C /* NavigationMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AE170B22853EBF800257E2C /* NavigationMapView.swift */; };
+		8AE170B52853EC1800257E2C /* SimulatedLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8AE170B42853EC1800257E2C /* SimulatedLocationProvider.swift */; };
+		8AF3423C2857C5CC00791E33 /* two_routes_with_two_legs.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AF3423A2857C1C400791E33 /* two_routes_with_two_legs.json */; };
+		8AF3423D2857C64B00791E33 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 8A8EDF1B284ABE55009DE805 /* route.json */; };
+		8AF3423E2857C64D00791E33 /* two_routes_with_two_legs.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AF3423A2857C1C400791E33 /* two_routes_with_two_legs.json */; };
+		8AF342402857DE4800791E33 /* two_routes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AF3423F2857DE4800791E33 /* two_routes.json */; };
+		8AF342412857DE4800791E33 /* two_routes.json in Resources */ = {isa = PBXBuildFile; fileRef = 8AF3423F2857DE4800791E33 /* two_routes.json */; };
 		AED6285622CBE4CE00058A51 /* ViewController+InstructionsCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = AED6285522CBE4CE00058A51 /* ViewController+InstructionsCard.swift */; };
 		B4FC994927D19E3A00FB6D4A /* ViewController+StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FC994827D19E3A00FB6D4A /* ViewController+StyleManager.swift */; };
 		B4FC994A27D19E3A00FB6D4A /* ViewController+StyleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4FC994827D19E3A00FB6D4A /* ViewController+StyleManager.swift */; };
@@ -62,6 +72,16 @@
 		E27A2204265674E400AA935F /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E27A2202265674E400AA935F /* Localizable.strings */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		8AC81F73284832F400662395 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = C5ADFBC01DDCC7840011824B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8AC81F56284832E000662395;
+			remoteInfo = MapboxNavigationTestHost;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		35002D5D1E5F6ABB0090E733 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		35002D5F1E5F6ADB0090E733 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -81,30 +101,38 @@
 		43E69517233D297B0019BF6E /* cover.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = cover.md; path = docs/cover.md; sourceTree = "<group>"; };
 		8A092F9A25DEE81900CA7CF5 /* ViewController+FreeDrive.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "ViewController+FreeDrive.swift"; path = "Example/ViewController+FreeDrive.swift"; sourceTree = "<group>"; };
 		8A0D5DB525DF2A86006F0919 /* StyledFeature.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = StyledFeature.swift; path = Example/StyledFeature.swift; sourceTree = "<group>"; };
-		8A12E84028232C560071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+UIViewControllerTransitioningDelegate.swift"; sourceTree = "<group>"; };
-		8A12E84328232C8F0071AF00 /* PresentationAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
-		8A12E84528232CA30071AF00 /* DismissalAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissalAnimator.swift; sourceTree = "<group>"; };
-		8A12E84C282343970071AF00 /* NavigationViewExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NavigationViewExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8A12E84E282343970071AF00 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8A12E850282343970071AF00 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8A12E852282343970071AF00 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		8A12E855282343970071AF00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8A12E857282343990071AF00 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8A12E85A282343990071AF00 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8A12E85C282343990071AF00 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomDestinationPreviewViewController.swift; sourceTree = "<group>"; };
-		8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+PreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomRoutesPreviewViewController.swift; sourceTree = "<group>"; };
-		8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+NavigationViewControllerDelegate.swift"; sourceTree = "<group>"; };
-		8AD220EB27C1A433000734A5 /* PreviewViewControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewViewControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		8AD220ED27C1A433000734A5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		8AD220EF27C1A433000734A5 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		8AD220F627C1A435000734A5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		8AD220F927C1A435000734A5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8AD220FB27C1A435000734A5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8A506B94285A7AE8008A6082 /* PreviewViewControllerExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PreviewViewControllerExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8A506B96285A7AE8008A6082 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8A506B98285A7AE8008A6082 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		8A506B9F285A7AE9008A6082 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8A506BA2285A7AE9008A6082 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8A506BA4285A7AE9008A6082 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8A506BA9285A7E50008A6082 /* CustomRoutesPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomRoutesPreviewViewController.swift; sourceTree = "<group>"; };
+		8A506BAA285A7E50008A6082 /* CustomDestinationPreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDestinationPreviewViewController.swift; sourceTree = "<group>"; };
+		8A506BAB285A7E50008A6082 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		8A506BAC285A7E50008A6082 /* SceneDelegate+PreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+PreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		8A506BAE285A7E50008A6082 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+UIViewControllerTransitioningDelegate.swift"; sourceTree = "<group>"; };
+		8A506BAF285A7E50008A6082 /* DismissalAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DismissalAnimator.swift; sourceTree = "<group>"; };
+		8A506BB0285A7E50008A6082 /* PresentationAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationAnimator.swift; sourceTree = "<group>"; };
+		8A506BB1285A7E50008A6082 /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		8A506BB2285A7E50008A6082 /* SceneDelegate+NavigationViewControllerDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+NavigationViewControllerDelegate.swift"; sourceTree = "<group>"; };
+		8A8EDF11284A8DB8009DE805 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		8A8EDF1B284ABE55009DE805 /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
+		8AC81F57284832E000662395 /* MapboxNavigationTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MapboxNavigationTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		8AC81F59284832E000662395 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8AC81F5B284832E000662395 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		8AC81F5D284832E000662395 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		8AC81F60284832E000662395 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8AC81F62284832E200662395 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8AC81F65284832E200662395 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8AC81F67284832E200662395 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8AC81F6F284832F400662395 /* MapboxNavigationTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MapboxNavigationTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		8AC81F71284832F400662395 /* MapboxNavigationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapboxNavigationTests.swift; sourceTree = "<group>"; };
+		8AE170B22853EBF800257E2C /* NavigationMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationMapView.swift; sourceTree = "<group>"; };
+		8AE170B42853EC1800257E2C /* SimulatedLocationProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimulatedLocationProvider.swift; sourceTree = "<group>"; };
 		8AE82687267A2003009103A7 /* uk */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = uk; path = uk.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8AF3423A2857C1C400791E33 /* two_routes_with_two_legs.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = two_routes_with_two_legs.json; sourceTree = "<group>"; };
+		8AF3423F2857DE4800791E33 /* two_routes.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = two_routes.json; sourceTree = "<group>"; };
 		8B808F852487CFEC00EEE453 /* el */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = el; path = el.lproj/Main.strings; sourceTree = "<group>"; };
 		8DF8E4DE2202696800B29FEF /* Cartfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
 		8DF8E4DF2202696800B29FEF /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
@@ -155,20 +183,28 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8A12E849282343970071AF00 /* Frameworks */ = {
+		8A506B91285A7AE8008A6082 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A12E861282344750071AF00 /* MapboxNavigation in Frameworks */,
+				8A506BBD285A7E7B008A6082 /* MapboxNavigation in Frameworks */,
+				8A506BBF285A7E9E008A6082 /* MapboxGeocoder in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8AD220E827C1A433000734A5 /* Frameworks */ = {
+		8AC81F54284832E000662395 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AD2210627C1A772000734A5 /* MapboxNavigation in Frameworks */,
-				8AB97C0E280A220100792939 /* MapboxGeocoder in Frameworks */,
+				8AC81F79284833D100662395 /* MapboxNavigation in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8AC81F6C284832F400662395 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8A506B7C285A53A0008A6082 /* SnapshotTesting in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -218,55 +254,84 @@
 			name = Example;
 			sourceTree = "<group>";
 		};
-		8A12E84228232C810071AF00 /* Transitions */ = {
+		8A506B95285A7AE8008A6082 /* PreviewViewControllerExample */ = {
 			isa = PBXGroup;
 			children = (
-				8A12E84028232C560071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */,
-				8A12E84528232CA30071AF00 /* DismissalAnimator.swift */,
-				8A12E84328232C8F0071AF00 /* PresentationAnimator.swift */,
+				8A506BAD285A7E50008A6082 /* Transitions */,
+				8A506BA8285A7E50008A6082 /* Custom Banners */,
+				8A506BB1285A7E50008A6082 /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */,
+				8A506BAB285A7E50008A6082 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */,
+				8A506BB2285A7E50008A6082 /* SceneDelegate+NavigationViewControllerDelegate.swift */,
+				8A506BAC285A7E50008A6082 /* SceneDelegate+PreviewViewControllerDelegate.swift */,
+				8A506B96285A7AE8008A6082 /* AppDelegate.swift */,
+				8A506B98285A7AE8008A6082 /* SceneDelegate.swift */,
+				8A506B9F285A7AE9008A6082 /* Assets.xcassets */,
+				8A506BA1285A7AE9008A6082 /* LaunchScreen.storyboard */,
+				8A506BA4285A7AE9008A6082 /* Info.plist */,
 			);
-			path = Transitions;
+			path = PreviewViewControllerExample;
 			sourceTree = "<group>";
 		};
-		8A12E847282338460071AF00 /* Custom Banners */ = {
+		8A506BA8285A7E50008A6082 /* Custom Banners */ = {
 			isa = PBXGroup;
 			children = (
-				8AA0387B28066E860007BD2D /* CustomRoutesPreviewViewController.swift */,
-				8AA03875280516A70007BD2D /* CustomDestinationPreviewViewController.swift */,
+				8A506BA9285A7E50008A6082 /* CustomRoutesPreviewViewController.swift */,
+				8A506BAA285A7E50008A6082 /* CustomDestinationPreviewViewController.swift */,
 			);
 			path = "Custom Banners";
 			sourceTree = "<group>";
 		};
-		8A12E84D282343970071AF00 /* NavigationViewExample */ = {
+		8A506BAD285A7E50008A6082 /* Transitions */ = {
 			isa = PBXGroup;
 			children = (
-				8A12E84E282343970071AF00 /* AppDelegate.swift */,
-				8A12E850282343970071AF00 /* SceneDelegate.swift */,
-				8A12E852282343970071AF00 /* ViewController.swift */,
-				8A12E854282343970071AF00 /* Main.storyboard */,
-				8A12E857282343990071AF00 /* Assets.xcassets */,
-				8A12E859282343990071AF00 /* LaunchScreen.storyboard */,
-				8A12E85C282343990071AF00 /* Info.plist */,
+				8A506BAE285A7E50008A6082 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift */,
+				8A506BAF285A7E50008A6082 /* DismissalAnimator.swift */,
+				8A506BB0285A7E50008A6082 /* PresentationAnimator.swift */,
 			);
-			path = NavigationViewExample;
+			path = Transitions;
 			sourceTree = "<group>";
 		};
-		8AD220EC27C1A433000734A5 /* PreviewViewControllerExample */ = {
+		8AC81F58284832E000662395 /* MapboxNavigationTestHost */ = {
 			isa = PBXGroup;
 			children = (
-				8AD220ED27C1A433000734A5 /* AppDelegate.swift */,
-				8AD220EF27C1A433000734A5 /* SceneDelegate.swift */,
-				8AA03877280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift */,
-				8AA0387928066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift */,
-				8AC63A99280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift */,
-				8AC63A9B28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift */,
-				8A12E84228232C810071AF00 /* Transitions */,
-				8A12E847282338460071AF00 /* Custom Banners */,
-				8AD220F627C1A435000734A5 /* Assets.xcassets */,
-				8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */,
-				8AD220FB27C1A435000734A5 /* Info.plist */,
+				8AC81F59284832E000662395 /* AppDelegate.swift */,
+				8AC81F5B284832E000662395 /* SceneDelegate.swift */,
+				8AC81F5D284832E000662395 /* ViewController.swift */,
+				8AC81F5F284832E000662395 /* Main.storyboard */,
+				8AC81F62284832E200662395 /* Assets.xcassets */,
+				8AC81F64284832E200662395 /* LaunchScreen.storyboard */,
+				8AC81F67284832E200662395 /* Info.plist */,
 			);
-			path = PreviewViewControllerExample;
+			path = MapboxNavigationTestHost;
+			sourceTree = "<group>";
+		};
+		8AC81F70284832F400662395 /* MapboxNavigationTests */ = {
+			isa = PBXGroup;
+			children = (
+				8AE170B62853F72F00257E2C /* Resources */,
+				8AE170B12853EBE200257E2C /* Extensions */,
+				8AC81F71284832F400662395 /* MapboxNavigationTests.swift */,
+				8AE170B42853EC1800257E2C /* SimulatedLocationProvider.swift */,
+			);
+			path = MapboxNavigationTests;
+			sourceTree = "<group>";
+		};
+		8AE170B12853EBE200257E2C /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				8AE170B22853EBF800257E2C /* NavigationMapView.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		8AE170B62853F72F00257E2C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8AF3423F2857DE4800791E33 /* two_routes.json */,
+				8A8EDF1B284ABE55009DE805 /* route.json */,
+				8AF3423A2857C1C400791E33 /* two_routes_with_two_legs.json */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		8DF8E4DD2202694100B29FEF /* Documents */ = {
@@ -288,6 +353,7 @@
 		A9E2B43473B53369153F54C6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8A8EDF11284A8DB8009DE805 /* XCTest.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -296,10 +362,11 @@
 			isa = PBXGroup;
 			children = (
 				8DF8E4DD2202694100B29FEF /* Documents */,
-				8A12E84D282343970071AF00 /* NavigationViewExample */,
-				8AD220EC27C1A433000734A5 /* PreviewViewControllerExample */,
 				35B711DB1E5E7B70001EDA8D /* Example */,
 				DA1A1AFC25E085D40097BBD7 /*  */,
+				8AC81F58284832E000662395 /* MapboxNavigationTestHost */,
+				8AC81F70284832F400662395 /* MapboxNavigationTests */,
+				8A506B95285A7AE8008A6082 /* PreviewViewControllerExample */,
 				C5ADFBCA1DDCC7840011824B /* Products */,
 				A9E2B43473B53369153F54C6 /* Frameworks */,
 			);
@@ -312,8 +379,9 @@
 			children = (
 				358D14631E5E3B7700ADE590 /* Example.app */,
 				C53F2F0720EBC95600D9798F /* Example.app */,
-				8AD220EB27C1A433000734A5 /* PreviewViewControllerExample.app */,
-				8A12E84C282343970071AF00 /* NavigationViewExample.app */,
+				8AC81F57284832E000662395 /* MapboxNavigationTestHost.app */,
+				8AC81F6F284832F400662395 /* MapboxNavigationTests.xctest */,
+				8A506B94285A7AE8008A6082 /* PreviewViewControllerExample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -342,35 +410,14 @@
 			productReference = 358D14631E5E3B7700ADE590 /* Example.app */;
 			productType = "com.apple.product-type.application";
 		};
-		8A12E84B282343970071AF00 /* NavigationViewExample */ = {
+		8A506B93285A7AE8008A6082 /* PreviewViewControllerExample */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 8A12E85F282343990071AF00 /* Build configuration list for PBXNativeTarget "NavigationViewExample" */;
+			buildConfigurationList = 8A506BA5285A7AE9008A6082 /* Build configuration list for PBXNativeTarget "PreviewViewControllerExample" */;
 			buildPhases = (
-				8A12E848282343970071AF00 /* Sources */,
-				8A12E849282343970071AF00 /* Frameworks */,
-				8A12E84A282343970071AF00 /* Resources */,
-				8A12E862282345290071AF00 /* Apply Mapbox Access Token */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = NavigationViewExample;
-			packageProductDependencies = (
-				8A12E860282344750071AF00 /* MapboxNavigation */,
-			);
-			productName = NavigationViewExample;
-			productReference = 8A12E84C282343970071AF00 /* NavigationViewExample.app */;
-			productType = "com.apple.product-type.application";
-		};
-		8AD220EA27C1A433000734A5 /* PreviewViewControllerExample */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 8AD220FC27C1A435000734A5 /* Build configuration list for PBXNativeTarget "PreviewViewControllerExample" */;
-			buildPhases = (
-				8AD220E727C1A433000734A5 /* Sources */,
-				8AD220E827C1A433000734A5 /* Frameworks */,
-				8AD220E927C1A433000734A5 /* Resources */,
-				8AD2210727C1AEAA000734A5 /* Apply Mapbox Access Token */,
+				8A506B90285A7AE8008A6082 /* Sources */,
+				8A506B91285A7AE8008A6082 /* Frameworks */,
+				8A506B92285A7AE8008A6082 /* Resources */,
+				8A506BC0285A7ED4008A6082 /* Apply Mapbox Access Token */,
 			);
 			buildRules = (
 			);
@@ -378,12 +425,54 @@
 			);
 			name = PreviewViewControllerExample;
 			packageProductDependencies = (
-				8AD2210527C1A772000734A5 /* MapboxNavigation */,
-				8AB97C0D280A220100792939 /* MapboxGeocoder */,
+				8A506BBC285A7E7B008A6082 /* MapboxNavigation */,
+				8A506BBE285A7E9E008A6082 /* MapboxGeocoder */,
 			);
 			productName = PreviewViewControllerExample;
-			productReference = 8AD220EB27C1A433000734A5 /* PreviewViewControllerExample.app */;
+			productReference = 8A506B94285A7AE8008A6082 /* PreviewViewControllerExample.app */;
 			productType = "com.apple.product-type.application";
+		};
+		8AC81F56284832E000662395 /* MapboxNavigationTestHost */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8AC81F6A284832E200662395 /* Build configuration list for PBXNativeTarget "MapboxNavigationTestHost" */;
+			buildPhases = (
+				8AC81F53284832E000662395 /* Sources */,
+				8AC81F54284832E000662395 /* Frameworks */,
+				8AC81F55284832E000662395 /* Resources */,
+				8AB31424284837EC00348E52 /* Apply Mapbox Access Token */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MapboxNavigationTestHost;
+			packageProductDependencies = (
+				8AC81F78284833D100662395 /* MapboxNavigation */,
+			);
+			productName = MapboxNavigationTestHost;
+			productReference = 8AC81F57284832E000662395 /* MapboxNavigationTestHost.app */;
+			productType = "com.apple.product-type.application";
+		};
+		8AC81F6E284832F400662395 /* MapboxNavigationTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8AC81F75284832F400662395 /* Build configuration list for PBXNativeTarget "MapboxNavigationTests" */;
+			buildPhases = (
+				8AC81F6B284832F400662395 /* Sources */,
+				8AC81F6C284832F400662395 /* Frameworks */,
+				8AC81F6D284832F400662395 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8AC81F74284832F400662395 /* PBXTargetDependency */,
+			);
+			name = MapboxNavigationTests;
+			packageProductDependencies = (
+				8A506B7B285A53A0008A6082 /* SnapshotTesting */,
+			);
+			productName = MapboxNavigationTests;
+			productReference = 8AC81F6F284832F400662395 /* MapboxNavigationTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		C53F2EDE20EBC95600D9798F /* Example-CarPlay */ = {
 			isa = PBXNativeTarget;
@@ -416,8 +505,8 @@
 				KnownAssetTags = (
 					New,
 				);
-				LastSwiftUpdateCheck = 1330;
-				LastUpgradeCheck = 1330;
+				LastSwiftUpdateCheck = 1340;
+				LastUpgradeCheck = 1340;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					358D14621E5E3B7700ADE590 = {
@@ -426,11 +515,17 @@
 						LastSwiftMigration = 1030;
 						ProvisioningStyle = Automatic;
 					};
-					8A12E84B282343970071AF00 = {
-						CreatedOnToolsVersion = 13.3.1;
+					8A506B93285A7AE8008A6082 = {
+						CreatedOnToolsVersion = 13.4.1;
 					};
-					8AD220EA27C1A433000734A5 = {
-						CreatedOnToolsVersion = 13.2.1;
+					8AC81F56284832E000662395 = {
+						CreatedOnToolsVersion = 13.3.1;
+						LastSwiftMigration = 1330;
+					};
+					8AC81F6E284832F400662395 = {
+						CreatedOnToolsVersion = 13.3.1;
+						LastSwiftMigration = 1330;
+						TestTargetID = 8AC81F56284832E000662395;
 					};
 					C53F2EDE20EBC95600D9798F = {
 						DevelopmentTeam = GJZR2MEM28;
@@ -478,6 +573,7 @@
 			mainGroup = C5ADFBBF1DDCC7840011824B;
 			packageReferences = (
 				DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */,
+				8A8EDF0E284A8305009DE805 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */,
 			);
 			productRefGroup = C5ADFBCA1DDCC7840011824B /* Products */;
 			projectDirPath = "";
@@ -485,8 +581,9 @@
 			targets = (
 				358D14621E5E3B7700ADE590 /* Example */,
 				C53F2EDE20EBC95600D9798F /* Example-CarPlay */,
-				8AD220EA27C1A433000734A5 /* PreviewViewControllerExample */,
-				8A12E84B282343970071AF00 /* NavigationViewExample */,
+				8AC81F56284832E000662395 /* MapboxNavigationTestHost */,
+				8AC81F6E284832F400662395 /* MapboxNavigationTests */,
+				8A506B93285A7AE8008A6082 /* PreviewViewControllerExample */,
 			);
 		};
 /* End PBXProject section */
@@ -505,22 +602,35 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8A12E84A282343970071AF00 /* Resources */ = {
+		8A506B92285A7AE8008A6082 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A12E85B282343990071AF00 /* LaunchScreen.storyboard in Resources */,
-				8A12E858282343990071AF00 /* Assets.xcassets in Resources */,
-				8A12E856282343970071AF00 /* Main.storyboard in Resources */,
+				8A506BA3285A7AE9008A6082 /* LaunchScreen.storyboard in Resources */,
+				8A506BA0285A7AE9008A6082 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8AD220E927C1A433000734A5 /* Resources */ = {
+		8AC81F55284832E000662395 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AD220FA27C1A435000734A5 /* LaunchScreen.storyboard in Resources */,
-				8AD220F727C1A435000734A5 /* Assets.xcassets in Resources */,
+				8AF3423C2857C5CC00791E33 /* two_routes_with_two_legs.json in Resources */,
+				8A8EDF1C284ABE55009DE805 /* route.json in Resources */,
+				8AC81F66284832E200662395 /* LaunchScreen.storyboard in Resources */,
+				8AC81F63284832E200662395 /* Assets.xcassets in Resources */,
+				8AF342402857DE4800791E33 /* two_routes.json in Resources */,
+				8AC81F61284832E000662395 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8AC81F6D284832F400662395 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AF3423D2857C64B00791E33 /* route.json in Resources */,
+				8AF342412857DE4800791E33 /* two_routes.json in Resources */,
+				8AF3423E2857C64D00791E33 /* two_routes_with_two_legs.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,7 +648,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		8A12E862282345290071AF00 /* Apply Mapbox Access Token */ = {
+		8A506BC0285A7ED4008A6082 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -557,7 +667,7 @@
 			shellPath = /bin/sh;
 			shellScript = "# This Run Script build phase helps to keep the navigation SDK’s developers from exposing their own access tokens during development. See <https://www.mapbox.com/help/ios-private-access-token/> for more information. If you are developing an application privately, you may add the MGLMapboxAccessToken key directly to your Info.plist file and delete this build phase.\n\ntoken_file=~/.mapbox\ntoken_file2=~/mapbox\ntoken=\"$(cat $token_file 2>/dev/null || cat $token_file2 2>/dev/null)\"\nif [ \"$token\" ]; then\n  plutil -replace MBXAccessToken -string $token \"$TARGET_BUILD_DIR/$INFOPLIST_PATH\"\nelse\n  echo 'warning: Missing Mapbox access token'\n  open 'https://www.mapbox.com/account/access-tokens/'\n  echo \"warning: Get an access token from <https://www.mapbox.com/account/access-tokens/>, then create a new file at $token_file or $token_file2 that contains the access token.\"\nfi\n";
 		};
-		8AD2210727C1AEAA000734A5 /* Apply Mapbox Access Token */ = {
+		8AB31424284837EC00348E52 /* Apply Mapbox Access Token */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -624,31 +734,41 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8A12E848282343970071AF00 /* Sources */ = {
+		8A506B90285A7AE8008A6082 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8A12E853282343970071AF00 /* ViewController.swift in Sources */,
-				8A12E84F282343970071AF00 /* AppDelegate.swift in Sources */,
-				8A12E851282343970071AF00 /* SceneDelegate.swift in Sources */,
+				8A506B97285A7AE8008A6082 /* AppDelegate.swift in Sources */,
+				8A506BB4285A7E50008A6082 /* CustomDestinationPreviewViewController.swift in Sources */,
+				8A506BBB285A7E50008A6082 /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */,
+				8A506BB6285A7E50008A6082 /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */,
+				8A506B99285A7AE8008A6082 /* SceneDelegate.swift in Sources */,
+				8A506BB7285A7E50008A6082 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */,
+				8A506BB9285A7E50008A6082 /* PresentationAnimator.swift in Sources */,
+				8A506BBA285A7E50008A6082 /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */,
+				8A506BB5285A7E50008A6082 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */,
+				8A506BB8285A7E50008A6082 /* DismissalAnimator.swift in Sources */,
+				8A506BB3285A7E50008A6082 /* CustomRoutesPreviewViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		8AD220E727C1A433000734A5 /* Sources */ = {
+		8AC81F53284832E000662395 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8AD220EE27C1A433000734A5 /* AppDelegate.swift in Sources */,
-				8AA0387A28066DA80007BD2D /* SceneDelegate+CustomDestinationPreviewViewControllerDelegate.swift in Sources */,
-				8A12E84428232C8F0071AF00 /* PresentationAnimator.swift in Sources */,
-				8A12E84128232C570071AF00 /* SceneDelegate+UIViewControllerTransitioningDelegate.swift in Sources */,
-				8AA0387C28066E860007BD2D /* CustomRoutesPreviewViewController.swift in Sources */,
-				8AA03876280516A80007BD2D /* CustomDestinationPreviewViewController.swift in Sources */,
-				8AD220F027C1A433000734A5 /* SceneDelegate.swift in Sources */,
-				8AC63A9C28078AE8008E25D7 /* SceneDelegate+NavigationViewControllerDelegate.swift in Sources */,
-				8AA03878280517FA0007BD2D /* SceneDelegate+PreviewViewControllerDelegate.swift in Sources */,
-				8A12E84628232CA30071AF00 /* DismissalAnimator.swift in Sources */,
-				8AC63A9A280789D6008E25D7 /* SceneDelegate+CustomRoutesPreviewViewControllerDelegate.swift in Sources */,
+				8AC81F5E284832E000662395 /* ViewController.swift in Sources */,
+				8AC81F5A284832E000662395 /* AppDelegate.swift in Sources */,
+				8AC81F5C284832E000662395 /* SceneDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		8AC81F6B284832F400662395 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8AC81F72284832F400662395 /* MapboxNavigationTests.swift in Sources */,
+				8AE170B52853EC1800257E2C /* SimulatedLocationProvider.swift in Sources */,
+				8AE170B32853EBF800257E2C /* NavigationMapView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -670,6 +790,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8AC81F74284832F400662395 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8AC81F56284832E000662395 /* MapboxNavigationTestHost */;
+			targetProxy = 8AC81F73284832F400662395 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		35002D661E5F6B1B0090E733 /* Main.storyboard */ = {
@@ -707,26 +835,26 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		8A12E854282343970071AF00 /* Main.storyboard */ = {
+		8A506BA1285A7AE9008A6082 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8A12E855282343970071AF00 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		8A12E859282343990071AF00 /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8A12E85A282343990071AF00 /* Base */,
+				8A506BA2285A7AE9008A6082 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
 		};
-		8AD220F827C1A435000734A5 /* LaunchScreen.storyboard */ = {
+		8AC81F5F284832E000662395 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				8AD220F927C1A435000734A5 /* Base */,
+				8AC81F60284832E000662395 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		8AC81F64284832E200662395 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8AC81F65284832E200662395 /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -798,7 +926,7 @@
 			};
 			name = Release;
 		};
-		8A12E85D282343990071AF00 /* Debug */ = {
+		8A506BA6285A7AE9008A6082 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -810,15 +938,15 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NavigationViewExample/Info.plist;
+				INFOPLIST_FILE = PreviewViewControllerExample/Info.plist;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -829,7 +957,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.NavigationViewExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.PreviewViewControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -837,7 +965,7 @@
 			};
 			name = Debug;
 		};
-		8A12E85E282343990071AF00 /* Release */ = {
+		8A506BA7285A7AE9008A6082 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -848,15 +976,15 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = NavigationViewExample/Info.plist;
+				INFOPLIST_FILE = PreviewViewControllerExample/Info.plist;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -866,7 +994,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.NavigationViewExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.PreviewViewControllerExample;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -874,13 +1002,14 @@
 			};
 			name = Release;
 		};
-		8AD220FD27C1A435000734A5 /* Debug */ = {
+		8AC81F68284832E200662395 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
@@ -889,13 +1018,13 @@
 				DEVELOPMENT_TEAM = GJZR2MEM28;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PreviewViewControllerExample/Info.plist;
+				INFOPLIST_FILE = MapboxNavigationTestHost/Info.plist;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -906,35 +1035,38 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.PreviewViewControllerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTestHost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
-		8AD220FE27C1A435000734A5 /* Release */ = {
+		8AC81F69284832E200662395 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_WEAK = YES;
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = GJZR2MEM28;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = PreviewViewControllerExample/Info.plist;
+				INFOPLIST_FILE = MapboxNavigationTestHost/Info.plist;
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "Get user location";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Get user location";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Get user location";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -944,11 +1076,77 @@
 				);
 				MARKETING_VERSION = 1.0;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.PreviewViewControllerExample;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTestHost;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		8AC81F76284832F400662395 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapboxNavigationTestHost.app/MapboxNavigationTestHost";
+			};
+			name = Debug;
+		};
+		8AC81F77284832F400662395 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = GJZR2MEM28;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mapbox.MapboxNavigationTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MapboxNavigationTestHost.app/MapboxNavigationTestHost";
 			};
 			name = Release;
 		};
@@ -1139,20 +1337,29 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8A12E85F282343990071AF00 /* Build configuration list for PBXNativeTarget "NavigationViewExample" */ = {
+		8A506BA5285A7AE9008A6082 /* Build configuration list for PBXNativeTarget "PreviewViewControllerExample" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8A12E85D282343990071AF00 /* Debug */,
-				8A12E85E282343990071AF00 /* Release */,
+				8A506BA6285A7AE9008A6082 /* Debug */,
+				8A506BA7285A7AE9008A6082 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		8AD220FC27C1A435000734A5 /* Build configuration list for PBXNativeTarget "PreviewViewControllerExample" */ = {
+		8AC81F6A284832E200662395 /* Build configuration list for PBXNativeTarget "MapboxNavigationTestHost" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				8AD220FD27C1A435000734A5 /* Debug */,
-				8AD220FE27C1A435000734A5 /* Release */,
+				8AC81F68284832E200662395 /* Debug */,
+				8AC81F69284832E200662395 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8AC81F75284832F400662395 /* Build configuration list for PBXNativeTarget "MapboxNavigationTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8AC81F76284832F400662395 /* Debug */,
+				8AC81F77284832F400662395 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -1178,6 +1385,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8A8EDF0E284A8305009DE805 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-snapshot-testing.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/mapbox/MapboxGeocoder.swift.git";
@@ -1189,16 +1404,21 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8A12E860282344750071AF00 /* MapboxNavigation */ = {
+		8A506B7B285A53A0008A6082 /* SnapshotTesting */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8A8EDF0E284A8305009DE805 /* XCRemoteSwiftPackageReference "swift-snapshot-testing" */;
+			productName = SnapshotTesting;
+		};
+		8A506BBC285A7E7B008A6082 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigation;
 		};
-		8AB97C0D280A220100792939 /* MapboxGeocoder */ = {
+		8A506BBE285A7E9E008A6082 /* MapboxGeocoder */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DAF5BE4826A1FD1200DD3F2B /* XCRemoteSwiftPackageReference "MapboxGeocoder.swift" */;
 			productName = MapboxGeocoder;
 		};
-		8AD2210527C1A772000734A5 /* MapboxNavigation */ = {
+		8AC81F78284833D100662395 /* MapboxNavigation */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MapboxNavigation;
 		};
