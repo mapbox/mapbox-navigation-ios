@@ -114,7 +114,7 @@ extension SceneDelegate: PreviewViewControllerDelegate {
             let navigationService = MapboxNavigationService(routeResponse: routeResponse,
                                                             routeIndex: self.routeIndex,
                                                             routeOptions: navigationRouteOptions,
-                                                            routingProvider: NavigationSettings.shared.directions,
+                                                            customRoutingProvider: NavigationSettings.shared.directions,
                                                             credentials: NavigationSettings.shared.directions.credentials,
                                                             simulating: .always)
             

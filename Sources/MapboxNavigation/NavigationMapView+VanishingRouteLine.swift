@@ -51,19 +51,28 @@ extension NavigationMapView {
      
      - parameter routeProgress: The current `RouteProgress`.
      - parameter coordinate: The current user location coordinate.
+     - parameter redraw: A `Bool` value to decide whether the route is new. When style changes, `RouteController` did refresh route or reroute, the value
+     should be set to `true`. When `RouteController` did update the `RouteProgress`, the value should be set to `false`.
      */
-    func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?) {
-        show([routeProgress.route], legIndex: routeProgress.legIndex)
-        guard routeLineTracksTraversal else { return }
+    public func updateRouteLine(routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D?, shouldRedraw: Bool = false) {
+        if shouldRedraw {
+            show([routeProgress.route], legIndex: routeProgress.legIndex)
+        }
         
-        if routeProgress.routeIsComplete {
+        guard routeLineTracksTraversal && routes != nil else { return }
+        guard !routeProgress.routeIsComplete else {
             removeRoutes()
             removeContinuousAlternativesRoutes()
-        } else {
-            updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+            return
+        }
+        
+        updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        if shouldRedraw {
             offRouteDistanceCheckEnabled = false
             travelAlongRouteLine(to: coordinate)
             offRouteDistanceCheckEnabled = true
+        } else {
+            travelAlongRouteLine(to: coordinate)
         }
     }
     

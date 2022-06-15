@@ -22,6 +22,10 @@
 * When proactive reroute happens, new departure voice instruction will not be pronounced anymore. ([#3937](https://github.com/mapbox/mapbox-navigation-ios/pull/3937))
 * Fixed an issue where a departure instruction (e.g., “Head west”) was announced periodically in the middle of a trip due to proactive rerouting. ([#3937](https://github.com/mapbox/mapbox-navigation-ios/pull/3937))
 
+### Camera
+
+* Fixed an issue where camera stops updating when `centerUpdatesAllowed`, `zoomUpdatesAllowed`, `bearingUpdatesAllowed`, `pitchUpdatesAllowed` or `paddingUpdatesAllowed` disabled in `OverviewCameraOptions` and `FollowingCameraOptions`. ([#3946](https://github.com/mapbox/mapbox-navigation-ios/pull/3946))
+
 ### Pricing
 
 * When calling `MapboxNavigationService.start()` and `MapboxNavigationService.stop()` billing session will be resumed and paused respectively. ([#3928](https://github.com/mapbox/mapbox-navigation-ios/pull/3928))
@@ -103,6 +107,7 @@
    * Replaced the `Router.routingProvider` property with `Router.customRoutingProvider`.
 * Renamed the `NavigationSettings.initialize(directions:tileStoreConfiguration:)` method to  `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:)`. This method allows you to control whether the rerouting uses the network or offline routing data. ([#3754](https://github.com/mapbox/mapbox-navigation-ios/pull/3754), [#3824](https://github.com/mapbox/mapbox-navigation-ios/pull/3824))
 * Fixed an issue where a failure to calculate a route offline could result in a successful result being passed to a `Directions.RouteCompletionHandler`.
+* Added the public property of `NavigationMapView.routeLineTracksTraversal` when standalone `NavigationMapView` is used for active navigation. When it's set to `true`, call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)` to update the route line, part of the route line disappears behind the user puck as the user travels along the main route. ([#3855](https://github.com/mapbox/mapbox-navigation-ios/pull/3855))
 
 ### CarPlay
 
