@@ -284,4 +284,44 @@ class MapViewTests: TestCase {
         XCTAssertNil(VectorSource.preferredMapboxStreetsLocale(for: Locale(identifier: "tlh")),
                      "Klingon not yet implemented. 🖖")
     }
+    
+    func testMapViewPointForCoordinate() {
+        let resourceOptions = ResourceOptions(accessToken: "")
+        let mapInitOptions = MapInitOptions(resourceOptions: resourceOptions)
+        let mapView = MapView(frame: UIScreen.main.bounds, mapInitOptions: mapInitOptions)
+        
+        let styleJSONObject: [String: Any] = [
+            "version": 8,
+            "center": [
+                -122.38556, 37.76333
+            ],
+            "zoom": 15,
+            "sources": [],
+            "layers": []
+        ]
+        
+        let styleJSON: String = ValueConverter.toJson(forValue: styleJSONObject)
+        XCTAssertFalse(styleJSON.isEmpty, "ValueConverter should create valid JSON string.")
+        
+        let styleLoadedExpectation = expectation(description: "Map loading error expectation")
+        styleLoadedExpectation.assertForOverFulfill = false
+        
+        mapView.mapboxMap.onNext(.styleLoaded, handler: { _ in
+            styleLoadedExpectation.fulfill()
+        })
+        
+        mapView.mapboxMap.loadStyleJSON(styleJSON)
+        
+        wait(for: [styleLoadedExpectation], timeout: 1.0)
+        
+        var coordinate = CLLocationCoordinate2D(latitude: 37.76333, longitude: -122.38556)
+        var expectedPoint = CGPoint(x: 187.5, y: 333.4999999980936)
+        var actualPoint = mapView.mapboxMap.point(for: coordinate)
+        XCTAssertEqual(actualPoint, expectedPoint, "Points should be equal.")
+        
+        coordinate = CLLocationCoordinate2D(latitude: 37.42859, longitude: -122.12780)
+        expectedPoint = CGPoint(x: 187.5, y: 333.5000000009532)
+        actualPoint = mapView.mapboxMap.point(for: coordinate)
+        XCTAssertEqual(actualPoint, expectedPoint, "Points should be equal.")
+    }
 }
