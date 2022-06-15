@@ -35,11 +35,12 @@ class MapboxNavigationTests: XCTestCase {
     }
     
     func testHighlightBuildings() {
+        let timeout: TimeInterval = 10.0
         let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
         }
-        wait(for: [styleLoadedExpectation], timeout: 10.0)
+        wait(for: [styleLoadedExpectation], timeout: timeout)
         
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.79060, longitude: -122.39564),
                                           zoom: 17.0,
@@ -51,7 +52,7 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.mapView.mapboxMap.onNext(.mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
-        wait(for: [mapLoadedExpectation], timeout: 10.0)
+        wait(for: [mapLoadedExpectation], timeout: timeout)
         
         let buildingHighlightCoordinates: [CLLocationCoordinate2D] = [
             CLLocationCoordinate2D(latitude: 37.79066, longitude: -122.39581),
@@ -87,11 +88,12 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.authorizationStatus = .authorizedAlways
         navigationMapView.accuracyAuthorization = .fullAccuracy
         
+        let timeout: TimeInterval = 2.0
         let mapLoadedExpectation = XCTestExpectation(description: "Map loaded expectation.")
         navigationMapView.mapView.mapboxMap.onNext(.mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
-        wait(for: [mapLoadedExpectation], timeout: 2.0)
+        wait(for: [mapLoadedExpectation], timeout: timeout)
         
         let location = CLLocation(latitude: 37.79066, longitude: -122.39581)
         let simulatedLocationProvider = SimulatedLocationProvider(currentLocation: location)
@@ -163,13 +165,14 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.authorizationStatus = .authorizedAlways
         navigationMapView.accuracyAuthorization = .fullAccuracy
         
+        let timeout: TimeInterval = 2.0
         let location = CLLocation(latitude: 37.79060960181454, longitude: -122.39564506250244)
         
         let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
         }
-        wait(for: [styleLoadedExpectation], timeout: 2.0)
+        wait(for: [styleLoadedExpectation], timeout: timeout)
         
         let cameraOptions = CameraOptions(center: location.coordinate,
                                           zoom: 14.0,
@@ -229,11 +232,12 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.authorizationStatus = .denied
         navigationMapView.userLocationStyle = nil
         
+        let timeout: TimeInterval = 2.0
         let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
         }
-        wait(for: [styleLoadedExpectation], timeout: 2.0)
+        wait(for: [styleLoadedExpectation], timeout: timeout)
         
         navigationMapView.mapView.mapboxMap.setCamera(to: CameraOptions(zoom: 15.0,
                                                                         bearing: 0.0,
@@ -244,7 +248,7 @@ class MapboxNavigationTests: XCTestCase {
             mapLoadedExpectation.fulfill()
         }
         
-        wait(for: [mapLoadedExpectation], timeout: 2.0)
+        wait(for: [mapLoadedExpectation], timeout: timeout)
         
         var coordinates = [
             CLLocationCoordinate2DMake(37.766786656393464, -122.41803651931673),
