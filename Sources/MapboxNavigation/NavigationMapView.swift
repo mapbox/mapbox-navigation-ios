@@ -85,6 +85,32 @@ open class NavigationMapView: UIView {
     }
     
     /**
+     Controls whether the main route style layer and its casing disappears as the user location puck travels over it. Defaults to `false`.
+     
+     Used in standalone `NavigationMapView` during active navigation. If using `NavigationViewController` and `CarPlayNavigationViewController`
+     for active navigation, update `NavigationViewController.routeLineTracksTraversal` and `CarPlayNavigationViewController.routeLineTracksTraversal` instead.
+     
+     If `true`, the part of the route that has been traversed will be
+     rendered with full transparency, to give the illusion of a
+     disappearing route. To customize the color that appears on the
+     traversed section of a route, override the `traversedRouteColor` property
+     for the `NavigationMapView.appearance()`. If `false`, the whole route will be shown without traversed
+     part disappearing effect.
+     
+     To update the route line during active navigation when `RouteProgress` changes, add observer for `Notification.Name.routeControllerProgressDidChange` and
+     call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)` with `shouldRedraw` as `false`.
+     
+     To update the route line during active navigation when route refresh or rerouting happens, add observers for `Notification.Name.routeControllerDidRefreshRoute` and
+     `Notification.Name.routeControllerDidReroute`. And call `NavigationMapView.updateRouteLine(routeProgress:coordinate:shouldRedraw:)`
+     with `shouldRedraw` as `true`.
+     */
+    public var routeLineTracksTraversal: Bool = false {
+        didSet {
+            updateRouteLineWithRouteLineTracksTraversal()
+        }
+    }
+    
+    /**
      Location manager that is used to track accuracy and status authorization changes.
      */
     let locationManager = CLLocationManager()
@@ -130,17 +156,6 @@ open class NavigationMapView: UIView {
     
     var currentLineGradientStops = [Double: UIColor]()
     var currentRestrictedAreasStops = [Double: UIColor]()
-    var routeLineTracksTraversal: Bool = false {
-        didSet {
-            if routeLineTracksTraversal, let route = self.routes?.first {
-                initPrimaryRoutePoints(route: route)
-                setUpLineGradientStops(along: route)
-            } else {
-                removeLineGradientStops()
-            }
-            updateRestrictedAreasGradientStops(along: self.routes?.first)
-        }
-    }
     
     var showsRoute: Bool {
         get {
@@ -160,6 +175,16 @@ open class NavigationMapView: UIView {
             
             return true
         }
+    }
+    
+    func updateRouteLineWithRouteLineTracksTraversal() {
+        if routeLineTracksTraversal, let route = routes?.first {
+            initPrimaryRoutePoints(route: route)
+            setUpLineGradientStops(along: route)
+        } else {
+            removeLineGradientStops()
+        }
+        updateRestrictedAreasGradientStops(along: routes?.first)
     }
     
     /**
