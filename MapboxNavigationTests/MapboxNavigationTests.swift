@@ -39,7 +39,7 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
         }
-        wait(for: [styleLoadedExpectation], timeout: 2.0)
+        wait(for: [styleLoadedExpectation], timeout: 10.0)
         
         let cameraOptions = CameraOptions(center: CLLocationCoordinate2D(latitude: 37.79060, longitude: -122.39564),
                                           zoom: 17.0,
@@ -51,7 +51,7 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.mapView.mapboxMap.onNext(.mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
-        wait(for: [mapLoadedExpectation], timeout: 2.0)
+        wait(for: [mapLoadedExpectation], timeout: 10.0)
         
         let buildingHighlightCoordinates: [CLLocationCoordinate2D] = [
             CLLocationCoordinate2D(latitude: 37.79066, longitude: -122.39581),
