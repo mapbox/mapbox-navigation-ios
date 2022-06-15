@@ -73,7 +73,8 @@ extension NavigationMapView {
                 try mapView.mapboxMap.style.removeLayer(withId: identifier)
             }
         } catch {
-            NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
+            Log.error("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
     }
 
@@ -154,7 +155,8 @@ extension NavigationMapView {
                 try mapView.mapboxMap.style.addPersistentLayer(highlightedBuildingsLayer, layerPosition: layerPosition)
             }
         } catch {
-            NSLog("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).")
+            Log.error("Failed to perform operation on \(identifier) with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
     }
     
@@ -169,7 +171,8 @@ extension NavigationMapView {
                 buildingExtrusionLayer.fillExtrusionColor = .constant(.init(buildingHighlightColor))
             }
         } catch {
-            NSLog("Failed to update building extrusion layer color with error: \(error.localizedDescription).")
+            Log.error("Failed to update building extrusion layer color with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
     }
 }

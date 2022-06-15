@@ -1,11 +1,8 @@
 import MapboxNavigationNative
 import MapboxDirections
-import os.log
 @_implementationOnly import MapboxCommon_Private
 
 class Navigator {
-    static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "Navigator")
-
     /**
      Tiles version string. If not specified explicitly - will be automatically resolved
      to the latest version.
@@ -43,17 +40,12 @@ class Navigator {
             
             self?.navigator.setRoutesFor(routesParams) { [weak self] result in
                 if result.isValue() {
-                    os_log("Navigator has been updated",
-                           log: Navigator.log,
-                           type: .debug)
+                    Log.info("Navigator has been updated", category: .navigation)
                     completion(.success(route?.getRouteInfo()))
                 }
                 else if result.isError() {
                     let reason = (result.error as String?) ?? ""
-                    os_log("Failed to update navigator with reason: %{public}@",
-                           log: Navigator.log,
-                           type: .error,
-                           reason)
+                    Log.error("Failed to update navigator with reason: \(reason)", category: .navigation)
                     completion(.failure(NavigatorError.failedToUpdateRoutes(reason: reason)))
                 }
                 else {

@@ -108,7 +108,7 @@ open class StyleManager {
         }
         
         guard let interval = solar.date.intervalUntilTimeOfDayChanges(sunrise: sunrise, sunset: sunset) else {
-            print("Unable to get sunrise or sunset. Automatic style switching has been disabled.")
+            Log.error("Unable to get sunrise or sunset. Automatic style switching has been disabled.", category: .navigationUI)
             return
         }
 

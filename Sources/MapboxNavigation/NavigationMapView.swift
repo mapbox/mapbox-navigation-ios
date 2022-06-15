@@ -489,7 +489,8 @@ open class NavigationMapView: UIView {
                 }
             }
         } catch {
-            NSLog("Failed to perform operation while adding maneuver arrow with error: \(error.localizedDescription).")
+            Log.error("Failed to perform operation while adding maneuver arrow with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
     }
     
@@ -517,7 +518,8 @@ open class NavigationMapView: UIView {
                 try mapView.mapboxMap.style.removeImage(withId: NavigationMapView.ImageIdentifier.arrowImage)
             }
         } catch {
-            NSLog("Failed to remove image \(NavigationMapView.ImageIdentifier.arrowImage) from style with error: \(error.localizedDescription).")
+            Log.error("Failed to remove image \(NavigationMapView.ImageIdentifier.arrowImage) from style with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
     }
     
@@ -589,7 +591,8 @@ open class NavigationMapView: UIView {
                 try mapView.mapboxMap.style.addSource(restrictedAreaGeoJSON, id: sourceIdentifier)
             }
         } catch {
-            NSLog("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).")
+            Log.error("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
         
         let layerIdentifier = route.identifier(.restrictedRouteAreaRoute)
@@ -633,7 +636,8 @@ open class NavigationMapView: UIView {
                 
                 try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
             } catch {
-                NSLog("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).")
+                Log.error("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
         
@@ -660,7 +664,8 @@ open class NavigationMapView: UIView {
                 try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
             }
         } catch {
-            NSLog("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).")
+            Log.error("Failed to add route source \(sourceIdentifier) with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
         
         let layerIdentifier = route.identifier(.route(isMainRoute: isMainRoute))
@@ -738,7 +743,8 @@ open class NavigationMapView: UIView {
                 
                 try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
             } catch {
-                NSLog("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).")
+                Log.error("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
         
@@ -763,7 +769,8 @@ open class NavigationMapView: UIView {
                 try mapView.mapboxMap.style.addSource(geoJSONSource, id: sourceIdentifier)
             }
         } catch {
-            NSLog("Failed to add route casing source \(sourceIdentifier) with error: \(error.localizedDescription).")
+            Log.error("Failed to add route casing source \(sourceIdentifier) with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
         
         let layerIdentifier = route.identifier(.routeCasing(isMainRoute: isMainRoute))
@@ -803,7 +810,8 @@ open class NavigationMapView: UIView {
                 }
                 try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
             } catch {
-                NSLog("Failed to add route casing layer \(layerIdentifier) with error: \(error.localizedDescription).")
+                Log.error("Failed to add route casing layer \(layerIdentifier) with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
         
@@ -1021,7 +1029,8 @@ open class NavigationMapView: UIView {
         do {
             try updateAnnotationSymbolImages()
         } catch {
-            NSLog("Error occured while updating annotation symbol images: \(error.localizedDescription).")
+            Log.error("Error occured while updating annotation symbol images: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
         
         updateRouteDurations(along: visibleRoutes)
@@ -1157,7 +1166,8 @@ open class NavigationMapView: UIView {
         do {
             try addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features))
         } catch {
-            NSLog("Error occured while adding route annotation symbol layer: \(error.localizedDescription).")
+            Log.error("Error occured while adding route annotation symbol layer: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
     }
     
@@ -1243,7 +1253,8 @@ open class NavigationMapView: UIView {
                     try mapView.mapboxMap.style.addPersistentLayer(symbolsLayer, layerPosition: .above(circlesLayer.id))
                 }
             } catch {
-                NSLog("Failed to perform operation while adding waypoint with error: \(error.localizedDescription).")
+                Log.error("Failed to perform operation while adding waypoint with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
         
@@ -1611,7 +1622,8 @@ open class NavigationMapView: UIView {
                 try mapView.mapboxMap.style.addPersistentLayer(circleLayer)
             }
         } catch {
-            NSLog("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).")
+            Log.error("Failed to perform operation while adding voice instructions with error: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
     }
     

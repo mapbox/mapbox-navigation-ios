@@ -50,7 +50,7 @@ public struct RecentItem: Equatable, Codable {
             
             return recentItems.sorted(by: { $0.timestamp > $1.timestamp })
         } catch {
-            NSLog("Failed to load recent items with error: \(error.localizedDescription)")
+            Log.error("Failed to load recent items with error: \(error.localizedDescription)", category: .navigationUI)
             return []
         }
     }
@@ -84,7 +84,7 @@ extension Array where Element == RecentItem {
             let data = try JSONEncoder().encode(self)
             try data.write(to: recentItemsPathURL)
         } catch {
-            NSLog("Failed to save recent items with error: \(error.localizedDescription)")
+            Log.error("Failed to save recent items with error: \(error.localizedDescription)", category: .navigationUI)
             return false
         }
         
