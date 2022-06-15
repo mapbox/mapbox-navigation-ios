@@ -317,15 +317,15 @@ final class BillingHandler {
     }
 
     /**
-     Starts a new billing session in `billingService` if a session with `uuid` exists and active.
+     Starts a new billing session in `billingService` if a session with `uuid` exists.
 
-     Use this method to force `billingService` to start a new billing session. 
+     Use this method to force `billingService` to start a new billing session.
      */
-    func beginNewBillingSessionIfRunning(with uuid: UUID) {
+    func beginNewBillingSessionIfExists(with uuid: UUID) {
         lock.lock()
 
-        guard let session = _sessions[uuid], !session.isPaused else {
-            return
+        guard let session = _sessions[uuid] else {
+            lock.unlock(); return
         }
 
         lock.unlock()
@@ -341,6 +341,10 @@ final class BillingHandler {
             case .resumeFailed, .unknown:
                 break
             }
+        }
+
+        if session.isPaused {
+            pauseBillingSession(with: uuid)
         }
     }
 
