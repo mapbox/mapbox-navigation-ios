@@ -21,6 +21,31 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
         return title
     }()
 
+    @objc dynamic public var selectedCircleColor: UIColor = .lightGray {
+        didSet {
+            if isSelected {
+                circleColor = selectedCircleColor
+                circleOutlineColor = selectedCircleColor
+            }
+        }
+    }
+    
+    @objc dynamic public var normalCircleColor: UIColor = .black {
+        didSet {
+            if !isSelected {
+                circleColor = normalCircleColor
+            }
+        }
+    }
+
+    @objc dynamic public var normalCircleOutlineColor: UIColor = .black {
+        didSet {
+            if !isSelected {
+                circleOutlineColor = normalCircleOutlineColor
+            }
+        }
+    }
+    
     public var circleColor: UIColor = .black {
         didSet {
             circleView.backgroundColor = circleColor

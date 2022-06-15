@@ -5,7 +5,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     var currentFeedbackType: FeedbackItemType?
 
-    private let reportButtonContainer = UIView()
+    private let reportButtonContainer = FeedbackStyleView()
     private let reportButtonSeparator = UIView()
     private let reportButton = UIButton()
 
@@ -83,12 +83,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
-        if #available(iOS 13.0, *) {
-            cell.circleColor = .systemBlue
-        } else {
-            cell.circleColor = .lightGray
-        }
-        cell.circleOutlineColor = cell.circleColor
+        cell.circleColor = cell.selectedCircleColor
+        cell.circleOutlineColor = cell.selectedCircleColor
 
         let item = sections[indexPath.row]
         selectedItems.append(item)
@@ -98,13 +94,8 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
-        if #available(iOS 13.0, *) {
-            cell.circleColor = .systemBackground
-            cell.circleOutlineColor = .label
-        } else {
-            cell.circleColor = .white
-            cell.circleOutlineColor = .darkText
-        }
+        cell.circleColor = cell.normalCircleColor
+        cell.circleOutlineColor = cell.normalCircleOutlineColor
 
         let item = sections[indexPath.row]
         selectedItems.removeAll { existingItem -> Bool in
@@ -169,7 +160,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
         let reportButtonContainerLeading = reportButtonContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let reportButtonContainerTrailing = reportButtonContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        let reportButtonContainerBottom = reportButtonContainer.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
+        let reportButtonContainerBottom = reportButtonContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         let reportButtonContainerHeight = reportButtonContainer.heightAnchor.constraint(equalToConstant: 96)
 
         let reportButtonSeparatorLeading = reportButtonSeparator.leadingAnchor.constraint(equalTo: reportButtonContainer.leadingAnchor)
