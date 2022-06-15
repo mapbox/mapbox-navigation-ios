@@ -510,6 +510,62 @@ class NavigationCameraTests: TestCase {
         XCTAssertEqual(cameraOptions?.padding, expectedPadding, "Paddings should be equal.")
     }
     
+    func testFollowingCameraModificationsDisabled() {
+        let navigationMapView = NavigationMapView(frame: .zero)
+        
+        // Create new `NavigationViewportDataSource` instance, which listens to the
+        // `Notification.Name.routeControllerProgressDidChange` notification, which is sent during
+        // active guidance navigation.
+        let navigationViewportDataSource = NavigationViewportDataSource(navigationMapView.mapView,
+                                                                        viewportDataSourceType: .active)
+        
+        // Some camera related modifications disabled while others not. It is expected that `CameraOptions` should
+        // still have non-nil default values after the progress update. Camera related properties with disabled
+        // modifications should also keep default value unchanged.
+        navigationViewportDataSource.options.followingCameraOptions.centerUpdatesAllowed = true
+        navigationViewportDataSource.options.followingCameraOptions.zoomUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.bearingUpdatesAllowed = false
+        navigationViewportDataSource.options.followingCameraOptions.pitchUpdatesAllowed = true
+        navigationViewportDataSource.options.followingCameraOptions.paddingUpdatesAllowed = true
+        
+        let expectedZoom: CGFloat = 11.1
+        navigationViewportDataSource.followingMobileCamera.zoom = expectedZoom
+        
+        let expectedBearing = 22.2
+        navigationViewportDataSource.followingMobileCamera.bearing = expectedBearing
+        
+        navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
+        
+        let viewportDataSourceDelegateMock = ViewportDataSourceDelegateMock()
+        navigationMapView.navigationCamera.viewportDataSource.delegate = viewportDataSourceDelegateMock
+        
+        guard let route = self.route(from: "route-for-navigation-camera") else {
+            XCTFail("Route should be valid.")
+            return
+        }
+        
+        let routeProgress = RouteProgress(route: route,
+                                          options: NavigationRouteOptions(coordinates: []))
+        routeProgress.currentLegProgress.stepIndex = 1
+        let expectation = self.expectation(forNotification: .routeControllerProgressDidChange,
+                                           object: self) { _ in
+            return true
+        }
+        
+        let location = CLLocation(latitude: 37.765469, longitude: -122.415279)
+        
+        sendRouteControllerProgressDidChangeNotification(routeProgress, location: location)
+        
+        wait(for: [expectation], timeout: 1.0)
+        
+        let cameraOptions = viewportDataSourceDelegateMock.cameraOptions?[CameraOptions.followingMobileCamera]
+        XCTAssertNotNil(cameraOptions?.center, "Center coordinates should be valid.")
+        XCTAssertEqual(cameraOptions?.zoom, expectedZoom, "Zooms should be equal.")
+        XCTAssertEqual(cameraOptions?.bearing, expectedBearing, "Bearings should be equal.")
+        XCTAssertNotNil(cameraOptions?.pitch, "Pitches should be valid.")
+        XCTAssertNotNil(cameraOptions?.padding, "Paddings should be valid.")
+    }
+    
     func testBearingSmoothingIsDisabled() {
         let navigationMapView = NavigationMapView(frame: .zero)
         
