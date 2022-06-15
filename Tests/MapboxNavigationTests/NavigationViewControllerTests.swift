@@ -333,65 +333,6 @@ class NavigationViewControllerTests: TestCase {
                        newRouteResponse.identifier)
     }
     
-    func disabled_testPuck3DLayerPosition() {
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                              routeIndex: 0,
-                                              routeOptions: routeOptions,
-                                              customRoutingProvider: MapboxRoutingProvider(.offline),
-                                              credentials: Fixture.credentials,
-                                              simulating: .never)
-        let options = NavigationOptions(styles: [TestableDayStyle()], navigationService: service)
-        let navigationViewController = NavigationViewController(for: initialRouteResponse,
-                                                                   routeIndex: 0,
-                                                                   routeOptions: routeOptions,
-                                                                   navigationOptions: options)
-        
-        // `LocationProducer.latestLocation` must be set to non-nil value to be able to create source and layer
-        // for 3D puck. To do this custom location provider is created, which triggers one location change.
-        let locationProvider = AppleLocationProvider()
-        navigationViewController.navigationMapView?.mapView.location.overrideLocationProvider(with: locationProvider)
-        
-        let locationManager = CLLocationManager()
-        locationProvider.locationManager(locationManager, didUpdateLocations: [CLLocation(latitude: 0.0, longitude: 0.0)])
-        
-        XCTAssertEqual(navigationViewController.navigationMapView?.mapView.location.options.puckType, nil, "Puck type should not be set by default.")
-        
-        var model = MapboxMaps.Model()
-        // Setting asset URL is required for successful 3D puck placement.
-        model.uri = URL(string: "http://asset.gltf")!
-        let puck3DConfiguration = Puck3DConfiguration(model: model)
-        navigationViewController.navigationMapView?.userLocationStyle = .puck3D(configuration: puck3DConfiguration)
-        
-        let puckType: PuckType = .puck3D(puck3DConfiguration)
-        XCTAssertEqual(navigationViewController.navigationMapView?.mapView.location.options.puckType, puckType, "Puck type should be set to non-nil value.")
-        
-        guard let instantLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers.map({ $0.id }),
-              instantLayerIds.contains(NavigationMapView.LayerIdentifier.puck3DLayer) else {
-                  XCTFail("Failed to set up 3D puck instantly")
-                  return
-              }
-        
-        navigationViewController.navigationMapView?.show([self.initialRoute])
-        navigationViewController.navigationMapView?.addArrow(route: self.initialRoute, legIndex: 0, stepIndex: 4)
-        
-        guard let allLayerIds = navigationViewController.navigationMapView?.mapView.mapboxMap.style.allLayerIdentifiers
-                .map({ $0.id }),
-              let indexOfArrowLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowLayer),
-              let indexOfMainRouteLayer = allLayerIds.firstIndex(of: self.initialRoute.identifier(.route(isMainRoute: true))),
-              let indexOfArrowStrokeLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowStrokeLayer),
-              let indexOfArrowSymbolLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.arrowSymbolLayer),
-              let indexOfPuck3DLayer = allLayerIds.firstIndex(of: NavigationMapView.LayerIdentifier.puck3DLayer) else {
-                  XCTFail("Failed to find all the layers")
-                  return
-              }
-        
-        // Since `NavigationViewController` presents route line after its presentation it is expected
-        // that maneuver arrow stroke layer will be added above main route line layer.
-        XCTAssert(indexOfMainRouteLayer < indexOfArrowStrokeLayer, "Arrow stroke layer should be above main route layer")
-        XCTAssert(indexOfArrowLayer < indexOfArrowSymbolLayer, "Arrow symbol layer is below arrow layer")
-        XCTAssert(indexOfArrowSymbolLayer < indexOfPuck3DLayer, "Puck 3D layer is below arrow symbol layer")
-    }
-    
     func testBlankBanner() {
         let options = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 38.853108, longitude: -77.043331),
