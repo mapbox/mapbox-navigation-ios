@@ -869,6 +869,38 @@ open class NavigationMapView: UIView {
     
     // MARK: User Tracking Features
     
+    var _locationChangesAllowed = true
+    
+    var authorizationStatus: CLAuthorizationStatus = .notDetermined {
+        didSet {
+            if isAuthorized() {
+                setupUserLocation()
+            } else {
+                mapView.location.options.puckType = nil
+                reducedAccuracyUserHaloCourseView = nil
+                
+                if let currentCourseView = mapView.viewWithTag(NavigationMapView.userCourseViewTag) {
+                    currentCourseView.removeFromSuperview()
+                }
+            }
+        }
+    }
+    
+    var accuracyAuthorization: CLAccuracyAuthorization = .fullAccuracy {
+        didSet {
+            // `UserHaloCourseView` will be applied in two cases:
+            // 1. When user explicitly sets `NavigationMapView.reducedAccuracyActivatedMode` to `true`.
+            // 2. When user disables `Precise Location` property in the settings of current application.
+            let shouldApply = reducedAccuracyActivatedMode || accuracyAuthorization == .reducedAccuracy
+            applyReducedAccuracyMode(shouldApply: shouldApply)
+        }
+    }
+    
+    var allowedAuthorizationStatuses: [CLAuthorizationStatus] = [
+        .authorizedAlways,
+        .authorizedWhenInUse
+    ]
+    
     /**
      Specifies how the map displays the user’s current location, including the appearance and underlying implementation.
      
@@ -886,7 +918,7 @@ open class NavigationMapView: UIView {
     var mostRecentUserCourseViewLocation: CLLocation?
     
     func setupUserLocation() {
-        if !locationManager.isAuthorized() { return }
+        if !isAuthorized() { return }
         
         // Since Mapbox Maps will not provide location data in case if `LocationOptions.puckType` is
         // set to nil, we have to draw empty and transparent `UIImage` instead of puck. This is used
@@ -917,6 +949,10 @@ open class NavigationMapView: UIView {
                 
                 courseView.tag = NavigationMapView.userCourseViewTag
                 mapView.addSubview(courseView)
+                
+                if let location = mostRecentUserCourseViewLocation {
+                    moveUserLocation(to: location)
+                }
             case .puck2D(configuration: let configuration):
                 mapView.location.options.puckType = .puck2D(configuration ?? Puck2DConfiguration())
             case .puck3D(configuration: let configuration):
@@ -946,17 +982,14 @@ open class NavigationMapView: UIView {
     
     func applyReducedAccuracyMode(shouldApply: Bool) {
         if shouldApply {
+            let userHaloCourseViewFrame = CGRect(origin: .zero, size: 75.0)
+            reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: userHaloCourseViewFrame)
+            
             // In case if the most recent user location is available use it while adding
             // `UserHaloCourseView` on a map.
-            let userHaloCourseViewOrigin: CGPoint
-            if let mostRecentUserCourseViewLocation = mostRecentUserCourseViewLocation {
-                userHaloCourseViewOrigin = mapView.mapboxMap.point(for: mostRecentUserCourseViewLocation.coordinate)
-            } else {
-                userHaloCourseViewOrigin = .zero
+            if let location = mostRecentUserCourseViewLocation {
+                moveUserLocation(to: location)
             }
-            
-            let userHaloCourseViewFrame = CGRect(origin: userHaloCourseViewOrigin, size: 75.0)
-            reducedAccuracyUserHaloCourseView = UserHaloCourseView(frame: userHaloCourseViewFrame)
         } else {
             reducedAccuracyUserHaloCourseView = nil
         }
@@ -1246,7 +1279,6 @@ open class NavigationMapView: UIView {
         if route.legs.count > 1 {
             removeAlternativeRoutes()
             routes = [route]
-            updateRouteDurations(along: routes)
             
             do {
                 let waypointSourceIdentifier = NavigationMapView.SourceIdentifier.waypointSource
