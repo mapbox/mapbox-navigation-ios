@@ -55,7 +55,7 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   MapboxCommon: 65f730f39074ea5c1e3c4290c4b5e00314b45867
   MapboxCoreMaps: d992e13b84ca0f0e7c68f37c1d1474ce2e662746
-  MapboxCoreNavigation: 60d67e5303c83772720950121bf9994e238db97d
+  MapboxCoreNavigation: 90e6de9d21cd95eafa7805c53bcb7f216bf0adb9
   MapboxDirections-pre: 993557363caace4e609e893db943478210247c4b
   MapboxMaps: c6ce45e35ffe7c24a8ee6f28f53515b1beffbc26
   MapboxMobileEvents: febdd92835daa258ca1c1faad0821c0b3394ef40
