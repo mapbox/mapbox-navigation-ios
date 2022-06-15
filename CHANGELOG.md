@@ -22,7 +22,7 @@
 * When proactive reroute happens, new departure voice instruction will not be pronounced anymore. ([#3937](https://github.com/mapbox/mapbox-navigation-ios/pull/3937))
 * Fixed an issue where a departure instruction (e.g., “Head west”) was announced periodically in the middle of a trip due to proactive rerouting. ([#3937](https://github.com/mapbox/mapbox-navigation-ios/pull/3937))
 
-### Location tracking
+### Camera
 
 * Fixed an issue where camera stops updating when `centerUpdatesAllowed`, `zoomUpdatesAllowed`, `bearingUpdatesAllowed`, `pitchUpdatesAllowed` or `paddingUpdatesAllowed` disabled in `OverviewCameraOptions` and `FollowingCameraOptions`. ([#3946](https://github.com/mapbox/mapbox-navigation-ios/pull/3946))
 
