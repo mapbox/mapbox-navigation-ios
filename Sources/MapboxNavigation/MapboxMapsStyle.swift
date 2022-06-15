@@ -13,7 +13,8 @@ extension MapboxMaps.Style {
                     try removeLayer(withId: $0)
                 }
             } catch {
-                NSLog("Failed to remove layer \($0) with error: \(error.localizedDescription).")
+                Log.error("Failed to remove layer \($0) with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
     }
@@ -32,7 +33,8 @@ extension MapboxMaps.Style {
                     try removeSource(withId: $0)
                 }
             } catch {
-                NSLog("Failed to remove source \($0) with error: \(error.localizedDescription).")
+                Log.error("Failed to remove source \($0) with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
     }

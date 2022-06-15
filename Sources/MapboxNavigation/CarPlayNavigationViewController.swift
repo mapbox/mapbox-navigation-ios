@@ -959,7 +959,8 @@ extension CarPlayNavigationViewController: StyleManagerDelegate {
                 // In case if buildings layer present - update its background color.
                 self?.navigationMapView?.updateBuildingsLayerIfPresent()
             case .failure(let error):
-                NSLog("Failed to load \(styleURI) with error: \(error.localizedDescription).")
+                Log.error("Failed to load \(styleURI) with error: \(error.localizedDescription).",
+                          category: .navigationUI)
             }
         }
     }

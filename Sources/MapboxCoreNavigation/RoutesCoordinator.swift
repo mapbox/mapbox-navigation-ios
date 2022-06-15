@@ -1,8 +1,5 @@
 import Foundation
 import MapboxNavigationNative
-import os.log
-
-let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "RoutesCoordinator")
 
 /// Coordinating routes update to NavNative Navigator to rule out some edge scenarios.
 final class RoutesCoordinator {
@@ -41,7 +38,7 @@ final class RoutesCoordinator {
                                completion: @escaping (Result<RouteInfo?, Error>) -> Void) {
         lock.lock()
         if case .activeNavigation(let currentUUID) = state, currentUUID != uuid {
-            os_log("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController is deallocated once not in use.", log: log, type: .fault)
+            Log.fault("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController is deallocated once not in use.", category: .navigation)
         }
 
         state = .activeNavigation(uuid)

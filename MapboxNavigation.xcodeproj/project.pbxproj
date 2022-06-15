@@ -457,6 +457,7 @@
 		DAFA92071F01735000A7FB09 /* DistanceFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 351BEC0B1E5BCC72006FE110 /* DistanceFormatter.swift */; };
 		E20E3AC526C50AC6002E13EE /* BillingServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */; };
 		E20F43C326BBD0A600346E71 /* RouterDelegateSpy.swift in Sources */ = {isa = PBXBuildFile; fileRef = E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */; };
+		E2108B30285866C200CB0875 /* NavigationLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2108B2F285866C200CB0875 /* NavigationLog.swift */; };
 		E23A76C62715E76A0098C23C /* ReplayLocationManager+TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */; };
 		E23D8B6B269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */; };
 		E24CD8202768E36000B6ABBD /* LeakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24CD81F2768E36000B6ABBD /* LeakTests.swift */; };
@@ -1137,6 +1138,7 @@
 		DAFEB36F2093A3EF00A86A83 /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.stringsdict; name = ko; path = Resources/ko.lproj/Localizable.stringsdict; sourceTree = "<group>"; };
 		E20E3AC426C50AC5002E13EE /* BillingServiceMock.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BillingServiceMock.swift; sourceTree = "<group>"; };
 		E20F43C226BBD0A600346E71 /* RouterDelegateSpy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RouterDelegateSpy.swift; sourceTree = "<group>"; };
+		E2108B2F285866C200CB0875 /* NavigationLog.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationLog.swift; sourceTree = "<group>"; };
 		E23A76C52715E76A0098C23C /* ReplayLocationManager+TestSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ReplayLocationManager+TestSupport.swift"; sourceTree = "<group>"; };
 		E23D8B6A269D7EE90094CEFA /* TilesetDescriptorFactoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TilesetDescriptorFactoryTests.swift; sourceTree = "<group>"; };
 		E24CD81F2768E36000B6ABBD /* LeakTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LeakTests.swift; sourceTree = "<group>"; };
@@ -2065,6 +2067,7 @@
 				C5ADFBCC1DDCC7840011824B /* MapboxCoreNavigation.h */,
 				2BEF16462775C8FD0085E3C6 /* MapMatchingResult.swift */,
 				41B901EA271048BD007F9F78 /* HistoryRecording.swift */,
+				E2108B2F285866C200CB0875 /* NavigationLog.swift */,
 				2BF398C2274FE99A000C9A72 /* HandlerFactory.swift */,
 				2BBED92E265E2C7D00F90032 /* NativeHandlersFactory.swift */,
 				353E68FB1EF0B7F8007B2AE5 /* NavigationLocationManager.swift */,
@@ -2974,6 +2977,7 @@
 			files = (
 				354A9BCB20EA9BDA00F03325 /* EventDetails.swift in Sources */,
 				DA5F44C625F07AB700F573EC /* RoadGraph.swift in Sources */,
+				E2108B30285866C200CB0875 /* NavigationLog.swift in Sources */,
 				414119FF26C5269A00402B5D /* RoadSubgraphEdge.swift in Sources */,
 				8D1A5CD2212DDFCD0059BA4A /* DispatchTimer.swift in Sources */,
 				C561735B1F182113005954F6 /* RouteStep.swift in Sources */,

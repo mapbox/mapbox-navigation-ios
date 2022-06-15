@@ -126,7 +126,7 @@ public class NavigationSettings {
             lock.unlock()
         }
         if _state != nil {
-            print("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`. This might result in an undefined behaviour. ")
+            Log.warning("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`. This might result in an undefined behaviour.", category: .settings)
         }
         _state = .init(directions: directions,
                        tileStoreConfiguration: tileStoreConfiguration,

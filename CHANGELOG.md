@@ -7,6 +7,7 @@
 * MapboxNavigation now requires [MapboxMaps v10.6.0-rc.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.6.0-rc.1). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * MapboxCoreNavigation now requires [MapboxNavigationNative v105.0.0](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/105.0.0). ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * MapboxCoreNavigation now requires [MapboxDirections v2.6.0-beta.2](https://github.com/mapbox/mapbox-directions-swift/releases/tag/v2.6.0-beta.2). ([#3941](https://github.com/mapbox/mapbox-navigation-ios/pull/3941))
+* MapboxCoreNavigation now explicitly requires [MapboxCommon v22.0.0-rc.2](https://github.com/mapbox/mapbox-common-ios/releases/tag/v22.0.0-rc.2). ([#3950](https://github.com/mapbox/mapbox-navigation-ios/pull/3950))
 
 ### Routing
 
@@ -42,6 +43,8 @@
 ### Other changes
 
 * Reduced peak memory usage.
+* Fixed an issue when rerouting to the route which does not originate on current user location, route line and camera jumped to route origin. ([#3943](https://github.com/mapbox/mapbox-navigation-ios/pull/3943))
+* All logs that Navigation SDK produces are now sent to the `MapboxCommon` framework. You can intercept these logs in your own code using `LogConfiguration.registerLogWriterBackend(forLogWriter:)` method from `MapboxCommon` framework. ([#3944](https://github.com/mapbox/mapbox-navigation-ios/pull/3944))
 
 ## v2.5.1
 

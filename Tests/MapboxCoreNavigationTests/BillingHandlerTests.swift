@@ -565,7 +565,7 @@ final class BillingHandlerUnitTests: TestCase {
     func testForceStartNewBillingSession() {
         let sessionUuid = UUID()
         handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
-        handler.beginNewBillingSessionIfRunning(with: sessionUuid)
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
         
         billingService.assertEvents([
             .beginBillingSession(.activeGuidance),
@@ -577,19 +577,54 @@ final class BillingHandlerUnitTests: TestCase {
         let sessionUuid = UUID()
         handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
         handler.pauseBillingSession(with: sessionUuid)
-        handler.beginNewBillingSessionIfRunning(with: sessionUuid)
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
+        handler.resumeBillingSession(with: sessionUuid)
 
         billingService.assertEvents([
             .beginBillingSession(.activeGuidance),
-            .pauseBillingSession(.activeGuidance)
+            .pauseBillingSession(.activeGuidance),
+            .beginBillingSession(.activeGuidance),
+            .pauseBillingSession(.activeGuidance),
+            .resumeBillingSession(.activeGuidance),
         ])
     }
 
     func testForceStartNewBillingSessionOnNonExistentSession() {
         let sessionUuid = UUID()
-        handler.beginNewBillingSessionIfRunning(with: sessionUuid)
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
 
         billingService.assertEvents([
+        ])
+    }
+
+    func testForceStartNewBillingSessionOnPausedSessionFreeDrive() {
+        let sessionUuid = UUID()
+        handler.beginBillingSession(for: .freeDrive, uuid: sessionUuid)
+        handler.pauseBillingSession(with: sessionUuid)
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
+        handler.resumeBillingSession(with: sessionUuid)
+
+        billingService.assertEvents([
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
+            .beginBillingSession(.freeDrive),
+            .pauseBillingSession(.freeDrive),
+            .resumeBillingSession(.freeDrive),
+        ])
+    }
+
+    func testForceStartNewBillingSessionOnPausedSessionWithOneActive() {
+        let sessionUuid = UUID()
+        let sessionUuid2 = UUID()
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid)
+        handler.beginBillingSession(for: .activeGuidance, uuid: sessionUuid2)
+        handler.pauseBillingSession(with: sessionUuid)
+        handler.beginNewBillingSessionIfExists(with: sessionUuid)
+        handler.resumeBillingSession(with: sessionUuid)
+
+        billingService.assertEvents([
+            .beginBillingSession(.activeGuidance),
+            .beginBillingSession(.activeGuidance),
         ])
     }
 
@@ -721,10 +756,38 @@ final class BillingHandlerUnitTests: TestCase {
             NotificationCenter.default.removeObserver(statusChangeSubscription)
         }
     }
+
+    func testStressTest() {
+        let finished = expectation(description: "Finished")
+        DispatchQueue.global().async {
+            DispatchQueue.concurrentPerform(iterations: 1000) { iterationIdx in
+                let sessionUuid = UUID()
+                let sessionType = BillingHandler.SessionType.random()
+                self.handler.beginBillingSession(for: sessionType, uuid: sessionUuid)
+                self.handler.pauseBillingSession(with: sessionUuid)
+                self.handler.beginNewBillingSessionIfExists(with: sessionUuid)
+                self.handler.resumeBillingSession(with: sessionUuid)
+                self.handler.stopBillingSession(with: sessionUuid)
+            }
+            finished.fulfill()
+        }
+        waitForExpectations(timeout: 10)
+    }
 }
 
 extension BillingHandlerUnitTests: RouterDataSource {
     var locationManagerType: NavigationLocationManager.Type {
         return NavigationLocationManager.self
+    }
+}
+
+private extension BillingHandler.SessionType {
+    static func random() -> Self {
+        if (0..<1).randomElement()! == 0 {
+            return .freeDrive
+        }
+        else {
+            return .activeGuidance
+        }
     }
 }
