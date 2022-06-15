@@ -67,7 +67,8 @@ class SpriteInfoCache {
             let decodedObject = try JSONDecoder().decode([String : SpriteInfo].self, from: data)
             return decodedObject
         } catch {
-            NSLog("Failed to parse requested data to Sprite info due to: \(error.localizedDescription).")
+            Log.error("Failed to parse requested data to Sprite info due to: \(error.localizedDescription).",
+                      category: .navigationUI)
         }
         
         return nil

@@ -63,7 +63,7 @@ internal class FileCache {
             do {
                 try data.write(to: cacheURL)
             } catch {
-                NSLog("================> Failed to write data to URL \(cacheURL)")
+                Log.error("================> Failed to write data to URL \(cacheURL)", category: .navigationUI)
             }
             completion?()
         }
@@ -97,7 +97,7 @@ internal class FileCache {
             do {
                 try fileManager.removeItem(at: cacheURL)
             } catch {
-                NSLog("================> Failed to remove cache dir: \(cacheURL)")
+                Log.error("================> Failed to remove cache dir: \(cacheURL)", category: .navigationUI)
             }
 
             self.createCacheDirIfNeeded(cacheURL, fileManager: fileManager)
@@ -120,7 +120,7 @@ internal class FileCache {
             do {
                 try fileManager.createDirectory(at: url, withIntermediateDirectories: true, attributes: nil)
             } catch {
-                NSLog("================> Failed to create directory: \(url)")
+                Log.error("================> Failed to create directory: \(url)", category: .navigationUI)
             }
         }
     }

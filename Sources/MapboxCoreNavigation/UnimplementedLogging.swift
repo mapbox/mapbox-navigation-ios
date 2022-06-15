@@ -1,5 +1,5 @@
 import Foundation
-import os.log
+import OSLog
 import Dispatch
 
 /**
@@ -26,10 +26,19 @@ public extension UnimplementedLogging {
         guard _unimplementedLoggingState.markWarned(description) == .marked else {
             return
         }
-        
-        let log = OSLog(subsystem: "com.mapbox.navigation", category: "delegation.\(selfDescription)")
-        let formatted: StaticString = "Unimplemented delegate method in %@: %@.%@. This message will only be logged once."
-        os_log(formatted, log: log, type: level, selfDescription, protocolDescription, function)
+
+        let logMethod: (String, NavigationLogCategory) -> ()
+        switch level {
+        case .debug, .info:
+            logMethod = Log.info
+        case .fault:
+            logMethod = Log.fault
+        case .error:
+            logMethod = Log.error
+        default:
+            logMethod = Log.warning
+        }
+        logMethod("Unimplemented delegate method in \(selfDescription): \(protocolDescription).\(function). This message will only be logged once.", .unimplementedMethods)
     }
 }
 

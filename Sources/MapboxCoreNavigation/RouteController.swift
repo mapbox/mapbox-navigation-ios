@@ -9,7 +9,6 @@ import MapboxMobileEvents
 import MapboxDirections
 import Polyline
 import Turf
-import os.log
 
 /**
  A `RouteController` tracks the user’s progress along a route, posting notifications as the user reaches significant points along the route. On every location update, the route controller evaluates the user’s location, determining whether the user remains on the route. If not, the route controller calculates a new route.
@@ -30,7 +29,6 @@ open class RouteController: NSObject {
         public static let shouldDisableBatteryMonitoring: Bool = true
     }
 
-    public static let log: OSLog = .init(subsystem: "com.mapbox.navigation", category: "RouteController")
     /// Holds currently alive instance of `RouteController`.
     private static weak var instance: RouteController?
     private static let instanceLock: NSLock = .init()
@@ -616,7 +614,8 @@ open class RouteController: NSObject {
         let twoInstances = Self.instance != nil
         Self.instanceLock.unlock()
         if twoInstances {
-            os_log("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController and RouteController is deallocated once not in use.", log: Self.log, type: .fault)
+            Log.fault("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController and RouteController is deallocated once not in use.",
+                      category: .navigation)
         }
 
         Navigator.datasetProfileIdentifier = options.profileIdentifier

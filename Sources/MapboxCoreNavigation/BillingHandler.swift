@@ -3,7 +3,6 @@
 
 import Foundation
 import MapboxDirections
-import os.log
 @_implementationOnly import MapboxCommon_Private
 
 /// Wrapper around `MapboxCommon_Private.BillingServiceFactory`, which provides its shared instance.
@@ -209,8 +208,6 @@ final class BillingHandler {
      */
     private var _sessions: [UUID: Session] = [:]
 
-    private let logger: OSLog = .init(subsystem: "com.mapbox.navigation", category: "Billing")
-
     /**
      The state of the billing session.
 
@@ -293,13 +290,12 @@ final class BillingHandler {
 
         switch sessionStatus {
         case .stopped:
-            billingService.triggerBillingEvent(onError: { [logger] error in
-                os_log("MAU isn't counted", log: logger, type: .fault)
+            billingService.triggerBillingEvent(onError: { error in
+                Log.fault("MAU isn't counted", category: .billing)
             })
-            billingService.beginBillingSession(for: sessionType, onError: { [weak self, logger] error in
-                os_log("Trip session isn't started. Please check that you have the correct Mapboox Access Token",
-                       log: logger,
-                       type: .fault)
+            billingService.beginBillingSession(for: sessionType, onError: { [weak self] error in
+                Log.fault("Trip session isn't started. Please check that you have the correct Mapboox Access Token",
+                          category: .billing)
 
                 switch error {
                 case .tokenValidationFailed:
@@ -330,10 +326,9 @@ final class BillingHandler {
 
         lock.unlock()
 
-        billingService.beginBillingSession(for: session.type) { [logger] error in
-            os_log("New trip session isn't started. Please check that you have the correct Mapboox Access Token.",
-                   log: logger,
-                   type: .fault)
+        billingService.beginBillingSession(for: session.type) { error in
+            Log.fault("New trip session isn't started. Please check that you have the correct Mapboox Access Token.",
+                      category: .billing)
 
             switch error {
             case .tokenValidationFailed:

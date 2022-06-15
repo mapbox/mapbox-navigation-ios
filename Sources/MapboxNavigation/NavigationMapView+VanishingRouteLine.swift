@@ -211,7 +211,7 @@ extension NavigationMapView {
                 try mapView.mapboxMap.style.removeLayer(withId: mainRouteCasingLayerIdentifier)
                 try mapView.mapboxMap.style.removeLayer(withId: restrictedAreaLayerIdentifier)
             } catch {
-                print("Failed to remove main route line layer.")
+                Log.error("Failed to remove main route line layer.", category: .navigationUI)
             }
             
             fractionTraveled = 0.0
@@ -243,7 +243,7 @@ extension NavigationMapView {
                                                              property: "line-gradient",
                                                              value: jsonObject)
             } catch {
-                print("Failed to update route line gradient.")
+                Log.error("Failed to update route line gradient.", category: .navigationUI)
             }
         }
     }

@@ -44,6 +44,7 @@
 
 * Reduced peak memory usage.
 * Fixed an issue when rerouting to the route which does not originate on current user location, route line and camera jumped to route origin. ([#3943](https://github.com/mapbox/mapbox-navigation-ios/pull/3943))
+* All logs that Navigation SDK produces are now sent to the `MapboxCommon` framework. You can intercept these logs in your own code using `LogConfiguration.registerLogWriterBackend(forLogWriter:)` method from `MapboxCommon` framework. ([#3944](https://github.com/mapbox/mapbox-navigation-ios/pull/3944))
 
 ## v2.5.1
 
