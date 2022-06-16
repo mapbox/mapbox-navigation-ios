@@ -114,6 +114,8 @@ open class NightStyle: DayStyle {
         FeedbackStyleView.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
         FeedbackCollectionView.appearance().backgroundColor = .black
         FeedbackCollectionView.appearance().cellColor = .white
+        FeedbackSubtypeCollectionViewCell.appearance().normalCircleColor = .black
+        FeedbackSubtypeCollectionViewCell.appearance().normalCircleOutlineColor = .lightText
         
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         WayNameLabel.appearance().roadShieldBlackColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)

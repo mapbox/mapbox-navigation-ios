@@ -94,7 +94,8 @@ extension RerouteController: RerouteObserver {
         delegate?.rerouteControllerWantsSwitchToAlternative(self,
                                                             response: decoded.routeResponse,
                                                             routeIndex: Int(route.getRouteIndex()),
-                                                            options: decoded.routeOptions)
+                                                            options: decoded.routeOptions,
+                                                            routeOrigin: route.getRouterOrigin())
     }
 
     func onRerouteDetected(forRouteRequest routeRequest: String) -> Bool {
@@ -116,7 +117,8 @@ extension RerouteController: RerouteObserver {
            decodedRequest.routeOptions == latestRouteResponse.options {
             delegate?.rerouteControllerDidRecieveReroute(self,
                                                          response: latestRouteResponse.response,
-                                                         options: latestRouteResponse.options)
+                                                         options: latestRouteResponse.options,
+                                                         routeOrigin: origin)
             self.latestRouteResponse = nil
         } else {
             guard let decodedResponse = Self.decode(routeResponse: routeResponse,
@@ -128,7 +130,8 @@ extension RerouteController: RerouteObserver {
             
             delegate?.rerouteControllerDidRecieveReroute(self,
                                                          response: decodedResponse,
-                                                         options: decodedRequest.routeOptions)
+                                                         options: decodedRequest.routeOptions,
+                                                         routeOrigin: origin)
         }
     }
 

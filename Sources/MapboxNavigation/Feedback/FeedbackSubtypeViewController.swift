@@ -5,11 +5,12 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     var currentFeedbackType: FeedbackItemType?
 
-    private let reportButtonContainer = UIView()
+    private let reportButtonContainer = FeedbackStyleView()
     private let reportButtonSeparator = UIView()
     private let reportButton = UIButton()
 
     private var selectedItems = [FeedbackItem]()
+    private var selectedPath = Set<IndexPath>()
 
     /**
      Initialize a new FeedbackSubtypeViewController from a `NavigationEventsManager`.
@@ -77,40 +78,33 @@ class FeedbackSubtypeViewController: FeedbackViewController {
             }
         }
 
+        cell.showSelectedColor = selectedPath.contains(indexPath)
         return cell
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
-        if #available(iOS 13.0, *) {
-            cell.circleColor = .systemBlue
-        } else {
-            cell.circleColor = .lightGray
-        }
-        cell.circleOutlineColor = cell.circleColor
-
-        let item = sections[indexPath.row]
-        selectedItems.append(item)
-
-        updateButtonTitle()
+        guard let cell = collectionView.cellForItem(at: indexPath) as? FeedbackSubtypeCollectionViewCell else { return }
+        toggleSelected(cell: cell, at: indexPath)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
-        if #available(iOS 13.0, *) {
-            cell.circleColor = .systemBackground
-            cell.circleOutlineColor = .label
+        guard let cell = collectionView.cellForItem(at: indexPath) as? FeedbackSubtypeCollectionViewCell else { return }
+        toggleSelected(cell: cell, at: indexPath)
+    }
+    
+    private func toggleSelected(cell: FeedbackSubtypeCollectionViewCell, at indexPath: IndexPath) {
+        guard let item = sections[safe: indexPath.row] else { return }
+        if selectedPath.contains(indexPath) {
+            selectedItems.removeAll { existingItem -> Bool in
+                return existingItem.type == item.type
+            }
+            selectedPath.remove(indexPath)
+            cell.showSelectedColor = false
         } else {
-            cell.circleColor = .white
-            cell.circleOutlineColor = .darkText
+            selectedItems.append(item)
+            selectedPath.insert(indexPath)
+            cell.showSelectedColor = true
         }
-
-        let item = sections[indexPath.row]
-        selectedItems.removeAll { existingItem -> Bool in
-            return existingItem.type == item.type
-        }
-
         updateButtonTitle()
     }
 
@@ -169,7 +163,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
         let reportButtonContainerLeading = reportButtonContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor)
         let reportButtonContainerTrailing = reportButtonContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        let reportButtonContainerBottom = reportButtonContainer.bottomAnchor.constraint(equalTo: view.safeBottomAnchor)
+        let reportButtonContainerBottom = reportButtonContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         let reportButtonContainerHeight = reportButtonContainer.heightAnchor.constraint(equalToConstant: 96)
 
         let reportButtonSeparatorLeading = reportButtonSeparator.leadingAnchor.constraint(equalTo: reportButtonContainer.leadingAnchor)
