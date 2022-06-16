@@ -247,6 +247,7 @@ open class DayStyle: Style {
         FeedbackCollectionView.appearance().cellColor = .black
         FeedbackSubtypeCollectionViewCell.appearance().normalCircleColor = .white
         FeedbackSubtypeCollectionViewCell.appearance().normalCircleOutlineColor = .darkText
+        FeedbackSubtypeCollectionViewCell.appearance().selectedCircleColor = .systemBlue
         InstructionLabel.appearance().roadShieldBlackColor = .roadShieldBlackColor
         InstructionLabel.appearance().roadShieldBlueColor = .roadShieldBlueColor
         InstructionLabel.appearance().roadShieldGreenColor = .roadShieldGreenColor
@@ -261,12 +262,6 @@ open class DayStyle: Style {
             UITableView.appearance(whenContainedInInstancesOf: [StepsViewController.self]).sectionHeaderTopPadding = 0.0
         }
         #endif
-        
-        if #available(iOS 13.0, *) {
-            FeedbackSubtypeCollectionViewCell.appearance().selectedCircleColor = .systemBlue
-        } else {
-            FeedbackSubtypeCollectionViewCell.appearance().selectedCircleColor = .lightGray
-        }
     }
     
     @available(iOS 12.0, *)

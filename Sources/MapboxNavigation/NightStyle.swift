@@ -116,12 +116,6 @@ open class NightStyle: DayStyle {
         FeedbackSubtypeCollectionViewCell.appearance().normalCircleColor = .black
         FeedbackSubtypeCollectionViewCell.appearance().normalCircleOutlineColor = .lightText
         
-        if #available(iOS 13.0, *) {
-            FeedbackSubtypeCollectionViewCell.appearance().selectedCircleColor = .systemBlue
-        } else {
-            FeedbackSubtypeCollectionViewCell.appearance().selectedCircleColor = .darkGray
-        }
-        
         WayNameView.appearance().borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
         WayNameLabel.appearance().roadShieldBlackColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
         WayNameLabel.appearance().roadShieldBlueColor = #colorLiteral(red: 0.18, green: 0.26, blue: 0.66, alpha: 1)
