@@ -83,8 +83,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
 
         let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
-        cell.circleColor = cell.selectedCircleColor
-        cell.circleOutlineColor = cell.selectedCircleColor
+        cell.showSelectedColor = true
 
         let item = sections[indexPath.row]
         selectedItems.append(item)
@@ -94,8 +93,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
         let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
-        cell.circleColor = cell.normalCircleColor
-        cell.circleOutlineColor = cell.normalCircleOutlineColor
+        cell.showSelectedColor = false
 
         let item = sections[indexPath.row]
         selectedItems.removeAll { existingItem -> Bool in

@@ -215,7 +215,7 @@ open class StyleManager {
         if #available(iOS 13.0, *) {
             UIApplication.shared.connectedScenes.forEach {
                 if let windowScene = $0 as? UIWindowScene,
-                   traitCollection?.userInterfaceIdiom == .phone {
+                   windowScene.traitCollection.userInterfaceIdiom == .phone {
                     refreshAppearance(for: windowScene.windows)
                 } else if let templateApplicationScene = $0 as? CPTemplateApplicationScene,
                           traitCollection?.userInterfaceIdiom == .carPlay {

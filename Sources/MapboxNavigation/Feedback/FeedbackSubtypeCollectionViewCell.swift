@@ -20,27 +20,39 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
         title.font = Constants.titleFont
         return title
     }()
-
-    @objc dynamic public var selectedCircleColor: UIColor = .lightGray {
+    
+    @objc dynamic var showSelectedColor: Bool = false {
         didSet {
-            if isSelected {
+            if showSelectedColor {
+                circleColor = selectedCircleColor
+                circleOutlineColor = selectedCircleColor
+            } else {
+                circleColor = normalCircleColor
+                circleOutlineColor = normalCircleOutlineColor
+            }
+        }
+    }
+
+    @objc dynamic var selectedCircleColor: UIColor = .lightGray {
+        didSet {
+            if showSelectedColor {
                 circleColor = selectedCircleColor
                 circleOutlineColor = selectedCircleColor
             }
         }
     }
     
-    @objc dynamic public var normalCircleColor: UIColor = .black {
+    @objc dynamic var normalCircleColor: UIColor = .black {
         didSet {
-            if !isSelected {
+            if !showSelectedColor {
                 circleColor = normalCircleColor
             }
         }
     }
 
-    @objc dynamic public var normalCircleOutlineColor: UIColor = .black {
+    @objc dynamic var normalCircleOutlineColor: UIColor = .black {
         didSet {
-            if !isSelected {
+            if !showSelectedColor {
                 circleOutlineColor = normalCircleOutlineColor
             }
         }
@@ -135,7 +147,7 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
 
         if #available(iOS 12.0, *),
            previousTraitCollection?.userInterfaceStyle != traitCollection.userInterfaceStyle {
-            circleView.layer.borderColor = circleOutlineColor.cgColor
+            circleOutlineColor = showSelectedColor ? normalCircleColor : selectedCircleColor
         }
     }
 }
