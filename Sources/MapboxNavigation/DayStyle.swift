@@ -245,6 +245,9 @@ open class DayStyle: Style {
         FeedbackStyleView.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .white
         FeedbackCollectionView.appearance().backgroundColor = .white
         FeedbackCollectionView.appearance().cellColor = .black
+        FeedbackSubtypeCollectionViewCell.appearance().normalCircleColor = .white
+        FeedbackSubtypeCollectionViewCell.appearance().normalCircleOutlineColor = .darkText
+        FeedbackSubtypeCollectionViewCell.appearance().selectedCircleColor = .systemBlue
         InstructionLabel.appearance().roadShieldBlackColor = .roadShieldBlackColor
         InstructionLabel.appearance().roadShieldBlueColor = .roadShieldBlueColor
         InstructionLabel.appearance().roadShieldGreenColor = .roadShieldGreenColor
