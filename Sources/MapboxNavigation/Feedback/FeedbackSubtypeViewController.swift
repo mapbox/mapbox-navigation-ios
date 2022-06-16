@@ -10,6 +10,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     private let reportButton = UIButton()
 
     private var selectedItems = [FeedbackItem]()
+    private var selectedPath = Set<IndexPath>()
 
     /**
      Initialize a new FeedbackSubtypeViewController from a `NavigationEventsManager`.
@@ -77,6 +78,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
             }
         }
 
+        cell.showSelectedColor = selectedPath.contains(indexPath)
         return cell
     }
 
@@ -87,6 +89,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
 
         let item = sections[indexPath.row]
         selectedItems.append(item)
+        selectedPath.insert(indexPath)
 
         updateButtonTitle()
     }
@@ -99,6 +102,7 @@ class FeedbackSubtypeViewController: FeedbackViewController {
         selectedItems.removeAll { existingItem -> Bool in
             return existingItem.type == item.type
         }
+        selectedPath.remove(indexPath)
 
         updateButtonTitle()
     }
