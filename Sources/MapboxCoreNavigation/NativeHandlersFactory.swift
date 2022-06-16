@@ -53,7 +53,8 @@ class NativeHandlersFactory {
     
     lazy var navigator: MapboxNavigationNative.Navigator = {
         onMainQueueSync { // Make sure that Navigator pick ups Main Thread RunLoop.
-            LogConfiguration.setLoggingLevelForCategory("*", level: LoggingLevel.info)
+            let loggingLevel = NSNumber(value: LoggingLevel.info.rawValue)
+            LogConfiguration.setLoggingLevelForCategory("*", upTo: loggingLevel)
             
             let router = routingProviderSource.map {
                 MapboxNavigationNative.RouterFactory.build(for: $0,
