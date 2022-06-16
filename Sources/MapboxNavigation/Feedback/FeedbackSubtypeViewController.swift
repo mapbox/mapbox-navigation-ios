@@ -83,27 +83,28 @@ class FeedbackSubtypeViewController: FeedbackViewController {
     }
 
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
-        let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
-        cell.showSelectedColor = true
-
-        let item = sections[indexPath.row]
-        selectedItems.append(item)
-        selectedPath.insert(indexPath)
-
-        updateButtonTitle()
+        guard let cell = collectionView.cellForItem(at: indexPath) as? FeedbackSubtypeCollectionViewCell else { return }
+        toggleSelected(cell: cell, at: indexPath)
     }
 
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as! FeedbackSubtypeCollectionViewCell
-        cell.showSelectedColor = false
-
-        let item = sections[indexPath.row]
-        selectedItems.removeAll { existingItem -> Bool in
-            return existingItem.type == item.type
+        guard let cell = collectionView.cellForItem(at: indexPath) as? FeedbackSubtypeCollectionViewCell else { return }
+        toggleSelected(cell: cell, at: indexPath)
+    }
+    
+    private func toggleSelected(cell: FeedbackSubtypeCollectionViewCell, at indexPath: IndexPath) {
+        guard let item = sections[safe: indexPath.row] else { return }
+        if selectedPath.contains(indexPath) {
+            selectedItems.removeAll { existingItem -> Bool in
+                return existingItem.type == item.type
+            }
+            selectedPath.remove(indexPath)
+            cell.showSelectedColor = false
+        } else {
+            selectedItems.append(item)
+            selectedPath.insert(indexPath)
+            cell.showSelectedColor = true
         }
-        selectedPath.remove(indexPath)
-
         updateButtonTitle()
     }
 
