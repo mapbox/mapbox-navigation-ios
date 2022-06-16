@@ -283,7 +283,9 @@ open class NavigationMapView: UIView {
                 }
                 
                 if showsRestrictedAreasOnRoute {
-                    parentLayerIdentifier = addRouteRestrictedAreaLayer(route, below: parentLayerIdentifier)
+                    parentLayerIdentifier = addRouteRestrictedAreaLayer(route,
+                                                                        below: parentLayerIdentifier,
+                                                                        reuseExistingLayer: true)
                 }
             }
             
@@ -295,11 +297,13 @@ open class NavigationMapView: UIView {
                                                   customLayerPosition: customLayerPosition,
                                                   fractionTraveled: fractionTraveled,
                                                   below: parentLayerIdentifier,
+                                                  reuseExistingLayer: true,
                                                   isMainRoute: index == 0,
                                                   legIndex: currentLegIndex)
             parentLayerIdentifier = addRouteCasingLayer(route,
                                                         fractionTraveled: fractionTraveled,
                                                         below: parentLayerIdentifier,
+                                                        reuseExistingLayer: true,
                                                         isMainRoute: index == 0)
         }
         
@@ -312,11 +316,13 @@ open class NavigationMapView: UIView {
             parentLayerIdentifier = addRouteLayer(route,
                                                   fractionTraveled: offset,
                                                   below: parentLayerIdentifier,
+                                                  reuseExistingLayer: true,
                                                   isMainRoute: false,
                                                   legIndex: nil)
             parentLayerIdentifier = addRouteCasingLayer(route,
                                                         fractionTraveled: offset,
                                                         below: parentLayerIdentifier,
+                                                        reuseExistingLayer: true,
                                                         isMainRoute: false)
         }
     }
@@ -592,7 +598,8 @@ open class NavigationMapView: UIView {
     
     @discardableResult func addRouteRestrictedAreaLayer(_ route: Route,
                                                         below parentLayerIndentifier: String? = nil,
-                                                        above aboveLayerIdentifier: String? = nil) -> String? {
+                                                        above aboveLayerIdentifier: String? = nil,
+                                                        reuseExistingLayer: Bool = false) -> String? {
         let sourceIdentifier = route.identifier(.restrictedRouteAreaSource)
         let restrictedRoadsFeatures = route.restrictedRoadsFeatures()
         
@@ -625,6 +632,13 @@ open class NavigationMapView: UIView {
                                                     routeRestrictedAreasLineLayerWithIdentifier: layerIdentifier,
                                                     sourceIdentifier: sourceIdentifier)
 
+        var layerAlreadyExists = false
+        if reuseExistingLayer && lineLayer == nil &&
+            mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
+            lineLayer = try? mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer
+            layerAlreadyExists = true
+        }
+        
         if lineLayer == nil {
             lineLayer = LineLayer(id: layerIdentifier)
             lineLayer?.source = sourceIdentifier
@@ -659,7 +673,13 @@ open class NavigationMapView: UIView {
                     }
                 }
                 
-                try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
+                if reuseExistingLayer && layerAlreadyExists {
+                    if let layerPosition = layerPosition {
+                        try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
+                    }
+                } else {
+                    try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
+                }
             } catch {
                 Log.error("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).",
                           category: .navigationUI)
@@ -673,6 +693,7 @@ open class NavigationMapView: UIView {
                                           customLayerPosition: MapboxMaps.LayerPosition? = nil,
                                           fractionTraveled: Double,
                                           below parentLayerIndentifier: String? = nil,
+                                          reuseExistingLayer: Bool = false,
                                           isMainRoute: Bool = true,
                                           legIndex: Int? = nil) -> String? {
         guard let defaultShape = route.shape else { return nil }
@@ -697,6 +718,13 @@ open class NavigationMapView: UIView {
         var lineLayer = delegate?.navigationMapView(self,
                                                     routeLineLayerWithIdentifier: layerIdentifier,
                                                     sourceIdentifier: sourceIdentifier)
+        
+        var layerAlreadyExists = false
+        if reuseExistingLayer && lineLayer == nil &&
+            mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
+            lineLayer = try? mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer
+            layerAlreadyExists = true
+        }
         
         if lineLayer == nil {
             lineLayer = LineLayer(id: layerIdentifier)
@@ -765,8 +793,13 @@ open class NavigationMapView: UIView {
                         }
                     }
                 }
-                
-                try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
+                if reuseExistingLayer && layerAlreadyExists {
+                    if let layerPosition = layerPosition {
+                        try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
+                    }
+                } else {
+                    try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
+                }
             } catch {
                 Log.error("Failed to add route layer \(layerIdentifier) with error: \(error.localizedDescription).",
                           category: .navigationUI)
@@ -779,6 +812,7 @@ open class NavigationMapView: UIView {
     @discardableResult func addRouteCasingLayer(_ route: Route,
                                                 fractionTraveled: Double,
                                                 below parentLayerIndentifier: String? = nil,
+                                                reuseExistingLayer: Bool = false,
                                                 isMainRoute: Bool = true) -> String? {
         guard let defaultShape = route.shape else { return nil }
         let shape = delegate?.navigationMapView(self, casingShapeFor: route) ?? defaultShape
@@ -802,6 +836,13 @@ open class NavigationMapView: UIView {
         var lineLayer = delegate?.navigationMapView(self,
                                                     routeCasingLineLayerWithIdentifier: layerIdentifier,
                                                     sourceIdentifier: sourceIdentifier)
+        
+        var layerAlreadyExists = false
+        if reuseExistingLayer && lineLayer == nil &&
+            mapView.mapboxMap.style.layerExists(withId: layerIdentifier) {
+            lineLayer = try? mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer
+            layerAlreadyExists = true
+        }
         
         if lineLayer == nil {
             lineLayer = LineLayer(id: layerIdentifier)
@@ -833,7 +874,13 @@ open class NavigationMapView: UIView {
                 if let parentLayerIndentifier = parentLayerIndentifier {
                     layerPosition = .below(parentLayerIndentifier)
                 }
-                try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
+                if reuseExistingLayer && layerAlreadyExists {
+                    if let layerPosition = layerPosition {
+                        try mapView.mapboxMap.style.moveLayer(withId: layerIdentifier, to: layerPosition)
+                    }
+                } else {
+                    try mapView.mapboxMap.style.addPersistentLayer(lineLayer, layerPosition: layerPosition)
+                }
             } catch {
                 Log.error("Failed to add route casing layer \(layerIdentifier) with error: \(error.localizedDescription).",
                           category: .navigationUI)

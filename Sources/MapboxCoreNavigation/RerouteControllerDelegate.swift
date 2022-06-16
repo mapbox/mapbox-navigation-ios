@@ -7,9 +7,10 @@ protocol ReroutingControllerDelegate: AnyObject {
     func rerouteControllerWantsSwitchToAlternative(_ rerouteController: RerouteController,
                                                    response: RouteResponse,
                                                    routeIndex: Int,
-                                                   options: RouteOptions)
+                                                   options: RouteOptions,
+                                                   routeOrigin: RouterOrigin)
     func rerouteControllerDidDetectReroute(_ rerouteController: RerouteController) -> Bool
-    func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions)
+    func rerouteControllerDidRecieveReroute(_ rerouteController: RerouteController, response: RouteResponse, options: RouteOptions, routeOrigin: RouterOrigin)
     func rerouteControllerDidCancelReroute(_ rerouteController: RerouteController)
     func rerouteControllerDidFailToReroute(_ rerouteController: RerouteController, with error: DirectionsError)
 }
