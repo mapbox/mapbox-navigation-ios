@@ -6,6 +6,8 @@ import MapboxCoreNavigation
 #if canImport(CarPlay)
 import CarPlay
 
+let CarPlayAlternativeIDKey: String = "MBCarPlayAlternativeID"
+
 /**
  `CarPlayNavigationViewController` is a fully-featured turn-by-turn navigation UI for CarPlay.
  
@@ -86,6 +88,52 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     public var continuousAlternatives: [AlternativeRoute] {
         navigationService.router.continuousAlternatives
+    }
+    
+    func alternativesListTemplate() -> CPListTemplate {
+        var variants: [CPListSection] = []
+        let distanceFormatter = DistanceFormatter()
+        let dateComponentsFormatter = DateComponentsFormatter()
+        self.continuousAlternatives.forEach { alternative in
+            guard let title = alternative.indexedRouteResponse.currentRoute?.description else {
+                return
+            }
+            dateComponentsFormatter.unitsStyle = alternative.expectedTravelTimeDelta < 3600 ? .short : .abbreviated
+            let timeDelta = dateComponentsFormatter.string(from: alternative.expectedTravelTimeDelta) ?? ""
+            let distanceDelta = distanceFormatter.string(from: alternative.distanceDelta)
+            
+            let items: [CPListItem] = [CPListItem(text: "\(alternative.expectedTravelTimeDelta >= 0 ? "+":"")\(timeDelta) / \(alternative.distanceDelta >= 0 ? "+":"")\(distanceDelta)",
+                                                  detailText: nil)]
+            items.forEach { [weak self] (item: CPListItem) -> Void in
+                if #available(iOS 14.0, *) {
+                    item.handler = { (_,_) -> Void in
+                        self?.navigationService.router.updateRoute(with: alternative.indexedRouteResponse,
+                                                                   routeOptions: nil,
+                                                                   completion: { _ in
+                            self?.carInterfaceController.popTemplate(animated: true)
+                        })
+                    }
+                } else {
+                    item.userInfo = [CarPlayAlternativeIDKey: alternative.id]
+                }
+            }
+            let section = CPListSection(items: items,
+                                        header: title,
+                                        sectionIndexTitle: nil)
+            variants.append(section)
+        }
+        
+        let alternativesTitle = NSLocalizedString("CARPLAY_ALTERNATIVES",
+                                                  bundle: .mapboxNavigation,
+                                                  value: "Alternatives",
+                                                  comment: "Title for alternatives selection list button")
+        
+        let template = CPListTemplate(title: alternativesTitle,
+                                      sections: variants)
+        if #unavailable(iOS 14.0) {
+            template.delegate = self
+        }
+        return template
     }
     
     /**
@@ -1019,4 +1067,28 @@ extension CarPlayNavigationViewController: CPSessionConfigurationDelegate {
         applyStyleIfNeeded(contentStyle)
     }
 }
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: CPListTemplateDelegate {
+    
+    public func listTemplate(_ listTemplate: CPListTemplate,
+                      didSelect item: CPListItem,
+                      completionHandler: @escaping () -> Void) {
+        // Selected a list item for switching to alternative route.
+        guard let userInfo = item.userInfo as? CarPlayUserInfo,
+              let alternativeId = userInfo[CarPlayAlternativeIDKey] as? AlternativeRoute.ID,
+              let alternativeRoute = continuousAlternatives.first(where: { $0.id == alternativeId})?.indexedRouteResponse else {
+                  completionHandler()
+                  return
+              }
+        
+        navigationService.router.updateRoute(with: alternativeRoute,
+                                             routeOptions: nil,
+                                             completion: { _ in
+            self.carInterfaceController.popTemplate(animated: true)
+            completionHandler()
+        })
+    }
+}
+
 #endif

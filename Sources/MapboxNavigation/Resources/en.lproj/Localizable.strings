@@ -1,3 +1,6 @@
+/* Title for alternatives selection list button */
+"CARPLAY_ALTERNATIVES" = "Alternatives";
+
 /* Title on arrival action sheet */
 "CARPLAY_ARRIVED" = "You have arrived";
 
@@ -151,7 +154,7 @@
 /* Feedback that a street is permanently blocked off. */
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_PERMANENTLY_BLOCKED_OFF" = "Street permanently blocked off";
 
-/* Feedback that a street is temporary blocked off. */
+/* Feedback that a street is temporarily blocked off. */
 "PASSIVE_NAVIGATION_FEEDBACK_ROAD_ISSUE_STREET_TEMPORARILY_BLOCKED_OFF" = "Street temporarily blocked off";
 
 /* Feedback that there is a congestion on the road. */
