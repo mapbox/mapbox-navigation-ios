@@ -43,7 +43,6 @@ Pod::Spec.new do |s|
   s.dependency "MapboxNavigationNative", "~> 106.0"
   s.dependency "MapboxDirections-pre", "2.6.0-beta.2"
   s.dependency "MapboxMobileEvents", "~> 1.0"
-  s.dependency "MapboxCommon", "~> 22.0"
 
   s.swift_version = "5.0"
 end
