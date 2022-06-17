@@ -3,6 +3,7 @@ import CoreLocation
 import MapboxCoreNavigation
 import MapboxMaps
 import MapboxDirections
+import MapboxSearch
 
 // :nodoc:
 @_spi(Experimental) open class PreviewViewController: UIViewController {
@@ -569,7 +570,7 @@ import MapboxDirections
 
 extension PreviewViewController: NavigationMapViewDelegate {
     
-    public func navigationMapView(_ mapView: NavigationMapView, didSelect route: Route) {
+    public func navigationMapView(_ mapView: NavigationMapView, didSelect route: MapboxDirections.Route) {
         delegate?.previewViewController(self, didSelect: route)
     }
 }

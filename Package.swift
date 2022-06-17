@@ -32,6 +32,7 @@ let package = Package(
         .package(name: "Nimble", url: "https://github.com/Quick/Nimble.git", from: "9.0.1"),
         .package(name: "SnapshotTesting", url: "https://github.com/pointfreeco/swift-snapshot-testing.git", from: "1.8.1"),
         .package(name: "OHHTTPStubs", url: "https://github.com/AliSoftware/OHHTTPStubs.git", from: "9.1.0"),
+        .package(name: "MapboxSearch", url: "https://github.com/mapbox/mapbox-search-ios.git", .branch("maxim/mapbox-common-22-0-0")),
     ],
     targets: [
         .target(
@@ -51,6 +52,7 @@ let package = Package(
                 "MapboxMaps",
                 "MapboxSpeech",
                 "Solar",
+                "MapboxSearch"
             ],
             exclude: ["Info.plist"],
             resources: [.copy("MBXInfo.plist")]),

@@ -74,6 +74,15 @@
         }
       },
       {
+        "package": "MapboxSearch",
+        "repositoryURL": "https://github.com/mapbox/mapbox-search-ios.git",
+        "state": {
+          "branch": "maxim/mapbox-common-22-0-0",
+          "revision": "87e2e7ec9e29483d3dcd77ce20c6c45fe1b939f6",
+          "version": null
+        }
+      },
+      {
         "package": "MapboxSpeech",
         "repositoryURL": "https://github.com/mapbox/mapbox-speech-swift.git",
         "state": {
