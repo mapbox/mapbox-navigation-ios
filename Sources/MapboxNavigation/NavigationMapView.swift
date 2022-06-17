@@ -1142,13 +1142,112 @@ open class NavigationMapView: UIView {
     }
     
     /**
+     Controls if displayed `continuousAlternative`s will also be annotated with estimated travel time delta relative to the main route.
+     
+     Callouts text font also respects `NavigationMapView.routeDurationAnnotationFontNames` property.
+     Default value is `true`.
+     */
+    public var showsContinuousAlternativeRoutesRelativeDuration: Bool = true {
+        didSet {
+            showContinuousAlternativeRoutesDurations()
+        }
+    }
+    
+    private let continuousAlternativeDurationAnnotationOffset: LocationDistance = 75
+    
+    func showContinuousAlternativeRoutesDurations() {
+        // Remove any existing route annotation.
+        removeContinuousAlternativeRoutesDurations()
+        
+        guard showsContinuousAlternativeRoutesRelativeDuration,
+              let visibleRoutes = continuousAlternatives, visibleRoutes.count > 0 else { return }
+        
+        do {
+            try updateAnnotationSymbolImages()
+        } catch {
+            NSLog("Error occured while updating annotation symbol images: \(error.localizedDescription).")
+        }
+        
+        updateContinuousAlternativeRoutesDurations(along: visibleRoutes)
+    }
+    
+    private func updateContinuousAlternativeRoutesDurations(along alternativeRoutes: [AlternativeRoute]?) {
+        guard let routes = alternativeRoutes else { return }
+        
+        let tollRoutes = routes.filter { route -> Bool in
+            return (route.indexedRouteResponse.currentRoute?.tollIntersections?.count ?? 0) > 0
+        }
+        let routesContainTolls = tollRoutes.count > 0
+        
+        // Pick a random tail direction to keep things varied.
+        guard let randomTailPosition = [
+            RouteDurationAnnotationTailPosition.leading,
+            RouteDurationAnnotationTailPosition.trailing
+        ].randomElement() else { return }
+
+        var features = [Turf.Feature]()
+        
+        for (index, alternativeRoute) in routes.enumerated() {
+            guard let routeShape = alternativeRoute.indexedRouteResponse.currentRoute?.shape else { return }
+            
+            var annotationCoordinate: LocationCoordinate2D!
+            if let mainRoute = self.routes?.first {
+                let offset = mainRoute.distance - alternativeRoute.infoFromDeviationPoint.distance + continuousAlternativeDurationAnnotationOffset
+                annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: offset)?.coordinate
+            } else {
+                annotationCoordinate = routeShape.indexedCoordinateFromStart(distance: alternativeRoute.infoFromOrigin.distance - alternativeRoute.infoFromDeviationPoint.distance + continuousAlternativeDurationAnnotationOffset)?.coordinate
+            }
+            
+            // Form the appropriate text string for the annotation.
+            let labelText = self.annotationLabelForAlternativeRoute(alternativeRoute,
+                                                                    tolls: routesContainTolls)
+            
+            // Create the feature for this route annotation. Set the styling attributes that will be
+            // used to render the annotation in the style layer.
+            var feature = Feature(geometry: .point(Point(annotationCoordinate)))
+            
+            var tailPosition = randomTailPosition
+            
+            // Convert our coordinate to screen space so we can make a choice on which side of the
+            // coordinate the label ends up on.
+            let unprojectedCoordinate = mapView.mapboxMap.point(for: annotationCoordinate)
+            
+            // Pick the orientation of the bubble "stem" based on how close to the edge of the screen it is.
+            if tailPosition == .leading && unprojectedCoordinate.x > bounds.width * 0.75 {
+                tailPosition = .trailing
+            } else if tailPosition == .trailing && unprojectedCoordinate.x < bounds.width * 0.25 {
+                tailPosition = .leading
+            }
+            
+            let imageName = tailPosition == .leading ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
+            
+            // Set the feature attributes which will be used in styling the symbol style layer.
+            feature.properties = [
+                "selected": .boolean(false),
+                "tailPosition": .number(Double(tailPosition.rawValue)),
+                "text": .string(labelText),
+                "imageName": .string(imageName),
+                "sortOrder": .number(Double(index == 0 ? index : -index)),
+            ]
+            
+            features.append(feature)
+        }
+        
+        // Add the features to the style.
+        do {
+            try addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features),
+                                              soureIdentifier: NavigationMapView.SourceIdentifier.continuousAlternativeRoutesDurationAnnotationsSource,
+                                              layerIdentifier: NavigationMapView.LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer)
+        } catch {
+            NSLog("Error occured while adding route annotation symbol layer: \(error.localizedDescription).")
+        }
+    }
+    /**
      Remove any old route duration callouts and generate new ones for each passed in route.
      */
     private func updateRouteDurations(along routes: [Route]?) {
-        let style = mapView.mapboxMap.style
-        
         // Remove any existing route annotation.
-        removeRouteDurationAnnotationsLayerFromStyle(style)
+        removeRouteDurations()
         
         guard let routes = routes else { return }
         
@@ -1269,7 +1368,9 @@ open class NavigationMapView: UIView {
         
         // Add the features to the style.
         do {
-            try addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features))
+            try addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features),
+                                              soureIdentifier: NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource,
+                                              layerIdentifier: NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer)
         } catch {
             Log.error("Error occured while adding route annotation symbol layer: \(error.localizedDescription).",
                       category: .navigationUI)
@@ -1281,15 +1382,18 @@ open class NavigationMapView: UIView {
      */
     public func removeRouteDurations() {
         let style = mapView.mapboxMap.style
-        removeRouteDurationAnnotationsLayerFromStyle(style)
+        // Removes the underlying style layers and data sources for the route duration annotations.
+        style.removeLayers([NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer])
+        style.removeSources([NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource])
     }
     
     /**
-     Removes the underlying style layers and data sources for the route duration annotations.
+     Removes all visible continuous alternative routes duration callouts.
      */
-    private func removeRouteDurationAnnotationsLayerFromStyle(_ style: MapboxMaps.Style) {
-        style.removeLayers([NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer])
-        style.removeSources([NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource])
+    func removeContinuousAlternativeRoutesDurations() {
+        let style = mapView.mapboxMap.style
+        style.removeLayers([NavigationMapView.LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer])
+        style.removeSources([NavigationMapView.SourceIdentifier.continuousAlternativeRoutesDurationAnnotationsSource])
     }
     
     /**
@@ -1446,29 +1550,28 @@ open class NavigationMapView: UIView {
     /**
      Add the MGLSymbolStyleLayer for the route duration annotations.
      */
-    private func addRouteAnnotationSymbolLayer(features: FeatureCollection) throws {
+    private func addRouteAnnotationSymbolLayer(features: FeatureCollection,
+                                               soureIdentifier: String,
+                                               layerIdentifier: String) throws {
         let style = mapView.mapboxMap.style
         
-        let routeDurationAnnotationsSourceIdentifier = NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource
-        if style.sourceExists(withId: routeDurationAnnotationsSourceIdentifier) {
-            try style.updateGeoJSONSource(withId: routeDurationAnnotationsSourceIdentifier, geoJSON: .featureCollection(features))
+        if style.sourceExists(withId: soureIdentifier) {
+            try style.updateGeoJSONSource(withId: soureIdentifier, geoJSON: .featureCollection(features))
         } else {
             var dataSource = GeoJSONSource()
             dataSource.data = .featureCollection(features)
-            try style.addSource(dataSource, id: routeDurationAnnotationsSourceIdentifier)
+            try style.addSource(dataSource, id: soureIdentifier)
         }
-        
-        let routeDurationAnnotationsLayerIdentifier = NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer
         
         var shapeLayer: SymbolLayer
-        if style.layerExists(withId: routeDurationAnnotationsLayerIdentifier),
-           let symbolLayer = try style.layer(withId: routeDurationAnnotationsLayerIdentifier) as? SymbolLayer {
+        if style.layerExists(withId: layerIdentifier),
+           let symbolLayer = try style.layer(withId: layerIdentifier) as? SymbolLayer {
             shapeLayer = symbolLayer
         } else {
-            shapeLayer = SymbolLayer(id: routeDurationAnnotationsLayerIdentifier)
+            shapeLayer = SymbolLayer(id: layerIdentifier)
         }
         
-        shapeLayer.source = routeDurationAnnotationsSourceIdentifier
+        shapeLayer.source = soureIdentifier
         
         shapeLayer.textField = .expression(Exp(.get) {
             "text"
@@ -1528,21 +1631,39 @@ open class NavigationMapView: UIView {
      and info on Tolls, if applicable.
      */
     private func annotationLabelForRoute(_ route: Route, tolls: Bool) -> String {
-        var eta = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
+        let eta = DateComponentsFormatter.shortDateComponentsFormatter.string(from: route.expectedTravelTime) ?? ""
         
-        let hasTolls = (route.tollIntersections?.count ?? 0) > 0
+        return tollAnnotationForLabel(on: route, tolls: tolls, label: eta)
+    }
+    
+    /**
+     Generate the text for the label to be shown on screen. It will include estimated duration delta relative to the main route
+     and info on Tolls, if applicable.
+     */
+    private func annotationLabelForAlternativeRoute(_ alternativeRoute: AlternativeRoute, tolls: Bool) -> String {
+        let timeDelta = DateComponentsFormatter.travelTimeString(alternativeRoute.expectedTravelTimeDelta,
+                                                                 signed: true)
+        
+        return tollAnnotationForLabel(on: alternativeRoute.indexedRouteResponse.currentRoute,
+                                      tolls: tolls,
+                                      label: timeDelta)
+    }
+    
+    private func tollAnnotationForLabel(on route: Route?, tolls: Bool, label: String) -> String {
+        var labelWithTolls = label
+        let hasTolls = (route?.tollIntersections?.count ?? 0) > 0
         if hasTolls {
-            eta += "\n" + NSLocalizedString("ROUTE_HAS_TOLLS", value: "Tolls", comment: "This route does have tolls")
+            labelWithTolls += "\n" + NSLocalizedString("ROUTE_HAS_TOLLS", value: "Tolls", comment: "This route does have tolls")
             if let symbol = Locale.current.currencySymbol {
-                eta += " " + symbol
+                labelWithTolls += " " + symbol
             }
         } else if tolls {
             // If one of the routes has tolls, but this one does not then it needs to explicitly say that it has no tolls
             // If no routes have tolls at all then we can omit this portion of the string.
-            eta += "\n" + NSLocalizedString("ROUTE_HAS_NO_TOLLS", value: "No Tolls", comment: "This route does not have tolls")
+            labelWithTolls += "\n" + NSLocalizedString("ROUTE_HAS_NO_TOLLS", value: "No Tolls", comment: "This route does not have tolls")
         }
         
-        return eta
+        return labelWithTolls
     }
     
     // MARK: Managing Annotations

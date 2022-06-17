@@ -93,16 +93,13 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
     func alternativesListTemplate() -> CPListTemplate {
         var variants: [CPListSection] = []
         let distanceFormatter = DistanceFormatter()
-        let dateComponentsFormatter = DateComponentsFormatter()
         self.continuousAlternatives.forEach { alternative in
             guard let title = alternative.indexedRouteResponse.currentRoute?.description else {
                 return
             }
-            dateComponentsFormatter.unitsStyle = alternative.expectedTravelTimeDelta < 3600 ? .short : .abbreviated
-            let timeDelta = dateComponentsFormatter.string(from: alternative.expectedTravelTimeDelta) ?? ""
             let distanceDelta = distanceFormatter.string(from: alternative.distanceDelta)
             
-            let items: [CPListItem] = [CPListItem(text: "\(alternative.expectedTravelTimeDelta >= 0 ? "+":"")\(timeDelta) / \(alternative.distanceDelta >= 0 ? "+":"")\(distanceDelta)",
+            let items: [CPListItem] = [CPListItem(text: "\(DateComponentsFormatter.travelTimeString(alternative.expectedTravelTimeDelta, signed: true)) / \(alternative.distanceDelta >= 0 ? "+":"")\(distanceDelta)",
                                                   detailText: nil)]
             items.forEach { [weak self] (item: CPListItem) -> Void in
                 if #available(iOS 14.0, *) {

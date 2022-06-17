@@ -20,6 +20,8 @@ extension NavigationMapView {
         
         self.continuousAlternatives = continuousAlternatives
         
+        showContinuousAlternativeRoutesDurations()
+        
         guard let routes = self.routes,
               !routes.isEmpty else { return }
         
@@ -52,6 +54,8 @@ extension NavigationMapView {
         removeContinuousAlternativesRoutesLayers()
         
         continuousAlternatives = nil
+        
+        showContinuousAlternativeRoutesDurations()
     }
     
     /**
