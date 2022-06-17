@@ -101,18 +101,8 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             
             let items: [CPListItem] = [CPListItem(text: "\(DateComponentsFormatter.travelTimeString(alternative.expectedTravelTimeDelta, signed: true)) / \(alternative.distanceDelta >= 0 ? "+":"")\(distanceDelta)",
                                                   detailText: nil)]
-            items.forEach { [weak self] (item: CPListItem) -> Void in
-                if #available(iOS 14.0, *) {
-                    item.handler = { (_,_) -> Void in
-                        self?.navigationService.router.updateRoute(with: alternative.indexedRouteResponse,
-                                                                   routeOptions: nil,
-                                                                   completion: { _ in
-                            self?.carInterfaceController.popTemplate(animated: true)
-                        })
-                    }
-                } else {
-                    item.userInfo = [CarPlayAlternativeIDKey: alternative.id]
-                }
+            items.forEach { (item: CPListItem) -> Void in
+                item.userInfo = [CarPlayAlternativeIDKey: alternative.id]
             }
             let section = CPListSection(items: items,
                                         header: title,
@@ -127,9 +117,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         let template = CPListTemplate(title: alternativesTitle,
                                       sections: variants)
-        if #unavailable(iOS 14.0) {
-            template.delegate = self
-        }
+        template.delegate = self
         return template
     }
     
