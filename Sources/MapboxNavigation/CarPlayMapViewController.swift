@@ -230,6 +230,7 @@ open class CarPlayMapViewController: UIViewController {
         
         navigationMapView.mapView.ornaments.options.logo.visibility = .hidden
         navigationMapView.mapView.ornaments.options.attributionButton.visibility = .hidden
+        navigationMapView.mapView.ornaments.options.compass.visibility = .hidden
         
         self.view = navigationMapView
     }

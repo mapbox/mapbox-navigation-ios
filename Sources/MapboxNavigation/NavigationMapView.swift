@@ -2125,7 +2125,15 @@ open class NavigationMapView: UIView {
         }
         
         let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
-        let bearing = customCameraOptions.flatMap({ $0.bearing }).map({ CGFloat($0) })
+        
+        let bearing: CGFloat?
+        // In case of CarPlay while previewing routes always use bearing that is set to zero.
+        if traitCollection.userInterfaceIdiom == .carPlay {
+            bearing = 0.0
+        } else {
+            bearing = customCameraOptions.flatMap({ $0.bearing }).map({ CGFloat($0) })
+        }
+        
         if let cameraOptions = mapView?.mapboxMap.camera(for: geometry,
                                                             padding: customCameraOptions?.padding ?? edgeInsets,
                                                             bearing: bearing,
