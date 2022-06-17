@@ -36,6 +36,7 @@
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
 * Fixed an issue where camera kept receiving updates even after stopping `MapboxNavigationService`. ([#3928](https://github.com/mapbox/mapbox-navigation-ios/pull/3928))
 * Added `NavigationViewController.showsContinuousAlternatives` and `CarPlayNavigationViewController.showsContinuousAlternatives` flags to toggle displaying alternative route's lines during navigation session. Use `NavigationMapView.show(continuousAlternatives:)` and `NavigationMapView.removeContinuousAlternativesRoutes()` methods for fine control over displayed routes. ([#3850](https://github.com/mapbox/mapbox-navigation-ios/pull/3850))
+* Added `NavigationMapView.showsContinuousAlternativeRoutesRelativeDuration` flag to control displaying map callouts for continuous alternative routes duration delta relative to the current main one. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
 
 ### CarPlay
 
@@ -43,6 +44,7 @@
 * The map automatically chooses the night style when "Always Show Dark Maps" is enabled in the Appearance section of Settings. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Fixed an issue where a `StyleManager` for CarPlay would update the appearance on both CarPlay and the iOS device simultaneously. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
+* Added UI for switching to alternative routes while in navigation. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
 
 ### Other changes
 
