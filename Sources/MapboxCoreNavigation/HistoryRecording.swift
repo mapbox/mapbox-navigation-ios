@@ -86,10 +86,10 @@ public protocol HistoryRecording {
 public extension HistoryRecording {
     static var historyDirectoryURL: URL? {
         get {
-            Navigator.historyDirectoryURL
+            HistoryRecorder.historyDirectoryURL
         }
         set {
-            Navigator.historyDirectoryURL = newValue
+            HistoryRecorder.historyDirectoryURL = newValue
         }
     }
 
@@ -102,9 +102,7 @@ public extension HistoryRecording {
     }
 
     static func startRecordingHistoryImplementation() {
-        if Navigator.isSharedInstanceCreated {
-            Navigator.shared.historyRecorder?.startRecording()
-        }
+        HistoryRecorder.shared.handle?.startRecording()
     }
     
     static func pushHistoryEvent(type: String, jsonData: Data?) throws {
@@ -124,8 +122,8 @@ public extension HistoryRecording {
             }
             jsonString = value
         }
-        if Navigator.isSharedInstanceCreated {
-            Navigator.shared.historyRecorder?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
+        if HistoryRecorder.isSharedInstanceCreated {
+            HistoryRecorder.shared.handle?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
         }
     }
 
@@ -138,8 +136,8 @@ public extension HistoryRecording {
     }
     
     private static func stopRecordingHistoryImplementation(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
-        guard Navigator.isSharedInstanceCreated,
-              let historyRecorder = Navigator.shared.historyRecorder else {
+        guard HistoryRecorder.isSharedInstanceCreated,
+              let historyRecorder = HistoryRecorder.shared.handle else {
             completionHandler(nil)
             return
         }

@@ -25,9 +25,6 @@ class NativeHandlersFactoryTests: TestCase {
     override func setUp() {
         super.setUp()
         UserDefaults.standard.set(nil, forKey: customConfigKey)
-        handlersFactory = NativeHandlersFactory(tileStorePath: "tile store path",
-                                                credentials: .mocked,
-                                                configFactoryType: ConfigFactorySpy.self)
     }
     
     func testDefaultCustomConfig() {
@@ -36,7 +33,7 @@ class NativeHandlersFactoryTests: TestCase {
                 "useInternalReroute": true
             ]
         ]
-        _ = handlersFactory.configHandle
+        _ = NativeHandlersFactory.configHandle(by: ConfigFactorySpy.self)
         let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
         XCTAssertTrue(config == expectedCustomConfig)
     }
@@ -53,7 +50,7 @@ class NativeHandlersFactoryTests: TestCase {
                 "useInternalReroute": true
             ]
         ]
-        _ = handlersFactory.configHandle
+        _ = NativeHandlersFactory.configHandle(by: ConfigFactorySpy.self)
         let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
         XCTAssertTrue(config == expectedCustomConfig)
     }
@@ -70,7 +67,7 @@ class NativeHandlersFactoryTests: TestCase {
                 "useInternalReroute": true
             ]
         ]
-        _ = handlersFactory.configHandle
+        _ = NativeHandlersFactory.configHandle(by: ConfigFactorySpy.self)
         let config = customConfig(from: ConfigFactorySpy.passedCustomConfig)
         XCTAssertTrue(config == expectedCustomConfig)
     }
