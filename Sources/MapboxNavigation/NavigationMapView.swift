@@ -2127,9 +2127,9 @@ open class NavigationMapView: UIView {
         let edgeInsets = safeArea + UIEdgeInsets.centerEdgeInsets
         let bearing = customCameraOptions.flatMap({ $0.bearing }).map({ CGFloat($0) })
         if let cameraOptions = mapView?.mapboxMap.camera(for: geometry,
-                                                            padding: customCameraOptions?.padding ?? edgeInsets,
-                                                            bearing: bearing,
-                                                            pitch: customCameraOptions?.pitch) {
+                                                         padding: customCameraOptions?.padding ?? edgeInsets,
+                                                         bearing: bearing,
+                                                         pitch: customCameraOptions?.pitch) {
             mapView?.camera.ease(to: cameraOptions, duration: animated ? 1.0 : 0.0)
         }
     }
