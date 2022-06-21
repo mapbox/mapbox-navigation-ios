@@ -15,4 +15,12 @@ extension UIDevice {
         return false
         #endif
     }
+    
+    final var isSimulator: Bool {
+        #if targetEnvironment(simulator)
+        return true
+        #endif
+        
+        return false
+    }
 }
