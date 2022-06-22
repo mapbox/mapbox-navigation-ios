@@ -14,7 +14,7 @@ public protocol HistoryRecording {
     /**
      Path to the directory where history file could be stored when `stopRecordingHistory(writingFileWith:)` is called.
 
-     Setting `nil` disables history recording. Defaults to `nil`.
+     Setting `nil` disables history recording. Defaults to `nil`. Updating value from `nil` to `non-nil` value results in recreating the shared instance since `nil` guaranteed an invalid handler. Further updates have no effect.
      */
     static var historyDirectoryURL: URL? { get set }
 
@@ -23,7 +23,6 @@ public protocol HistoryRecording {
 
      - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
      */
-    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func startRecordingHistory()
     
     /**
@@ -31,6 +30,7 @@ public protocol HistoryRecording {
 
      - postcondition: Use the `stopRecordingHistory(writingFileWith:)` method to stop recording history and write the recorded history to a file.
      */
+    @available(*, deprecated, message: "Use corresponding static method instead.")
     func startRecordingHistory()
 
     /**
@@ -41,7 +41,6 @@ public protocol HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
-    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func pushHistoryEvent(type: String, jsonData: Data?) throws
     
     /**
@@ -52,6 +51,7 @@ public protocol HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
+    @available(*, deprecated, message: "Use corresponding static method instead.")
     func pushHistoryEvent(type: String, jsonData: Data?) throws
 
     /**
@@ -64,7 +64,6 @@ public protocol HistoryRecording {
 
      - parameter completionHandler: A closure to be executed when the history file is ready.
      */
-    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler)
     
     /**
@@ -77,6 +76,7 @@ public protocol HistoryRecording {
 
      - parameter completionHandler: A closure to be executed when the history file is ready.
      */
+    @available(*, deprecated, message: "Use corresponding static method instead.")
     func stopRecordingHistory(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler)
 }
 
@@ -86,10 +86,10 @@ public protocol HistoryRecording {
 public extension HistoryRecording {
     static var historyDirectoryURL: URL? {
         get {
-            Navigator.historyDirectoryURL
+            HistoryRecorder.historyDirectoryURL
         }
         set {
-            Navigator.historyDirectoryURL = newValue
+            HistoryRecorder.historyDirectoryURL = newValue
         }
     }
 
@@ -102,9 +102,7 @@ public extension HistoryRecording {
     }
 
     static func startRecordingHistoryImplementation() {
-        if Navigator.isSharedInstanceCreated {
-            Navigator.shared.historyRecorder?.startRecording()
-        }
+        HistoryRecorder.shared.handle?.startRecording()
     }
     
     static func pushHistoryEvent(type: String, jsonData: Data?) throws {
@@ -124,8 +122,8 @@ public extension HistoryRecording {
             }
             jsonString = value
         }
-        if Navigator.isSharedInstanceCreated {
-            Navigator.shared.historyRecorder?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
+        if HistoryRecorder.isSharedInstanceCreated {
+            HistoryRecorder.shared.handle?.pushHistory(forEventType: type, eventJson: jsonString ?? "")
         }
     }
 
@@ -138,8 +136,8 @@ public extension HistoryRecording {
     }
     
     private static func stopRecordingHistoryImplementation(writingFileWith completionHandler: @escaping HistoryFileWritingCompletionHandler) {
-        guard Navigator.isSharedInstanceCreated,
-              let historyRecorder = Navigator.shared.historyRecorder else {
+        guard HistoryRecorder.isSharedInstanceCreated,
+              let historyRecorder = HistoryRecorder.shared.handle else {
             completionHandler(nil)
             return
         }
