@@ -96,17 +96,15 @@ class Navigator {
         let factory = NativeHandlersFactory(tileStorePath: tileStorePath ?? "",
                                             credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: Self.tilesVersion,
-                                            historyDirectoryURL: Self.historyDirectoryURL,
                                             datasetProfileIdentifier: Self.datasetProfileIdentifier,
                                             routingProviderSource: NavigationSettings.shared.routingProviderSource.nativeSource)
         tileStore = factory.tileStore
-        historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
         roadGraph = factory.roadGraph
         navigator = factory.navigator
         roadObjectStore = RoadObjectStore(navigator.roadObjectStore())
         roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
-        rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
+        rerouteController = RerouteController(navigator, config: NativeHandlersFactory.navigatorConfig)
         
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()
@@ -125,19 +123,17 @@ class Navigator {
         let factory = NativeHandlersFactory(tileStorePath: NavigationSettings.shared.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
                                             credentials: NavigationSettings.shared.directions.credentials,
                                             tilesVersion: version ?? Self.tilesVersion,
-                                            historyDirectoryURL: Self.historyDirectoryURL,
                                             targetVersion: version.map { _ in Self.tilesVersion },
                                             datasetProfileIdentifier: Self.datasetProfileIdentifier,
                                             routingProviderSource: NavigationSettings.shared.routingProviderSource.nativeSource)
         tileStore = factory.tileStore
-        historyRecorder = factory.historyRecorder
         cacheHandle = factory.cacheHandle
         roadGraph = factory.roadGraph
         navigator = factory.navigator
         
         roadObjectStore.native = navigator.roadObjectStore()
         roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
-        rerouteController = RerouteController(navigator, config: factory.navigatorConfig)
+        rerouteController = RerouteController(navigator, config: NativeHandlersFactory.navigatorConfig)
         
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()
@@ -206,18 +202,7 @@ class Navigator {
             self.navigatorAlternativesObserver = nil
         }
     }
-    
-    // MARK: History
-    
-    /**
-     Path to the directory where history file could be stored when `HistoryRecording.stopRecordingHistory(writingFileWith:)` is called.
-     
-     Setting `nil` disables history recording. Defaults to `nil`.
-     */
-    static var historyDirectoryURL: URL? = nil
-    
-    private(set) var historyRecorder: HistoryRecorderHandle?
-    
+        
     // MARK: Electronic horizon
     
     private(set) var roadGraph: RoadGraph
