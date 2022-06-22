@@ -5,13 +5,15 @@ class HistoryRecorder {
     /**
      Path to the directory where history file could be stored when `HistoryRecording.stopRecordingHistory(writingFileWith:)` is called.
      
-     Setting `nil` disables history recording. Defaults to `nil`.
+     Setting `nil` disables history recording. Defaults to `nil`. Updating value from `nil` to `non-nil` value results in recreating the shared instance since `nil` guaranteed an invalid handler. Further updates have no effect.
      */
     static var historyDirectoryURL: URL? = nil
     {
         didSet {
             if _historyRecorder?.handle == nil && historyDirectoryURL != nil {
                 _historyRecorder = nil
+            } else if oldValue != nil {
+                Log.warning("`historyDirectoryURL` is updated excessively.", category: .settings)
             }
         }
     }
