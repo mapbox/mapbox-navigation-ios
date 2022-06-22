@@ -14,7 +14,7 @@ public protocol HistoryRecording {
     /**
      Path to the directory where history file could be stored when `stopRecordingHistory(writingFileWith:)` is called.
 
-     Setting `nil` disables history recording. Defaults to `nil`.
+     Setting `nil` disables history recording. Defaults to `nil`. Updating value from `nil` to `non-nil` value results in recreating the shared instance since `nil` guaranteed an invalid handler. Further updates have no effect.
      */
     static var historyDirectoryURL: URL? { get set }
 
