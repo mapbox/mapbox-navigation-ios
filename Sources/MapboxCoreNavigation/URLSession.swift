@@ -1,5 +1,6 @@
 import Foundation
 import MapboxDirections
+import UIKit
 
 extension URLSession {
     /**
@@ -92,12 +93,22 @@ extension URLSession {
         #elseif arch(i386)
         chip = "i386"
         #endif
-        let chipComponent = "(\(chip))"
         
-        let components: [String] = bundleComponents + [
+        var simulator: String? = nil
+        if UIDevice.isSimulator {
+            simulator = "Simulator"
+        }
+        
+        let otherComponents = [
+            chip,
+            simulator
+        ].compactMap({ $0 })
+        
+        let components = bundleComponents + [
             systemComponent,
-            chipComponent,
+            "(\(otherComponents.joined(separator: "; ")))"
         ]
+        
         return components.joined(separator: " ")
     }()
 }
