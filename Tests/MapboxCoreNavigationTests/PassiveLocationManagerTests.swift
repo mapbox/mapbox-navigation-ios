@@ -73,7 +73,7 @@ class PassiveLocationManagerTests: TestCase {
         super.tearDown()
         PassiveLocationManager.historyDirectoryURL = nil
         NavigationSettings.shared.initialize(directions: .mocked, tileStoreConfiguration: TileStoreConfiguration(navigatorLocation: .default, mapLocation: nil), routingProviderSource: .hybrid, alternativeRouteDetectionStrategy: .init())
-        Navigator._recreateNavigator()
+        HistoryRecorder._recreateHistoryRecorder()
     }
     
     func testManualLocations() {
@@ -116,7 +116,7 @@ class PassiveLocationManagerTests: TestCase {
         let supportDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!.appendingPathComponent("test")
         
         PassiveLocationManager.historyDirectoryURL = supportDir
-        withExtendedLifetime(Navigator.shared) { _ in
+        withExtendedLifetime(HistoryRecorder.shared) { _ in
             PassiveLocationManager.startRecordingHistory()
 
             let historyCallbackExpectation = XCTestExpectation(description: "History callback should be called")

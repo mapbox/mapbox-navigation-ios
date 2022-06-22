@@ -5,7 +5,6 @@ protocol HandlerData {
     var tileStorePath: String { get }
     var credentials: Credentials { get }
     var tilesVersion: String { get }
-    var historyDirectoryURL: URL? { get }
     var targetVersion: String? { get }
     var configFactoryType: ConfigFactory.Type { get }
     var datasetProfileIdentifier: ProfileIdentifier { get }
@@ -25,7 +24,6 @@ class HandlerFactory<HandlerType, Arguments> {
         let tileStorePath: String
         let credentials: Credentials
         let tilesVersion: String
-        let historyDirectoryURL: URL?
         let targetVersion: String?
         let configFactoryType: ConfigFactory.Type
         let datasetProfileIdentifier: ProfileIdentifier
@@ -34,7 +32,6 @@ class HandlerFactory<HandlerType, Arguments> {
             self.tileStorePath = data.tileStorePath
             self.credentials = data.credentials
             self.tilesVersion = data.tilesVersion
-            self.historyDirectoryURL = data.historyDirectoryURL
             self.targetVersion = data.targetVersion
             self.configFactoryType = data.configFactoryType
             self.datasetProfileIdentifier = data.datasetProfileIdentifier
@@ -44,7 +41,6 @@ class HandlerFactory<HandlerType, Arguments> {
             return lhs.tileStorePath != rhs.tileStorePath ||
                 lhs.credentials != rhs.credentials ||
                 lhs.tilesVersion != rhs.tilesVersion ||
-                lhs.historyDirectoryURL?.absoluteString != rhs.historyDirectoryURL?.absoluteString ||
                 lhs.targetVersion != rhs.targetVersion ||
                 lhs.configFactoryType != rhs.configFactoryType ||
                 lhs.datasetProfileIdentifier != rhs.datasetProfileIdentifier
@@ -74,12 +70,6 @@ class HandlerFactory<HandlerType, Arguments> {
         }
         return cachedHandle
     }
-}
-
-let historyRecorderHandlerFactory = HandlerFactory { (path: String,
-                                                      configHandle: ConfigHandle) in
-    HistoryRecorderHandle.build(forHistoryDir: path,
-                                config: configHandle)
 }
 
 let cacheHandlerFactory = HandlerFactory { (tilesConfig: TilesConfig,

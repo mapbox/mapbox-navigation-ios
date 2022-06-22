@@ -51,6 +51,7 @@
 * All logs that Navigation SDK produces are now sent to the `MapboxCommon` framework. You can intercept these logs in your own code using `LogConfiguration.registerLogWriterBackend(forLogWriter:)` method from `MapboxCommon` framework. ([#3944](https://github.com/mapbox/mapbox-navigation-ios/pull/3944))
 * Fixed an issue where popped window doesn't get updated in appearance when style changes on phone. ([#3954](https://github.com/mapbox/mapbox-navigation-ios/pull/3954))
 * Fixed an issue where detailed feedback items don't change color in different style. ([#3954](https://github.com/mapbox/mapbox-navigation-ios/pull/3954))
+* Update method deprecation for `HistoryRecording` protocol. Static methods are now preferred over instance ones. ([#3960](https://github.com/mapbox/mapbox-navigation-ios/pull/3960))
 
 ## v2.5.1
 

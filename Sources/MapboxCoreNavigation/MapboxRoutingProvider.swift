@@ -122,13 +122,12 @@ public class MapboxRoutingProvider: RoutingProvider {
         let factory = NativeHandlersFactory(tileStorePath: settings.tileStoreConfiguration.navigatorLocation.tileStoreURL?.path ?? "",
                                             credentials: settings.directions.credentials,
                                             tilesVersion: Navigator.tilesVersion,
-                                            historyDirectoryURL: Navigator.historyDirectoryURL,
                                             datasetProfileIdentifier: datasetProfileIdentifier ?? Navigator.datasetProfileIdentifier,
                                             routingProviderSource: source.nativeSource)
         return RouterFactory.build(for: source.nativeSource,
-                                      cache: factory.cacheHandle,
-                                      config: factory.configHandle,
-                                      historyRecorder: factory.historyRecorder)
+                                   cache: factory.cacheHandle,
+                                   config: NativeHandlersFactory.configHandle(),
+                                   historyRecorder: HistoryRecorder.shared.handle)
     } ()
     
     private func complete(requestId: RequestId, with result: @escaping () -> Void) {

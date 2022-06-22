@@ -17,7 +17,6 @@ class NativeHandlersFactory {
     let tileStorePath: String
     let credentials: Credentials
     let tilesVersion: String
-    let historyDirectoryURL: URL?
     let targetVersion: String?
     let configFactoryType: ConfigFactory.Type
     let datasetProfileIdentifier: ProfileIdentifier
@@ -26,7 +25,6 @@ class NativeHandlersFactory {
     init(tileStorePath: String,
          credentials: Credentials,
          tilesVersion: String = "",
-         historyDirectoryURL: URL? = nil,
          targetVersion: String? = nil,
          configFactoryType: ConfigFactory.Type = ConfigFactory.self,
          datasetProfileIdentifier: ProfileIdentifier = ProfileIdentifier.automobile,
@@ -34,7 +32,6 @@ class NativeHandlersFactory {
         self.tileStorePath = tileStorePath
         self.credentials = credentials
         self.tilesVersion = tilesVersion
-        self.historyDirectoryURL = historyDirectoryURL
         self.targetVersion = targetVersion
         self.configFactoryType = configFactoryType
         self.datasetProfileIdentifier = datasetProfileIdentifier
@@ -43,18 +40,13 @@ class NativeHandlersFactory {
     
     // MARK: - Native Handlers
     
-    lazy var historyRecorder: HistoryRecorderHandle? = {
-        historyDirectoryURL.flatMap {
-            historyRecorderHandlerFactory.getHandler(with: (path: $0.path,
-                                                            configHandle: configHandle),
-                                                     cacheData: self)
-        }
-    }()
-    
     lazy var navigator: MapboxNavigationNative.Navigator = {
         onMainQueueSync { // Make sure that Navigator pick ups Main Thread RunLoop.
             let loggingLevel = NSNumber(value: LoggingLevel.info.rawValue)
-            LogConfiguration.setLoggingLevelForCategory("*", upTo: loggingLevel)
+            LogConfiguration.setLoggingLevelForUpTo(loggingLevel)
+            
+            let historyRecorder = HistoryRecorder.shared.handle
+            let configHandle = Self.configHandle(by: configFactoryType)
             
             let router = routingProviderSource.map {
                 MapboxNavigationNative.RouterFactory.build(for: $0,
@@ -71,8 +63,8 @@ class NativeHandlersFactory {
     
     lazy var cacheHandle: CacheHandle = {
         cacheHandlerFactory.getHandler(with: (tilesConfig: tilesConfig,
-                                              configHandle: configHandle,
-                                              historyRecorder: historyRecorder),
+                                              configHandle: Self.configHandle(by: configFactoryType),
+                                              historyRecorder: HistoryRecorder.shared.handle),
                                        cacheData: self)
     }()
     
@@ -86,10 +78,10 @@ class NativeHandlersFactory {
     
     // MARK: - Support Objects
     
-    lazy var settingsProfile: SettingsProfile = {
+    static var settingsProfile: SettingsProfile {
         SettingsProfile(application: .mobile,
                         platform: .IOS)
-    }()
+    }
     
     lazy var endpointConfig: TileEndpointConfiguration = {
         TileEndpointConfiguration(credentials: credentials,
@@ -109,7 +101,7 @@ class NativeHandlersFactory {
                     endpointConfig: endpointConfig)
     }()
     
-    lazy var navigatorConfig: NavigatorConfig = {
+    static var navigatorConfig: NavigatorConfig {
         return NavigatorConfig(voiceInstructionThreshold: nil,
                                electronicHorizonOptions: nil,
                                polling: nil,
@@ -117,9 +109,9 @@ class NativeHandlersFactory {
                                noSignalSimulationEnabled: nil,
                                avoidManeuverSeconds: NSNumber(value: RerouteController.DefaultManeuverAvoidanceRadius),
                                useSensors: false)
-    }()
+    }
     
-    lazy var configHandle: ConfigHandle = {
+    static func configHandle(by configFactoryType: ConfigFactory.Type = ConfigFactory.self) -> ConfigHandle {
         let defaultConfig = [
             customConfigFeaturesKey: [
                 "useInternalReroute": true
@@ -138,8 +130,8 @@ class NativeHandlersFactory {
             customConfigJSON = ""
         }
         
-        return configFactoryType.build(for: settingsProfile,
-                                       config: navigatorConfig,
+        return configFactoryType.build(for: Self.settingsProfile,
+                                       config: Self.navigatorConfig,
                                        customConfig: customConfigJSON)
-    }()
+    }
 }
