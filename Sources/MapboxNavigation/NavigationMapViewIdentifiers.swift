@@ -34,6 +34,8 @@ extension NavigationMapView {
     struct ImageIdentifier {
         static let arrowImage = "triangle-tip-navigation"
         static let markerImage = "default_marker"
+        static let routeAnnotationLeftHanded = "RouteInfoAnnotationLeftHanded"
+        static let routeAnnotationRightHanded = "RouteInfoAnnotationRightHanded"
     }
     
     struct ModelKeyIdentifier {

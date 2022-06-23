@@ -90,6 +90,18 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         navigationService.router.continuousAlternatives
     }
     
+    private func format(value: LocationDistance,
+                        labels: (decreasing: String, increasing: String, equal: String)) -> String {
+        switch value {
+        case ..<0:
+            return labels.decreasing
+        case 0:
+            return labels.equal
+        default:
+            return labels.increasing
+        }
+    }
+    
     func alternativesListTemplate() -> CPListTemplate {
         var variants: [CPListSection] = []
         let distanceFormatter = DistanceFormatter()
@@ -97,9 +109,46 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             guard let title = alternative.indexedRouteResponse.currentRoute?.description else {
                 return
             }
-            let distanceDelta = distanceFormatter.string(from: alternative.distanceDelta)
+            distanceFormatter.measurementFormatter.numberFormatter.negativePrefix = ""
+            let distanceDeltaText = distanceFormatter.string(from: alternative.distanceDelta)
+            let distanceDelta = format(value: alternative.distanceDelta,
+                                       labels: (decreasing: String.localizedStringWithFormat(NSLocalizedString("SHORTER_ALTERNATIVE",
+                                                                                                               bundle: .mapboxNavigation,
+                                                                                                               value: "%@ shorter",
+                                                                                                               comment: "Alternatives selection note about a shorter route."),
+                                                                                             distanceDeltaText),
+                                                increasing: String.localizedStringWithFormat(NSLocalizedString("LONGER_ALTERNATIVE",
+                                                                                                               bundle: .mapboxNavigation,
+                                                                                                               value: "%@ longer",
+                                                                                                               comment: "Alternatives selection note about a longer route."),
+                                                                                             distanceDeltaText),
+                                                equal: NSLocalizedString("SAME_DISTANCE",
+                                                                         bundle: .mapboxNavigation,
+                                                                         value: "Same distance",
+                                                                         comment: "Alternatives selection note about equal travel distance.")))
+            let timeDeltaText = DateComponentsFormatter.travelTimeString(alternative.expectedTravelTimeDelta, signed: false, unitStyle: .full)
+            let timeDelta = format(value: alternative.expectedTravelTimeDelta,
+                                   labels: (decreasing: String.localizedStringWithFormat(NSLocalizedString("FASTER_ALTERNATIVE",
+                                                                                                           bundle: .mapboxNavigation,
+                                                                                                           value: "%@ faster",
+                                                                                                           comment: "Alternatives selection note about a faster route."),
+                                                                                         timeDeltaText),
+                                            increasing: String.localizedStringWithFormat(NSLocalizedString("SLOWER_ALTERNATIVE",
+                                                                                                           bundle: .mapboxNavigation,
+                                                                                                           value: "%@ slower",
+                                                                                                           comment: "Alternatives selection note about a slower route."),
+                                                                                         timeDeltaText),
+                                            equal: NSLocalizedString("SAME_TIME",
+                                                                     bundle: .mapboxNavigation,
+                                                                     value: "Same time",
+                                                                     comment: "Alternatives selection note about equal travel time.")))
             
-            let items: [CPListItem] = [CPListItem(text: "\(DateComponentsFormatter.travelTimeString(alternative.expectedTravelTimeDelta, signed: true)) / \(alternative.distanceDelta >= 0 ? "+":"")\(distanceDelta)",
+            let items: [CPListItem] = [CPListItem(text: String.localizedStringWithFormat(NSLocalizedString("ALTERNATIVE_NOTES",
+                                                                                                           bundle: .mapboxNavigation,
+                                                                                                           value: "%1$@, %2$@",
+                                                                                                           comment: "Combined alternatives selection notes about duration and distance delta."),
+                                                                                         timeDelta,
+                                                                                         distanceDelta),
                                                   detailText: nil)]
             items.forEach { (item: CPListItem) -> Void in
                 item.userInfo = [CarPlayAlternativeIDKey: alternative.id]

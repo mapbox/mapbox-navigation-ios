@@ -22,10 +22,12 @@ extension DateComponentsFormatter {
         return formatter
     }()
     
-    public static func travelTimeString(_ interval: TimeInterval, signed: Bool) -> String {
+    public static func travelTimeString(_ interval: TimeInterval,
+                                        signed: Bool,
+                                        unitStyle: DateComponentsFormatter.UnitsStyle?) -> String {
         let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = interval < 3600 ? .short : .abbreviated
-        let timeString = formatter.string(from: interval) ?? ""
+        formatter.unitsStyle = unitStyle ?? (interval < 3600 ? .short : .abbreviated)
+        let timeString = formatter.string(from: signed ? interval : abs(interval)) ?? ""
         
         return signed ? "\(interval >= 0 ? "+":"")\(timeString)" : timeString
     }

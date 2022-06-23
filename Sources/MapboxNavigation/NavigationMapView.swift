@@ -1179,12 +1179,6 @@ open class NavigationMapView: UIView {
         }
         let routesContainTolls = tollRoutes.count > 0
         
-        // Pick a random tail direction to keep things varied.
-        guard let randomTailPosition = [
-            RouteDurationAnnotationTailPosition.leading,
-            RouteDurationAnnotationTailPosition.trailing
-        ].randomElement() else { return }
-
         var features = [Turf.Feature]()
         
         for (index, alternativeRoute) in routes.enumerated() {
@@ -1202,33 +1196,10 @@ open class NavigationMapView: UIView {
             let labelText = self.annotationLabelForAlternativeRoute(alternativeRoute,
                                                                     tolls: routesContainTolls)
             
-            // Create the feature for this route annotation. Set the styling attributes that will be
-            // used to render the annotation in the style layer.
-            var feature = Feature(geometry: .point(Point(annotationCoordinate)))
-            
-            var tailPosition = randomTailPosition
-            
-            // Convert our coordinate to screen space so we can make a choice on which side of the
-            // coordinate the label ends up on.
-            let unprojectedCoordinate = mapView.mapboxMap.point(for: annotationCoordinate)
-            
-            // Pick the orientation of the bubble "stem" based on how close to the edge of the screen it is.
-            if tailPosition == .leading && unprojectedCoordinate.x > bounds.width * 0.75 {
-                tailPosition = .trailing
-            } else if tailPosition == .trailing && unprojectedCoordinate.x < bounds.width * 0.25 {
-                tailPosition = .leading
-            }
-            
-            let imageName = tailPosition == .leading ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
-            
-            // Set the feature attributes which will be used in styling the symbol style layer.
-            feature.properties = [
-                "selected": .boolean(false),
-                "tailPosition": .number(Double(tailPosition.rawValue)),
-                "text": .string(labelText),
-                "imageName": .string(imageName),
-                "sortOrder": .number(Double(index == 0 ? index : -index)),
-            ]
+            let feature = composeCalloutFeature(annotationCoordinate: annotationCoordinate,
+                                                labelText: labelText,
+                                                index: index,
+                                                isSelected: false)
             
             features.append(feature)
         }
@@ -1236,7 +1207,7 @@ open class NavigationMapView: UIView {
         // Add the features to the style.
         do {
             try addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features),
-                                              soureIdentifier: NavigationMapView.SourceIdentifier.continuousAlternativeRoutesDurationAnnotationsSource,
+                                              sourceIdentifier: NavigationMapView.SourceIdentifier.continuousAlternativeRoutesDurationAnnotationsSource,
                                               layerIdentifier: NavigationMapView.LayerIdentifier.continuousAlternativeRoutesDurationAnnotationsLayer)
         } catch {
             NSLog("Error occured while adding route annotation symbol layer: \(error.localizedDescription).")
@@ -1259,12 +1230,6 @@ open class NavigationMapView: UIView {
         }
         let routesContainTolls = tollRoutes.count > 0
         
-        // Pick a random tail direction to keep things varied.
-        guard let randomTailPosition = [
-            RouteDurationAnnotationTailPosition.leading,
-            RouteDurationAnnotationTailPosition.trailing
-        ].randomElement() else { return }
-
         var features = [Turf.Feature]()
         
         // Run through our heuristic algorithm looking for a good coordinate along each route line
@@ -1330,51 +1295,67 @@ open class NavigationMapView: UIView {
             // Form the appropriate text string for the annotation.
             let labelText = self.annotationLabelForRoute(route, tolls: routesContainTolls)
             
-            // Create the feature for this route annotation. Set the styling attributes that will be
-            // used to render the annotation in the style layer.
-            var feature = Feature(geometry: .point(Point(annotationCoordinate)))
             
-            var tailPosition = randomTailPosition
-            
-            // Convert our coordinate to screen space so we can make a choice on which side of the
-            // coordinate the label ends up on.
-            let unprojectedCoordinate = mapView.mapboxMap.point(for: annotationCoordinate)
-            
-            // Pick the orientation of the bubble "stem" based on how close to the edge of the screen it is.
-            if tailPosition == .leading && unprojectedCoordinate.x > bounds.width * 0.75 {
-                tailPosition = .trailing
-            } else if tailPosition == .trailing && unprojectedCoordinate.x < bounds.width * 0.25 {
-                tailPosition = .leading
-            }
-            
-            var imageName = tailPosition == .leading ? "RouteInfoAnnotationLeftHanded" : "RouteInfoAnnotationRightHanded"
-            
-            // The selected route uses the colored annotation image.
-            if index == 0 {
-                imageName += "-Selected"
-            }
-            
-            // Set the feature attributes which will be used in styling the symbol style layer.
-            feature.properties = [
-                "selected": .boolean(index == 0),
-                "tailPosition": .number(Double(tailPosition.rawValue)),
-                "text": .string(labelText),
-                "imageName": .string(imageName),
-                "sortOrder": .number(Double(index == 0 ? index : -index)),
-            ]
-            
+            let feature = composeCalloutFeature(annotationCoordinate: annotationCoordinate,
+                                                labelText: labelText,
+                                                index: index,
+                                                isSelected: index == 0)
             features.append(feature)
         }
         
         // Add the features to the style.
         do {
             try addRouteAnnotationSymbolLayer(features: FeatureCollection(features: features),
-                                              soureIdentifier: NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource,
+                                              sourceIdentifier: NavigationMapView.SourceIdentifier.routeDurationAnnotationsSource,
                                               layerIdentifier: NavigationMapView.LayerIdentifier.routeDurationAnnotationsLayer)
         } catch {
             Log.error("Error occured while adding route annotation symbol layer: \(error.localizedDescription).",
                       category: .navigationUI)
         }
+    }
+    
+    private func composeCalloutFeature(annotationCoordinate: LocationCoordinate2D,
+                                       labelText: String,
+                                       index: Int,
+                                       isSelected: Bool) -> Feature {
+        // Create the feature for this route annotation. Set the styling attributes that will be
+        // used to render the annotation in the style layer.
+        var feature = Feature(geometry: .point(Point(annotationCoordinate)))
+        
+        // Pick a random tail direction to keep things varied.
+        guard var tailPosition = [
+            RouteDurationAnnotationTailPosition.leading,
+            RouteDurationAnnotationTailPosition.trailing
+        ].randomElement() else { return  feature }
+        
+        // Convert our coordinate to screen space so we can make a choice on which side of the
+        // coordinate the label ends up on.
+        let unprojectedCoordinate = mapView.mapboxMap.point(for: annotationCoordinate)
+        
+        // Pick the orientation of the bubble "stem" based on how close to the edge of the screen it is.
+        if tailPosition == .leading && unprojectedCoordinate.x > bounds.width * 0.75 {
+            tailPosition = .trailing
+        } else if tailPosition == .trailing && unprojectedCoordinate.x < bounds.width * 0.25 {
+            tailPosition = .leading
+        }
+        
+        var imageName = tailPosition == .leading ? ImageIdentifier.routeAnnotationLeftHanded : ImageIdentifier.routeAnnotationRightHanded
+        
+        // The selected route uses the colored annotation image.
+        if isSelected {
+            imageName += "-Selected"
+        }
+        
+        // Set the feature attributes which will be used in styling the symbol style layer.
+        feature.properties = [
+            "selected": .boolean(isSelected),
+            "tailPosition": .number(Double(tailPosition.rawValue)),
+            "text": .string(labelText),
+            "imageName": .string(imageName),
+            "sortOrder": .number(Double(isSelected ? index : -index)),
+        ]
+        
+        return feature
     }
     
     /**
@@ -1551,16 +1532,16 @@ open class NavigationMapView: UIView {
      Add the MGLSymbolStyleLayer for the route duration annotations.
      */
     private func addRouteAnnotationSymbolLayer(features: FeatureCollection,
-                                               soureIdentifier: String,
+                                               sourceIdentifier: String,
                                                layerIdentifier: String) throws {
         let style = mapView.mapboxMap.style
         
-        if style.sourceExists(withId: soureIdentifier) {
-            try style.updateGeoJSONSource(withId: soureIdentifier, geoJSON: .featureCollection(features))
+        if style.sourceExists(withId: sourceIdentifier) {
+            try style.updateGeoJSONSource(withId: sourceIdentifier, geoJSON: .featureCollection(features))
         } else {
             var dataSource = GeoJSONSource()
             dataSource.data = .featureCollection(features)
-            try style.addSource(dataSource, id: soureIdentifier)
+            try style.addSource(dataSource, id: sourceIdentifier)
         }
         
         var shapeLayer: SymbolLayer
@@ -1571,7 +1552,7 @@ open class NavigationMapView: UIView {
             shapeLayer = SymbolLayer(id: layerIdentifier)
         }
         
-        shapeLayer.source = soureIdentifier
+        shapeLayer.source = sourceIdentifier
         
         shapeLayer.textField = .expression(Exp(.get) {
             "text"
@@ -1642,7 +1623,8 @@ open class NavigationMapView: UIView {
      */
     private func annotationLabelForAlternativeRoute(_ alternativeRoute: AlternativeRoute, tolls: Bool) -> String {
         let timeDelta = DateComponentsFormatter.travelTimeString(alternativeRoute.expectedTravelTimeDelta,
-                                                                 signed: true)
+                                                                 signed: true,
+                                                                 unitStyle: nil)
         
         return tollAnnotationForLabel(on: alternativeRoute.indexedRouteResponse.currentRoute,
                                       tolls: tolls,
