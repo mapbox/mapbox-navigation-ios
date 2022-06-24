@@ -20,7 +20,7 @@ class NavigationEventsManagerTests: TestCase {
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
         let firstRoute = Fixture.route(from: "DCA-Arboretum", options: firstRouteOptions)
-        let firstRouteResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: firstRouteOptions)
+        let firstRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: "DCA-Arboretum", options: firstRouteOptions), routeIndex: 0)
         
         let secondRouteOptions = NavigationRouteOptions(coordinates: [
             CLLocationCoordinate2D(latitude: 42.361634, longitude: -71.12852),
@@ -33,7 +33,7 @@ class NavigationEventsManagerTests: TestCase {
         let secondTrace = Fixture.generateTrace(for: secondRoute).shifted(to: firstTrace.last!.timestamp + 1).qualified()
         
         let locationManager = NavigationLocationManager()
-        let service = MapboxNavigationService(routeResponse: firstRouteResponse, routeIndex: 0,
+        let service = MapboxNavigationService(indexedRouteResponse: firstRouteResponse,
                                               routeOptions: firstRouteOptions,
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               credentials: Fixture.credentials,
@@ -88,14 +88,13 @@ class NavigationEventsManagerTests: TestCase {
         ])
         let eventTimeout = 0.3
         let route = Fixture.route(from: "DCA-Arboretum", options: routeOptions)
-        let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: routeOptions)
-        let dataSource = MapboxNavigationService(routeResponse: routeResponse,
-                                                 routeIndex: 0,
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: "DCA-Arboretum", options: routeOptions), routeIndex: 0)
+        let dataSource = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                  routeOptions: routeOptions,
                                                  customRoutingProvider: MapboxRoutingProvider(.offline),
                                                  credentials: Fixture.credentials,
                                                  simulating: .onPoorGPS)
-        let sessionState = SessionState(currentRoute: route, originalRoute: route, routeIdentifier: routeResponse.identifier)
+        let sessionState = SessionState(currentRoute: route, originalRoute: route, routeIdentifier: indexedRouteResponse.routeResponse.identifier)
         
         // Attempt to create NavigationEventDetails object from global queue, no errors from Main Thread Checker
         // are expected.

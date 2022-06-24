@@ -23,8 +23,7 @@ class NavigationServiceTests: TestCase {
     var dependencies: (navigationService: NavigationService, routeLocations: RouteLocations)!
     
     func createDependencies(locationSource: NavigationLocationManager? = nil) -> (navigationService: NavigationService, routeLocations: RouteLocations) {
-        let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                        routeIndex: 0,
+        let navigationService = MapboxNavigationService(indexedRouteResponse: initiaIndexedRouteResponse,
                                                         routeOptions: routeOptions,
                                                         customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,
@@ -50,6 +49,9 @@ class NavigationServiceTests: TestCase {
     }
 
     let initialRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+    let initiaIndexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName,
+                                                                                               options: routeOptions),
+                                                          routeIndex: 0)
 
     let alternateRouteResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
     let alternateRoute = Fixture.route(from: jsonFileName, options: routeOptions)
@@ -354,8 +356,8 @@ class NavigationServiceTests: TestCase {
             CLLocationCoordinate2D(latitude: 37.77735, longitude: -122.461465),
             CLLocationCoordinate2D(latitude: 37.777016, longitude: -122.468832),
         ])
-        let routeResponse = Fixture.routeResponse(from: "straight-line", options: options)
-        let navigationService = MapboxNavigationService(routeResponse: routeResponse, routeIndex: 0, routeOptions: options, customRoutingProvider: nil, credentials: Fixture.credentials)
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: "straight-line", options: options), routeIndex: 0)
+        let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse, routeOptions: options, customRoutingProvider: nil, credentials: Fixture.credentials)
         let router = navigationService.router
         let firstCoordinate = router.routeProgress.nearbyShape.coordinates.first!
         let firstLocation = CLLocation(latitude: firstCoordinate.latitude, longitude: firstCoordinate.longitude)
@@ -410,14 +412,13 @@ class NavigationServiceTests: TestCase {
     func testTurnstileEventSentUponInitialization() {
         // MARK: it sends a turnstile event upon initialization
 
-        let service = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
+        let service = MapboxNavigationService(indexedRouteResponse: initiaIndexedRouteResponse, routeOptions: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials, locationSource: NavigationLocationManager(), eventsManagerType: NavigationEventsManagerSpy.self)
         let eventsManagerSpy = service.eventsManager as! NavigationEventsManagerSpy
         XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: MMEEventTypeAppUserTurnstile))
     }
 
     func testReroutingFromLocationUpdatesSimulatedLocationSource() {
-        let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                        routeIndex: 0,
+        let navigationService = MapboxNavigationService(indexedRouteResponse: initiaIndexedRouteResponse,
                                                         routeOptions: routeOptions,
                                                         customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,
@@ -477,13 +478,13 @@ class NavigationServiceTests: TestCase {
 
         // MARK: Setupping a re-route stub
         MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
-            completionHandler(Directions.Session(options, Credentials()),
-                              .success(RouteResponse(httpResponse: nil,
-                                                     identifier: nil,
-                                                     routes: [self.alternateRoute],
-                                                     waypoints: nil,
-                                                     options: .route(options),
-                                                     credentials: Fixture.credentials)))
+            completionHandler(.success(.init(routeResponse: RouteResponse(httpResponse: nil,
+                                                                          identifier: nil,
+                                                                          routes: [self.alternateRoute],
+                                                                          waypoints: nil,
+                                                                          options: .route(options),
+                                                                          credentials: Fixture.credentials),
+                                             routeIndex: 0)))
             return nil
         }
         
@@ -612,7 +613,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            let routeController = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
+            let routeController = RouteController(with: initiaIndexedRouteResponse, options: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
             subject = routeController
         }
 
@@ -624,7 +625,7 @@ class NavigationServiceTests: TestCase {
 
         autoreleasepool {
             let fakeDataSource = RouteControllerDataSourceFake()
-            _ = RouteController(alongRouteAtIndex: 0, in: initialRouteResponse, options: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
+            _ = RouteController(with: initiaIndexedRouteResponse, options: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), dataSource: fakeDataSource)
             subject = fakeDataSource
         }
 
@@ -632,7 +633,10 @@ class NavigationServiceTests: TestCase {
     }
 
     func testCountdownTimerDefaultAndUpdate() {
-        let subject = MapboxNavigationService(routeResponse: initialRouteResponse, routeIndex: 0, routeOptions: routeOptions, customRoutingProvider: MapboxRoutingProvider(.offline), credentials: Fixture.credentials)
+        let subject = MapboxNavigationService(indexedRouteResponse: initiaIndexedRouteResponse,
+                                              routeOptions: routeOptions,
+                                              customRoutingProvider: MapboxRoutingProvider(.offline),
+                                              credentials: Fixture.credentials)
 
         XCTAssert(subject.poorGPSTimer.countdownInterval == .milliseconds(2500), "Default countdown interval should be 2500 milliseconds.")
 
@@ -694,7 +698,7 @@ class NavigationServiceTests: TestCase {
             CLLocationCoordinate2D(latitude: 38.910736, longitude: -76.966906),
         ])
         let route = Fixture.route(from: "DCA-Arboretum", options: options)
-        let routeResponse = Fixture.routeResponse(from: "DCA-Arboretum", options: options)
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: "DCA-Arboretum", options: options), routeIndex: 0)
         let trace = Fixture.generateTrace(for: route).shiftedToPresent()
         guard let firstLoction = trace.first,
               let lastLocation = trace.last,
@@ -708,8 +712,7 @@ class NavigationServiceTests: TestCase {
 
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
-        let service = MapboxNavigationService(routeResponse: routeResponse,
-                                              routeIndex: 0,
+        let service = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                               routeOptions: options,
                                               customRoutingProvider: MapboxRoutingProvider(.online),
                                               credentials: Fixture.credentials,
@@ -737,8 +740,8 @@ class NavigationServiceTests: TestCase {
                                            options: .route(options),
                                            credentials: Fixture.credentials)
         MapboxRoutingProvider.__testRoutesStub = { (options, completionHandler) in
-            completionHandler(Directions.Session(options, Fixture.credentials),
-                              .success(fasterResponse))
+            completionHandler(.success(.init(routeResponse: fasterResponse,
+                                             routeIndex: 0)))
             return nil
         }
         
@@ -838,8 +841,7 @@ class NavigationServiceTests: TestCase {
     }
     
     func testNavigationServiceStopShouldStopLocationUpdates() {
-        let navigationService = MapboxNavigationService(routeResponse: response,
-                                                        routeIndex: 0,
+        let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                         routeOptions: routeOptions,
                                                         customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,

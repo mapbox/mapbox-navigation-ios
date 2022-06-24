@@ -317,7 +317,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
      */
-    @available(*, deprecated, renamed: "init(routeResponse:routeIndex:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
     public convenience init(routeResponse: RouteResponse,
                             routeIndex: Int,
                             routeOptions: RouteOptions,
@@ -350,7 +350,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
      */
-    @available(*, deprecated, renamed: "init(routeResponse:routeIndex:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
     public convenience init(routeResponse: RouteResponse,
                             routeIndex: Int,
                             routeOptions: RouteOptions,
@@ -383,8 +383,40 @@ public class MapboxNavigationService: NSObject, NavigationService {
      - parameter simulationMode: The simulation mode desired.
      - parameter routerType: An optional router type to use for traversing the route.
      */
-    required public init(routeResponse: RouteResponse,
-                         routeIndex: Int,
+    @available(*, deprecated, renamed: "init(indexedRouteResponse:routeOptions:customRoutingProvider:credentials:locationSource:eventsManagerType:simulating:routerType:)")
+    public convenience init(routeResponse: RouteResponse,
+                            routeIndex: Int,
+                            routeOptions: RouteOptions,
+                            customRoutingProvider: RoutingProvider? = nil,
+                            credentials: Credentials,
+                            locationSource: NavigationLocationManager? = nil,
+                            eventsManagerType: NavigationEventsManager.Type? = nil,
+                            simulating simulationMode: SimulationMode? = nil,
+                            routerType: Router.Type? = nil) {
+        self.init(indexedRouteResponse: .init(routeResponse: routeResponse,
+                                              routeIndex: routeIndex),
+                  routeOptions: routeOptions,
+                  customRoutingProvider: customRoutingProvider,
+                  credentials: credentials,
+                  locationSource: locationSource,
+                  eventsManagerType: eventsManagerType,
+                  simulating: simulationMode,
+                  routerType: routerType)
+    }
+    
+    /**
+     Intializes a new `NavigationService`.
+     
+     - parameter indexedRouteResponse: `IndexedRouteResponse` object, containing selection of routes to follow.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter customRoutingProvider: Custom `RoutingProvider`, used to create a route during refreshing or rerouting.
+     - parameter credentials: Credentials to authorize additional data requests throughout the route.
+     - parameter locationSource: An optional override for the default `NaviationLocationManager`.
+     - parameter eventsManagerType: An optional events manager type to use while tracking the route.
+     - parameter simulationMode: The simulation mode desired.
+     - parameter routerType: An optional router type to use for traversing the route.
+     */
+    required public init(indexedRouteResponse: IndexedRouteResponse,
                          routeOptions: RouteOptions,
                          customRoutingProvider: RoutingProvider? = nil,
                          credentials: Credentials,
@@ -406,8 +438,7 @@ public class MapboxNavigationService: NSObject, NavigationService {
         }
         
         let routerType = routerType ?? DefaultRouter.self
-        _router = routerType.init(alongRouteAtIndex: routeIndex,
-                                  in: routeResponse,
+        _router = routerType.init(with: indexedRouteResponse,
                                   options: routeOptions,
                                   customRoutingProvider: customRoutingProvider,
                                   dataSource: self)
@@ -681,6 +712,10 @@ extension MapboxNavigationService: RouterDelegate {
     
     public func router(_ router: Router, didFailToUpdateAlternatives error: AlternativeRouteError) {
         delegate?.navigationService(self, didFailToUpdateAlternatives: error)
+    }
+    
+    public func router(_ router: Router, didSwitchToCoincideOnlineRoute coincideRoute: AlternativeRoute) {
+        delegate?.navigationService(self, didSwitchToCoincideOnlineRoute: coincideRoute)
     }
     
     public func router(_ router: Router, willTakeAlternativeRoute route: Route, at location: CLLocation?) {

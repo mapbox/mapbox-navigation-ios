@@ -11,6 +11,11 @@ class InstructionsCardViewControllerTests: TestCase {
         return Fixture.routeResponse(from: jsonFileName, options: routeOptions)
     }()
     
+    lazy var initialIndexedRouteResponse: IndexedRouteResponse = {
+        return IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName, options: routeOptions),
+                                    routeIndex: 0)
+    }()
+    
     var dataSource: (
         instructionsCardViewController: InstructionsCardViewController,
         routeProgress: RouteProgress,
@@ -46,8 +51,7 @@ class InstructionsCardViewControllerTests: TestCase {
             let route = Fixture.route(from: "route-with-banner-instructions",
                                       options: navigationRouteOptions)
             
-            let navigationService = MapboxNavigationService(routeResponse: initialRouteResponse,
-                                                            routeIndex: 0,
+            let navigationService = MapboxNavigationService(indexedRouteResponse: initialIndexedRouteResponse,
                                                             routeOptions: navigationRouteOptions,
                                                             customRoutingProvider: MapboxRoutingProvider(.offline),
                                                             credentials: Fixture.credentials,

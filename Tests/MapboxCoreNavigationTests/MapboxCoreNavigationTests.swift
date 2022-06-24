@@ -13,6 +13,9 @@ var routeOptions: NavigationRouteOptions {
     return NavigationRouteOptions(waypoints: [from, to])
 }
 let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+let indexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName,
+                                                                                     options: routeOptions),
+                                                routeIndex: 0)
 let directions = DirectionsSpy()
 let route: Route = {
     return Fixture.route(from: jsonFileName, options: routeOptions)
@@ -40,8 +43,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testNavigationNotificationsInfoDict() {
-        navigation = MapboxNavigationService(routeResponse: response,
-                                             routeIndex: 0,
+        navigation = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
@@ -85,8 +87,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testDepart() {
-        navigation = MapboxNavigationService(routeResponse: response,
-                                             routeIndex: 0,
+        navigation = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
@@ -136,8 +137,7 @@ class MapboxCoreNavigationTests: TestCase {
         let locationManager = ReplayLocationManager(locations: coordinates
                                                         .map { CLLocation(coordinate: $0) }
                                                         .shiftedToPresent())
-        let navigationService = MapboxNavigationService(routeResponse: response,
-                                                        routeIndex: 0,
+        let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                         routeOptions: routeOptions,
                                                         customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,
@@ -194,8 +194,7 @@ class MapboxCoreNavigationTests: TestCase {
         
         let locationManager = ReplayLocationManager(locations: locations)
         locationManager.speedMultiplier = 100
-        navigation = MapboxNavigationService(routeResponse: response,
-                                             routeIndex: 0,
+        navigation = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
@@ -247,8 +246,7 @@ class MapboxCoreNavigationTests: TestCase {
         }
         
         let locationManager = DummyLocationManager()
-        navigation = MapboxNavigationService(routeResponse: response,
-                                             routeIndex: 0,
+        navigation = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
@@ -277,10 +275,11 @@ class MapboxCoreNavigationTests: TestCase {
     func disabled_testArrive() {
         let route = Fixture.route(from: "multileg-route", options: routeOptions)
         let replayLocations = Array(Fixture.generateTrace(for: route).shiftedToPresent().qualified()[0..<100])
-        let routeResponse = RouteResponse(httpResponse: nil,
-                                          routes: [route],
-                                          options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
-                                          credentials: .mocked)
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: RouteResponse(httpResponse: nil,
+                                                                                     routes: [route],
+                                                                                     options: .route(.init(locations: replayLocations, profileIdentifier: nil)),
+                                                                                     credentials: .mocked),
+                                                        routeIndex: 0)
 
         let locationManager = ReplayLocationManager(locations: replayLocations)
         let speedMultiplier: TimeInterval = 50
@@ -288,8 +287,7 @@ class MapboxCoreNavigationTests: TestCase {
         locationManager.startDate = Date()
         locationManager.startUpdatingLocation()
 
-        navigation = MapboxNavigationService(routeResponse: routeResponse,
-                                             routeIndex: 0,
+        navigation = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
@@ -338,8 +336,7 @@ class MapboxCoreNavigationTests: TestCase {
         let locationManager = ReplayLocationManager(locations: trace)
         locationManager.speedMultiplier = 100
 
-        navigation = MapboxNavigationService(routeResponse: response,
-                                             routeIndex: 0,
+        navigation = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,
@@ -461,8 +458,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testFailToReroute() {
-        navigation = MapboxNavigationService(routeResponse: response,
-                                             routeIndex: 0,
+        navigation = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.online),
                                              credentials: Fixture.credentials,
@@ -484,8 +480,7 @@ class MapboxCoreNavigationTests: TestCase {
     }
     
     func testNoUpdatesAfterFinishingRouting() {
-        navigation = MapboxNavigationService(routeResponse: response,
-                                             routeIndex: 0,
+        navigation = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                              routeOptions: routeOptions,
                                              customRoutingProvider: MapboxRoutingProvider(.offline),
                                              credentials: Fixture.credentials,

@@ -21,6 +21,7 @@ public final class RouterDelegateSpy: RouterDelegate {
     public var onRouterShouldDisableBatteryMonitoring: (() -> Bool)?
     public var onDidUpdateAlternativeRoutes: (([AlternativeRoute], [AlternativeRoute]) -> Void)?
     public var onDidFailToUpdateAlternativeRoutes: ((AlternativeRouteError) -> Void)?
+    public var onDidSwitchToCoincideRoute: ((AlternativeRoute) -> Void)?
     public var onWillTakeAlternativeRoute: ((Route, CLLocation?) -> Void)?
     public var onDidTakeAlternativeRoute: ((CLLocation?) -> Void)?
     public var onDidFailToTakeAlternativeRoute: ((CLLocation?) -> Void)?
@@ -118,5 +119,9 @@ public final class RouterDelegateSpy: RouterDelegate {
     
     public func router(_ router: Router, didFailToTakeAlternativeRouteAt location: CLLocation?) {
         onDidFailToTakeAlternativeRoute?(location)
+    }
+    
+    public func router(_ router: Router, didSwitchToCoincideOnlineRoute coincideRoute: AlternativeRoute) {
+        onDidSwitchToCoincideRoute?(coincideRoute)
     }
 }

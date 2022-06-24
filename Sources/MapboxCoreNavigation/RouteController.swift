@@ -222,6 +222,20 @@ open class RouteController: NSObject {
     
     public private(set) var continuousAlternatives: [AlternativeRoute] = []
     
+    /**
+     Enables automatic switching to online version of the current route when possible.
+     
+     Indicates if `RouteController` will attempt to detect if current route was build offline and if there is an online route with the same path is available to automatically switch to it. Using online route is beneficial due to available live data like traffic congestion, incidents, etc.
+     This feature relies on `AlternativeRouteDetectionStrategy` allowing detecting alternative routes.
+     
+     Enabled by default.
+     */
+    public var prefersOnlineRoute: Bool = true {
+        didSet {
+            switchToCoincideRouteIfNeeded()
+        }
+    }
+    
     // MARK: Navigating
     
     private lazy var sharedNavigator: Navigator = {
@@ -584,7 +598,7 @@ open class RouteController: NSObject {
     
     // MARK: Handling Lifecycle
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(with:options:customRoutingProvider:dataSource:)")
     public convenience init(alongRouteAtIndex routeIndex: Int, in routeResponse: RouteResponse, options: RouteOptions, directions: Directions = NavigationSettings.shared.directions, dataSource source: RouterDataSource) {
         self.init(alongRouteAtIndex: routeIndex,
                   in: routeResponse,
@@ -593,7 +607,7 @@ open class RouteController: NSObject {
                   dataSource: source)
     }
     
-    @available(*, deprecated, renamed: "init(alongRouteAtIndex:in:options:customRoutingProvider:dataSource:)")
+    @available(*, deprecated, renamed: "init(with:options:customRoutingProvider:dataSource:)")
     required public convenience init(alongRouteAtIndex routeIndex: Int,
                                      in routeResponse: RouteResponse,
                                      options: RouteOptions,
@@ -606,8 +620,20 @@ open class RouteController: NSObject {
                   dataSource: source)
     }
     
-    required public init(alongRouteAtIndex routeIndex: Int,
+    @available(*, deprecated, renamed: "init(with:options:customRoutingProvider:dataSource:)")
+    required public convenience init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
+                         options: RouteOptions,
+                         customRoutingProvider: RoutingProvider? = nil,
+                         dataSource source: RouterDataSource) {
+        self.init(with: .init(routeResponse: routeResponse,
+                              routeIndex: routeIndex),
+                  options: options,
+                  customRoutingProvider: customRoutingProvider,
+                  dataSource: source)
+    }
+    
+    required public init(with indexedRouteResponse: IndexedRouteResponse,
                          options: RouteOptions,
                          customRoutingProvider: RoutingProvider? = nil,
                          dataSource source: RouterDataSource) {
@@ -621,8 +647,8 @@ open class RouteController: NSObject {
 
         Navigator.datasetProfileIdentifier = options.profileIdentifier
         
-        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        self.indexedRouteResponse = indexedRouteResponse
+        self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -770,7 +796,7 @@ extension RouteController: Router {
 
         announceImpendingReroute(at: location)
         
-        calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: progress) { [weak self] (result) in
             guard let self = self else { return }
 
             switch result {
@@ -964,6 +990,36 @@ extension RouteController: AlternativeRoutesCenterDelegate {
         delegate?.router(self,
                          didUpdateAlternatives: updatedAlternatives,
                          removedAlternatives: removedAlternatives)
+        
+        switchToCoincideRouteIfNeeded()
+    }
+    
+    func switchToCoincideRouteIfNeeded() {
+        guard prefersOnlineRoute &&
+        indexedRouteResponse.responseOrigin == .onboard else { return }
+    
+        for alternativeRoute in continuousAlternatives {
+            let lastIntersection: Intersection? = route.legs.last?.steps.last(where: { step in
+                !(step.intersections?.isEmpty ?? true)
+            })?.intersections?.last
+            
+            if alternativeRoute.indexedRouteResponse.responseOrigin == .online &&
+               alternativeRoute.mainRouteIntersection.location == lastIntersection?.location {
+                updateRoute(with: alternativeRoute.indexedRouteResponse,
+                            routeOptions: nil,
+                            completion: { [weak self] _ in
+                    guard let self = self else { return }
+                    
+                    var userInfo = [RouteController.NotificationUserInfoKey: Any]()
+                    userInfo[.coincideRouteKey] = alternativeRoute
+                    NotificationCenter.default.post(name: .routeControllerDidSwitchToCoincideOnlineRoute,
+                                                    object: self,
+                                                    userInfo: userInfo)
+                    self.delegate?.router(self, didSwitchToCoincideOnlineRoute: alternativeRoute)
+                })
+                break
+            }
+        }
     }
     
     func alternativeRoutesCenter(_ center: AlternativeRoutesCenter, didFailToUpdateAlternatives error: AlternativeRouteError) {

@@ -85,9 +85,10 @@ class TestCarPlayManagerDelegate: CarPlayManagerDelegate {
                         routeIndex: Int,
                         routeOptions: RouteOptions,
                         desiredSimulationMode: SimulationMode) -> NavigationService? {
-        let routeResponse = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
-        let navigationService = MapboxNavigationService(routeResponse: routeResponse,
-                                                        routeIndex: routeIndex,
+        let indexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName,
+                                                                                             options: routeOptions),
+                                                        routeIndex: 0)
+        let navigationService = MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                                         routeOptions: routeOptions,
                                                         customRoutingProvider: MapboxRoutingProvider(.offline),
                                                         credentials: Fixture.credentials,

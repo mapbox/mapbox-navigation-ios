@@ -566,14 +566,13 @@ extension CarPlayManager {
      - parameter completionHandler: A closure to be executed when the calculation completes.
      */
     public func previewRoutes(for options: RouteOptions, completionHandler: @escaping CompletionHandler) {
-        calculate(options) { [weak self] (session, result) in
+        calculate(options) { [weak self] (result) in
             guard let self = self else {
                 completionHandler()
                 return
             }
             
             self.didCalculate(result,
-                              in: session,
                               for: options,
                               completionHandler: completionHandler)
         }
@@ -611,12 +610,11 @@ extension CarPlayManager {
         interfaceController.pushTemplate(previewMapTemplate, animated: true)
     }
     
-    func calculate(_ options: RouteOptions, completionHandler: @escaping Directions.RouteCompletionHandler) {
+    func calculate(_ options: RouteOptions, completionHandler: @escaping RoutingProvider.IndexedRouteResponseCompletionHandler) {
         resolvedRoutingProvider.calculateRoutes(options: options, completionHandler: completionHandler)
     }
     
-    func didCalculate(_ result: Result<RouteResponse, DirectionsError>,
-                      in session: Directions.Session,
+    func didCalculate(_ result: Result<IndexedRouteResponse, DirectionsError>,
                       for routeOptions: RouteOptions,
                       completionHandler: CompletionHandler) {
         defer {
@@ -637,8 +635,8 @@ extension CarPlayManager {
             popToRootTemplate(interfaceController: interfaceController, animated: true)
             mapTemplate?.present(navigationAlert: alert, animated: true)
             return
-        case let .success(routeResponse):
-            previewRoutes(for: routeResponse)
+        case let .success(indexedRouteResponse):
+            previewRoutes(for: indexedRouteResponse.routeResponse)
         }
     }
 
@@ -693,8 +691,8 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                  routeIndex: routeResponse.routeIndex,
                                  routeOptions: routeOptions,
                                  desiredSimulationMode: desiredSimulationMode) ??
-        MapboxNavigationService(routeResponse: routeResponse.response,
-                                routeIndex: routeResponse.routeIndex,
+        MapboxNavigationService(indexedRouteResponse: .init(routeResponse: routeResponse.response,
+                                                            routeIndex: routeResponse.routeIndex),
                                 routeOptions: routeOptions,
                                 customRoutingProvider: customRoutingProvider,
                                 credentials: NavigationSettings.shared.directions.credentials,

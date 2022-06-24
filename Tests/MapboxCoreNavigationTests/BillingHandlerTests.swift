@@ -537,10 +537,10 @@ final class BillingHandlerUnitTests: TestCase {
 
         let (initialRouteResponse, _) = Fixture.route(waypoints: initialRouteWaypoints)
         let (newRouteResponse, _) = Fixture.route(waypoints: newRouteWaypoints)
+        let initialIndexedRouteResponse = IndexedRouteResponse(routeResponse: initialRouteResponse, routeIndex: 0)
 
         let dataSource = DataSource()
-        let routeController = RouteController(alongRouteAtIndex: 0,
-                                              in: initialRouteResponse,
+        let routeController = RouteController(with: initialIndexedRouteResponse,
                                               options: NavigationRouteOptions(coordinates: initialRouteWaypoints),
                                               customRoutingProvider: MapboxRoutingProvider(.offline),
                                               dataSource: dataSource)
@@ -659,9 +659,9 @@ final class BillingHandlerUnitTests: TestCase {
                                               routes: [route],
                                               options: .route(.init(coordinates: waypointCoordinates)),
                                               credentials: .mocked)
-
-            let routeController = RouteController(alongRouteAtIndex: 0,
-                                                  in: routeResponse,
+            let indexedRouteResponse = IndexedRouteResponse(routeResponse: routeResponse, routeIndex: 0)
+            
+            let routeController = RouteController(with: indexedRouteResponse,
                                                   options: routeOptions,
                                                   customRoutingProvider: MapboxRoutingProvider(.offline),
                                                   dataSource: self)

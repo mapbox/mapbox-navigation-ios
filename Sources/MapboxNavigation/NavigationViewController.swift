@@ -201,8 +201,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         indexedRouteResponse.routeIndex
     }
     
-    var _routeIndex: Int?
-    var _routeResponse: RouteResponse?
+    var _indexedRouteResponse: IndexedRouteResponse?
     
     /**
      A reference to a MapboxDirections service. Used for rerouting.
@@ -226,8 +225,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
     }
     
     func setupNavigationService() {
-        guard let routeResponse = _routeResponse,
-              let routeIndex = _routeIndex,
+        guard let indexedRouteResponse = _indexedRouteResponse,
               let routeOptions = _routeOptions else {
             fatalError("`route`, `routeIndex` and `routeOptions` must be valid to create an instance of `NavigationViewController`.")
         }
@@ -237,8 +235,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         }
         
         navigationService = navigationOptions?.navigationService
-            ?? MapboxNavigationService(routeResponse: routeResponse,
-                                       routeIndex: routeIndex,
+            ?? MapboxNavigationService(indexedRouteResponse: indexedRouteResponse,
                                        routeOptions: routeOptions,
                                        customRoutingProvider: nil,
                                        credentials: NavigationSettings.shared.directions.credentials,
@@ -324,11 +321,29 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter routeOptions: The route options used to get the route.
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
+    @available(*, deprecated, renamed: "init(for:routeOptions:navigationOptions:)")
     required public init(for routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
         super.init(nibName: nil, bundle: nil)
         
         _ = prepareViewLoading(routeResponse: routeResponse,
                                routeIndex: routeIndex,
+                               routeOptions: routeOptions,
+                               navigationOptions: navigationOptions)
+    }
+    
+    /**
+     Initializes a `NavigationViewController` that presents the user interface for following a predefined route based on the given options.
+
+     The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, MapboxCoreNavigation `MapboxRoutingProvider.calculateRoutes(options:completionHandler:)`, or it may be unarchived or created from a JSON object.
+     
+     - parameter routeResponse: `IndexedRouteResponse` object, containing selection of routes to follow.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter navigationOptions: The navigation options to use for the navigation session.
+     */
+    required public init(for indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
+        super.init(nibName: nil, bundle: nil)
+        
+        _ = prepareViewLoading(indexedRouteResponse: indexedRouteResponse,
                                routeOptions: routeOptions,
                                navigationOptions: navigationOptions)
     }
@@ -343,8 +358,7 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
             preconditionFailure("NavigationViewController(navigationService:) must recieve `navigationService` created with `RouteOptions`.")
         }
         let navigationOptions = NavigationOptions(navigationService: service)
-        self.init(for: service.indexedRouteResponse.routeResponse,
-                  routeIndex: service.indexedRouteResponse.routeIndex,
+        self.init(for: service.indexedRouteResponse,
                   routeOptions: routeOptions,
                   navigationOptions: navigationOptions)
     }
@@ -464,13 +478,29 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationOptions: The navigation options to use for the navigation session.
      - returns `True` if setup was successful, `False` if `view` is already loaded and settings did not apply.
      */
+    @available(*, deprecated, renamed: "prepareViewLoading(indexedRouteResponse:routeOptions:navigationOptions:)")
     public func prepareViewLoading(routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) -> Bool {
+        return prepareViewLoading(indexedRouteResponse: .init(routeResponse: routeResponse, routeIndex: routeIndex),
+                                  routeOptions: routeOptions,
+                                  navigationOptions: navigationOptions)
+    }
+    
+    /**
+     Updates key settings before loading the view.
+     
+     This method basically re-runs the setup which takes place in `init`. It could be useful if some of the attributes have changed before `NavigationViewController` did load it's view, or if you did not have access to initializing logic. For example, as a part of `UIStoryboardSegue` configuration.
+     
+     - parameter indexedRouteResponse: `IndexedRouteResponse` object, containing selection of routes to follow.
+     - parameter routeOptions: The route options used to get the route.
+     - parameter navigationOptions: The navigation options to use for the navigation session.
+     - returns `True` if setup was successful, `False` if `view` is already loaded and settings did not apply.
+     */
+    public func prepareViewLoading(indexedRouteResponse: IndexedRouteResponse, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) -> Bool {
         guard !isViewLoaded else {
             return false
         }
         
-        self._routeResponse = routeResponse
-        self._routeIndex = routeIndex
+        self._indexedRouteResponse = indexedRouteResponse
         self._routeOptions = routeOptions
         self.navigationOptions = navigationOptions
         
@@ -1000,6 +1030,10 @@ extension NavigationViewController: NavigationServiceDelegate {
     
     public func navigationService(_ service: NavigationService, didFailToUpdateAlternatives error: AlternativeRouteError) {
         delegate?.navigationViewController(self, didFailToUpdateAlternatives: error)
+    }
+    
+    public func navigationService(_ service: NavigationService, didSwitchToCoincideOnlineRoute coincideRoute: AlternativeRoute) {
+        delegate?.navigationViewController(self, didSwitchToCoincideOnlineRoute: coincideRoute)
     }
     
     public func navigationService(_ service: NavigationService, willTakeAlternativeRoute route: Route, at location: CLLocation?) {

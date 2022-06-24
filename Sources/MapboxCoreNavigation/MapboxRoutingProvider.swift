@@ -75,7 +75,7 @@ public class MapboxRoutingProvider: RoutingProvider {
      */
     public let datasetProfileIdentifier: ProfileIdentifier?
     
-    static var __testRoutesStub: ((_: RouteOptions, _: @escaping Directions.RouteCompletionHandler) -> Request?)? = nil
+    static var __testRoutesStub: ((_: RouteOptions, _: @escaping IndexedRouteResponseCompletionHandler) -> Request?)? = nil
     
     // MARK: Performing and Parsing Requests
     
@@ -206,18 +206,20 @@ public class MapboxRoutingProvider: RoutingProvider {
     }
     
     private func doRequest<ResponseType: Codable>(options: DirectionsOptions,
-                                                      completion: @escaping (Result<ResponseType, DirectionsError>) -> Void) -> Request? {
+                                                  completion: @escaping (Result<ResponseType, DirectionsError>, RouterOrigin) -> Void) -> Request? {
         let directionsUri = settings.directions.url(forCalculating: options).removingSKU().absoluteString
         var requestId: RequestId!
         
-        requestId = router.getRouteForDirectionsUri(directionsUri) { [weak self] (result, _) in
+        requestId = router.getRouteForDirectionsUri(directionsUri) { [weak self] (result, origin) in
             guard let self = self else { return }
             
             self.parseResponse(requestId: requestId,
                                userInfo: [.options: options,
                                           .credentials: self.settings.directions.credentials],
                                           result: result,
-                                          completion: completion)
+                               completion: {
+                completion($0, origin)
+            })
         }
         let request = Request(requestIdentifier: requestId,
                               routingProvider: self)
@@ -241,9 +243,45 @@ public class MapboxRoutingProvider: RoutingProvider {
      - returns: Related request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel corresponding task using this handle or `activeRequests`.
      */
     @discardableResult public func calculateRoutes(options: RouteOptions,
-                                                   completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
+                                                   completionHandler: @escaping IndexedRouteResponseCompletionHandler) -> NavigationProviderRequest? {
         return Self.__testRoutesStub?(options, completionHandler) ??
-            doRequest(options: options) { [weak self] (result: Result<RouteResponse, DirectionsError>) in
+        doRequest(options: options) { (result: Result<RouteResponse, DirectionsError>, origin: RouterOrigin) in
+                switch result {
+                case .success(let routeResponse):
+                    completionHandler(.success(IndexedRouteResponse(routeResponse: routeResponse,
+                                                                    routeIndex: 0,
+                                                                    responseOrigin: origin)))
+                case .failure(let error):
+                    completionHandler(.failure(error))
+                }
+            }
+    }
+    
+    /**
+     Begins asynchronously calculating routes using the given options and delivers the results to a closure.
+     
+     Depending on configured `RouterSource`, this method may retrieve the routes asynchronously from the [Mapbox Directions API](https://www.mapbox.com/api-documentation/navigation/#directions) over a network connection or use onboard routing engine with available offline data.
+     
+     Routes may be displayed atop a [Mapbox map](https://www.mapbox.com/maps/).
+     
+     - parameter options: A `RouteOptions` object specifying the requirements for the resulting routes.
+     - parameter completionHandler: The closure (block) to call with the resulting routes. This closure is executed on the application’s main thread.
+     - returns: Related request. If, while waiting for the completion handler to execute, you no longer want the resulting routes, cancel corresponding task using this handle or `activeRequests`.
+     */
+    @available(*, deprecated, renamed: "calculateRoutes(options:completionHandler:)")
+    @discardableResult public func calculateRoutes(options: RouteOptions,
+                                                   completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
+        return Self.__testRoutesStub?(options, { result in
+            let session = (options: options as DirectionsOptions,
+                           credentials: self.settings.directions.credentials)
+            switch result {
+            case .success(let indexedRouteResponse):
+                completionHandler(session, .success(indexedRouteResponse.routeResponse))
+            case .failure(let error):
+                completionHandler(session, .failure(error))
+            }
+        }) ??
+            doRequest(options: options) { [weak self] (result: Result<RouteResponse, DirectionsError>, _) in
                 guard let self = self else { return }
                 let session = (options: options as DirectionsOptions,
                                credentials: self.settings.directions.credentials)
@@ -262,7 +300,7 @@ public class MapboxRoutingProvider: RoutingProvider {
      */
     @discardableResult public func calculateRoutes(options: MatchOptions,
                                                    completionHandler: @escaping Directions.MatchCompletionHandler) -> NavigationProviderRequest? {
-        return doRequest(options: options) { (result: Result<MapMatchingResponse, DirectionsError>) in
+        return doRequest(options: options) { (result: Result<MapMatchingResponse, DirectionsError>, _)  in
             let session = (options: options as DirectionsOptions,
                            credentials: self.settings.directions.credentials)
             completionHandler(session, result)

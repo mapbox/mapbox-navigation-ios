@@ -93,6 +93,67 @@ public struct AlternativeRoute: Identifiable {
     }
 }
 
+fileprivate func findIntersectionIndices(for intersection: Intersection, in route: Route) -> (legIndex: UInt32, segmentIndex: UInt32)? {
+    for (legIndex, leg) in route.legs.enumerated() {
+        for step in leg.steps {
+            if let index = step.intersections?.firstIndex(of: intersection),
+               let segmentIndex = step.segmentIndicesByIntersection?[index] {
+                return (UInt32(legIndex), UInt32(segmentIndex))
+            }
+        }
+    }
+    return nil
+}
+
+extension RouteAlternative {
+
+    /// Creates a fake `RouteAlternative` repeating the given route. For test purposes only.
+    convenience init?(repeating indexedRouteResponse: IndexedRouteResponse, id: UInt32) {
+        guard case let .route(routeOptions) = indexedRouteResponse.routeResponse.options,
+            let mainRoute = indexedRouteResponse.currentRoute else {
+            return nil
+        }
+        let encoder = JSONEncoder()
+        encoder.userInfo[.options] = routeOptions
+        guard let routeData = try? encoder.encode(indexedRouteResponse.routeResponse),
+              let routeJSONString = String(data: routeData, encoding: .utf8) else {
+                  return nil
+        }
+
+        let routeRequest = Directions(credentials: indexedRouteResponse.routeResponse.credentials)
+                                .url(forCalculating: routeOptions).absoluteString
+
+        let parsedRoutes = RouteParser.parseDirectionsResponse(forResponse: routeJSONString,
+                                                               request: routeRequest,
+                                                               routeOrigin: .online)
+
+        guard let routeInterface = (parsedRoutes.value as? [RouteInterface])?.first else {
+            return nil
+        }
+        guard let lastIntersection = mainRoute.legs.last?.steps.last?.intersections?.last,
+              let intersectionData = findIntersectionIndices(for: lastIntersection,
+                                                             in: mainRoute) else {
+            return nil
+        }
+        
+        self.init(id: id,
+                  route: routeInterface,
+                  mainRouteFork: .init(location: lastIntersection.location,
+                                       geometryIndex: intersectionData.segmentIndex,
+                                       segmentIndex: intersectionData.segmentIndex,
+                                       legIndex: intersectionData.legIndex),
+                  alternativeRouteFork: .init(location: lastIntersection.location,
+                                              geometryIndex: intersectionData.segmentIndex,
+                                              segmentIndex: intersectionData.segmentIndex,
+                                              legIndex: intersectionData.legIndex),
+                  infoFromFork: .init(distance: 0,
+                                      duration: 0),
+                  infoFromStart: .init(distance: mainRoute.distance,
+                                       duration: mainRoute.expectedTravelTime),
+                  isNew: true)
+    }
+}
+
 extension Route {
     fileprivate func findIntersection(on legIndex: Int, by segmentIndex: Int) -> Intersection? {
         guard legs.count > legIndex else {
@@ -100,7 +161,14 @@ extension Route {
         }
         
         let leg = legs[legIndex]
-        guard let stepindex = leg.segmentRangesByStep.firstIndex(where: { $0.contains(segmentIndex) }) else {
+        var stepindex = leg.segmentRangesByStep.firstIndex(where: { $0.contains(segmentIndex) })
+        // last segment range (arrival) is empty, but it may still contain an intersection
+        if stepindex == nil &&
+            leg.segmentRangesByStep.last?.isEmpty ?? false &&
+            leg.segmentRangesByStep.dropLast().last?.last == segmentIndex - 1 {
+            stepindex = leg.segmentRangesByStep.endIndex - 1
+        }
+        guard let stepindex = stepindex else {
             return nil
         }
         

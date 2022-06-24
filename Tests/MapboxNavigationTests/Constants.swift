@@ -29,3 +29,6 @@ var routeOptions: NavigationRouteOptions {
 
 let jsonFileName = "routeWithInstructions"
 let response = Fixture.routeResponse(from: jsonFileName, options: routeOptions)
+let indexedRouteResponse = IndexedRouteResponse(routeResponse: Fixture.routeResponse(from: jsonFileName,
+                                                                                     options: routeOptions),
+                                                routeIndex: 0)

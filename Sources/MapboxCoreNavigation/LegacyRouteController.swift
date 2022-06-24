@@ -246,14 +246,24 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
                   dataSource: source)
     }
     
-    required public init(alongRouteAtIndex routeIndex: Int,
+    required public convenience init(alongRouteAtIndex routeIndex: Int,
                          in routeResponse: RouteResponse,
                          options: RouteOptions,
                          customRoutingProvider: RoutingProvider? = nil,
                          dataSource source: RouterDataSource) {
+        self.init(with: .init(routeResponse: routeResponse,  routeIndex: routeIndex),
+                  options: options,
+                  customRoutingProvider: customRoutingProvider,
+                  dataSource: source)
+    }
+    
+    required public init(with indexedRouteResponse: IndexedRouteResponse,
+                         options: RouteOptions,
+                         customRoutingProvider: RoutingProvider? = nil,
+                         dataSource source: RouterDataSource) {
         self.customRoutingProvider = customRoutingProvider
-        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        self.indexedRouteResponse = indexedRouteResponse
+        self.routeProgress = RouteProgress(route: indexedRouteResponse.currentRoute!, options: options)
         self.dataSource = source
         self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
@@ -497,7 +507,7 @@ open class LegacyRouteController: NSObject, Router, InternalRouter, CLLocationMa
 
         self.lastRerouteLocation = location
 
-        calculateRoutes(from: location, along: progress) { [weak self] (session, result) in
+        calculateRoutes(from: location, along: progress) { [weak self] (result) in
             guard let self = self else { return }
             
             switch result {

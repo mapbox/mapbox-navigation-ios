@@ -47,8 +47,7 @@ class CustomViewController: UIViewController {
         navigationMapView.userLocationStyle = .courseView()
         
         let locationManager = simulateLocation ? SimulatedLocationManager(route: indexedUserRouteResponse!.routeResponse.routes!.first!) : NavigationLocationManager()
-        navigationService = MapboxNavigationService(routeResponse: indexedUserRouteResponse!.routeResponse,
-                                                    routeIndex: indexedUserRouteResponse!.routeIndex,
+        navigationService = MapboxNavigationService(indexedRouteResponse: indexedUserRouteResponse!,
                                                     routeOptions: userRouteOptions!,
                                                     customRoutingProvider: nil,
                                                     credentials: NavigationSettings.shared.directions.credentials,
