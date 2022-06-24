@@ -1147,7 +1147,7 @@ open class NavigationMapView: UIView {
      Callouts text font also respects `NavigationMapView.routeDurationAnnotationFontNames` property.
      Default value is `true`.
      */
-    public var showsContinuousAlternativeRoutesRelativeDuration: Bool = true {
+    public var showsRelativeDurationOnAlternativeRoutes: Bool = true {
         didSet {
             showContinuousAlternativeRoutesDurations()
         }
@@ -1159,7 +1159,7 @@ open class NavigationMapView: UIView {
         // Remove any existing route annotation.
         removeContinuousAlternativeRoutesDurations()
         
-        guard showsContinuousAlternativeRoutesRelativeDuration,
+        guard showsRelativeDurationOnAlternativeRoutes,
               let visibleRoutes = continuousAlternatives, visibleRoutes.count > 0 else { return }
         
         do {

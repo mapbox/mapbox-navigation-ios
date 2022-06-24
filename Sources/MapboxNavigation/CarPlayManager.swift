@@ -304,12 +304,12 @@ public class CarPlayManager: NSObject {
      The bar button that brings alternative routes selection during navigation.
      */
     public lazy var alternativeRoutesButton: CPBarButton = {
-        let altsButton = CPBarButton(type: .text) { (button: CPBarButton) in
-            guard let template = self.carPlayNavigationViewController?.alternativesListTemplate() else {
+        let altsButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
+            guard let template = self?.carPlayNavigationViewController?.alternativesListTemplate() else {
                 return
             }
-            self.interfaceController?.pushTemplate(template,
-                                                   animated: true)
+            self?.interfaceController?.pushTemplate(template,
+                                                    animated: true)
         }
         
         altsButton.title = NSLocalizedString("CARPLAY_ALTERNATIVES",
