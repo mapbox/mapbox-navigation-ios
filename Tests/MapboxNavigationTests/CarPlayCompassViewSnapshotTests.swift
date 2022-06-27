@@ -14,6 +14,12 @@ class CarPlayCompassViewSnapshotTests: TestCase {
     
     func testCarPlayCompassView() {
         for style in styles {
+            // `StyleManager` switches between user interface styles depending on platform, on
+            // which it was created (to prevent global appearance updates of UI components that are
+            // used on both phone and CarPlay).
+            // In this case trait collection is changed directly.
+            style.traitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+            
             let stackView = UIStackView(orientation: .vertical, spacing: 5, autoLayout: true)
             style.apply()
             
