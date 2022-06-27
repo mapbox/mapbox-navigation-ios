@@ -80,8 +80,8 @@ open class NightStyle: DayStyle {
             FeedbackSubtypeCollectionViewCell.appearance(for: phoneTraitCollection).normalCircleColor = .black
             FeedbackSubtypeCollectionViewCell.appearance(for: phoneTraitCollection).normalCircleOutlineColor = .lightText
             
-            BottomBannerView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
             TopBannerView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
+            BottomBannerView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
             InstructionsBannerView.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
             
             WayNameView.appearance(for: phoneTraitCollection).borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
@@ -171,9 +171,6 @@ open class NightStyle: DayStyle {
             
             LaneView.appearance(for: carPlayTraitCollection).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             LaneView.appearance(for: carPlayTraitCollection).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
-            LaneView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [LanesView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            LaneView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [LanesView.self]).secondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
-            LanesView.appearance(for: carPlayTraitCollection).backgroundColor = backgroundColor
             
             WayNameView.appearance(for: carPlayTraitCollection).borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
             WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
@@ -185,35 +182,12 @@ open class NightStyle: DayStyle {
             WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldDefaultColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
             
             ManeuverView.appearance(for: carPlayTraitCollection).backgroundColor = .clear
-            // TODO: Are all of these container views used on CarPlay?
-            ManeuverView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            ManeuverView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
-            ManeuverView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [NextBannerView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            ManeuverView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [NextBannerView.self]).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
-            ManeuverView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            ManeuverView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
-            ManeuverView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            ManeuverView.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
-            
-            DistanceLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).unitTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-            DistanceLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).valueTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-            DistanceLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).unitTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-            DistanceLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).valueTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
-            DistanceLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).unitTextColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
-            DistanceLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).valueTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
             
             NavigationMapView.appearance(for: carPlayTraitCollection).routeAlternateColor = #colorLiteral(red: 0.7991961837, green: 0.8232284188, blue: 0.8481693864, alpha: 1)
             NavigationMapView.appearance(for: carPlayTraitCollection).buildingDefaultColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             NavigationMapView.appearance(for: carPlayTraitCollection).buildingHighlightColor = #colorLiteral(red: 0.9254902005, green: 0.2352941185, blue: 0.1019607857, alpha: 1)
             
-            PrimaryLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
-            PrimaryLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
-            PrimaryLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).normalTextColor = #colorLiteral(red: 0.9996390939, green: 1, blue: 0.9997561574, alpha: 1)
-            
             SecondaryLabel.appearance(for: carPlayTraitCollection).normalFont = UIFont.systemFont(ofSize: 26, weight: .medium).adjustedFont
-            SecondaryLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsCardView.self]).normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
-            SecondaryLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [InstructionsBannerView.self]).normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
-            SecondaryLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [StepInstructionsView.self]).normalTextColor = #colorLiteral(red: 0.7349056005, green: 0.7675836682, blue: 0.8063536286, alpha: 1)
             
             InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
             InstructionLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = #colorLiteral(red: 0.18, green: 0.26, blue: 0.66, alpha: 1)

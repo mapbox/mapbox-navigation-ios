@@ -71,8 +71,8 @@ open class StyleManager {
     }
     
     init(traitCollection: UITraitCollection = UITraitCollection(userInterfaceIdiom: .phone)) {
-        self.traitCollection = traitCollection
         commonInit()
+        self.traitCollection = traitCollection
     }
     
     func commonInit() {
