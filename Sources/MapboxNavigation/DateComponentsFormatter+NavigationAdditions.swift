@@ -22,13 +22,25 @@ extension DateComponentsFormatter {
         return formatter
     }()
     
+    public static func travelDurationUnitStyle(_ interval: TimeInterval) -> DateComponentsFormatter.UnitsStyle {
+        return interval < 3600 ? .short : .abbreviated
+    }
+    
     public static func travelTimeString(_ interval: TimeInterval,
                                         signed: Bool,
                                         unitStyle: DateComponentsFormatter.UnitsStyle?) -> String {
         let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = unitStyle ?? (interval < 3600 ? .short : .abbreviated)
+        formatter.unitsStyle = unitStyle ?? travelDurationUnitStyle(interval)
         let timeString = formatter.string(from: signed ? interval : abs(interval)) ?? ""
         
-        return signed ? "\(interval >= 0 ? "+":"")\(timeString)" : timeString
+        if signed && interval >= 0 {
+                return String.localizedStringWithFormat(NSLocalizedString("EXPLICITLY_POSITIVE_NUMBER",
+                                                                          bundle: .mapboxNavigation,
+                                                                          value: "+%@",
+                                                                          comment: "Number string with an explicit '+' sign."),
+                                                        timeString)
+        } else {
+            return timeString
+        }
     }
 }

@@ -146,7 +146,7 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
             let items: [CPListItem] = [CPListItem(text: String.localizedStringWithFormat(NSLocalizedString("ALTERNATIVE_NOTES",
                                                                                                            bundle: .mapboxNavigation,
                                                                                                            value: "%1$@ / %2$@",
-                                                                                                           comment: "Combined alternatives selection notes about duration and distance delta."),
+                                                                                                           comment: "Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta."),
                                                                                          timeDelta,
                                                                                          distanceDelta),
                                                   detailText: nil)]
