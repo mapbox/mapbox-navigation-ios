@@ -164,7 +164,6 @@ public extension HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
-    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func pushHistoryEvent<Value: Encodable>(type: String, value: Value?, encoder: JSONEncoder? = nil) throws {
         let data = try value.map { value -> Data in
             try (encoder ?? JSONEncoder()).encode(value)
@@ -181,6 +180,7 @@ public extension HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
+    @available(*, deprecated, message: "Use corresponding static method instead.")
     func pushHistoryEvent<Value: Encodable>(type: String, value: Value?, encoder: JSONEncoder? = nil) throws {
         let data = try value.map { value -> Data in
             try (encoder ?? JSONEncoder()).encode(value)
@@ -196,7 +196,6 @@ public extension HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
-    @available(*, deprecated, message: "Use corresponding instance method instead.")
     static func pushHistoryEvent(type: String, dictionary value: [String: Any?]?) throws {
         let data = try value.map { value -> Data in
             try JSONSerialization.data(withJSONObject: value, options: [])
@@ -212,6 +211,7 @@ public extension HistoryRecording {
 
      - precondition: Use the `startRecordingHistory()` method to begin recording history. If the `startRecordingHistory()` method has not been called, this method has no effect.
      */
+    @available(*, deprecated, message: "Use corresponding static method instead.")
     func pushHistoryEvent(type: String, dictionary value: [String: Any?]?) throws {
         let data = try value.map { value -> Data in
             try JSONSerialization.data(withJSONObject: value, options: [])
