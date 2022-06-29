@@ -59,7 +59,7 @@ open class LanesView: UIView, NavigationComponent {
             }
         }
         
-        guard !subviews.isEmpty && subviews.contains(where: { $0.isValid }) else {
+        guard !subviews.isEmpty && subviews.contains(where: { $0.isUsable }) else {
             hide(animated: animated,
                  duration: duration) { completed in
                 completion?(completed)

@@ -169,9 +169,6 @@ open class NightStyle: DayStyle {
             // `StylableLabel` is used in `CarPlayCompassView` to show compass direction.
             StylableLabel.appearance(for: carPlayTraitCollection, whenContainedInInstancesOf: [CarPlayCompassView.self]).normalTextColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
             
-            LaneView.appearance(for: carPlayTraitCollection).primaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            LaneView.appearance(for: carPlayTraitCollection).secondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
-            
             WayNameView.appearance(for: carPlayTraitCollection).borderColor = #colorLiteral(red: 0.2802129388, green: 0.3988235593, blue: 0.5260632038, alpha: 1)
             WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlackColor = #colorLiteral(red: 0.08, green: 0.09, blue: 0.12, alpha: 1)
             WayNameLabel.appearance(for: carPlayTraitCollection).roadShieldBlueColor = #colorLiteral(red: 0.18, green: 0.26, blue: 0.66, alpha: 1)

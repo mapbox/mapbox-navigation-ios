@@ -17,42 +17,55 @@ extension VisualInstruction {
         return laneComponents.count > 0
     }
 
-    func maneuverImage(side: DrivingSide, color: UIColor, size: CGSize) -> UIImage? {
-        let mv = ManeuverView()
-        mv.frame = CGRect(origin: .zero, size: size)
-        mv.primaryColor = color
-        mv.backgroundColor = .clear
-        mv.scale = UIScreen.main.scale
-        mv.visualInstruction = self
-        mv.drivingSide = side
-        let image = mv.imageRepresentation
-        return image
+    func maneuverImage(drivingSide: DrivingSide,
+                       color: UIColor,
+                       size: CGSize) -> UIImage? {
+        let maneuverView = ManeuverView()
+        maneuverView.frame = CGRect(origin: .zero, size: size)
+        maneuverView.primaryColor = color
+        maneuverView.backgroundColor = .clear
+        maneuverView.scale = UIScreen.main.scale
+        maneuverView.visualInstruction = self
+        maneuverView.drivingSide = drivingSide
+        
+        return maneuverView.imageRepresentation
     }
 
-    func laneImage(side: DrivingSide, indication: LaneIndication, maneuverDirection: ManeuverDirection?, isUsable: Bool, useableColor: UIColor, unuseableColor: UIColor, size: CGSize) -> UIImage? {
+    func laneViewImage(drivingSide: DrivingSide,
+                       indication: LaneIndication,
+                       maneuverDirection: ManeuverDirection?,
+                       isUsable: Bool,
+                       useableColor: UIColor,
+                       unuseableColor: UIColor,
+                       size: CGSize) -> UIImage? {
         let laneView = LaneView()
         laneView.frame = CGRect(origin: .zero, size: size)
-        if isUsable {
-            laneView.primaryColor = useableColor
-            laneView.secondaryColor = unuseableColor
-        } else {
-            laneView.primaryColor = unuseableColor
-            laneView.secondaryColor = unuseableColor
-        }
+        laneView.primaryColor = useableColor
+        laneView.secondaryColor = unuseableColor
         laneView.backgroundColor = .clear
         laneView.maneuverDirection = maneuverDirection
         laneView.indications = indication
-        laneView.isValid = isUsable
-        laneView.drivingSide = side
-        let image = laneView.imageRepresentation
-
-        return image
+        laneView.isUsable = isUsable
+        laneView.drivingSide = drivingSide
+        
+        return laneView.imageRepresentation
     }
 
-    func lanesImage(side: DrivingSide, direction: ManeuverDirection?, useableColor: UIColor, unuseableColor: UIColor, size: CGSize, scale: CGFloat) -> UIImage? {
+    func lanesViewImage(drivingSide: DrivingSide,
+                        direction: ManeuverDirection?,
+                        useableColor: UIColor,
+                        unuseableColor: UIColor,
+                        size: CGSize,
+                        scale: CGFloat) -> UIImage? {
         let subimages = components.compactMap { (component) -> UIImage? in
             if case let .lane(indications: indications, isUsable: isUsable, preferredDirection: preferredDirection) = component {
-                return laneImage(side: side, indication: indications, maneuverDirection: preferredDirection ?? direction, isUsable: isUsable, useableColor: useableColor, unuseableColor: unuseableColor, size: CGSize(width: size.height, height: size.height))
+                return laneViewImage(drivingSide: drivingSide,
+                                     indication: indications,
+                                     maneuverDirection: preferredDirection ?? direction,
+                                     isUsable: isUsable,
+                                     useableColor: useableColor,
+                                     unuseableColor: unuseableColor,
+                                     size: CGSize(width: size.height, height: size.height))
             } else {
                 return nil
             }
@@ -73,15 +86,26 @@ extension VisualInstruction {
         return newImage
     }
     
-    /// Returns a `CPImageSet` representing the maneuver.
+    /**
+     Returns a `CPImageSet` representing the maneuver.
+     
+     - parameter side: Driving side of the road cars and traffic flow.
+     
+     - returns: An image set with light and dark versions of an image.
+     */
     @available(iOS 12.0, *)
     public func maneuverImageSet(side: DrivingSide) -> CPImageSet? {
         let colors: [UIColor] = [.black, .white]
-        let blackAndWhiteManeuverIcons: [UIImage] = colors.compactMap { (color) in
-            return maneuverImage(side: side, color: color, size: CGSize(width: 30, height: 30))
+        let maneuverIcons: [UIImage] = colors.compactMap { (color) in
+            return maneuverImage(drivingSide: side,
+                                 color: color,
+                                 size: CGSize(width: 30, height: 30))
         }
-        guard blackAndWhiteManeuverIcons.count == 2 else { return nil }
-        return CPImageSet(lightContentImage: blackAndWhiteManeuverIcons[1], darkContentImage: blackAndWhiteManeuverIcons[0])
+        guard maneuverIcons.count == 2 else { return nil }
+        
+        // `CPImageSet` applies `lightContentImage` for dark appearance and `darkContentImage`
+        // for light appearance, because of this white color is set for `lightContentImage` parameter.
+        return CPImageSet(lightContentImage: maneuverIcons[1], darkContentImage: maneuverIcons[0])
     }
     
     /// Returns whether the `VisualInstruction`’s maneuver image should be flipped according to the driving side.
@@ -135,50 +159,62 @@ extension VisualInstruction {
         return instructionLabel.attributedText
     }
 
-    /// Returns a `CPImageSet` representing the maneuver lane configuration.
+    /**
+     Returns a `CPImageSet` representing the maneuver lane configuration.
+     
+     - parameter side: Indicates which side of the road cars and traffic flow.
+     - parameter direction: `ManeuverType` that contains directional information.
+     - parameter scale: The natural scale factor associated with the CarPlay screen.
+     
+     - returns: Light and dark representations of an image that contains maneuver lane configuration.
+     */
     @available(iOS 12.0, *)
-    public func lanesImageSet(side: DrivingSide, direction: ManeuverDirection?, scale: CGFloat)  -> CPImageSet? {
-        // create lanes visual banner
-        // The `lanesImageMaxSize` size is an estimate of the CarPlay Lane Configuration View
-        // The dimensions are specified in the CarPlay App Programming Guide - https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=38
+    public func lanesImageSet(side: DrivingSide,
+                              direction: ManeuverDirection?,
+                              scale: CGFloat) -> CPImageSet? {
+        // The `lanesImageMaxSize` size is an estimate of the CarPlay Lane Configuration View.
+        // The dimensions are specified in the CarPlay App Programming Guide:
+        // https://developer.apple.com/carplay/documentation/CarPlay-App-Programming-Guide.pdf#page=38
         let lanesImageMaxSize = CGSize(width: 120, height: 18)
-
-        let lightUsableColor: UIColor
-        let lightUnuseableColor: UIColor
-        let darkUsableColor: UIColor
-        let darkUnuseableColor: UIColor
-
-        if #available(iOS 13.0, *) {
-            let lightTraitCollection = UITraitCollection(userInterfaceStyle: .light)
-            let darkTraitCollection = UITraitCollection(userInterfaceStyle: .dark)
-
-            lightUsableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: lightTraitCollection)
-            lightUnuseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: lightTraitCollection)
-
-            darkUsableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).primaryColor.resolvedColor(with: darkTraitCollection)
-            darkUnuseableColor = LaneView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay)).secondaryColor.resolvedColor(with: darkTraitCollection)
-        } else {
-            // No light/dark traits are supported
-            lightUsableColor = LaneView.appearance().primaryColor
-            lightUnuseableColor = LaneView.appearance().secondaryColor
-
-            darkUsableColor = LaneView.appearance().primaryColor
-            darkUnuseableColor = LaneView.appearance().secondaryColor
-        }
-
-        var lightLanesImage = lanesImage(side: side, direction: direction, useableColor: lightUsableColor, unuseableColor: lightUnuseableColor, size: CGSize(width: CGFloat(laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: scale)
-
-        var darkLanesImage = lanesImage(side: side, direction: direction, useableColor: darkUsableColor, unuseableColor: darkUnuseableColor, size: CGSize(width: CGFloat(laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height), scale: scale)
-
-        if let image = lightLanesImage, let darkImage = darkLanesImage, image.size.width > lanesImageMaxSize.width {
-            let aspectRatio = lanesImageMaxSize.width / image.size.width
+        
+        let lightTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceIdiom: .carPlay),
+            UITraitCollection(userInterfaceStyle: .light)
+        ])
+        var lightLanesImage = lanesViewImage(drivingSide: side,
+                                             direction: direction,
+                                             useableColor: LaneView.appearance(for: lightTraitCollection).primaryColor,
+                                             unuseableColor: LaneView.appearance(for: lightTraitCollection).secondaryColor,
+                                             size: CGSize(width: CGFloat(laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height),
+                                             scale: scale)
+        
+        let darkTraitCollection = UITraitCollection(traitsFrom: [
+            UITraitCollection(userInterfaceIdiom: .carPlay),
+            UITraitCollection(userInterfaceStyle: .dark)
+        ])
+        var darkLanesImage = lanesViewImage(drivingSide: side,
+                                            direction: direction,
+                                            useableColor: LaneView.appearance(for: darkTraitCollection).primaryColor,
+                                            unuseableColor: LaneView.appearance(for: darkTraitCollection).secondaryColor,
+                                            size: CGSize(width: CGFloat(laneComponents.count) * lanesImageMaxSize.height, height: lanesImageMaxSize.height),
+                                            scale: scale)
+        
+        if let lightImage = lightLanesImage,
+           let darkImage = darkLanesImage,
+           lightImage.size.width > lanesImageMaxSize.width {
+            let aspectRatio = lanesImageMaxSize.width / lightImage.size.width
             let scaledSize = CGSize(width: lanesImageMaxSize.width, height: lanesImageMaxSize.height * aspectRatio)
-            lightLanesImage = image.scaled(to: scaledSize)
+            lightLanesImage = lightImage.scaled(to: scaledSize)
             darkLanesImage = darkImage.scaled(to: scaledSize)
         }
-        if let image = lightLanesImage, let darkImage = darkLanesImage {
-            return CPImageSet(lightContentImage: image, darkContentImage: darkImage)
+        
+        if let lightImage = lightLanesImage,
+           let darkImage = darkLanesImage {
+            // `CPImageSet` applies `lightContentImage` for dark appearance and `d`arkContentImage`
+            // for light appearance, because of this `darkImage` is set for `lightContentImage` parameter.
+            return CPImageSet(lightContentImage: darkImage, darkContentImage: lightImage)
         }
+        
         return nil
     }
 }
