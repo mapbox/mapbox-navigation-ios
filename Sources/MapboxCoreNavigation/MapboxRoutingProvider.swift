@@ -285,6 +285,7 @@ public class MapboxRoutingProvider: RoutingProvider {
     @discardableResult public func refreshRoute(indexedRouteResponse: IndexedRouteResponse,
                                                 fromLegAtIndex startLegIndex: UInt32 = 0,
                                                 completionHandler: @escaping Directions.RouteCompletionHandler) -> NavigationProviderRequest? {
+        print(">>> [RoutingProvider.refreshRoute] Enter")
         guard case let .route(routeOptions) = indexedRouteResponse.routeResponse.options else {
             preconditionFailure("Invalid route data passed for refreshing. Expected `RouteResponse` containing `.route` `ResponseOptions` but got `.match`.")
         }
@@ -293,6 +294,7 @@ public class MapboxRoutingProvider: RoutingProvider {
                        credentials: self.settings.directions.credentials)
         
         guard let responseIdentifier = indexedRouteResponse.routeResponse.identifier else {
+            print(">>> [RoutingProvider.refreshRoute] 🐙 No id")
             DispatchQueue.main.async {
                 completionHandler(session, .failure(.noData))
             }
@@ -306,22 +308,32 @@ public class MapboxRoutingProvider: RoutingProvider {
                                                  routeIndex: routeIndex,
                                                  legIndex: startLegIndex,
                                                  routingProfile: routeOptions.profileIdentifier.nativeProfile)
-        
+        print(">>> [RoutingProvider.refreshRoute] Sending request to NavNative router")
         requestId = router.getRouteRefresh(for: refreshOptions, callback: { [weak self] result, _ in
-            guard let self = self else { return }
-            
+            print(">>> [RoutingProvider.refreshRoute] Request from NavNative received")
+            guard let self = self else {
+                print(">>> [RoutingProvider.refreshRoute] Self == nil 🐙")
+                return
+            }
+
+            print(">>> [RoutingProvider.refreshRoute] Parsing response")
+
             self.parseResponse(requestId: requestId,
                                userInfo: [.responseIdentifier: responseIdentifier,
                                           .routeIndex: indexedRouteResponse.routeIndex,
                                           .startLegIndex: Int(startLegIndex),
                                           .credentials: self.settings.directions.credentials],
                                result: result) { (response: Result<RouteRefreshResponse, DirectionsError>) in
+                print(">>> [RoutingProvider.refreshRoute] Response parsed")
+
                 switch response {
                 case .failure(let error):
+                    print(">>> [RoutingProvider.refreshRoute] Response parsed; error")
                     DispatchQueue.main.async {
                         completionHandler(session, .failure(error))
                     }
                 case .success(let routeRefreshResponse):
+                    print(">>> [RoutingProvider.refreshRoute] Response parsed; success")
                     DispatchQueue.global().async {
                         do {
                             let routeResponse = try indexedRouteResponse.routeResponse.copy(with: routeOptions)
@@ -338,6 +350,8 @@ public class MapboxRoutingProvider: RoutingProvider {
                 }
             }
         })
+        print(">>> [RoutingProvider.refreshRoute] Request id: \(String(describing: requestId))")
+
         let request = Request(requestIdentifier: requestId,
                               routingProvider: self)
         requestsLock {
