@@ -228,17 +228,29 @@ extension InternalRouter where Self: Router {
             return
         }
         isRefreshing = true
+        print(">>> ROUTER: isRefreshing = true")
         routingProvider.refreshRoute(indexedRouteResponse: indexedRouteResponse,
                                      fromLegAtIndex: UInt32(legIndex)) { [weak self] session, result in
+            print(">>> ROUTER: Refresh received")
+
             defer {
+                print(">>> ROUTER: isRefreshing = false")
                 self?.isRefreshing = false
                 self?.lastRouteRefresh = nil
                 completion()
             }
-            
-            guard case .success(let response) = result, let self = self else {
+
+            if self == nil {
+                print(">>> ROUTER: Refresh received; Self == nil")
                 return
             }
+            guard let self = self else { return }
+            guard case .success(let response) = result else {
+                print(">>> ROUTER: Refresh received; 🔴")
+                return
+            }
+
+            print(">>> ROUTER: Refresh received; 🟢")
 
             if let segments = response.routes?.first?.legs.first?.segmentNumericCongestionLevels {
 //                for idx in 0..<response.routes![0].legs[0].segmentNumericCongestionLevels!.count {
