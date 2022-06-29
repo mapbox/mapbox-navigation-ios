@@ -301,6 +301,26 @@ public class CarPlayManager: NSObject {
     }()
     
     /**
+     The bar button that brings alternative routes selection during navigation.
+     */
+    public lazy var alternativeRoutesButton: CPBarButton = {
+        let altsButton = CPBarButton(type: .text) { [weak self] (button: CPBarButton) in
+            guard let template = self?.carPlayNavigationViewController?.alternativesListTemplate() else {
+                return
+            }
+            self?.interfaceController?.pushTemplate(template,
+                                                    animated: true)
+        }
+        
+        altsButton.title = NSLocalizedString("CARPLAY_ALTERNATIVES",
+                                             bundle: .mapboxNavigation,
+                                             value: "Alternatives",
+                                             comment: "Title for alternatives selection list button")
+        
+        return altsButton
+    }()
+    
+    /**
      The bar button that prompts the presented navigation view controller to display the feedback screen.
      */
     public lazy var showFeedbackButton: CPMapButton = {
@@ -989,7 +1009,7 @@ extension CarPlayManager: CPMapTemplateDelegate {
                                                          for: currentActivity) {
             mapTemplate.leadingNavigationBarButtons = leadingButtons
         } else {
-            mapTemplate.leadingNavigationBarButtons = [muteButton]
+            mapTemplate.leadingNavigationBarButtons = [muteButton, alternativeRoutesButton]
         }
         
         if let trailingButtons = delegate?.carPlayManager(self,

@@ -15,6 +15,7 @@ extension NavigationMapView {
         static let waypointSymbolLayer = "\(identifier)_waypointSymbolLayer"
         static let buildingExtrusionLayer = "\(identifier)_buildingExtrusionLayer"
         static let routeDurationAnnotationsLayer: String = "\(identifier)_routeDurationAnnotationsLayer"
+        static let continuousAlternativeRoutesDurationAnnotationsLayer: String = "\(identifier)_continuousAlternativeRoutesDurationAnnotationsLayer"
         static let puck2DLayer: String = "puck"
         static let puck3DLayer: String = "puck-model-layer"
     }
@@ -26,12 +27,15 @@ extension NavigationMapView {
         static let voiceInstructionSource = "\(identifier)_instructionSource"
         static let waypointSource = "\(identifier)_waypointSource"
         static let routeDurationAnnotationsSource: String = "\(identifier)_routeDurationAnnotationsSource"
+        static let continuousAlternativeRoutesDurationAnnotationsSource: String = "\(identifier)_continuousAlternativeRoutesDurationAnnotationsSource"
         static let puck3DSource: String = "puck-model-source"
     }
     
     struct ImageIdentifier {
         static let arrowImage = "triangle-tip-navigation"
         static let markerImage = "default_marker"
+        static let routeAnnotationLeftHanded = "RouteInfoAnnotationLeftHanded"
+        static let routeAnnotationRightHanded = "RouteInfoAnnotationRightHanded"
     }
     
     struct ModelKeyIdentifier {

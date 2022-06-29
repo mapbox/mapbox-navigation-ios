@@ -38,7 +38,11 @@ public struct AlternativeRoute: Identifiable {
     public let infoFromDeviationPoint: RouteInfo
     /// Alternative route statistics, counting from it's origin.
     public let infoFromOrigin: RouteInfo
-
+    /// The difference of distances between alternative and the main routes
+    public let distanceDelta: LocationDistance
+    /// The difference of expected travel time between alternative and the main routes
+    public let expectedTravelTimeDelta: TimeInterval
+    
     init?(mainRoute: Route, alternativeRoute nativeRouteAlternative: RouteAlternative) {
         self.id = nativeRouteAlternative.id
         guard let decoded = RerouteController.decode(routeRequest: nativeRouteAlternative.route.getRequestUri(),
@@ -70,6 +74,9 @@ public struct AlternativeRoute: Identifiable {
                                             duration: nativeRouteAlternative.infoFromFork.duration)
         self.infoFromOrigin = .init(distance: nativeRouteAlternative.infoFromStart.distance,
                                     duration: nativeRouteAlternative.infoFromStart.duration)
+        
+        self.distanceDelta = infoFromOrigin.distance - mainRoute.distance
+        self.expectedTravelTimeDelta = infoFromOrigin.duration - mainRoute.expectedTravelTime
     }
     
     /**
@@ -83,13 +90,17 @@ public struct AlternativeRoute: Identifiable {
                 mainRouteIntersection: Intersection,
                 alternativeRouteIntersection: Intersection,
                 infoFromDeviationPoint: RouteInfo,
-                infoFromOrigin: RouteInfo) {
+                infoFromOrigin: RouteInfo,
+                distanceDelta: LocationDistance,
+                expectedTravelTimeDelta: TimeInterval) {
         self.id = id
         self.indexedRouteResponse = indexedRouteResponse
         self.mainRouteIntersection = mainRouteIntersection
         self.alternativeRouteIntersection = alternativeRouteIntersection
         self.infoFromDeviationPoint = infoFromDeviationPoint
         self.infoFromOrigin = infoFromOrigin
+        self.distanceDelta = distanceDelta
+        self.expectedTravelTimeDelta = expectedTravelTimeDelta
     }
 }
 

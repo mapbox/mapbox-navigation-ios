@@ -6,6 +6,8 @@ import MapboxCoreNavigation
 #if canImport(CarPlay)
 import CarPlay
 
+let CarPlayAlternativeIDKey: String = "MBCarPlayAlternativeID"
+
 /**
  `CarPlayNavigationViewController` is a fully-featured turn-by-turn navigation UI for CarPlay.
  
@@ -86,6 +88,86 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
      */
     public var continuousAlternatives: [AlternativeRoute] {
         navigationService.router.continuousAlternatives
+    }
+    
+    private func format(value: LocationDistance,
+                        labels: (decreasing: String, increasing: String, equal: String)) -> String {
+        switch value {
+        case ..<0:
+            return labels.decreasing
+        case 0:
+            return labels.equal
+        default:
+            return labels.increasing
+        }
+    }
+    
+    func alternativesListTemplate() -> CPListTemplate {
+        var variants: [CPListSection] = []
+        let distanceFormatter = DistanceFormatter()
+        self.continuousAlternatives.forEach { alternative in
+            guard let title = alternative.indexedRouteResponse.currentRoute?.description else {
+                return
+            }
+            distanceFormatter.measurementFormatter.numberFormatter.negativePrefix = ""
+            let distanceDeltaText = distanceFormatter.string(from: alternative.distanceDelta)
+            let distanceDelta = format(value: alternative.distanceDelta,
+                                       labels: (decreasing: String.localizedStringWithFormat(NSLocalizedString("SHORTER_ALTERNATIVE",
+                                                                                                               bundle: .mapboxNavigation,
+                                                                                                               value: "%@ shorter",
+                                                                                                               comment: "Alternatives selection note about a shorter route distance in any unit."),
+                                                                                             distanceDeltaText),
+                                                increasing: String.localizedStringWithFormat(NSLocalizedString("LONGER_ALTERNATIVE",
+                                                                                                               bundle: .mapboxNavigation,
+                                                                                                               value: "%@ longer",
+                                                                                                               comment: "Alternatives selection note about a longer route distance in any unit."),
+                                                                                             distanceDeltaText),
+                                                equal: NSLocalizedString("SAME_DISTANCE",
+                                                                         bundle: .mapboxNavigation,
+                                                                         value: "Same distance",
+                                                                         comment: "Alternatives selection note about equal travel distance.")))
+            let timeDeltaText = DateComponentsFormatter.travelTimeString(alternative.expectedTravelTimeDelta, signed: false, unitStyle: .full)
+            let timeDelta = format(value: alternative.expectedTravelTimeDelta,
+                                   labels: (decreasing: String.localizedStringWithFormat(NSLocalizedString("FASTER_ALTERNATIVE",
+                                                                                                           bundle: .mapboxNavigation,
+                                                                                                           value: "%@ faster",
+                                                                                                           comment: "Alternatives selection note about a faster route time interval in any unit."),
+                                                                                         timeDeltaText),
+                                            increasing: String.localizedStringWithFormat(NSLocalizedString("SLOWER_ALTERNATIVE",
+                                                                                                           bundle: .mapboxNavigation,
+                                                                                                           value: "%@ slower",
+                                                                                                           comment: "Alternatives selection note about a slower route time interval in any unit."),
+                                                                                         timeDeltaText),
+                                            equal: NSLocalizedString("SAME_TIME",
+                                                                     bundle: .mapboxNavigation,
+                                                                     value: "Same time",
+                                                                     comment: "Alternatives selection note about equal travel time.")))
+            
+            let items: [CPListItem] = [CPListItem(text: String.localizedStringWithFormat(NSLocalizedString("ALTERNATIVE_NOTES",
+                                                                                                           bundle: .mapboxNavigation,
+                                                                                                           value: "%1$@ / %2$@",
+                                                                                                           comment: "Combined alternatives selection notes about duration (first slot position) and distance (second slot position) delta."),
+                                                                                         timeDelta,
+                                                                                         distanceDelta),
+                                                  detailText: nil)]
+            items.forEach { (item: CPListItem) -> Void in
+                item.userInfo = [CarPlayAlternativeIDKey: alternative.id]
+            }
+            let section = CPListSection(items: items,
+                                        header: title,
+                                        sectionIndexTitle: nil)
+            variants.append(section)
+        }
+        
+        let alternativesTitle = NSLocalizedString("CARPLAY_ALTERNATIVES",
+                                                  bundle: .mapboxNavigation,
+                                                  value: "Alternatives",
+                                                  comment: "Title for alternatives selection list button")
+        
+        let template = CPListTemplate(title: alternativesTitle,
+                                      sections: variants)
+        template.delegate = self
+        return template
     }
     
     /**
@@ -1019,4 +1101,28 @@ extension CarPlayNavigationViewController: CPSessionConfigurationDelegate {
         applyStyleIfNeeded(contentStyle)
     }
 }
+
+@available(iOS 12.0, *)
+extension CarPlayNavigationViewController: CPListTemplateDelegate {
+    
+    public func listTemplate(_ listTemplate: CPListTemplate,
+                      didSelect item: CPListItem,
+                      completionHandler: @escaping () -> Void) {
+        // Selected a list item for switching to alternative route.
+        guard let userInfo = item.userInfo as? CarPlayUserInfo,
+              let alternativeId = userInfo[CarPlayAlternativeIDKey] as? AlternativeRoute.ID,
+              let alternativeRoute = continuousAlternatives.first(where: { $0.id == alternativeId})?.indexedRouteResponse else {
+                  completionHandler()
+                  return
+              }
+        
+        navigationService.router.updateRoute(with: alternativeRoute,
+                                             routeOptions: nil,
+                                             completion: { _ in
+            self.carInterfaceController.popTemplate(animated: true)
+            completionHandler()
+        })
+    }
+}
+
 #endif
