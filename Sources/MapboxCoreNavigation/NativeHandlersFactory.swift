@@ -108,7 +108,7 @@ class NativeHandlersFactory {
                                incidentsOptions: nil,
                                noSignalSimulationEnabled: nil,
                                avoidManeuverSeconds: NSNumber(value: RerouteController.DefaultManeuverAvoidanceRadius),
-                               useSensors: false)
+                               useSensors: NSNumber(booleanLiteral: NavigationSettings.shared.utilizeSensorData))
     }
     
     static func configHandle(by configFactoryType: ConfigFactory.Type = ConfigFactory.self) -> ConfigHandle {

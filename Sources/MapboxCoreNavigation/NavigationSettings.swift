@@ -14,7 +14,7 @@ public typealias RoutingProviderSource = MapboxRoutingProvider.Source
  To customize the user experience during a particular turn-by-turn navigation session, use the `NavigationOptions` class
  when initializing a `NavigationViewController`.
 
- To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:)` method.
+ To customize some global defaults use `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
  */
 public class NavigationSettings {
     
@@ -38,13 +38,15 @@ public class NavigationSettings {
             .init(directions: .shared,
                   tileStoreConfiguration: .default,
                   routingProviderSource: .hybrid,
-                  alternativeRouteDetectionStrategy: .init())
+                  alternativeRouteDetectionStrategy: .init(),
+                  utilizeSensorData: false)
         }
 
         var directions: Directions
         var tileStoreConfiguration: TileStoreConfiguration
         var routingProviderSource: RoutingProviderSource
         var alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy?
+        var utilizeSensorData: Bool
     }
 
     /// Protects access to `_state`.
@@ -68,7 +70,7 @@ public class NavigationSettings {
     /**
      Default `Directions` instance. By default, `Directions.shared` is used.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
      */
     public var directions: Directions {
         state.directions
@@ -77,7 +79,7 @@ public class NavigationSettings {
     /**
      Global `TileStoreConfiguration` instance.
 
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
      */
     public var tileStoreConfiguration: TileStoreConfiguration {
         state.tileStoreConfiguration
@@ -85,7 +87,7 @@ public class NavigationSettings {
 
     /**
      Default `routingProviderSource` used for rerouting during navigation. By default, `.hybrid` is used.
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
      */
     public var routingProviderSource: RoutingProviderSource {
         state.routingProviderSource
@@ -94,12 +96,23 @@ public class NavigationSettings {
     /**
      Configuration on how `AlternativeRoute`s will be detected during navigation process.
      
-     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:)` method.
+     You can override this property by using `NavigationSettings.initialize(directions:tileStoreConfiguration:navigationRouterType:alternativeRouteDetectionStrategy:utilizeSensorData:)` method.
      
      If set to `nil`, the detection is turned off.
      */
     public var alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? {
         state.alternativeRouteDetectionStrategy
+    }
+    
+    /**
+     Enables analyzing data from sensors for better location prediction in case of a weak GPS signal, for example in tunnel.
+     
+     Usage of sensors can increase battery consumption. Disabled by default.
+     
+     - important: Don't enable sensors if you emulate location updates. The SDK ignores location updates which don't match data from sensors.
+     */
+    public var utilizeSensorData: Bool {
+        state.utilizeSensorData
     }
     
     /**
@@ -117,21 +130,24 @@ public class NavigationSettings {
      `TileStoreConfiguration` for more details.
        - routingProviderSource: Configures the type of routing to be used by various SDK objects when providing route calculations. Use this value to configure usage of onlive vs. offline data for routing.
        - alternativeRouteDetectionStrategy: Configures how `AlternativeRoute`s will be detected during navigation process.
+       - utilizeSensorData: Enables using sensors data to improve positioning.
      */
     public func initialize(directions: Directions,
                            tileStoreConfiguration: TileStoreConfiguration,
                            routingProviderSource: RoutingProviderSource = .hybrid,
-                           alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? = .init()) {
+                           alternativeRouteDetectionStrategy: AlternativeRouteDetectionStrategy? = .init(),
+                           utilizeSensorData: Bool = false) {
         lock.lock(); defer {
             lock.unlock()
         }
         if _state != nil {
-            Log.warning("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`. This might result in an undefined behaviour.", category: .settings)
+            Log.warning("Warning: Using NavigationSettings.initialize(directions:tileStoreConfiguration:routingProviderSource:alternativeRouteDetectionStrategy:utilizeSensorData:) after corresponding variables was initialized. Possible reasons: Initialize called more than once, or the following properties was accessed before initialization: `tileStoreConfiguration`, `directions`, `routingProviderSource`, `alternativeRouteDetectionStrategy`, `utilizeSensorData`. This might result in an undefined behaviour.", category: .settings)
         }
         _state = .init(directions: directions,
                        tileStoreConfiguration: tileStoreConfiguration,
                        routingProviderSource: routingProviderSource,
-                       alternativeRouteDetectionStrategy: alternativeRouteDetectionStrategy)
+                       alternativeRouteDetectionStrategy: alternativeRouteDetectionStrategy,
+                       utilizeSensorData: utilizeSensorData)
     }
     
     /**
