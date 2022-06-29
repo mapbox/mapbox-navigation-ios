@@ -5,18 +5,12 @@ import MapboxDirections
 @testable import MapboxNavigation
 @testable import MapboxCoreNavigation
 
-class LaneSnapshotTests: TestCase {
+class LaneViewSnapshotTests: TestCase {
+    
     override func setUp() {
         super.setUp()
         isRecording = false
         DayStyle().apply()
-
-        // Apply correct appearance for test case envirounment.
-        LaneView.appearance().primaryColor = LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColor
-        LaneView.appearance().secondaryColor = LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColor
-        LaneView.appearance().primaryColorHighlighted = LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).primaryColorHighlighted
-        LaneView.appearance().secondaryColorHighlighted = LaneView.appearance(whenContainedInInstancesOf: [LanesView.self]).secondaryColorHighlighted
-        LanesView.appearance().backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
     }
     
     func testAllLanes30x30() {
