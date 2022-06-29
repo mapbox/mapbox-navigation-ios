@@ -22,7 +22,7 @@ extension DateComponentsFormatter {
         return formatter
     }()
     
-    public static func travelDurationUnitStyle(_ interval: TimeInterval) -> DateComponentsFormatter.UnitsStyle {
+    public static func travelDurationUnitStyle(interval: TimeInterval) -> DateComponentsFormatter.UnitsStyle {
         return interval < 3600 ? .short : .abbreviated
     }
     
@@ -30,7 +30,7 @@ extension DateComponentsFormatter {
                                         signed: Bool,
                                         unitStyle: DateComponentsFormatter.UnitsStyle?) -> String {
         let formatter = DateComponentsFormatter()
-        formatter.unitsStyle = unitStyle ?? travelDurationUnitStyle(interval)
+        formatter.unitsStyle = unitStyle ?? travelDurationUnitStyle(interval: interval)
         let timeString = formatter.string(from: signed ? interval : abs(interval)) ?? ""
         
         if signed && interval >= 0 {
