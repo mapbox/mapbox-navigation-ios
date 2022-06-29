@@ -880,7 +880,9 @@ extension NavigationViewController: NavigationServiceDelegate {
             imageColor = .black
         }
         
-        if let image = instruction.primaryInstruction.maneuverImage(side: instruction.drivingSide, color: imageColor, size: CGSize(width: 72, height: 72)) {
+        if let image = instruction.primaryInstruction.maneuverImage(drivingSide: instruction.drivingSide,
+                                                                    color: imageColor,
+                                                                    size: CGSize(width: 72, height: 72)) {
             // Bake in any transform required for left turn arrows etc.
             let imageData = UIGraphicsImageRenderer(size: image.size).pngData { (context) in
                 image.draw(at: .zero)
@@ -888,7 +890,9 @@ extension NavigationViewController: NavigationServiceDelegate {
             let temporaryURL = FileManager.default.temporaryDirectory.appendingPathComponent("com.mapbox.navigation.notification-icon.png")
             do {
                 try imageData.write(to: temporaryURL)
-                let iconAttachment = try UNNotificationAttachment(identifier: "maneuver", url: temporaryURL, options: [UNNotificationAttachmentOptionsTypeHintKey: kUTTypePNG])
+                let iconAttachment = try UNNotificationAttachment(identifier: "maneuver",
+                                                                  url: temporaryURL,
+                                                                  options: [UNNotificationAttachmentOptionsTypeHintKey: kUTTypePNG])
                 content.attachments = [iconAttachment]
             } catch {
                 Log.error("Failed to create UNNotificationAttachment with error: \(error.localizedDescription).",
