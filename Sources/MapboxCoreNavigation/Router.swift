@@ -244,10 +244,10 @@ extension InternalRouter where Self: Router {
 //                for idx in 0..<response.routes![0].legs[0].segmentNumericCongestionLevels!.count {
 //                    response.routes![0].legs[0].segmentNumericCongestionLevels![idx] = (0...100).randomElement()!
 //                }
-                Log.info(">>> \(segments.map { $0?.description ?? "nil" }.joined(separator: ","))", category: .navigation)
+                print(">>> \(segments.map { $0?.description ?? "nil" }.joined(separator: ","))")
             }
             else {
-                Log.fault("No congestion", category: .navigation)
+                print("No congestion")
             }
             self.indexedRouteResponse = .init(routeResponse: response, routeIndex: self.indexedRouteResponse.routeIndex)
             
