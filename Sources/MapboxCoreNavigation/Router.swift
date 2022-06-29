@@ -297,8 +297,18 @@ extension InternalRouter where Self: Router {
                 completion()
             }
             
-            guard case let .success(response) = result, let self = self else {
+            guard case .success(let response) = result, let self = self else {
                 return
+            }
+
+            if let segments = response.routes?.first?.legs.first?.segmentNumericCongestionLevels {
+//                for idx in 0..<response.routes![0].legs[0].segmentNumericCongestionLevels!.count {
+//                    response.routes![0].legs[0].segmentNumericCongestionLevels![idx] = (0...100).randomElement()!
+//                }
+                Log.info(">>> \(segments.map { $0?.description ?? "nil" }.joined(separator: ","))", category: .navigation)
+            }
+            else {
+                Log.fault("No congestion", category: .navigation)
             }
             self.indexedRouteResponse = .init(routeResponse: response, routeIndex: self.indexedRouteResponse.routeIndex)
             
