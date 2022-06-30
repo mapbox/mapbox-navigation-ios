@@ -262,10 +262,6 @@ open class DayStyle: Style {
             LaneView.appearance(for: phoneTraitCollection).secondaryColor = .defaultLaneArrowSecondary
             LaneView.appearance(for: phoneTraitCollection).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
             LaneView.appearance(for: phoneTraitCollection).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
-            LaneView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [LanesView.self]).primaryColor = .defaultLaneArrowPrimary
-            LaneView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [LanesView.self]).secondaryColor = .defaultLaneArrowSecondary
-            LaneView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [LanesView.self]).primaryColorHighlighted = .defaultLaneArrowPrimaryHighlighted
-            LaneView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [LanesView.self]).secondaryColorHighlighted = .defaultLaneArrowSecondaryHighlighted
             
             LanesView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 0.968627451, green: 0.968627451, blue: 0.968627451, alpha: 1)
             
@@ -413,7 +409,7 @@ open class DayStyle: Style {
             defaultInstructionColor = UIColor.white
             
             defaultLaneViewPrimaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
-            defaultLaneViewSecondaryColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
+            defaultLaneViewSecondaryColor = #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1)
             
             defaultLaneArrowPrimaryHighlightedColor = .defaultLaneArrowPrimaryHighlighted
             defaultLaneArrowSecondaryHighlightedColor = .defaultLaneArrowSecondaryHighlighted
