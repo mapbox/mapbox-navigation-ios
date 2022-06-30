@@ -1,10 +1,8 @@
 import XCTest
 import Foundation
-import MapboxDirections
 import SnapshotTesting
 @testable import TestHelper
 @testable import MapboxNavigation
-@testable import MapboxCoreNavigation
 
 class FeedbackViewControllerSnapshotTests: TestCase {
     
@@ -40,40 +38,55 @@ class FeedbackViewControllerSnapshotTests: TestCase {
     }
     
     func testNightFeedbackViewController() {
-        UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
-        UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).textColor = .white
-        FeedbackStyleView.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
-        FeedbackCollectionView.appearance().backgroundColor = .black
-        FeedbackCollectionView.appearance().cellColor = .white
+        NightStyleSpy().apply()
         assertImageSnapshot(matching: feedbackViewController, as: .image(precision: 0.95))
     }
     
-    func testDetailedFeedbackViewControllerChangingAppearance() {
+    func testDayDetailedFeedbackViewController() {
         guard let detailedFeedbackViewController = createDetailedFeedbackViewController() else {
               XCTFail("Failed to create detailed FeedbackViewController.")
             return
           }
         
-        let indexPath = IndexPath(row: 0, section: 0)
         // test the day style of detailed FeedbackSubtypeViewController
         assertImageSnapshot(matching: detailedFeedbackViewController, as: .image(precision: 0.95))
         
-        // test the day style of detailed FeedbackSubtypeViewController when selection.
+        // test the day style of detailed FeedbackSubtypeViewController when selection
+        let indexPath = IndexPath(row: 0, section: 0)
         detailedFeedbackViewController.collectionView(detailedFeedbackViewController.collectionView, didSelectItemAt: indexPath)
         assertImageSnapshot(matching: detailedFeedbackViewController, as: .image(precision: 0.95))
+    }
+    
+    func testNightDetailedFeedbackViewController() {
+        NightStyleSpy().apply()
+        guard let detailedFeedbackViewController = createDetailedFeedbackViewController() else {
+              XCTFail("Failed to create detailed FeedbackViewController.")
+            return
+          }
         
-        // test the detailed FeedbackSubtypeViewController reloading data after selection.
-        UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
-        UILabel.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).textColor = .white
-        FeedbackStyleView.appearance(whenContainedInInstancesOf: [FeedbackViewController.self]).backgroundColor = .black
-        FeedbackCollectionView.appearance().backgroundColor = .black
-        FeedbackCollectionView.appearance().cellColor = .white
-        FeedbackSubtypeCollectionViewCell.appearance().normalCircleColor = .black
-        FeedbackSubtypeCollectionViewCell.appearance().normalCircleOutlineColor = .lightText
+        // test the night style of detailed FeedbackSubtypeViewController
         assertImageSnapshot(matching: detailedFeedbackViewController, as: .image(precision: 0.95))
         
-        // test the detailed FeedbackSubtypeViewController for deselection after changing appearance.
+        // test the night style of detailed FeedbackSubtypeViewController when selection
+        let indexPath = IndexPath(row: 0, section: 0)
+        detailedFeedbackViewController.collectionView(detailedFeedbackViewController.collectionView, didSelectItemAt: indexPath)
+        assertImageSnapshot(matching: detailedFeedbackViewController, as: .image(precision: 0.95))
+
+        // test the detailed FeedbackSubtypeViewController keeping the selection after Style changes
+        DayStyle().apply()
+        assertImageSnapshot(matching: detailedFeedbackViewController, as: .image(precision: 0.95))
+
+        // test the detailed FeedbackSubtypeViewController deselection function after Style changes
         detailedFeedbackViewController.collectionView(detailedFeedbackViewController.collectionView, didDeselectItemAt: indexPath)
         assertImageSnapshot(matching: detailedFeedbackViewController, as: .image(precision: 0.95))
+    }
+}
+
+class NightStyleSpy: NightStyle {
+    override func apply() {
+        super.apply()
+        let traitCollection = UITraitCollection(userInterfaceIdiom: .phone)
+        FeedbackSubtypeCollectionViewCell.appearance(for: traitCollection).normalCircleColor = .lightGray
+        UILabel.appearance(for: traitCollection, whenContainedInInstancesOf: [FeedbackViewController.self]).textColor = .red
     }
 }
