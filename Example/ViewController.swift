@@ -157,7 +157,7 @@ class ViewController: UIViewController {
         
         if navigationMapView == nil {
             navigationMapView = NavigationMapView(frame: .zero)
-            navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
+            navigationMapView.mapView.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
                 self?.navigationMapView.localizeLabels()
             }
         }

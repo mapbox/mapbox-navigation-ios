@@ -66,7 +66,7 @@ class CustomViewController: UIViewController {
         // Start navigation
         navigationService.start()
         
-        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded, handler: { [weak self] _ in
             guard let route = self?.navigationService.route else { return }
             // By setting the `NavigationMapView.routeLineTracksTraversal` to `true`, it would allow the main route shown with
             // traversed part disappearing effect in a standalone `NavigationMapView` during active navigation.
@@ -88,7 +88,7 @@ class CustomViewController: UIViewController {
         
         navigationMapView.navigationCamera.viewportDataSource = navigationViewportDataSource
         
-        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { [weak self] _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { [weak self] _ in
             guard let self = self else { return }
             self.pointAnnotationManager = self.navigationMapView.mapView.annotations.makePointAnnotationManager()
         }

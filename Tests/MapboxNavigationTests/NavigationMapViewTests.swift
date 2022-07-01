@@ -677,7 +677,7 @@ class NavigationMapViewTests: TestCase {
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
         
-        navigationMapView.mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()
         })
         

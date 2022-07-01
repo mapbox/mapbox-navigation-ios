@@ -74,7 +74,7 @@ extension ViewController {
                                               lineWidth: 3.0,
                                               lineString: LineString([]))
         
-        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded, handler: { [weak self] _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded, handler: { [weak self] _ in
             guard let self = self else { return }
             self.addStyledFeature(self.trackStyledFeature)
             self.addStyledFeature(self.rawTrackStyledFeature)
