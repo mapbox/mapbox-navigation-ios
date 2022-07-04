@@ -53,6 +53,7 @@
 * Fixed an issue where popped window doesn't get updated in appearance when style changes on phone. ([#3954](https://github.com/mapbox/mapbox-navigation-ios/pull/3954))
 * Fixed an issue where detailed feedback items don't change color in different style. ([#3954](https://github.com/mapbox/mapbox-navigation-ios/pull/3954))
 * Update method deprecation for `HistoryRecording` protocol. Static methods are now preferred over instance ones. ([#3960](https://github.com/mapbox/mapbox-navigation-ios/pull/3960))
+* Fixed a bug which sometimes caused the crash when new continuous alternatives arrive. ([#3986](https://github.com/mapbox/mapbox-navigation-ios/pull/3986))
 
 ## v2.5.1
 
