@@ -312,7 +312,8 @@ open class NavigationMapView: UIView {
                 return
             }
             
-            let offset = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
+            // workaround for NN routes distance calculation error
+            let offset = max(route.distance - routeAlternative.infoFromDeviationPoint.distance, 0.0) / route.distance
             parentLayerIdentifier = addRouteLayer(route,
                                                   fractionTraveled: offset,
                                                   below: parentLayerIdentifier,
