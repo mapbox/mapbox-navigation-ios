@@ -156,22 +156,31 @@ open class SimulatedLocationManager: NavigationLocationManager {
         return _nextDate!
     }
     
+    private var slicedIndex: Int? = nil
+    
     internal func tick() {
+        let advanceDistance = currentSpeed // currentDistance //
         guard let polyline = routeShape,
-              let newCoordinate = polyline.coordinateFromStart(distance: currentDistance) else {
+              let indexedNewCoordinate = polyline.indexedCoordinateFromStart(distance: advanceDistance) else {
+//              let newCoordinate = polyline.coordinateFromStart(distance: advanceDistance) else {
             return
         }
+        let newCoordinate = indexedNewCoordinate.coordinate
         
         // Closest coordinate ahead
-        guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: currentDistance + 10) else { return }
+        guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: advanceDistance + 10) else { return }
         guard let closestCoordinate = polyline.closestCoordinate(to: newCoordinate) else { return }
         
         // Simulate speed based on expected segment travel time
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
-            let closestCoordinateOnRoute = polyline.closestCoordinate(to: newCoordinate),
-            let nextCoordinateOnRoute = polyline.coordinates.after(element: polyline.coordinates[closestCoordinateOnRoute.index]),
-            let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRoute.index] {
-            let distance = polyline.coordinates[closestCoordinateOnRoute.index].distance(to: nextCoordinateOnRoute)
+           let routeShape = route?.shape,
+           let closestCoordinateOnRouteIndex = slicedIndex.map({ idx -> Int? in
+               routeShape.closestCoordinate(to: newCoordinate,
+                                            startingIndex: idx)?.index
+           }) ?? routeShape.closestCoordinate(to: newCoordinate)?.index,//routeShape.closestCoordinate(to: newCoordinate),
+           let nextCoordinateOnRoute = routeShape.coordinates.after(index:closestCoordinateOnRouteIndex),
+           let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRouteIndex] {
+            let distance = routeShape.coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
             currentSpeed =  min(max(distance / time, minimumSpeed), maximumSpeed)
         } else {
             let closestLocation = locations[closestCoordinate.index]
@@ -193,6 +202,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
 
         delegate?.locationManager?(self, didUpdateLocations: [location])
         currentDistance = calculateCurrentDistance(currentDistance)
+        
+        routeShape = routeShape.sliced(from: newCoordinate)
+        slicedIndex = indexedNewCoordinate.index
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
@@ -223,6 +235,8 @@ open class SimulatedLocationManager: NavigationLocationManager {
         copy.locations = locations
         copy.routeShape = routeShape
         copy.speedMultiplier = speedMultiplier
+        
+        copy.slicedIndex = slicedIndex
         return copy
     }
     
@@ -236,17 +250,23 @@ open class SimulatedLocationManager: NavigationLocationManager {
                 return
             }
             
+            var newClosestCoordinate: LocationCoordinate2D!
             if let location = notification.userInfo?[RouteController.NotificationUserInfoKey.locationKey] as? CLLocation,
                let shape = router.routeProgress.route.shape,
                let closestCoordinate = shape.closestCoordinate(to: location.coordinate) {
                 simulatedLocation = location
                 currentDistance = closestCoordinate.distance
+                newClosestCoordinate = closestCoordinate.coordinate
             } else {
                 currentDistance = calculateCurrentDistance(router.routeProgress.distanceTraveled)
+                newClosestCoordinate = router.routeProgress.route.shape?.coordinateFromStart(distance: currentDistance)
             }
             
             routeProgress = router.routeProgress
             route = router.routeProgress.route
+            
+            routeShape = routeShape.sliced(from: newClosestCoordinate)
+            slicedIndex = nil
         }
     }
 }
@@ -283,6 +303,13 @@ extension Array where Element : Equatable {
         }
         return nil
     }
+    
+    fileprivate func after(index: Index) -> Element? {
+        if index + 1 <= self.count {
+            return index + 1 == self.count ? self[0] : self[index + 1]
+        }
+        return nil
+    }
 }
 
 extension Array where Element == CLLocationCoordinate2D {
@@ -314,5 +341,51 @@ extension Array where Element == CLLocationCoordinate2D {
                                            timestamp: Date()))
         
         return locations
+    }
+}
+
+fileprivate extension LineString {
+    typealias DistanceIndex = (distance: LocationDistance, index: Int)
+    
+    func closestCoordinate(to coordinate: LocationCoordinate2D, startingIndex: Int) -> DistanceIndex? {
+        // Ported from https://github.com/Turfjs/turf/blob/142e137ce0c758e2825a260ab32b24db0aa19439/packages/turf-point-on-line/index.js
+        guard let startCoordinate = coordinates.first else { return nil }
+        
+        guard coordinates.count > 1 else {
+            return (coordinate.distance(to: startCoordinate), 0)
+        }
+        
+        var closestCoordinate: DistanceIndex?
+        var closestDistance: LocationDistance?
+        
+        for index in startingIndex..<coordinates.count - 1 {
+            let segment = (coordinates[index], coordinates[index + 1])
+            let distances = (coordinate.distance(to: segment.0), coordinate.distance(to: segment.1))
+            
+            let maxDistance = max(distances.0, distances.1)
+            let direction = segment.0.direction(to: segment.1)
+            let perpendicularPoint1 = coordinate.coordinate(at: maxDistance, facing: direction + 90)
+            let perpendicularPoint2 = coordinate.coordinate(at: maxDistance, facing: direction - 90)
+            let intersectionPoint = Turf.intersection((perpendicularPoint1, perpendicularPoint2), segment)
+            let intersectionDistance: LocationDistance? = intersectionPoint != nil ? coordinate.distance(to: intersectionPoint!) : nil
+            
+            if distances.0 < closestDistance ?? .greatestFiniteMagnitude {
+                closestCoordinate = (distance: startCoordinate.distance(to: segment.0),
+                                     index: index)
+                closestDistance = distances.0
+            }
+            if distances.1 < closestDistance ?? .greatestFiniteMagnitude {
+                closestCoordinate = (distance: startCoordinate.distance(to: segment.1),
+                                     index: index+1)
+                closestDistance = distances.1
+            }
+            if intersectionDistance != nil && intersectionDistance! < closestDistance ?? .greatestFiniteMagnitude {
+                closestCoordinate = (distance: startCoordinate.distance(to: intersectionPoint!),
+                                     index: index)
+                closestDistance = intersectionDistance!
+            }
+        }
+        
+        return closestCoordinate
     }
 }
