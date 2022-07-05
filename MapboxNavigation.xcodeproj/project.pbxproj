@@ -374,6 +374,7 @@
 		B4A78D32261FD47700FDF212 /* sthlm-double-back.json in Resources */ = {isa = PBXBuildFile; fileRef = B47C1AFE261FD0A30078546C /* sthlm-double-back.json */; };
 		B4BB0AD52704D1D7006F502D /* short_route.json in Resources */ = {isa = PBXBuildFile; fileRef = B4BB0AD42704D1D7006F502D /* short_route.json */; };
 		B4BB0AD72704D1E6006F502D /* multileg_route.json in Resources */ = {isa = PBXBuildFile; fileRef = B4BB0AD62704D1E6006F502D /* multileg_route.json */; };
+		B4C8E39E286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4C8E39D286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift */; };
 		B4E19C47268114840011581F /* NavigationLocationProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E19C46268114840011581F /* NavigationLocationProvider.swift */; };
 		B4E6711F27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E6711E27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift */; };
 		B4E6712227BB0A56004EE9C1 /* SpriteInfoCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E6712027BB09EF004EE9C1 /* SpriteInfoCache.swift */; };
@@ -962,6 +963,7 @@
 		B4B61B9627A882E200AA127E /* SpriteRepositoryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteRepositoryTests.swift; sourceTree = "<group>"; };
 		B4BB0AD42704D1D7006F502D /* short_route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = short_route.json; sourceTree = "<group>"; };
 		B4BB0AD62704D1E6006F502D /* multileg_route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = multileg_route.json; sourceTree = "<group>"; };
+		B4C8E39D286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackViewControllerSnapshotTests.swift; sourceTree = "<group>"; };
 		B4D4291826260D5900EE92A8 /* MBXInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = MBXInfo.plist; sourceTree = "<group>"; };
 		B4E19C46268114840011581F /* NavigationLocationProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationLocationProvider.swift; sourceTree = "<group>"; };
 		B4E6711E27BB09D6004EE9C1 /* SpriteInfoCacheTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpriteInfoCacheTests.swift; sourceTree = "<group>"; };
@@ -1349,7 +1351,7 @@
 				8AB316C026BC9FAB00C3AC76 /* Instructions */,
 				8AB316C126BC9FFC00C3AC76 /* Cache */,
 				8AB316BE26BC9F6A00C3AC76 /* Style */,
-				8A379B0E27B5E3E000CE0A23 /* End of Route */,
+				8A379B0E27B5E3E000CE0A23 /* Feedback */,
 				8AB316BF26BC9F8900C3AC76 /* Speech */,
 				8AB316BC26BC9E1E00C3AC76 /* CarPlay */,
 				16E11B53212B3D4700027CD3 /* Extensions */,
@@ -1513,12 +1515,13 @@
 			name = Instructions;
 			sourceTree = "<group>";
 		};
-		8A379B0E27B5E3E000CE0A23 /* End of Route */ = {
+		8A379B0E27B5E3E000CE0A23 /* Feedback */ = {
 			isa = PBXGroup;
 			children = (
 				8A379B0C27B5E3C600CE0A23 /* EndOfRouteFeedbackTests.swift */,
+				B4C8E39D286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift */,
 			);
-			name = "End of Route";
+			name = Feedback;
 			sourceTree = "<group>";
 		};
 		8AB316BC26BC9E1E00C3AC76 /* CarPlay */ = {
@@ -2800,6 +2803,7 @@
 				E2D14983265CFD3C008135A3 /* StatusViewTests.swift in Sources */,
 				8AB8F30026DD7C30003FF4EE /* CGPointTests.swift in Sources */,
 				8A5B281226D82AB600622FBD /* UserPuckCourseViewSnapshotTests.swift in Sources */,
+				B4C8E39E286B72FA004D3EDD /* FeedbackViewControllerSnapshotTests.swift in Sources */,
 				8AD12F4C26C193560008AE55 /* LeaksTests.swift in Sources */,
 				3502231A205BC94E00E1449A /* Constants.swift in Sources */,
 				DA0557252155040700A1F2AA /* RouteTests.swift in Sources */,

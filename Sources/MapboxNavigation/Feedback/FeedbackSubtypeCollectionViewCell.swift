@@ -33,7 +33,7 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
         }
     }
 
-    @objc dynamic var selectedCircleColor: UIColor = .lightGray {
+    @objc dynamic var selectedCircleColor: UIColor = .systemBlue {
         didSet {
             if showSelectedColor {
                 circleColor = selectedCircleColor
@@ -42,7 +42,7 @@ class FeedbackSubtypeCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    @objc dynamic var normalCircleColor: UIColor = .black {
+    @objc dynamic var normalCircleColor: UIColor = .white {
         didSet {
             if !showSelectedColor {
                 circleColor = normalCircleColor

@@ -76,6 +76,14 @@ public class NavigationEventsManagerSpy: NavigationEventsManager {
         }
         return nil
     }
+    
+    override public func createFeedback(screenshotOption: FeedbackScreenshotOption = .automatic) -> FeedbackEvent? {
+        let sessionState = SessionState(currentRoute: nil, originalRoute: nil, routeIdentifier: nil)
+        var event = PassiveNavigationEventDetails(dataSource: PassiveLocationManager(), sessionState: sessionState)
+        event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
+        event.event = MMEEventTypeNavigationFeedback
+        return FeedbackEvent(eventDetails: event)
+    }
 }
 
 typealias FakeTelemetryEvent = (name: String, attributes: [String: Any])
