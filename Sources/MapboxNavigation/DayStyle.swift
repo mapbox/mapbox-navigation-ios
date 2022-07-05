@@ -178,7 +178,7 @@ open class DayStyle: Style {
             FeedbackCollectionView.appearance(for: phoneTraitCollection).cellColor = .black
             FeedbackSubtypeCollectionViewCell.appearance(for: phoneTraitCollection).normalCircleColor = .white
             FeedbackSubtypeCollectionViewCell.appearance(for: phoneTraitCollection).normalCircleOutlineColor = .darkText
-            FeedbackSubtypeCollectionViewCell.appearance(for: phoneTraitCollection).selectedCircleColor = .systemBlue
+            FeedbackSubtypeCollectionViewCell.appearance(for: phoneTraitCollection).selectedCircleColor = #colorLiteral(red: 0, green: 0.47843137, blue: 1, alpha: 1)
             
             let regularAndRegularSizeClassPhoneTraitCollection = UITraitCollection(traitsFrom: [
                 UITraitCollection(userInterfaceIdiom: .phone),

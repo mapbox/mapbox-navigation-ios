@@ -60,9 +60,9 @@ class FeedbackViewControllerSnapshotTests: TestCase {
     func testNightDetailedFeedbackViewController() {
         NightStyleSpy().apply()
         guard let detailedFeedbackViewController = createDetailedFeedbackViewController() else {
-              XCTFail("Failed to create detailed FeedbackViewController.")
+            XCTFail("Failed to create detailed FeedbackViewController.")
             return
-          }
+        }
         
         // test the night style of detailed FeedbackSubtypeViewController
         assertImageSnapshot(matching: detailedFeedbackViewController, as: .image(precision: 0.95))
