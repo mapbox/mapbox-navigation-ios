@@ -426,7 +426,7 @@ class NavigationServiceTests: TestCase {
         navigationService.start()
 
         let eventsManagerSpy = navigationService.eventsManager as! NavigationEventsManagerSpy
-        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: NavigationEventTypeRouteRetrieval))
+        XCTAssertTrue(eventsManagerSpy.hasFlushedEvent(with: EventType.routeRetrieval.rawValue))
 
         let routeUpdated = expectation(description: "Route updated")
         router.updateRoute(with: .init(routeResponse: alternateRouteResponse, routeIndex: 0), routeOptions: nil) {

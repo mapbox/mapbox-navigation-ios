@@ -2,6 +2,7 @@ import Foundation
 import MapboxMobileEvents
 @testable import MapboxCoreNavigation
 import MapboxDirections
+import MapboxCommon_Private
 #if SWIFT_PACKAGE
 import CTestHelper
 #endif
