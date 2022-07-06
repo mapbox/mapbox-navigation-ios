@@ -1,9 +1,12 @@
 import Foundation
+import CoreLocation
+import UIKit
 import MapboxMobileEvents
 import MapboxDirections
 
-let NavigationEventTypeRouteRetrieval = "mobile.performance_trace"
-let NavigationEventTypeFreeDrive = "navigation.freeDrive"
+@_implementationOnly import MapboxCommon_Private
+
+private let secondsBeforeCollectionAfterFeedbackEvent: TimeInterval = 20
 
 /**
  A data source that declares values required for recording passive location events.
@@ -103,6 +106,7 @@ open class NavigationEventsManager {
 
     /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
     private var mobileEventsManager: MMEEventsManager!
+    private var eventsService: EventsService!
 
     lazy var accessToken: String = {
         guard let token = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ??
@@ -115,6 +119,10 @@ open class NavigationEventsManager {
         }
         return token
     }()
+
+    private lazy var userAgent: String = {
+        usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+    }()
     
     public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
                          passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
@@ -126,6 +134,10 @@ open class NavigationEventsManager {
             accessToken = tokenOverride
         }
         self.mobileEventsManager = mobileEventsManager
+
+        let options = EventsServiceOptions(token: accessToken, userAgentFragment: userAgent, baseURL: "https://api-events-staging.tilestream.net")
+        self.eventsService = EventsService(options: options)
+
         start()
         resumeNotifications()
     }
@@ -145,13 +157,15 @@ open class NavigationEventsManager {
         NotificationCenter.default.removeObserver(self)
     }
 
-    func start() {
-        let userAgent = usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+    private func eventAttributes(type: EventType, date: Date = Date()) -> [String : Any] {
+        return [EventKey.event.rawValue: type.rawValue, EventKey.created.rawValue: date.ISO8601]
+    }
 
-        guard let stringForShortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
+    func start() {
+        guard let shortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
             preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
-        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: String(describing:stringForShortVersion))
+        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: shortVersion)
         
         // FIXME: Running `MobileEventsManager.sendTurnstileEvent()` fixes such main thread checker
         // warning in MapboxMobileEvents: This method can cause UI unresponsiveness if invoked on the main thread.
@@ -161,6 +175,9 @@ open class NavigationEventsManager {
             guard let self = self else { return }
             self.mobileEventsManager.sendTurnstileEvent()
         }
+
+        let turnstileEvent = TurnstileEvent(skuId: .nav2SesMAU, sdkIdentifier: userAgent, sdkVersion: shortVersion)
+        eventsService.sendTurnstileEvent(for: turnstileEvent)
     }
     
     // MARK: Sending Feedback Events
@@ -216,13 +233,13 @@ open class NavigationEventsManager {
     func navigationCancelEvent(rating potentialRating: Int? = nil, comment: String? = nil) -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
         
-        let rating = potentialRating ?? MMEEventsManager.unrated
+        let rating = potentialRating ?? EventRating.unrated
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
-        event.event = MMEEventTypeNavigationCancel
+        event.event = EventType.cancel.rawValue
         event.arrivalTimestamp = sessionState.arrivalTimestamp
         
-        let validRating: Bool = (rating >= MMEEventsManager.unrated && rating <= 100)
-        assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(MMEEventsManager.unrated) (none) and 100.")
+        let validRating: Bool = (rating >= EventRating.unrated && rating <= 100)
+        assert(validRating, "MMEEventsManager: Invalid Rating. Values should be between \(EventRating.unrated) (none) and 100.")
         guard validRating else { return event }
         
         event.rating = rating
@@ -237,7 +254,7 @@ open class NavigationEventsManager {
             return nil
         }
 
-        var event = PerformanceEventDetails(event: NavigationEventTypeRouteRetrieval, session: sessionState, createdOn: sessionState.currentRoute?.responseEndDate, appMetadata: userInfo)
+        var event = PerformanceEventDetails(event: EventType.routeRetrieval.rawValue, session: sessionState, createdOn: sessionState.currentRoute?.responseEndDate, appMetadata: userInfo)
         event.counters.append(PerformanceEventDetails.Counter(name: "elapsed_time",
                                                               value: responseEndDate.timeIntervalSince(fetchStartDate)))
 
@@ -251,7 +268,7 @@ open class NavigationEventsManager {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
-        event.event = MMEEventTypeNavigationDepart
+        event.event = EventType.depart.rawValue
         return event
     }
     
@@ -259,7 +276,7 @@ open class NavigationEventsManager {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
         var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
-        event.event = MMEEventTypeNavigationArrive
+        event.event = EventType.arrive.rawValue
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
 
         return event
@@ -269,18 +286,18 @@ open class NavigationEventsManager {
         guard let dataSource = passiveNavigationDataSource else { return nil }
 
         var event = FreeDriveEventDetails(type: type, dataSource: dataSource, sessionState: sessionState, appMetadata: userInfo)
-        event.event = NavigationEventTypeFreeDrive
+        event.event = EventType.freeDrive.rawValue
 
         return event
     }
     
     func navigationFeedbackEventWithLocationsAdded(event: CoreFeedbackEvent) -> [String: Any] {
         var eventDictionary = event.eventDictionary
-        eventDictionary["feedbackId"] = event.identifier.uuidString
-        eventDictionary["locationsBefore"] = sessionState.pastLocations.allObjects
+        eventDictionary[EventKey.feedbackId.rawValue] = event.identifier.uuidString
+        eventDictionary[EventKey.locationsBefore.rawValue] = sessionState.pastLocations.allObjects
             .filter { $0.timestamp <= event.timestamp }
             .map { EventLocation($0).dictionaryRepresentation }
-        eventDictionary["locationsAfter"] = sessionState.pastLocations.allObjects
+        eventDictionary[EventKey.locationsAfter.rawValue] = sessionState.pastLocations.allObjects
             .filter { $0.timestamp > event.timestamp }
             .map { EventLocation($0).dictionaryRepresentation }
         return eventDictionary
@@ -300,7 +317,7 @@ open class NavigationEventsManager {
         }
         
         event.userIdentifier = UIDevice.current.identifierForVendor?.uuidString
-        event.event = MMEEventTypeNavigationFeedback
+        event.event = EventType.feedback.rawValue
         
         let screenshot: UIImage?
         switch screenshotOption {
@@ -314,7 +331,7 @@ open class NavigationEventsManager {
         return event
     }
     
-    func navigationRerouteEvent(eventType: String = MMEEventTypeNavigationReroute) -> ActiveNavigationEventDetails? {
+    func navigationRerouteEvent(eventType: String = EventType.reroute.rawValue) -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
@@ -342,36 +359,50 @@ open class NavigationEventsManager {
         let date = Date()
         mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayConnect, attributes: [MMEEventKeyEvent: MMEventTypeNavigationCarplayConnect, MMEEventKeyCreated: date.ISO8601])
         mobileEventsManager.flush()
+
+        let attributes = eventAttributes(type: .carplayConnect, date: date)
+        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
     }
 
     public func sendCarPlayDisconnectEvent() {
         let date = Date()
         mobileEventsManager.enqueueEvent(withName: MMEventTypeNavigationCarplayDisconnect, attributes: [MMEEventKeyEvent: MMEventTypeNavigationCarplayDisconnect, MMEEventKeyCreated: date.ISO8601])
         mobileEventsManager.flush()
+
+        let attributes = eventAttributes(type: .carplayDisconnect, date: date)
+        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
     }
     
     func sendRouteRetrievalEvent() {
-        guard let attributes = (try? navigationRouteRetrievalEvent()?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeRouteRetrieval, attributes: attributes ?? [:])
+        let attributes = (try? navigationRouteRetrievalEvent()?.asDictionary()) ?? [:]
+        mobileEventsManager.enqueueEvent(withName: EventType.routeRetrieval.rawValue, attributes: attributes)
         mobileEventsManager.flush()
+
+        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
     }
 
     func sendDepartEvent() {
-        guard let attributes = (try? navigationDepartEvent()?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes ?? [:])
+        let attributes = (try? navigationDepartEvent()?.asDictionary()) ?? [:]
+        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes)
         mobileEventsManager.flush()
+
+        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
     }
     
     func sendArriveEvent() {
-        guard let attributes = (try? navigationArriveEvent()?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes ?? [:])
+        let attributes = (try? navigationArriveEvent()?.asDictionary()) ?? [:]
+        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes)
         mobileEventsManager.flush()
+
+        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
     }
     
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
-        guard let attributes = (try? navigationCancelEvent(rating: rating, comment: comment)?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes ?? [:])
+        let attributes = (try? navigationCancelEvent(rating: rating, comment: comment)?.asDictionary()) ?? [:]
+        mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         mobileEventsManager.flush()
+
+        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
     }
 
     func sendPassiveNavigationStart() {
@@ -380,15 +411,19 @@ open class NavigationEventsManager {
             sessionState.departureTimestamp = dataSource.rawLocation?.timestamp ?? Date()
         }
 
-        guard let attributes = (try? passiveNavigationEvent(type: .start)?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
+        let attributes = (try? passiveNavigationEvent(type: .start)?.asDictionary()) ?? [:]
+        mobileEventsManager.enqueueEvent(withName: EventType.freeDrive.rawValue, attributes: attributes)
         mobileEventsManager.flush()
+
+        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
     }
 
     func sendPassiveNavigationStop() {
-        guard let attributes = (try? passiveNavigationEvent(type: .stop)?.asDictionary()) as [String: Any]?? else { return }
-        mobileEventsManager.enqueueEvent(withName: NavigationEventTypeFreeDrive, attributes: attributes ?? [:])
+        let attributes = (try? passiveNavigationEvent(type: .stop)?.asDictionary()) ?? [:]
+        mobileEventsManager.enqueueEvent(withName: EventType.freeDrive.rawValue, attributes: attributes)
         mobileEventsManager.flush()
+
+        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
     }
     
     func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
@@ -398,10 +433,12 @@ open class NavigationEventsManager {
                 outstandingFeedbackEvents.remove(at: index)
             }
             
-            let eventName = event.eventDictionary["event"] as! String
+            let eventName = event.eventDictionary[EventKey.event.rawValue] as! String
             let eventDictionary = navigationFeedbackEventWithLocationsAdded(event: event)
             
             mobileEventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
+
+            eventsService.sendEvent(for: Event(priority: .immediate, attributes: eventDictionary))
         }
         mobileEventsManager.flush()
     }
@@ -446,7 +483,7 @@ open class NavigationEventsManager {
     func eventsToFlush(flushAll: Bool) -> [CoreFeedbackEvent] {
         let now = Date()
         let eventsToPush = flushAll ? outstandingFeedbackEvents : outstandingFeedbackEvents.filter {
-            now.timeIntervalSince($0.timestamp) > SecondsBeforeCollectionAfterFeedbackEvent
+            now.timeIntervalSince($0.timestamp) > secondsBeforeCollectionAfterFeedbackEvent
         }
         return eventsToPush
     }
