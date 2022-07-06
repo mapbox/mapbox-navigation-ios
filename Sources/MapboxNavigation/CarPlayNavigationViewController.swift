@@ -640,9 +640,14 @@ open class CarPlayNavigationViewController: UIViewController, BuildingHighlighti
         
         updateManeuvers(routeProgress)
         navigationMapView?.showWaypoints(on: routeProgress.route)
-        navigationMapView?.addArrow(route: routeProgress.route,
-                                    legIndex: routeProgress.legIndex,
-                                    stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
+        
+        if routeProgress.currentLegProgress.followOnStep != nil {
+            navigationMapView?.addArrow(route: routeProgress.route,
+                                        legIndex: routeProgress.legIndex,
+                                        stepIndex: routeProgress.currentLegProgress.stepIndex + 1)
+        } else {
+            navigationMapView?.removeArrow()
+        }
     }
     
     @objc func progressDidChange(_ notification: NSNotification) {

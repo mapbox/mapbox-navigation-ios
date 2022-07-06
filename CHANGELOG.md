@@ -43,6 +43,7 @@
 * Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Fixed an issue where a `StyleManager` for CarPlay would update the appearance on both CarPlay and the iOS device simultaneously. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
 * Fixed an issue where an appearance change of CarPlay would cause an appearance change of iOS as well. Refer to `DayStyle` while implementing custom styles using `Style` class. ([#3922](https://github.com/mapbox/mapbox-navigation-ios/pull/3922))
+* Fixed an issue where maneuver arrow wasn't removed after passing visual instruction on CarPlay. ([#3987](https://github.com/mapbox/mapbox-navigation-ios/pull/3987))
 
 ### Other changes
 
