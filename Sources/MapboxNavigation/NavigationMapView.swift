@@ -1083,6 +1083,15 @@ open class NavigationMapView: UIView {
               from previousLocation: CLLocation? = nil,
               to location: CLLocation,
               animated: Bool = false) {
+        // If the point is outside of the bounds of `MapView` - hide user course view.
+        let point = mapView.mapboxMap.point(for: location.coordinate)
+        if point.x == -1.0 && point.y == -1.0 {
+            userCourseView.isHidden = true
+            return
+        } else {
+            userCourseView.isHidden = false
+        }
+        
         if let previousLocation = previousLocation {
             let point = mapView.mapboxMap.point(for: previousLocation.coordinate)
             userCourseView.center = point
@@ -1094,13 +1103,6 @@ open class NavigationMapView: UIView {
             guard let self = self else { return }
             let point = self.mapView.mapboxMap.point(for: location.coordinate)
             userCourseView.center = point
-            
-            // If the point is outside of the bounds of `MapView` - hide user course view.
-            if point.x == -1.0 && point.y == -1.0 {
-                userCourseView.isHidden = true
-            } else {
-                userCourseView.isHidden = false
-            }
         }
         
         let cameraOptions = CameraOptions(cameraState: mapView.cameraState)
