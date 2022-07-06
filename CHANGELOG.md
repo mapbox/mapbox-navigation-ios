@@ -55,6 +55,7 @@
 * Fixed an issue where detailed feedback items don't change color in different style. ([#3954](https://github.com/mapbox/mapbox-navigation-ios/pull/3954))
 * Update method deprecation for `HistoryRecording` protocol. Static methods are now preferred over instance ones. ([#3960](https://github.com/mapbox/mapbox-navigation-ios/pull/3960))
 * Fixed a bug which sometimes caused the crash when new continuous alternatives arrive. ([#3986](https://github.com/mapbox/mapbox-navigation-ios/pull/3986))
+* Fixed an issue where `UserPuckCourseView` is drawn in incorrect position if its location is outside of the bounds of `MapView`. ([#3988](https://github.com/mapbox/mapbox-navigation-ios/pull/3988))
 
 ## v2.5.1
 
