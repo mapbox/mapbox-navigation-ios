@@ -6,6 +6,7 @@ import MapboxMaps
 @testable import MapboxCoreNavigation
 
 class VanishingRouteLineTests: TestCase {
+    let errorAllowed = 1e-6
     var navigationMapView: NavigationMapView!
     var window = UIWindow()
     
@@ -23,10 +24,6 @@ class VanishingRouteLineTests: TestCase {
     
     func getRoute() -> Route {
         let routeData = Fixture.JSONFromFileNamed(name: "short_route")
-        let routeOptions = NavigationRouteOptions(coordinates: [
-            CLLocationCoordinate2DMake(-122.5237429, 37.975393),
-            CLLocationCoordinate2DMake(-122.5231413, 37.9750695)
-        ])
         let decoder = JSONDecoder()
         decoder.userInfo[.options] = routeOptions
         var testRoute: Route?
@@ -56,8 +53,25 @@ class VanishingRouteLineTests: TestCase {
         return route
     }
     
-    func getRouteProgress() -> RouteProgress {
-        let route = getRoute()
+    func getStraightLineRoute() -> Route {
+        let routeData = Fixture.JSONFromFileNamed(name: "route-with-straight-line")
+        let routeOptions = NavigationRouteOptions(coordinates: [
+            CLLocationCoordinate2DMake(55.026291, 37.975393),
+            CLLocationCoordinate2DMake(55.026720, 30.798226)
+        ])
+        let decoder = JSONDecoder()
+        decoder.userInfo[.options] = routeOptions
+        var testRoute: Route?
+        XCTAssertNoThrow(testRoute = try decoder.decode(Route.self, from: routeData))
+        guard let route = testRoute else {
+            preconditionFailure("Route is invalid.")
+        }
+        
+        return route
+    }
+    
+    func getRouteProgress(_ route: Route? = nil) -> RouteProgress {
+        let route = route ?? getRoute()
         let routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
         routeProgress.currentLegProgress = RouteLegProgress(leg: route.legs[0], stepIndex: 2, spokenInstructionIndex: 0)
         routeProgress.currentLegProgress.currentStepProgress = RouteStepProgress(step: route.legs[0].steps[2], spokenInstructionIndex: 0)
@@ -88,6 +102,13 @@ class VanishingRouteLineTests: TestCase {
         return routeProgress
     }
     
+    func updateVanishingRouteLine(route: Route, routeProgress: RouteProgress, coordinate: CLLocationCoordinate2D) {
+        navigationMapView.routeLineTracksTraversal = true
+        navigationMapView.show([route])
+        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        navigationMapView.updateFractionTraveled(coordinate: coordinate)
+    }
+    
     func lineGradientToString(lineGradient: Value<StyleColor>?) -> String {
         guard let halfStringFromLineGradient = lineGradient.debugDescription.components(separatedBy: "(").last,
               let stringFromLineGradient = halfStringFromLineGradient.components(separatedBy: ")").first else {
@@ -107,10 +128,10 @@ class VanishingRouteLineTests: TestCase {
         XCTAssertEqual(navigationMapView.mapView.cameraState.zoom, zoomeLevel, "Zoom levels should be equal.")
     }
     
-    func testParseRoutePoints() {
+    func testInitPrimaryRoutePoints() {
         // https://github.com/mapbox/mapbox-navigation-android/blob/0ca183f7cb7bec930521ea9bcd59d0e8e2bef165/libnavui-maps/src/test/java/com/mapbox/navigation/ui/maps/internal/route/line/MapboxRouteLineUtilsTest.kt#L1798
-        let route = getMultilegRoute()
-        let routePoints = navigationMapView.parseRoutePoints(route: route)
+        var route = getMultilegRoute()
+        var routePoints = navigationMapView.parseRoutePoints(route: route)
         
         // Because mapbox-directions-swift parses the route with one more duplicate coordinate in the last step of each route leg.
         // The two leg route has two more coordinates compared with Android.
@@ -118,25 +139,67 @@ class VanishingRouteLineTests: TestCase {
         XCTAssertEqual(routePoints.nestedList.flatMap{$0}.count, 15)
         XCTAssertEqual(routePoints.flatList[1].latitude, routePoints.flatList[2].latitude)
         XCTAssertEqual(routePoints.flatList[1].longitude, routePoints.flatList[2].longitude)
-        XCTAssertEqual(routePoints.flatList[128].latitude, routePoints.flatList[129].latitude, accuracy: 0.000001)
-        XCTAssertEqual(routePoints.flatList[128].longitude, routePoints.flatList[129].longitude, accuracy: 0.000001)
+        XCTAssertEqual(routePoints.flatList[128].latitude, routePoints.flatList[129].latitude, accuracy: errorAllowed)
+        XCTAssertEqual(routePoints.flatList[128].longitude, routePoints.flatList[129].longitude, accuracy: errorAllowed)
+        
+        route = getStraightLineRoute()
+        routePoints = navigationMapView.parseRoutePoints(route: route)
+        XCTAssertEqual(routePoints.flatList.count, 6)
+        // This route has 3 steps.
+        XCTAssertEqual(routePoints.nestedList.flatMap{$0}.count, 3)
+        
+        guard let routeLineGranularDistances = navigationMapView.calculateGranularDistances(routePoints.flatList) else {
+            XCTFail("Failed to calculate granular distances.")
+            return
+        }
+        let distanceArray = routeLineGranularDistances.distanceArray
+        XCTAssertEqual(distanceArray.count, routePoints.flatList.count)
+        XCTAssertEqual(distanceArray.first?.distanceRemaining, routeLineGranularDistances.distance)
+        XCTAssertEqual(distanceArray.first?.point, routePoints.flatList.first)
+        XCTAssertEqual(distanceArray.last?.distanceRemaining, 0.0)
+        XCTAssertEqual(distanceArray.last?.point, routePoints.flatList.last)
     }
     
     func testUpdateUpcomingRoutePointIndex() {
         // https://github.com/mapbox/mapbox-navigation-android/blob/0ca183f7cb7bec930521ea9bcd59d0e8e2bef165/libnavui-maps/src/test/java/com/mapbox/navigation/ui/maps/route/line/api/MapboxRouteLineApiTest.kt#L802
         let route = getRoute()
-        
-        navigationMapView.initPrimaryRoutePoints(route: route)
-        navigationMapView.routeLineGranularDistances = nil
-        XCTAssertEqual(navigationMapView.fractionTraveled, 0.0)
-        
         let routeProgress = getRouteProgress()
         
-        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        navigationMapView.initPrimaryRoutePoints(route: route)
+        guard let flatList = navigationMapView.routePoints?.flatList,
+              let nestedPoints = navigationMapView.routePoints?.nestedList,
+              let currentLegPoints = nestedPoints.first else {
+            XCTFail("Failed to initialize primary route points.")
+            return
+        }
+        // This route has 9 coordinates.
+        XCTAssertEqual(flatList.count, 9)
+        // This route has 1 leg.
+        XCTAssertEqual(nestedPoints.count, 1)
+        // This route leg has 4 steps.
+        XCTAssertEqual(currentLegPoints.count, 4)
+        XCTAssertEqual(currentLegPoints[safe: 2]?.count, routeProgress.currentLegProgress.currentStep.shape?.coordinates.count)
         
-        // Because mapbox-directions-swift parses the route with one more duplicate coordinate in the last step of each route leg.
-        // The one leg route has one more coordinate compared with Android.
-        XCTAssertEqual(navigationMapView.routeRemainingDistancesIndex, 7)
+        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
+        XCTAssertEqual(routeProgress.currentLegProgress.currentStepProgress.distanceTraveled, 0.0)
+        
+        var traveledPoints = 0
+        traveledPoints += currentLegPoints[0].count
+        traveledPoints += currentLegPoints[1].count
+        // Because user has arrived at the first coordinate of current step with distanceTraveled on this step as 0.0.
+        traveledPoints += 1
+        
+        var remainingPoints = 0
+        remainingPoints += currentLegPoints[3].count
+        // Because user has arrived at the first coordinate with other coordinates remaining in current step.
+        remainingPoints += currentLegPoints[2].count - 1
+        
+        let expectedRemainingPoints = flatList.count - traveledPoints
+        XCTAssertEqual(remainingPoints, expectedRemainingPoints)
+        XCTAssertEqual(expectedRemainingPoints, 3)
+        
+        let expectedUpcomingPointIndex = traveledPoints
+        XCTAssertEqual(navigationMapView.routeRemainingDistancesIndex, expectedUpcomingPointIndex)
     }
     
     func testUpdateUpcomingRoutePointIndexWhenPrimaryRoutePointsIsNill() {
@@ -150,33 +213,49 @@ class VanishingRouteLineTests: TestCase {
     
     func testUpdateFractionTraveled() {
         // https://github.com/mapbox/mapbox-navigation-android/blob/0ca183f7cb7bec930521ea9bcd59d0e8e2bef165/libnavui-maps/src/test/java/com/mapbox/navigation/ui/maps/route/line/api/MapboxRouteLineApiTest.kt#L636
-        let routeProgress = getRouteProgress()
-        let route = routeProgress.route
-        
-        let coordinate = route.shape!.coordinates[1]
-        navigationMapView.routeLineTracksTraversal = true
-        navigationMapView.show([route])
-        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-        navigationMapView.updateFractionTraveled(coordinate: coordinate)
+        var routeProgress = getRouteProgress()
+        var route = routeProgress.route
+        var coordinate = route.shape!.coordinates[1]
+        updateVanishingRouteLine(route: route, routeProgress: routeProgress, coordinate: coordinate)
         
         // When `routeLineTracksTraversal` enabled, the `fractionTraveled` is expected to be updated after
         // the upcoming route point index update and a location update.
-        let expectedFractionTraveled = 0.3240769449298392
-        XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: 0.0000000001)
+        var expectedFractionTraveled = 0.3240769449298392
+        XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: errorAllowed)
+        
+        route = getStraightLineRoute()
+        routeProgress = RouteProgress(route: route, options: routeOptions, legIndex: 0, spokenInstructionIndex: 0)
+        routeProgress.currentLegProgress = RouteLegProgress(leg: route.legs[0], stepIndex: 0, spokenInstructionIndex: 0)
+        routeProgress.currentLegProgress.currentStepProgress = RouteStepProgress(step: route.legs[0].steps[0], spokenInstructionIndex: 0)
+        routeProgress.currentLegProgress.currentStepProgress.distanceTraveled = 43
+        
+        coordinate = CLLocationCoordinate2D(latitude: 55.02625104819779, longitude: 30.798893352940773)
+        updateVanishingRouteLine(route: route, routeProgress: routeProgress, coordinate: coordinate)
+        
+        let expectedUpcomingPointIndex = 1
+        XCTAssertEqual(navigationMapView.routeRemainingDistancesIndex, expectedUpcomingPointIndex, "User just passed the first coordinate of the first step.")
+        
+        guard let firstCoordinate = route.shape?.coordinates.first,
+              let totalDistance = route.shape?.distance() else {
+            XCTFail("Failed to update vanishing route line.")
+            return
+        }
+        
+        let traveledDistance = firstCoordinate.distance(to: coordinate)
+        expectedFractionTraveled = traveledDistance / totalDistance
+        // Compare the Haversine calculated result with the project distance calculated result.
+        XCTAssertEqual(navigationMapView.fractionTraveled, expectedFractionTraveled, accuracy: errorAllowed)
     }
     
     func testEmptyRouteWithValidRouteProgress() {
-        let routeProgress = getRouteProgress()
         let route = getEmptyRoute()
+        let routeProgress = getRouteProgress(route)
         
         let coordinate = CLLocationCoordinate2DMake(-122.5237429, 37.975393)
-        navigationMapView.routeLineTracksTraversal = true
-        navigationMapView.show([route])
-        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-        navigationMapView.updateFractionTraveled(coordinate: coordinate)
+        updateVanishingRouteLine(route: route, routeProgress: routeProgress, coordinate: coordinate)
         
-        // Route without coordinates inside its steps would lead to invalid routeRemainingDistancesIndex.
-        XCTAssertEqual(navigationMapView.routeRemainingDistancesIndex, -1)
+        // Route without coordinates inside its steps would lead to 0 routeRemainingDistancesIndex.
+        XCTAssertEqual(navigationMapView.routeRemainingDistancesIndex, 0)
         XCTAssertEqual(navigationMapView.fractionTraveled, 0.0, accuracy: 0)
     }
     
@@ -185,10 +264,7 @@ class VanishingRouteLineTests: TestCase {
         let routeProgress = getUnstartedRouteProgress(route: route)
         
         let coordinate = CLLocationCoordinate2DMake(-122.5237429, 37.975393)
-        navigationMapView.routeLineTracksTraversal = true
-        navigationMapView.show([route])
-        navigationMapView.updateUpcomingRoutePointIndex(routeProgress: routeProgress)
-        navigationMapView.updateFractionTraveled(coordinate: coordinate)
+        updateVanishingRouteLine(route: route, routeProgress: routeProgress, coordinate: coordinate)
         
         XCTAssert(navigationMapView.routeRemainingDistancesIndex! >= 0, "Non-empty route should have valid routeRemainingDistancesIndex.")
         XCTAssertEqual(navigationMapView.fractionTraveled, 0.0, accuracy: 0)
@@ -233,7 +309,7 @@ class VanishingRouteLineTests: TestCase {
         navigationMapView.travelAlongRouteLine(to: coordinate)
         let expectedFractionTraveled = 0.3240769449298392
         let actualFractionTraveled = navigationMapView.fractionTraveled
-        XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: 0.0000000001, "Failed to update route line when routeLineTracksTraversal enabled.")
+        XCTAssertEqual(actualFractionTraveled, expectedFractionTraveled, accuracy: errorAllowed, "Failed to update route line when routeLineTracksTraversal enabled.")
         
         let layerIdentifier = route.identifier(.route(isMainRoute: true))
         do {

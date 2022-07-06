@@ -92,18 +92,19 @@ extension NavigationMapView {
          Find the count of remaining points in the current step.
          */
         let lineString = currentStepProgress.step.shape ?? LineString([])
-        if currentStepProgress.distanceTraveled <= 0 {
-            allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].dropLast().count
+        // If user hasn't arrived at current step. All the coordinates will be included to the remaiining points.
+        if currentStepProgress.distanceTraveled < 0 {
+            allRemainingPoints += currentLegSteps[currentLegProgress.stepIndex].count
         } else if let startIndex = lineString.indexedCoordinateFromStart(distance: currentStepProgress.distanceTraveled)?.index,
                   lineString.coordinates.indices.contains(startIndex) {
-            allRemainingPoints += lineString.coordinates.suffix(from: startIndex + 1).dropLast().count
+            allRemainingPoints += lineString.coordinates.suffix(from: startIndex + 1).count
         }
         
         /**
          Add to the count of remaining points all of the remaining points on the current leg, after the current step.
          */
         if currentLegProgress.stepIndex < currentLegSteps.endIndex {
-            allRemainingPoints += currentLegSteps.suffix(from: currentLegProgress.stepIndex + 1).dropLast().flatMap{ $0.compactMap{ $0 } }.count
+            allRemainingPoints += currentLegSteps.suffix(from: currentLegProgress.stepIndex + 1).flatMap{ $0.compactMap{ $0 } }.count
         }
         
         /**
@@ -117,7 +118,7 @@ extension NavigationMapView {
          After calculating the number of remaining points and the number of all points,  calculate the index of the upcoming point.
          */
         let allPoints = completeRoutePoints.flatList.count
-        routeRemainingDistancesIndex = allPoints - allRemainingPoints - 1
+        routeRemainingDistancesIndex = allPoints - allRemainingPoints
     }
     
     func calculateGranularDistances(_ coordinates: [CLLocationCoordinate2D]) -> RouteLineGranularDistances? {
