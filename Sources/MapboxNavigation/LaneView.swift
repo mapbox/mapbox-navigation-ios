@@ -336,24 +336,37 @@ extension ManeuverDirection {
 
 /// :nodoc:
 open class LaneView: UIView {
+    
+    /**
+     The direction or directions of travel that the lane is reserved for.
+     */
     var indications: LaneIndication {
         didSet {
             setNeedsDisplay()
         }
     }
     
+    /**
+     Denotes which of the `indications` is applicable to the current route when there is more than one.
+     */
     var maneuverDirection: ManeuverDirection? {
         didSet {
             setNeedsDisplay()
         }
     }
     
-    var isValid: Bool = false {
+    /**
+     Denotes whether or not the user can use this lane to continue along the current route.
+     */
+    var isUsable: Bool = false {
         didSet {
             setNeedsDisplay()
         }
     }
     
+    /**
+     Indicates which side of the road cars and traffic flow.
+     */
     var drivingSide: DrivingSide = .right {
         didSet {
             setNeedsDisplay()
@@ -364,30 +377,52 @@ open class LaneView: UIView {
         return bounds.size
     }
     
+    /**
+     Color of the maneuver direction (applied only when `LaneView.isUsable` is set to `true`). In case if
+     `LaneView.showHighlightedColors` is set to `true` this value is not used, `LaneView.primaryColorHighlighted`
+     is used instead.
+     */
     @objc public dynamic var primaryColor: UIColor = .defaultLaneArrowPrimary {
         didSet {
             setNeedsDisplay()
         }
     }
     
+    /**
+     Color of the directions that the lane is reserved for (except the one that is applicable to the
+     current route). In case if `LaneView.showHighlightedColors` is set to `true` this value is not used,
+     `LaneView.secondaryColorHighlighted` is used instead.
+     */
     @objc public dynamic var secondaryColor: UIColor = .defaultLaneArrowSecondary {
         didSet {
             setNeedsDisplay()
         }
     }
-
+    
+    /**
+     Highlighted color of the directions that the lane is reserved for (except the one that is
+     applicable to the current route).
+     */
     @objc public dynamic var primaryColorHighlighted: UIColor = .defaultLaneArrowPrimaryHighlighted {
         didSet {
             setNeedsDisplay()
         }
     }
-
+    
+    /**
+     Highlighted color of the directions that the lane is reserved for (except the one that is applicable
+     to the current route).
+     */
     @objc public dynamic var secondaryColorHighlighted: UIColor = .defaultLaneArrowSecondaryHighlighted {
         didSet {
             setNeedsDisplay()
         }
     }
-
+    
+    /**
+     Controls whether highighted colors (either `LaneView.primaryColorHighlighted` or
+     `LaneView.secondaryColorHighlighted`) should be used.
+     */
     public var showHighlightedColors: Bool = false {
         didSet {
             setNeedsDisplay()
@@ -395,7 +430,7 @@ open class LaneView: UIView {
     }
     
     var appropriatePrimaryColor: UIColor {
-        if isValid {
+        if isUsable {
             return showHighlightedColors ? primaryColorHighlighted : primaryColor
         } else {
             return showHighlightedColors ? secondaryColorHighlighted : secondaryColor
@@ -408,12 +443,16 @@ open class LaneView: UIView {
     
     static let defaultFrame: CGRect = CGRect(origin: .zero, size: 30.0)
     
-    convenience init(indications: LaneIndication, isUsable: Bool, direction: ManeuverDirection?) {
+    convenience init(indications: LaneIndication,
+                     isUsable: Bool,
+                     direction: ManeuverDirection?,
+                     showHighlightedColors: Bool = false) {
         self.init(frame: LaneView.defaultFrame)
         backgroundColor = .clear
         self.indications = indications
         maneuverDirection = direction ?? ManeuverDirection(rawValue: indications.description)
-        isValid = isUsable
+        self.isUsable = isUsable
+        self.showHighlightedColors = showHighlightedColors
     }
 
     override init(frame: CGRect) {
@@ -422,9 +461,9 @@ open class LaneView: UIView {
         commonInit()
     }
 
-    @objc public required init?(coder aDecoder: NSCoder) {
+    @objc public required init?(coder decoder: NSCoder) {
         indications = []
-        super.init(coder: aDecoder)
+        super.init(coder: decoder)
         commonInit()
     }
 
@@ -444,7 +483,7 @@ open class LaneView: UIView {
         #endif
         
         let resizing = LanesStyleKit.ResizingBehavior.aspectFit
-        let appropriateColor = isValid ? appropriatePrimaryColor : appropriateSecondaryColor
+        let appropriateColor = isUsable ? appropriatePrimaryColor : appropriateSecondaryColor
         let size = CGSize(width: 32, height: 32)
         
         let isFlipped = indications.dominantSide(maneuverDirection: maneuverDirection, drivingSide: drivingSide) == .left

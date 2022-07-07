@@ -148,17 +148,19 @@ public class ExitView: StylableView {
                              styleID: String?,
                              dataSource: DataSource,
                              traitCollection: UITraitCollection) -> String {
-        var appearance = ExitView.appearance()
+        var appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .phone))
         if traitCollection.userInterfaceIdiom == .carPlay {
+            let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
+            
             if #available(iOS 12.0, *) {
-                let carPlayTraitCollection = UITraitCollection(traitsFrom: [
-                    UITraitCollection(userInterfaceIdiom: .carPlay),
+                let traitCollection = UITraitCollection(traitsFrom: [
+                    carPlayTraitCollection,
                     UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
                 ])
                 
-                appearance = ExitView.appearance(for: carPlayTraitCollection)
+                appearance = ExitView.appearance(for: traitCollection)
             } else {
-                appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .carPlay))
+                appearance = ExitView.appearance(for: carPlayTraitCollection)
             }
         }
         
