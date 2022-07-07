@@ -17,9 +17,9 @@ extension VisualInstruction {
         return laneComponents.count > 0
     }
 
-    func maneuverImage(drivingSide: DrivingSide,
-                       color: UIColor,
-                       size: CGSize) -> UIImage? {
+    func maneuverViewImage(drivingSide: DrivingSide,
+                           color: UIColor,
+                           size: CGSize) -> UIImage? {
         let maneuverView = ManeuverView()
         maneuverView.frame = CGRect(origin: .zero, size: size)
         maneuverView.primaryColor = color
