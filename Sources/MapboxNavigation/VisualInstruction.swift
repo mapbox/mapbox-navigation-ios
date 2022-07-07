@@ -97,9 +97,9 @@ extension VisualInstruction {
     public func maneuverImageSet(side: DrivingSide) -> CPImageSet? {
         let colors: [UIColor] = [.black, .white]
         let maneuverIcons: [UIImage] = colors.compactMap { (color) in
-            return maneuverImage(drivingSide: side,
-                                 color: color,
-                                 size: CGSize(width: 30, height: 30))
+            return maneuverViewImage(drivingSide: side,
+                                     color: color,
+                                     size: CGSize(width: 30, height: 30))
         }
         guard maneuverIcons.count == 2 else { return nil }
         

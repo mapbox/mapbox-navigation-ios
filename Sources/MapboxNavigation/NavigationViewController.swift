@@ -880,9 +880,9 @@ extension NavigationViewController: NavigationServiceDelegate {
             imageColor = .black
         }
         
-        if let image = instruction.primaryInstruction.maneuverImage(drivingSide: instruction.drivingSide,
-                                                                    color: imageColor,
-                                                                    size: CGSize(width: 72, height: 72)) {
+        if let image = instruction.primaryInstruction.maneuverViewImage(drivingSide: instruction.drivingSide,
+                                                                        color: imageColor,
+                                                                        size: CGSize(width: 72, height: 72)) {
             // Bake in any transform required for left turn arrows etc.
             let imageData = UIGraphicsImageRenderer(size: image.size).pngData { (context) in
                 image.draw(at: .zero)
