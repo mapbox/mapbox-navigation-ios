@@ -621,6 +621,10 @@ open class RouteController: NSObject {
 
         Navigator.datasetProfileIdentifier = options.profileIdentifier
         
+        guard case .route(_) = routeResponse.options else {
+            preconditionFailure("RouteController must recieve `routeResponse` created with `RouteOptions`.")
+        }
+        
         self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
         self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
         self.dataSource = source

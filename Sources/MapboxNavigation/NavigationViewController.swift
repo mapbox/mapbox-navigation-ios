@@ -325,9 +325,64 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
      - parameter navigationOptions: The navigation options to use for the navigation session.
      */
     required public init(for routeResponse: RouteResponse, routeIndex: Int, routeOptions: RouteOptions, navigationOptions: NavigationOptions? = nil) {
+        guard case .route(_) = routeResponse.options else {
+            preconditionFailure("NavigationViewController was created with `routeOptions` and a `routeResponse` without `RouteOptions`.")
+        }
+        
         super.init(nibName: nil, bundle: nil)
         
         _ = prepareViewLoading(routeResponse: routeResponse,
+                               routeIndex: routeIndex,
+                               routeOptions: routeOptions,
+                               navigationOptions: navigationOptions)
+    }
+    
+    /**
+     Initializes a `NavigationViewController` that presents the user interface for following a predefined route based on the given options.
+
+     The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculateRoutes(matching:completionHandler:)` method, MapboxCoreNavigation `MapboxRoutingProvider.calculateRoutes(options:completionHandler:)`, or it may be unarchived or created from a JSON object.
+     
+     - parameter mapMatchingResponse: `MapMatchingResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter navigationOptions: The navigation options to use for the navigation session.
+     */
+    required public convenience init(for mapMatchingResponse: MapMatchingResponse, routeIndex: Int, navigationOptions: NavigationOptions? = nil) throws {
+        try self.init(for: RouteResponse(matching: mapMatchingResponse,
+                                         options: mapMatchingResponse.options,
+                                         credentials: mapMatchingResponse.credentials),
+                      routeIndex: routeIndex,
+                      navigationOptions: navigationOptions)
+    }
+    
+    /**
+     Initializes a `NavigationViewController` that presents the user interface for following a predefined route based on the given options.
+
+     The route may come directly from the completion handler of the [MapboxDirections](https://docs.mapbox.com/ios/api/directions/) framework’s `Directions.calculate(_:completionHandler:)` method, MapboxCoreNavigation `MapboxRoutingProvider.calculateRoutes(options:completionHandler:)`, or it may be unarchived or created from a JSON object.
+     
+     - parameter routeResponse: `RouteResponse` object, containing selection of routes to follow.
+     - parameter routeIndex: The index of the route within the original `RouteResponse` object.
+     - parameter navigationOptions: The navigation options to use for the navigation session.
+     */
+    required public init(for routeResponse: RouteResponse, routeIndex: Int, navigationOptions: NavigationOptions? = nil) {
+        var routeOptions: RouteOptions!
+        var validatedRouteResponse: RouteResponse!
+        switch routeResponse.options {
+        case let .match(matchOptions):
+            routeOptions = RouteOptions(matchOptions: matchOptions)
+            validatedRouteResponse = RouteResponse(httpResponse: routeResponse.httpResponse,
+                                          identifier: routeResponse.identifier,
+                                          routes: routeResponse.routes,
+                                          waypoints: routeResponse.waypoints,
+                                          options: .route(routeOptions),
+                                          credentials: routeResponse.credentials)
+        case let .route(options):
+            routeOptions = options
+            validatedRouteResponse = routeResponse
+        }
+        
+        super.init(nibName: nil, bundle: nil)
+        
+        _ = prepareViewLoading(routeResponse: validatedRouteResponse,
                                routeIndex: routeIndex,
                                routeOptions: routeOptions,
                                navigationOptions: navigationOptions)

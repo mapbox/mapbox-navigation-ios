@@ -268,7 +268,8 @@ extension InternalRouter where Self: Router {
     }
     
     func refreshRoute(from location: CLLocation, legIndex: Int, completion: @escaping ()->()) {
-        guard refreshesRoute else {
+        guard refreshesRoute,
+              case .route(_) = indexedRouteResponse.routeResponse.options else {
             completion()
             return
         }
