@@ -95,7 +95,7 @@ public class GenericRouteShield: StylableView {
      This generates the cache key needed to hold the `GenericRouteShield`'s `imageRepresentation` in the `ImageCache` caching engine.
      */
     static func criticalHash(styleID: String?, dataSource: DataSource, traitCollection: UITraitCollection) -> String {
-        var appearance = GenericRouteShield.appearance()
+        var appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .phone))
         if traitCollection.userInterfaceIdiom == .carPlay {
             if #available(iOS 12.0, *) {
                 let carPlayTraitCollection = UITraitCollection(traitsFrom: [

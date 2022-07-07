@@ -16,17 +16,16 @@ extension UIColor {
     class var defaultManeuverArrow: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
     
     class var defaultTurnArrowPrimary: UIColor { #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) }
-    class var defaultTurnArrowPrimaryHighlighted: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
     class var defaultTurnArrowSecondary: UIColor { #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) }
+    
+    class var defaultTurnArrowPrimaryHighlighted: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
     class var defaultTurnArrowSecondaryHighlighted: UIColor { UIColor.white.withAlphaComponent(0.4) }
-
+    
     class var defaultLaneArrowPrimary: UIColor { #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1) }
     class var defaultLaneArrowSecondary: UIColor { #colorLiteral(red: 0.6196078431, green: 0.6196078431, blue: 0.6196078431, alpha: 1) }
+    
     class var defaultLaneArrowPrimaryHighlighted: UIColor { #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1) }
     class var defaultLaneArrowSecondaryHighlighted: UIColor { UIColor(white: 0.7, alpha: 1.0) }
-
-    class var defaultLaneArrowPrimaryCarPlay: UIColor { #colorLiteral(red: 0.7649999857, green: 0.7649999857, blue: 0.7570000291, alpha: 1) }
-    class var defaultLaneArrowSecondaryCarPlay: UIColor { #colorLiteral(red: 0.4198532104, green: 0.4398920536, blue: 0.4437610507, alpha: 1) }
     
     class var trafficUnknown: UIColor { defaultRouteLayer }
     class var trafficLow: UIColor { defaultRouteLayer }
@@ -82,5 +81,19 @@ extension UIColor {
                   green: CGFloat(styleColor.green / 255.0),
                   blue: CGFloat(styleColor.blue / 255.0),
                   alpha: CGFloat(styleColor.alpha))
+    }
+    
+    /**
+     Returns hex representation of a `UIColor`.
+     */
+    var hexString: String {
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        var a: CGFloat = 0
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+        
+        let rgb: Int = (Int)(r * 255) << 16 | (Int)(g * 255) << 8 | (Int)(b * 255) << 0
+        return String(format:"#%06x", rgb)
     }
 }

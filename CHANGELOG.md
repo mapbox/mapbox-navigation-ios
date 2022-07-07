@@ -46,6 +46,7 @@
 * During the navigating activity, the user can tap the "Alternatives" button in the navigation bar to switch to an alternative route. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
 * Fixed an issue where an appearance change of CarPlay would cause an appearance change of iOS as well. Refer to `DayStyle` while implementing custom styles using `Style` class. ([#3922](https://github.com/mapbox/mapbox-navigation-ios/pull/3922))
 * Fixed an issue where maneuver arrow wasn't removed after passing visual instruction on CarPlay. ([#3987](https://github.com/mapbox/mapbox-navigation-ios/pull/3987))
+* Fixed an issue where `LaneView` uses incorrect styling on CarPlay. ([#3975](https://github.com/mapbox/mapbox-navigation-ios/pull/3975))
 
 ### Other changes
 

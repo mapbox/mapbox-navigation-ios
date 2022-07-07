@@ -243,14 +243,14 @@ class InstructionPresenter {
             let genericRouteShield = GenericRouteShield(pointSize: dataSource.font.pointSize,
                                                         text: text)
             
-            var appearance = GenericRouteShield.appearance()
+            var appearance = GenericRouteShield.appearance(for: UITraitCollection(userInterfaceIdiom: .phone))
             if traitCollection.userInterfaceIdiom == .carPlay {
                 let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
                 
                 if #available(iOS 12.0, *) {
                     let traitCollection = UITraitCollection(traitsFrom: [
                         carPlayTraitCollection,
-                        UITraitCollection(userInterfaceStyle: self.traitCollection.userInterfaceStyle)
+                        UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
                     ])
                     
                     appearance = GenericRouteShield.appearance(for: traitCollection)
@@ -292,14 +292,14 @@ class InstructionPresenter {
                                     side: side,
                                     text: text)
             
-            var appearance = ExitView.appearance()
+            var appearance = ExitView.appearance(for: UITraitCollection(userInterfaceIdiom: .phone))
             if traitCollection.userInterfaceIdiom == .carPlay {
                 let carPlayTraitCollection = UITraitCollection(userInterfaceIdiom: .carPlay)
                 
                 if #available(iOS 12.0, *) {
                     let traitCollection = UITraitCollection(traitsFrom: [
                         carPlayTraitCollection,
-                        UITraitCollection(userInterfaceStyle: self.traitCollection.userInterfaceStyle)
+                        UITraitCollection(userInterfaceStyle: traitCollection.userInterfaceStyle)
                     ])
                     
                     appearance = ExitView.appearance(for: traitCollection)
