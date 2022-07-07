@@ -159,16 +159,14 @@ open class SimulatedLocationManager: NavigationLocationManager {
     private var slicedIndex: Int? = nil
     
     internal func tick() {
-        let advanceDistance = currentSpeed // currentDistance //
         guard let polyline = routeShape,
-              let indexedNewCoordinate = polyline.indexedCoordinateFromStart(distance: advanceDistance) else {
-//              let newCoordinate = polyline.coordinateFromStart(distance: advanceDistance) else {
+              let indexedNewCoordinate = polyline.indexedCoordinateFromStart(distance: currentSpeed) else {
             return
         }
         let newCoordinate = indexedNewCoordinate.coordinate
         
         // Closest coordinate ahead
-        guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: advanceDistance + 10) else { return }
+        guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: currentSpeed + 10) else { return }
         guard let closestCoordinate = polyline.closestCoordinate(to: newCoordinate) else { return }
         
         // Simulate speed based on expected segment travel time
@@ -177,11 +175,12 @@ open class SimulatedLocationManager: NavigationLocationManager {
            let closestCoordinateOnRouteIndex = slicedIndex.map({ idx -> Int? in
                routeShape.closestCoordinate(to: newCoordinate,
                                             startingIndex: idx)?.index
-           }) ?? routeShape.closestCoordinate(to: newCoordinate)?.index,//routeShape.closestCoordinate(to: newCoordinate),
+           }) ?? routeShape.closestCoordinate(to: newCoordinate)?.index,
            let nextCoordinateOnRoute = routeShape.coordinates.after(index:closestCoordinateOnRouteIndex),
            let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRouteIndex] {
             let distance = routeShape.coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
             currentSpeed =  min(max(distance / time, minimumSpeed), maximumSpeed)
+            slicedIndex = closestCoordinateOnRouteIndex
         } else {
             let closestLocation = locations[closestCoordinate.index]
             let distanceToClosest = closestLocation.distance(from: CLLocation(newCoordinate))
@@ -204,7 +203,6 @@ open class SimulatedLocationManager: NavigationLocationManager {
         currentDistance = calculateCurrentDistance(currentDistance)
         
         routeShape = routeShape.sliced(from: newCoordinate)
-        slicedIndex = indexedNewCoordinate.index
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {

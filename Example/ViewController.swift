@@ -516,10 +516,8 @@ class ViewController: UIViewController {
             userWaypoint.headingAccuracy = 90
         }
         waypoints.insert(userWaypoint, at: 0)
-//        6.86167,47.636555;9.194678,45.462315
-        let customWaypoints = [Waypoint(coordinate: CLLocationCoordinate2DMake(47.636555, 6.86167)),
-                               Waypoint(coordinate: CLLocationCoordinate2DMake(45.462315, 9.194678))]
-        let navigationRouteOptions = NavigationRouteOptions(waypoints: customWaypoints)
+
+        let navigationRouteOptions = NavigationRouteOptions(waypoints: waypoints)
         
         // Get periodic updates regarding changes in estimated arrival time and traffic congestion segments along the route line.
         RouteControllerProactiveReroutingInterval = 30
