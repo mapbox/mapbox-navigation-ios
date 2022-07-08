@@ -25,7 +25,7 @@ extension NavigationMapView {
         // MARK: NavigationComponentDelegate implementation
         
         func navigationViewDidLoad(_ view: UIView) {
-            navigationMapView.mapView.mapboxMap.onEvery(.styleLoaded) { [weak self] _ in
+            navigationMapView.mapView.mapboxMap.onEvery(event: .styleLoaded) { [weak self] _ in
                 guard let self = self else { return }
                 
                 self.navigationMapView.localizeLabels()

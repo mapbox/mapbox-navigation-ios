@@ -1,5 +1,21 @@
 # Changes to the Mapbox Navigation SDK for iOS
 
+## 2.7.0
+
+### Packaging
+
+* MapboxNavigation now requires [MapboxMaps v10.7.0-alpha.1](https://github.com/mapbox/mapbox-maps-ios/releases/tag/v10.7.0-alpha.1). ([#3978](https://github.com/mapbox/mapbox-navigation-ios/pull/3978))
+* MapboxCoreNavigation now requires [MapboxNavigationNative v108._x_](https://github.com/mapbox/mapbox-navigation-native-ios/releases/tag/108.0.0). ([#3978](https://github.com/mapbox/mapbox-navigation-ios/pull/3978))
+
+### Map
+
+* Fixed `MapView` rendering issues that occur after the application returns to the foreground. ([#1402](https://github.com/mapbox/mapbox-maps-ios/pull/1402))
+* Each alternative route shown during turn-by-turn navigation is now annotated with the amount of time it saves or adds to the trip. To hide these annotations, set the `NavigationMapView.showsRelativeDurationOnContinuousAlternativeRoutes` property to `false`. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
+
+### CarPlay
+
+* During active navigation, the user can tap the "Alternatives" button in the navigation bar to switch to an alternative route. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
+
 ## v2.6.0
 
 ### Packaging
@@ -35,7 +51,6 @@
 * Added the `layerPosition` parameter to the `NavigationMapView.show(_:layerPosition:legIndex:)` method for controlling the position of the main route layer while presenting routes. ([#3897](https://github.com/mapbox/mapbox-navigation-ios/pull/3897))
 * Fixed an issue where camera kept receiving updates even after stopping `MapboxNavigationService`. ([#3928](https://github.com/mapbox/mapbox-navigation-ios/pull/3928))
 * Added `NavigationViewController.showsContinuousAlternatives` and `CarPlayNavigationViewController.showsContinuousAlternatives` flags to toggle displaying alternative route's lines during navigation session. Use `NavigationMapView.show(continuousAlternatives:)` and `NavigationMapView.removeContinuousAlternativesRoutes()` methods for fine control over displayed routes. ([#3850](https://github.com/mapbox/mapbox-navigation-ios/pull/3850))
-* Each alternative route shown during turn-by-turn navigation is now annotated with the amount of time it saves or adds to the trip. To hide these annotations, set the `NavigationMapView.showsRelativeDurationOnContinuousAlternativeRoutes` property to `false`. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
 
 ### CarPlay
 
@@ -43,7 +58,6 @@
 * The map automatically chooses the night style when "Always Show Dark Maps" is enabled in the Appearance section of Settings. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Renamed the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:)` to the `VisualInstruction.carPlayManeuverLabelAttributedText(bounds:shieldHeight:window:traitCollection:instructionLabelType:)` to have the ability to change color of the shield icons depending on provided trait collection. ([#3882](https://github.com/mapbox/mapbox-navigation-ios/pull/3882))
 * Fixed an issue where a `StyleManager` for CarPlay would update the appearance on both CarPlay and the iOS device simultaneously. ([#3914](https://github.com/mapbox/mapbox-navigation-ios/pull/3914))
-* During the navigating activity, the user can tap the "Alternatives" button in the navigation bar to switch to an alternative route. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
 * Fixed an issue where an appearance change of CarPlay would cause an appearance change of iOS as well. Refer to `DayStyle` while implementing custom styles using `Style` class. ([#3922](https://github.com/mapbox/mapbox-navigation-ios/pull/3922))
 * Fixed an issue where maneuver arrow wasn't removed after passing visual instruction on CarPlay. ([#3987](https://github.com/mapbox/mapbox-navigation-ios/pull/3987))
 * Fixed an issue where `LaneView` uses incorrect styling on CarPlay. ([#3975](https://github.com/mapbox/mapbox-navigation-ios/pull/3975))

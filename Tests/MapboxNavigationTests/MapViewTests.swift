@@ -43,7 +43,7 @@ class MapViewTests: TestCase {
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
         
-        mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
+        mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()
         })
         
@@ -114,7 +114,7 @@ class MapViewTests: TestCase {
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
         
-        mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
+        mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()
         })
         
@@ -186,7 +186,7 @@ class MapViewTests: TestCase {
         let mapLoadingErrorExpectation = expectation(description: "Map loading error expectation")
         mapLoadingErrorExpectation.assertForOverFulfill = false
         
-        mapView.mapboxMap.onNext(.mapLoadingError, handler: { event in
+        mapView.mapboxMap.onNext(event: .mapLoadingError, handler: { event in
             mapLoadingErrorExpectation.fulfill()
         })
         
