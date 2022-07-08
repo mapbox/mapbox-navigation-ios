@@ -52,13 +52,6 @@ open class NavigationEventsManager {
      */
     public var delaysEventFlushing = true
     
-    /**
-     Indicates whether the application depends on MapboxNavigation in addition to MapboxCoreNavigation.
-     */
-    var usesDefaultUserInterface = {
-        return Bundle.mapboxNavigationIfInstalled != nil
-    }()
-    
     // MARK: Storing Data and Datasources
     
     private var sessionState = SessionState()
@@ -105,10 +98,48 @@ open class NavigationEventsManager {
     }
 
     /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
-    private var mobileEventsManager: MMEEventsManager!
-    private var eventsService: EventsService!
+    private let mobileEventsManager: MMEEventsManager
+    private let eventsService: EventsService
 
-    lazy var accessToken: String = {
+    private let accessToken: String
+
+    public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
+                         passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
+                         accessToken possibleToken: String? = nil,
+                         mobileEventsManager: MMEEventsManager = .shared()) {
+        accessToken = possibleToken ?? NavigationEventsManager.obtainAccessToken()
+        self.mobileEventsManager = mobileEventsManager
+
+        let options = EventsServiceOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent, baseURL: "https://api-events-staging.tilestream.net")
+        self.eventsService = EventsService(options: options)
+
+        commonInit(activeNavigationDataSource: activeNavigationDataSource,
+                   passiveNavigationDataSource: passiveNavigationDataSource)
+    }
+
+    init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
+         passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
+         accessToken possibleToken: String? = nil,
+         mobileEventsManager: MMEEventsManager = .shared(),
+         eventsService: EventsService) {
+        accessToken = possibleToken ?? NavigationEventsManager.obtainAccessToken()
+        self.mobileEventsManager = mobileEventsManager
+        self.eventsService = eventsService
+
+        commonInit(activeNavigationDataSource: activeNavigationDataSource,
+                   passiveNavigationDataSource: passiveNavigationDataSource)
+    }
+
+    private func commonInit(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource?,
+                            passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource?) {
+        self.activeNavigationDataSource = activeNavigationDataSource
+        self.passiveNavigationDataSource = passiveNavigationDataSource
+
+        start()
+        resumeNotifications()
+    }
+
+    private static func obtainAccessToken() -> String {
         guard let token = Bundle.main.object(forInfoDictionaryKey: "MBXAccessToken") as? String ??
                 Bundle.main.object(forInfoDictionaryKey: "MGLMapboxAccessToken") as? String
         else {
@@ -118,29 +149,11 @@ open class NavigationEventsManager {
             return ""
         }
         return token
-    }()
-
-    private lazy var userAgent: String = {
-        usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
-    }()
-    
-    public required init(activeNavigationDataSource: ActiveNavigationEventsManagerDataSource? = nil,
-                         passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
-                         accessToken possibleToken: String? = nil,
-                         mobileEventsManager: MMEEventsManager = .shared()) {
-        self.activeNavigationDataSource = activeNavigationDataSource
-        self.passiveNavigationDataSource = passiveNavigationDataSource
-        if let tokenOverride = possibleToken {
-            accessToken = tokenOverride
-        }
-        self.mobileEventsManager = mobileEventsManager
-
-        let options = EventsServiceOptions(token: accessToken, userAgentFragment: userAgent, baseURL: "https://api-events-staging.tilestream.net")
-        self.eventsService = EventsService(options: options)
-
-        start()
-        resumeNotifications()
     }
+
+    private static var userAgent: String = {
+        Bundle.usesDefaultUserInterface ? "mapbox-navigation-ui-ios" : "mapbox-navigation-ios"
+    }()
     
     deinit {
         suspendNotifications()
@@ -165,7 +178,7 @@ open class NavigationEventsManager {
         guard let shortVersion = Bundle.string(forMapboxCoreNavigationInfoDictionaryKey: "CFBundleShortVersionString") else {
             preconditionFailure("CFBundleShortVersionString must be set in the Info.plist.")
         }
-        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: userAgent, hostSDKVersion: shortVersion)
+        mobileEventsManager.initialize(withAccessToken: accessToken, userAgentBase: NavigationEventsManager.userAgent, hostSDKVersion: shortVersion)
         
         // FIXME: Running `MobileEventsManager.sendTurnstileEvent()` fixes such main thread checker
         // warning in MapboxMobileEvents: This method can cause UI unresponsiveness if invoked on the main thread.
@@ -176,7 +189,7 @@ open class NavigationEventsManager {
             self.mobileEventsManager.sendTurnstileEvent()
         }
 
-        let turnstileEvent = TurnstileEvent(skuId: .nav2SesMAU, sdkIdentifier: userAgent, sdkVersion: shortVersion)
+        let turnstileEvent = TurnstileEvent(skuId: .nav2SesMAU, sdkIdentifier: NavigationEventsManager.userAgent, sdkVersion: shortVersion)
         eventsService.sendTurnstileEvent(for: turnstileEvent)
     }
     
@@ -234,7 +247,7 @@ open class NavigationEventsManager {
         guard let dataSource = activeNavigationDataSource else { return nil }
         
         let rating = potentialRating ?? EventRating.unrated
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
         event.event = EventType.cancel.rawValue
         event.arrivalTimestamp = sessionState.arrivalTimestamp
         
@@ -267,7 +280,7 @@ open class NavigationEventsManager {
     func navigationDepartEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
         event.event = EventType.depart.rawValue
         return event
     }
@@ -275,7 +288,7 @@ open class NavigationEventsManager {
     func navigationArriveEvent() -> ActiveNavigationEventDetails? {
         guard let dataSource = activeNavigationDataSource else { return nil }
 
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
         event.event = EventType.arrive.rawValue
         event.arrivalTimestamp = dataSource.router.rawLocation?.timestamp ?? Date()
 
@@ -307,8 +320,7 @@ open class NavigationEventsManager {
         var event: NavigationEventDetails
     
         if let activeNavigationDataSource = activeNavigationDataSource {
-            event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource,
-                                                 session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
+            event = ActiveNavigationEventDetails(dataSource: activeNavigationDataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
         } else if let passiveNavigationDataSource = passiveNavigationDataSource {
             event = PassiveNavigationEventDetails(dataSource: passiveNavigationDataSource, sessionState: sessionState, appMetadata: userInfo)
         } else {
@@ -336,7 +348,7 @@ open class NavigationEventsManager {
 
         let timestamp = dataSource.router.rawLocation?.timestamp ?? Date()
         
-        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: usesDefaultUserInterface, appMetadata: userInfo)
+        var event = ActiveNavigationEventDetails(dataSource: dataSource, session: sessionState, defaultInterface: Bundle.usesDefaultUserInterface, appMetadata: userInfo)
         event.event = eventType
         event.created = timestamp
         

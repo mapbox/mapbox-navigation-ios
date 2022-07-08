@@ -67,7 +67,7 @@ class NavigationServiceTests: TestCase {
 
     func testDefaultUserInterfaceUsage() {
         dependencies = createDependencies()
-        let usesDefaultUserInterface = dependencies.navigationService.eventsManager.usesDefaultUserInterface
+        let usesDefaultUserInterface = Bundle.usesDefaultUserInterface
         
         // When building via Xcode when using SPM `MapboxNavigation` bundle will be present.
         if let _ = Bundle.mapboxNavigationIfInstalled {
