@@ -370,11 +370,11 @@ open class NavigationViewController: UIViewController, NavigationStatusPresenter
         case let .match(matchOptions):
             routeOptions = RouteOptions(matchOptions: matchOptions)
             validatedRouteResponse = RouteResponse(httpResponse: routeResponse.httpResponse,
-                                          identifier: routeResponse.identifier,
-                                          routes: routeResponse.routes,
-                                          waypoints: routeResponse.waypoints,
-                                          options: .route(routeOptions),
-                                          credentials: routeResponse.credentials)
+                                                   identifier: routeResponse.identifier,
+                                                   routes: routeResponse.routes,
+                                                   waypoints: routeResponse.waypoints,
+                                                   options: .route(routeOptions),
+                                                   credentials: routeResponse.credentials)
         case let .route(options):
             routeOptions = options
             validatedRouteResponse = routeResponse

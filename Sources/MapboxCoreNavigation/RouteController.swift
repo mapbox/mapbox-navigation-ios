@@ -618,17 +618,29 @@ open class RouteController: NSObject {
             Log.fault("[BUG] Two simultaneous active navigation sessions. This might happen if there are two NavigationViewController or RouteController instances exists at the same time. Profile the app and make sure that NavigationViewController and RouteController is deallocated once not in use.",
                       category: .navigation)
         }
-
-        Navigator.datasetProfileIdentifier = options.profileIdentifier
         
-        guard case .route(_) = routeResponse.options else {
-            preconditionFailure("RouteController must recieve `routeResponse` created with `RouteOptions`.")
+        var routeOptions: RouteOptions!
+        var validatedRouteResponse: RouteResponse!
+        switch routeResponse.options {
+        case let .match(matchOptions):
+            routeOptions = RouteOptions(matchOptions: matchOptions)
+            validatedRouteResponse = RouteResponse(httpResponse: routeResponse.httpResponse,
+                                                   identifier: routeResponse.identifier,
+                                                   routes: routeResponse.routes,
+                                                   waypoints: routeResponse.waypoints,
+                                                   options: .route(routeOptions),
+                                                   credentials: routeResponse.credentials)
+        case let .route(options):
+            routeOptions = options
+            validatedRouteResponse = routeResponse
         }
         
-        self.indexedRouteResponse = .init(routeResponse: routeResponse, routeIndex: routeIndex)
-        self.routeProgress = RouteProgress(route: routeResponse.routes![routeIndex], options: options)
+        Navigator.datasetProfileIdentifier = routeOptions.profileIdentifier
+        
+        self.indexedRouteResponse = .init(routeResponse: validatedRouteResponse, routeIndex: routeIndex)
+        self.routeProgress = RouteProgress(route: validatedRouteResponse.routes![routeIndex], options: routeOptions)
         self.dataSource = source
-        self.refreshesRoute = options.profileIdentifier == .automobileAvoidingTraffic && options.refreshingEnabled
+        self.refreshesRoute = routeOptions.profileIdentifier == .automobileAvoidingTraffic && routeOptions.refreshingEnabled
         UIDevice.current.isBatteryMonitoringEnabled = true
 
         if NavigationSettings.shared.alternativeRouteDetectionStrategy != nil {
