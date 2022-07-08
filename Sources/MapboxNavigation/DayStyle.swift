@@ -239,6 +239,9 @@ open class DayStyle: Style {
             
             ResumeButton.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             ResumeButton.appearance(for: phoneTraitCollection).tintColor = .defaultPrimaryText
+            ResumeButton.appearance(for: phoneTraitCollection).borderColor = #colorLiteral(red: 0.737254902, green: 0.7960784314, blue: 0.8705882353, alpha: 1)
+            ResumeButton.appearance(for: phoneTraitCollection).borderWidth = 1 / UIScreen.main.scale
+            ResumeButton.appearance(for: phoneTraitCollection).cornerRadius = 5.0
             
             NextBannerView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)
             NextBannerView.appearance(for: phoneTraitCollection, whenContainedInInstancesOf: [InstructionsCardContainerView.self]).backgroundColor = #colorLiteral(red: 0.9675388083, green: 0.9675388083, blue: 0.9675388083, alpha: 1)

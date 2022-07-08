@@ -151,6 +151,7 @@ open class NightStyle: DayStyle {
             
             ResumeButton.appearance(for: phoneTraitCollection).backgroundColor = backgroundColor
             ResumeButton.appearance(for: phoneTraitCollection).tintColor = #colorLiteral(red: 0.9842069745, green: 0.9843751788, blue: 0.9841964841, alpha: 1)
+            ResumeButton.appearance(for: phoneTraitCollection).borderColor = #colorLiteral(red: 0.3764705882, green: 0.4901960784, blue: 0.6117647059, alpha: 0.796599912)
             
             NextBannerView.appearance(for: phoneTraitCollection).backgroundColor = #colorLiteral(red: 0.103291966, green: 0.1482483149, blue: 0.2006777823, alpha: 1)
             
