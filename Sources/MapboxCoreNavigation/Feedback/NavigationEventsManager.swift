@@ -99,7 +99,7 @@ open class NavigationEventsManager {
 
     /// :nodoc: the internal lower-level mobile events manager is an implementation detail which should not be manipulated directly
     private let mobileEventsManager: MMEEventsManager
-    private let eventsService: EventsService
+    private let eventsAPI: EventsAPI
 
     private let accessToken: String
 
@@ -111,7 +111,7 @@ open class NavigationEventsManager {
         self.mobileEventsManager = mobileEventsManager
 
         let options = EventsServiceOptions(token: accessToken, userAgentFragment: NavigationEventsManager.userAgent, baseURL: "https://api-events-staging.tilestream.net")
-        self.eventsService = EventsService(options: options)
+        self.eventsAPI = EventsService(options: options)
 
         commonInit(activeNavigationDataSource: activeNavigationDataSource,
                    passiveNavigationDataSource: passiveNavigationDataSource)
@@ -121,10 +121,10 @@ open class NavigationEventsManager {
          passiveNavigationDataSource: PassiveNavigationEventsManagerDataSource? = nil,
          accessToken possibleToken: String? = nil,
          mobileEventsManager: MMEEventsManager = .shared(),
-         eventsService: EventsService) {
+         eventsAPI: EventsAPI) {
         accessToken = possibleToken ?? NavigationEventsManager.obtainAccessToken()
         self.mobileEventsManager = mobileEventsManager
-        self.eventsService = eventsService
+        self.eventsAPI = eventsAPI
 
         commonInit(activeNavigationDataSource: activeNavigationDataSource,
                    passiveNavigationDataSource: passiveNavigationDataSource)
@@ -189,8 +189,7 @@ open class NavigationEventsManager {
             self.mobileEventsManager.sendTurnstileEvent()
         }
 
-        let turnstileEvent = TurnstileEvent(skuId: .nav2SesMAU, sdkIdentifier: NavigationEventsManager.userAgent, sdkVersion: shortVersion)
-        eventsService.sendTurnstileEvent(for: turnstileEvent)
+        eventsAPI.sendTurnstileEvent(sdkIdentifier: NavigationEventsManager.userAgent, sdkVersion: shortVersion)
     }
     
     // MARK: Sending Feedback Events
@@ -373,7 +372,7 @@ open class NavigationEventsManager {
         mobileEventsManager.flush()
 
         let attributes = eventAttributes(type: .carplayConnect, date: date)
-        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        eventsAPI.sendImmediateEvent(with: attributes)
     }
 
     public func sendCarPlayDisconnectEvent() {
@@ -382,7 +381,7 @@ open class NavigationEventsManager {
         mobileEventsManager.flush()
 
         let attributes = eventAttributes(type: .carplayDisconnect, date: date)
-        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        eventsAPI.sendImmediateEvent(with: attributes)
     }
     
     func sendRouteRetrievalEvent() {
@@ -390,7 +389,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: EventType.routeRetrieval.rawValue, attributes: attributes)
         mobileEventsManager.flush()
 
-        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        eventsAPI.sendImmediateEvent(with: attributes)
     }
 
     func sendDepartEvent() {
@@ -398,7 +397,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationDepart, attributes: attributes)
         mobileEventsManager.flush()
 
-        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        eventsAPI.sendImmediateEvent(with: attributes)
     }
     
     func sendArriveEvent() {
@@ -406,7 +405,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationArrive, attributes: attributes)
         mobileEventsManager.flush()
 
-        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        eventsAPI.sendImmediateEvent(with: attributes)
     }
     
     func sendCancelEvent(rating: Int? = nil, comment: String? = nil) {
@@ -414,7 +413,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: MMEEventTypeNavigationCancel, attributes: attributes)
         mobileEventsManager.flush()
 
-        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        eventsAPI.sendImmediateEvent(with: attributes)
     }
 
     func sendPassiveNavigationStart() {
@@ -427,7 +426,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: EventType.freeDrive.rawValue, attributes: attributes)
         mobileEventsManager.flush()
 
-        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        eventsAPI.sendImmediateEvent(with: attributes)
     }
 
     func sendPassiveNavigationStop() {
@@ -435,7 +434,7 @@ open class NavigationEventsManager {
         mobileEventsManager.enqueueEvent(withName: EventType.freeDrive.rawValue, attributes: attributes)
         mobileEventsManager.flush()
 
-        eventsService.sendEvent(for: Event(priority: .immediate, attributes: attributes))
+        eventsAPI.sendImmediateEvent(with: attributes)
     }
     
     func sendFeedbackEvents(_ events: [CoreFeedbackEvent]) {
@@ -450,7 +449,7 @@ open class NavigationEventsManager {
             
             mobileEventsManager.enqueueEvent(withName: eventName, attributes: eventDictionary)
 
-            eventsService.sendEvent(for: Event(priority: .immediate, attributes: eventDictionary))
+            eventsAPI.sendQueuedEvent(with: eventDictionary)
         }
         mobileEventsManager.flush()
     }
