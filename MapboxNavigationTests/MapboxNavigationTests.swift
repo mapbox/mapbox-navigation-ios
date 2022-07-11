@@ -37,7 +37,7 @@ class MapboxNavigationTests: XCTestCase {
     func testHighlightBuildings() {
         let timeout: TimeInterval = 10.0
         let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
-        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
         }
         wait(for: [styleLoadedExpectation], timeout: timeout)
@@ -49,7 +49,7 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.mapView.mapboxMap.setCamera(to: cameraOptions)
         
         let mapLoadedExpectation = XCTestExpectation(description: "Map loaded expectation.")
-        navigationMapView.mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
         wait(for: [mapLoadedExpectation], timeout: timeout)
@@ -90,7 +90,7 @@ class MapboxNavigationTests: XCTestCase {
         
         let timeout: TimeInterval = 2.0
         let mapLoadedExpectation = XCTestExpectation(description: "Map loaded expectation.")
-        navigationMapView.mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
         wait(for: [mapLoadedExpectation], timeout: timeout)
@@ -169,7 +169,7 @@ class MapboxNavigationTests: XCTestCase {
         let location = CLLocation(latitude: 37.79060960181454, longitude: -122.39564506250244)
         
         let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
-        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
         }
         wait(for: [styleLoadedExpectation], timeout: timeout)
@@ -185,7 +185,7 @@ class MapboxNavigationTests: XCTestCase {
         navigationMapView.mapView.location.overrideLocationProvider(with: simulatedLocationProvider)
         
         let mapLoadedExpectation = XCTestExpectation(description: "Map loaded expectation.")
-        navigationMapView.mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
         
@@ -234,7 +234,7 @@ class MapboxNavigationTests: XCTestCase {
         
         let timeout: TimeInterval = 2.0
         let styleLoadedExpectation = XCTestExpectation(description: "Style loaded expectation.")
-        navigationMapView.mapView.mapboxMap.onNext(.styleLoaded) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .styleLoaded) { _ in
             styleLoadedExpectation.fulfill()
         }
         wait(for: [styleLoadedExpectation], timeout: timeout)
@@ -244,7 +244,7 @@ class MapboxNavigationTests: XCTestCase {
                                                                         pitch: 0.0))
         
         let mapLoadedExpectation = XCTestExpectation(description: "Map loaded expectation.")
-        navigationMapView.mapView.mapboxMap.onNext(.mapLoaded) { _ in
+        navigationMapView.mapView.mapboxMap.onNext(event: .mapLoaded) { _ in
             mapLoadedExpectation.fulfill()
         }
         
