@@ -184,22 +184,21 @@ open class SimulatedLocationManager: NavigationLocationManager {
         let newCoordinate = indexedNewCoordinate.coordinate
         // Closest coordinate ahead
         guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: currentSpeed + 10) else { return }
-        guard let closestCoordinate = polyline.closestCoordinate(to: newCoordinate) else { return }
+        guard let originalShape = route?.shape,
+              let closestCoordinateOnRouteIndex = slicedIndex.map({ idx -> Int? in
+                  originalShape.closestCoordinate(to: newCoordinate,
+                                               startingIndex: idx)?.index
+              }) ?? originalShape.closestCoordinate(to: newCoordinate)?.index else { return }
         
         // Simulate speed based on expected segment travel time
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
-           let routeShape = route?.shape,
-           let closestCoordinateOnRouteIndex = slicedIndex.map({ idx -> Int? in
-               routeShape.closestCoordinate(to: newCoordinate,
-                                            startingIndex: idx)?.index
-           }) ?? routeShape.closestCoordinate(to: newCoordinate)?.index,
-           let nextCoordinateOnRoute = routeShape.coordinates.after(index:closestCoordinateOnRouteIndex),
+           let nextCoordinateOnRoute = originalShape.coordinates.after(index:closestCoordinateOnRouteIndex),
            let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRouteIndex] {
-            let distance = routeShape.coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
+            let distance = originalShape.coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
             currentSpeed =  min(max(distance / time, minimumSpeed), maximumSpeed)
             slicedIndex = max(closestCoordinateOnRouteIndex - 1, 0)
         } else {
-            let closestLocation = locations[closestCoordinate.index]
+            let closestLocation = locations[closestCoordinateOnRouteIndex]
             let distanceToClosest = closestLocation.distance(from: CLLocation(newCoordinate))
             let distance = min(max(distanceToClosest, 10), safeDistance)
             let coordinatesNearby = polyline.trimmed(from: newCoordinate, distance: 100)!.coordinates

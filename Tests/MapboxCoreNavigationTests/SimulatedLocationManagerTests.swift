@@ -35,7 +35,7 @@ class SimulatedLocationManagerTests: TestCase {
         let locationManagerSpy = SimulatedLocationManagerSpy()
         locationManager.delegate = locationManagerSpy
         
-        while locationManager.currentDistance < route.distance - 1 {
+        while locationManager.currentDistance < route.shape?.distance() ?? 0 {
             locationManager.tick()
         }
         locationManager.delegate = nil
