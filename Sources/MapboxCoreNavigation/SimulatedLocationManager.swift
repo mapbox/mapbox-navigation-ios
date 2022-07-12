@@ -125,9 +125,10 @@ open class SimulatedLocationManager: NavigationLocationManager {
     private var currentSpeed: CLLocationSpeed = 0
     private let accuracy: DispatchTimeInterval = .milliseconds(50)
     private let updateIntervalMilliseconds: Int = 1000
+    private let defaultTickInterval: TimeInterval = 1
     private var timer: DispatchTimer!
     private var locations: [SimulatedLocation]!
-    private var routeShape: LineString!
+    private var remainingRouteShape: LineString!
 
     private let queue = DispatchQueue(label: "com.mapbox.SimulatedLocationManager")
     
@@ -139,7 +140,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
     
     private func reset() {
         if let shape = route?.shape {
-            routeShape = shape
+            remainingRouteShape = shape
             locations = shape.coordinates.simulatedLocationsWithTurnPenalties()
         }
     }
@@ -151,7 +152,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         if _nextDate == nil || _nextDate! < Date() {
             _nextDate = Date()
         } else {
-            _nextDate?.addTimeInterval(1)
+            _nextDate?.addTimeInterval(defaultTickInterval)
         }
         return _nextDate!
     }
@@ -159,8 +160,9 @@ open class SimulatedLocationManager: NavigationLocationManager {
     private var slicedIndex: Int? = nil
     
     internal func tick() {
-        guard let polyline = routeShape,
-              let indexedNewCoordinate = polyline.indexedCoordinateFromStart(distance: currentSpeed) else {
+        let tickDistance = currentSpeed * defaultTickInterval
+        guard let polyline = remainingRouteShape,
+              let indexedNewCoordinate = polyline.indexedCoordinateFromStart(distance: tickDistance) else {
             return
         }
         if polyline.distance() == 0,
@@ -183,16 +185,16 @@ open class SimulatedLocationManager: NavigationLocationManager {
         
         let newCoordinate = indexedNewCoordinate.coordinate
         // Closest coordinate ahead
-        guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: currentSpeed + 10) else { return }
+        guard let lookAheadCoordinate = polyline.coordinateFromStart(distance: tickDistance + 10) else { return }
         guard let originalShape = route?.shape,
               let closestCoordinateOnRouteIndex = slicedIndex.map({ idx -> Int? in
                   originalShape.closestCoordinate(to: newCoordinate,
-                                               startingIndex: idx)?.index
+                                                  startingIndex: idx)?.index
               }) ?? originalShape.closestCoordinate(to: newCoordinate)?.index else { return }
         
         // Simulate speed based on expected segment travel time
         if let expectedSegmentTravelTimes = routeProgress?.currentLeg.expectedSegmentTravelTimes,
-           let nextCoordinateOnRoute = originalShape.coordinates.after(index:closestCoordinateOnRouteIndex),
+           let nextCoordinateOnRoute = originalShape.coordinates.after(index: closestCoordinateOnRouteIndex),
            let time = expectedSegmentTravelTimes.optional[closestCoordinateOnRouteIndex] {
             let distance = originalShape.coordinates[closestCoordinateOnRouteIndex].distance(to: nextCoordinateOnRoute)
             currentSpeed =  min(max(distance / time, minimumSpeed), maximumSpeed)
@@ -218,7 +220,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         delegate?.locationManager?(self, didUpdateLocations: [location])
         currentDistance += polyline.distance(to: newCoordinate) ?? 0
         
-        routeShape = polyline.sliced(from: newCoordinate)
+        remainingRouteShape = polyline.sliced(from: newCoordinate)
     }
     
     private func calculateCurrentSpeed(distance: CLLocationDistance, coordinatesNearby: [CLLocationCoordinate2D]? = nil, closestLocation: SimulatedLocation) -> CLLocationSpeed {
@@ -247,7 +249,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
         copy.simulatedLocation = simulatedLocation
         copy.currentSpeed = currentSpeed
         copy.locations = locations
-        copy.routeShape = routeShape
+        copy.remainingRouteShape = remainingRouteShape
         copy.speedMultiplier = speedMultiplier
         
         copy.slicedIndex = slicedIndex
@@ -279,7 +281,7 @@ open class SimulatedLocationManager: NavigationLocationManager {
             routeProgress = router.routeProgress
             route = router.routeProgress.route
             
-            routeShape = routeShape.sliced(from: newClosestCoordinate)
+            remainingRouteShape = remainingRouteShape.sliced(from: newClosestCoordinate)
             slicedIndex = nil
         }
     }
@@ -311,16 +313,9 @@ extension Array where Element : Hashable {
 }
 
 extension Array where Element : Equatable {
-    fileprivate func after(element: Element) -> Element? {
-        if let index = self.firstIndex(of: element), index + 1 <= self.count {
-            return index + 1 == self.count ? self[0] : self[index + 1]
-        }
-        return nil
-    }
-    
     fileprivate func after(index: Index) -> Element? {
-        if index + 1 <= self.count {
-            return index + 1 == self.count ? self[0] : self[index + 1]
+        if index + 1 < self.count {
+            return self[index + 1]
         }
         return nil
     }
