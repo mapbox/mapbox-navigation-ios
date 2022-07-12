@@ -104,7 +104,7 @@ class Navigator {
         navigator = factory.navigator
         roadObjectStore = RoadObjectStore(navigator.roadObjectStore())
         roadObjectMatcher = RoadObjectMatcher(MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle))
-        rerouteController = RerouteController(navigator, config: NativeHandlersFactory.navigatorConfig)
+        rerouteController = RerouteController(navigator, config: NativeHandlersFactory.configHandle())
         
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()
@@ -133,7 +133,7 @@ class Navigator {
         
         roadObjectStore.native = navigator.roadObjectStore()
         roadObjectMatcher.native = MapboxNavigationNative.RoadObjectMatcher(cache: cacheHandle)
-        rerouteController = RerouteController(navigator, config: NativeHandlersFactory.navigatorConfig)
+        rerouteController = RerouteController(navigator, config: NativeHandlersFactory.configHandle())
         
         subscribeNavigator()
         setupAlternativesControllerIfNeeded()

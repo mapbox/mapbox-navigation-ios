@@ -23,10 +23,10 @@ class RerouteController {
 
     var initialManeuverAvoidanceRadius: TimeInterval {
         get {
-            config.avoidManeuverSeconds?.doubleValue ?? Self.DefaultManeuverAvoidanceRadius
+            config.avoidManeuverSeconds()?.doubleValue ?? Self.DefaultManeuverAvoidanceRadius
         }
         set {
-            config.avoidManeuverSeconds = NSNumber(value: newValue)
+            config.setAvoidManeuverSecondsForSeconds(NSNumber(value: newValue))
         }
     }
 
@@ -38,7 +38,7 @@ class RerouteController {
         }
     }
     
-    private var config: NavigatorConfig
+    private var config: ConfigHandle
 
     // MARK: Reporting Data
     
@@ -66,11 +66,11 @@ class RerouteController {
     func resetToDefaultSettings() {
         reroutesProactively = true
         isCancelled = false
-        config.avoidManeuverSeconds = NSNumber(value: Self.DefaultManeuverAvoidanceRadius)
+        config.setAvoidManeuverSecondsForSeconds(NSNumber(value: Self.DefaultManeuverAvoidanceRadius))
         customRoutingProvider = nil
     }
 
-    required init(_ navigator: MapboxNavigationNative.Navigator, config: NavigatorConfig) {
+    required init(_ navigator: MapboxNavigationNative.Navigator, config: ConfigHandle) {
         self.navigator = navigator
         self.config = config
         self.defaultRerouteController = navigator.getRerouteController()
