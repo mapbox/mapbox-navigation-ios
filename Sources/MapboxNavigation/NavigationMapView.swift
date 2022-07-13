@@ -42,18 +42,7 @@ open class NavigationMapView: UIView {
      */
     public var showsRestrictedAreasOnRoute: Bool = false {
         didSet {
-            updateRestrictedAreasGradientStops(along: self.routes?.first)
-            if let routes = self.routes {
-                if routeLineTracksTraversal {
-                    if showsRestrictedAreasOnRoute, let route = routes.first {
-                        addRouteRestrictedAreaLayer(route, above: route.identifier(.route(isMainRoute: true)))
-                    } else {
-                        removeRestrictedRouteArea()
-                    }
-                } else {
-                    show(routes, legIndex: currentLegIndex)
-                }
-            }
+            updateRouteLineWithRouteLineTracksTraversal()
         }
     }
 
@@ -74,13 +63,7 @@ open class NavigationMapView: UIView {
      */
     public var crossfadesCongestionSegments: Bool = false {
         didSet {
-            if let routes = self.routes {
-                if routeLineTracksTraversal, let route = routes.first {
-                    setUpLineGradientStops(along: route)
-                } else {
-                    show(routes, legIndex: currentLegIndex)
-                }
-            }
+            updateRouteLineWithRouteLineTracksTraversal()
         }
     }
     
@@ -154,9 +137,6 @@ open class NavigationMapView: UIView {
      */
     var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
     
-    var currentLineGradientStops = [Double: UIColor]()
-    var currentRestrictedAreasStops = [Double: UIColor]()
-    
     var showsRoute: Bool {
         get {
             guard let mainRouteLayerIdentifier = routes?.first?.identifier(.route(isMainRoute: true)),
@@ -178,13 +158,13 @@ open class NavigationMapView: UIView {
     }
     
     func updateRouteLineWithRouteLineTracksTraversal() {
-        if routeLineTracksTraversal, let route = routes?.first {
-            initPrimaryRoutePoints(route: route)
-            setUpLineGradientStops(along: route)
-        } else {
-            removeLineGradientStops()
+        if let routes = self.routes {
+            let offset = fractionTraveled
+            show(routes, legIndex: currentLegIndex)
+            if let route = routes.first, routeLineTracksTraversal {
+                updateRouteLineOffSet(along: route, offset: offset)
+            }
         }
-        updateRestrictedAreasGradientStops(along: routes?.first)
     }
     
     /**
@@ -275,11 +255,9 @@ open class NavigationMapView: UIView {
         
         for (index, route) in routes.enumerated() {
             if index == 0 {
-                updateRestrictedAreasGradientStops(along: route)
                 
                 if routeLineTracksTraversal {
                     initPrimaryRoutePoints(route: route)
-                    setUpLineGradientStops(along: route)
                 }
                 
                 if showsRestrictedAreasOnRoute {
@@ -287,6 +265,8 @@ open class NavigationMapView: UIView {
                                                                         below: parentLayerIdentifier,
                                                                         reuseExistingLayer: true)
                 }
+                
+                pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
             }
             
             // Use custom layer position for the main route layer. All other alternative route layers
@@ -295,13 +275,11 @@ open class NavigationMapView: UIView {
             
             parentLayerIdentifier = addRouteLayer(route,
                                                   customLayerPosition: customLayerPosition,
-                                                  fractionTraveled: fractionTraveled,
                                                   below: parentLayerIdentifier,
                                                   reuseExistingLayer: true,
                                                   isMainRoute: index == 0,
                                                   legIndex: currentLegIndex)
             parentLayerIdentifier = addRouteCasingLayer(route,
-                                                        fractionTraveled: fractionTraveled,
                                                         below: parentLayerIdentifier,
                                                         reuseExistingLayer: true,
                                                         isMainRoute: index == 0)
@@ -314,16 +292,21 @@ open class NavigationMapView: UIView {
             
             let offset = (route.distance - routeAlternative.infoFromDeviationPoint.distance) / route.distance
             parentLayerIdentifier = addRouteLayer(route,
-                                                  fractionTraveled: offset,
                                                   below: parentLayerIdentifier,
                                                   reuseExistingLayer: true,
                                                   isMainRoute: false,
                                                   legIndex: nil)
+            if let altertiveRouteLayerIdentifier = parentLayerIdentifier {
+                setLayerLineGradient(for: altertiveRouteLayerIdentifier, with: offset)
+            }
+            
             parentLayerIdentifier = addRouteCasingLayer(route,
-                                                        fractionTraveled: offset,
                                                         below: parentLayerIdentifier,
                                                         reuseExistingLayer: true,
                                                         isMainRoute: false)
+            if let altertiveRouteCasingIdentifier = parentLayerIdentifier {
+                setLayerLineGradient(for: altertiveRouteCasingIdentifier, with: offset)
+            }
         }
     }
     
@@ -349,7 +332,6 @@ open class NavigationMapView: UIView {
         
         routes = nil
         removeLineGradientStops()
-        updateRestrictedAreasGradientStops(along: nil)
     }
     
     func removeAlternativeRoutes() {
@@ -555,37 +537,10 @@ open class NavigationMapView: UIView {
     }
     
     /**
-     Set up the line gradient stops for vanishing route line.
-     
-     - parameter route: Route that will show vanishing effect when `routeLineTracksTraversal` enabled.
-     */
-    func setUpLineGradientStops(along route: Route) {
-        if let legIndex = currentLegIndex {
-            let congestionFeatures = route.congestionFeatures(legIndex: legIndex,
-                                                              roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-            currentLineGradientStops = routeLineCongestionGradient(route,
-                                                                   congestionFeatures: congestionFeatures,
-                                                                   fractionTraveled: fractionTraveled,
-                                                                   isSoft: crossfadesCongestionSegments)
-            pendingCoordinateForRouteLine = route.shape?.coordinates.first ?? mostRecentUserCourseViewLocation?.coordinate
-        }
-    }
-    
-    func updateRestrictedAreasGradientStops(along route: Route?) {
-        if showsRestrictedAreasOnRoute, let route = route {
-            currentRestrictedAreasStops = routeLineRestrictionsGradient(route.restrictedRoadsFeatures(),
-                                                                        fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
-        } else {
-            currentRestrictedAreasStops.removeAll()
-        }
-    }
-    
-    /**
      Stop the vanishing effect for route line when `routeLineTracksTraversal` disabled.
      */
     func removeLineGradientStops() {
         fractionTraveled = 0.0
-        currentLineGradientStops.removeAll()
         if let routes = self.routes {
             show(routes, legIndex: currentLegIndex)
         }
@@ -648,15 +603,9 @@ open class NavigationMapView: UIView {
             lineLayer?.lineCap = .constant(.round)
             lineLayer?.lineOpacity = .constant(0.5)
             
-            if !currentRestrictedAreasStops.isEmpty {
-                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(currentRestrictedAreasStops,
-                                                                                             lineBaseColor: routeRestrictedAreaColor))
-            } else {
-                let routeLineStops = routeLineRestrictionsGradient(restrictedRoadsFeatures,
-                                                                   fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
-                lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
-                                                                                             lineBaseColor: routeRestrictedAreaColor))
-            }
+            let routeLineStops = routeLineRestrictionsGradient(restrictedRoadsFeatures)
+            lineLayer?.lineGradient = .expression(Expression.routeLineGradientExpression(routeLineStops,
+                                                                                         lineBaseColor: routeRestrictedAreaColor))
             lineLayer?.lineDasharray = .constant([0.5, 2.0])
         }
         
@@ -691,7 +640,6 @@ open class NavigationMapView: UIView {
     
     @discardableResult func addRouteLayer(_ route: Route,
                                           customLayerPosition: MapboxMaps.LayerPosition? = nil,
-                                          fractionTraveled: Double,
                                           below parentLayerIndentifier: String? = nil,
                                           reuseExistingLayer: Bool = false,
                                           isMainRoute: Bool = true,
@@ -735,40 +683,27 @@ open class NavigationMapView: UIView {
             lineLayer?.lineCap = .constant(.round)
             
             if isMainRoute {
-                if !currentLineGradientStops.isEmpty {
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(currentLineGradientStops,
-                                                                                                  lineBaseColor: trafficUnknownColor,
-                                                                                                  isSoft: crossfadesCongestionSegments)))
-                } else {
-                    let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
-                    let gradientStops = routeLineCongestionGradient(route,
-                                                                    congestionFeatures: congestionFeatures,
-                                                                    fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
-                                                                    isSoft: crossfadesCongestionSegments)
-                    
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
-                                                                                                  lineBaseColor: trafficUnknownColor,
-                                                                                                  isSoft: crossfadesCongestionSegments)))
-                }
+                let congestionFeatures = route.congestionFeatures(legIndex: legIndex, roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels)
+                let gradientStops = routeLineCongestionGradient(route,
+                                                                congestionFeatures: congestionFeatures,
+                                                                isSoft: crossfadesCongestionSegments)
+                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                                                                                              lineBaseColor: trafficUnknownColor,
+                                                                                              isSoft: crossfadesCongestionSegments)))
             } else {
                 if showsCongestionForAlternativeRoutes {
                     let gradientStops = routeLineCongestionGradient(route,
                                                                     congestionFeatures: route.congestionFeatures(roadClassesWithOverriddenCongestionLevels: roadClassesWithOverriddenCongestionLevels),
-                                                                    fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0,
                                                                     isMain: false,
                                                                     isSoft: crossfadesCongestionSegments)
                     lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
                                                                                                   lineBaseColor: alternativeTrafficUnknownColor,
                                                                                                   isSoft: crossfadesCongestionSegments)))
                 } else {
-                    if routeLineTracksTraversal {
-                        let gradientStops = alternativeRouteLineGradient(fractionTraveled, baseColor: routeAlternateColor)
-                        lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
-                                                                                                      lineBaseColor: routeAlternateColor,
-                                                                                                      isSoft: false)))
-                    } else {
-                        lineLayer?.lineColor = .constant(.init(routeAlternateColor))
-                    }
+                    let gradientStops: [Double: UIColor] = [1.0: routeAlternateColor]
+                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                                                                                                  lineBaseColor: routeAlternateColor,
+                                                                                                  isSoft: false)))
                 }
             }
         }
@@ -810,7 +745,6 @@ open class NavigationMapView: UIView {
     }
     
     @discardableResult func addRouteCasingLayer(_ route: Route,
-                                                fractionTraveled: Double,
                                                 below parentLayerIndentifier: String? = nil,
                                                 reuseExistingLayer: Bool = false,
                                                 isMainRoute: Bool = true) -> String? {
@@ -853,18 +787,13 @@ open class NavigationMapView: UIView {
             lineLayer?.lineCap = .constant(.round)
             
             if isMainRoute {
-                let gradientStops = routeLineCongestionGradient(route,
-                                                                fractionTraveled: routeLineTracksTraversal ? fractionTraveled : 0.0)
+                let gradientStops = routeLineCongestionGradient(route)
                 lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops, lineBaseColor: routeCasingColor)))
             } else {
-                if routeLineTracksTraversal {
-                    let gradientStops = alternativeRouteLineGradient(fractionTraveled, baseColor: routeAlternateCasingColor)
-                    lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
-                                                                                                  lineBaseColor: routeAlternateCasingColor,
-                                                                                                  isSoft: false)))
-                } else {
-                    lineLayer?.lineColor = .constant(.init(routeAlternateCasingColor))
-                }
+                let gradientStops: [Double: UIColor] = [1.0: routeAlternateCasingColor]
+                lineLayer?.lineGradient = .expression((Expression.routeLineGradientExpression(gradientStops,
+                                                                                              lineBaseColor: routeAlternateCasingColor,
+                                                                                              isSoft: false)))
             }
         }
         

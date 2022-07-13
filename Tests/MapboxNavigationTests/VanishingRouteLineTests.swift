@@ -321,13 +321,24 @@ class VanishingRouteLineTests: TestCase {
         let route = getRoute()
         
         // When different congestion levels have same color, the line gradient stops are expected to combine these congestion level.
+        navigationMapView.trafficUnknownColor = UIColor.blue
         navigationMapView.trafficModerateColor = navigationMapView.trafficUnknownColor
         navigationMapView.routes = [route]
         navigationMapView.routeLineTracksTraversal = true
         navigationMapView.show([route], legIndex: 0)
         
-        let expectedGradientStops = [0.0 : navigationMapView.trafficUnknownColor]
-        XCTAssertEqual(expectedGradientStops, navigationMapView.currentLineGradientStops, "Failed to combine the same color of congestion segment.")
+        let expectedExpressionString = "[step, [line-progress], [rgba, 0.0, 0.0, 255.0, 1.0], 0.0, [rgba, 0.0, 0.0, 255.0, 1.0]]"
+        let layerIdentifier = route.identifier(.route(isMainRoute: true))
+        do {
+            guard let lineLayer = try navigationMapView.mapView.mapboxMap.style.layer(withId: layerIdentifier) as? LineLayer else {
+                XCTFail("Route line layer should be added.")
+                return
+            }
+            let lineGradientString = lineGradientToString(lineGradient: lineLayer.lineGradient)
+            XCTAssertEqual(lineGradientString, expectedExpressionString, "Failed to combine the same color of congestion segment.")
+        } catch {
+            XCTFail(error.localizedDescription)
+        }
     }
     
     func testSwitchCrossfadesCongestionSegments() {
@@ -413,8 +424,7 @@ class VanishingRouteLineTests: TestCase {
         // the route line is expcted to apply `trafficUnknownColor` for the main route.
         let congestionFeatures = route.congestionFeatures(legIndex: 0)
         let currentLineGradientStops = navigationMapView.routeLineCongestionGradient(route,
-                                                                                     congestionFeatures: congestionFeatures,
-                                                                                     fractionTraveled: 0.0)
+                                                                                     congestionFeatures: congestionFeatures)
         XCTAssertEqual(currentLineGradientStops[0.0], navigationMapView.trafficUnknownColor, "Failed to use trafficUnknownColor for route line when no congestion level found.")
     }
     

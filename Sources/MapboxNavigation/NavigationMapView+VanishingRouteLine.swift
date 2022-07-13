@@ -184,7 +184,7 @@ extension NavigationMapView {
         /**
          Calculate the percentage of the route traveled.
          */
-        if granularDistances.distance >= remainingDistance {
+        if granularDistances.distance > 0 {
             let offset = (1.0 - remainingDistance / granularDistances.distance)
             if offset >= 0 {
                 fractionTraveled = offset
@@ -209,12 +209,17 @@ extension NavigationMapView {
         guard distance >= meterPerPixel else { return }
             
         updateFractionTraveled(coordinate: currentCoordinate)
+        updateRouteLineOffSet(along: route, offset: fractionTraveled)
         
+        pendingCoordinateForRouteLine = coordinate
+    }
+    
+    func updateRouteLineOffSet(along route: Route, offset: Double) {
         let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
         let mainRouteCasingLayerIdentifier = route.identifier(.routeCasing(isMainRoute: true))
         let restrictedAreaLayerIdentifier = route.identifier(.restrictedRouteAreaRoute)
         
-        if fractionTraveled >= 1.0 {
+        if offset >= 1.0 {
             // In case if route was fully travelled - remove main route and its casing.
             do {
                 try mapView.mapboxMap.style.removeLayer(withId: mainRouteLayerIdentifier)
@@ -228,33 +233,20 @@ extension NavigationMapView {
             return
         }
         
-        let mainRouteLayerGradient = updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentLineGradientStops, baseColor: trafficUnknownColor)
-        let mainRouteLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteLayerGradient, lineBaseColor: trafficUnknownColor, isSoft: crossfadesCongestionSegments)
-        setLayerLineGradient(for: mainRouteLayerIdentifier, exp: mainRouteLayerGradientExpression)
-        
-        let mainRouteCasingLayerGradient = routeLineCongestionGradient(route, fractionTraveled: fractionTraveled)
-        let mainRouteCasingLayerGradientExpression = Expression.routeLineGradientExpression(mainRouteCasingLayerGradient, lineBaseColor: routeCasingColor)
-        setLayerLineGradient(for: mainRouteCasingLayerIdentifier, exp: mainRouteCasingLayerGradientExpression)
-        
+        setLayerLineGradient(for: mainRouteLayerIdentifier, with: offset)
+        setLayerLineGradient(for: mainRouteCasingLayerIdentifier, with: offset)
         if showsRestrictedAreasOnRoute {
-            let restrictedAreaLayerGradient = updateRouteLineGradientStops(fractionTraveled: fractionTraveled, gradientStops: currentRestrictedAreasStops, baseColor: routeRestrictedAreaColor)
-            let restrictedAreaLayerGradientExpression = Expression.routeLineGradientExpression(restrictedAreaLayerGradient, lineBaseColor: traversedRouteColor)
-            setLayerLineGradient(for: restrictedAreaLayerIdentifier, exp: restrictedAreaLayerGradientExpression)
+            setLayerLineGradient(for: restrictedAreaLayerIdentifier, with: offset)
         }
         
-        pendingCoordinateForRouteLine = coordinate
+        fractionTraveled = offset
     }
     
-    func setLayerLineGradient(for layerId: String, exp: Expression) {
-        if let data = try? JSONEncoder().encode(exp.self),
-           let jsonObject = try? JSONSerialization.jsonObject(with: data, options: []) {
-            do {
-                try mapView.mapboxMap.style.setLayerProperty(for: layerId,
-                                                             property: "line-gradient",
-                                                             value: jsonObject)
-            } catch {
-                Log.error("Failed to update route line gradient.", category: .navigationUI)
-            }
+    func setLayerLineGradient(for layerId: String, with offset: Double) {
+        do {
+            try mapView.mapboxMap.style.setLayerProperty(for: layerId, property: "line-trim-offset", value: [0.0, Double.minimum(1.0, offset)])
+        } catch {
+            Log.error("Failed to update route line gradient.", category: .navigationUI)
         }
     }
     
@@ -302,35 +294,8 @@ extension NavigationMapView {
         return overriddenLineLayerCasingColor
     }
     
-    func updateRouteLineGradientStops(fractionTraveled: Double, gradientStops: [Double: UIColor], baseColor: UIColor) -> [Double: UIColor] {
-        // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply its color to the `fractionTraveled` stop.
-        var minimumSegment: (Double, UIColor) = (0.0, baseColor)
-        var filteredGradientStops = [Double: UIColor]()
-        
-        let overriddenLineLayerColor = lineLayerColorIfPresent(from: routes?.first)
-        
-        for (key, value) in gradientStops {
-            if key > fractionTraveled {
-                filteredGradientStops[key] = overriddenLineLayerColor ?? value
-            } else if key >= minimumSegment.0 {
-                minimumSegment = (key, overriddenLineLayerColor ?? value)
-            }
-        }
-        
-        filteredGradientStops[0.0] = traversedRouteColor
-        let  nextDownFractionTraveled = Double(CGFloat(fractionTraveled).nextDown)
-        if nextDownFractionTraveled >= 0.0 {
-            filteredGradientStops[nextDownFractionTraveled] = traversedRouteColor
-        }
-        filteredGradientStops[fractionTraveled] = minimumSegment.1
-
-        return filteredGradientStops
-    }
-    
     struct LineGradientSettings {
-        let fractionTraveled: Double
         let isSoft: Bool
-        let startingColor: UIColor
         let baseColor: UIColor
         let featureColor: (Turf.Feature) -> UIColor
     }
@@ -349,8 +314,6 @@ extension NavigationMapView {
             }.reduce(0, +)
             // lastRecordSegment records the last segmentEndPercentTraveled and associated congestion color added to the gradientStops.
             var lastRecordSegment: (Double, UIColor) = (0.0, traversedRouteColor)
-            // minimumSegment records the nearest smaller or equal stop and associated congestion color of the `fractionTraveled`, and then apply its color to the `fractionTraveled` stop.
-            var minimumSegment: (Double, UIColor) = (0.0, lineSettings.startingColor)
 
             for (index, feature) in routeLineFeatures.enumerated() {
                 let associatedFeatureColor = lineSettings.featureColor(feature)
@@ -359,23 +322,18 @@ extension NavigationMapView {
                       let distance = lineString.distance() else {
                     return gradientStops
                 }
-                let minimumPercentGap = 0.0000000000000002
+                let minimumPercentGap = 2e-16
                 let stopGap = (routeDistance > 0.0) ? max(min(GradientCongestionFadingDistance, distance * 0.1) / routeDistance, minimumPercentGap) : minimumPercentGap
                 
                 if index == routeLineFeatures.startIndex {
-                    minimumSegment = (0.0, associatedFeatureColor)
                     distanceTraveled = distanceTraveled + distance
+                    gradientStops[0.0] = associatedFeatureColor
                     
                     if index + 1 < routeLineFeatures.count {
                         let segmentEndPercentTraveled = distanceTraveled / routeDistance
                         let currentGradientStop = lineSettings.isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
-                        if currentGradientStop > lineSettings.fractionTraveled {
-                            gradientStops[currentGradientStop] = associatedFeatureColor
-                            lastRecordSegment = (currentGradientStop, associatedFeatureColor)
-                        }
-                        else {
-                            minimumSegment = (0.0, traversedRouteColor)
-                        }
+                        gradientStops[currentGradientStop] = associatedFeatureColor
+                        lastRecordSegment = (currentGradientStop, associatedFeatureColor)
                     }
                     
                     continue
@@ -387,11 +345,7 @@ extension NavigationMapView {
                     } else {
                         let segmentStartPercentTraveled = distanceTraveled / routeDistance
                         let currentGradientStop = lineSettings.isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
-                        if currentGradientStop > fractionTraveled {
-                            gradientStops[currentGradientStop] = associatedFeatureColor
-                        } else if currentGradientStop >= minimumSegment.0 {
-                            minimumSegment = (currentGradientStop, associatedFeatureColor)
-                        }
+                        gradientStops[currentGradientStop] = associatedFeatureColor
                     }
                     
                     continue
@@ -402,38 +356,22 @@ extension NavigationMapView {
                 } else {
                     let segmentStartPercentTraveled = distanceTraveled / routeDistance
                     let currentGradientStop = lineSettings.isSoft ? segmentStartPercentTraveled + stopGap : Double(CGFloat(segmentStartPercentTraveled).nextUp)
-                    if currentGradientStop > lineSettings.fractionTraveled {
-                        gradientStops[currentGradientStop] = associatedFeatureColor
-                    } else if currentGradientStop >= minimumSegment.0 {
-                        minimumSegment = (currentGradientStop, associatedFeatureColor)
-                    }
+                    gradientStops[currentGradientStop] = associatedFeatureColor
                 }
                 
                 distanceTraveled = distanceTraveled + distance
                 let segmentEndPercentTraveled = distanceTraveled / routeDistance
                 let currentGradientStop = lineSettings.isSoft ? segmentEndPercentTraveled - stopGap : Double(CGFloat(segmentEndPercentTraveled).nextDown)
-                
-                if currentGradientStop > lineSettings.fractionTraveled {
-                    gradientStops[currentGradientStop] = associatedFeatureColor
-                    lastRecordSegment = (currentGradientStop, associatedFeatureColor)
-                } else if currentGradientStop >= minimumSegment.0 {
-                    minimumSegment = (currentGradientStop, associatedFeatureColor)
-                }
+                gradientStops[currentGradientStop] = associatedFeatureColor
+                lastRecordSegment = (currentGradientStop, associatedFeatureColor)
             }
             
-            gradientStops[0.0] = traversedRouteColor
-            let currentGradientStop = Double(CGFloat(lineSettings.fractionTraveled).nextDown)
-            if currentGradientStop >= 0.0 {
-                gradientStops[currentGradientStop] = traversedRouteColor
+            if gradientStops.isEmpty {
+                gradientStops[1.0] = lineSettings.baseColor
             }
-            gradientStops[lineSettings.fractionTraveled] = minimumSegment.1
+            
         } else {
-            let percentTraveled = CGFloat(lineSettings.fractionTraveled)
-            gradientStops[0.0] = traversedRouteColor
-            if percentTraveled.nextDown >= 0.0 {
-                gradientStops[Double(percentTraveled.nextDown)] = traversedRouteColor
-            }
-            gradientStops[Double(percentTraveled)] = lineSettings.baseColor
+            gradientStops[1.0] = lineSettings.baseColor
         }
         
         return gradientStops
@@ -441,7 +379,6 @@ extension NavigationMapView {
     
     func routeLineCongestionGradient(_ route: Route? = nil,
                                      congestionFeatures: [Turf.Feature]? = nil,
-                                     fractionTraveled: Double,
                                      isMain: Bool = true,
                                      isSoft: Bool = false) -> [Double: UIColor] {
         // If `congestionFeatures` is set to nil - check if overridden route line casing is used.
@@ -452,10 +389,8 @@ extension NavigationMapView {
             overriddenLineLayerColor = lineLayerCasingColorIfPresent(from: route)
         }
         
-        let lineSettings = LineGradientSettings(fractionTraveled: fractionTraveled,
-                                                isSoft: isSoft,
-                                                startingColor: overriddenLineLayerColor ?? (isMain ? .trafficUnknown : .alternativeTrafficUnknown),
-                                                baseColor: overriddenLineLayerColor ?? routeCasingColor,
+        let lineSettings = LineGradientSettings(isSoft: isSoft,
+                                                baseColor: overriddenLineLayerColor ?? (isMain ? .trafficUnknown : .alternativeTrafficUnknown),
                                                 featureColor: {
             if let overriddenLineLayerColor = overriddenLineLayerColor {
                 return overriddenLineLayerColor
@@ -476,16 +411,6 @@ extension NavigationMapView {
         return routeLineFeaturesGradient(congestionFeatures, lineSettings: lineSettings)
     }
     
-    func alternativeRouteLineGradient(_ fractionTraveled: Double, baseColor: UIColor) -> [Double: UIColor] {
-        var gradient = [0.0: .defaultTraversedRouteColor,
-                        1.0: baseColor]
-        if fractionTraveled != 0.0 && fractionTraveled != 1.0 {
-            gradient[fractionTraveled] = baseColor
-        }
-        
-        return gradient
-    }
-    
     /**
      Given a congestion level, return its associated color.
      */
@@ -504,10 +429,14 @@ extension NavigationMapView {
         }
     }
     
-    func routeLineRestrictionsGradient(_ restrictionFeatures: [Turf.Feature], fractionTraveled: Double) -> [Double: UIColor] {
-        let lineSettings = LineGradientSettings(fractionTraveled: fractionTraveled,
-                                                isSoft: false,
-                                                startingColor: traversedRouteColor,
+    func routeLineRestrictionsGradient(_ restrictionFeatures: [Turf.Feature]) -> [Double: UIColor] {
+        // If there's no restricted feature, hide the restricted route line layer.
+        guard restrictionFeatures.count > 0 else {
+            let gradientStops: [Double: UIColor] = [1.0: traversedRouteColor]
+            return gradientStops
+        }
+        
+        let lineSettings = LineGradientSettings(isSoft: false,
                                                 baseColor: routeRestrictedAreaColor,
                                                 featureColor: {
             if case let .boolean(isRestricted) = $0.properties?[RestrictedRoadClassAttribute],
