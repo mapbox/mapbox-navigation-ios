@@ -16,6 +16,10 @@
 
 * During active navigation, the user can tap the "Alternatives" button in the navigation bar to switch to an alternative route. ([#3956](https://github.com/mapbox/mapbox-navigation-ios/pull/3956))
 
+### Other changes
+
+* Fixed the unmatched language issue of some localized strings in the feedback view. ([#4007](https://github.com/mapbox/mapbox-navigation-ios/pull/4007))
+
 ## v2.6.0
 
 ### Packaging
