@@ -572,6 +572,9 @@ class ViewController: UIViewController {
     func presentAndRemoveNavigationMapView(_ navigationViewController: NavigationViewController,
                                            completion: CompletionHandler? = nil) {
         navigationViewController.modalPresentationStyle = .fullScreen
+        navigationViewController.showsEndOfRouteFeedback = false
+        navigationViewController.snapsUserLocationAnnotationToRoute = false
+
         activeNavigationViewController = navigationViewController
         
         present(navigationViewController, animated: true) {

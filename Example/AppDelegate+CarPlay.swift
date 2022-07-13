@@ -108,7 +108,7 @@ extension AppDelegate: CarPlayManagerDelegate {
     }
 
     func carPlayManager(_ carPlayManager: CarPlayManager, shouldPresentArrivalUIFor waypoint: Waypoint) -> Bool {
-        return true
+        return false
     }
     
     func carPlayManager(_ carPlayManager: CarPlayManager,
