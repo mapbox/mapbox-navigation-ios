@@ -155,7 +155,7 @@ public class Fixture: NSObject {
         locationManager.delegate = traceCollector
         locationManager.speedMultiplier = speedMultiplier
         
-        while locationManager.currentDistance < route.distance {
+        while locationManager.currentDistance < route.shape?.distance() ?? 0 {
             locationManager.tick()
         }
         

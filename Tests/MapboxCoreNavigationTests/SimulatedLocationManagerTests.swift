@@ -34,24 +34,16 @@ class SimulatedLocationManagerTests: TestCase {
         let locationManager = SimulatedLocationManager(route: route)
         let locationManagerSpy = SimulatedLocationManagerSpy()
         locationManager.delegate = locationManagerSpy
-        locationManager.speedMultiplier = 5
         
-        while locationManager.currentDistance < route.distance {
+        while locationManager.currentDistance < route.shape?.distance() ?? 0 {
             locationManager.tick()
         }
-        
-        var testCoordinates:[CLLocationCoordinate2D] = locationManagerSpy.locations.map { $0.coordinate }
-        let expectedDistance = LineString(coordinates).distance()
-        let testDistance = LineString(testCoordinates).distance()
-        XCTAssert(abs(expectedDistance! - testDistance!) < 70)
-        
-        while locationManager.currentDistance < route.distance + 30 {
-            locationManager.tick()
-        }
-
         locationManager.delegate = nil
-
-        testCoordinates = locationManagerSpy.locations.map { $0.coordinate }
+        
+        let testCoordinates:[CLLocationCoordinate2D] = locationManagerSpy.locations.map { $0.coordinate }
+        let testDistance = LineString(testCoordinates).distance()
+        XCTAssert(abs(route.distance - testDistance!) < 70)
+        
         let endPointDifferences = (testCoordinates.first?.distance(to: coordinates.first!))! + (testCoordinates.last?.distance(to: coordinates.last!))!
         XCTAssert(endPointDifferences < 5)
     }
