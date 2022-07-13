@@ -65,7 +65,7 @@ public class FeedbackViewController: UIViewController, DismissDraggable, UIGestu
     
     // MARK: UI Configuration
     
-    static let sceneTitle = NSLocalizedString("FEEDBACK_TITLE", value: "Report Problem", comment: "Title of view controller for sending feedback")
+    static let sceneTitle = NSLocalizedString("FEEDBACK_TITLE", bundle: .mapboxNavigation, value: "Report Problem", comment: "Title of view controller for sending feedback")
     static let cellReuseIdentifier = "collectionViewCellId"
     static let autoDismissInterval: TimeInterval = 10
     static let verticalCellPadding: CGFloat = 20.0

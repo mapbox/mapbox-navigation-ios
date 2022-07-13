@@ -1644,14 +1644,14 @@ open class NavigationMapView: UIView {
         var labelWithTolls = label
         let hasTolls = (route?.tollIntersections?.count ?? 0) > 0
         if hasTolls {
-            labelWithTolls += "\n" + NSLocalizedString("ROUTE_HAS_TOLLS", value: "Tolls", comment: "This route does have tolls")
+            labelWithTolls += "\n" + NSLocalizedString("ROUTE_HAS_TOLLS", bundle: .mapboxNavigation, value: "Tolls", comment: "This route does have tolls")
             if let symbol = Locale.current.currencySymbol {
                 labelWithTolls += " " + symbol
             }
         } else if tolls {
             // If one of the routes has tolls, but this one does not then it needs to explicitly say that it has no tolls
             // If no routes have tolls at all then we can omit this portion of the string.
-            labelWithTolls += "\n" + NSLocalizedString("ROUTE_HAS_NO_TOLLS", value: "No Tolls", comment: "This route does not have tolls")
+            labelWithTolls += "\n" + NSLocalizedString("ROUTE_HAS_NO_TOLLS", bundle: .mapboxNavigation, value: "No Tolls", comment: "This route does not have tolls")
         }
         
         return labelWithTolls
