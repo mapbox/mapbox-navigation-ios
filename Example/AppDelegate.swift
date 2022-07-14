@@ -10,12 +10,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     
+    var _carPlayManager: Any? = nil
     @available(iOS 12.0, *)
-    lazy var carPlayManager: CarPlayManager = CarPlayManager(customRoutingProvider: MapboxRoutingProvider(.hybrid))
+    var carPlayManager: CarPlayManager {
+        if _carPlayManager == nil {
+            _carPlayManager = CarPlayManager(customRoutingProvider: MapboxRoutingProvider(.hybrid))
+        }
+        
+        return _carPlayManager as! CarPlayManager
+    }
     
+    var _carPlaySearchController: Any? = nil
     @available(iOS 12.0, *)
-    lazy var carPlaySearchController: CarPlaySearchController = CarPlaySearchController()
-
+    var carPlaySearchController: CarPlaySearchController {
+        if _carPlaySearchController == nil {
+            _carPlaySearchController = CarPlaySearchController()
+        }
+        
+        return _carPlaySearchController as! CarPlaySearchController
+    }
+    
     // `CLLocationManager` instance, which is going to be used to create a location, which is used as a
     // hint when looking up the specified address in `CarPlaySearchController`.
     static let coarseLocationManager: CLLocationManager = {
@@ -24,8 +38,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return coarseLocationManager
     }()
     
+    var _recentSearchItems: [Any]? = nil
     @available(iOS 12.0, *)
-    lazy var recentSearchItems: [CPListItem]? = []
+    var recentSearchItems: [CPListItem]? {
+        get {
+            _recentSearchItems as! [CPListItem]?
+        }
+        set {
+            _recentSearchItems = newValue
+        }
+    }
+    
     var recentItems: [RecentItem] = RecentItem.loadDefaults()
     var recentSearchText: String? = ""
     

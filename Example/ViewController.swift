@@ -526,18 +526,24 @@ class ViewController: UIViewController {
     }
         
     fileprivate lazy var defaultSuccess: RouteRequestSuccess = { [weak self] (response) in
-        guard let routes = response.routes, !routes.isEmpty, case let .route(options) = response.options else { return }
-        self?.navigationMapView.removeWaypoints()
-        self?.response = response
+        guard let self = self,
+              // In some rare cases this callback can be called when `NavigationMapView` object is no
+              // longer available. This check prevents access to invalid object.
+              self.navigationMapView != nil,
+              let routes = response.routes,
+              !routes.isEmpty,
+              case let .route(options) = response.options else { return }
+        self.navigationMapView.removeWaypoints()
+        self.response = response
         
         // Waypoints which were placed by the user are rewritten by slightly changed waypoints
         // which are returned in response with routes.
         if let waypoints = response.waypoints {
-            self?.waypoints = waypoints
+            self.waypoints = waypoints
         }
         
-        self?.clearMap.isHidden = false
-        self?.longPressHintView.isHidden = true
+        self.clearMap.isHidden = false
+        self.longPressHintView.isHidden = true
     }
 
     fileprivate lazy var defaultFailure: RouteRequestFailure = { [weak self] (error) in
