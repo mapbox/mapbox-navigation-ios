@@ -209,12 +209,12 @@ extension NavigationMapView {
         guard distance >= meterPerPixel else { return }
             
         updateFractionTraveled(coordinate: currentCoordinate)
-        updateRouteLineOffSet(along: route, offset: fractionTraveled)
+        updateRouteLineOffset(along: route, offset: fractionTraveled)
         
         pendingCoordinateForRouteLine = coordinate
     }
     
-    func updateRouteLineOffSet(along route: Route, offset: Double) {
+    func updateRouteLineOffset(along route: Route, offset: Double) {
         let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
         let mainRouteCasingLayerIdentifier = route.identifier(.routeCasing(isMainRoute: true))
         let restrictedAreaLayerIdentifier = route.identifier(.restrictedRouteAreaRoute)
@@ -367,11 +367,11 @@ extension NavigationMapView {
             }
             
             if gradientStops.isEmpty {
-                gradientStops[1.0] = lineSettings.baseColor
+                gradientStops[0.0] = lineSettings.baseColor
             }
             
         } else {
-            gradientStops[1.0] = lineSettings.baseColor
+            gradientStops[0.0] = lineSettings.baseColor
         }
         
         return gradientStops
@@ -432,7 +432,7 @@ extension NavigationMapView {
     func routeLineRestrictionsGradient(_ restrictionFeatures: [Turf.Feature]) -> [Double: UIColor] {
         // If there's no restricted feature, hide the restricted route line layer.
         guard restrictionFeatures.count > 0 else {
-            let gradientStops: [Double: UIColor] = [1.0: traversedRouteColor]
+            let gradientStops: [Double: UIColor] = [0.0: traversedRouteColor]
             return gradientStops
         }
         

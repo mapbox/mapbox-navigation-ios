@@ -162,7 +162,7 @@ open class NavigationMapView: UIView {
             let offset = fractionTraveled
             show(routes, legIndex: currentLegIndex)
             if let route = routes.first, routeLineTracksTraversal {
-                updateRouteLineOffSet(along: route, offset: offset)
+                updateRouteLineOffset(along: route, offset: offset)
             }
         }
     }
