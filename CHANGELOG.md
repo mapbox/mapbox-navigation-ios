@@ -19,6 +19,7 @@
 ### Other changes
 
 * Fixed the unmatched language issue of some localized strings in the feedback view. ([#4007](https://github.com/mapbox/mapbox-navigation-ios/pull/4007))
+* Added `NavigationSettings.utilizeSensorData` toggle to allow navigator to use additional device sensors data for better positioning. ([#3973](https://github.com/mapbox/mapbox-navigation-ios/pull/3973))
 
 ## v2.6.0
 
@@ -40,7 +41,6 @@
 * Fixed an issue where `RouteController` sometimes took too long to detect that the user went off the route after making a turn or taking an off-ramp. ([#3913](https://github.com/mapbox/mapbox-navigation-ios/pull/3913))
 * When proactive reroute happens, new departure voice instruction will not be pronounced anymore. ([#3937](https://github.com/mapbox/mapbox-navigation-ios/pull/3937))
 * Fixed an issue where a departure instruction (e.g., “Head west”) was announced periodically in the middle of a trip due to proactive rerouting. ([#3937](https://github.com/mapbox/mapbox-navigation-ios/pull/3937))
-* Added `NavigationSettings.utilizeSensorData` toggle to allow navigator to use additional device sensors data for better positioning. ([#3973](https://github.com/mapbox/mapbox-navigation-ios/pull/3973))
 
 ### Camera
 
