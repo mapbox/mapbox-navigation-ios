@@ -383,14 +383,17 @@ extension NavigationMapView {
                                      isSoft: Bool = false) -> [Double: UIColor] {
         // If `congestionFeatures` is set to nil - check if overridden route line casing is used.
         let overriddenLineLayerColor: UIColor?
+        let baseColor: UIColor
         if let _ = congestionFeatures {
             overriddenLineLayerColor = lineLayerColorIfPresent(from: route)
+            baseColor = overriddenLineLayerColor ?? (isMain ? .trafficUnknown : .alternativeTrafficUnknown)
         } else {
             overriddenLineLayerColor = lineLayerCasingColorIfPresent(from: route)
+            baseColor = overriddenLineLayerColor ?? routeCasingColor
         }
         
         let lineSettings = LineGradientSettings(isSoft: isSoft,
-                                                baseColor: overriddenLineLayerColor ?? (isMain ? .trafficUnknown : .alternativeTrafficUnknown),
+                                                baseColor: baseColor,
                                                 featureColor: {
             if let overriddenLineLayerColor = overriddenLineLayerColor {
                 return overriddenLineLayerColor

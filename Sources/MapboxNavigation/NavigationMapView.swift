@@ -137,6 +137,20 @@ open class NavigationMapView: UIView {
      */
     var pendingCoordinateForRouteLine: CLLocationCoordinate2D?
     
+    /**
+     Layer identifier for userLocationStyle that is used to track the layer position.
+     */
+    var puckLayerIdentifier: String? {
+        switch userLocationStyle {
+        case .puck2D(configuration: _):
+            return NavigationMapView.LayerIdentifier.puck2DLayer
+        case .puck3D(configuration: _):
+            return NavigationMapView.LayerIdentifier.puck3DLayer
+        default:
+            return nil
+        }
+    }
+    
     var showsRoute: Bool {
         get {
             guard let mainRouteLayerIdentifier = routes?.first?.identifier(.route(isMainRoute: true)),
@@ -383,15 +397,6 @@ open class NavigationMapView: UIView {
             let shaftLength = max(min(30 * metersPerPoint, 30), 10)
             let shaftPolyline = route.polylineAroundManeuver(legIndex: legIndex, stepIndex: stepIndex, distance: shaftLength)
             
-            var puckLayerIdentifier: String?
-            switch userLocationStyle {
-            case .puck2D(configuration: _):
-                puckLayerIdentifier = NavigationMapView.LayerIdentifier.puck2DLayer
-            case .puck3D(configuration: _):
-                puckLayerIdentifier = NavigationMapView.LayerIdentifier.puck3DLayer
-            default: break
-            }
-            
             if shaftPolyline.coordinates.count > 1 {
                 let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
                 let mainRouteLayerIdentifier = route.identifier(.route(isMainRoute: true))
@@ -606,6 +611,10 @@ open class NavigationMapView: UIView {
                 let allLayerIds = mapView.mapboxMap.style.allLayerIdentifiers.map{ $0.id }
                 if allLayerIds.contains(NavigationMapView.LayerIdentifier.arrowStrokeLayer) {
                     layerPosition = .below(NavigationMapView.LayerIdentifier.arrowStrokeLayer)
+                } else if allLayerIds.contains(NavigationMapView.LayerIdentifier.waypointCircleLayer) {
+                    layerPosition = .below(NavigationMapView.LayerIdentifier.waypointCircleLayer)
+                } else if let puckLayer = puckLayerIdentifier, allLayerIds.contains(puckLayer) {
+                    layerPosition = .below(puckLayer)
                 }
                 
                 if layerAlreadyExists {
